@@ -1,0 +1,96 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.
+ * See the NOTICE file distributed with this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ * =========================================================================================================
+ *
+ * This software consists of voluntary contributions made by many individuals on behalf of the
+ * Apache Software Foundation. For more information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ *
+ * +-------------------------------------------------------------------------------------------------------+
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
+ * | Author: Yong.Teng <webmaster@buession.com> 													       |
+ * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * +-------------------------------------------------------------------------------------------------------+
+ */
+package com.buession.velocity.view;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.servlet.view.AbstractTemplateViewResolver;
+import org.springframework.web.servlet.view.AbstractUrlBasedView;
+
+/**
+ * @author Yong.Teng
+ */
+public class VelocityViewResolver extends AbstractTemplateViewResolver {
+
+    private String toolboxConfigLocation;
+
+    private String dateToolAttribute;
+
+    private String numberToolAttribute;
+
+    private final static Logger logger = LoggerFactory.getLogger(VelocityViewResolver.class);
+
+    public VelocityViewResolver(){
+        setViewClass(requiredViewClass());
+    }
+
+    public void setToolboxConfigLocation(String toolboxConfigLocation){
+        this.toolboxConfigLocation = toolboxConfigLocation;
+    }
+
+    public void setDateToolAttribute(String dateToolAttribute){
+        this.dateToolAttribute = dateToolAttribute;
+    }
+
+    public void setNumberToolAttribute(String numberToolAttribute){
+        this.numberToolAttribute = numberToolAttribute;
+    }
+
+    @Override
+    protected Class<?> requiredViewClass(){
+        return VelocityView.class;
+    }
+
+    @Override
+    protected void initApplicationContext(){
+        super.initApplicationContext();
+
+        if(this.toolboxConfigLocation != null){
+            if(VelocityView.class == getViewClass()){
+                logger.info("Using VelocityToolboxView instead of default VelocityView " + "due to specified " +
+                        "toolboxConfigLocation");
+                setViewClass(VelocityToolboxView.class);
+            }else if(!VelocityToolboxView.class.isAssignableFrom(getViewClass())){
+                throw new IllegalArgumentException("Given view class [" + getViewClass().getName() + "] is not of " +
+                        "type [" + VelocityToolboxView.class.getName() + "], which it needs to be in case of a " +
+                        "specified toolboxConfigLocation");
+            }
+        }
+    }
+
+    @Override
+    protected AbstractUrlBasedView buildView(String viewName) throws Exception{
+        VelocityView view = (VelocityView) super.buildView(viewName);
+
+        view.setDateToolAttribute(dateToolAttribute);
+        view.setNumberToolAttribute(numberToolAttribute);
+
+        if(this.toolboxConfigLocation != null){
+            ((VelocityToolboxView) view).setToolboxConfigLocation(this.toolboxConfigLocation);
+        }
+        return view;
+    }
+
+}

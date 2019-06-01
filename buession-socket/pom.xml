@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<name>Buession Framework Socket</name>
+	<modelVersion>4.0.0</modelVersion>
+  	<parent>
+		<groupId>com.buession</groupId>
+		<artifactId>buession-parent</artifactId>
+		<relativePath>../buession-parent</relativePath>
+		<version>0.0.1</version>
+	</parent>
+  	<artifactId>buession-socket</artifactId>
+  	<url>http://maven.apache.org</url>
+  	<description>Buession Framework Socket Server and Socket Client Package</description>
+  	<packaging>jar</packaging>
+
+  	<developers>
+  		<developer>
+  			<id>yong.teng</id>
+  			<name>yong.teng</name>
+  			<email>webmaster@buession.com</email>
+  		</developer>
+  	</developers>
+
+  	<organization>
+  		<name>buession.com Inc.</name>
+  		<url>http://www.buession.com/</url>
+  	</organization>
+
+  	<properties>
+    	<project.encoding>UTF-8</project.encoding>
+  		<netty.version>4.0.25.Final</netty.version>
+  	</properties>
+
+  	<dependencies>
+		<dependency>
+			<groupId>com.buession</groupId>
+			<artifactId>buession-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.buession</groupId>
+			<artifactId>buession-io</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+  			<groupId>org.javassist</groupId>
+  			<artifactId>javassist</artifactId>
+  			<version>3.18.2-GA</version>
+		</dependency>
+
+		<!-- netty start -->
+		<dependency>
+  			<groupId>io.netty</groupId>
+  			<artifactId>netty-common</artifactId>
+  			<version>${netty.version}</version>
+		</dependency>
+		<dependency>
+  			<groupId>io.netty</groupId>
+  			<artifactId>netty-handler</artifactId>
+  			<version>${netty.version}</version>
+		</dependency>
+		<dependency>
+  			<groupId>io.netty</groupId>
+  			<artifactId>netty-buffer</artifactId>
+  			<version>${netty.version}</version>
+		</dependency>
+		<dependency>
+  			<groupId>io.netty</groupId>
+  			<artifactId>netty-codec</artifactId>
+  			<version>${netty.version}</version>
+		</dependency>
+		<dependency>
+  			<groupId>io.netty</groupId>
+  			<artifactId>netty-codec-socks</artifactId>
+  			<version>${netty.version}</version>
+		</dependency>
+		<dependency>
+  			<groupId>io.netty</groupId>
+  			<artifactId>netty-transport</artifactId>
+  			<version>${netty.version}</version>
+		</dependency>
+		<dependency>
+  			<groupId>io.netty</groupId>
+  			<artifactId>netty-tcnative</artifactId>
+  			<classifier>linux-x86_64</classifier>
+  			<version>1.1.32.Fork1</version>
+		</dependency>
+		<!-- netty end -->
+
+		<dependency>
+  			<groupId>args4j</groupId>
+  			<artifactId>args4j</artifactId>
+  			<version>2.0.29</version>
+		</dependency>
+
+    	<dependency>
+      		<groupId>junit</groupId>
+      		<artifactId>junit</artifactId>
+			<scope>test</scope>
+    	</dependency>
+  	</dependencies>
+
+    <build>
+        <finalName>buession-socket</finalName>
+        <plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+  				<configuration>
+  					<charset>${project.encoding}</charset>
+  					<encoding>${project.encoding}</encoding>
+  				</configuration>
+                <executions>
+                	<execution>
+                		<phase>package</phase>
+                		<goals>
+                			<goal>jar</goal>
+                		</goals>
+                	</execution>
+                </executions>
+                <version>2.4</version>
+            </plugin>
+            <plugin>
+            	<groupId>org.apache.maven.plugins</groupId>
+  				<artifactId>maven-javadoc-plugin</artifactId>
+  				<configuration>
+  					<charset>${project.encoding}</charset>
+  					<encoding>${project.encoding}</encoding>
+  					<docencoding>${project.encoding}</docencoding>
+  				</configuration>
+  				<executions>
+  					<execution>
+  						<id>attach-javadoc</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+  					</execution>
+  				</executions>
+  				<version>2.9.1</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>
