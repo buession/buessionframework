@@ -26,7 +26,9 @@
  */
 package com.buession.core.utils;
 
-import com.buession.core.mcrypt.MD5Mcrypt;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * 短链接生成器
@@ -35,6 +37,11 @@ import com.buession.core.mcrypt.MD5Mcrypt;
  */
 public class ShortUrlGenerator {
 
+    private final static String ALGO = "MD5";
+
+    private final static char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
+            'e', 'f'};
+
     private final static char[] CHARS = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
             'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
             'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2',
@@ -42,22 +49,25 @@ public class ShortUrlGenerator {
 
     private final static int LENGTH = 6;
 
+    private final static int GROUP_SIZE = 4;
+
     private ShortUrlGenerator(){
 
     }
 
     public final static String[] encode(final String url){
-        MD5Mcrypt md5Mcrypt = new MD5Mcrypt();
-        String sMD5EncryptResult = md5Mcrypt.encode(url);
-        String[] result = new String[4];
+        Assert.isBlank(url, "Encode short url cloud not be null or empty");
 
-        for(int i = 0; i < 4; i++){
+        String md5Str = doEncode(url);
+        String[] result = new String[GROUP_SIZE];
+
+        for(int i = 0; i < GROUP_SIZE; i++){
             // 把加密字符按照 8 位一组 16 进制与 0x3FFFFFFF 进行位与运算
-            String sTempSubString = sMD5EncryptResult.substring(i * 8, i * 8 + 8);
+            String sTempSubString = md5Str.substring(i * 8, i * 8 + 8);
 
-            // 这里需要使用 long 型来转换，因为 Inteper .parseInt() 只能处理 31 位 , 首位为符号位 , 如果不用 long ，则会越界
+            // 这里需要使用 long 型来转换，因为 Integer.parseInt() 只能处理 31 位 , 首位为符号位 , 如果不用 long ，则会越界
             long lHexLong = 0x3FFFFFFF & Long.parseLong(sTempSubString, 16);
-            char[] outChars = new char[6];
+            char[] outChars = new char[LENGTH];
 
             for(int j = 0; j < LENGTH; j++){
                 // 把得到的值与 0x0000003D 进行位与运算，取得字符数组 chars 索引
@@ -73,6 +83,29 @@ public class ShortUrlGenerator {
         }
 
         return result;
+    }
+
+    private final static String doEncode(final String url){
+        try{
+            MessageDigest messageDigest = MessageDigest.getInstance(ALGO);
+
+            messageDigest.update(url.getBytes(StandardCharsets.UTF_8));
+
+            return getFormattedText(messageDigest.digest());
+        }catch(NoSuchAlgorithmException e){
+            throw new SecurityException(e);
+        }
+    }
+
+    private final static String getFormattedText(byte[] bytes){
+        final StringBuilder buffer = new StringBuilder(bytes.length * 2);
+
+        for(int j = 0; j < bytes.length; j++){
+            buffer.append(HEX_DIGITS[(bytes[j] >> 4) & 0x0f]);
+            buffer.append(HEX_DIGITS[bytes[j] & 0x0f]);
+        }
+
+        return buffer.toString();
     }
 
 }
