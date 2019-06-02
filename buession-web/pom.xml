@@ -10,7 +10,7 @@
 		<version>1.0.0</version>
 	</parent>
 	<artifactId>buession-web</artifactId>
-	<url>http://maven.apache.org</url>
+	<url>https://github.com/buession/buessionframework</url>
 	<description>Buession Web</description>
 	<packaging>jar</packaging>
 
@@ -35,14 +35,10 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:https://github.com/eduosi/buessionframework.git</connection>
-		<developerConnection>scm:git:https://github.com/eduosi/buessionframework.git</developerConnection>
-		<url>https://github.com/eduosi/buessionframework</url>
+		<connection>scm:git:https://github.com/buession/buessionframework.git</connection>
+		<developerConnection>scm:git:https://github.com/buession/buessionframework.git</developerConnection>
+		<url>https://github.com/buession/buessionframework</url>
 	</scm>
-
-	<properties>
-		<aspectj.version>1.9.2</aspectj.version>
-	</properties>
 
 	<dependencies>
 		<dependency>
@@ -71,23 +67,19 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>${springframework.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>${springframework.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
-			<version>${aspectj.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
-			<version>${aspectj.version}</version>
 		</dependency>
 
 		<dependency>
