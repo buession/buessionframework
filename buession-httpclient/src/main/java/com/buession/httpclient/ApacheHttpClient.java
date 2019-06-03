@@ -32,6 +32,11 @@ import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.Request;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.Response;
+import com.buession.httpclient.exception.ConnectTimeoutException;
+import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
+import com.buession.httpclient.exception.ReadTimeoutException;
+import com.buession.httpclient.exception.RequestAbortedException;
+import com.buession.httpclient.exception.RequestException;
 import com.buession.httpclient.httpcomponents.HttpComponentsRequestBuilder;
 import com.buession.httpclient.httpcomponents.HttpComponentsResponseBuilder;
 import org.apache.http.HttpEntity;
@@ -53,6 +58,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -120,39 +126,17 @@ public class ApacheHttpClient extends AbstractHttpClient {
         this.httpClient = httpClient;
     }
 
-    /**
-     * GET 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response get(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response get(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(new HttpGet(), url, headers, parameters);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response post(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         final HttpPost httpPost = new HttpPost();
 
         httpPost.setEntity(HttpComponentsRequestBuilder.buildRequestBody(data));
@@ -160,22 +144,10 @@ public class ApacheHttpClient extends AbstractHttpClient {
         return doRequest(httpPost, url, headers, parameters);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response patch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         final HttpPatch httpPatch = new HttpPatch();
 
         httpPatch.setEntity(HttpComponentsRequestBuilder.buildRequestBody(data));
@@ -183,22 +155,10 @@ public class ApacheHttpClient extends AbstractHttpClient {
         return doRequest(httpPatch, url, headers, parameters);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response put(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         final HttpPut httpPut = new HttpPut();
 
         httpPut.setEntity(HttpComponentsRequestBuilder.buildRequestBody(data));
@@ -206,305 +166,133 @@ public class ApacheHttpClient extends AbstractHttpClient {
         return doRequest(httpPut, url, headers, parameters);
     }
 
-    /**
-     * DELETE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response delete(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response delete(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(new HttpDelete(), url, headers, parameters);
     }
 
-    /**
-     * CONNECT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response connect(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response connect(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneHttpRequest(RequestMethod.CONNECT), url, headers, parameters);
     }
 
-    /**
-     * TRACE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response trace(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response trace(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(new HttpTrace(), url, headers, parameters);
     }
 
-    /**
-     * COPY 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response copy(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response copy(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneHttpRequest(RequestMethod.COPY), url, headers, parameters);
     }
 
-    /**
-     * MOVE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response move(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response move(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneHttpRequest(RequestMethod.MOVE), url, headers, parameters);
     }
 
-    /**
-     * HEAD 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response head(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response head(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(new HttpHead(), url, headers, parameters);
     }
 
-    /**
-     * OPTIONS 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response options(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response options(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(new HttpOptions(), url, headers, parameters);
     }
 
-    /**
-     * LINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response link(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response link(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneHttpRequest(RequestMethod.LINK), url, headers, parameters);
     }
 
-    /**
-     * UNLINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlink(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response unlink(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneHttpRequest(RequestMethod.UNLINK), url, headers, parameters);
     }
 
-    /**
-     * PURGE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response purge(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response purge(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneHttpRequest(RequestMethod.PURGE), url, headers, parameters);
     }
 
-    /**
-     * LOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response lock(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response lock(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneHttpRequest(RequestMethod.LOCK), url, headers, parameters);
     }
 
-    /**
-     * UNLOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlock(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response unlock(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneHttpRequest(RequestMethod.UNLOCK), url, headers, parameters);
     }
 
-    /**
-     * PROPFIND 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response propfind(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response propfind(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneHttpRequest(RequestMethod.PROPFIND), url, headers, parameters);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
+
     @Override
-    public Response proppatch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response proppatch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers)
+            throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException{
         final HttpRequestBase httpRequestBase = createNoneHttpRequest(RequestMethod.PROPPATCH,
                 HttpComponentsRequestBuilder.buildRequestBody(data));
         return doRequest(httpRequestBase, url, headers, parameters);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response report(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         final HttpRequestBase httpRequestBase = createNoneHttpRequest(RequestMethod.REPORT,
                 HttpComponentsRequestBuilder.buildRequestBody(data));
         return doRequest(httpRequestBase, url, headers, parameters);
     }
 
-    /**
-     * VIEW 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response view(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response view(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneHttpRequest(RequestMethod.VIEW), url, headers, parameters);
     }
 
-    /**
-     * WRAPPED 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response wrapped(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response wrapped(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneHttpRequest(RequestMethod.WRAPPED), url, headers, parameters);
     }
 
     protected Response doRequest(final HttpRequestBase httpRequest, final String url, final List<Header> headers,
-                                 final Map<String, Object> parameters){
+                                 final Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         final Request request = HttpComponentsRequestBuilder.create(httpRequest).setUrl(url).setParameters
                 (parameters).setHeaders(headers).build();
 
@@ -528,11 +316,20 @@ public class ApacheHttpClient extends AbstractHttpClient {
             return HttpComponentsResponseBuilder.create(httpResponse).build();
         }catch(IOException e){
             logger.error("Request({}) url: {} error.", httpRequest.getMethod(), httpRequest.getURI(), e);
+            if(e instanceof org.apache.http.conn.ConnectTimeoutException){
+                throw new ConnectTimeoutException(e.getMessage());
+            }else if(e instanceof org.apache.http.conn.ConnectionPoolTimeoutException){
+                throw new ConnectionPoolTimeoutException(e.getMessage());
+            }else if(e instanceof SocketTimeoutException){
+                throw new ReadTimeoutException(e.getMessage());
+            }else if(e instanceof org.apache.http.impl.execchain.RequestAbortedException){
+                throw new RequestAbortedException(e.getMessage());
+            }else{
+                throw new RequestException(e.getMessage(), e);
+            }
         }finally{
             httpRequest.releaseConnection();
         }
-
-        return null;
     }
 
     protected static HttpRequestBase createNoneHttpRequest(final RequestMethod requestMethod){

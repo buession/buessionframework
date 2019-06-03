@@ -25,6 +25,11 @@
 package com.buession.httpclient;
 
 import com.buession.httpclient.core.Response;
+import com.buession.httpclient.exception.ConnectTimeoutException;
+import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
+import com.buession.httpclient.exception.ReadTimeoutException;
+import com.buession.httpclient.exception.RequestAbortedException;
+import com.buession.httpclient.exception.RequestException;
 import org.junit.Test;
 
 /**
@@ -33,9 +38,10 @@ import org.junit.Test;
 public class OkHttpClientTest {
 
     @Test
-    public void get(){
+    public void get() throws RequestAbortedException, ReadTimeoutException, ConnectionPoolTimeoutException,
+            ConnectTimeoutException, RequestException{
         HttpClient httpClient = new OkHttpClient();
-        Response response = httpClient.get("http://10.101.0.36/");
+        Response response = httpClient.get("https://aws.amazon.com/cn/");
         System.out.print(response);
     }
 

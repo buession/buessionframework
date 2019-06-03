@@ -30,8 +30,11 @@ import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.buession.httpclient.exception.ConnectTimeoutException;
+import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
+import com.buession.httpclient.exception.ReadTimeoutException;
+import com.buession.httpclient.exception.RequestAbortedException;
+import com.buession.httpclient.exception.RequestException;
 
 import java.net.URL;
 import java.util.List;
@@ -43,8 +46,6 @@ import java.util.Map;
 public abstract class AbstractHttpClient implements HttpClient {
 
     private ConnectionManager connectionManager;
-
-    private final static Logger logger = LoggerFactory.getLogger(AbstractHttpClient.class);
 
     /**
      * 构造函数
@@ -84,3126 +85,1284 @@ public abstract class AbstractHttpClient implements HttpClient {
         this.connectionManager = connectionManager;
     }
 
-    /**
-     * GET 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response get(String url){
+    public Response get(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return get(url, null, null);
     }
 
-    /**
-     * GET 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response get(URL url){
+    public Response get(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return get(url, null, null);
     }
 
-    /**
-     * GET 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response get(String url, List<Header> headers){
+    public Response get(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return get(url, null, headers);
     }
 
-    /**
-     * GET 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response get(URL url, List<Header> headers){
+    public Response get(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return get(url, null, headers);
     }
 
-    /**
-     * GET 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response get(String url, Map<String, Object> parameters){
+    public Response get(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return get(url, parameters, null);
     }
 
-    /**
-     * GET 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response get(URL url, Map<String, Object> parameters){
+    public Response get(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return get(url, parameters, null);
     }
 
-    /**
-     * GET 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response get(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response get(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return get(url.toString(), parameters, headers);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(String url){
+    public Response post(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return post(url, null, null, null);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(URL url){
+    public Response post(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return post(url, null, null, null);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(String url, List<Header> headers){
+    public Response post(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return post(url, null, null, headers);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(URL url, List<Header> headers){
+    public Response post(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return post(url, null, null, headers);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(String url, Map<String, Object> parameters){
+    public Response post(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return post(url, null, parameters, null);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(URL url, Map<String, Object> parameters){
+    public Response post(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return post(url, null, parameters, null);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response post(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return post(url, null, parameters, headers);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response post(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return post(url, null, parameters, headers);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(String url, RequestBody data){
+    public Response post(String url, RequestBody data) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return post(url, data, null, null);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(URL url, RequestBody data){
+    public Response post(URL url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return post(url, data, null, null);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(String url, RequestBody data, List<Header> headers){
+    public Response post(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return post(url, data, null, headers);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(URL url, RequestBody data, List<Header> headers){
+    public Response post(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return post(url, data, null, headers);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(String url, RequestBody data, Map<String, Object> parameters){
+    public Response post(String url, RequestBody data, Map<String, Object> parameters) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return post(url, data, parameters);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(URL url, RequestBody data, Map<String, Object> parameters){
+    public Response post(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return post(url, data, parameters);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response post(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return post(url.toString(), data, parameters, headers);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(String url){
+    public Response patch(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return patch(url, null, null, null);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(URL url){
+    public Response patch(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return patch(url, null, null, null);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(String url, List<Header> headers){
+    public Response patch(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return patch(url, null, null, headers);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(URL url, List<Header> headers){
+    public Response patch(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return patch(url, null, null, headers);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(String url, Map<String, Object> parameters){
+    public Response patch(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return patch(url, null, parameters, null);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(URL url, Map<String, Object> parameters){
+    public Response patch(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return patch(url, null, parameters, null);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response patch(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return patch(url, null, parameters, headers);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response patch(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return patch(url, null, parameters, headers);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(String url, RequestBody data){
+    public Response patch(String url, RequestBody data) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return patch(url, data, null, null);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(URL url, RequestBody data){
+    public Response patch(URL url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return patch(url, data, null, null);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(String url, RequestBody data, List<Header> headers){
+    public Response patch(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return patch(url, data, null, headers);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(URL url, RequestBody data, List<Header> headers){
+    public Response patch(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return patch(url, data, null, headers);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(String url, RequestBody data, Map<String, Object> parameters){
+    public Response patch(String url, RequestBody data, Map<String, Object> parameters) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return patch(url, data, parameters, null);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(URL url, RequestBody data, Map<String, Object> parameters){
+    public Response patch(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return patch(url, data, parameters, null);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response patch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return patch(url.toString(), data, parameters, headers);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(String url){
+    public Response put(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return put(url, null, null, null);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(URL url){
+    public Response put(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return put(url, null, null, null);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(String url, List<Header> headers){
+    public Response put(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return put(url, null, null, headers);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(URL url, List<Header> headers){
+    public Response put(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return put(url, null, null, headers);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(String url, Map<String, Object> parameters){
+    public Response put(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return put(url, null, parameters, null);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(URL url, Map<String, Object> parameters){
+    public Response put(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return put(url, null, parameters, null);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response put(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return put(url, null, parameters, headers);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response put(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return put(url, null, parameters, headers);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(String url, RequestBody data){
+    public Response put(String url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return put(url, data, null, null);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(URL url, RequestBody data){
+    public Response put(URL url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return put(url, data, null, null);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(String url, RequestBody data, List<Header> headers){
+    public Response put(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return put(url, data, null, headers);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(URL url, RequestBody data, List<Header> headers){
+    public Response put(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return put(url, data, null, headers);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(String url, RequestBody data, Map<String, Object> parameters){
+    public Response put(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return put(url, data, parameters, null);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(URL url, RequestBody data, Map<String, Object> parameters){
+    public Response put(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return put(url, data, parameters, null);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response put(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return put(url.toString(), data, parameters, headers);
     }
 
-    /**
-     * DELETE 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response delete(String url){
+    public Response delete(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return delete(url, null, null);
     }
 
-    /**
-     * DELETE 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response delete(URL url){
+    public Response delete(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return delete(url, null, null);
     }
 
-    /**
-     * DELETE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response delete(String url, List<Header> headers){
+    public Response delete(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return delete(url, null, headers);
     }
 
-    /**
-     * DELETE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response delete(URL url, List<Header> headers){
+    public Response delete(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return delete(url, null, headers);
     }
 
-    /**
-     * DELETE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response delete(String url, Map<String, Object> parameters){
+    public Response delete(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return delete(url, parameters, null);
     }
 
-    /**
-     * DELETE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response delete(URL url, Map<String, Object> parameters){
+    public Response delete(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return delete(url, parameters, null);
     }
 
-    /**
-     * DELETE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response delete(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response delete(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return delete(url.toString(), parameters, headers);
     }
 
-    /**
-     * CONNECT 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response connect(String url){
+    public Response connect(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return connect(url, null, null);
     }
 
-    /**
-     * CONNECT 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response connect(URL url){
+    public Response connect(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return connect(url, null, null);
     }
 
-    /**
-     * CONNECT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response connect(String url, List<Header> headers){
+    public Response connect(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return connect(url, null, headers);
     }
 
-    /**
-     * CONNECT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response connect(URL url, List<Header> headers){
+    public Response connect(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return connect(url, null, headers);
     }
 
-    /**
-     * CONNECT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response connect(String url, Map<String, Object> parameters){
+    public Response connect(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return connect(url, parameters, null);
     }
 
-    /**
-     * CONNECT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response connect(URL url, Map<String, Object> parameters){
+    public Response connect(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return connect(url, parameters, null);
     }
 
-    /**
-     * CONNECT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response connect(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response connect(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return connect(url.toString(), parameters, headers);
     }
 
-    /**
-     * TRACE 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response trace(String url){
+    public Response trace(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return trace(url, null, null);
     }
 
-    /**
-     * TRACE 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response trace(URL url){
+    public Response trace(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return trace(url, null, null);
     }
 
-    /**
-     * TRACE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response trace(String url, List<Header> headers){
+    public Response trace(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return trace(url, null, headers);
     }
 
-    /**
-     * TRACE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response trace(URL url, List<Header> headers){
+    public Response trace(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return trace(url, null, headers);
     }
 
-    /**
-     * TRACE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response trace(String url, Map<String, Object> parameters){
+    public Response trace(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return trace(url, parameters, null);
     }
 
-    /**
-     * TRACE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response trace(URL url, Map<String, Object> parameters){
+    public Response trace(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return trace(url, parameters, null);
     }
 
-    /**
-     * TRACE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response trace(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response trace(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return trace(url.toString(), parameters, headers);
     }
 
-    /**
-     * COPY 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response copy(String url){
+    public Response copy(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return copy(url, null, null);
     }
 
-    /**
-     * COPY 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response copy(URL url){
+    public Response copy(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return copy(url, null, null);
     }
 
-    /**
-     * COPY 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response copy(String url, List<Header> headers){
+    public Response copy(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return copy(url, null, headers);
     }
 
-    /**
-     * COPY 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response copy(URL url, List<Header> headers){
+    public Response copy(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return copy(url, null, headers);
     }
 
-    /**
-     * COPY 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response copy(String url, Map<String, Object> parameters){
+    public Response copy(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return copy(url, parameters, null);
     }
 
-    /**
-     * COPY 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response copy(URL url, Map<String, Object> parameters){
+    public Response copy(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return copy(url, parameters, null);
     }
 
-    /**
-     * COPY 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response copy(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response copy(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return copy(url.toString(), parameters, headers);
     }
 
-    /**
-     * MOVE 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response move(String url){
+    public Response move(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return move(url, null, null);
     }
 
-    /**
-     * MOVE 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response move(URL url){
+    public Response move(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return move(url, null, null);
     }
 
-    /**
-     * MOVE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response move(String url, List<Header> headers){
+    public Response move(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return move(url, null, headers);
     }
 
-    /**
-     * MOVE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response move(URL url, List<Header> headers){
+    public Response move(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return move(url, null, headers);
     }
 
-    /**
-     * MOVE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response move(String url, Map<String, Object> parameters){
+    public Response move(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return move(url, parameters, null);
     }
 
-    /**
-     * MOVE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response move(URL url, Map<String, Object> parameters){
+    public Response move(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return move(url, parameters, null);
     }
 
-    /**
-     * MOVE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response move(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response move(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return move(url.toString(), parameters, headers);
     }
 
-    /**
-     * HEAD 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response head(String url){
+    public Response head(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return head(url, null, null);
     }
 
-    /**
-     * HEAD 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response head(URL url){
+    public Response head(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return head(url, null, null);
     }
 
-    /**
-     * HEAD 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response head(String url, List<Header> headers){
+    public Response head(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return head(url, null, headers);
     }
 
-    /**
-     * HEAD 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response head(URL url, List<Header> headers){
+    public Response head(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return head(url, null, headers);
     }
 
-    /**
-     * HEAD 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response head(String url, Map<String, Object> parameters){
+    public Response head(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return head(url, parameters, null);
     }
 
-    /**
-     * HEAD 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response head(URL url, Map<String, Object> parameters){
+    public Response head(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return head(url, parameters, null);
     }
 
-    /**
-     * HEAD 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response head(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response head(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return head(url.toString(), parameters, headers);
     }
 
-    /**
-     * OPTIONS 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response options(String url){
+    public Response options(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return options(url, null, null);
     }
 
-    /**
-     * OPTIONS 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response options(URL url){
+    public Response options(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return options(url, null, null);
     }
 
-    /**
-     * OPTIONS 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response options(String url, List<Header> headers){
+    public Response options(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return options(url, null, headers);
     }
 
-    /**
-     * OPTIONS 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response options(URL url, List<Header> headers){
+    public Response options(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return options(url, null, headers);
     }
 
-    /**
-     * OPTIONS 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response options(String url, Map<String, Object> parameters){
+    public Response options(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return options(url, parameters, null);
     }
 
-    /**
-     * OPTIONS 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response options(URL url, Map<String, Object> parameters){
+    public Response options(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return options(url, parameters, null);
     }
 
-    /**
-     * OPTIONS 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response options(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response options(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return options(url.toString(), parameters, headers);
     }
 
-    /**
-     * LINK 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response link(String url){
+    public Response link(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return link(url, null, null);
     }
 
-    /**
-     * LINK 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response link(URL url){
+    public Response link(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return link(url, null, null);
     }
 
-    /**
-     * LINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response link(String url, List<Header> headers){
+    public Response link(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return link(url, null, headers);
     }
 
-    /**
-     * LINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response link(URL url, List<Header> headers){
+    public Response link(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return link(url, null, headers);
     }
 
-    /**
-     * LINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response link(String url, Map<String, Object> parameters){
+    public Response link(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return link(url, parameters, null);
     }
 
-    /**
-     * LINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response link(URL url, Map<String, Object> parameters){
+    public Response link(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return link(url, parameters, null);
     }
 
-    /**
-     * LINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response link(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response link(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return link(url.toString(), parameters, headers);
     }
 
-    /**
-     * UNLINK 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlink(String url){
+    public Response unlink(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return unlink(url, null, null);
     }
 
-    /**
-     * UNLINK 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlink(URL url){
+    public Response unlink(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return unlink(url, null, null);
     }
 
-    /**
-     * UNLINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlink(String url, List<Header> headers){
+    public Response unlink(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return unlink(url, null, headers);
     }
 
-    /**
-     * UNLINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlink(URL url, List<Header> headers){
+    public Response unlink(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return unlink(url, null, headers);
     }
 
-    /**
-     * UNLINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlink(String url, Map<String, Object> parameters){
+    public Response unlink(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return unlink(url, parameters, null);
     }
 
-    /**
-     * UNLINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlink(URL url, Map<String, Object> parameters){
+    public Response unlink(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return unlink(url, parameters, null);
     }
 
-    /**
-     * UNLINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlink(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response unlink(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return unlink(url.toString(), parameters, headers);
     }
 
-    /**
-     * PURGE 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response purge(String url){
+    public Response purge(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return purge(url, null, null);
     }
 
-    /**
-     * PURGE 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response purge(URL url){
+    public Response purge(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return purge(url, null, null);
     }
 
-    /**
-     * PURGE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response purge(String url, List<Header> headers){
+    public Response purge(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return purge(url, null, headers);
     }
 
-    /**
-     * PURGE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response purge(URL url, List<Header> headers){
+    public Response purge(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return purge(url, null, headers);
     }
 
-    /**
-     * PURGE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response purge(String url, Map<String, Object> parameters){
+    public Response purge(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return purge(url, parameters, null);
     }
 
-    /**
-     * PURGE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response purge(URL url, Map<String, Object> parameters){
+    public Response purge(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return purge(url, parameters, null);
     }
 
-    /**
-     * PURGE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response purge(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response purge(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return purge(url.toString(), parameters, headers);
     }
 
-    /**
-     * LOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response lock(String url){
+    public Response lock(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return lock(url, null, null);
     }
 
-    /**
-     * LOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response lock(URL url){
+    public Response lock(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return lock(url, null, null);
     }
 
-    /**
-     * LOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response lock(String url, List<Header> headers){
+    public Response lock(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return lock(url, null, headers);
     }
 
-    /**
-     * LOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response lock(URL url, List<Header> headers){
+    public Response lock(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return lock(url, null, headers);
     }
 
-    /**
-     * LOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response lock(String url, Map<String, Object> parameters){
+    public Response lock(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return lock(url, parameters, null);
     }
 
-    /**
-     * LOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response lock(URL url, Map<String, Object> parameters){
+    public Response lock(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return lock(url, parameters, null);
     }
 
-    /**
-     * LOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response lock(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response lock(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return lock(url.toString(), parameters, headers);
     }
 
-    /**
-     * UNLOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlock(String url){
+    public Response unlock(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return unlock(url, null, null);
     }
 
-    /**
-     * UNLOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlock(URL url){
+    public Response unlock(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return unlock(url, null, null);
     }
 
-    /**
-     * UNLOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlock(String url, List<Header> headers){
+    public Response unlock(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return unlock(url, null, headers);
     }
 
-    /**
-     * UNLOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlock(URL url, List<Header> headers){
+    public Response unlock(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return unlock(url, null, headers);
     }
 
-    /**
-     * UNLOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlock(String url, Map<String, Object> parameters){
+    public Response unlock(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return unlock(url, parameters, null);
     }
 
-    /**
-     * UNLOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlock(URL url, Map<String, Object> parameters){
+    public Response unlock(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return unlock(url, parameters, null);
     }
 
-    /**
-     * UNLOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlock(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response unlock(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return unlock(url.toString(), parameters, headers);
     }
 
-    /**
-     * PROPFIND 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response propfind(String url){
+    public Response propfind(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return propfind(url, null, null);
     }
 
-    /**
-     * PROPFIND 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response propfind(URL url){
+    public Response propfind(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return propfind(url, null, null);
     }
 
-    /**
-     * PROPFIND 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response propfind(String url, List<Header> headers){
+    public Response propfind(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return propfind(url, null, headers);
     }
 
-    /**
-     * PROPFIND 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response propfind(URL url, List<Header> headers){
+    public Response propfind(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return propfind(url, null, headers);
     }
 
-    /**
-     * PROPFIND 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response propfind(String url, Map<String, Object> parameters){
+    public Response propfind(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return propfind(url, parameters, null);
     }
 
-    /**
-     * PROPFIND 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response propfind(URL url, Map<String, Object> parameters){
+    public Response propfind(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return propfind(url, parameters, null);
     }
 
-    /**
-     * PROPFIND 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response propfind(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response propfind(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return propfind(url.toString(), parameters, headers);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(String url){
+    public Response proppatch(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return proppatch(url, null, null, null);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(URL url){
+    public Response proppatch(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return proppatch(url, null, null, null);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(String url, List<Header> headers){
+    public Response proppatch(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return proppatch(url, null, null, headers);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(URL url, List<Header> headers){
+    public Response proppatch(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return proppatch(url, null, null, headers);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(String url, Map<String, Object> parameters){
+    public Response proppatch(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return proppatch(url, null, parameters, null);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(URL url, Map<String, Object> parameters){
+    public Response proppatch(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return proppatch(url, null, parameters, null);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response proppatch(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return proppatch(url, null, parameters, headers);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return proppatch(url, null, parameters, headers);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(String url, RequestBody data){
+    public Response proppatch(String url, RequestBody data) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return proppatch(url, data, null, null);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(URL url, RequestBody data){
+    public Response proppatch(URL url, RequestBody data) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return proppatch(url, data, null, null);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(String url, RequestBody data, List<Header> headers){
+    public Response proppatch(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return proppatch(url, data, null, headers);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(URL url, RequestBody data, List<Header> headers){
+    public Response proppatch(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return proppatch(url, data, null, headers);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(String url, RequestBody data, Map<String, Object> parameters){
+    public Response proppatch(String url, RequestBody data, Map<String, Object> parameters) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return proppatch(url, data, parameters, null);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(URL url, RequestBody data, Map<String, Object> parameters){
+    public Response proppatch(URL url, RequestBody data, Map<String, Object> parameters) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return proppatch(url, data, parameters, null);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response proppatch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return proppatch(url.toString(), data, parameters, headers);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(String url){
+    public Response report(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return report(url, null, null, null);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(URL url){
+    public Response report(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return report(url, null, null, null);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(String url, List<Header> headers){
+    public Response report(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return report(url, null, null, headers);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(URL url, List<Header> headers){
+    public Response report(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return report(url, null, null, headers);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(String url, Map<String, Object> parameters){
+    public Response report(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return report(url, null, parameters, null);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(URL url, Map<String, Object> parameters){
+    public Response report(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return report(url, null, parameters, null);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response report(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return report(url, null, parameters, headers);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response report(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return report(url, null, parameters, headers);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(String url, RequestBody data){
+    public Response report(String url, RequestBody data) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return report(url, data, null, null);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(URL url, RequestBody data){
+    public Response report(URL url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return report(url, data, null, null);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(String url, RequestBody data, List<Header> headers){
+    public Response report(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return report(url, data, null, headers);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(URL url, RequestBody data, List<Header> headers){
+    public Response report(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return report(url, data, null, headers);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(String url, RequestBody data, Map<String, Object> parameters){
+    public Response report(String url, RequestBody data, Map<String, Object> parameters) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return report(url, data, parameters, null);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(URL url, RequestBody data, Map<String, Object> parameters){
+    public Response report(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return report(url, data, parameters, null);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response report(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return report(url.toString(), data, parameters, headers);
     }
 
-    /**
-     * VIEW 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response view(String url){
+    public Response view(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return view(url, null, null);
     }
 
-    /**
-     * VIEW 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response view(URL url){
+    public Response view(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return view(url, null, null);
     }
 
-    /**
-     * VIEW 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response view(String url, List<Header> headers){
+    public Response view(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return view(url, null, headers);
     }
 
-    /**
-     * VIEW 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response view(URL url, List<Header> headers){
+    public Response view(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return view(url, null, headers);
     }
 
-    /**
-     * VIEW 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response view(String url, Map<String, Object> parameters){
+    public Response view(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return view(url, parameters, null);
     }
 
-    /**
-     * VIEW 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response view(URL url, Map<String, Object> parameters){
+    public Response view(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return view(url, parameters, null);
     }
 
-    /**
-     * VIEW 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response view(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response view(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return view(url.toString(), parameters, headers);
     }
 
-    /**
-     * WRAPPED 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response wrapped(String url){
+    public Response wrapped(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return wrapped(url, null, null);
     }
 
-    /**
-     * WRAPPED 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response wrapped(URL url){
+    public Response wrapped(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         return wrapped(url, null, null);
     }
 
-    /**
-     * WRAPPED 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response wrapped(String url, List<Header> headers){
+    public Response wrapped(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return wrapped(url, null, headers);
     }
 
-    /**
-     * WRAPPED 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response wrapped(URL url, List<Header> headers){
+    public Response wrapped(URL url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return wrapped(url, null, headers);
     }
 
-    /**
-     * WRAPPED 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response wrapped(String url, Map<String, Object> parameters){
+    public Response wrapped(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return wrapped(url, parameters, null);
     }
 
-    /**
-     * WRAPPED 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response wrapped(URL url, Map<String, Object> parameters){
+    public Response wrapped(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return wrapped(url, parameters, null);
     }
 
-    /**
-     * WRAPPED 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers){
+    public Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         validateURL(url);
         return wrapped(url.toString(), parameters, headers);
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response request(String url, RequestMethod requestMethod){
+    public Response request(String url, RequestMethod requestMethod) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return request(url, requestMethod, null, null, null);
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response request(URL url, RequestMethod requestMethod){
+    public Response request(URL url, RequestMethod requestMethod) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return request(url, requestMethod, null, null, null);
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response request(String url, RequestMethod requestMethod, List<Header> headers){
+    public Response request(String url, RequestMethod requestMethod, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return request(url, requestMethod, null, null, headers);
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response request(URL url, RequestMethod requestMethod, List<Header> headers){
+    public Response request(URL url, RequestMethod requestMethod, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return request(url, requestMethod, null, null, headers);
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters){
+    public Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return request(url, requestMethod, null, parameters, null);
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters){
+    public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return request(url, requestMethod, null, parameters, null);
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
     public Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header>
-            headers){
+            headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException{
         return request(url, requestMethod, null, parameters, headers);
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers){
+    public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header>
+            headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException{
         return request(url, requestMethod, null, parameters, headers);
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response request(String url, RequestMethod requestMethod, RequestBody data){
+    public Response request(String url, RequestMethod requestMethod, RequestBody data) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return request(url, requestMethod, data, null, null);
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response request(URL url, RequestMethod requestMethod, RequestBody data){
+    public Response request(URL url, RequestMethod requestMethod, RequestBody data) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return request(url, requestMethod, data, null, null);
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response request(String url, RequestMethod requestMethod, RequestBody data, List<Header> headers){
+    public Response request(String url, RequestMethod requestMethod, RequestBody data, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return request(url, requestMethod, data, null, headers);
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response request(URL url, RequestMethod requestMethod, RequestBody data, List<Header> headers){
+    public Response request(URL url, RequestMethod requestMethod, RequestBody data, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return request(url, requestMethod, data, null, headers);
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
-    @Override
-    public Response request(String url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters){
-        return request(url, requestMethod, data, parameters, null);
-    }
-
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
-    @Override
-    public Response request(URL url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters){
-        return request(url, requestMethod, data, parameters, null);
-    }
-
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
     public Response request(String url, RequestMethod requestMethod, RequestBody data, Map<String, Object>
-            parameters, List<Header> headers){
+            parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException{
+        return request(url, requestMethod, data, parameters, null);
+    }
+
+    @Override
+    public Response request(URL url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters)
+            throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException{
+        return request(url, requestMethod, data, parameters, null);
+    }
+
+    @Override
+    public Response request(String url, RequestMethod requestMethod, RequestBody data, Map<String, Object>
+            parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         Assert.isBlank(url, "Request url could not be null or empty.");
 
         if(requestMethod == null){
@@ -3253,25 +1412,10 @@ public abstract class AbstractHttpClient implements HttpClient {
         return null;
     }
 
-    /**
-     * HTTP 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param requestMethod
-     *         请求方法
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
     public Response request(URL url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters,
-                            List<Header> headers){
+                            List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException{
         Assert.isNull(url, "Request url could not be null.");
 
         if(requestMethod == null){

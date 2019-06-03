@@ -17,32 +17,25 @@
  * <http://www.apache.org/>.
  *
  * +-------------------------------------------------------------------------------------------------------+
- * | License: http://buession.buession.com.cn/LICENSE 												       |
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient;
+package com.buession.httpclient.exception;
 
-import com.buession.httpclient.core.Response;
-import com.buession.httpclient.exception.ConnectTimeoutException;
-import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
-import com.buession.httpclient.exception.ReadTimeoutException;
-import com.buession.httpclient.exception.RequestAbortedException;
-import com.buession.httpclient.exception.RequestException;
-import org.junit.Test;
+import java.io.InterruptedIOException;
 
 /**
  * @author Yong.Teng
  */
-public class ApacheClientTest {
+public class ConnectionPoolTimeoutException extends InterruptedIOException {
 
-    @Test
-    public void get() throws RequestAbortedException, ReadTimeoutException, ConnectionPoolTimeoutException,
-            ConnectTimeoutException, RequestException{
-        HttpClient httpClient = new ApacheHttpClient();
-        Response response = httpClient.get("https://aws.amazon.com/cn/");
-        System.out.print(response);
+    public ConnectionPoolTimeoutException(){
+        super();
     }
 
+    public ConnectionPoolTimeoutException(String message){
+        super(message);
+    }
 }

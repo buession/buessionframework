@@ -17,32 +17,35 @@
  * <http://www.apache.org/>.
  *
  * +-------------------------------------------------------------------------------------------------------+
- * | License: http://buession.buession.com.cn/LICENSE 												       |
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient;
-
-import com.buession.httpclient.core.Response;
-import com.buession.httpclient.exception.ConnectTimeoutException;
-import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
-import com.buession.httpclient.exception.ReadTimeoutException;
-import com.buession.httpclient.exception.RequestAbortedException;
-import com.buession.httpclient.exception.RequestException;
-import org.junit.Test;
+package com.buession.httpclient.exception;
 
 /**
  * @author Yong.Teng
  */
-public class ApacheClientTest {
+public class RequestException extends Exception {
 
-    @Test
-    public void get() throws RequestAbortedException, ReadTimeoutException, ConnectionPoolTimeoutException,
-            ConnectTimeoutException, RequestException{
-        HttpClient httpClient = new ApacheHttpClient();
-        Response response = httpClient.get("https://aws.amazon.com/cn/");
-        System.out.print(response);
+    public RequestException(){
+        super();
     }
 
+    public RequestException(String message){
+        super(message);
+    }
+
+    public RequestException(String message, Throwable cause){
+        super(message, cause);
+    }
+
+    public RequestException(Throwable cause){
+        super(cause);
+    }
+
+    public RequestException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

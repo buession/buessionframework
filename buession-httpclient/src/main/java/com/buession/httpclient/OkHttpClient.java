@@ -32,6 +32,11 @@ import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.Request;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.Response;
+import com.buession.httpclient.exception.ConnectTimeoutException;
+import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
+import com.buession.httpclient.exception.ReadTimeoutException;
+import com.buession.httpclient.exception.RequestAbortedException;
+import com.buession.httpclient.exception.RequestException;
 import com.buession.httpclient.okhttp.OkHttpRequestBuilder;
 import com.buession.httpclient.okhttp.OkHttpResponseBuilder;
 import okhttp3.Headers;
@@ -40,6 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -79,380 +85,161 @@ public class OkHttpClient extends AbstractHttpClient {
         this.httpClient = httpClient;
     }
 
-    /**
-     * GET 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response get(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response get(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(new okhttp3.Request.Builder().get(), url, headers, parameters);
     }
 
-    /**
-     * POST 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response post(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response post(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(data);
         return doRequest((new okhttp3.Request.Builder()).post(requestBody), url, headers, parameters);
     }
 
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response patch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response patch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(data);
         return doRequest((new okhttp3.Request.Builder()).patch(requestBody), url, headers, parameters);
     }
 
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response put(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response put(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(data);
         return doRequest((new okhttp3.Request.Builder()).put(requestBody), url, headers, parameters);
     }
 
-    /**
-     * DELETE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response delete(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response delete(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(new okhttp3.Request.Builder().delete(), url, headers, parameters);
     }
 
-    /**
-     * CONNECT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response connect(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response connect(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneRequestBuilder(RequestMethod.CONNECT), url, headers, parameters);
     }
 
-    /**
-     * TRACE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response trace(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response trace(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneRequestBuilder(RequestMethod.TRACE), url, headers, parameters);
     }
 
-    /**
-     * COPY 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response copy(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response copy(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneRequestBuilder(RequestMethod.COPY), url, headers, parameters);
     }
 
-    /**
-     * MOVE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response move(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response move(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneRequestBuilder(RequestMethod.MOVE), url, headers, parameters);
     }
 
-    /**
-     * HEAD 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response head(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response head(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(new okhttp3.Request.Builder().head(), url, headers, parameters);
     }
 
-    /**
-     * OPTIONS 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response options(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response options(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneRequestBuilder(RequestMethod.OPTIONS), url, headers, parameters);
     }
 
-    /**
-     * LINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response link(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response link(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneRequestBuilder(RequestMethod.LINK), url, headers, parameters);
     }
 
-    /**
-     * UNLINK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlink(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response unlink(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneRequestBuilder(RequestMethod.UNLINK), url, headers, parameters);
     }
 
-    /**
-     * PURGE 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response purge(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response purge(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneRequestBuilder(RequestMethod.PURGE), url, headers, parameters);
     }
 
-    /**
-     * LOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response lock(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response lock(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneRequestBuilder(RequestMethod.LOCK), url, headers, parameters);
     }
 
-    /**
-     * UNLOCK 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response unlock(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response unlock(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneRequestBuilder(RequestMethod.UNLOCK), url, headers, parameters);
     }
 
-    /**
-     * PROPFIND 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response propfind(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response propfind(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneRequestBuilder(RequestMethod.PROPFIND), url, headers, parameters);
     }
 
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response proppatch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response proppatch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers)
+            throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException{
         final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(data);
         return doRequest(createNoneRequestBuilder(RequestMethod.PROPPATCH, requestBody), url, headers, parameters);
     }
 
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response report(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
+    public Response report(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(data);
         return doRequest(createNoneRequestBuilder(RequestMethod.REPORT, requestBody), url, headers, parameters);
     }
 
-    /**
-     * VIEW 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response view(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response view(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneRequestBuilder(RequestMethod.VIEW), url, headers, parameters);
     }
 
-    /**
-     * WRAPPED 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
     @Override
-    public Response wrapped(String url, Map<String, Object> parameters, List<Header> headers){
+    public Response wrapped(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException{
         return doRequest(createNoneRequestBuilder(RequestMethod.WRAPPED), url, headers, parameters);
     }
 
     protected Response doRequest(final okhttp3.Request.Builder requestBuilder, final String url, final List<Header>
-            headers, final Map<String, Object> parameters){
+            headers, final Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         final Configuration configuration = getConnectionManager().getConfiguration();
         final Request request = OkHttpRequestBuilder.create().setUrl(url).setParameters(parameters).setHeaders
                 (headers).build();
@@ -475,16 +262,33 @@ public class OkHttpClient extends AbstractHttpClient {
         }
 
         okhttp3.Request okHttpRequest = requestBuilder.url(request.getUrl()).headers(headersBuilder.build()).build();
+        okhttp3.Response httpResponse = null;
 
         try{
-            okhttp3.Response httpResponse = httpClient.newCall(okHttpRequest).execute();
+            httpResponse = httpClient.newCall(okHttpRequest).execute();
 
             return OkHttpResponseBuilder.create(httpResponse).build();
         }catch(IOException e){
             logger.error("Request({}) url: {} error.", okHttpRequest.method(), request.getUrl(), e);
-        }
 
-        return null;
+            if(e instanceof SocketTimeoutException){
+                String message = e.getMessage();
+
+                if(message.contains("connect timed out")){
+                    throw new ConnectTimeoutException(e.getMessage());
+                }else if(message.contains("Read timed out")){
+                    throw new ReadTimeoutException(e.getMessage());
+                }else{
+                    throw new RequestException(e.getMessage(), e);
+                }
+            }else{
+                throw new RequestException(e.getMessage(), e);
+            }
+        }finally{
+            if(httpResponse != null){
+                httpResponse.close();
+            }
+        }
     }
 
     protected static okhttp3.Request.Builder createNoneRequestBuilder(final RequestMethod requestMethod){

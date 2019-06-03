@@ -54,7 +54,7 @@ public class Configuration {
     /**
      * 读取超时时间，单位：毫秒
      */
-    private int readTimeout = 5000;
+    private int readTimeout = 3000;
 
     /**
      * 是否允许重定向

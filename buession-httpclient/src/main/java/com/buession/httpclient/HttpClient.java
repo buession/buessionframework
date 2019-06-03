@@ -29,6 +29,11 @@ import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.Response;
+import com.buession.httpclient.exception.ConnectTimeoutException;
+import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
+import com.buession.httpclient.exception.ReadTimeoutException;
+import com.buession.httpclient.exception.RequestAbortedException;
+import com.buession.httpclient.exception.RequestException;
 
 import java.net.URL;
 import java.util.List;
@@ -61,8 +66,21 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response get(String url);
+
+    Response get(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * GET 请求
@@ -71,8 +89,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response get(URL url);
+    Response get(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * GET 请求
@@ -83,8 +113,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response get(String url, List<Header> headers);
+    Response get(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * GET 请求
@@ -95,8 +137,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response get(URL url, List<Header> headers);
+    Response get(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * GET 请求
@@ -107,8 +161,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response get(String url, Map<String, Object> parameters);
+    Response get(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * GET 请求
@@ -119,8 +185,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response get(URL url, Map<String, Object> parameters);
+    Response get(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * GET 请求
@@ -133,8 +211,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response get(String url, Map<String, Object> parameters, List<Header> headers);
+    Response get(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * GET 请求
@@ -147,8 +237,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response get(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response get(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -157,8 +259,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(String url);
+    Response post(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -167,8 +281,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(URL url);
+    Response post(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -179,8 +305,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(String url, List<Header> headers);
+    Response post(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -191,8 +329,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(URL url, List<Header> headers);
+    Response post(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -203,8 +353,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(String url, Map<String, Object> parameters);
+    Response post(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -215,8 +377,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(URL url, Map<String, Object> parameters);
+    Response post(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -229,8 +403,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(String url, Map<String, Object> parameters, List<Header> headers);
+    Response post(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -243,8 +429,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response post(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -255,8 +453,20 @@ public interface HttpClient {
      *         请求数据
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(String url, RequestBody data);
+    Response post(String url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -267,8 +477,20 @@ public interface HttpClient {
      *         请求数据
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(URL url, RequestBody data);
+    Response post(URL url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -281,8 +503,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(String url, RequestBody data, List<Header> headers);
+    Response post(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -295,8 +529,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(URL url, RequestBody data, List<Header> headers);
+    Response post(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -309,8 +555,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(String url, RequestBody data, Map<String, Object> parameters);
+    Response post(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -323,8 +581,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(URL url, RequestBody data, Map<String, Object> parameters);
+    Response post(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * POST 请求
@@ -339,8 +609,21 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers);
+    Response post(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * POST 请求
@@ -355,8 +638,21 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response post(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers);
+    Response post(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * PATCH 请求
@@ -365,8 +661,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(String url);
+    Response patch(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
@@ -375,8 +683,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(URL url);
+    Response patch(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
@@ -387,8 +707,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(String url, List<Header> headers);
+    Response patch(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
@@ -399,8 +731,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(URL url, List<Header> headers);
+    Response patch(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
@@ -411,8 +755,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(String url, Map<String, Object> parameters);
+    Response patch(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
@@ -423,8 +779,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(URL url, Map<String, Object> parameters);
+    Response patch(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
@@ -437,8 +805,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(String url, Map<String, Object> parameters, List<Header> headers);
+    Response patch(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
@@ -451,8 +831,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response patch(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
@@ -463,8 +855,20 @@ public interface HttpClient {
      *         请求数据
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(String url, RequestBody data);
+    Response patch(String url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
@@ -475,8 +879,20 @@ public interface HttpClient {
      *         请求数据
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(URL url, RequestBody data);
+    Response patch(URL url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
@@ -489,8 +905,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(String url, RequestBody data, List<Header> headers);
+    Response patch(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
@@ -503,8 +931,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(URL url, RequestBody data, List<Header> headers);
+    Response patch(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
@@ -517,8 +957,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(String url, RequestBody data, Map<String, Object> parameters);
+    Response patch(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
@@ -531,219 +983,23 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response patch(URL url, RequestBody data, Map<String, Object> parameters);
+    Response patch(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response patch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers);
-
-    /**
-     * PATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response patch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
-    Response put(String url);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
-    Response put(URL url);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response put(String url, List<Header> headers);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response put(URL url, List<Header> headers);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
-    Response put(String url, Map<String, Object> parameters);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
-    Response put(URL url, Map<String, Object> parameters);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response put(String url, Map<String, Object> parameters, List<Header> headers);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response put(URL url, Map<String, Object> parameters, List<Header> headers);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
-    Response put(String url, RequestBody data);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
-    Response put(URL url, RequestBody data);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response put(String url, RequestBody data, List<Header> headers);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response put(URL url, RequestBody data, List<Header> headers);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
-    Response put(String url, RequestBody data, Map<String, Object> parameters);
-
-    /**
-     * PUT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
-    Response put(URL url, RequestBody data, Map<String, Object> parameters);
-
-    /**
-     * PUT 请求
      *
      * @param url
      *         请求 URL
@@ -755,8 +1011,394 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response put(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers);
+    Response patch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
+
+    /**
+     * PATCH 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     * @param parameters
+     *         请求参数
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response patch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param parameters
+     *         请求参数
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param parameters
+     *         请求参数
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param parameters
+     *         请求参数
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param parameters
+     *         请求参数
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(String url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(URL url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     * @param parameters
+     *         请求参数
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     * @param parameters
+     *         请求参数
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PUT 请求
@@ -771,8 +1413,50 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response put(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers);
+    Response put(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
+
+    /**
+     * PUT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     * @param parameters
+     *         请求参数
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response put(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * DELETE 请求
@@ -781,8 +1465,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response delete(String url);
+    Response delete(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * DELETE 请求
@@ -791,8 +1487,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response delete(URL url);
+    Response delete(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * DELETE 请求
@@ -803,8 +1511,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response delete(String url, List<Header> headers);
+    Response delete(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * DELETE 请求
@@ -815,8 +1535,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response delete(URL url, List<Header> headers);
+    Response delete(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * DELETE 请求
@@ -827,8 +1559,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response delete(String url, Map<String, Object> parameters);
+    Response delete(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * DELETE 请求
@@ -839,8 +1583,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response delete(URL url, Map<String, Object> parameters);
+    Response delete(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * DELETE 请求
@@ -853,8 +1609,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response delete(String url, Map<String, Object> parameters, List<Header> headers);
+    Response delete(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * DELETE 请求
@@ -867,8 +1635,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response delete(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response delete(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * CONNECT 请求
@@ -877,8 +1657,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response connect(String url);
+    Response connect(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * CONNECT 请求
@@ -887,8 +1679,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response connect(URL url);
+    Response connect(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * CONNECT 请求
@@ -899,8 +1703,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response connect(String url, List<Header> headers);
+    Response connect(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * CONNECT 请求
@@ -911,8 +1727,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response connect(URL url, List<Header> headers);
+    Response connect(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * CONNECT 请求
@@ -923,8 +1751,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response connect(String url, Map<String, Object> parameters);
+    Response connect(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * CONNECT 请求
@@ -935,8 +1775,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response connect(URL url, Map<String, Object> parameters);
+    Response connect(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * CONNECT 请求
@@ -949,8 +1801,21 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response connect(String url, Map<String, Object> parameters, List<Header> headers);
+    Response connect(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * CONNECT 请求
@@ -963,8 +1828,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response connect(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response connect(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * TRACE 请求
@@ -973,8 +1850,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response trace(String url);
+    Response trace(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * TRACE 请求
@@ -983,8 +1872,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response trace(URL url);
+    Response trace(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * TRACE 请求
@@ -995,8 +1896,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response trace(String url, List<Header> headers);
+    Response trace(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * TRACE 请求
@@ -1007,8 +1920,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response trace(URL url, List<Header> headers);
+    Response trace(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * TRACE 请求
@@ -1019,8 +1944,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response trace(String url, Map<String, Object> parameters);
+    Response trace(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * TRACE 请求
@@ -1031,8 +1968,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response trace(URL url, Map<String, Object> parameters);
+    Response trace(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * TRACE 请求
@@ -1045,8 +1994,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response trace(String url, Map<String, Object> parameters, List<Header> headers);
+    Response trace(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * TRACE 请求
@@ -1059,8 +2020,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response trace(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response trace(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * COPY 请求
@@ -1069,8 +2042,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response copy(String url);
+    Response copy(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * COPY 请求
@@ -1079,8 +2064,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response copy(URL url);
+    Response copy(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * COPY 请求
@@ -1091,8 +2088,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response copy(String url, List<Header> headers);
+    Response copy(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * COPY 请求
@@ -1103,8 +2112,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response copy(URL url, List<Header> headers);
+    Response copy(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * COPY 请求
@@ -1115,8 +2136,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response copy(String url, Map<String, Object> parameters);
+    Response copy(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * COPY 请求
@@ -1127,8 +2160,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response copy(URL url, Map<String, Object> parameters);
+    Response copy(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * COPY 请求
@@ -1141,8 +2186,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response copy(String url, Map<String, Object> parameters, List<Header> headers);
+    Response copy(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * COPY 请求
@@ -1155,8 +2212,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response copy(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response copy(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * MOVE 请求
@@ -1165,8 +2234,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response move(String url);
+    Response move(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * MOVE 请求
@@ -1175,8 +2256,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response move(URL url);
+    Response move(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * MOVE 请求
@@ -1187,8 +2280,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response move(String url, List<Header> headers);
+    Response move(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * MOVE 请求
@@ -1199,8 +2304,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response move(URL url, List<Header> headers);
+    Response move(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * MOVE 请求
@@ -1211,8 +2328,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response move(String url, Map<String, Object> parameters);
+    Response move(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * MOVE 请求
@@ -1223,8 +2352,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response move(URL url, Map<String, Object> parameters);
+    Response move(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * MOVE 请求
@@ -1237,8 +2378,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response move(String url, Map<String, Object> parameters, List<Header> headers);
+    Response move(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * MOVE 请求
@@ -1251,8 +2404,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response move(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response move(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * HEAD 请求
@@ -1261,8 +2426,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response head(String url);
+    Response head(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * HEAD 请求
@@ -1271,8 +2448,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response head(URL url);
+    Response head(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * HEAD 请求
@@ -1283,8 +2472,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response head(String url, List<Header> headers);
+    Response head(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * HEAD 请求
@@ -1295,8 +2496,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response head(URL url, List<Header> headers);
+    Response head(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * HEAD 请求
@@ -1307,8 +2520,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response head(String url, Map<String, Object> parameters);
+    Response head(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * HEAD 请求
@@ -1319,8 +2544,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response head(URL url, Map<String, Object> parameters);
+    Response head(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * HEAD 请求
@@ -1333,8 +2570,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response head(String url, Map<String, Object> parameters, List<Header> headers);
+    Response head(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * HEAD 请求
@@ -1347,8 +2596,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response head(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response head(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * OPTIONS 请求
@@ -1357,8 +2618,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response options(String url);
+    Response options(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * OPTIONS 请求
@@ -1367,8 +2640,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response options(URL url);
+    Response options(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * OPTIONS 请求
@@ -1379,8 +2664,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response options(String url, List<Header> headers);
+    Response options(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * OPTIONS 请求
@@ -1391,8 +2688,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response options(URL url, List<Header> headers);
+    Response options(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * OPTIONS 请求
@@ -1403,8 +2712,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response options(String url, Map<String, Object> parameters);
+    Response options(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * OPTIONS 请求
@@ -1415,8 +2736,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response options(URL url, Map<String, Object> parameters);
+    Response options(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * OPTIONS 请求
@@ -1429,8 +2762,21 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response options(String url, Map<String, Object> parameters, List<Header> headers);
+    Response options(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * OPTIONS 请求
@@ -1443,8 +2789,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response options(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response options(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * LINK 请求
@@ -1453,8 +2811,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response link(String url);
+    Response link(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * LINK 请求
@@ -1463,8 +2833,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response link(URL url);
+    Response link(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * LINK 请求
@@ -1475,8 +2857,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response link(String url, List<Header> headers);
+    Response link(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * LINK 请求
@@ -1487,8 +2881,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response link(URL url, List<Header> headers);
+    Response link(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * LINK 请求
@@ -1499,8 +2905,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response link(String url, Map<String, Object> parameters);
+    Response link(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * LINK 请求
@@ -1511,8 +2929,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response link(URL url, Map<String, Object> parameters);
+    Response link(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * LINK 请求
@@ -1525,8 +2955,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response link(String url, Map<String, Object> parameters, List<Header> headers);
+    Response link(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * LINK 请求
@@ -1539,8 +2981,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response link(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response link(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * UNLINK 请求
@@ -1549,8 +3003,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlink(String url);
+    Response unlink(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * UNLINK 请求
@@ -1559,8 +3025,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlink(URL url);
+    Response unlink(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * UNLINK 请求
@@ -1571,8 +3049,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlink(String url, List<Header> headers);
+    Response unlink(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * UNLINK 请求
@@ -1583,8 +3073,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlink(URL url, List<Header> headers);
+    Response unlink(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * UNLINK 请求
@@ -1595,8 +3097,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlink(String url, Map<String, Object> parameters);
+    Response unlink(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * UNLINK 请求
@@ -1607,8 +3121,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlink(URL url, Map<String, Object> parameters);
+    Response unlink(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * UNLINK 请求
@@ -1621,8 +3147,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlink(String url, Map<String, Object> parameters, List<Header> headers);
+    Response unlink(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * UNLINK 请求
@@ -1635,8 +3173,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlink(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response unlink(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PURGE 请求
@@ -1645,8 +3195,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response purge(String url);
+    Response purge(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * PURGE 请求
@@ -1655,8 +3217,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response purge(URL url);
+    Response purge(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * PURGE 请求
@@ -1667,8 +3241,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response purge(String url, List<Header> headers);
+    Response purge(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PURGE 请求
@@ -1679,8 +3265,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response purge(URL url, List<Header> headers);
+    Response purge(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PURGE 请求
@@ -1691,8 +3289,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response purge(String url, Map<String, Object> parameters);
+    Response purge(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PURGE 请求
@@ -1703,8 +3313,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response purge(URL url, Map<String, Object> parameters);
+    Response purge(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PURGE 请求
@@ -1717,8 +3339,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response purge(String url, Map<String, Object> parameters, List<Header> headers);
+    Response purge(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PURGE 请求
@@ -1731,8 +3365,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response purge(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response purge(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * LOCK 请求
@@ -1741,8 +3387,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response lock(String url);
+    Response lock(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * LOCK 请求
@@ -1751,8 +3409,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response lock(URL url);
+    Response lock(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * LOCK 请求
@@ -1763,8 +3433,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response lock(String url, List<Header> headers);
+    Response lock(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * LOCK 请求
@@ -1775,8 +3457,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response lock(URL url, List<Header> headers);
+    Response lock(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * LOCK 请求
@@ -1787,8 +3481,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response lock(String url, Map<String, Object> parameters);
+    Response lock(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * LOCK 请求
@@ -1799,8 +3505,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response lock(URL url, Map<String, Object> parameters);
+    Response lock(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * LOCK 请求
@@ -1813,8 +3531,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response lock(String url, Map<String, Object> parameters, List<Header> headers);
+    Response lock(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * LOCK 请求
@@ -1827,8 +3557,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response lock(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response lock(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * UNLOCK 请求
@@ -1837,8 +3579,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlock(String url);
+    Response unlock(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * UNLOCK 请求
@@ -1847,8 +3601,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlock(URL url);
+    Response unlock(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * UNLOCK 请求
@@ -1859,8 +3625,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlock(String url, List<Header> headers);
+    Response unlock(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * UNLOCK 请求
@@ -1871,8 +3649,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlock(URL url, List<Header> headers);
+    Response unlock(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * UNLOCK 请求
@@ -1883,8 +3673,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlock(String url, Map<String, Object> parameters);
+    Response unlock(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * UNLOCK 请求
@@ -1895,8 +3697,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlock(URL url, Map<String, Object> parameters);
+    Response unlock(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * UNLOCK 请求
@@ -1909,8 +3723,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlock(String url, Map<String, Object> parameters, List<Header> headers);
+    Response unlock(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * UNLOCK 请求
@@ -1923,8 +3749,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response unlock(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response unlock(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPFIND 请求
@@ -1933,8 +3771,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response propfind(String url);
+    Response propfind(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPFIND 请求
@@ -1943,8 +3793,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response propfind(URL url);
+    Response propfind(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * PROPFIND 请求
@@ -1955,8 +3817,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response propfind(String url, List<Header> headers);
+    Response propfind(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPFIND 请求
@@ -1967,8 +3841,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response propfind(URL url, List<Header> headers);
+    Response propfind(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPFIND 请求
@@ -1979,8 +3865,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response propfind(String url, Map<String, Object> parameters);
+    Response propfind(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPFIND 请求
@@ -1991,8 +3889,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response propfind(URL url, Map<String, Object> parameters);
+    Response propfind(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPFIND 请求
@@ -2005,8 +3915,21 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response propfind(String url, Map<String, Object> parameters, List<Header> headers);
+    Response propfind(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * PROPFIND 请求
@@ -2019,8 +3942,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response propfind(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response propfind(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * VIEW 请求
@@ -2029,8 +3964,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response view(String url);
+    Response view(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * VIEW 请求
@@ -2039,8 +3986,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response view(URL url);
+    Response view(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * VIEW 请求
@@ -2051,8 +4010,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response view(String url, List<Header> headers);
+    Response view(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * VIEW 请求
@@ -2063,8 +4034,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response view(URL url, List<Header> headers);
+    Response view(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * VIEW 请求
@@ -2075,8 +4058,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response view(String url, Map<String, Object> parameters);
+    Response view(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * VIEW 请求
@@ -2087,8 +4082,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response view(URL url, Map<String, Object> parameters);
+    Response view(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * VIEW 请求
@@ -2101,8 +4108,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response view(String url, Map<String, Object> parameters, List<Header> headers);
+    Response view(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * VIEW 请求
@@ -2115,8 +4134,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response view(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response view(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2125,8 +4156,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(String url);
+    Response proppatch(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2135,8 +4178,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(URL url);
+    Response proppatch(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2147,8 +4202,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(String url, List<Header> headers);
+    Response proppatch(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2159,8 +4226,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(URL url, List<Header> headers);
+    Response proppatch(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2171,8 +4250,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(String url, Map<String, Object> parameters);
+    Response proppatch(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2183,8 +4274,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(URL url, Map<String, Object> parameters);
+    Response proppatch(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2197,8 +4300,21 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(String url, Map<String, Object> parameters, List<Header> headers);
+    Response proppatch(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2211,8 +4327,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2223,8 +4351,20 @@ public interface HttpClient {
      *         请求数据
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(String url, RequestBody data);
+    Response proppatch(String url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2235,8 +4375,20 @@ public interface HttpClient {
      *         请求数据
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(URL url, RequestBody data);
+    Response proppatch(URL url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2249,8 +4401,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(String url, RequestBody data, List<Header> headers);
+    Response proppatch(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2263,8 +4427,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(URL url, RequestBody data, List<Header> headers);
+    Response proppatch(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2277,8 +4453,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(String url, RequestBody data, Map<String, Object> parameters);
+    Response proppatch(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
@@ -2291,219 +4479,23 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response proppatch(URL url, RequestBody data, Map<String, Object> parameters);
+    Response proppatch(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response proppatch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers);
-
-    /**
-     * PROPPATCH 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response proppatch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
-    Response report(String url);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     *
-     * @return Response {@link Response}
-     */
-    Response report(URL url);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response report(String url, List<Header> headers);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response report(URL url, List<Header> headers);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
-    Response report(String url, Map<String, Object> parameters);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
-    Response report(URL url, Map<String, Object> parameters);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response report(String url, Map<String, Object> parameters, List<Header> headers);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param parameters
-     *         请求参数
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response report(URL url, Map<String, Object> parameters, List<Header> headers);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
-    Response report(String url, RequestBody data);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     *
-     * @return Response {@link Response}
-     */
-    Response report(URL url, RequestBody data);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response report(String url, RequestBody data, List<Header> headers);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param headers
-     *         请求头
-     *
-     * @return Response {@link Response}
-     */
-    Response report(URL url, RequestBody data, List<Header> headers);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
-    Response report(String url, RequestBody data, Map<String, Object> parameters);
-
-    /**
-     * REPORT 请求
-     *
-     * @param url
-     *         请求 URL
-     * @param data
-     *         请求数据
-     * @param parameters
-     *         请求参数
-     *
-     * @return Response {@link Response}
-     */
-    Response report(URL url, RequestBody data, Map<String, Object> parameters);
-
-    /**
-     * REPORT 请求
      *
      * @param url
      *         请求 URL
@@ -2515,8 +4507,394 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response report(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers);
+    Response proppatch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
+
+    /**
+     * PROPPATCH 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     * @param parameters
+     *         请求参数
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response proppatch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(String url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param parameters
+     *         请求参数
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param parameters
+     *         请求参数
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param parameters
+     *         请求参数
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param parameters
+     *         请求参数
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(String url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(URL url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     * @param parameters
+     *         请求参数
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     * @param parameters
+     *         请求参数
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * REPORT 请求
@@ -2531,8 +4909,50 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response report(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers);
+    Response report(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
+
+    /**
+     * REPORT 请求
+     *
+     * @param url
+     *         请求 URL
+     * @param data
+     *         请求数据
+     * @param parameters
+     *         请求参数
+     * @param headers
+     *         请求头
+     *
+     * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
+     */
+    Response report(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * WRAPPED 请求
@@ -2541,8 +4961,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response wrapped(String url);
+    Response wrapped(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * WRAPPED 请求
@@ -2551,8 +4983,20 @@ public interface HttpClient {
      *         请求 URL
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response wrapped(URL url);
+    Response wrapped(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * WRAPPED 请求
@@ -2563,8 +5007,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response wrapped(String url, List<Header> headers);
+    Response wrapped(String url, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * WRAPPED 请求
@@ -2575,8 +5031,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response wrapped(URL url, List<Header> headers);
+    Response wrapped(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+            ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * WRAPPED 请求
@@ -2587,8 +5055,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response wrapped(String url, Map<String, Object> parameters);
+    Response wrapped(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * WRAPPED 请求
@@ -2599,8 +5079,20 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response wrapped(URL url, Map<String, Object> parameters);
+    Response wrapped(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * WRAPPED 请求
@@ -2613,8 +5105,21 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response wrapped(String url, Map<String, Object> parameters, List<Header> headers);
+    Response wrapped(String url, Map<String, Object> parameters, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * WRAPPED 请求
@@ -2627,8 +5132,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers);
+    Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * HTTP 请求
@@ -2639,8 +5156,20 @@ public interface HttpClient {
      *         请求方法
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(String url, RequestMethod requestMethod);
+    Response request(String url, RequestMethod requestMethod) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * HTTP 请求
@@ -2651,8 +5180,20 @@ public interface HttpClient {
      *         请求方法
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(URL url, RequestMethod requestMethod);
+    Response request(URL url, RequestMethod requestMethod) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * HTTP 请求
@@ -2665,8 +5206,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(String url, RequestMethod requestMethod, List<Header> headers);
+    Response request(String url, RequestMethod requestMethod, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * HTTP 请求
@@ -2679,8 +5232,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(URL url, RequestMethod requestMethod, List<Header> headers);
+    Response request(URL url, RequestMethod requestMethod, List<Header> headers) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * HTTP 请求
@@ -2693,8 +5258,21 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters);
+    Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * HTTP 请求
@@ -2707,8 +5285,21 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters);
+    Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * HTTP 请求
@@ -2723,8 +5314,21 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers);
+    Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers)
+            throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * HTTP 请求
@@ -2739,8 +5343,21 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers);
+    Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header> headers)
+            throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * HTTP 请求
@@ -2753,8 +5370,20 @@ public interface HttpClient {
      *         请求数据
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(String url, RequestMethod requestMethod, RequestBody data);
+    Response request(String url, RequestMethod requestMethod, RequestBody data) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * HTTP 请求
@@ -2767,8 +5396,20 @@ public interface HttpClient {
      *         请求数据
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(URL url, RequestMethod requestMethod, RequestBody data);
+    Response request(URL url, RequestMethod requestMethod, RequestBody data) throws ConnectTimeoutException,
+            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException;
 
     /**
      * HTTP 请求
@@ -2783,8 +5424,21 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(String url, RequestMethod requestMethod, RequestBody data, List<Header> headers);
+    Response request(String url, RequestMethod requestMethod, RequestBody data, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * HTTP 请求
@@ -2799,8 +5453,21 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(URL url, RequestMethod requestMethod, RequestBody data, List<Header> headers);
+    Response request(URL url, RequestMethod requestMethod, RequestBody data, List<Header> headers) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * HTTP 请求
@@ -2815,8 +5482,21 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(String url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters);
+    Response request(String url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters)
+            throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * HTTP 请求
@@ -2831,8 +5511,21 @@ public interface HttpClient {
      *         请求参数
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
-    Response request(URL url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters);
+    Response request(URL url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters) throws
+            ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
+            RequestException;
 
     /**
      * HTTP 请求
@@ -2849,9 +5542,21 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
     Response request(String url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters,
-                     List<Header> headers);
+                     List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
     /**
      * HTTP 请求
@@ -2868,8 +5573,20 @@ public interface HttpClient {
      *         请求头
      *
      * @return Response {@link Response}
+     *
+     * @throws ConnectTimeoutException
+     *         连接超时异常
+     * @throws ConnectionPoolTimeoutException
+     *         连接池异常
+     * @throws ReadTimeoutException
+     *         读取超时异常
+     * @throws RequestAbortedException
+     *         请求终止异常
+     * @throws RequestException
+     *         请求异常
      */
     Response request(URL url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters,
-                     List<Header> headers);
+                     List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException;
 
 }

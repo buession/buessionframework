@@ -29,8 +29,14 @@ package com.buession.httpclient.core;
  */
 public class HttpHeader {
 
+    public final static String HOST = "Host";
+
     public final static String CONTENT_TYPE = "Content-Type";
 
+    public final static String CONTENT_LENGTH = "Content-Length";
+
     public final static String CONTENT_ENCODING = "Content-Encoding";
+
+    public final static String USER_AGENT = "User-Agent";
 
 }
