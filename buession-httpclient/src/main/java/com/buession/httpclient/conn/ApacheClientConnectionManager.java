@@ -85,9 +85,9 @@ public class ApacheClientConnectionManager extends AbstractConnectionManager<Htt
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
 
         //最大连接数
-        connectionManager.setMaxTotal(getConfiguration().getMaxTotal());
+        connectionManager.setMaxTotal(getConfiguration().getMaxConnections());
         //并发数
-        connectionManager.setDefaultMaxPerRoute(getConfiguration().getDefaultMaxPerRoute());
+        connectionManager.setDefaultMaxPerRoute(getConfiguration().getMaxPerRoute());
 
         return connectionManager;
     }

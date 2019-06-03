@@ -34,12 +34,15 @@ public class Configuration {
     /**
      * 最大连接数
      */
-    private int maxTotal = 5000;
+    private int maxConnections = 5000;
 
     /**
      * 每个路由的最大连接数
      */
-    private int defaultMaxPerRoute = 500;
+    private int maxPerRoute = 500;
+
+
+    private int idleConnectionTime = 60 * 1000;
 
     /**
      * 连接超时时间，单位：毫秒
@@ -87,18 +90,18 @@ public class Configuration {
      *
      * @return 最大连接数
      */
-    public int getMaxTotal(){
-        return maxTotal;
+    public int getMaxConnections(){
+        return maxConnections;
     }
 
     /**
      * 设置最大连接数
      *
-     * @param maxTotal
+     * @param maxConnections
      *         最大连接数
      */
-    public void setMaxTotal(int maxTotal){
-        this.maxTotal = maxTotal;
+    public void setMaxConnections(int maxConnections){
+        this.maxConnections = maxConnections;
     }
 
     /**
@@ -106,18 +109,37 @@ public class Configuration {
      *
      * @return 每个路由的最大连接数
      */
-    public int getDefaultMaxPerRoute(){
-        return defaultMaxPerRoute;
+    public int getMaxPerRoute(){
+        return maxPerRoute;
     }
 
     /**
      * 设置每个路由的最大连接数
      *
-     * @param defaultMaxPerRoute
+     * @param maxPerRoute
      *         每个路由的最大连接数
      */
-    public void setDefaultMaxPerRoute(int defaultMaxPerRoute){
-        this.defaultMaxPerRoute = defaultMaxPerRoute;
+    public void setMaxPerRoute(int maxPerRoute){
+        this.maxPerRoute = maxPerRoute;
+    }
+
+    /**
+     * 获取 IDLE 连接超时，单位：毫秒
+     *
+     * @return IDLE 连接超时
+     */
+    public long getIdleConnectionTime(){
+        return idleConnectionTime;
+    }
+
+    /**
+     * 设置 IDLE 连接超时
+     *
+     * @param idleConnectionTime
+     *         IDLE 连接超时，单位：毫秒
+     */
+    public void setIdleConnectionTime(int idleConnectionTime){
+        this.idleConnectionTime = idleConnectionTime;
     }
 
     /**

@@ -87,8 +87,8 @@ public class OkHttpClientConnectionManager extends AbstractConnectionManager<com
         com.buession.httpclient.okhttp.OkHttpClientConnectionManager connectionManager = new com.buession.httpclient
                 .okhttp.OkHttpClientConnectionManager();
 
-        connectionManager.setConnectionPool(new ConnectionPool(getConfiguration().getMaxTotal(), 5, TimeUnit
-                .MILLISECONDS));
+        connectionManager.setConnectionPool(new ConnectionPool(getConfiguration().getMaxConnections(),
+                getConfiguration().getIdleConnectionTime(), TimeUnit.MILLISECONDS));
 
         return connectionManager;
     }
