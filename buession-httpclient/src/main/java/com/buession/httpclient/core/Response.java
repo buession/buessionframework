@@ -46,6 +46,8 @@ public class Response {
 
     private String body;
 
+    private long contentLength;
+
     public ProtocolVersion getProtocolVersion(){
         return protocolVersion;
     }
@@ -102,15 +104,22 @@ public class Response {
         this.body = body;
     }
 
+    public long getContentLength(){
+        return contentLength;
+    }
+
+    public void setContentLength(long contentLength){
+        this.contentLength = contentLength;
+    }
+
     public boolean isSuccessful(){
         return statusCode >= 200 && statusCode < 300;
     }
 
     @Override
     public String toString(){
-        return "Response{" + "isSuccessful=" + isSuccessful() + ", protocolVersion=" + protocolVersion + ", " +
-                "statusCode=" + statusCode + ", statusText='" + statusText + '\'' + ", statusLine=" + statusLine + "," +
-                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + " headers="
-                + headers + "," + " " + "inputStream=" + inputStream + ", " + "body='" + body + '\'' + '}';
+        return "Response{" + "protocolVersion=" + protocolVersion + ", statusCode=" + statusCode + ", statusText='" +
+                statusText + '\'' + ", statusLine=" + statusLine + ", headers=" + headers + ", inputStream=" +
+                inputStream + ", body='" + body + '\'' + ", contentLength=" + contentLength + '}';
     }
 }

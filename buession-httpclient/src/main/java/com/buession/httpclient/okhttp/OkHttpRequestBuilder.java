@@ -24,17 +24,18 @@
  */
 package com.buession.httpclient.okhttp;
 
-import com.buession.httpclient.core.ContentType;
-import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.HttpHeader;
-import com.buession.httpclient.core.RequestBodyElement;
+import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
+import com.buession.httpclient.core.EncodedFormRequestBody;
+import com.buession.httpclient.core.ObjectFormRequestBody;
+import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.helper.AbstractRequestBuilder;
 import com.buession.httpclient.helper.RequestBuilder;
+import com.buession.httpclient.okhttp.convert.ChunkedInputStreamRequestBodyConvert;
+import com.buession.httpclient.okhttp.convert.EncodedFormRequestBodyConvert;
+import com.buession.httpclient.okhttp.convert.ObjectRequestBodyConvert;
+import com.buession.httpclient.okhttp.convert.RepeatableInputStreamRequestBodyConvert;
 import okhttp3.FormBody;
-import okhttp3.MediaType;
-
-import java.util.List;
 
 /**
  * @author Yong.Teng
@@ -50,48 +51,26 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder {
         return requestBuilder;
     }
 
-    public final static okhttp3.RequestBody buildRequestBody(List<Header> headers, RequestBody data){
-        String contentType = null;
-
-        if(headers != null){
-            for(Header header : headers){
-                if(HttpHeader.CONTENT_TYPE.equalsIgnoreCase(header.getName())){
-                    contentType = header.getValue();
-                }
-            }
+    public final static okhttp3.RequestBody buildRequestBody(RequestBody data){
+        if(data == null){
+            return new FormBody.Builder().build();
         }
 
-        if(data != null){
-            if(ContentType.APPLICATION_JSON.getMimeType().equalsIgnoreCase(contentType) || ContentType.TEXT_JSON
-                    .getMimeType().equalsIgnoreCase(contentType)){
-                return okhttp3.RequestBody.create(MediaType.parse(ContentType.APPLICATION_JSON.valueOf()),
-                        nameValuePair2JSONString(data));
-            }else if(ContentType.TEXT_PLAIN.getMimeType().equalsIgnoreCase(contentType)){
-                return okhttp3.RequestBody.create(MediaType.parse(ContentType.TEXT_PLAIN.valueOf()),
-                        nameValuePair2JSONString(data));
-            }else{
-                return parseFormBody(data);
-            }
+        if(data instanceof EncodedFormRequestBody){
+            EncodedFormRequestBodyConvert convert = new EncodedFormRequestBodyConvert();
+            return convert.convert((EncodedFormRequestBody) data);
+        }else if(data instanceof ChunkedInputStreamRequestBody){
+            ChunkedInputStreamRequestBodyConvert convert = new ChunkedInputStreamRequestBodyConvert();
+            return convert.convert((ChunkedInputStreamRequestBody) data);
+        }else if(data instanceof RepeatableInputStreamRequestBody){
+            RepeatableInputStreamRequestBodyConvert convert = new RepeatableInputStreamRequestBodyConvert();
+            return convert.convert((RepeatableInputStreamRequestBody) data);
+        }else if(data instanceof ObjectFormRequestBody){
+            ObjectRequestBodyConvert convert = new ObjectRequestBodyConvert();
+            return convert.convert((ObjectFormRequestBody) data);
         }else{
             return new FormBody.Builder().build();
         }
-    }
-
-    private static FormBody parseFormBody(final RequestBody requestBody){
-        if(requestBody == null){
-            return null;
-        }
-
-        final List<RequestBodyElement> data = requestBody.build();
-        final FormBody.Builder formBodyBuilder = new FormBody.Builder();
-
-        for(RequestBodyElement requestBodyElement : data){
-            String value = requestBodyElement.getValue() == null ? "" : String.valueOf(requestBodyElement.getValue());
-
-            formBodyBuilder.add(requestBodyElement.getName(), value);
-        }
-
-        return formBodyBuilder.build();
     }
 
 }

@@ -22,25 +22,40 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core;
+package com.buession.httpclient.exception;
+
+import com.buession.httpclient.core.RequestMethod;
 
 /**
  * @author Yong.Teng
  */
-public interface RequestBody<T> {
+public class UnsupportedRequestMethodException extends Exception {
 
-    ContentType getContentType();
+    public UnsupportedRequestMethodException(){
+    }
 
-    Header getContentEncoding();
+    public UnsupportedRequestMethodException(String message){
+        super(message);
+    }
 
-    long getContentLength();
+    public UnsupportedRequestMethodException(String message, Throwable cause){
+        super(message, cause);
+    }
 
-    T getContent();
+    public UnsupportedRequestMethodException(RequestMethod method){
+        this("Unsupported HTTP Method '" + method + "'.");
+    }
 
-    boolean isRepeatable();
+    public UnsupportedRequestMethodException(Throwable cause){
+        super(cause);
+    }
 
-    boolean isChunked();
+    public UnsupportedRequestMethodException(RequestMethod method, Throwable cause){
+        this("Unsupported HTTP Method '" + method + "'.", cause);
+    }
 
-    boolean isStreaming();
-
+    public UnsupportedRequestMethodException(String message, Throwable cause, boolean enableSuppression, boolean
+            writableStackTrace){
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

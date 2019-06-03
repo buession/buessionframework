@@ -22,57 +22,59 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.helper;
+package com.buession.httpclient.core;
 
-import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.Request;
-import com.buession.httpclient.utils.URLUtils;
-
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRequestBuilder implements RequestBuilder {
+public class EncodedFormRequestBody extends AbstractRequestBody<List<RequestBodyElement>> {
 
-    protected Request request = new Request();
+    public final static ContentType CONTENT_TYPE = ContentType.APPLICATION_FORM_URLENCODED;
 
-    private String url;
+    public EncodedFormRequestBody(List<RequestBodyElement> content, long contentLength){
+        super(CONTENT_TYPE, content, contentLength);
+    }
 
-    private Map<String, Object> parameters;
+    public EncodedFormRequestBody(Header contentEncoding, List<RequestBodyElement> content, long contentLength){
+        super(CONTENT_TYPE, contentEncoding, content, contentLength);
+    }
 
-    @Override
-    public RequestBuilder setUrl(String url){
-        this.url = url;
-        return this;
+    public EncodedFormRequestBody(List<RequestBodyElement> content, long contentLength, Charset charset){
+        super(new ContentType(CONTENT_TYPE.getMimeType(), charset), content, contentLength);
+    }
+
+    public EncodedFormRequestBody(Header contentEncoding, List<RequestBodyElement> content, long contentLength,
+                                  Charset charset){
+        super(new ContentType(CONTENT_TYPE.getMimeType(), charset), contentEncoding, content, contentLength);
+    }
+
+    public void addRequestBodyElement(RequestBodyElement requestBodyElement){
+        if(getContent() == null){
+            setContent(new ArrayList<>(1));
+        }
+
+        getContent().add(requestBodyElement);
+    }
+
+    public void addRequestBodyElement(String name, String value){
+        if(getContent() == null){
+            setContent(new ArrayList<>(1));
+        }
+
+        getContent().add(new RequestBodyElement(name, value));
     }
 
     @Override
-    public RequestBuilder setHeaders(List<Header> headers){
-        request.setHeaders(headers);
-        return this;
+    public boolean isRepeatable(){
+        return true;
     }
 
     @Override
-    public RequestBuilder setParameters(Map<String, Object> parameters){
-        this.parameters = parameters;
-        return this;
+    public boolean isStreaming(){
+        return false;
     }
-
-    @Override
-    public RequestBuilder setNameValuePairs(RequestBody requestBody){
-        request.setRequestBody(requestBody);
-        return this;
-    }
-
-    @Override
-    public Request build(){
-        final String requestUrl = URLUtils.determineRequestUrl(url, parameters);
-
-        request.setUrl(requestUrl);
-        return request;
-    }
-
 }

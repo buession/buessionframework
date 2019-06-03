@@ -24,6 +24,7 @@
  */
 package com.buession.httpclient.utils;
 
+import com.buession.core.validator.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +83,7 @@ public class URLUtils {
 
     public static String parametersToQueryString(Map<String, Object> parameters, String encoding) throws
             UnsupportedEncodingException{
-        if(parameters == null || parameters.isEmpty()){
+        if(Validate.isEmpty(parameters)){
             return null;
         }
 
@@ -120,7 +121,7 @@ public class URLUtils {
 
         sb.append(url);
 
-        if(parameters != null && parameters.isEmpty() == false){
+        if(Validate.isEmpty(parameters) == false){
             try{
                 final String queryString = parametersToQueryString(parameters, StandardCharsets.UTF_8);
 

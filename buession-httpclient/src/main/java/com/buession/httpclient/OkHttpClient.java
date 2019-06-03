@@ -112,7 +112,7 @@ public class OkHttpClient extends AbstractHttpClient {
      */
     @Override
     public Response post(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
-        final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(headers, data);
+        final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(data);
         return doRequest((new okhttp3.Request.Builder()).post(requestBody), url, headers, parameters);
     }
 
@@ -132,7 +132,7 @@ public class OkHttpClient extends AbstractHttpClient {
      */
     @Override
     public Response patch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
-        final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(headers, data);
+        final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(data);
         return doRequest((new okhttp3.Request.Builder()).patch(requestBody), url, headers, parameters);
     }
 
@@ -152,7 +152,7 @@ public class OkHttpClient extends AbstractHttpClient {
      */
     @Override
     public Response put(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
-        final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(headers, data);
+        final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(data);
         return doRequest((new okhttp3.Request.Builder()).put(requestBody), url, headers, parameters);
     }
 
@@ -393,7 +393,7 @@ public class OkHttpClient extends AbstractHttpClient {
      */
     @Override
     public Response proppatch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
-        final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(headers, data);
+        final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(data);
         return doRequest(createNoneRequestBuilder(RequestMethod.PROPPATCH, requestBody), url, headers, parameters);
     }
 
@@ -413,7 +413,7 @@ public class OkHttpClient extends AbstractHttpClient {
      */
     @Override
     public Response report(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
-        final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(headers, data);
+        final okhttp3.RequestBody requestBody = OkHttpRequestBuilder.buildRequestBody(data);
         return doRequest(createNoneRequestBuilder(RequestMethod.REPORT, requestBody), url, headers, parameters);
     }
 

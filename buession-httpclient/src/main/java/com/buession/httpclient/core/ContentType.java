@@ -25,23 +25,37 @@
 package com.buession.httpclient.core;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Yong.Teng
  */
-public enum ContentType {
+public final class ContentType {
 
-    APPLICATION_JSON("application/json", Charset.defaultCharset()),
+    public final static ContentType APPLICATION_OBJECT_STREAM = new ContentType("application/octet-stream",
+            StandardCharsets.ISO_8859_1);
 
-    TEXT_JSON("text/json", Charset.defaultCharset()),
+    public final static ContentType APPLICATION_JSON = new ContentType("application/json", StandardCharsets.UTF_8);
 
-    TEXT_PLAIN("text/plain", Charset.defaultCharset());
+    public final static ContentType TEXT_JSON = new ContentType("text/json", StandardCharsets.UTF_8);
+
+    public final static ContentType TEXT_PLAIN = new ContentType("text/plain", Charset.defaultCharset());
+
+    public final static ContentType APPLICATION_FORM_URLENCODED = new ContentType
+            ("application/x-www-form-urlencoded", StandardCharsets.ISO_8859_1);
+
+    public final static ContentType MULTIPART_FORM_DATA = new ContentType("multipart/form-data", StandardCharsets
+            .ISO_8859_1);
 
     private String mimeType;
 
     private Charset charset;
 
-    ContentType(String mimeType, Charset charset){
+    public ContentType(String mimeType){
+        this.mimeType = mimeType;
+    }
+
+    public ContentType(String mimeType, Charset charset){
         this.mimeType = mimeType;
         this.charset = charset;
     }
@@ -56,6 +70,20 @@ public enum ContentType {
 
     public String valueOf(){
         return valueOf(this);
+    }
+
+    @Override
+    public String toString(){
+        StringBuffer sb = new StringBuffer();
+
+        sb.append(mimeType);
+
+        if(charset != null){
+            sb.append("; charset=");
+            sb.append(charset.name());
+        }
+
+        return sb.toString();
     }
 
     public final static String valueOf(ContentType contentType){

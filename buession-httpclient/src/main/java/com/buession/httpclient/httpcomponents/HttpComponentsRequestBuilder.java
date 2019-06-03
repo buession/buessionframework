@@ -24,22 +24,19 @@
  */
 package com.buession.httpclient.httpcomponents;
 
-import com.buession.httpclient.core.ContentType;
-import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.RequestBodyElement;
+import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
+import com.buession.httpclient.core.EncodedFormRequestBody;
+import com.buession.httpclient.core.ObjectFormRequestBody;
+import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.helper.AbstractRequestBuilder;
 import com.buession.httpclient.helper.RequestBuilder;
+import com.buession.httpclient.httpcomponents.convert.ChunkedInputStreamRequestBodyConvert;
+import com.buession.httpclient.httpcomponents.convert.EncodedFormRequestBodyConvert;
+import com.buession.httpclient.httpcomponents.convert.ObjectRequestBodyConvert;
+import com.buession.httpclient.httpcomponents.convert.RepeatableInputStreamRequestBodyConvert;
 import org.apache.http.HttpEntity;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
-
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Yong.Teng
@@ -55,47 +52,26 @@ public class HttpComponentsRequestBuilder extends AbstractRequestBuilder {
         return requestBuilder;
     }
 
-    public final static HttpEntity buildRequestBody(List<Header> headers, RequestBody data){
-        String contentType = null;
-
-        if(headers != null){
-            for(Header header : headers){
-                if(HTTP.CONTENT_TYPE.equalsIgnoreCase(header.getName())){
-                    contentType = header.getValue();
-                }
-            }
-        }
-
-        if(data != null){
-            if(ContentType.APPLICATION_JSON.getMimeType().equalsIgnoreCase(contentType) || ContentType.TEXT_JSON
-                    .getMimeType().equalsIgnoreCase(contentType)){
-                return new StringEntity(nameValuePair2JSONString(data), org.apache.http.entity.ContentType
-                        .APPLICATION_JSON);
-            }else if(ContentType.TEXT_PLAIN.getMimeType().equalsIgnoreCase(contentType)){
-                return new StringEntity(nameValuePair2JSONString(data), org.apache.http.entity.ContentType.TEXT_PLAIN);
-            }else{
-                return new UrlEncodedFormEntity(parseBasicNameValuePair(data), Charset.defaultCharset());
-            }
-        }
-
-        return null;
-    }
-
-    private final static List<org.apache.http.NameValuePair> parseBasicNameValuePair(final RequestBody requestBody){
-        if(requestBody == null){
+    public final static HttpEntity buildRequestBody(RequestBody data){
+        if(data == null){
             return null;
         }
 
-        final List<RequestBodyElement> data = requestBody.build();
-        final List<org.apache.http.NameValuePair> result = new ArrayList<>(data.size());
-
-        for(RequestBodyElement requestBodyElement : data){
-            String value = requestBodyElement.getValue() == null ? "" : String.valueOf(requestBodyElement.getValue());
-
-            result.add(new BasicNameValuePair(requestBodyElement.getName(), value));
+        if(data instanceof EncodedFormRequestBody){
+            EncodedFormRequestBodyConvert convert = new EncodedFormRequestBodyConvert();
+            return convert.convert((EncodedFormRequestBody) data);
+        }else if(data instanceof ChunkedInputStreamRequestBody){
+            ChunkedInputStreamRequestBodyConvert convert = new ChunkedInputStreamRequestBodyConvert();
+            return convert.convert((ChunkedInputStreamRequestBody) data);
+        }else if(data instanceof RepeatableInputStreamRequestBody){
+            RepeatableInputStreamRequestBodyConvert convert = new RepeatableInputStreamRequestBodyConvert();
+            return convert.convert((RepeatableInputStreamRequestBody) data);
+        }else if(data instanceof ObjectFormRequestBody){
+            ObjectRequestBodyConvert convert = new ObjectRequestBodyConvert();
+            return convert.convert((ObjectFormRequestBody) data);
         }
 
-        return result;
+        return null;
     }
 
 }

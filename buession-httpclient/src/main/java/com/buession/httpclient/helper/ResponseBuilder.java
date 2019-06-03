@@ -48,6 +48,8 @@ public interface ResponseBuilder {
 
     ResponseBuilder setBody(String body);
 
+    ResponseBuilder setContentLength(long contentLength);
+
     Response build();
 
 }

@@ -24,23 +24,28 @@
  */
 package com.buession.httpclient.core;
 
+import java.nio.charset.Charset;
+
 /**
  * @author Yong.Teng
  */
-public interface RequestBody<T> {
+public class ObjectFormRequestBody extends AbstractRequestBody<Object> {
 
-    ContentType getContentType();
+    public final static ContentType CONTENT_TYPE = ContentType.APPLICATION_JSON;
 
-    Header getContentEncoding();
+    public ObjectFormRequestBody(Object content, long contentLength){
+        super(CONTENT_TYPE, content, contentLength);
+    }
 
-    long getContentLength();
+    public ObjectFormRequestBody(Header contentEncoding, Object content, long contentLength){
+        super(CONTENT_TYPE, contentEncoding, content, contentLength);
+    }
 
-    T getContent();
+    public ObjectFormRequestBody(Object content, long contentLength, Charset charset){
+        super(new ContentType(CONTENT_TYPE.getMimeType(), charset), content, contentLength);
+    }
 
-    boolean isRepeatable();
-
-    boolean isChunked();
-
-    boolean isStreaming();
-
+    public ObjectFormRequestBody(Header contentEncoding, Object content, long contentLength, Charset charset){
+        super(new ContentType(CONTENT_TYPE.getMimeType(), charset), contentEncoding, content, contentLength);
+    }
 }

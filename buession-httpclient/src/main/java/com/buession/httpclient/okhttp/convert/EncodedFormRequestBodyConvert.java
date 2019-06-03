@@ -22,25 +22,32 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core;
+package com.buession.httpclient.okhttp.convert;
+
+import com.buession.httpclient.core.EncodedFormRequestBody;
+import com.buession.httpclient.core.RequestBodyConvert;
+import com.buession.httpclient.core.RequestBodyElement;
+import okhttp3.FormBody;
 
 /**
  * @author Yong.Teng
  */
-public interface RequestBody<T> {
+public class EncodedFormRequestBodyConvert implements RequestBodyConvert<EncodedFormRequestBody, FormBody> {
 
-    ContentType getContentType();
+    @Override
+    public FormBody convert(EncodedFormRequestBody source){
+        if(source.getContent() == null){
+            return null;
+        }
 
-    Header getContentEncoding();
+        final FormBody.Builder formBodyBuilder = new FormBody.Builder();
 
-    long getContentLength();
+        for(RequestBodyElement requestBodyElement : source.getContent()){
+            String value = requestBodyElement.getValue() == null ? "" : requestBodyElement.getValue().toString();
 
-    T getContent();
+            formBodyBuilder.add(requestBodyElement.getName(), value);
+        }
 
-    boolean isRepeatable();
-
-    boolean isChunked();
-
-    boolean isStreaming();
-
+        return formBodyBuilder.build();
+    }
 }

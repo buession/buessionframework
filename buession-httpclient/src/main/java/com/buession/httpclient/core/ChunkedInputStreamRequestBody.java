@@ -24,23 +24,38 @@
  */
 package com.buession.httpclient.core;
 
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
 /**
  * @author Yong.Teng
  */
-public interface RequestBody<T> {
+public class ChunkedInputStreamRequestBody extends InputStreamRequestBody {
 
-    ContentType getContentType();
+    public ChunkedInputStreamRequestBody(){
+        super();
+    }
 
-    Header getContentEncoding();
+    public ChunkedInputStreamRequestBody(ContentType contentType, InputStream content, long contentLength){
+        super(contentType, content, contentLength);
+    }
 
-    long getContentLength();
+    public ChunkedInputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content, long
+            contentLength){
+        super(contentType, contentEncoding, content, contentLength);
+    }
 
-    T getContent();
+    public ChunkedInputStreamRequestBody(InputStream content, long contentLength, Charset charset){
+        super(content, contentLength, charset);
+    }
 
-    boolean isRepeatable();
+    public ChunkedInputStreamRequestBody(Header contentEncoding, InputStream content, long contentLength, Charset
+            charset){
+        super(contentEncoding, content, contentLength, charset);
+    }
 
-    boolean isChunked();
-
-    boolean isStreaming();
-
+    @Override
+    public boolean isChunked(){
+        return true;
+    }
 }

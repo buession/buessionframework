@@ -22,25 +22,32 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core;
+package com.buession.httpclient.httpcomponents;
+
+import com.buession.httpclient.core.ContentType;
+import org.apache.http.entity.BasicHttpEntity;
+
+import java.io.InputStream;
 
 /**
  * @author Yong.Teng
  */
-public interface RequestBody<T> {
+public class InputStreamEntity extends BasicHttpEntity {
 
-    ContentType getContentType();
+    private boolean firstAttempt = true;
 
-    Header getContentEncoding();
+    public InputStreamEntity(InputStream content, long contentLength, ContentType contentType){
+        setContent(content);
+        setContentType(contentType.toString());
+        setContentLength(contentLength);
+    }
 
-    long getContentLength();
+    public boolean isFirstAttempt(){
+        return firstAttempt;
+    }
 
-    T getContent();
-
-    boolean isRepeatable();
-
-    boolean isChunked();
-
-    boolean isStreaming();
+    public void setFirstAttempt(boolean firstAttempt){
+        this.firstAttempt = firstAttempt;
+    }
 
 }

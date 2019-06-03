@@ -22,25 +22,39 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core;
+package com.buession.httpclient.httpcomponents.convert;
+
+import com.buession.httpclient.core.ObjectFormRequestBody;
+import com.buession.httpclient.core.RequestBody;
+import com.buession.httpclient.core.RequestBodyConvert;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.entity.StringEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
-public interface RequestBody<T> {
+public class ObjectRequestBodyConvert implements RequestBodyConvert<ObjectFormRequestBody, StringEntity> {
 
-    ContentType getContentType();
+    private final static Logger logger = LoggerFactory.getLogger(ObjectRequestBodyConvert.class);
 
-    Header getContentEncoding();
+    @Override
+    public StringEntity convert(ObjectFormRequestBody source){
+        if(source.getContent() == null){
+            return null;
+        }
 
-    long getContentLength();
+        ObjectMapper objectMapper = new ObjectMapper();
 
-    T getContent();
+        try{
+            String str = objectMapper.writeValueAsString(source.getContent());
+            return new StringEntity(str, org.apache.http.entity.ContentType.APPLICATION_JSON);
+        }catch(JsonProcessingException e){
+            logger.error("{} convert to JSON String error.", RequestBody.class.getName(), e);
+        }
 
-    boolean isRepeatable();
-
-    boolean isChunked();
-
-    boolean isStreaming();
-
+        return null;
+    }
 }

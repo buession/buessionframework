@@ -31,4 +31,6 @@ public class HttpHeader {
 
     public final static String CONTENT_TYPE = "Content-Type";
 
+    public final static String CONTENT_ENCODING = "Content-Encoding";
+
 }

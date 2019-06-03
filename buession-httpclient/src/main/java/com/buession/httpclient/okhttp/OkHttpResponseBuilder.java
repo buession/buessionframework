@@ -86,8 +86,10 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder {
             responseBuilder.setHeaders(headersMap2List(headersMap));
         }
 
+
         final ResponseBody responseBody = httpResponse.body();
 
+        responseBuilder.setContentLength(responseBody.contentLength());
         responseBuilder.setInputStream(responseBody.byteStream());
         try{
             responseBuilder.setBody(responseBody.string());
@@ -95,6 +97,9 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder {
             logger.error("Response entity to body error.", e);
         }
 
+        httpResponse.close();
+
         return responseBuilder;
     }
+
 }

@@ -22,25 +22,19 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core;
+package com.buession.httpclient.okhttp.convert;
+
+import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
+import com.buession.httpclient.core.RequestBodyConvert;
 
 /**
  * @author Yong.Teng
  */
-public interface RequestBody<T> {
+public class ChunkedInputStreamRequestBodyConvert implements RequestBodyConvert<ChunkedInputStreamRequestBody,
+        okhttp3.RequestBody> {
 
-    ContentType getContentType();
-
-    Header getContentEncoding();
-
-    long getContentLength();
-
-    T getContent();
-
-    boolean isRepeatable();
-
-    boolean isChunked();
-
-    boolean isStreaming();
-
+    @Override
+    public okhttp3.RequestBody convert(ChunkedInputStreamRequestBody source){
+        return null;
+    }
 }

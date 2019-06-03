@@ -22,25 +22,13 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core;
+package com.buession.httpclient.core.io;
 
 /**
  * @author Yong.Teng
  */
-public interface RequestBody<T> {
+public interface Releasable {
 
-    ContentType getContentType();
-
-    Header getContentEncoding();
-
-    long getContentLength();
-
-    T getContent();
-
-    boolean isRepeatable();
-
-    boolean isChunked();
-
-    boolean isStreaming();
+    void release();
 
 }

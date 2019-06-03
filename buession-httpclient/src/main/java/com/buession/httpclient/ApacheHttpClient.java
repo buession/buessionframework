@@ -155,7 +155,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
     public Response post(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
         final HttpPost httpPost = new HttpPost();
 
-        httpPost.setEntity(HttpComponentsRequestBuilder.buildRequestBody(headers, data));
+        httpPost.setEntity(HttpComponentsRequestBuilder.buildRequestBody(data));
 
         return doRequest(httpPost, url, headers, parameters);
     }
@@ -178,7 +178,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
     public Response patch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
         final HttpPatch httpPatch = new HttpPatch();
 
-        httpPatch.setEntity(HttpComponentsRequestBuilder.buildRequestBody(headers, data));
+        httpPatch.setEntity(HttpComponentsRequestBuilder.buildRequestBody(data));
 
         return doRequest(httpPatch, url, headers, parameters);
     }
@@ -201,7 +201,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
     public Response put(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
         final HttpPut httpPut = new HttpPut();
 
-        httpPut.setEntity(HttpComponentsRequestBuilder.buildRequestBody(headers, data));
+        httpPut.setEntity(HttpComponentsRequestBuilder.buildRequestBody(data));
 
         return doRequest(httpPut, url, headers, parameters);
     }
@@ -444,7 +444,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
     @Override
     public Response proppatch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
         final HttpRequestBase httpRequestBase = createNoneHttpRequest(RequestMethod.PROPPATCH,
-                HttpComponentsRequestBuilder.buildRequestBody(headers, data));
+                HttpComponentsRequestBuilder.buildRequestBody(data));
         return doRequest(httpRequestBase, url, headers, parameters);
     }
 
@@ -465,7 +465,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
     @Override
     public Response report(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers){
         final HttpRequestBase httpRequestBase = createNoneHttpRequest(RequestMethod.REPORT,
-                HttpComponentsRequestBuilder.buildRequestBody(headers, data));
+                HttpComponentsRequestBuilder.buildRequestBody(data));
         return doRequest(httpRequestBase, url, headers, parameters);
     }
 

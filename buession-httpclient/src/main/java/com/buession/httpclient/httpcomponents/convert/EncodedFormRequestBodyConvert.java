@@ -22,25 +22,37 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core;
+package com.buession.httpclient.httpcomponents.convert;
+
+import com.buession.httpclient.core.EncodedFormRequestBody;
+import com.buession.httpclient.core.RequestBodyConvert;
+import com.buession.httpclient.core.RequestBodyElement;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public interface RequestBody<T> {
+public class EncodedFormRequestBodyConvert implements RequestBodyConvert<EncodedFormRequestBody, UrlEncodedFormEntity> {
 
-    ContentType getContentType();
+    @Override
+    public UrlEncodedFormEntity convert(EncodedFormRequestBody source){
+        if(source.getContent() == null){
+            return null;
+        }
 
-    Header getContentEncoding();
+        List<NameValuePair> data = new ArrayList<>(source.getContent().size());
 
-    long getContentLength();
+        for(RequestBodyElement requestBodyElement : source.getContent()){
+            String value = requestBodyElement.getValue() == null ? "" : requestBodyElement.getValue().toString();
 
-    T getContent();
+            data.add(new BasicNameValuePair(requestBodyElement.getName(), value));
+        }
 
-    boolean isRepeatable();
-
-    boolean isChunked();
-
-    boolean isStreaming();
-
+        return new UrlEncodedFormEntity(data, source.getContentType().getCharset());
+    }
 }

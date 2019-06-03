@@ -27,6 +27,7 @@ package com.buession.httpclient.httpcomponents;
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.helper.AbstractResponseBuilder;
 import com.buession.httpclient.helper.ResponseBuilder;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,11 +77,21 @@ public class HttpComponentsResponseBuilder extends AbstractResponseBuilder {
             responseBuilder.setHeaders(headersMap2List(headersMap));
         }
 
+        responseBuilder.setContentLength(httpResponse.getEntity().getContentLength());
+
         try{
             responseBuilder.setInputStream(httpResponse.getEntity().getContent());
             responseBuilder.setBody(EntityUtils.toString(httpResponse.getEntity()));
         }catch(IOException e){
             logger.error("Response entity to body error.", e);
+        }
+
+        if(httpResponse instanceof CloseableHttpResponse){
+            try{
+                ((CloseableHttpResponse) httpResponse).close();
+            }catch(IOException e){
+                logger.error("Close HTTP Response error.", e);
+            }
         }
 
         return responseBuilder;

@@ -27,20 +27,8 @@ package com.buession.httpclient.core;
 /**
  * @author Yong.Teng
  */
-public interface RequestBody<T> {
+public interface RequestBodyConvert<S, T> {
 
-    ContentType getContentType();
-
-    Header getContentEncoding();
-
-    long getContentLength();
-
-    T getContent();
-
-    boolean isRepeatable();
-
-    boolean isChunked();
-
-    boolean isStreaming();
+    T convert(S source);
 
 }

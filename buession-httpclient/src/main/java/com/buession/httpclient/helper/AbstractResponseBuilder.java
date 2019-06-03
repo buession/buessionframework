@@ -78,6 +78,12 @@ public abstract class AbstractResponseBuilder implements ResponseBuilder {
     }
 
     @Override
+    public ResponseBuilder setContentLength(long contentLength){
+        response.setContentLength(contentLength);
+        return this;
+    }
+
+    @Override
     public Response build(){
         response.setStatusLine(new StatusLine(response.getStatusCode(), response.getStatusText()));
         return response;
