@@ -29,3 +29,5 @@ echo -e "Secure environment variables: ${TRAVIS_SECURE_ENV_VARS}"
 echo -e "************************************"
 echo -e "Home directory: $HOME"
 echo -e "Configured build environment\n"
+
+chmod -R 0777 ./ci/*.sh
