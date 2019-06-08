@@ -2,10 +2,10 @@
 
 基于各开源框架的二次开发和封装。
 
-[![Build Status](https://travis-ci.org/alibaba/druid.svg?branch=master)](https://travis-ci.org/alibaba/druid)
-[![Coverage Status](https://img.shields.io/codecov/c/github/alibaba/druid/master.svg)](https://codecov.io/github/alibaba/druid?branch=master&view=all#sort=coverage&dir=asc)  
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.alibaba/druid/badge.svg)](https://oss.sonatype.org/#nexus-search;quick~com.buession)
-[![GitHub release](https://img.shields.io/github/release/alibaba/druid.svg)](https://github.com/buession/buessionframework/releases)
+[![Build Status](https://travis-ci.org/buession/buessionframework.svg?branch=master)](https://travis-ci.org/buession/buessionframework)
+[![Coverage Status](https://img.shields.io/codecov/c/github/buession/buessionframework/master.svg)](https://codecov.io/github/buession/buessionframework?branch=master&view=all#sort=coverage&dir=asc)  
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.buession/buessionframework/badge.svg)](https://oss.sonatype.org/#nexus-search;quick~com.buession)
+[![GitHub release](https://img.shields.io/github/release/buession/buessionframework.svg)](https://github.com/buession/buessionframework/releases)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
 ## Requirements
