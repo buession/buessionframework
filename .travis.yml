@@ -15,6 +15,7 @@ before_install:
   - unset _JAVA_OPTIONS
 install: true
 script:
+  - cd ${TRAVIS_BUILD_DIR}/buession-parent
   - mvn clean install -Dmaven.test.skip=true
 after_success:
   - codecov
