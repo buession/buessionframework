@@ -13,7 +13,6 @@ env:
     - JAVA_OPTS="-Xms512m -Xmx4048m -Xss128m -XX:ReservedCodeCacheSize=512m -XX:+UseG1GC -Xverify:none -server"
 before_install:
   - unset _JAVA_OPTIONS
-  - ./ci/init-travis-build.sh
 install: true
 script:
   - ./ci/script.sh
