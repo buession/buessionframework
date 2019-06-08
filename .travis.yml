@@ -15,27 +15,6 @@ before_install:
   - unset _JAVA_OPTIONS
 install: true
 script:
-  - ./ci/script.sh
-after_script:
-  - ./ci/stop.sh
+  - mvn clean install -Dmaven.test.skip=true
 after_success:
   - codecov
-stages:
-  - initialize
-  - build
-  - test
-  - publish
-jobs:
-  include:
-    - stage: initialize
-      name: "Initialize Build System"
-      script: ./ci/initialize.sh
-    - stage: build
-      name: "Build Buession Framework"
-      script: ./ci/build.sh
-    - stage: test
-      name: "Simple Unit Tests"
-      script: ./ci/test.sh
-    - stage: publish
-      name: "Publish Buession Framework"
-      script: ./ci/publish.sh
