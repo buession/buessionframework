@@ -1,8 +1,38 @@
 language: java
 jdk:
   - oraclejdk8
-after_success:
-  - codecov
 branches:
   only:
     - master
+env:
+  global:
+    - JAVA_OPTS="-Xms512m -Xmx4048m -Xss128m -XX:ReservedCodeCacheSize=512m -XX:+UseG1GC -Xverify:none -server"
+before_install:
+  - unset _JAVA_OPTIONS
+  - ./ci/init-travis-build.sh
+install: true
+script:
+  - ./ci/script.sh
+after_script:
+  - ./ci/stop.sh
+after_success:
+  - codecov
+stages:
+  - initialize
+  - build
+  - test
+  - publish
+jobs:
+  include:
+    - stage: initialize
+      name: "Initialize Build System"
+      script: ./ci/initialize.sh
+    - stage: build
+      name: "Build Buession Framework"
+      script: ./ci/build.sh
+    - stage: test
+      name: "Simple Unit Tests"
+      script: ./ci/test.sh
+    - stage: publish
+      name: "Publish Buession Framework"
+      script: ./ci/publish.sh
