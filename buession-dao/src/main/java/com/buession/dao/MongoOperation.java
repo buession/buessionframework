@@ -21,10 +21,67 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2015 Buession.com Inc.														|
+ * | Copyright @ 2013-2018 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
+package com.buession.dao;
+
 /**
  * @author Yong.Teng
  */
-package com.buession.dao.utils;
+public final class MongoOperation {
+
+    public final static Operator DEFAULT_OPERATOR = Operator.EQUAL;
+
+    private Operator operator;
+
+    private Object value;
+
+    public MongoOperation(Object value){
+        this(DEFAULT_OPERATOR, value);
+    }
+
+    public MongoOperation(Operator operator, Object value){
+        this.operator = operator;
+        this.value = value;
+    }
+
+    public Operator getOperator(){
+        return operator;
+    }
+
+    public void setOperator(Operator operator){
+        this.operator = operator;
+    }
+
+    public Object getValue(){
+        return value;
+    }
+
+    public void setValue(Object value){
+        this.value = value;
+    }
+
+    public enum Operator {
+
+        EQUAL,
+
+        NOT_EQUAL,
+
+        LT,
+
+        LTE,
+
+        GT,
+
+        GTE,
+
+        IN,
+
+        NIN,
+
+        LIKE;
+
+    }
+
+}

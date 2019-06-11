@@ -59,6 +59,7 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-commons</artifactId>
+			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
@@ -72,24 +73,12 @@
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
-			<version>3.5.1</version>
-			<scope>compile</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis-spring</artifactId>
-			<version>2.0.1</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis-typehandlers-jsr310</artifactId>
-			<version>1.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis-typehandlers-threeten-extra</artifactId>
-			<version>1.0.0</version>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>

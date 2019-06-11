@@ -34,9 +34,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
+import com.buession.core.utils.Assert;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import org.apache.ibatis.mapping.ResultMap;
@@ -48,8 +50,6 @@ import org.slf4j.LoggerFactory;
 
 import com.buession.core.Pagination;
 import com.buession.core.exception.OperationException;
-import com.buession.dao.utils.DML;
-import com.buession.dao.utils.Order;
 
 /**
  * Data Access Object 抽象类
@@ -143,9 +143,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
     @Override
     @SuppressWarnings("unchecked")
     public int update(E e, Map<String, Object> conditions){
-        if(e == null){
-            throw new IllegalArgumentException("The data could not be empty for update.");
-        }
+        Assert.isNull(e, "The data could not be empty for update.");
 
         Map<String, Object> data = new HashMap<>(16);
         if(conditions != null){
@@ -289,9 +287,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
      */
     @Override
     public List<E> select(Map<String, Object> conditions, int offset, int size, Map<String, Order> orders){
-        if(offset < 0){
-            throw new IllegalArgumentException("Offset argument value could not be negative integer");
-        }
+        Assert.isNegative(offset, "Offset argument value could not be negative integer");
 
         if(size < 1){
             throw new IllegalArgumentException("Size argument value must be positive integer");
@@ -333,8 +329,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
 
         long totalRecords = count(conditions);
 
-        com.buession.dao.codec.Pagination<E> pagination = new com.buession.dao.codec.Pagination<>(page, pagesize,
-                totalRecords);
+        com.buession.dao.Pagination<E> pagination = new com.buession.dao.Pagination<>(page, pagesize, totalRecords);
 
         if(totalRecords > 0){
             List<E> result = select(conditions, pagination.getOffset(), pagination.getPagesize(), orders);
@@ -427,7 +422,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
     }
 
     protected final SqlSessionTemplate getSlaveSqlSessionTemplate(final int index) throws OperationException{
-        if(Validate.isEmpty(slaveSqlSessionTemplates) == true){
+        if(Validate.isEmpty(slaveSqlSessionTemplates)){
             return getMasterSqlSessionTemplate();
         }else{
             SqlSessionTemplate sqlSessionTemplate = slaveSqlSessionTemplates.get(index);
@@ -441,11 +436,13 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
     }
 
     protected final SqlSessionTemplate getSlaveSqlSessionTemplate() throws OperationException{
-        if(Validate.isEmpty(slaveSqlSessionTemplates) == true){
+        if(Validate.isEmpty(slaveSqlSessionTemplates)){
             return getMasterSqlSessionTemplate();
         }else{
-            int i = random.nextInt(slaveSqlSessionTemplates.size());
-            return getSlaveSqlSessionTemplate(i);
+            Random random = new Random();
+            int index = random.nextInt(slaveSqlSessionTemplates.size());
+
+            return getSlaveSqlSessionTemplate(index);
         }
     }
 

@@ -27,19 +27,15 @@
 package com.buession.dao;
 
 import com.buession.core.Pagination;
-import com.buession.dao.utils.Order;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * @author Yong.Teng
  */
 public abstract class AbstractDao<P, E> implements Dao<P, E> {
-
-    protected final static Random random = new Random();
 
     /**
      * 批量插入数据
@@ -52,7 +48,7 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
     @Override
     public List<Integer> batchInsert(List<E> data){
         if(data != null){
-            List<Integer> result = new ArrayList<>();
+            List<Integer> result = new ArrayList<>(data.size());
 
             for(E e : data){
                 Integer primary = insert(e);
@@ -76,7 +72,7 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
     @Override
     public List<Integer> batchReplace(List<E> data){
         if(data != null){
-            List<Integer> result = new ArrayList<>();
+            List<Integer> result = new ArrayList<>(data.size());
 
             for(E e : data){
                 Integer primary = replace(e);

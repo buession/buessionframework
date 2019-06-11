@@ -115,20 +115,19 @@ public abstract class RedisAccessor {
         Assert.isNull(connection, "RedisConnection is required");
 
         Options options = getOptions();
-        if(options == null){
-            serializer = DEFAULT_SERIALIZER;
-        }else{
+        if(options != null){
             serializer = options.getSerializer();
-            if(serializer == null){
-                serializer = DEFAULT_SERIALIZER;
-            }
         }
+        if(serializer == null){
+            serializer = DEFAULT_SERIALIZER;
+        }
+
         connectionFactory = new RedisConnectionFactory(connection);
         client = doGetRedisClient(connection);
     }
 
     protected RedisConnectionFactory getConnectionFactory(){
-        return new RedisConnectionFactory();
+        return connectionFactory;
     }
 
     protected <R> R execute(final Executor<R> executor){
@@ -145,7 +144,6 @@ public abstract class RedisAccessor {
         }
 
         try{
-            connection = connectionFactory.getConnection();
             client.setConnection(connection);
             result = executor.execute(client);
         }catch(Exception e){

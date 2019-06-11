@@ -21,17 +21,51 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2015 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.dao.utils;
+package com.buession.dao;
 
 /**
- * 排序方式
+ * Data Manipulation Language
  *
  * @author Yong.Teng
  */
-public enum Order {
-    ASC,
-    DESC
+public enum DML {
+
+    INSERT("insert"),
+
+    REPLACE("replace"),
+
+    UPDATE("update"),
+
+    UPDATE_BY_PRIMARY("updateByPrimary"),
+
+    SELECT("select"),
+
+    SELECT_ONE("selectOne"),
+
+    GET_BY_PRIMARY("getByPrimary"),
+
+    GET_ALL("getAll"),
+
+    DELETE("delete"),
+
+    DELETE_BY_PRIMARY("deleteByPrimary"),
+
+    CLEAR("clear"),
+
+    TRUNCATE("truncate");
+
+    private String method;
+
+    DML(final String method){
+        this.method = method;
+    }
+
+    @Override
+    public String toString(){
+        return method;
+    }
+
 }

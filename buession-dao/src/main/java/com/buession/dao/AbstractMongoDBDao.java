@@ -28,31 +28,29 @@ package com.buession.dao;
 
 import com.buession.core.Pagination;
 import com.buession.core.exception.OperationException;
+import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
-import com.buession.dao.utils.MongoOperation;
-import com.buession.dao.utils.Order;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.mapping.context.MappingContext;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.mapping.MongoPersistentEntity;
-import org.springframework.data.mongodb.core.mapping.MongoPersistentProperty;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author Yong.Teng
  */
-@SuppressWarnings("deprecation")
 public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
 
     public final static String PRIMARY_FIELD = "_id";
@@ -62,8 +60,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
 
     @Resource
     private List<MongoTemplate> slaveMongoTemplates;
-
-    private MappingContext<? extends MongoPersistentEntity<?>, MongoPersistentProperty> mappingContext = null;
 
     private final static Logger logger = LoggerFactory.getLogger(AbstractMongoDBDao.class);
 
@@ -209,8 +205,20 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
     }
 
     public List<E> select(Query query, int offset, int size, Map<String, Order> orders){
-        if(query == null){
-            throw new IllegalArgumentException("Query Argument could not be null");
+        Assert.isNull(query, "Query Argument could not be null");
+
+        if(Validate.isEmpty(orders) == false){
+            final List<Sort.Order> sortOrders = new ArrayList<>(orders.size());
+
+            orders.forEach((field, order)->{
+                if(order == Order.ASC){
+                    sortOrders.add(new Sort.Order(Sort.Direction.ASC, field));
+                }else if(order == Order.DESC){
+                    sortOrders.add(new Sort.Order(Sort.Direction.DESC, field));
+                }
+            });
+
+            query.with(Sort.by(sortOrders));
         }
 
         query.limit(size);
@@ -248,8 +256,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
 
         long totalRecords = count(query);
 
-        com.buession.dao.codec.Pagination<E> pagination = new com.buession.dao.codec.Pagination<>(page, pagesize,
-                totalRecords);
+        com.buession.dao.Pagination<E> pagination = new com.buession.dao.Pagination<>(page, pagesize, totalRecords);
 
         if(totalRecords > 0){
             List<E> result = select(query, pagination.getOffset(), pagination.getPagesize(), orders);
@@ -283,9 +290,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
     }
 
     public long count(Query query){
-        if(query == null){
-            throw new IllegalArgumentException("Query Argument could not be null");
-        }
+        Assert.isNull(query, "Query Argument could not be null");
 
         try{
             return getSlaveMongoTemplate().count(query, getStatement());
@@ -350,8 +355,10 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         if(Validate.isEmpty(slaveMongoTemplates)){
             return getMasterMongoTemplate();
         }else{
-            int i = random.nextInt(slaveMongoTemplates.size());
-            return getSlaveMongoTemplate(i);
+            Random random = new Random();
+            int index = random.nextInt(slaveMongoTemplates.size());
+
+            return getSlaveMongoTemplate(index);
         }
     }
 
@@ -367,45 +374,43 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
 
         Criteria criteria = new Criteria();
 
-        for(Map.Entry<String, Object> e : conditions.entrySet()){
-            Object value = e.getValue();
-
+        conditions.forEach((field, value)->{
             if(value instanceof MongoOperation){
                 MongoOperation mongoOperation = (MongoOperation) value;
                 MongoOperation.Operator operator = mongoOperation.getOperator();
 
                 /* 等于 */
                 if(MongoOperation.Operator.EQUAL.equals(operator)){
-                    criteria.and(e.getKey()).is(mongoOperation.getValue());
+                    criteria.and(field).is(mongoOperation.getValue());
                     /* 不等于 */
                 }else if(MongoOperation.Operator.NOT_EQUAL.equals(operator)){
-                    criteria.and(e.getKey()).ne(mongoOperation.getValue());
+                    criteria.and(field).ne(mongoOperation.getValue());
                     /* 小于 */
                 }else if(MongoOperation.Operator.LT.equals(operator)){
-                    criteria.and(e.getKey()).lt(mongoOperation.getValue());
+                    criteria.and(field).lt(mongoOperation.getValue());
                     /* 小于等于 */
                 }else if(MongoOperation.Operator.LTE.equals(operator)){
-                    criteria.and(e.getKey()).lte(mongoOperation.getValue());
+                    criteria.and(field).lte(mongoOperation.getValue());
                     /* 大于 */
                 }else if(MongoOperation.Operator.GT.equals(operator)){
-                    criteria.and(e.getKey()).gt(mongoOperation.getValue());
+                    criteria.and(field).gt(mongoOperation.getValue());
                     /* 大于等于 */
                 }else if(MongoOperation.Operator.GTE.equals(operator)){
-                    criteria.and(e.getKey()).gte(mongoOperation.getValue());
+                    criteria.and(field).gte(mongoOperation.getValue());
                     /* IN */
                 }else if(MongoOperation.Operator.IN.equals(operator) == true){
-                    criteria.and(e.getKey()).in(mongoOperation.getValue());
+                    criteria.and(field).in(mongoOperation.getValue());
                     /* NOT IN */
                 }else if(MongoOperation.Operator.NIN.equals(operator)){
-                    criteria.and(e.getKey()).nin(mongoOperation.getValue());
+                    criteria.and(field).nin(mongoOperation.getValue());
                     /* 正则 */
                 }else if(MongoOperation.Operator.LIKE.equals(operator)){
-                    criteria.and(e.getKey()).regex((String) mongoOperation.getValue());
+                    criteria.and(field).regex((String) mongoOperation.getValue());
                 }
             }else{
-                criteria.and(e.getKey()).is(e.getValue());
+                criteria.and(field).is(value);
             }
-        }
+        });
 
         return criteria;
     }

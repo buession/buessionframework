@@ -128,7 +128,7 @@ public class Configuration {
      *
      * @return IDLE 连接超时
      */
-    public long getIdleConnectionTime(){
+    public int getIdleConnectionTime(){
         return idleConnectionTime;
     }
 

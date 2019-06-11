@@ -34,6 +34,8 @@ public class JedisPoolClientTemplateTest extends AbstractRedisTest {
     private RedisTemplate redisTemplate(){
         RedisTemplate redisTemplate = new RedisTemplate();
 
+        redisTemplate.afterPropertiesSet();
+
         return redisTemplate;
     }
 

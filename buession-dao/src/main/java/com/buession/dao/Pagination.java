@@ -24,7 +24,7 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.dao.codec;
+package com.buession.dao;
 
 /**
  * 分页类
