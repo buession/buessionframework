@@ -33,6 +33,7 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
@@ -47,7 +48,7 @@ public class ResponseHeaderProcessor extends AbstractProcessor {
 
     protected final static String EXPIRES = "Expires";
 
-    @Pointcut("@annotation(com.buession.web.http.response.ResponseHeader)")
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
     public void responseHeaderProcess(){
     }
 
@@ -62,40 +63,23 @@ public class ResponseHeaderProcessor extends AbstractProcessor {
         Class<?> clazz = pjp.getTarget().getClass();
         Method method = ((MethodSignature) pjp.getSignature()).getMethod();
 
-        if(clazz != null && method != null){
-            if(clazz.isAnnotationPresent(ResponseHeader.class)){
-                setHeader(response, clazz.getAnnotation(ResponseHeader.class));
+        if(clazz != null){
+            if(AnnotatedElementUtils.hasAnnotation(clazz, ResponseHeader.class)){
+                setHeader(response, AnnotatedElementUtils.findMergedAnnotation(clazz, ResponseHeader.class));
             }
 
-            if(method.isAnnotationPresent(ResponseHeader.class)){
-                setHeader(response, method.getAnnotation(ResponseHeader.class));
+            if(AnnotatedElementUtils.hasAnnotation(clazz, ResponseHeaders.class)){
+                setHeaders(response, AnnotatedElementUtils.findMergedAnnotation(clazz, ResponseHeaders.class));
             }
         }
-    }
 
-    @Pointcut("@annotation(com.buession.web.http.response.ResponseHeaders)")
-    public void responseHeadersProcess(){
-
-    }
-
-    @After("responseHeadersProcess()")
-    public void doResponseHeadersProcessAfter(JoinPoint pjp){
-        HttpServletResponse response = getHttpServletResponse(pjp);
-
-        if(response == null){
-            return;
-        }
-
-        Class<?> clazz = pjp.getTarget().getClass();
-        Method method = ((MethodSignature) pjp.getSignature()).getMethod();
-
-        if(clazz != null && method != null){
-            if(clazz.isAnnotationPresent(ResponseHeaders.class)){
-                setHeaders(response, clazz.getAnnotation(ResponseHeaders.class));
+        if(method != null){
+            if(AnnotatedElementUtils.hasAnnotation(method, ResponseHeader.class)){
+                setHeader(response, AnnotatedElementUtils.findMergedAnnotation(method, ResponseHeader.class));
             }
 
-            if(method.isAnnotationPresent(ResponseHeaders.class)){
-                setHeaders(response, method.getAnnotation(ResponseHeaders.class));
+            if(AnnotatedElementUtils.hasAnnotation(method, ResponseHeaders.class)){
+                setHeaders(response, AnnotatedElementUtils.findMergedAnnotation(method, ResponseHeaders.class));
             }
         }
     }
