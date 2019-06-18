@@ -84,17 +84,17 @@ public class ResponseHeaderProcessor extends AbstractProcessor {
         }
     }
 
-    private final static void setHeader(final HttpServletResponse response, final ResponseHeader responseHeader){
-        if(responseHeader != null){
-            setHeader(response, responseHeader.name(), responseHeader.value());
-        }
-    }
-
     private final static void setHeader(final HttpServletResponse response, final String name, final String value){
         if(EXPIRES.equalsIgnoreCase(name) == true){
             ResponseUtils.httpCache(response, Integer.parseInt(value));
         }else{
             response.addHeader(name, value);
+        }
+    }
+
+    private final static void setHeader(final HttpServletResponse response, final ResponseHeader responseHeader){
+        if(responseHeader != null){
+            setHeader(response, responseHeader.name(), responseHeader.value());
         }
     }
 

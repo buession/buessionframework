@@ -68,10 +68,6 @@ public abstract class AbstractMessagePropertyBeanPostProcessor implements BeanPo
         List<Field> fields = getAllFields(clazz);
 
         for(Field field : fields){
-            if(field.isAnnotationPresent(Message.class) == false){
-                continue;
-            }
-
             if(field.getType().isAssignableFrom(MessageObject.class) == false){
                 throw new BeanCreationException("The field " + field.getName() + " is not subclass of " +
                         MessageObject.class.getName() + ", on: " + beanName + "(" + bean.getClass().getName() + ").");
@@ -97,11 +93,7 @@ public abstract class AbstractMessagePropertyBeanPostProcessor implements BeanPo
         final String key = message.value();
         final String text = environment.getProperty(key + "." + message.textField());
 
-        if(text == null){
-            if(message.required() == false){
-                return;
-            }
-
+        if(message.required() && text == null){
             throw new IllegalArgumentException("Could not resolve placeholder '" + key + "' in value \"${" + key +
                     "}\", on: " + beanName + "(" + bean.getClass().getName() + ").");
         }
@@ -122,14 +114,16 @@ public abstract class AbstractMessagePropertyBeanPostProcessor implements BeanPo
     }
 
     private final static List<Field> getAllFields(final Class<?> clazz){
-        final List<Field> allFields = new ArrayList<>();
+        final List<Field> allFields = new ArrayList<>(4);
         Class<?> currentClass = clazz;
 
         while(currentClass != null){
             final Field[] declaredFields = currentClass.getDeclaredFields();
 
             for(final Field field : declaredFields){
-                allFields.add(field);
+                if(field.isAnnotationPresent(Message.class)){
+                    allFields.add(field);
+                }
             }
 
             currentClass = currentClass.getSuperclass();

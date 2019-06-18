@@ -41,7 +41,7 @@ public class ResponseUtils {
 
     }
 
-    public final static void httpCache(final HttpServletResponse response, int timeout){
+    public final static void httpCache(final HttpServletResponse response, final int timeout){
         if(response != null){
             long timestamp = System.currentTimeMillis() + (timeout * 1000);
             Date date = new Date();
@@ -52,7 +52,7 @@ public class ResponseUtils {
         }
     }
 
-    public final static void httpCache(final HttpServletResponse response, Date date){
+    public final static void httpCache(final HttpServletResponse response, final Date date){
         if(response != null){
             SimpleDateFormat httpDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
             long maxAge = (date.getTime() - System.currentTimeMillis()) / 1000;
