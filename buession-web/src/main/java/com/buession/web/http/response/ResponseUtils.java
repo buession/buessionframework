@@ -27,10 +27,7 @@
 package com.buession.web.http.response;
 
 import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * @author Yong.Teng
@@ -41,27 +38,25 @@ public class ResponseUtils {
 
     }
 
-    public final static void httpCache(final HttpServletResponse response, final int timeout){
+    public final static void httpCache(final HttpServletResponse response, final int lifetime){
         if(response != null){
-            long timestamp = System.currentTimeMillis() + (timeout * 1000);
-            Date date = new Date();
+            long expiresAt = lifetime + System.currentTimeMillis();
 
-            date.setTime(timestamp);
-
-            httpCache(response, date);
+            httpCache(response, lifetime, expiresAt);
         }
     }
 
     public final static void httpCache(final HttpServletResponse response, final Date date){
         if(response != null){
-            SimpleDateFormat httpDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.ENGLISH);
-            long maxAge = (date.getTime() - System.currentTimeMillis()) / 1000;
-
-            httpDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-
-            response.setHeader("Cache-Control", "max-age=" + maxAge);
-            response.setHeader("Expires", httpDateFormat.format(date));
+            long maxAge = date.getTime() - System.currentTimeMillis();
+            httpCache(response, maxAge, date.getTime());
         }
+    }
+
+    private final static void httpCache(final HttpServletResponse response, final long maxAge, final long expires){
+        response.setHeader("Cache-Control", "max-age=" + maxAge);
+        response.setDateHeader("Expires", expires);
+        response.setHeader("Pragma", maxAge > 0 ? null : "no-cache");
     }
 
 }
