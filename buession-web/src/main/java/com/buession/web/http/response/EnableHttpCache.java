@@ -41,13 +41,9 @@ import java.lang.annotation.Target;
 @ResponseHeader(name = "Expires")
 public @interface EnableHttpCache {
 
-    String DEFAULT_VALUE = "0";
-
     /**
      * Alias for {@link ResponseHeader#value()}.
      */
-    @AliasFor(annotation = ResponseHeader.class) String value() default DEFAULT_VALUE;
-
-    @AliasFor("value") String lifetime() default DEFAULT_VALUE;
+    @AliasFor(annotation = ResponseHeader.class) String value() default "0";
 
 }

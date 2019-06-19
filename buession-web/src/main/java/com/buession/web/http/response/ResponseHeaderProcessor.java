@@ -93,9 +93,7 @@ public class ResponseHeaderProcessor extends AbstractProcessor {
     }
 
     private final static void setHeader(final HttpServletResponse response, final ResponseHeader responseHeader){
-        if(responseHeader != null){
-            setHeader(response, responseHeader.name(), responseHeader.value());
-        }
+        setHeader(response, responseHeader.name(), responseHeader.value());
     }
 
     private final static void setHeaders(final HttpServletResponse response, final ResponseHeaders responseHeaders){

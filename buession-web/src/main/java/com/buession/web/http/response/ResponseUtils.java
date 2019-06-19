@@ -54,7 +54,11 @@ public class ResponseUtils {
     }
 
     private final static void httpCache(final HttpServletResponse response, final long maxAge, final long expires){
-        response.setHeader("Cache-Control", "max-age=" + maxAge);
+        if(maxAge <= 0){
+            response.setHeader("Cache-Control", "no-cache");
+        }else{
+            response.setHeader("Cache-Control", "max-age=" + maxAge);
+        }
         response.setDateHeader("Expires", expires);
         response.setHeader("Pragma", maxAge > 0 ? null : "no-cache");
     }
