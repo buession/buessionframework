@@ -37,7 +37,15 @@ public class ThesaurusFactoryBean extends ThesaurusFactory implements FactoryBea
 
     private Parser parser;
 
-    private Class<? extends Parser> clazz;
+    private Class<Parser> clazz;
+
+    public ThesaurusFactoryBean(){
+        super();
+    }
+
+    public ThesaurusFactoryBean(String type){
+        super(type);
+    }
 
     @Override
     public Parser getObject() throws Exception{
@@ -45,7 +53,7 @@ public class ThesaurusFactoryBean extends ThesaurusFactory implements FactoryBea
     }
 
     @Override
-    public Class<? extends Parser> getObjectType(){
+    public Class<Parser> getObjectType(){
         return clazz;
     }
 
@@ -56,28 +64,28 @@ public class ThesaurusFactoryBean extends ThesaurusFactory implements FactoryBea
 
     @Override
     public void afterPropertiesSet() throws Exception{
-        Assert.isBlank(getKey(), "Thesaurus key could not be null or empty.");
+        Assert.isBlank(getType(), "Thesaurus key could not be null or empty.");
 
-        char first = getKey().charAt(0);
+        char first = getType().charAt(0);
 
         StringBuffer sb = new StringBuffer();
 
         sb.append("com.buession.thesaurus.");
 
         if(first >= 'a' && first <= 'z'){
-            sb.append((char) (getKey().charAt(0) - 32));
-            sb.append(getKey().substring(1));
+            sb.append((char) (getType().charAt(0) - 32));
+            sb.append(getType().substring(1));
         }else{
-            sb.append(getKey());
+            sb.append(getType());
         }
 
         sb.append("Parser");
 
         try{
-            clazz = (Class<? extends Parser>) Class.forName(sb.toString());
+            clazz = (Class<Parser>) Class.forName(sb.toString());
             parser = clazz.newInstance();
         }catch(ClassNotFoundException e){
-            throw new ThesaurusTypeNotFoundException("The " + getKey() + " thesaurus not be found.");
+            throw new ThesaurusTypeNotFoundException("The " + getType() + " thesaurus not be found.");
         }
     }
 }

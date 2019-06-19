@@ -55,9 +55,8 @@ public class SogouParserTest {
     @Test
     public void parse() throws ThesaurusNotFoundException, IllegalAccessException, InstantiationException,
             IOException, ThesaurusTypeNotFoundException{
-        ThesaurusFactoryBean thesaurusFactoryBean = new ThesaurusFactoryBean();
+        ThesaurusFactoryBean thesaurusFactoryBean = new ThesaurusFactoryBean("sogou");
 
-        thesaurusFactoryBean.setKey("sogou");
         try{
             thesaurusFactoryBean.afterPropertiesSet();
 

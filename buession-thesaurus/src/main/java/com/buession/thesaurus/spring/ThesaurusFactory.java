@@ -31,14 +31,20 @@ package com.buession.thesaurus.spring;
  */
 public class ThesaurusFactory {
 
-    private String key;
+    private String type;
 
-    public String getKey(){
-        return key;
+    public ThesaurusFactory(){
     }
 
-    public void setKey(String key){
-        this.key = key;
+    public ThesaurusFactory(String type){
+        this.type = type;
     }
 
+    public String getType(){
+        return type;
+    }
+
+    public void setType(String type){
+        this.type = type;
+    }
 }
