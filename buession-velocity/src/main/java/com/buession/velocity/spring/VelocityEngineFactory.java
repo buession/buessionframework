@@ -24,6 +24,7 @@
  */
 package com.buession.velocity.spring;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.velocity.SpringResourceLoader;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
@@ -35,7 +36,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,8 +58,6 @@ public class VelocityEngineFactory {
 
     private boolean preferFileSystemAccess = true;
 
-    private boolean overrideLogging = true;
-
     private final static Logger logger = LoggerFactory.getLogger(VelocityEngineFactory.class);
 
     public Resource getConfigLocation(){
@@ -80,7 +78,7 @@ public class VelocityEngineFactory {
 
     public void setVelocityPropertiesMap(Map<String, Object> velocityPropertiesMap){
         if(velocityPropertiesMap != null){
-            velocityProperties.putAll(velocityPropertiesMap);
+            this.velocityProperties.putAll(velocityPropertiesMap);
         }
     }
 
@@ -93,7 +91,7 @@ public class VelocityEngineFactory {
     }
 
     public ResourceLoader getResourceLoader(){
-        return this.resourceLoader;
+        return resourceLoader;
     }
 
     public void setResourceLoader(ResourceLoader resourceLoader){
@@ -105,28 +103,16 @@ public class VelocityEngineFactory {
     }
 
     public boolean getPreferFileSystemAccess(){
-        return this.preferFileSystemAccess;
+        return preferFileSystemAccess;
     }
 
     public void setPreferFileSystemAccess(boolean preferFileSystemAccess){
         this.preferFileSystemAccess = preferFileSystemAccess;
     }
 
-    public boolean isOverrideLogging(){
-        return getOverrideLogging();
-    }
-
-    public boolean getOverrideLogging(){
-        return overrideLogging;
-    }
-
-    public void setOverrideLogging(boolean overrideLogging){
-        this.overrideLogging = overrideLogging;
-    }
-
     public VelocityEngine createVelocityEngine() throws IOException, VelocityException{
-        VelocityEngine velocityEngine = newVelocityEngine();
-        Map<String, Object> properties = new HashMap<>(16);
+        VelocityEngine velocityEngine = new VelocityEngine();
+        Map<String, Object> properties = new HashMap<>(velocityProperties.size());
 
         if(configLocation != null){
             logger.info("Loading Velocity config from [{}]", configLocation);
@@ -141,54 +127,48 @@ public class VelocityEngineFactory {
             initVelocityResourceLoader(velocityEngine, resourceLoaderPath);
         }
 
-        if(overrideLogging){
-            //velocityEngine.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM, new CommonsLogLogChute());
-        }
-
         properties.forEach((name, value)->{
             velocityEngine.setProperty(name, value);
         });
 
         postProcessVelocityEngine(velocityEngine);
 
+        // Perform actual initialization.
         velocityEngine.init();
 
         return velocityEngine;
     }
 
-    protected VelocityEngine newVelocityEngine() throws IOException, VelocityException{
-        return new VelocityEngine();
-    }
-
     protected void initVelocityResourceLoader(VelocityEngine velocityEngine, String resourceLoaderPath){
-        if(isPreferFileSystemAccess()){
-            try{
-                StringBuilder resolvedPath = new StringBuilder();
-                String[] paths = StringUtils.commaDelimitedListToStringArray(resourceLoaderPath);
-
-                for(int i = 0; i < paths.length; i++){
-                    String path = paths[i];
-                    Resource resource = getResourceLoader().getResource(path);
-                    File file = resource.getFile();  // will fail if not resolvable in the file system
-
-                    logger.debug("Resource loader path [{}] resolved to file [{}]", path, file.getAbsolutePath());
-
-                    resolvedPath.append(file.getAbsolutePath());
-                    if(i < paths.length - 1){
-                        resolvedPath.append(',');
-                    }
-                }
-
-                velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "file");
-                velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_CACHE, "true");
-                velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, resolvedPath.toString());
-            }catch(IOException ex){
-                logger.debug("Cannot resolve resource loader path [{}] to [java.io.File]: " + "using " +
-                        "SpringResourceLoader", resourceLoaderPath, ex);
-                initSpringResourceLoader(velocityEngine, resourceLoaderPath);
-            }
-        }else{
+        if(isPreferFileSystemAccess() == false){
             logger.debug("File system access not preferred: using SpringResourceLoader");
+            initSpringResourceLoader(velocityEngine, resourceLoaderPath);
+            return;
+        }
+
+        try{
+            StringBuilder resolvedPath = new StringBuilder();
+            String[] paths = StringUtils.split(resourceLoaderPath);
+
+            for(int i = 0; i < paths.length; i++){
+                String path = paths[i];
+                Resource resource = getResourceLoader().getResource(path);
+                File file = resource.getFile();
+
+                logger.debug("Resource loader path [{}] resolved to file [{}]", path, file.getAbsolutePath());
+
+                resolvedPath.append(file.getAbsolutePath());
+                if(i < paths.length - 1){
+                    resolvedPath.append(',');
+                }
+            }
+
+            velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "file");
+            velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_CACHE, "true");
+            velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, resolvedPath.toString());
+        }catch(IOException ex){
+            logger.debug("Cannot resolve resource loader path [{}] to [java.io.File]: using " +
+                    "SpringResourceLoader", resourceLoaderPath, ex);
             initSpringResourceLoader(velocityEngine, resourceLoaderPath);
         }
     }

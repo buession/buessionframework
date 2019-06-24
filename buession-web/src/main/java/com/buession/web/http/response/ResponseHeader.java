@@ -37,23 +37,19 @@ import java.lang.annotation.Target;
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Mapping
 public @interface ResponseHeader {
 
     /**
-     * 返回响应头名称
-     *
-     * @return 响应头名称
+     * 响应头名称
      */
     String name() default "";
 
     /**
-     * 返回响应头值
-     *
-     * @return 响应头值
+     * 响应头值
      */
     String value() default "";
 

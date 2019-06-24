@@ -35,7 +35,7 @@ import java.lang.annotation.Target;
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @ResponseHeader(name = "Expires")
@@ -44,6 +44,7 @@ public @interface EnableHttpCache {
     /**
      * Alias for {@link ResponseHeader#value()}.
      */
-    @AliasFor(annotation = ResponseHeader.class) String value() default "0";
+    @AliasFor(annotation = ResponseHeader.class)
+    String value() default "0";
 
 }

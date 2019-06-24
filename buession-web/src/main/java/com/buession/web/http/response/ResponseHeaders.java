@@ -34,16 +34,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Mapping
 public @interface ResponseHeaders {
 
     /**
-     * 返回响应头列表
-     *
-     * @return 响应头列表
+     * 响应头列表
      */
     ResponseHeader[] value();
 

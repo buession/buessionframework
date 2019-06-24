@@ -71,6 +71,7 @@ public class OkHttpClientConnectionManager extends AbstractConnectionManager<com
      * @param configuration
      *         连接对象
      * @param clientConnectionManager
+     *         驱动连接管理器
      */
     public OkHttpClientConnectionManager(Configuration configuration, com.buession.httpclient.okhttp
             .OkHttpClientConnectionManager clientConnectionManager){

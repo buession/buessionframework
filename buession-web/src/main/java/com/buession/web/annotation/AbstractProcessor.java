@@ -26,10 +26,10 @@
  */
 package com.buession.web.annotation;
 
-import com.buession.core.validator.Validate;
 import org.aspectj.lang.JoinPoint;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -37,17 +37,26 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class AbstractProcessor {
 
+    protected final static HttpServletRequest getHttpServletRequest(final JoinPoint pjp){
+        if(pjp == null || pjp.getArgs() == null){
+            return null;
+        }
+
+        for(Object argument : pjp.getArgs()){
+            if(argument instanceof HttpServletRequest){
+                return (HttpServletRequest) argument;
+            }
+        }
+
+        return null;
+    }
+
     protected final static HttpServletResponse getHttpServletResponse(final JoinPoint pjp){
-        if(pjp == null){
+        if(pjp == null || pjp.getArgs() == null){
             return null;
         }
 
-        Object[] arguments = pjp.getArgs();
-        if(Validate.isEmpty(arguments)){
-            return null;
-        }
-
-        for(Object argument : arguments){
+        for(Object argument : pjp.getArgs()){
             if(argument instanceof HttpServletResponse){
                 return (HttpServletResponse) argument;
             }
@@ -57,16 +66,11 @@ public abstract class AbstractProcessor {
     }
 
     protected final static Model getModel(final JoinPoint pjp){
-        if(pjp == null){
+        if(pjp == null || pjp.getArgs() == null){
             return null;
         }
 
-        Object[] arguments = pjp.getArgs();
-        if(Validate.isEmpty(arguments)){
-            return null;
-        }
-
-        for(Object argument : arguments){
+        for(Object argument : pjp.getArgs()){
             if(argument instanceof Model){
                 return (Model) argument;
             }

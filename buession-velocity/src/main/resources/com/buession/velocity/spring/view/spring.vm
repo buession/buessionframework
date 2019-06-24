@@ -112,8 +112,7 @@
  *#
 #macro( springFormInput $path $attributes )
     #springBind($path)
-<input type="text" id="#springXmlId(${status.expression})" name="${status.expression}"
-       value="$!status.value" ${attributes}#springCloseTag()
+<input type="text" id="#springXmlId(${status.expression})" name="${status.expression}" value="$!status.value" ${attributes}#springCloseTag()
 #end
 
 #**
@@ -130,8 +129,7 @@
  *#
 #macro( springFormPasswordInput $path $attributes )
     #springBind($path)
-<input type="password" id="#springXmlId(${status.expression})" name="${status.expression}"
-       value="" ${attributes}#springCloseTag()
+<input type="password" id="#springXmlId(${status.expression})" name="${status.expression}" value="" ${attributes}#springCloseTag()
 #end
 
 #**
@@ -147,8 +145,7 @@
  *#
 #macro( springFormHiddenInput $path $attributes )
     #springBind($path)
-<input type="hidden" id="#springXmlId(${status.expression})" name="${status.expression}"
-       value="$!status.value" ${attributes}#springCloseTag()
+<input type="hidden" id="#springXmlId(${status.expression})" name="${status.expression}" value="$!status.value" ${attributes}#springCloseTag()
 #end
 
 #**
@@ -279,8 +276,7 @@
 #macro( springFormCheckbox $path $attributes )
     #springBind($path)
 <input type="hidden" name="_#springXmlId(${status.expression})" value="on"/>
-<input type="checkbox" id="#springXmlId(${status.expression})" name="${status.expression}"#if(
-    "$!{status.value}"=="true") checked="checked"#end ${attributes}/>
+<input type="checkbox" id="#springXmlId(${status.expression})" name="${status.expression}"#if("$!{status.value}"=="true") checked="checked"#end ${attributes}/>
 #end
 
 #**

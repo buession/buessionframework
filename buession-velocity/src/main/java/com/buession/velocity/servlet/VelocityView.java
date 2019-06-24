@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.velocity.view;
+package com.buession.velocity.servlet;
 
 import com.buession.velocity.VelocityConfig;
 import com.buession.velocity.tools.LocaleAwareDateTool;
@@ -141,9 +141,9 @@ public class VelocityView extends AbstractTemplateView {
                     VelocityConfig.class, true, false);
             return velocityConfig.getVelocityEngine();
         }catch(NoSuchBeanDefinitionException ex){
-            throw new ApplicationContextException("Must define a single VelocityConfig bean in this web application "
-                    + "context (may be inherited): VelocityConfigurer is the usual implementation. This " + "bean " +
-                    "may" + " be given any name.", ex);
+            throw new ApplicationContextException("Must define a single VelocityConfig bean in this web application " +
+                    "context " + "(may be inherited): VelocityConfigurer is the usual implementation. " + "This bean " +
+                    "may be given any name.", ex);
         }
     }
 
@@ -163,6 +163,7 @@ public class VelocityView extends AbstractTemplateView {
     @Override
     protected void renderMergedTemplateModel(Map<String, Object> model, HttpServletRequest request,
                                              HttpServletResponse response) throws Exception{
+
         exposeHelpers(model, request);
 
         Context velocityContext = createVelocityContext(model, request, response);
@@ -175,15 +176,6 @@ public class VelocityView extends AbstractTemplateView {
     protected void exposeHelpers(Map<String, Object> model, HttpServletRequest request) throws Exception{
     }
 
-    protected Context createVelocityContext(Map<String, Object> model, HttpServletRequest request,
-                                            HttpServletResponse response) throws Exception{
-        return createVelocityContext(model);
-    }
-
-    protected Context createVelocityContext(Map<String, Object> model) throws Exception{
-        return new VelocityContext(model);
-    }
-
     protected void exposeHelpers(Context velocityContext, HttpServletRequest request, HttpServletResponse response)
             throws Exception{
         exposeHelpers(velocityContext, request);
@@ -192,7 +184,19 @@ public class VelocityView extends AbstractTemplateView {
     protected void exposeHelpers(Context velocityContext, HttpServletRequest request) throws Exception{
     }
 
+    protected Context createVelocityContext(Map<String, Object> model, HttpServletRequest request,
+                                            HttpServletResponse response) throws Exception{
+
+        return createVelocityContext(model);
+    }
+
+    protected Context createVelocityContext(Map<String, Object> model) throws Exception{
+        return new VelocityContext(model);
+    }
+
+
     protected void exposeToolAttributes(Context velocityContext, HttpServletRequest request) throws Exception{
+        // Expose generic attributes.
         if(toolAttributes != null){
             for(Map.Entry<String, Class<?>> entry : toolAttributes.entrySet()){
                 String attributeName = entry.getKey();
@@ -208,6 +212,7 @@ public class VelocityView extends AbstractTemplateView {
             }
         }
 
+        // Expose locale-aware DateTool/NumberTool attributes.
         if(dateToolAttribute != null){
             velocityContext.put(dateToolAttribute, new LocaleAwareDateTool(request));
         }
@@ -237,11 +242,12 @@ public class VelocityView extends AbstractTemplateView {
         try{
             template.merge(context, response.getWriter());
         }catch(MethodInvocationException ex){
-            Throwable cause = ex.getWrappedThrowable();
-            throw new NestedServletException("Method invocation failed during rendering of Velocity view with name '"
-                    + getBeanName() + "': " + ex.getMessage() + "; reference [" + ex.getReferenceName() + "], method " +
-                    "" + "" + "" + "" + "" + "" + "" + "" + "" + "'" + ex.getMethodName() + "'", cause == null ? ex :
-                    cause);
+            Throwable cause = ex.getCause();
+            String message = String.format("Method invocation failed during rendering of Velocity view with name " +
+                    "'{}': {}; reference [{}], method: '{}'", getBeanName(), ex.getMessage(), ex.getReferenceName(),
+                    ex.getMethodName());
+
+            throw new NestedServletException(message, cause == null ? ex : cause);
         }
     }
 

@@ -22,7 +22,48 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.web.http.response;
+
+import org.springframework.core.annotation.AliasFor;
+import org.springframework.web.bind.annotation.Mapping;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * @author Yong.Teng
  */
-package com.buession.velocity;
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Mapping
+public @interface ContentType {
+
+    String DEFAULT_MIME = "text/html";
+
+    String DEFAULT_ENCODING = "UTF-8";
+
+    /**
+     * MIME
+     */
+    @AliasFor("value") String mime() default DEFAULT_MIME;
+
+    /**
+     * MIME
+     */
+    @AliasFor("mime") String value() default DEFAULT_MIME;
+
+    /**
+     * 编码
+     */
+    @AliasFor("encoding") String charset() default DEFAULT_ENCODING;
+
+    /**
+     * 编码
+     */
+    @AliasFor("charset") String encoding() default DEFAULT_ENCODING;
+
+}

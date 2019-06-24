@@ -37,6 +37,7 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 
 /**
@@ -45,6 +46,8 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 public class ResponseHeaderProcessor extends AbstractProcessor {
+
+    protected final static String CONTENT_TYPE = "Content-Type";
 
     protected final static String EXPIRES = "Expires";
 
@@ -64,23 +67,25 @@ public class ResponseHeaderProcessor extends AbstractProcessor {
         Method method = ((MethodSignature) pjp.getSignature()).getMethod();
 
         if(clazz != null){
-            if(AnnotatedElementUtils.hasAnnotation(clazz, ResponseHeader.class)){
-                setHeader(response, AnnotatedElementUtils.findMergedAnnotation(clazz, ResponseHeader.class));
-            }
-
-            if(AnnotatedElementUtils.hasAnnotation(clazz, ResponseHeaders.class)){
-                setHeaders(response, AnnotatedElementUtils.findMergedAnnotation(clazz, ResponseHeaders.class));
-            }
+            process(clazz, response);
         }
 
         if(method != null){
-            if(AnnotatedElementUtils.hasAnnotation(method, ResponseHeader.class)){
-                setHeader(response, AnnotatedElementUtils.findMergedAnnotation(method, ResponseHeader.class));
-            }
+            process(method, response);
+        }
+    }
 
-            if(AnnotatedElementUtils.hasAnnotation(method, ResponseHeaders.class)){
-                setHeaders(response, AnnotatedElementUtils.findMergedAnnotation(method, ResponseHeaders.class));
-            }
+    private final static void process(final AnnotatedElement annotatedElement, final HttpServletResponse response){
+        if(AnnotatedElementUtils.hasAnnotation(annotatedElement, ResponseHeader.class)){
+            setHeader(response, AnnotatedElementUtils.findMergedAnnotation(annotatedElement, ResponseHeader.class));
+        }
+
+        if(AnnotatedElementUtils.hasAnnotation(annotatedElement, ResponseHeaders.class)){
+            setHeaders(response, AnnotatedElementUtils.findMergedAnnotation(annotatedElement, ResponseHeaders.class));
+        }
+
+        if(AnnotatedElementUtils.hasAnnotation(annotatedElement, ContentType.class)){
+            setContentType(response, AnnotatedElementUtils.findMergedAnnotation(annotatedElement, ContentType.class));
         }
     }
 
@@ -97,10 +102,6 @@ public class ResponseHeaderProcessor extends AbstractProcessor {
     }
 
     private final static void setHeaders(final HttpServletResponse response, final ResponseHeaders responseHeaders){
-        if(responseHeaders == null){
-            return;
-        }
-
         ResponseHeader[] headers = responseHeaders.value();
 
         if(Validate.isEmpty(headers) == false){
@@ -108,6 +109,19 @@ public class ResponseHeaderProcessor extends AbstractProcessor {
                 setHeader(response, header);
             }
         }
+    }
+
+    private final static void setContentType(final HttpServletResponse response, final ContentType contentType){
+        StringBuffer sb = new StringBuffer();
+
+        sb.append(contentType.mime());
+
+        if(Validate.hasText(contentType.encoding()) == false){
+            sb.append("; charset=");
+            sb.append(contentType.encoding());
+        }
+
+        setHeader(response, CONTENT_TYPE, sb.toString());
     }
 
 }

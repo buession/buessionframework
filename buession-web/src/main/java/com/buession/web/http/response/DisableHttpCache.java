@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @ResponseHeaders({@ResponseHeader(name = "Cache-Control", value = "no-cache"), @ResponseHeader(name = "Pragma", value

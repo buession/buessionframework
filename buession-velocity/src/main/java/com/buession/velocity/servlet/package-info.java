@@ -25,4 +25,4 @@
 /**
  * @author Yong.Teng
  */
-package com.buession.velocity.view;
+package com.buession.velocity.servlet;

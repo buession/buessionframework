@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.velocity.view;
+package com.buession.velocity.servlet;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.context.Context;
@@ -43,17 +43,17 @@ public class VelocityLayoutView extends VelocityToolboxView {
     /**
      * The default {@link #setLayoutUrl(String) layout url}.
      */
-    public final static String DEFAULT_LAYOUT_URL = "layout.vm";
+    public static final String DEFAULT_LAYOUT_URL = "layout.vm";
 
     /**
      * The default {@link #setLayoutKey(String) layout key}.
      */
-    public final static String DEFAULT_LAYOUT_KEY = "layout";
+    public static final String DEFAULT_LAYOUT_KEY = "layout";
 
     /**
      * The default {@link #setScreenContentKey(String) screen content key}.
      */
-    public final static String DEFAULT_SCREEN_CONTENT_KEY = "screen_content";
+    public static final String DEFAULT_SCREEN_CONTENT_KEY = "screen_content";
 
     private String layoutUrl = DEFAULT_LAYOUT_URL;
 
@@ -97,8 +97,8 @@ public class VelocityLayoutView extends VelocityToolboxView {
             getTemplate(layoutUrl);
             return true;
         }catch(ResourceNotFoundException ex){
-            throw new NestedIOException("Cannot find Velocity template for URL [" + layoutUrl + "]: Did you " +
-                    "specify the correct resource loader path?", ex);
+            throw new NestedIOException("Cannot find Velocity template for URL [" + layoutUrl + "]: Did you specify "
+                    + "the correct resource loader path?", ex);
         }catch(Exception ex){
             throw new NestedIOException("Could not load Velocity template for URL [" + layoutUrl + "]", ex);
         }
@@ -121,11 +121,11 @@ public class VelocityLayoutView extends VelocityToolboxView {
     private void renderScreenContent(Context velocityContext) throws Exception{
         logger.debug("Rendering screen content template [{}]", getUrl());
 
-        StringWriter sw = new StringWriter();
+        StringWriter writer = new StringWriter();
         Template screenContentTemplate = getTemplate(getUrl());
-        screenContentTemplate.merge(velocityContext, sw);
+        screenContentTemplate.merge(velocityContext, writer);
 
-        velocityContext.put(screenContentKey, sw.toString());
+        velocityContext.put(screenContentKey, writer.toString());
     }
 
 }

@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.velocity.view;
+package com.buession.velocity.servlet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +33,8 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
  * @author Yong.Teng
  */
 public class VelocityViewResolver extends AbstractTemplateViewResolver {
+
+    private String encoding;
 
     private String toolboxConfigLocation;
 
@@ -46,12 +48,32 @@ public class VelocityViewResolver extends AbstractTemplateViewResolver {
         setViewClass(requiredViewClass());
     }
 
+    public String getEncoding(){
+        return encoding;
+    }
+
+    public void setEncoding(String encoding){
+        this.encoding = encoding;
+    }
+
+    public String getToolboxConfigLocation(){
+        return toolboxConfigLocation;
+    }
+
     public void setToolboxConfigLocation(String toolboxConfigLocation){
         this.toolboxConfigLocation = toolboxConfigLocation;
     }
 
+    public String getDateToolAttribute(){
+        return dateToolAttribute;
+    }
+
     public void setDateToolAttribute(String dateToolAttribute){
         this.dateToolAttribute = dateToolAttribute;
+    }
+
+    public String getNumberToolAttribute(){
+        return numberToolAttribute;
     }
 
     public void setNumberToolAttribute(String numberToolAttribute){
@@ -67,16 +89,18 @@ public class VelocityViewResolver extends AbstractTemplateViewResolver {
     protected void initApplicationContext(){
         super.initApplicationContext();
 
-        if(this.toolboxConfigLocation != null){
-            if(VelocityView.class == getViewClass()){
-                logger.info("Using VelocityToolboxView instead of default VelocityView " + "due to specified " +
-                        "toolboxConfigLocation");
-                setViewClass(VelocityToolboxView.class);
-            }else if(!VelocityToolboxView.class.isAssignableFrom(getViewClass())){
-                throw new IllegalArgumentException("Given view class [" + getViewClass().getName() + "] is not of " +
-                        "type [" + VelocityToolboxView.class.getName() + "], which it needs to be in case of a " +
-                        "specified toolboxConfigLocation");
-            }
+        if(toolboxConfigLocation == null){
+            return;
+        }
+
+        if(VelocityView.class == getViewClass()){
+            logger.info("Using VelocityToolboxView instead of default VelocityView due to specified " +
+                    "toolboxConfigLocation");
+            setViewClass(VelocityToolboxView.class);
+        }else if(!VelocityToolboxView.class.isAssignableFrom(getViewClass())){
+            throw new IllegalArgumentException("Given view class [" + getViewClass().getName() + "] is not of " +
+                    "type [" + VelocityToolboxView.class.getName() + "], which it needs to be in case of a " +
+                    "specified toolboxConfigLocation");
         }
     }
 
@@ -87,9 +111,10 @@ public class VelocityViewResolver extends AbstractTemplateViewResolver {
         view.setDateToolAttribute(dateToolAttribute);
         view.setNumberToolAttribute(numberToolAttribute);
 
-        if(this.toolboxConfigLocation != null){
-            ((VelocityToolboxView) view).setToolboxConfigLocation(this.toolboxConfigLocation);
+        if(toolboxConfigLocation != null){
+            ((VelocityToolboxView) view).setToolboxConfigLocation(toolboxConfigLocation);
         }
+
         return view;
     }
 

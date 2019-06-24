@@ -22,9 +22,9 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.velocity;
+package com.buession.velocity.spring;
 
-import com.buession.velocity.spring.VelocityEngineFactory;
+import com.buession.velocity.VelocityConfig;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
@@ -56,7 +56,7 @@ public class VelocityConfigurer extends VelocityEngineFactory implements Velocit
     /**
      * the name of Spring's default bind macro library
      */
-    private final static String SPRING_MACRO_LIBRARY = "org/springframework/web/servlet/view/velocity/spring.vm";
+    private final static String SPRING_MACRO_LIBRARY = "com/buession/velocity/spring/view/spring.vm";
 
     private VelocityEngine velocityEngine;
 

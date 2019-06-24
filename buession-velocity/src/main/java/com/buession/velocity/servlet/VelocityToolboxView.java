@@ -22,13 +22,14 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.velocity.view;
+package com.buession.velocity.servlet;
 
-import org.apache.velocity.VelocityContext;
 import org.apache.velocity.context.Context;
-import org.apache.velocity.tools.view.ToolboxManager;
-import org.apache.velocity.tools.view.context.ChainedContext;
-import org.apache.velocity.tools.view.servlet.ServletToolboxManager;
+import org.apache.velocity.tools.Scope;
+import org.apache.velocity.tools.ToolManager;
+import org.apache.velocity.tools.ToolboxFactory;
+import org.apache.velocity.tools.view.ViewToolContext;
+import org.apache.velocity.tools.view.ViewToolManager;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 
@@ -55,14 +56,28 @@ public class VelocityToolboxView extends VelocityView {
     @Override
     protected Context createVelocityContext(Map<String, Object> model, HttpServletRequest request,
                                             HttpServletResponse response) throws Exception{
-        ChainedContext velocityContext = new ChainedContext(new VelocityContext(model), getVelocityEngine(), request,
-                response, getServletContext());
+        ViewToolContext velocityContext = new ViewToolContext(getVelocityEngine(), request, response,
+                getServletContext());
+
+        velocityContext.putAll(model);
 
         if(getToolboxConfigLocation() != null){
-            ToolboxManager toolboxManager = ServletToolboxManager.getInstance(getServletContext(),
-                    getToolboxConfigLocation());
-            Map<String, Object> toolboxContext = toolboxManager.getToolbox(velocityContext);
-            velocityContext.setToolbox(toolboxContext);
+            ToolManager toolManager = new ViewToolManager(getServletContext(), false, true);
+
+            toolManager.setVelocityEngine(getVelocityEngine());
+            toolManager.configure(getToolboxConfigLocation());
+
+            ToolboxFactory toolboxFactory = toolManager.getToolboxFactory();
+
+            if(toolboxFactory.hasTools(Scope.APPLICATION)){
+                velocityContext.addToolbox(toolboxFactory.createToolbox(Scope.APPLICATION));
+            }
+            if(toolboxFactory.hasTools(Scope.SESSION)){
+                velocityContext.addToolbox(toolboxFactory.createToolbox(Scope.SESSION));
+            }
+            if(toolboxFactory.hasTools(Scope.REQUEST)){
+                velocityContext.addToolbox(toolboxFactory.createToolbox(Scope.REQUEST));
+            }
         }
 
         return velocityContext;
