@@ -24,90 +24,11 @@
  */
 package com.buession.web.mvc.controller;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
-import java.util.List;
-
 /**
  * @author Yong.Teng
  */
 public interface Controller {
 
     int PAGE_NOT_FOUND_ERROR_CODE = 404;
-
-    class Response<E> extends com.buession.web.mvc.Response<E> {
-
-        public Response(){
-            super();
-        }
-
-        public Response(boolean state){
-            super(state);
-        }
-
-        public Response(boolean state, int code){
-            super(state, code);
-        }
-
-        public Response(boolean state, int code, String message){
-            super(state, code, message);
-        }
-
-        public Response(boolean state, String message){
-            super(state, message);
-        }
-
-        public Response(boolean state, int code, String message, E data){
-            super(state, code, message, data);
-        }
-
-        public Response(boolean state, String message, E data){
-            super(state, message, data);
-        }
-
-        public Response(boolean state, int code, String message, E data, Pagination<E> pagination){
-            super(state, code, message, data);
-            setPagination(pagination);
-        }
-
-        public Response(boolean state, String message, E data, Pagination<E> pagination){
-            super(state, message, data);
-            setPagination(pagination);
-        }
-
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        @Override
-        public E getData(){
-            return super.getData();
-        }
-
-        @JsonInclude(JsonInclude.Include.NON_NULL)
-        @Override
-        public com.buession.core.Pagination<E> getPagination(){
-            return super.getPagination();
-        }
-
-        public final static class Pagination<E> extends com.buession.core.Pagination<E> {
-
-            public Pagination(){
-                super();
-            }
-
-            public Pagination(int page, int pagesize){
-                super(page, pagesize);
-            }
-
-            public Pagination(int page, int pagesize, long totalRecords){
-                super(page, pagesize, totalRecords);
-            }
-
-            @JsonInclude(JsonInclude.Include.NON_NULL)
-            @Override
-            public List<E> getData(){
-                return super.getData();
-            }
-
-        }
-    }
 
 }
