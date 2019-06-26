@@ -27,8 +27,8 @@
 package com.buession.thesaurus;
 
 import com.buession.core.utils.Assert;
+import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
-import com.buession.thesaurus.core.Type;
 import com.buession.thesaurus.core.Word;
 
 import java.io.File;
@@ -41,7 +41,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractParser<T extends Type> implements Parser<T> {
+public abstract class AbstractParser implements Parser {
 
     @Override
     public Set<Word> parse(File file) throws IOException{
@@ -74,11 +74,7 @@ public abstract class AbstractParser<T extends Type> implements Parser<T> {
             return null;
         }
 
-        String[] temp = str.split(delimiter);
-        if(temp == null){
-            return null;
-        }
-
+        String[] temp = StringUtils.split(delimiter);
         char[] ch = new char[temp.length];
 
         for(int i = 0; i < temp.length; i++){

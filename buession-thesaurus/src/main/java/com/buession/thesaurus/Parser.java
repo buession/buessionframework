@@ -38,9 +38,9 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public interface Parser<T extends Type> {
+public interface Parser {
 
-    T getType();
+    Type getType();
 
     Set<Word> parse(File file) throws IOException;
 

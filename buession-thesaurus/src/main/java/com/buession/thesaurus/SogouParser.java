@@ -28,8 +28,8 @@ package com.buession.thesaurus;
 
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
+import com.buession.thesaurus.core.Type;
 import com.buession.thesaurus.core.Word;
-import com.buession.thesaurus.sogou.SogouType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,21 +48,20 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class SogouParser extends AbstractParser<SogouType> {
+public class SogouParser extends AbstractParser {
 
     protected final static Charset ENCODING = StandardCharsets.UTF_16LE;
-
-    @Override
-    public SogouType getType(){
-        return new SogouType();
-    }
 
     private final static Logger logger = LoggerFactory.getLogger(SogouParser.class);
 
     @Override
+    public Type getType(){
+        return Type.SOGOU;
+    }
+
+    @Override
     protected Set<Word> doParse(InputStream inputStream) throws IOException{
         SogouScelModel model = read(inputStream);
-        Set<Word> words = new LinkedHashSet<>();
 
         logger.debug("words entry info is: name => {}, type => {}, description => {}, sample => {}.", model.getName()
                 , model.getType(), model.getDescription(), model.getSample());
@@ -71,7 +70,10 @@ public class SogouParser extends AbstractParser<SogouType> {
 
         if(tempWords == null){
             return null;
-        }else if(tempWords.size() == 0){
+        }
+
+        Set<Word> words = new LinkedHashSet<>(tempWords.size());
+        if(tempWords.size() == 0){
             return words;
         }
 

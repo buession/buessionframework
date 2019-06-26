@@ -26,6 +26,7 @@ package com.buession.thesaurus.spring;
 
 import com.buession.core.utils.Assert;
 import com.buession.thesaurus.Parser;
+import com.buession.thesaurus.core.Type;
 import com.buession.thesaurus.execption.ThesaurusTypeNotFoundException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -41,6 +42,10 @@ public class ThesaurusFactoryBean extends ThesaurusFactory implements FactoryBea
 
     public ThesaurusFactoryBean(){
         super();
+    }
+
+    public ThesaurusFactoryBean(Type type){
+        super(type);
     }
 
     public ThesaurusFactoryBean(String type){
@@ -64,17 +69,18 @@ public class ThesaurusFactoryBean extends ThesaurusFactory implements FactoryBea
 
     @Override
     public void afterPropertiesSet() throws Exception{
-        Assert.isBlank(getType(), "Thesaurus key could not be null or empty.");
+        Assert.isNull(getType(), "Thesaurus key could not be null.");
 
-        char first = getType().charAt(0);
+        char first = getType().getId().charAt(0);
 
         StringBuffer sb = new StringBuffer();
 
-        sb.append("com.buession.thesaurus.");
+        sb.append(Parser.class.getPackage().getName());
+        sb.append('.');
 
         if(first >= 'a' && first <= 'z'){
-            sb.append((char) (getType().charAt(0) - 32));
-            sb.append(getType().substring(1));
+            sb.append((char) (first - 32));
+            sb.append(getType().getId().substring(1));
         }else{
             sb.append(getType());
         }
@@ -88,4 +94,5 @@ public class ThesaurusFactoryBean extends ThesaurusFactory implements FactoryBea
             throw new ThesaurusTypeNotFoundException("The " + getType() + " thesaurus not be found.");
         }
     }
+
 }

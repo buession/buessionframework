@@ -43,11 +43,18 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractMessagePropertyBeanPostProcessor implements BeanPostProcessor {
+public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 
     private Environment environment;
 
-    private final static Logger logger = LoggerFactory.getLogger(AbstractMessagePropertyBeanPostProcessor.class);
+    private final static Logger logger = LoggerFactory.getLogger(MessagePropertyBeanPostProcessor.class);
+
+    public MessagePropertyBeanPostProcessor(){
+    }
+
+    public MessagePropertyBeanPostProcessor(Environment environment){
+        this.environment = environment;
+    }
 
     public Environment getEnvironment(){
         return environment;
@@ -91,14 +98,14 @@ public abstract class AbstractMessagePropertyBeanPostProcessor implements BeanPo
     private void handleMessageInjected(final Object bean, final String beanName, final Field field, final Message
             message) throws IllegalAccessException{
         final String key = message.value();
-        final String text = environment.getProperty(key + "." + message.textField());
+        final String text = getEnvironment().getProperty(key + "." + message.textField());
 
         if(message.required() && text == null){
             throw new IllegalArgumentException("Could not resolve placeholder '" + key + "' in value \"${" + key +
                     "}\", on: " + beanName + "(" + bean.getClass().getName() + ").");
         }
 
-        final int code = environment.getProperty(key + "." + message.codeField(), Integer.class);
+        final int code = getEnvironment().getProperty(key + "." + message.codeField(), Integer.class);
 
         field.setAccessible(true);
 

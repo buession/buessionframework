@@ -24,15 +24,28 @@
  */
 package com.buession.thesaurus.core;
 
-import com.buession.thesaurus.Parser;
-
 /**
  * @author Yong.Teng
  */
-public interface Type<T extends Parser> {
+public enum Type {
 
-    String getName();
+    SOGOU("sogou", "搜狗词库");
 
-    Class<T> getParse();
+    private String id;
+
+    private String name;
+
+    Type(String id, String name){
+        this.id = id;
+        this.name = name;
+    }
+
+    public String getId(){
+        return id;
+    }
+
+    public String getName(){
+        return name;
+    }
 
 }

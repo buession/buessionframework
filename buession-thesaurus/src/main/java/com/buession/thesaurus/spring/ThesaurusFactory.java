@@ -26,25 +26,40 @@
  */
 package com.buession.thesaurus.spring;
 
+import com.buession.thesaurus.core.Type;
+
 /**
  * @author Yong.Teng
  */
 public class ThesaurusFactory {
 
-    private String type;
+    private Type type;
 
     public ThesaurusFactory(){
     }
 
-    public ThesaurusFactory(String type){
+    public ThesaurusFactory(Type type){
         this.type = type;
     }
 
-    public String getType(){
+    public ThesaurusFactory(String type){
+        try{
+            this.type = Enum.valueOf(Type.class, type);
+        }catch(Exception e){
+            for(Type row : Type.values()){
+                if(row.getId().equals(type)){
+                    this.type = row;
+                    break;
+                }
+            }
+        }
+    }
+
+    public Type getType(){
         return type;
     }
 
-    public void setType(String type){
+    public void setType(Type type){
         this.type = type;
     }
 }
