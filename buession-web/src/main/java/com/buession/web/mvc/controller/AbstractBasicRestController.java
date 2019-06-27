@@ -38,27 +38,31 @@ import javax.servlet.http.HttpServletResponse;
 public abstract class AbstractBasicRestController<P, E> extends AbstractRestController {
 
     @RequestMapping(path = "", method = RequestMethod.POST)
-    public Response add(HttpServletRequest request, HttpServletResponse response, @RequestBody E e){
+    public com.buession.web.mvc.Response add(HttpServletRequest request, HttpServletResponse response, @RequestBody E
+            e){
         return pageNotFound(request, response);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-    public Response edit(HttpServletRequest request, HttpServletResponse response, @PathVariable(name = "id") P id,
-                         @RequestBody E e){
+    public com.buession.web.mvc.Response edit(HttpServletRequest request, HttpServletResponse response, @PathVariable
+            (name = "id") P id, @RequestBody E e){
         return pageNotFound(request, response);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public Response detail(HttpServletRequest request, HttpServletResponse response, @PathVariable(name = "id") P id){
+    public com.buession.web.mvc.Response detail(HttpServletRequest request, HttpServletResponse response,
+                                                @PathVariable(name = "id") P id){
         return pageNotFound(request, response);
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public Response delete(HttpServletRequest request, HttpServletResponse response, @PathVariable(name = "id") P id){
+    public com.buession.web.mvc.Response delete(HttpServletRequest request, HttpServletResponse response,
+                                                @PathVariable(name = "id") P id){
         return pageNotFound(request, response);
     }
 
-    protected Response pageNotFound(final HttpServletRequest request, final HttpServletResponse response){
+    protected com.buession.web.mvc.Response pageNotFound(final HttpServletRequest request, final HttpServletResponse
+            response){
         return new Response(false, PAGE_NOT_FOUND_ERROR_CODE, request.getRequestURI());
     }
 

@@ -34,6 +34,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -61,12 +62,13 @@ public class DocumentMeteDataProcessor extends AbstractProcessor {
         Class<?> clazz = pjp.getTarget().getClass();
         Method method = ((MethodSignature) pjp.getSignature()).getMethod();
 
-        if(clazz != null && clazz.isAnnotationPresent(DocumentMeteData.class)){
-            addHeadToModelAttribute(model, clazz.getAnnotation(DocumentMeteData.class));
+        if(AnnotatedElementUtils.hasAnnotation(clazz, DocumentMeteData.class)){
+            addHeadToModelAttribute(model, AnnotatedElementUtils.findMergedAnnotation(clazz, DocumentMeteData
+                    .class));
         }
 
-        if(method != null && method.isAnnotationPresent(DocumentMeteData.class)){
-            addHeadToModelAttribute(model, method.getAnnotation(DocumentMeteData.class));
+        if(AnnotatedElementUtils.hasAnnotation(method, DocumentMeteData.class)){
+            addHeadToModelAttribute(model, AnnotatedElementUtils.findMergedAnnotation(method, DocumentMeteData.class));
         }
     }
 

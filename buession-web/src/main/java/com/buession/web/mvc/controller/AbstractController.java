@@ -35,28 +35,29 @@ import javax.servlet.http.HttpServletRequest;
  */
 public abstract class AbstractController implements Controller {
 
-    protected final static <E> Response<E> responseSuccess(){
+    protected final static <E> com.buession.web.mvc.Response<E> responseSuccess(){
         return responseSuccess("操作成功");
     }
 
-    protected final static <E> Response<E> responseSuccess(final String message){
+    protected final static <E> com.buession.web.mvc.Response<E> responseSuccess(final String message){
         return responseSuccess(message, (E) null);
     }
 
-    protected final static <E> Response<E> responseSuccess(final E data){
+    protected final static <E> com.buession.web.mvc.Response<E> responseSuccess(final E data){
         return responseSuccess("操作成功", data);
     }
 
-    protected final static <E> Response<E> responseSuccess(final String message, final E data){
+    protected final static <E> com.buession.web.mvc.Response<E> responseSuccess(final String message, final E data){
         return response(true, 0, message, data);
     }
 
-    public static <E> Response<E> responseSuccess(final Pagination<E> pagination){
+    public static <E> com.buession.web.mvc.Response<E> responseSuccess(final Pagination<E> pagination){
         return responseSuccess("数据获取成功", pagination);
     }
 
     @SuppressWarnings({"unchecked"})
-    public static <E> Response<E> responseSuccess(final String message, final Pagination<E> pagination){
+    public static <E> com.buession.web.mvc.Response<E> responseSuccess(final String message, final Pagination<E>
+            pagination){
         final Response<E> response = new Response(true, 0, message, pagination.getData());
         final Response.Pagination<E> paging = new Response.Pagination<>(pagination.getPage(), pagination.getPagesize
                 (), pagination.getTotalRecords());
@@ -67,32 +68,35 @@ public abstract class AbstractController implements Controller {
         return response;
     }
 
-    protected final static <E> Response<E> responseFailure(final MessageObject message){
+    protected final static <E> com.buession.web.mvc.Response<E> responseFailure(final MessageObject message){
         return responseFailure(message.getCode(), message.getText());
     }
 
-    protected static <E> Response<E> responseFailure(final MessageObject message, final Exception e){
+    protected static <E> com.buession.web.mvc.Response<E> responseFailure(final MessageObject message, final
+    Exception e){
         return responseFailure(message.getCode(), message.getText() + "：" + e.getMessage());
     }
 
-    protected static <E> Response<E> responseFailureFormat(final MessageObject message, final Object... args){
+    protected static <E> com.buession.web.mvc.Response<E> responseFailureFormat(final MessageObject message, final
+    Object... args){
         return responseFailure(message.getCode(), String.format(message.getText(), args));
     }
 
-    protected final static <E> Response<E> responseFailure(final int code){
+    protected final static <E> com.buession.web.mvc.Response<E> responseFailure(final int code){
         return responseFailure(code, "操作失败");
     }
 
-    protected final static <E> Response<E> responseFailure(final int code, final String message){
+    protected final static <E> com.buession.web.mvc.Response<E> responseFailure(final int code, final String message){
         return response(false, code, message);
     }
 
-    protected final static <E> Response<E> response(final boolean state, final int code, final String message){
+    protected final static <E> com.buession.web.mvc.Response<E> response(final boolean state, final int code, final
+    String message){
         return new Response<>(state, code, message);
     }
 
-    protected final static <E> Response<E> response(final boolean state, final int code, final String message, final
-    E data){
+    protected final static <E> com.buession.web.mvc.Response<E> response(final boolean state, final int code, final
+    String message, final E data){
         return new Response<>(state, code, message, data);
     }
 

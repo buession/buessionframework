@@ -26,44 +26,21 @@
  */
 package com.buession.web.http.request;
 
+import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * @author Yong.Teng
  */
 public class RequestUtils {
 
-    private final static Set<String> CLIENT_IP_HEADERS = new LinkedHashSet<>();
+    private final static String[] CLIENT_IP_HEADERS = new String[]{"X-Forwarded-For-Pound"/* 微信 */, "X-Cdn-Src-Ip"/* 网宿
+    */, "X-Forwarded-For", "X-Real-Ip", "Proxy-Client-IP", "WL-Proxy-Client-IP", "Real-ClientIP"};
 
-    private final static Set<String> MOBILE_MAPS = new HashSet<>();
-
-    static{
-        CLIENT_IP_HEADERS.add("X-Forwarded-For");
-        CLIENT_IP_HEADERS.add("Proxy-Client-IP");
-        CLIENT_IP_HEADERS.add("WL-Proxy-Client-IP");
-        CLIENT_IP_HEADERS.add("Real-ClientIP");
-
-        MOBILE_MAPS.add("android");
-        MOBILE_MAPS.add("iphone");
-        MOBILE_MAPS.add("ipod");
-        MOBILE_MAPS.add("windows phone");
-        MOBILE_MAPS.add("mobile");
-        MOBILE_MAPS.add("coolpad");
-        MOBILE_MAPS.add("mmp");
-        MOBILE_MAPS.add("smartphone");
-        MOBILE_MAPS.add("midp");
-        MOBILE_MAPS.add("wap");
-        MOBILE_MAPS.add("xoom");
-        MOBILE_MAPS.add("symbian");
-        MOBILE_MAPS.add("j2me");
-        MOBILE_MAPS.add("blackberry");
-        MOBILE_MAPS.add("wince");
-    }
+    private final static String[] MOBILE_MAPS = new String[]{"android", "iphone", "ipod", "windows phone", "mobile",
+            "coolpad", "mmp", "smartphone", "midp", "wap", "xoom", "symbian", "j2me", "blackberry", "wince"};
 
     private RequestUtils(){
     }
@@ -77,11 +54,9 @@ public class RequestUtils {
      * @return 客户端真实 IP 地址
      */
     public final static String getClientIp(final HttpServletRequest request){
-        if(request == null){
-            throw new IllegalArgumentException("HttpServletRequest cloud not be null.");
-        }
+        Assert.isNull(request, "HttpServletRequest cloud not be null.");
 
-        String ip = null;
+        String ip;
         for(String header : CLIENT_IP_HEADERS){
             ip = request.getHeader(header);
             if(Validate.hasText(ip) == true && "unknown".equalsIgnoreCase(ip) == false){
@@ -106,7 +81,7 @@ public class RequestUtils {
      * @return 是否为 Ajax 请求
      */
     public final static boolean isAjaxRequest(final HttpServletRequest request){
-        return request == null ? false : "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"));
+        return request != null && "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"));
     }
 
     /**
