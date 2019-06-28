@@ -25,7 +25,6 @@
 package com.buession.redis.utils;
 
 import com.buession.core.validator.Validate;
-import redis.clients.jedis.util.SafeEncoder;
 
 /**
  * @author Yong.Teng
@@ -45,7 +44,7 @@ public class KeyUtil {
             return keys;
         }
 
-        String[] rawKeys = new String[]{};
+        String[] rawKeys = new String[keys.length];
 
         for(int i = 0; i < keys.length; i++){
             rawKeys[i] = makeRawKey(prefix, keys[i]);
@@ -81,16 +80,15 @@ public class KeyUtil {
         return key;
     }
 
-    public final static byte[][] makeByteKeys(final String prefix, final byte[]... keys){
+    public final static byte[][] makeByteKeys(final byte[] prefix, final byte[]... keys){
         if(Validate.isEmpty(keys)){
             return keys;
         }
 
-        final byte[] prefixByte = prefix == null ? null : SafeEncoder.encode(prefix);
-        byte[][] byteKeys = new byte[][]{};
+        byte[][] byteKeys = new byte[keys.length][];
 
         for(int i = 0; i < keys.length; i++){
-            byteKeys[i] = makeByteKey(prefixByte, keys[i]);
+            byteKeys[i] = makeByteKey(prefix, keys[i]);
         }
 
         return byteKeys;

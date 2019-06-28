@@ -45,14 +45,14 @@ import java.lang.reflect.Method;
  */
 @Aspect
 @Component
-public class DocumentMeteDataProcessor extends AbstractProcessor {
+public class DocumentMetaDataProcessor extends AbstractProcessor {
 
-    private final static String DEFAULT_ATTR_NAME = "metedata";
+    private final static String DEFAULT_ATTR_NAME = "metadata";
 
-    private final static Logger logger = LoggerFactory.getLogger(DocumentMeteDataProcessor.class);
+    private final static Logger logger = LoggerFactory.getLogger(DocumentMetaDataProcessor.class);
 
-    @AfterReturning("@annotation(com.buession.web.mvc.view.document.DocumentMeteData)")
-    public void documentMeteDataProcessAfter(JoinPoint pjp) throws Throwable{
+    @AfterReturning("@annotation(com.buession.web.mvc.view.document.DocumentMetaData)")
+    public void documentMetaDataProcessAfter(JoinPoint pjp) throws Throwable{
         Model model = getModel(pjp);
 
         if(model == null){
@@ -62,41 +62,40 @@ public class DocumentMeteDataProcessor extends AbstractProcessor {
         Class<?> clazz = pjp.getTarget().getClass();
         Method method = ((MethodSignature) pjp.getSignature()).getMethod();
 
-        if(AnnotatedElementUtils.hasAnnotation(clazz, DocumentMeteData.class)){
-            addHeadToModelAttribute(model, AnnotatedElementUtils.findMergedAnnotation(clazz, DocumentMeteData
-                    .class));
+        if(AnnotatedElementUtils.hasAnnotation(clazz, DocumentMetaData.class)){
+            addHeadToModelAttribute(model, AnnotatedElementUtils.findMergedAnnotation(clazz, DocumentMetaData.class));
         }
 
-        if(AnnotatedElementUtils.hasAnnotation(method, DocumentMeteData.class)){
-            addHeadToModelAttribute(model, AnnotatedElementUtils.findMergedAnnotation(method, DocumentMeteData.class));
+        if(AnnotatedElementUtils.hasAnnotation(method, DocumentMetaData.class)){
+            addHeadToModelAttribute(model, AnnotatedElementUtils.findMergedAnnotation(method, DocumentMetaData.class));
         }
     }
 
-    private final static MeteData convert(final DocumentMeteData meteData){
-        if(meteData == null){
+    private final static MeteData convert(final DocumentMetaData metaData){
+        if(metaData == null){
             return null;
         }
 
-        MeteData meteDataObject = new MeteData();
+        MeteData metaDataObject = new MeteData();
 
-        meteDataObject.setTitle(meteData.title());
-        meteDataObject.setAuthor(meteData.author());
-        meteDataObject.setCharset(meteData.charset());
-        meteDataObject.setKeywords(meteData.keywords());
-        meteDataObject.setDescription(meteData.description());
-        meteDataObject.setAuthor(meteDataObject.getAuthor());
-        meteDataObject.setCopyright(meteDataObject.getCopyright());
+        metaDataObject.setTitle(metaData.title());
+        metaDataObject.setAuthor(metaData.author());
+        metaDataObject.setCharset(metaData.charset());
+        metaDataObject.setKeywords(metaData.keywords());
+        metaDataObject.setDescription(metaData.description());
+        metaDataObject.setAuthor(metaData.author());
+        metaDataObject.setCopyright(metaData.copyright());
 
-        return meteDataObject;
+        return metaDataObject;
     }
 
-    private final static void addHeadToModelAttribute(final Model model, final DocumentMeteData meteData){
-        if(model == null || meteData == null){
+    private final static void addHeadToModelAttribute(final Model model, final DocumentMetaData metaData){
+        if(model == null || metaData == null){
             return;
         }
 
-        String attrName = Validate.hasText(meteData.attrName()) ? meteData.attrName() : DEFAULT_ATTR_NAME;
-        model.addAttribute(attrName, convert(meteData));
+        String attrName = Validate.hasText(metaData.attrName()) ? metaData.attrName() : DEFAULT_ATTR_NAME;
+        model.addAttribute(attrName, convert(metaData));
     }
 
 }

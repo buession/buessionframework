@@ -38,7 +38,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface DocumentMeteData {
+public @interface DocumentMetaData {
 
     /**
      * 返回注册 Model attribute 名字

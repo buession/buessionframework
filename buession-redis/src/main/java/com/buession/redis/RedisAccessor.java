@@ -38,6 +38,7 @@ import com.buession.redis.core.Options;
 import com.buession.redis.serializer.JSONSerializer;
 import com.buession.redis.serializer.Serializer;
 import com.buession.redis.utils.KeyUtil;
+import com.buession.redis.utils.SafeEncoder;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,7 +179,8 @@ public abstract class RedisAccessor {
     }
 
     protected final byte[][] makeByteKeys(final byte[]... keys){
-        return KeyUtil.makeByteKeys(getOptions().getPrefix(), keys);
+        String prefix = getOptions().getPrefix();
+        return KeyUtil.makeByteKeys(prefix == null ? null : SafeEncoder.encode(prefix), keys);
     }
 
     protected <V> String[] serializer(final V... values){
