@@ -36,7 +36,7 @@ public class Pagination<E> extends com.buession.core.Pagination<E> {
     /**
      * 偏移量
      */
-    private int offset = 0;
+    private Integer offset;
 
     /**
      * Constructs with default configuration.
@@ -71,41 +71,19 @@ public class Pagination<E> extends com.buession.core.Pagination<E> {
     }
 
     /**
-     * 设置当前页码
-     *
-     * @param page
-     *         当前页码
-     */
-    @Override
-    public void setPage(int page){
-        super.setPage(page);
-
-        if(getPage() > 1){
-            setOffset((getPage() - 1) * getPagesize());
-        }
-    }
-
-    /**
-     * 设置每页大小
-     *
-     * @param pagesize
-     *         每页大小
-     */
-    @Override
-    public void setPagesize(int pagesize){
-        super.setPagesize(pagesize);
-
-        if(getPage() > 1){
-            setOffset((getPage() - 1) * getPagesize());
-        }
-    }
-
-    /**
      * 返回查询偏移量
      *
      * @return 查询偏移量
      */
     public int getOffset(){
+        if(offset == null){
+            if(getPage() > 1){
+                setOffset((getPage() - 1) * getPagesize());
+            }else{
+                offset = 0;
+            }
+        }
+
         return offset;
     }
 
@@ -115,7 +93,7 @@ public class Pagination<E> extends com.buession.core.Pagination<E> {
      * @param offset
      *         查询偏移量
      */
-    private void setOffset(int offset){
+    public void setOffset(int offset){
         this.offset = offset < 0 ? 0 : offset;
     }
 
