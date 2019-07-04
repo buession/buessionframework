@@ -32,6 +32,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -57,6 +58,8 @@ import com.buession.core.exception.OperationException;
  * @author Yong.Teng
  */
 public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
+
+    public final static String ORDERS_PARAMETER_NAME = "ORDERS";
 
     @Resource
     protected SqlSessionTemplate masterSqlSessionTemplate;
@@ -241,8 +244,14 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
      */
     @Override
     public E selectOne(Map<String, Object> conditions, int offset, Map<String, Order> orders){
+        final Map<String, Object> parameters = new LinkedHashMap<>(conditions);
+
+        if(orders != null){
+            parameters.put(ORDERS_PARAMETER_NAME, orders);
+        }
+
         try{
-            return getSlaveSqlSessionTemplate().selectOne(getStatement(DML.SELECT_ONE), conditions);
+            return getSlaveSqlSessionTemplate().selectOne(getStatement(DML.SELECT_ONE), parameters);
         }catch(OperationException e){
             logger.error(e.getMessage());
         }
@@ -262,8 +271,14 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
      */
     @Override
     public List<E> select(Map<String, Object> conditions, Map<String, Order> orders){
+        final Map<String, Object> parameters = new LinkedHashMap<>(conditions);
+
+        if(orders != null){
+            parameters.put(ORDERS_PARAMETER_NAME, orders);
+        }
+
         try{
-            return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), conditions);
+            return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters);
         }catch(OperationException e){
             logger.error(e.getMessage());
         }
@@ -293,8 +308,14 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
             throw new IllegalArgumentException("Size argument value must be positive integer");
         }
 
+        final Map<String, Object> parameters = new LinkedHashMap<>(conditions);
+
+        if(orders != null){
+            parameters.put(ORDERS_PARAMETER_NAME, orders);
+        }
+
         try{
-            return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), conditions, new RowBounds
+            return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters, new RowBounds
                     (offset, size));
         }catch(OperationException e){
             logger.error(e.getMessage());

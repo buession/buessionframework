@@ -44,6 +44,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import javax.annotation.Resource;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -63,37 +64,86 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
 
     private final static Logger logger = LoggerFactory.getLogger(AbstractMongoDBDao.class);
 
+    /**
+     * 返回 master MongoTemplate
+     *
+     * @return master MongoTemplate
+     */
     public MongoTemplate getMasterMongoTemplate(){
         return masterMongoTemplate;
     }
 
+    /**
+     * 设置 master MongoTemplate
+     *
+     * @param masterMongoTemplate
+     *         master MongoTemplate
+     */
     public void setMasterMongoTemplate(MongoTemplate masterMongoTemplate){
         this.masterMongoTemplate = masterMongoTemplate;
     }
 
+    /**
+     * 返回 slave MongoTemplate
+     *
+     * @return slave MongoTemplate
+     */
     public List<MongoTemplate> getSlaveMongoTemplates(){
         return slaveMongoTemplates;
     }
 
+    /**
+     * 设置 slave MongoTemplate
+     *
+     * @param slaveMongoTemplates
+     *         slave MongoTemplate
+     */
     public void setSlaveMongoTemplates(List<MongoTemplate> slaveMongoTemplates){
         this.slaveMongoTemplates = slaveMongoTemplates;
     }
 
+    /**
+     * 插入数据
+     *
+     * @param e
+     *         实体类
+     *
+     * @return 成功返回 1，失败返回 0
+     */
     @Override
     public int insert(E e){
         try{
             masterMongoTemplate.insert(e);
             return 1;
         }catch(Exception ex){
+            logger.error("Insert data failure.", ex);
             return 0;
         }
     }
 
+    /**
+     * 插入数据
+     *
+     * @param e
+     *         实体类
+     *
+     * @return 成功返回 1，失败返回 0
+     */
     @Override
     public int replace(E e){
-        return 0;
+        return insert(e);
     }
 
+    /**
+     * 更新数据
+     *
+     * @param e
+     *         更新数据
+     * @param conditions
+     *         更新条件
+     *
+     * @return 更新条数
+     */
     @Override
     public int update(E e, Map<String, Object> conditions){
         final Query query = new Query();
@@ -117,43 +167,53 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         return (int) writeResult.getModifiedCount();
     }
 
+    /**
+     * 根据主键更新数据
+     *
+     * @param primary
+     *         主键值
+     * @param e
+     *         新数据
+     *
+     * @return 更新条数
+     */
     @Override
     public int updateByPrimary(P primary, E e){
-        final Query query = new Query();
-        final Criteria criteria = Criteria.where(PRIMARY_FIELD).is(primary);
-        final Update update = new Update();
+        final Map<String, Object> conditions = new HashMap<>(1);
 
-        query.addCriteria(criteria);
-
-        if(e != null){
-            BasicDBObject data = toDbObject(e);
-
-            for(String key : data.keySet()){
-                update.set(key, data.get(key));
-            }
-        }
-
-        UpdateResult writeResult = masterMongoTemplate.updateFirst(query, update, getStatement());
-
-        return (int) writeResult.getModifiedCount();
+        conditions.put(PRIMARY_FIELD, primary);
+        return update(e, conditions);
     }
 
+    /**
+     * 根据主键查询数据
+     *
+     * @param primary
+     *         主键值
+     *
+     * @return 数据结果
+     */
     @Override
     public E getByPrimary(P primary){
-        final Query query = new Query();
-        final Criteria criteria = Criteria.where(PRIMARY_FIELD).is(primary);
+        final Map<String, Object> conditions = new HashMap<>(1);
 
-        query.addCriteria(criteria);
+        conditions.put(PRIMARY_FIELD, primary);
 
-        try{
-            return getSlaveMongoTemplate().findOne(query, getStatement());
-        }catch(OperationException e){
-            logger.error(e.getMessage());
-        }
-
-        return null;
+        return selectOne(conditions);
     }
 
+    /**
+     * 获取一条记录
+     *
+     * @param conditions
+     *         查询条件
+     * @param offset
+     *         偏移量
+     * @param orders
+     *         排序
+     *
+     * @return 查询结果
+     */
     @Override
     public E selectOne(Map<String, Object> conditions, int offset, Map<String, Order> orders){
         final Query query = new Query();
@@ -162,6 +222,8 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         if(criteria != null){
             query.addCriteria(criteria);
         }
+
+        buildSort(query, orders);
 
         query.skip(offset);
 
@@ -174,6 +236,16 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         return null;
     }
 
+    /**
+     * 数据查询
+     *
+     * @param conditions
+     *         查询条件
+     * @param orders
+     *         排序
+     *
+     * @return 结果集
+     */
     @Override
     public List<E> select(Map<String, Object> conditions, Map<String, Order> orders){
         final Query query = new Query();
@@ -182,6 +254,8 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         if(criteria != null){
             query.addCriteria(criteria);
         }
+
+        buildSort(query, orders);
 
         try{
             return getSlaveMongoTemplate().find(query, getStatement());
@@ -192,6 +266,20 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         return null;
     }
 
+    /**
+     * 数据查询
+     *
+     * @param conditions
+     *         查询条件
+     * @param offset
+     *         偏移量
+     * @param size
+     *         查询条数
+     * @param orders
+     *         排序
+     *
+     * @return 结果集
+     */
     @Override
     public List<E> select(Map<String, Object> conditions, int offset, int size, Map<String, Order> orders){
         final Query query = new Query();
@@ -204,25 +292,25 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         return select(query, offset, size, orders);
     }
 
+    /**
+     * 数据查询
+     *
+     * @param query
+     *         查询条件
+     * @param offset
+     *         偏移量
+     * @param size
+     *         查询条数
+     * @param orders
+     *         排序
+     *
+     * @return 结果集
+     */
     public List<E> select(Query query, int offset, int size, Map<String, Order> orders){
         Assert.isNull(query, "Query Argument could not be null");
 
-        if(Validate.isEmpty(orders) == false){
-            final List<Sort.Order> sortOrders = new ArrayList<>(orders.size());
-
-            orders.forEach((field, order)->{
-                if(order == Order.ASC){
-                    sortOrders.add(new Sort.Order(Sort.Direction.ASC, field));
-                }else if(order == Order.DESC){
-                    sortOrders.add(new Sort.Order(Sort.Direction.DESC, field));
-                }
-            });
-
-            query.with(Sort.by(sortOrders));
-        }
-
-        query.limit(size);
-        query.skip(offset);
+        buildSort(query, orders);
+        query.limit(size).skip(offset);
 
         try{
             return getSlaveMongoTemplate().find(query, getStatement());
@@ -233,6 +321,20 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         return null;
     }
 
+    /**
+     * 数据分页查询
+     *
+     * @param conditions
+     *         查询条件
+     * @param page
+     *         页码
+     * @param pagesize
+     *         每页大小
+     * @param orders
+     *         排序
+     *
+     * @return Pagination
+     */
     @Override
     public Pagination<E> paging(Map<String, Object> conditions, int page, int pagesize, Map<String, Order> orders){
         final Query query = new Query();
@@ -245,6 +347,20 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         return paging(query, page, pagesize, orders);
     }
 
+    /**
+     * 数据分页查询
+     *
+     * @param query
+     *         查询条件
+     * @param page
+     *         页码
+     * @param pagesize
+     *         每页大小
+     * @param orders
+     *         排序
+     *
+     * @return Pagination
+     */
     public Pagination<E> paging(Query query, int page, int pagesize, Map<String, Order> orders){
         if(page < 1){
             throw new IllegalArgumentException("Page argument value must be positive integer");
@@ -266,6 +382,11 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         return pagination;
     }
 
+    /**
+     * 查询所有数据
+     *
+     * @return 结果集
+     */
     @Override
     public List<E> getAll(){
         try{
@@ -277,6 +398,14 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         return null;
     }
 
+    /**
+     * 数据记录总数
+     *
+     * @param conditions
+     *         查询条件
+     *
+     * @return 记录总数
+     */
     @Override
     public long count(Map<String, Object> conditions){
         final Query query = new Query();
@@ -289,6 +418,14 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         return count(query);
     }
 
+    /**
+     * 数据记录总数
+     *
+     * @param query
+     *         查询条件
+     *
+     * @return 记录总数
+     */
     public long count(Query query){
         Assert.isNull(query, "Query Argument could not be null");
 
@@ -301,6 +438,14 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         return 0;
     }
 
+    /**
+     * 删除数据
+     *
+     * @param conditions
+     *         删除条件
+     *
+     * @return 影响条数
+     */
     @Override
     public int delete(Map<String, Object> conditions){
         final Query query = new Query();
@@ -315,6 +460,14 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         return (int) writeResult.getDeletedCount();
     }
 
+    /**
+     * 根据主键删除数据
+     *
+     * @param primary
+     *         主键值
+     *
+     * @return 影响条数
+     */
     @Override
     public int deleteByPrimary(P primary){
         final Query query = new Query();
@@ -327,14 +480,26 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         return (int) writeResult.getDeletedCount();
     }
 
+    /**
+     * 清空数据
+     *
+     * @return 影响条数
+     */
     @Override
     public int clear(){
-        return 0;
+        DeleteResult writeResult = getMasterMongoTemplate().remove(new Query(), getStatement());
+
+        return (int) writeResult.getDeletedCount();
     }
 
+    /**
+     * 清空数据
+     *
+     * @return 影响条数
+     */
     @Override
     public int truncate(){
-        return 0;
+        return clear();
     }
 
     protected final MongoTemplate getSlaveMongoTemplate(final int index) throws OperationException{
@@ -413,6 +578,22 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         });
 
         return criteria;
+    }
+
+    protected void buildSort(final Query query, final Map<String, Order> orders){
+        if(Validate.isEmpty(orders) == false){
+            final List<Sort.Order> sortOrders = new ArrayList<>(orders.size());
+
+            orders.forEach((field, order)->{
+                if(order == Order.ASC){
+                    sortOrders.add(new Sort.Order(Sort.Direction.ASC, field));
+                }else if(order == Order.DESC){
+                    sortOrders.add(new Sort.Order(Sort.Direction.DESC, field));
+                }
+            });
+
+            query.with(Sort.by(sortOrders));
+        }
     }
 
     private <E> BasicDBObject toDbObject(E e){
