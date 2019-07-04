@@ -307,7 +307,7 @@ public abstract class AbstractJedisRedisClient<T extends JedisCommands> extends 
 
     @Override
     public Long append(final String key, final String value){
-        return execute(ProtocolCommand.SETNX, new Executor<T, Long>() {
+        return execute(ProtocolCommand.APPEND, new Executor<T, Long>() {
 
             @Override
             public Long execute(T client){
@@ -523,7 +523,7 @@ public abstract class AbstractJedisRedisClient<T extends JedisCommands> extends 
 
     @Override
     public Status hSet(final String key, final String field, final String value){
-        return execute(ProtocolCommand.HMSET, new Executor<T, Status>() {
+        return execute(ProtocolCommand.HSET, new Executor<T, Status>() {
 
             @Override
             public Status execute(T client){
@@ -547,7 +547,7 @@ public abstract class AbstractJedisRedisClient<T extends JedisCommands> extends 
 
     @Override
     public String hGet(final String key, final String field){
-        return execute(ProtocolCommand.HSETNX, new Executor<T, String>() {
+        return execute(ProtocolCommand.HGET, new Executor<T, String>() {
 
             @Override
             public String execute(T client){
@@ -559,7 +559,7 @@ public abstract class AbstractJedisRedisClient<T extends JedisCommands> extends 
 
     @Override
     public Status hMSet(final String key, final Map<String, String> data){
-        return execute(ProtocolCommand.HSETNX, new Executor<T, Status>() {
+        return execute(ProtocolCommand.HMSET, new Executor<T, Status>() {
 
             @Override
             public Status execute(T client){
@@ -743,7 +743,7 @@ public abstract class AbstractJedisRedisClient<T extends JedisCommands> extends 
 
     @Override
     public Long lInsert(final String key, final String value, final ListPosition position, final String pivot){
-        return execute(ProtocolCommand.LPUSHX, new Executor<T, Long>() {
+        return execute(ProtocolCommand.LINSERT, new Executor<T, Long>() {
 
             @Override
             public Long execute(T client){
@@ -1736,7 +1736,7 @@ public abstract class AbstractJedisRedisClient<T extends JedisCommands> extends 
     @Override
     public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius, final
     GeoUnit unit, final GeoArgument geoArgument){
-        return execute(ProtocolCommand.PFMERGE, new Executor<T, List<GeoRadius>>() {
+        return execute(ProtocolCommand.GEORADIUSBYMEMBER, new Executor<T, List<GeoRadius>>() {
 
             @Override
             public List<GeoRadius> execute(T client){

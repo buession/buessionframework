@@ -1208,7 +1208,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
     @Override
     public List<String> blPop(final String[] keys, final int timeout){
-        return execute(ProtocolCommand.LPOP, new Executor<Jedis, List<String>>() {
+        return execute(ProtocolCommand.BLPOP, new Executor<Jedis, List<String>>() {
 
             @Override
             public List<String> execute(Jedis client){
@@ -3750,7 +3750,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
     @Override
     public byte[] echo(byte[] str){
-        return execute(ProtocolCommand.GEODIST, new Executor<Jedis, byte[]>() {
+        return execute(ProtocolCommand.ECHO, new Executor<Jedis, byte[]>() {
 
             @Override
             public byte[] execute(Jedis client){
