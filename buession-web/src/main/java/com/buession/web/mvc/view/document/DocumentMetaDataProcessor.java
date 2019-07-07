@@ -27,7 +27,7 @@
 package com.buession.web.mvc.view.document;
 
 import com.buession.core.validator.Validate;
-import com.buession.web.annotation.AbstractProcessor;
+import com.buession.web.servlet.annotation.AbstractProcessor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;

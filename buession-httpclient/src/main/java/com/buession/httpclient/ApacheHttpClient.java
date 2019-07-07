@@ -28,6 +28,8 @@ import com.buession.httpclient.conn.ApacheClientConnectionManager;
 import com.buession.httpclient.conn.ConnectionManager;
 import com.buession.httpclient.core.Configuration;
 import com.buession.httpclient.core.Header;
+import com.buession.httpclient.core.HttpVersion;
+import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.Request;
 import com.buession.httpclient.core.RequestMethod;
@@ -295,8 +297,14 @@ public class ApacheHttpClient extends AbstractHttpClient {
             ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         final Request request = HttpComponentsRequestBuilder.create(httpRequest).setUrl(url).setParameters
                 (parameters).setHeaders(headers).build();
+        final HttpVersion httpVersion = getHttpVersion();
 
         httpRequest.setConfig(getRequestConfig());
+        if(httpVersion != null){
+            httpRequest.setProtocolVersion(new org.apache.http.ProtocolVersion(httpVersion.getProtocol(), httpVersion
+                    .getMajor(), httpVersion.getMinor()));
+        }
+        setHttpVersion(null);
 
         try{
             httpRequest.setURI(new URI(request.getUrl()));

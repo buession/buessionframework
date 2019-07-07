@@ -25,6 +25,7 @@
 package com.buession.httpclient.helper;
 
 import com.buession.httpclient.core.Header;
+import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.Request;
 import com.buession.httpclient.utils.URLUtils;
@@ -39,9 +40,17 @@ public abstract class AbstractRequestBuilder implements RequestBuilder {
 
     protected Request request = new Request();
 
+    private ProtocolVersion protocolVersion;
+
     private String url;
 
     private Map<String, Object> parameters;
+
+    @Override
+    public RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion){
+        this.protocolVersion = protocolVersion;
+        return this;
+    }
 
     @Override
     public RequestBuilder setUrl(String url){

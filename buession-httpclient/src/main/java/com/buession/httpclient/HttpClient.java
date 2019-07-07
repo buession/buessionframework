@@ -26,6 +26,7 @@ package com.buession.httpclient;
 
 import com.buession.httpclient.conn.ConnectionManager;
 import com.buession.httpclient.core.Header;
+import com.buession.httpclient.core.HttpVersion;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.Response;
@@ -60,6 +61,21 @@ public interface HttpClient {
     void setConnectionManager(ConnectionManager connectionManager);
 
     /**
+     * 获取 HTTP 协议版本
+     *
+     * @return HTTP 协议版本
+     */
+    HttpVersion getHttpVersion();
+
+    /**
+     * 设置 HTTP 协议版本
+     *
+     * @param httpVersion
+     *         HTTP 协议版本
+     */
+    void setHttpVersion(HttpVersion httpVersion);
+
+    /**
      * GET 请求
      *
      * @param url
@@ -78,7 +94,6 @@ public interface HttpClient {
      * @throws RequestException
      *         请求异常
      */
-
     Response get(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
             RequestAbortedException, RequestException;
 

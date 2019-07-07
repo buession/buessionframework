@@ -22,31 +22,23 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.helper;
-
-import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.Request;
-
-import java.util.List;
-import java.util.Map;
+package com.buession.httpclient.core;
 
 /**
  * @author Yong.Teng
  */
-public interface RequestBuilder {
+public class HttpVersion extends ProtocolVersion {
 
-    RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion);
+    public final static String HTTP = "HTTP";
 
-    RequestBuilder setUrl(String url);
+    public final static HttpVersion HTTP_0_9 = new HttpVersion(0, 9);
 
-    RequestBuilder setHeaders(List<Header> headers);
+    public final static HttpVersion HTTP_1_0 = new HttpVersion(1, 0);
 
-    RequestBuilder setParameters(Map<String, Object> parameters);
+    public final static HttpVersion HTTP_1_1 = new HttpVersion(1, 1);
 
-    RequestBuilder setNameValuePairs(RequestBody requestBody);
-
-    Request build();
+    public HttpVersion(int major, int minor){
+        super(HTTP, major, minor);
+    }
 
 }

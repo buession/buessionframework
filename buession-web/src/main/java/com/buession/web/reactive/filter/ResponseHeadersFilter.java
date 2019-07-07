@@ -22,20 +22,51 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.principal.annotation;
+package com.buession.web.reactive.filter;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.buession.core.validator.Validate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Mono;
+
+import java.util.Map;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface User {
+public class ResponseHeadersFilter implements WebFilter {
 
+    private Map<String, String> headers;
+
+    public Map<String, String> getHeaders(){
+        return headers;
+    }
+
+    public Map<String, String> getHeaders(final ServerHttpRequest request){
+        return getHeaders();
+    }
+
+    public void setHeaders(Map<String, String> headers){
+        this.headers = headers;
+    }
+
+    public void setHeaders(final ServerHttpRequest request, Map<String, String> headers){
+        setHeaders(headers);
+    }
+
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
+        Map<String, String> headers = getHeaders();
+        if(Validate.isEmpty(headers) == false){
+            HttpHeaders httpHeaders = exchange.getResponse().getHeaders();
+            headers.forEach((name, value)->{
+                httpHeaders.set(name, value);
+            });
+        }
+
+        return chain.filter(exchange);
+    }
 }

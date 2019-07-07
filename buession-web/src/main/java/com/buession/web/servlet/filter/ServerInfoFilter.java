@@ -21,46 +21,48 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2017 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.http.response;
+package com.buession.web.servlet.filter;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
+import com.buession.web.utils.ServerUtils;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Yong.Teng
  */
-public class ResponseUtils {
+public class ServerInfoFilter extends ResponseHeadersFilter {
 
-    private ResponseUtils(){
+    public final static String SERVER_NAME_HEADER_NAME = "Server-Name";
 
+    private static Map<String, String> headers = null;
+
+    private String headerName = SERVER_NAME_HEADER_NAME;
+
+    public String getHeaderName(){
+        return headerName;
     }
 
-    public final static void httpCache(final HttpServletResponse response, final int lifetime){
-        if(response != null){
-            long expiresAt = lifetime + System.currentTimeMillis();
-
-            httpCache(response, lifetime, expiresAt);
-        }
+    public void setHeaderName(String headerName){
+        this.headerName = headerName;
     }
 
-    public final static void httpCache(final HttpServletResponse response, final Date date){
-        if(response != null){
-            long maxAge = date.getTime() - System.currentTimeMillis();
-            httpCache(response, maxAge, date.getTime());
+    @Override
+    public Map<String, String> getHeaders(){
+        if(headers == null){
+            headers = new LinkedHashMap<>();
+
+            headers.put(getHeaderName(), format(ServerUtils.getHostName()));
         }
+
+        return headers;
     }
 
-    private final static void httpCache(final HttpServletResponse response, final long maxAge, final long expires){
-        if(maxAge <= 0){
-            response.setHeader("Cache-Control", "no-cache");
-        }else{
-            response.setHeader("Cache-Control", "max-age=" + maxAge);
-        }
-        response.setDateHeader("Expires", expires);
-        response.setHeader("Pragma", maxAge > 0 ? null : "no-cache");
+    protected String format(final String computerName){
+        return computerName;
     }
 
 }

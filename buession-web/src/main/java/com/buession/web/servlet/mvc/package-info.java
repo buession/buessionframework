@@ -22,31 +22,7 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.helper;
-
-import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.Request;
-
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author Yong.Teng
  */
-public interface RequestBuilder {
-
-    RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion);
-
-    RequestBuilder setUrl(String url);
-
-    RequestBuilder setHeaders(List<Header> headers);
-
-    RequestBuilder setParameters(Map<String, Object> parameters);
-
-    RequestBuilder setNameValuePairs(RequestBody requestBody);
-
-    Request build();
-
-}
+package com.buession.web.servlet.mvc;

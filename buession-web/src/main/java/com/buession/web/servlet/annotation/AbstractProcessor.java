@@ -24,26 +24,59 @@
  * | Copyright @ 2013-2018 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.http.response;
+package com.buession.web.servlet.annotation;
 
-import com.buession.web.http.response.ResponseHeader;
-import org.springframework.web.bind.annotation.Mapping;
+import org.aspectj.lang.JoinPoint;
+import org.springframework.ui.Model;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Mapping
-public @interface ResponseHeaders {
+/**
+ * @author Yong.Teng
+ */
+public abstract class AbstractProcessor {
 
-    /**
-     * 响应头列表
-     */
-    ResponseHeader[] value();
+    protected final static HttpServletRequest getHttpServletRequest(final JoinPoint pjp){
+        if(pjp == null || pjp.getArgs() == null){
+            return null;
+        }
+
+        for(Object argument : pjp.getArgs()){
+            if(argument instanceof HttpServletRequest){
+                return (HttpServletRequest) argument;
+            }
+        }
+
+        return null;
+    }
+
+    protected final static HttpServletResponse getHttpServletResponse(final JoinPoint pjp){
+        if(pjp == null || pjp.getArgs() == null){
+            return null;
+        }
+
+        for(Object argument : pjp.getArgs()){
+            if(argument instanceof HttpServletResponse){
+                return (HttpServletResponse) argument;
+            }
+        }
+
+        return null;
+    }
+
+    protected final static Model getModel(final JoinPoint pjp){
+        if(pjp == null || pjp.getArgs() == null){
+            return null;
+        }
+
+        for(Object argument : pjp.getArgs()){
+            if(argument instanceof Model){
+                return (Model) argument;
+            }
+        }
+
+        return null;
+    }
 
 }

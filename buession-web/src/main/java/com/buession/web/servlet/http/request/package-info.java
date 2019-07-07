@@ -21,10 +21,10 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2018 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 /**
  * @author Yong.Teng
  */
-package com.buession.web.annotation;
+package com.buession.web.servlet.http.request;

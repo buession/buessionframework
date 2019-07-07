@@ -21,60 +21,46 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2018 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.filter;
+package com.buession.web.servlet.http.response;
 
-import com.buession.core.validator.Validate;
-import org.springframework.web.filter.OncePerRequestFilter;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Map;
+import java.util.Date;
 
 /**
  * @author Yong.Teng
  */
-public class ResponseHeadersFilter extends OncePerRequestFilter {
+public class ResponseUtils {
 
-    private Map<String, String> headers;
+    private ResponseUtils(){
 
-    public Map<String, String> getHeaders(){
-        return headers;
     }
 
-    public Map<String, String> getHeaders(final HttpServletRequest request){
-        return getHeaders();
-    }
+    public final static void httpCache(final HttpServletResponse response, final int lifetime){
+        if(response != null){
+            long expiresAt = lifetime + System.currentTimeMillis();
 
-    public void setHeaders(Map<String, String> headers){
-        this.headers = headers;
-    }
-
-    public void setHeaders(final HttpServletRequest request, Map<String, String> headers){
-        setHeaders(headers);
-    }
-
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain
-            filterChain) throws ServletException, IOException{
-        if(response == null){
-            filterChain.doFilter(request, response);
-            return;
+            httpCache(response, lifetime, expiresAt);
         }
+    }
 
-        Map<String, String> headers = getHeaders();
-        if(Validate.isEmpty(headers) == false){
-            headers.forEach((name, value)->{
-                response.addHeader(name, value);
-            });
+    public final static void httpCache(final HttpServletResponse response, final Date date){
+        if(response != null){
+            long maxAge = date.getTime() - System.currentTimeMillis();
+            httpCache(response, maxAge, date.getTime());
         }
+    }
 
-        filterChain.doFilter(request, response);
+    private final static void httpCache(final HttpServletResponse response, final long maxAge, final long expires){
+        if(maxAge <= 0){
+            response.setHeader("Cache-Control", "no-cache");
+        }else{
+            response.setHeader("Cache-Control", "max-age=" + maxAge);
+        }
+        response.setDateHeader("Expires", expires);
+        response.setHeader("Pragma", maxAge > 0 ? null : "no-cache");
     }
 
 }

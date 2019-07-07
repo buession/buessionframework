@@ -21,77 +21,55 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2019 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.filter;
+package com.buession.web.servlet.filter;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.LinkedHashMap;
+import com.buession.core.validator.Validate;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Map;
 
 /**
  * @author Yong.Teng
  */
-public class ServerInfoFilter extends ResponseHeadersFilter {
+public class ResponseHeadersFilter extends OncePerRequestFilter {
 
-    public final static String SERVER_NAME_HEADER_NAME = "Server-Name";
+    private Map<String, String> headers;
 
-    private static Map<String, String> headers = null;
-
-    private String headerName = SERVER_NAME_HEADER_NAME;
-
-    public String getHeaderName(){
-        return headerName;
-    }
-
-    public void setHeaderName(String headerName){
-        this.headerName = headerName;
-    }
-
-    @Override
     public Map<String, String> getHeaders(){
-        if(headers == null){
-            headers = new LinkedHashMap<>();
-
-            headers.put(getHeaderName(), getHostName());
-        }
-
         return headers;
     }
 
-    protected String format(final String computerName){
-        return computerName;
+    public Map<String, String> getHeaders(final HttpServletRequest request){
+        return getHeaders();
     }
 
-    private final String getHostName(){
-        String computerName = System.getenv("COMPUTERNAME");
+    public void setHeaders(Map<String, String> headers){
+        this.headers = headers;
+    }
 
-        if(computerName != null){
-            return computerName;
+    public void setHeaders(final HttpServletRequest request, Map<String, String> headers){
+        setHeaders(headers);
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain
+            filterChain) throws ServletException, IOException{
+        Map<String, String> headers = getHeaders();
+        if(Validate.isEmpty(headers) == false){
+            headers.forEach((name, value)->{
+                response.addHeader(name, value);
+            });
         }
 
-        computerName = System.getenv("HOSTNAME");
-        if(computerName != null){
-            return computerName;
-        }
-
-        try{
-            return format((InetAddress.getLocalHost()).getHostName());
-        }catch(UnknownHostException e){
-            String host = e.getMessage();
-
-            if(host != null){
-                int colon = host.indexOf(':');
-
-                if(colon > 0){
-                    return format(host.substring(0, colon));
-                }
-            }
-        }
-
-        return null;
+        filterChain.doFilter(request, response);
     }
 
 }

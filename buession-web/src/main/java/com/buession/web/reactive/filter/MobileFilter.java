@@ -22,41 +22,40 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.principal.annotation;
+package com.buession.web.reactive.filter;
 
-import org.springframework.core.MethodParameter;
-import org.springframework.web.bind.support.WebDataBinderFactory;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.method.support.ModelAndViewContainer;
+import com.buession.web.reactive.http.request.RequestUtils;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Mono;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+public class MobileFilter implements WebFilter {
 
     @Override
-    public boolean supportsParameter(MethodParameter methodParameter){
-        return methodParameter.hasParameterAnnotation(User.class);
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
+        if(exchange == null){
+            return chain.filter(exchange);
+        }
+
+        ServerHttpRequest request = exchange.getRequest();
+
+        if(RequestUtils.isMobile(request)){
+            exchange.getAttributes().put("isMobile", true);
+            return chain.filter(exchange);
+        }
+
+
+        final String accept = request.getHeaders().getFirst("Accept");
+        final boolean isMobile = accept != null && (accept.contains("vnd.wap.wml") == true && accept.contains
+                ("text/html") == false || accept.indexOf("vnd.wap.wml") > accept.indexOf("text/html"));
+
+        exchange.getAttributes().put("isMobile", isMobile);
+
+        return chain.filter(exchange);
     }
-
-    @Override
-    public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception{
-        return getUser(methodParameter);
-    }
-
-    /**
-     * 获取用户信息
-     *
-     * @param methodParameter
-     *         方法参数
-     *
-     * @return 用户
-     *
-     * @throws Exception
-     *         异常
-     */
-    protected abstract Object getUser(final MethodParameter methodParameter) throws Exception;
-
 }

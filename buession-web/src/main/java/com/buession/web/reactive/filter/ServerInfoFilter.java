@@ -22,31 +22,45 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.helper;
+package com.buession.web.reactive.filter;
 
-import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.Request;
+import com.buession.web.utils.ServerUtils;
 
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * @author Yong.Teng
  */
-public interface RequestBuilder {
+public class ServerInfoFilter extends ResponseHeadersFilter {
 
-    RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion);
+    public final static String SERVER_NAME_HEADER_NAME = "Server-Name";
 
-    RequestBuilder setUrl(String url);
+    private static Map<String, String> headers = null;
 
-    RequestBuilder setHeaders(List<Header> headers);
+    private String headerName = SERVER_NAME_HEADER_NAME;
 
-    RequestBuilder setParameters(Map<String, Object> parameters);
+    public String getHeaderName(){
+        return headerName;
+    }
 
-    RequestBuilder setNameValuePairs(RequestBody requestBody);
+    public void setHeaderName(String headerName){
+        this.headerName = headerName;
+    }
 
-    Request build();
+    @Override
+    public Map<String, String> getHeaders(){
+        if(headers == null){
+            headers = new LinkedHashMap<>();
+
+            headers.put(getHeaderName(), format(ServerUtils.getHostName()));
+        }
+
+        return headers;
+    }
+
+    protected String format(final String computerName){
+        return computerName;
+    }
 
 }

@@ -22,31 +22,38 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.helper;
+package com.buession.web.reactive.annotation;
 
-import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.Request;
-
-import java.util.List;
-import java.util.Map;
+import com.buession.web.principal.User;
+import org.springframework.core.MethodParameter;
+import org.springframework.web.reactive.BindingContext;
+import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
 
 /**
  * @author Yong.Teng
  */
-public interface RequestBuilder {
+public abstract class AbstractUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-    RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion);
+    @Override
+    public boolean supportsParameter(MethodParameter methodParameter){
+        return methodParameter.hasParameterAnnotation(User.class);
+    }
 
-    RequestBuilder setUrl(String url);
+    @Override
+    public Mono<Object> resolveArgument(MethodParameter methodParameter, BindingContext bindingContext,
+                                        ServerWebExchange exchange){
+        return getUser(methodParameter);
+    }
 
-    RequestBuilder setHeaders(List<Header> headers);
-
-    RequestBuilder setParameters(Map<String, Object> parameters);
-
-    RequestBuilder setNameValuePairs(RequestBody requestBody);
-
-    Request build();
-
+    /**
+     * 获取用户信息
+     *
+     * @param methodParameter
+     *         方法参数
+     *
+     * @return 用户
+     */
+    protected abstract Mono<Object> getUser(final MethodParameter methodParameter);
 }

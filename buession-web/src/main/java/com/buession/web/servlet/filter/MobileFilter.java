@@ -24,7 +24,44 @@
  * | Copyright @ 2013-2017 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
+package com.buession.web.servlet.filter;
+
+import java.io.IOException;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.buession.web.servlet.http.request.RequestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.filter.OncePerRequestFilter;
+
 /**
  * @author Yong.Teng
  */
-package com.buession.web.filter;
+public class MobileFilter extends OncePerRequestFilter {
+
+    private final static Logger logger = LoggerFactory.getLogger(MobileFilter.class);
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain
+            filterChain) throws ServletException, IOException{
+        if(RequestUtils.isMobile(request)){
+            request.setAttribute("isMobile", true);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+
+        final String accept = request.getHeader("Accept");
+        final boolean isMobile = accept != null && (accept.contains("vnd.wap.wml") == true && accept.contains
+                ("text/html") == false || accept.indexOf("vnd.wap.wml") > accept.indexOf("text/html"));
+
+        request.setAttribute("isMobile", isMobile);
+
+        filterChain.doFilter(request, response);
+    }
+
+}

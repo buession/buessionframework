@@ -27,6 +27,7 @@ package com.buession.httpclient;
 import com.buession.core.utils.Assert;
 import com.buession.httpclient.conn.ConnectionManager;
 import com.buession.httpclient.core.Header;
+import com.buession.httpclient.core.HttpVersion;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.Response;
@@ -46,6 +47,8 @@ import java.util.Map;
 public abstract class AbstractHttpClient implements HttpClient {
 
     private ConnectionManager connectionManager;
+
+    private HttpVersion httpVersion;
 
     /**
      * 构造函数
@@ -83,6 +86,16 @@ public abstract class AbstractHttpClient implements HttpClient {
     @Override
     public void setConnectionManager(ConnectionManager connectionManager){
         this.connectionManager = connectionManager;
+    }
+
+    @Override
+    public HttpVersion getHttpVersion(){
+        return httpVersion;
+    }
+
+    @Override
+    public void setHttpVersion(HttpVersion httpVersion){
+        this.httpVersion = httpVersion;
     }
 
     @Override
@@ -1365,13 +1378,7 @@ public abstract class AbstractHttpClient implements HttpClient {
             ReadTimeoutException, RequestAbortedException, RequestException{
         Assert.isBlank(url, "Request url could not be null or empty.");
 
-        if(requestMethod == null){
-            requestMethod = RequestMethod.GET;
-        }
-
-        if(requestMethod == RequestMethod.GET){
-            return get(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.POST){
+        if(requestMethod == RequestMethod.POST){
             return post(url, data, parameters, headers);
         }else if(requestMethod == RequestMethod.PUT){
             return put(url, data, parameters, headers);
@@ -1407,9 +1414,9 @@ public abstract class AbstractHttpClient implements HttpClient {
             return view(url, parameters, headers);
         }else if(requestMethod == RequestMethod.WRAPPED){
             return wrapped(url, parameters, headers);
+        }else{
+            return get(url, parameters, headers);
         }
-
-        return null;
     }
 
     @Override
@@ -1418,13 +1425,7 @@ public abstract class AbstractHttpClient implements HttpClient {
             ReadTimeoutException, RequestAbortedException, RequestException{
         Assert.isNull(url, "Request url could not be null.");
 
-        if(requestMethod == null){
-            requestMethod = RequestMethod.GET;
-        }
-
-        if(requestMethod == RequestMethod.GET){
-            return get(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.POST){
+        if(requestMethod == RequestMethod.POST){
             return post(url, data, parameters, headers);
         }else if(requestMethod == RequestMethod.PUT){
             return put(url, data, parameters, headers);
@@ -1460,9 +1461,9 @@ public abstract class AbstractHttpClient implements HttpClient {
             return view(url, parameters, headers);
         }else if(requestMethod == RequestMethod.WRAPPED){
             return wrapped(url, parameters, headers);
+        }else{
+            return get(url, parameters, headers);
         }
-
-        return null;
     }
 
     protected final static void validateURL(final URL url){

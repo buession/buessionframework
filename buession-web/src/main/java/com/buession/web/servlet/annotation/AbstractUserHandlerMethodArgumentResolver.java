@@ -22,31 +22,42 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.helper;
+package com.buession.web.servlet.annotation;
 
-import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.Request;
-
-import java.util.List;
-import java.util.Map;
+import com.buession.web.principal.User;
+import org.springframework.core.MethodParameter;
+import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.ModelAndViewContainer;
 
 /**
  * @author Yong.Teng
  */
-public interface RequestBuilder {
+public abstract class AbstractUserHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-    RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion);
+    @Override
+    public boolean supportsParameter(MethodParameter methodParameter){
+        return methodParameter.hasParameterAnnotation(User.class);
+    }
 
-    RequestBuilder setUrl(String url);
+    @Override
+    public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception{
+        return getUser(methodParameter);
+    }
 
-    RequestBuilder setHeaders(List<Header> headers);
-
-    RequestBuilder setParameters(Map<String, Object> parameters);
-
-    RequestBuilder setNameValuePairs(RequestBody requestBody);
-
-    Request build();
+    /**
+     * 获取用户信息
+     *
+     * @param methodParameter
+     *         方法参数
+     *
+     * @return 用户
+     *
+     * @throws Exception
+     *         异常
+     */
+    protected abstract Object getUser(final MethodParameter methodParameter) throws Exception;
 
 }

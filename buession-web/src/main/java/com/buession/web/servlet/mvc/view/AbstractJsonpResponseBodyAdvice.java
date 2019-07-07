@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.mvc.view;
+package com.buession.web.servlet.mvc.view;
 
 import com.buession.core.validator.Validate;
 import org.springframework.core.MethodParameter;

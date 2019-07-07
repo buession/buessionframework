@@ -22,31 +22,58 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.helper;
+package com.buession.web.reactive.annotation;
 
-import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.Request;
-
-import java.util.List;
-import java.util.Map;
+import org.aspectj.lang.JoinPoint;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.ui.Model;
 
 /**
  * @author Yong.Teng
  */
-public interface RequestBuilder {
+public abstract class AbstractProcessor {
 
-    RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion);
+    protected final static ServerHttpRequest getServerHttpRequest(final JoinPoint pjp){
+        if(pjp == null || pjp.getArgs() == null){
+            return null;
+        }
 
-    RequestBuilder setUrl(String url);
+        for(Object argument : pjp.getArgs()){
+            if(argument instanceof ServerHttpRequest){
+                return (ServerHttpRequest) argument;
+            }
+        }
 
-    RequestBuilder setHeaders(List<Header> headers);
+        return null;
+    }
 
-    RequestBuilder setParameters(Map<String, Object> parameters);
+    protected final static ServerHttpResponse getServerHttpResponse(final JoinPoint pjp){
+        if(pjp == null || pjp.getArgs() == null){
+            return null;
+        }
 
-    RequestBuilder setNameValuePairs(RequestBody requestBody);
+        for(Object argument : pjp.getArgs()){
+            if(argument instanceof ServerHttpResponse){
+                return (ServerHttpResponse) argument;
+            }
+        }
 
-    Request build();
+        return null;
+    }
+
+    protected final static Model getModel(final JoinPoint pjp){
+        if(pjp == null || pjp.getArgs() == null){
+            return null;
+        }
+
+        for(Object argument : pjp.getArgs()){
+            if(argument instanceof Model){
+                return (Model) argument;
+            }
+        }
+
+        return null;
+    }
 
 }

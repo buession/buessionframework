@@ -22,7 +22,47 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.web.utils;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 /**
  * @author Yong.Teng
  */
-package com.buession.web.principal.annotation;
+public class ServerUtils {
+
+    private ServerUtils(){
+
+    }
+
+    public final static String getHostName(){
+        String computerName = System.getenv("COMPUTERNAME");
+
+        if(computerName != null){
+            return computerName;
+        }
+
+        computerName = System.getenv("HOSTNAME");
+        if(computerName != null){
+            return computerName;
+        }
+
+        try{
+            return (InetAddress.getLocalHost()).getHostName();
+        }catch(UnknownHostException e){
+            String host = e.getMessage();
+
+            if(host != null){
+                int colon = host.indexOf(':');
+
+                if(colon > 0){
+                    return host.substring(0, colon);
+                }
+            }
+        }
+
+        return null;
+    }
+
+}

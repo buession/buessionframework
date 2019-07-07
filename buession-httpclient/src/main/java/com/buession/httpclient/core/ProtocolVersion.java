@@ -42,7 +42,11 @@ public class ProtocolVersion {
     }
 
     public ProtocolVersion(String protocol, int major, int minor){
+        this(major, minor);
         this.protocol = protocol;
+    }
+
+    public ProtocolVersion(int major, int minor){
         this.major = major;
         this.minor = minor;
     }

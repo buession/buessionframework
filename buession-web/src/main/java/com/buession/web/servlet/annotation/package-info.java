@@ -21,62 +21,10 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2017 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.annotation;
-
-import org.aspectj.lang.JoinPoint;
-import org.springframework.ui.Model;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractProcessor {
-
-    protected final static HttpServletRequest getHttpServletRequest(final JoinPoint pjp){
-        if(pjp == null || pjp.getArgs() == null){
-            return null;
-        }
-
-        for(Object argument : pjp.getArgs()){
-            if(argument instanceof HttpServletRequest){
-                return (HttpServletRequest) argument;
-            }
-        }
-
-        return null;
-    }
-
-    protected final static HttpServletResponse getHttpServletResponse(final JoinPoint pjp){
-        if(pjp == null || pjp.getArgs() == null){
-            return null;
-        }
-
-        for(Object argument : pjp.getArgs()){
-            if(argument instanceof HttpServletResponse){
-                return (HttpServletResponse) argument;
-            }
-        }
-
-        return null;
-    }
-
-    protected final static Model getModel(final JoinPoint pjp){
-        if(pjp == null || pjp.getArgs() == null){
-            return null;
-        }
-
-        for(Object argument : pjp.getArgs()){
-            if(argument instanceof Model){
-                return (Model) argument;
-            }
-        }
-
-        return null;
-    }
-
-}
+package com.buession.web.servlet.annotation;

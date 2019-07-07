@@ -24,26 +24,7 @@
  * | Copyright @ 2013-2018 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.http.response;
-
-import com.buession.web.http.response.ResponseHeader;
-import org.springframework.web.bind.annotation.Mapping;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Mapping
-public @interface ResponseHeaders {
-
-    /**
-     * 响应头列表
-     */
-    ResponseHeader[] value();
-
-}
+/**
+ * @author Yong.Teng
+ */
+package com.buession.web.servlet.http.response;

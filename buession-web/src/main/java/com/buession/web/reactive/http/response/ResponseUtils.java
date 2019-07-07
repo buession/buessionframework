@@ -22,31 +22,46 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.helper;
+package com.buession.web.reactive.http.response;
 
-import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.Request;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Date;
 
 /**
  * @author Yong.Teng
  */
-public interface RequestBuilder {
+public class ResponseUtils {
 
-    RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion);
+    private ResponseUtils(){
 
-    RequestBuilder setUrl(String url);
+    }
 
-    RequestBuilder setHeaders(List<Header> headers);
+    public final static void httpCache(final ServerHttpResponse response, final int lifetime){
+        if(response != null){
+            long expiresAt = lifetime + System.currentTimeMillis();
 
-    RequestBuilder setParameters(Map<String, Object> parameters);
+            httpCache(response, lifetime, expiresAt);
+        }
+    }
 
-    RequestBuilder setNameValuePairs(RequestBody requestBody);
+    public final static void httpCache(final ServerHttpResponse response, final Date date){
+        if(response != null){
+            long maxAge = date.getTime() - System.currentTimeMillis();
+            httpCache(response, maxAge, date.getTime());
+        }
+    }
 
-    Request build();
+    private final static void httpCache(final ServerHttpResponse response, final long maxAge, final long expires){
+        HttpHeaders httpHeaders = response.getHeaders();
+        if(maxAge <= 0){
+            httpHeaders.setCacheControl("no-cache");
+        }else{
+            httpHeaders.setCacheControl("max-age=" + maxAge);
+        }
+        httpHeaders.setExpires(expires);
+        httpHeaders.setPragma(maxAge > 0 ? null : "no-cache");
+    }
 
 }

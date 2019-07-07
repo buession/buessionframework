@@ -24,10 +24,13 @@
  * | Copyright @ 2013-2018 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.http.response;
+package com.buession.web.servlet.http.response;
 
 import com.buession.core.validator.Validate;
-import com.buession.web.annotation.AbstractProcessor;
+import com.buession.web.http.response.ContentType;
+import com.buession.web.http.response.ResponseHeader;
+import com.buession.web.http.response.ResponseHeaders;
+import com.buession.web.servlet.annotation.AbstractProcessor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
