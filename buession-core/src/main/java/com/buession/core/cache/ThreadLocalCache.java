@@ -24,7 +24,6 @@
  */
 package com.buession.core.cache;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,11 +35,11 @@ public class ThreadLocalCache<K, V> {
     private ThreadLocal<Map<K, V>> cache = new ThreadLocal<>();
 
     public ThreadLocalCache(){
-        cache.set(Collections.EMPTY_MAP);
+        cache.set(new HashMap<>(0));
     }
 
     public ThreadLocalCache(Map<K, V> data){
-        cache.set(data == null ? Collections.EMPTY_MAP : data);
+        cache.set(data == null ? new HashMap<>(0) : data);
     }
 
     public ThreadLocalCache(int initialCapacity){
