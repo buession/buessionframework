@@ -26,8 +26,6 @@
  */
 package com.buession.core.validator.routines;
 
-import com.buession.core.validator.Validate;
-
 /**
  * @author Yong.Teng
  */
@@ -110,11 +108,10 @@ public class TelValidator {
             return false;
         }
 
-        char c = charSequence.charAt(0);
-        return c >= '1' && c <= '9' && Validate.isNumeric(charSequence.subSequence(1, len - 1));
+        return NumberValidateUtil.type2(charSequence);
     }
 
-    public static enum AreaCodeType {
+    public enum AreaCodeType {
         NEED,
         NOT_NEED,
         BOTH

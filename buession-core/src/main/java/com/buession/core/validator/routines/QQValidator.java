@@ -46,13 +46,8 @@ public class QQValidator {
             return false;
         }
 
-        int len = charSequence.length();
-        if(Validate.isBetween(len, MIN_LENGTH, MAX_LENGTH, true) == false){
-            return false;
-        }
-
-        char c = charSequence.charAt(0);
-        return c >= '1' && c <= '9' && Validate.isNumeric(charSequence.subSequence(1, len - 1));
+        return Validate.isBetween(charSequence.length(), MIN_LENGTH, MAX_LENGTH, true) && NumberValidateUtil.type2
+                (charSequence);
     }
 
 }

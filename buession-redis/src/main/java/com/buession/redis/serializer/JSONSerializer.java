@@ -50,10 +50,8 @@ public class JSONSerializer implements Serializer {
         try{
             return mapper.writeValueAsString(o);
         }catch(JsonProcessingException e){
-            logger.error("{} json encode failure: {}", o == null ? "null" : o.getClass().getName(), e.getMessage());
+            throw new SerializerException((o == null ? "null" : o.getClass().getName()) + " json encode failure", e);
         }
-
-        return null;
     }
 
     @Override
@@ -73,7 +71,7 @@ public class JSONSerializer implements Serializer {
 
                 });
             }catch(IOException e){
-                logger.error("{} json encode to Object failure: {}", str, e.getMessage());
+                throw new SerializerException(str + " json encode to Object failure", e);
             }
         }
 
@@ -90,8 +88,8 @@ public class JSONSerializer implements Serializer {
             try{
                 return mapper.readValue(str, clazz);
             }catch(IOException e){
-                logger.error("{} json decode to {} failure: {}", str, clazz == null ? "null" : clazz.getName(), e
-                        .getMessage());
+                throw new SerializerException(str + " json decode to " + (clazz == null ? "null" : clazz.getName()) +
+                        " failure", e);
             }
         }
 
@@ -108,8 +106,8 @@ public class JSONSerializer implements Serializer {
             try{
                 return mapper.readValue(str, type);
             }catch(IOException e){
-                logger.error("{} json decode to {} failure: {}", str, type == null ? "null" : type.getType()
-                        .getTypeName(), e.getMessage());
+                throw new SerializerException(str + " json decode to " + (type == null ? "null" : type.getType()
+                        .getTypeName()) + " failure", e);
             }
         }
 
@@ -128,7 +126,7 @@ public class JSONSerializer implements Serializer {
 
                 });
             }catch(IOException e){
-                logger.error("{} json encode to Object failure: {}", bytes, e.getMessage());
+                throw new SerializerException(bytes + " json decode to Object failure", e);
             }
         }
 
@@ -145,8 +143,8 @@ public class JSONSerializer implements Serializer {
             try{
                 return mapper.readValue(bytes, clazz);
             }catch(IOException e){
-                logger.error("{} json decode to {} failure: {}", bytes, clazz == null ? "null" : clazz.getName(), e
-                        .getMessage());
+                throw new SerializerException(bytes + " json decode to " + (clazz == null ? "null" : clazz.getName())
+                        + " failure", e);
             }
         }
 
@@ -163,8 +161,8 @@ public class JSONSerializer implements Serializer {
             try{
                 return mapper.readValue(bytes, type);
             }catch(IOException e){
-                logger.error("{} json decode to {} failure: {}", bytes, type == null ? "null" : type.getType()
-                        .getTypeName(), e.getMessage());
+                throw new SerializerException(bytes + " json decode to " + (type == null ? "null" : type.getType()
+                        .getTypeName()) + " failure", e);
             }
         }
 

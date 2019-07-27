@@ -96,12 +96,14 @@ public final class Serialize {
                 try{
                     byteArrayOutputStream.close();
                 }catch(IOException e){
+                    logger.error("{} close error.", ByteArrayOutputStream.class.getName(), e);
                 }
             }
             if(objectOutputStream != null){
                 try{
                     objectOutputStream.close();
                 }catch(IOException e){
+                    logger.error("{} close error.", ObjectOutputStream.class.getName(), e);
                 }
             }
         }
@@ -155,12 +157,14 @@ public final class Serialize {
                 try{
                     byteArrayOutputStream.close();
                 }catch(IOException e){
+                    logger.error("{} close error.", ObjectOutputStream.class.getName(), e);
                 }
             }
             if(objectOutputStream != null){
                 try{
                     objectOutputStream.close();
                 }catch(IOException e){
+                    logger.error("{} close error.", ObjectOutputStream.class.getName(), e);
                 }
             }
         }
@@ -192,9 +196,12 @@ public final class Serialize {
      *         类
      *
      * @return 反序列化后的对象
+     *
+     * @throws SerializationException
+     *         反序列化异常
      */
     @SuppressWarnings("unchecked")
-    public static <T> T deserialize(byte[] bytes){
+    public static <T> T deserialize(byte[] bytes) throws SerializationException{
         if(Validate.isEmpty(bytes)){
             return null;
         }
@@ -208,16 +215,14 @@ public final class Serialize {
                 try{
                     return (T) objectInputStream.readObject();
                 }catch(ClassNotFoundException e){
-                    throw new Exception("Failed to deserialize object type", e);
+                    throw new SerializationException("Failed to deserialize object type", e);
                 }
             }catch(Throwable e){
-                throw new Exception("Failed to deserialize", e);
+                throw new SerializationException("Failed to deserialize", e);
             }
         }catch(Exception e){
-            logger.error("Failed to deserialize", e);
+            throw new SerializationException("Failed to deserialize", e);
         }
-
-        return null;
     }
 
     /**
@@ -229,8 +234,11 @@ public final class Serialize {
      *         类
      *
      * @return 反序列化后的对象
+     *
+     * @throws SerializationException
+     *         反序列化异常
      */
-    public static <T> T unserialize(byte[] bytes){
+    public static <T> T unserialize(byte[] bytes) throws SerializationException{
         return deserialize(bytes);
     }
 
@@ -243,8 +251,11 @@ public final class Serialize {
      *         类
      *
      * @return 反序列化后对象
+     *
+     * @throws SerializationException
+     *         反序列化异常
      */
-    public static <T> T deserialize(final String str){
+    public static <T> T deserialize(final String str) throws SerializationException{
         return deserialize(str, StandardCharsets.UTF_8.name());
     }
 
@@ -257,8 +268,11 @@ public final class Serialize {
      *         类
      *
      * @return 反序列化后对象
+     *
+     * @throws SerializationException
+     *         反序列化异常
      */
-    public static <T> T unserialize(final String str){
+    public static <T> T unserialize(final String str) throws SerializationException{
         return deserialize(str);
     }
 
@@ -273,14 +287,17 @@ public final class Serialize {
      *         类
      *
      * @return 反序列化后对象
+     *
+     * @throws SerializationException
+     *         反序列化异常
      */
     @SuppressWarnings("unchecked")
-    public static <T> T deserialize(final String str, final String charsetName){
+    public static <T> T deserialize(final String str, final String charsetName) throws SerializationException{
         if(str == null || str.length() == 0){
             try{
                 throw new IllegalArgumentException("String could not be empty or null");
             }catch(IllegalArgumentException e){
-                logger.warn("unserialize the string is " + (str == null ? "null" : "empty") + ".", e);
+                logger.warn("deserialize the string is " + (str == null ? "null" : "empty") + ".", e);
             }
             return null;
         }
@@ -297,26 +314,28 @@ public final class Serialize {
                 try{
                     result = (T) objectInputStream.readObject();
                 }catch(ClassNotFoundException e){
-                    logger.warn("deserialize the string " + str + " failure: ", e);
+                    throw new SerializationException("deserialize the string " + str + " failure.", e);
                 }
             }catch(IOException e){
-                logger.warn("deserialize the string " + str + " failure: ", e);
+                throw new SerializationException("deserialize the string " + str + " failure.", e);
             }finally{
                 if(byteArrayInputStream != null){
                     try{
                         byteArrayInputStream.close();
                     }catch(IOException e){
+                        logger.error("{} close error.", ByteArrayOutputStream.class.getName(), e);
                     }
                 }
                 if(objectInputStream != null){
                     try{
                         objectInputStream.close();
                     }catch(IOException e){
+                        logger.error("{} close error.", ObjectInputStream.class.getName(), e);
                     }
                 }
             }
         }catch(UnsupportedEncodingException e){
-            logger.warn("deserialize the string " + str + " failure: ", e);
+            throw new SerializationException("deserialize the string " + str + " failure.", e);
         }
 
         return result;
@@ -333,9 +352,12 @@ public final class Serialize {
      *         类
      *
      * @return 反序列化后对象
+     *
+     * @throws SerializationException
+     *         反序列化异常
      */
     @SuppressWarnings("unchecked")
-    public static <T> T unserialize(final String str, final String charsetName){
+    public static <T> T unserialize(final String str, final String charsetName) throws SerializationException{
         return deserialize(str, charsetName);
     }
 
@@ -350,9 +372,12 @@ public final class Serialize {
      *         类
      *
      * @return 反序列化后对象
+     *
+     * @throws SerializationException
+     *         反序列化异常
      */
     @SuppressWarnings("unchecked")
-    public static <T> T deserialize(final String str, final Charset charset){
+    public static <T> T deserialize(final String str, final Charset charset) throws SerializationException{
         return charset == null ? unserialize(str) : unserialize(str, charset.name());
     }
 
@@ -367,9 +392,12 @@ public final class Serialize {
      *         类
      *
      * @return 反序列化后对象
+     *
+     * @throws SerializationException
+     *         反序列化异常
      */
     @SuppressWarnings("unchecked")
-    public static <T> T unserialize(final String str, final Charset charset){
+    public static <T> T unserialize(final String str, final Charset charset) throws SerializationException{
         return deserialize(str, charset);
     }
 

@@ -41,52 +41,59 @@ public class ByteArraySerializer implements Serializer {
     private final static Logger logger = LoggerFactory.getLogger(ByteArraySerializer.class);
 
     @Override
-    public <O> String encode(O o){
+    public <O> String encode(O o) throws SerializerException{
         try{
             return com.buession.core.utils.Serialize.serialize(o, Constants.CHARSET);
         }catch(SerializationException e){
-            logger.error("{} encode failure: {}", o, e.getMessage());
-            return null;
+            throw new SerializerException(o + "encode failure", e);
         }
     }
 
     @Override
-    public <O> byte[] encodeAsBytes(O o){
+    public <O> byte[] encodeAsBytes(O o) throws SerializerException{
         return SafeEncoder.encode(encode(o));
     }
 
     @Override
-    public <O> O decode(String str){
+    public <O> O decode(String str) throws SerializerException{
         return doDecode(str);
     }
 
     @Override
-    public <O> O decode(String str, Class<O> clazz){
+    public <O> O decode(String str, Class<O> clazz) throws SerializerException{
         return doDecode(str);
     }
 
     @Override
-    public <O> O decode(String str, TypeReference type){
+    public <O> O decode(String str, TypeReference type) throws SerializerException{
         return doDecode(str);
     }
 
     @Override
-    public <O> O decode(byte[] bytes){
+    public <O> O decode(byte[] bytes) throws SerializerException{
         return bytes == null ? null : doDecode(new String(bytes, Constants.CHARSET));
     }
 
     @Override
-    public <O> O decode(byte[] bytes, Class<O> clazz){
+    public <O> O decode(byte[] bytes, Class<O> clazz) throws SerializerException{
         return bytes == null ? null : doDecode(new String(bytes, Constants.CHARSET));
     }
 
     @Override
-    public <O> O decode(byte[] bytes, TypeReference<O> type){
+    public <O> O decode(byte[] bytes, TypeReference<O> type) throws SerializerException{
         return bytes == null ? null : doDecode(new String(bytes, Constants.CHARSET));
     }
 
-    private final static <O> O doDecode(final String str){
-        return str == null ? null : com.buession.core.utils.Serialize.unserialize(str, Constants.CHARSET);
+    private final static <O> O doDecode(final String str) throws SerializerException{
+        if(str == null){
+            return null;
+        }
+
+        try{
+            return com.buession.core.utils.Serialize.unserialize(str, Constants.CHARSET);
+        }catch(SerializationException e){
+            throw new SerializerException(e.getMessage(), e);
+        }
     }
 
 }

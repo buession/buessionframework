@@ -64,7 +64,7 @@ public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.
 
         @Override
         protected Date _parseDate(JsonParser p, DeserializationContext context) throws IOException{
-            if(this._customFormat != null && p.hasToken(JsonToken.VALUE_STRING)){
+            if(_customFormat != null && p.hasToken(JsonToken.VALUE_STRING)){
                 return super._parseDate(p, context);
             }else{
                 switch(p.getCurrentTokenId()){
@@ -86,9 +86,8 @@ public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.
                             timestamp = p.getLongValue();
                         }catch(JsonParseException e){
                             Number v = (Number) context.handleWeirdNumberValue(_valueClass, p.getNumberValue(), "not " +
-                                    "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "a " +
-                                    "valid " + "64-bit " + "long " + "for " + "creating " + "`java" + ".util" + "" +
-                                    ".Date`", new Object[0]);
+                                    "" + "" + "" + "" + "a valid 64-bit long for creating `java.util.Date`", new
+                                    Object[0]);
                             timestamp = v.longValue();
                         }
 

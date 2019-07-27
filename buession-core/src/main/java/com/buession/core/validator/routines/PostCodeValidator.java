@@ -44,13 +44,7 @@ public class PostCodeValidator {
             return false;
         }
 
-        int len = charSequence.length();
-        if(len != POST_LENGTH){
-            return false;
-        }
-
-        char c = charSequence.charAt(0);
-        return c >= '1' && c <= '9' && Validate.isNumeric(charSequence.subSequence(1, len - 1));
+        return charSequence.length() == POST_LENGTH && NumberValidateUtil.type2(charSequence);
     }
 
 }

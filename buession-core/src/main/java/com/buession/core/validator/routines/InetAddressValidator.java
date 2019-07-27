@@ -140,14 +140,10 @@ public class InetAddressValidator {
         }
 
         int len = str.length();
-        if(len < 1 || len > 4){
-            return false;
-        }
-
-        return Validate.isXdigit(str);
+        return (len >= 1 && len <= 4) && Validate.isXdigit(str);
     }
 
-    public static enum InetAddressType {
+    public enum InetAddressType {
 
         INET_4_ADDRESS,
 

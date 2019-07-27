@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2019 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.exception;
@@ -42,8 +42,6 @@ public class DataAlreadyExistException extends Exception {
     public DataAlreadyExistException(String message, Throwable cause){
         super(message, cause);
     }
-
-    ;
 
     public DataAlreadyExistException(Throwable cause){
         super(cause);
