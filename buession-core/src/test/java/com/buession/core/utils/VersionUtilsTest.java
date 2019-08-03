@@ -24,13 +24,25 @@
  */
 package com.buession.core.utils;
 
+import org.junit.Test;
+
 /**
  * @author Yong.Teng
  */
-@Deprecated
-public class ReflectUtil extends ReflectUtils {
+public class VersionUtilsTest {
 
-    private ReflectUtil(){
+    @Test
+    public void compare(){
+        //   System.out.println(VersionUtils.compare("1.0", "1.1"));
+        // System.out.println(VersionUtils.compare("1.11", "1.1"));
+        // System.out.println(VersionUtils.compare("1.11", "1.11"));
+        //System.out.println(VersionUtils.compare("1.11.1", "1.11"));
+        //System.out.println(VersionUtils.compare("1.11", "1.11.1"));
+        //System.out.println(VersionUtils.compare("1.0 beta", "1.0"));
+        //System.out.println(VersionUtils.compare("1.0beta", "1.0"));
+        System.out.println(VersionUtils.compare("1.0beta", "1.0rc"));
+        System.out.println(VersionUtils.compare("11.1", "11.1release"));
+        System.out.println(VersionUtils.compare("11.1", "11.1p"));
     }
 
 }

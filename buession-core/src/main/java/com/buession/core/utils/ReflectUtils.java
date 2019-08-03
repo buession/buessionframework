@@ -24,13 +24,21 @@
  */
 package com.buession.core.utils;
 
+import java.lang.reflect.Field;
+
 /**
  * @author Yong.Teng
  */
-@Deprecated
-public class ReflectUtil extends ReflectUtils {
+public class ReflectUtils {
 
-    private ReflectUtil(){
+    protected ReflectUtils(){
+
+    }
+
+    public final static void setFieldAccessible(Field field){
+        if(field != null && field.isAccessible() == false){
+            field.setAccessible(true);
+        }
     }
 
 }

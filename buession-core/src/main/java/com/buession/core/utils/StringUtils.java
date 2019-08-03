@@ -137,4 +137,94 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         }
     }
 
+    /**
+     * 比较两个 CharSequence 前 length 位是否相等
+     *
+     * @param cs1
+     *         the first CharSequence, may be null
+     * @param cs2
+     *         the second CharSequence, may be null
+     * @param length
+     *         the compare length
+     *
+     * @return 如果两个 CharSequence 前 length 位相等，则返回 true；否则，返回 false
+     */
+    public static boolean equals(CharSequence cs1, CharSequence cs2, int length){
+        if(cs1 == cs2){
+            return true;
+        }else if(cs1 != null && cs2 != null){
+            return regionMatches(cs1, false, 0, cs2, 0, length);
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * 忽略比较两个 CharSequence 前 length 位是否相等
+     *
+     * @param cs1
+     *         the first CharSequence, may be null
+     * @param cs2
+     *         the second CharSequence, may be null
+     * @param length
+     *         the compare length
+     *
+     * @return 如果两个 CharSequence 前 length 位相等，则返回 true；否则，返回 false
+     */
+    public static boolean equalsIgnoreCase(CharSequence cs1, CharSequence cs2, int length){
+        if(cs1 == cs2){
+            return true;
+        }else if(cs1 != null && cs2 != null){
+            return regionMatches(cs1, true, 0, cs2, 0, length);
+        }else{
+            return false;
+        }
+    }
+
+    public static boolean regionMatches(final CharSequence cs, final boolean ignoreCase, final int thisStart, final
+    CharSequence substring, final int start, final int length){
+        if(cs instanceof String && substring instanceof String){
+            return ((String) cs).regionMatches(ignoreCase, thisStart, (String) substring, start, length);
+        }
+
+        int index1 = thisStart;
+        int index2 = start;
+        int tmpLen = length;
+
+        // Extract these first so we detect NPEs the same as the java.lang.String version
+        final int srcLen = cs.length() - thisStart;
+        final int otherLen = substring.length() - start;
+
+        // Check for invalid parameters
+        if(thisStart < 0 || start < 0 || length < 0){
+            return false;
+        }
+
+        // Check that the regions are long enough
+        if(srcLen < length || otherLen < length){
+            return false;
+        }
+
+        while(tmpLen-- > 0){
+            final char c1 = cs.charAt(index1++);
+            final char c2 = substring.charAt(index2++);
+
+            if(c1 == c2){
+                continue;
+            }
+
+            if(ignoreCase == false){
+                return false;
+            }
+
+            // The same check as in String.regionMatches():
+            if(Character.toUpperCase(c1) != Character.toUpperCase(c2) && Character.toLowerCase(c1) != Character
+                    .toLowerCase(c2)){
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }

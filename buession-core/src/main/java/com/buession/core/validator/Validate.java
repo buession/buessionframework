@@ -461,6 +461,30 @@ public class Validate {
     }
 
     /**
+     * 验证是否为数字字符串
+     *
+     * @param charSequence
+     *         待验证的字符串
+     *
+     * @return Boolean
+     */
+    public final static boolean isDigit(final CharSequence charSequence){
+        return isNumeric(charSequence);
+    }
+
+    /**
+     * 验证是否为数字字符
+     *
+     * @param ch
+     *         待验证的字符
+     *
+     * @return Boolean
+     */
+    public final static boolean isDigit(final char ch){
+        return isNumeric(ch);
+    }
+
+    /**
      * 验证是否为英文或数字字符串
      *
      * @param charSequence

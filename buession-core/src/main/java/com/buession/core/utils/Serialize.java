@@ -208,18 +208,11 @@ public final class Serialize {
 
         try{
             ByteArrayInputStream byteStream = new ByteArrayInputStream(bytes);
+            ObjectInputStream objectInputStream = new ObjectInputStream(byteStream);
 
-            try{
-                ObjectInputStream objectInputStream = new ObjectInputStream(byteStream);
-
-                try{
-                    return (T) objectInputStream.readObject();
-                }catch(ClassNotFoundException e){
-                    throw new SerializationException("Failed to deserialize object type", e);
-                }
-            }catch(Throwable e){
-                throw new SerializationException("Failed to deserialize", e);
-            }
+            return (T) objectInputStream.readObject();
+        }catch(ClassNotFoundException e){
+            throw new SerializationException("Failed to deserialize object type", e);
         }catch(Exception e){
             throw new SerializationException("Failed to deserialize", e);
         }
@@ -302,43 +295,36 @@ public final class Serialize {
             return null;
         }
 
-        T result = null;
+        ByteArrayInputStream byteArrayInputStream = null;
+        ObjectInputStream objectInputStream = null;
         try{
             String s = URLDecoder.decode(str, charsetName);
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets
-                    .ISO_8859_1));
-            ObjectInputStream objectInputStream = null;
+            byteArrayInputStream = new ByteArrayInputStream(s.getBytes(StandardCharsets.ISO_8859_1));
+            objectInputStream = new ObjectInputStream(byteArrayInputStream);
 
-            try{
-                objectInputStream = new ObjectInputStream(byteArrayInputStream);
-                try{
-                    result = (T) objectInputStream.readObject();
-                }catch(ClassNotFoundException e){
-                    throw new SerializationException("deserialize the string " + str + " failure.", e);
-                }
-            }catch(IOException e){
-                throw new SerializationException("deserialize the string " + str + " failure.", e);
-            }finally{
-                if(byteArrayInputStream != null){
-                    try{
-                        byteArrayInputStream.close();
-                    }catch(IOException e){
-                        logger.error("{} close error.", ByteArrayOutputStream.class.getName(), e);
-                    }
-                }
-                if(objectInputStream != null){
-                    try{
-                        objectInputStream.close();
-                    }catch(IOException e){
-                        logger.error("{} close error.", ObjectInputStream.class.getName(), e);
-                    }
-                }
-            }
+            return  (T) objectInputStream.readObject();
         }catch(UnsupportedEncodingException e){
             throw new SerializationException("deserialize the string " + str + " failure.", e);
+        }catch(ClassNotFoundException e){
+            throw new SerializationException("deserialize the string " + str + " failure.", e);
+        }catch(IOException e){
+            throw new SerializationException("deserialize the string " + str + " failure.", e);
+        }finally{
+            if(byteArrayInputStream != null){
+                try{
+                    byteArrayInputStream.close();
+                }catch(IOException e){
+                    logger.error("{} close error.", ByteArrayOutputStream.class.getName(), e);
+                }
+            }
+            if(objectInputStream != null){
+                try{
+                    objectInputStream.close();
+                }catch(IOException e){
+                    logger.error("{} close error.", ObjectInputStream.class.getName(), e);
+                }
+            }
         }
-
-        return result;
     }
 
     /**
