@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2019 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
@@ -33,7 +33,7 @@ import java.io.Serializable;
  */
 public class Postal implements Serializable {
 
-    private static final long serialVersionUID = -570124317632308660L;
+    private final static long serialVersionUID = -570124317632308660L;
 
     private final String code;
 

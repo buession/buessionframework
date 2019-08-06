@@ -26,6 +26,7 @@
  */
 package com.buession.geoip.spring;
 
+import com.buession.geoip.CacheDatabaseResolver;
 import com.buession.geoip.DatabaseResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,10 +67,10 @@ public class GeoIPResolverFactoryBean extends GeoIPResolverFactory implements Fa
     @Override
     public void afterPropertiesSet() throws Exception{
         if(getLoadMode() == LoadMode.STREAM){
-            resolver = new DatabaseResolver(getStream());
+            resolver = isEnableCache() ? new CacheDatabaseResolver(getStream()) : new DatabaseResolver(getStream());
             logger.info("Read db path from stream");
         }else{
-            resolver = new DatabaseResolver(getDbPath());
+            resolver = isEnableCache() ? new CacheDatabaseResolver(getDbPath()) : new DatabaseResolver(getDbPath());
             logger.info("Read db path from file {}", getDbPath());
         }
     }

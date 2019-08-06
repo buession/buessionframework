@@ -46,6 +46,8 @@ public class GeoIPResolverFactory {
 
     private LoadMode loadMode = LoadMode.STREAM;
 
+    private boolean enableCache = true;
+
     public File getDbPath(){
         return dbPath;
     }
@@ -90,6 +92,14 @@ public class GeoIPResolverFactory {
 
     public LoadMode getLoadMode(){
         return loadMode;
+    }
+
+    public boolean isEnableCache(){
+        return enableCache;
+    }
+
+    public void setEnableCache(boolean enableCache){
+        this.enableCache = enableCache;
     }
 
     protected enum LoadMode {

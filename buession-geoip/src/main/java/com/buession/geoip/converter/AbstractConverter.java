@@ -26,6 +26,7 @@
  */
 package com.buession.geoip.converter;
 
+import com.buession.core.validator.Validate;
 import com.maxmind.geoip2.model.AbstractResponse;
 import com.maxmind.geoip2.record.AbstractRecord;
 
@@ -49,6 +50,10 @@ public abstract class AbstractConverter<M, S extends AbstractRecord, R extends A
     }
 
     protected static String getName(final Map<String, String> names, Locale locale){
+        if(Validate.isEmpty(names)){
+            return null;
+        }
+
         if(locale == null){
             locale = Locale.getDefault();
         }

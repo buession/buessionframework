@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2019 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -32,7 +32,6 @@ import com.buession.geoip.utils.GlobalUtils;
 import com.maxmind.geoip2.model.CityResponse;
 
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author Yong.Teng

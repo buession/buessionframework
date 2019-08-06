@@ -26,6 +26,7 @@
  */
 package com.buession.geoip.test;
 
+import com.buession.geoip.CacheDatabaseResolver;
 import com.buession.geoip.DatabaseResolver;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import org.junit.Test;
@@ -40,8 +41,9 @@ public class GeoIPReaderTest {
     @Test
     public void location() throws IOException, GeoIp2Exception{
         String path = DatabaseResolver.class.getResource("/maxmind/City.mmdb").getPath();
-        DatabaseResolver geoIPReader = new DatabaseResolver(path);
-        System.out.println(geoIPReader.location("173.194.201.95").getDistrict().getName());
+        CacheDatabaseResolver geoIPReader = new CacheDatabaseResolver(path);
+        System.out.println(geoIPReader.location("180.118.86.115").getDistrict().getName());
+        System.out.println(geoIPReader.location("180.118.86.115").getDistrict().getName());
 
     }
 

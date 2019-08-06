@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2019 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
@@ -35,7 +35,7 @@ import java.io.Serializable;
  */
 public final class District implements Serializable {
 
-    private static final long serialVersionUID = -8098424244620246891L;
+    private final static long serialVersionUID = -8098424244620246891L;
 
     private final int geoNameId;
 
@@ -59,7 +59,12 @@ public final class District implements Serializable {
         this.name = name;
         this.postal = postal;
         this.parent = parent;
-        this.fullName = parent != null && parent.getName() != "" ? parent.getName() + name : name;
+
+        if(name != null){
+            this.fullName = parent != null ? parent.getName() + name : name;
+        }else{
+            this.fullName = null;
+        }
     }
 
     public int getGeoNameId(){
