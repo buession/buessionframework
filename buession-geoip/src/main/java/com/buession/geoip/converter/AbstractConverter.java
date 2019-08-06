@@ -26,7 +26,6 @@
  */
 package com.buession.geoip.converter;
 
-import com.buession.geoip.utils.GlobalUtils;
 import com.maxmind.geoip2.model.AbstractResponse;
 import com.maxmind.geoip2.record.AbstractRecord;
 
@@ -49,8 +48,37 @@ public abstract class AbstractConverter<M, S extends AbstractRecord, R extends A
         return converter(s, response, null);
     }
 
-    protected static String getName(final Map<String, String> names, final Locale locale){
-        return names == null ? null : names.get(GlobalUtils.getLocalName(locale));
+    protected static String getName(final Map<String, String> names, Locale locale){
+        if(locale == null){
+            locale = Locale.getDefault();
+        }
+
+        String result = names.get(locale.getLanguage());
+        if(result != null){
+            return result;
+        }
+
+        result = names.get(getLanguageTag(locale, '-'));
+        if(result != null){
+            return result;
+        }
+
+        result = names.get(getLanguageTag(locale, '_'));
+        if(result != null){
+            return result;
+        }
+
+        return null;
+    }
+
+    private final static String getLanguageTag(final Locale locale, final char separator){
+        StringBuffer sb = new StringBuffer();
+
+        sb.append(locale.getLanguage());
+        sb.append(separator);
+        sb.append(locale.getCountry());
+
+        return sb.toString();
     }
 
 }

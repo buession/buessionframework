@@ -74,10 +74,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      */
     public static String substr(final String str, int beginIndex, final int length){
         Assert.isNull(str, "String could not be null.");
-
-        if(length < 0){
-            throw new IllegalArgumentException("Length could not be negative.");
-        }
+        Assert.isNegative(length, "Length could not be negative.");
 
         if(beginIndex < 0){
             beginIndex = str.length() + beginIndex;
@@ -119,9 +116,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @return 生成的随机字符串
      */
     public static String random(final int length){
-        if(length < 0){
-            throw new IllegalArgumentException("length could not be negative.");
-        }else if(length == 0){
+        Assert.isNegative(length, "Length could not be negative.");
+
+        if(length == 0){
             return "";
         }else{
             StringBuffer sb = new StringBuffer(length);

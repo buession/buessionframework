@@ -21,14 +21,13 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2018 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.utils;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Locale;
 
 /**
  * @author Yong.Teng
@@ -61,26 +60,6 @@ public class GlobalUtils {
         }catch(UnknownHostException e){
             return null;
         }
-    }
-
-    public final static String getLocalName(Locale locale){
-        if(locale == null){
-            locale = Locale.getDefault();
-        }
-
-        String name = locale.toString();
-        StringBuilder sb = new StringBuilder(name.length());
-
-        for(int i = 0; i < name.length(); i++){
-            char c = name.charAt(i);
-            if(c == '_'){
-                sb.append('-');
-            }else{
-                sb.append(c);
-            }
-        }
-
-        return sb.toString();
     }
 
     public final static int getInteger(final Integer v){
