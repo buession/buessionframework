@@ -24,8 +24,8 @@
  */
 package com.buession.web.servlet.mvc.controller;
 
+import com.buession.web.mvc.Response;
 import com.buession.web.mvc.controller.AbstractRestController;
-import com.buession.web.mvc.controller.Response;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

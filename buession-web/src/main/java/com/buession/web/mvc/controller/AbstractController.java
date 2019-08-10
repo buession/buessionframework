@@ -27,6 +27,7 @@ package com.buession.web.mvc.controller;
 import com.buession.core.Pagination;
 import com.buession.core.codec.MessageObject;
 import com.buession.web.exception.PageNotFoundException;
+import com.buession.web.mvc.Response;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -59,8 +60,8 @@ public abstract class AbstractController implements Controller {
     public static <E> com.buession.web.mvc.Response<E> responseSuccess(final String message, final Pagination<E>
             pagination){
         final Response<E> response = new Response(true, 0, message, pagination.getData());
-        final Response.Pagination<E> paging = new Response.Pagination<>(pagination.getPage(), pagination.getPagesize
-                (), pagination.getTotalRecords());
+        final Pagination<E> paging = new Pagination<>(pagination.getPage(), pagination.getPagesize(), pagination
+                .getTotalRecords());
 
         pagination.setData(null);
         response.setPagination(paging);

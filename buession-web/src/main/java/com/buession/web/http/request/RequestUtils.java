@@ -24,27 +24,139 @@
  */
 package com.buession.web.http.request;
 
+import com.buession.core.validator.Validate;
+
 /**
  * @author Yong.Teng
  */
 public class RequestUtils {
 
-    public final static String[] CLIENT_IP_HEADERS = new String[]{"X-Forwarded-For-Pound"/* 微信 */, "X-Cdn-Src-Ip"/* 网宿
-    */, "X-Forwarded-For", "X-Real-Ip", "Proxy-Client-IP", "WL-Proxy-Client-IP", "Real-ClientIP"};
+    public final static String[] CLIENT_IP_HEADERS = new String[]{
+            /* 微信 */
+            "X-Forwarded-For-Pound",
+            /* 网宿 */
+            "X-Cdn-Src-Ip",
+            /* 天翼云 */
+            "X-Original-Forwarded-For",
+            /* */
+            "X-Forwarded-For",
+            /* */
+            "X-Real-Ip",
+            /* */
+            "Proxy-Client-IP",
+            /* */
+            "WL-Proxy-Client-IP",
+            /* */
+            "Real-ClientIP"};
 
-    public final static String[] MOBILE_MAPS = new String[]{"android"/* Android*/, "iphone"/* IPhone*/, "ipod"/*
-    IPod*/, "windows phone"/* Windows Phone*/, "windowsce", "mobile", "coolpad", "mmp", "smartphone", "midp", "wap",
-            "xoom", "symbian"/* Symbian */, "j2me", "ucweb", "operamini", "operamobi", "MicroMessenger"/* 微信 */,
-            "MQQBrowser"/*
-             QQ 浏览器 */, "wince", "Nokia"/* 诺基亚 */, "SonyEricsson"/* 索尼爱立信 */, "Sony"/* 索尼 */, "Ericsson"/* 爱立信 */,
-            "Mot"/* 摩托罗拉 */, "Samsung"/* 三星 */, "HTC"/* HTC */, "sgh"/*  */, "LG"/* LG */, "sharp"/* 夏普 */, "sie-"/*
-             */, "Philips"/* 飞利浦 */, "Haier"/* 海尔 */, "Changhong"/* 长虹 */, "Panasonic"/* 松下 */, "alcatel"/*  */,
-            "Lenovo"/* 联想 */, "blackberry"/* 黑莓 */, "meizu"/* 魅族 */, "netfront"/*  */, "palm"/*  */, "openwave"/*
-            */, "nexusone"/*  */, "cldc"/*  */, "midp"/*  */, "Huawei"/* 华为 */, "TCL"/* TCL */, "CECT"/* CECT */,
-            "Compal"/* Compal */, "NEC"/* NEC */, "TDG"/* TDG */, "Alcatel"/* 阿尔卡特 */, "BIRD"/* 波导 */, "DAXIAN"/* 大显
-            */, "DBTEL"/* 迪比特 */, "Eastcom"/* 东信 */, "PANTECH"/* 多彩 */, "Dopod"/* 多普达 */, "KONKA"/* 康佳 */, "Kejian"/*
-             *  科健 */, "BenQ"/* 明基 */, "Soutec"/* 南方高科 */, "SAGEM"/* 萨基姆 */, "SIE"/* 西门子 */, "Amoi"/* 夏新 */, "ZTE"/*
-             *  中兴 */, "Xiaomi"/* 小米 */};
+    public final static String[] MOBILE_MAPS = new String[]{
+            /* Android*/
+            "android",
+            /* IPhone */
+            "iphone",
+            /* IPod */
+            "ipod",
+            /* Windows Phone */
+            "windows phone", "windowsce", "mobile", "coolpad", "mmp", "smartphone", "midp", "wap", "xoom",
+            /* Symbian */
+            "symbian", "j2me", "ucweb", "operamini", "operamobi",
+            /* 微信 */
+            "MicroMessenger",
+            /* QQ 浏览器 */
+            "MQQBrowser", "wince",
+            /* 诺基亚 */
+            "Nokia",
+            /* 索尼爱立信 */
+            "SonyEricsson",
+            /* 索尼 */
+            "Sony",
+            /* 爱立信 */
+            "Ericsson",
+            /* 摩托罗拉 */
+            "Mot",
+            /* 三星 */
+            "Samsung",
+            /* HTC */
+            "HTC",
+            /*  */
+            "sgh",
+            /* LG */
+            "LG",
+            /* 夏普 */
+            "sharp",
+            /*  */
+            "sie-",
+            /* 飞利浦 */
+            "Philips",
+            /* 海尔 */
+            "Haier",
+            /* 长虹 */
+            "Changhong",
+            /* 松下 */
+            "Panasonic",
+            /*  */
+            "alcatel",
+            /* 联想 */
+            "Lenovo",
+            /* 黑莓 */
+            "blackberry",
+            /* 魅族 */
+            "meizu",
+            /*  */
+            "netfront",
+            /*  */
+            "palm",
+            /* */
+            "openwave",
+            /*  */
+            "nexusone",
+            /*  */
+            "cldc",
+            /*  */
+            "midp",
+            /* 华为 */
+            "Huawei",
+            /* TCL */
+            "TCL",
+            /* CECT */
+            "CECT",
+            /* Compal */
+            "Compal",
+            /* NEC */
+            "NEC",
+            /* TDG */
+            "TDG",
+            /* 阿尔卡特 */
+            "Alcatel",
+            /* 波导 */
+            "BIRD",
+            /* 大显 */
+            "DAXIAN",
+            /* 迪比特 */
+            "DBTEL",
+            /* 东信 */
+            "Eastcom",
+            /* 多彩 */
+            "PANTECH",
+            /* 多普达 */
+            "Dopod",
+            /* 康佳 */
+            "KONKA",
+            /*  科健 */
+            "Kejian",
+            /* 明基 */
+            "BenQ",
+            /* 南方高科 */
+            "Soutec",
+            /* 萨基姆 */"SAGEM",
+            /* 西门子 */
+            "SIE",
+            /* 夏新 */
+            "Amoi",
+            /*  中兴 */
+            "ZTE",
+            /* 小米 */
+            "Xiaomi"};
 
     /**
      * 判断是否为 Ajax 请求
@@ -67,7 +179,7 @@ public class RequestUtils {
      * @return 是否为移动端请求
      */
     protected final static boolean isMobile(final String userAgent){
-        if(userAgent == null){
+        if(Validate.hasText(userAgent) == false){
             return false;
         }
 
