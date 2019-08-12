@@ -24,6 +24,8 @@
  */
 package com.buession.core.cache;
 
+import com.buession.core.validator.Validate;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,16 +57,30 @@ public class ThreadLocalCache<K, V> {
         Map<K, V> map = cache.get();
 
         if(map == null){
-            Map<K, V> data = new HashMap<>(1);
-
-            data.put(key, value);
-
-            cache.set(data);
-
-            return value;
-        }else{
-            return map.put(key, value);
+            map = new HashMap<>(1);
         }
+
+        V result = map.put(key, value);
+
+        cache.set(map);
+
+        return result;
+    }
+
+    public void putAll(Map<K, V> data){
+        if(Validate.isEmpty(data) == false){
+            Map<K, V> map = cache.get();
+
+            if(map == null){
+                cache.set(new HashMap<>(data));
+            }else{
+                map.putAll(data);
+            }
+        }
+    }
+
+    public Map<K, V> getAll(){
+        return cache.get();
     }
 
     public V remove(K key){

@@ -61,7 +61,7 @@ public class VersionUtils {
      * @param version2
      *         第二个版本号
      *
-     * @return 当 version1 < version2 时，返回 -1；当 version1 = version2 时，返回 0；当 version1 > version2 时返回 1
+     * @return 当 version1 &lt; version2 时，返回 -1；当 version1 = version2 时，返回 0；当 version1 &gt; version2 时返回 1
      */
     public final static int compare(final String version1, final String version2){
         char first1 = version1.charAt(0);

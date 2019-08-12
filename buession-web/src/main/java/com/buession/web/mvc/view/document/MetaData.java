@@ -33,7 +33,7 @@ import java.io.Serializable;
  *
  * @author Yong.Teng
  */
-public class MeteData implements Serializable {
+public class MetaData implements Serializable {
 
     private static final long serialVersionUID = -2362098929099645692L;
 

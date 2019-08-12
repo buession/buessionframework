@@ -32,8 +32,6 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -48,8 +46,6 @@ import java.lang.reflect.Method;
 public class DocumentMetaDataProcessor extends AbstractProcessor {
 
     private final static String DEFAULT_ATTR_NAME = "metadata";
-
-    private final static Logger logger = LoggerFactory.getLogger(DocumentMetaDataProcessor.class);
 
     @AfterReturning("@annotation(com.buession.web.mvc.view.document.DocumentMetaData)")
     public void documentMetaDataProcessAfter(JoinPoint pjp) throws Throwable{
@@ -71,12 +67,12 @@ public class DocumentMetaDataProcessor extends AbstractProcessor {
         }
     }
 
-    private final static MeteData convert(final DocumentMetaData metaData){
+    private final static MetaData convert(final DocumentMetaData metaData){
         if(metaData == null){
             return null;
         }
 
-        MeteData metaDataObject = new MeteData();
+        MetaData metaDataObject = new MetaData();
 
         metaDataObject.setTitle(metaData.title());
         metaDataObject.setAuthor(metaData.author());
