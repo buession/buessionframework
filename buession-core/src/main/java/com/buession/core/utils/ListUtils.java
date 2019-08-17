@@ -52,17 +52,7 @@ public class ListUtils {
      * @return 转换结果
      */
     public final static <V> Set<V> toSet(List<V> list){
-        if(list == null){
-            return null;
-        }
-
-        Set<V> result = new LinkedHashSet<>(list.size());
-
-        for(V v : list){
-            result.add(v);
-        }
-
-        return result;
+        return list == null ? null : new LinkedHashSet<>(list.size());
     }
 
 }

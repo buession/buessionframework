@@ -38,6 +38,8 @@ import java.util.Set;
  */
 public class ArrayUtils {
 
+    public final static String EMPTY_STRING = "";
+
     public final static String DEFAULT_GLUE = ", ";
 
     private ArrayUtils(){
@@ -280,11 +282,11 @@ public class ArrayUtils {
      */
     public static <O> String toString(final O[] a, final String glue){
         if(a == null){
-            return "null";
+            return null;
         }
 
         if(a.length == 0){
-            return "";
+            return EMPTY_STRING;
         }
 
         String glueSep = glue == null ? DEFAULT_GLUE : glue;
@@ -294,9 +296,11 @@ public class ArrayUtils {
 
         for(int i = 0; ; i++){
             sb.append(a[i]);
+
             if(i == iMax){
                 return sb.toString();
             }
+
             sb.append(glueSep);
         }
     }

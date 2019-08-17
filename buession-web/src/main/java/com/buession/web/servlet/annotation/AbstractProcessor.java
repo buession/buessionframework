@@ -26,6 +26,7 @@
  */
 package com.buession.web.servlet.annotation;
 
+import com.buession.web.servlet.http.HttpServlet;
 import org.aspectj.lang.JoinPoint;
 import org.springframework.ui.Model;
 
@@ -37,46 +38,24 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class AbstractProcessor {
 
-    protected final static HttpServletRequest getHttpServletRequest(final JoinPoint pjp){
+    protected final static HttpServlet getHttpServlet(final JoinPoint pjp){
         if(pjp == null || pjp.getArgs() == null){
             return null;
         }
+
+        HttpServlet httpServlet = new HttpServlet();
 
         for(Object argument : pjp.getArgs()){
             if(argument instanceof HttpServletRequest){
-                return (HttpServletRequest) argument;
+                httpServlet.setRequest((HttpServletRequest) argument);
+            }else if(argument instanceof HttpServletResponse){
+                httpServlet.setResponse((HttpServletResponse) argument);
+            }else if(argument instanceof Model){
+                httpServlet.setModel((Model) argument);
             }
         }
 
-        return null;
-    }
-
-    protected final static HttpServletResponse getHttpServletResponse(final JoinPoint pjp){
-        if(pjp == null || pjp.getArgs() == null){
-            return null;
-        }
-
-        for(Object argument : pjp.getArgs()){
-            if(argument instanceof HttpServletResponse){
-                return (HttpServletResponse) argument;
-            }
-        }
-
-        return null;
-    }
-
-    protected final static Model getModel(final JoinPoint pjp){
-        if(pjp == null || pjp.getArgs() == null){
-            return null;
-        }
-
-        for(Object argument : pjp.getArgs()){
-            if(argument instanceof Model){
-                return (Model) argument;
-            }
-        }
-
-        return null;
+        return httpServlet;
     }
 
 }

@@ -56,17 +56,7 @@ public class MapUtils {
      * @return 转换结果
      */
     public final static <K, V> List<V> toList(Map<K, V> map){
-        if(map == null){
-            return null;
-        }
-
-        List<V> result = new ArrayList<>(map.size());
-
-        map.forEach((key, value)->{
-            result.add(value);
-        });
-
-        return result;
+        return map == null ? null : new ArrayList<>(map.values());
     }
 
     /**
@@ -82,17 +72,7 @@ public class MapUtils {
      * @return 转换结果
      */
     public final static <K, V> Set<V> toSet(Map<K, V> map){
-        if(map == null){
-            return null;
-        }
-
-        Set<V> result = new LinkedHashSet<>(map.size());
-
-        map.forEach((key, value)->{
-            result.add(value);
-        });
-
-        return result;
+        return map == null ? null : new LinkedHashSet<>(map.values());
     }
 
 }

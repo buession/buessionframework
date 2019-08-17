@@ -22,74 +22,34 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.cache;
-
-import com.buession.core.validator.Validate;
-
-import java.util.HashMap;
-import java.util.Map;
+package com.buession.web.http;
 
 /**
  * @author Yong.Teng
  */
-public class ThreadLocalCache<K, V> {
+public enum HttpHeader {
 
-    private ThreadLocal<Map<K, V>> cache = new ThreadLocal<>();
+    ACCESS_CONTROL_ALLOW_ORIGIN("Access-Control-Allow-Origin"),
 
-    public ThreadLocalCache(){
-        cache.set(new HashMap<>(0));
+    CONTENT_TYPE("Content-Type"),
+
+    EXPIRES("Expires"),
+
+    ORIGIN("Origin");
+
+    private String value;
+
+    HttpHeader(String value){
+        this.value = value;
     }
 
-    public ThreadLocalCache(Map<K, V> data){
-        cache.set(data == null ? new HashMap<>(0) : data);
+    public String getValue(){
+        return value;
     }
 
-    public ThreadLocalCache(int initialCapacity){
-        cache.set(new HashMap<>(initialCapacity));
-    }
-
-    public V get(K key){
-        Map<K, V> map = cache.get();
-        return map == null ? null : map.get(key);
-    }
-
-    public V put(K key, V value){
-        Map<K, V> map = cache.get();
-
-        if(map == null){
-            map = new HashMap<>(1);
-        }
-
-        V result = map.put(key, value);
-
-        cache.set(map);
-
-        return result;
-    }
-
-    public void putAll(Map<K, V> data){
-        if(Validate.isEmpty(data) == false){
-            Map<K, V> map = cache.get();
-
-            if(map == null){
-                cache.set(new HashMap<>(data));
-            }else{
-                map.putAll(data);
-            }
-        }
-    }
-
-    public Map<K, V> getAll(){
-        return cache.get();
-    }
-
-    public V remove(K key){
-        Map<K, V> map = cache.get();
-        return map == null ? null : map.remove(key);
-    }
-
-    public void clear(){
-        cache.remove();
+    @Override
+    public String toString(){
+        return value;
     }
 
 }

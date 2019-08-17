@@ -22,74 +22,59 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.cache;
+package com.buession.web.servlet.http;
 
-import com.buession.core.validator.Validate;
+import org.springframework.ui.Model;
 
-import java.util.HashMap;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Yong.Teng
  */
-public class ThreadLocalCache<K, V> {
+public class HttpServlet {
 
-    private ThreadLocal<Map<K, V>> cache = new ThreadLocal<>();
+    private HttpServletRequest request;
 
-    public ThreadLocalCache(){
-        cache.set(new HashMap<>(0));
+    private HttpServletResponse response;
+
+    private Model model;
+
+    public HttpServlet(){
     }
 
-    public ThreadLocalCache(Map<K, V> data){
-        cache.set(data == null ? new HashMap<>(0) : data);
+    public HttpServlet(HttpServletRequest request, HttpServletResponse response){
+        this.request = request;
+        this.response = response;
     }
 
-    public ThreadLocalCache(int initialCapacity){
-        cache.set(new HashMap<>(initialCapacity));
+    public HttpServlet(HttpServletRequest request, HttpServletResponse response, Model model){
+        this.request = request;
+        this.response = response;
+        this.model = model;
     }
 
-    public V get(K key){
-        Map<K, V> map = cache.get();
-        return map == null ? null : map.get(key);
+    public HttpServletRequest getRequest(){
+        return request;
     }
 
-    public V put(K key, V value){
-        Map<K, V> map = cache.get();
-
-        if(map == null){
-            map = new HashMap<>(1);
-        }
-
-        V result = map.put(key, value);
-
-        cache.set(map);
-
-        return result;
+    public void setRequest(HttpServletRequest request){
+        this.request = request;
     }
 
-    public void putAll(Map<K, V> data){
-        if(Validate.isEmpty(data) == false){
-            Map<K, V> map = cache.get();
-
-            if(map == null){
-                cache.set(new HashMap<>(data));
-            }else{
-                map.putAll(data);
-            }
-        }
+    public HttpServletResponse getResponse(){
+        return response;
     }
 
-    public Map<K, V> getAll(){
-        return cache.get();
+    public void setResponse(HttpServletResponse response){
+        this.response = response;
     }
 
-    public V remove(K key){
-        Map<K, V> map = cache.get();
-        return map == null ? null : map.remove(key);
+    public Model getModel(){
+        return model;
     }
 
-    public void clear(){
-        cache.remove();
+    public void setModel(Model model){
+        this.model = model;
     }
-
 }

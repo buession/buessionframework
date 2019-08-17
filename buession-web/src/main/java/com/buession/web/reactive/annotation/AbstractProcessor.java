@@ -24,6 +24,7 @@
  */
 package com.buession.web.reactive.annotation;
 
+import com.buession.web.reactive.http.ServerHttp;
 import org.aspectj.lang.JoinPoint;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -34,46 +35,24 @@ import org.springframework.ui.Model;
  */
 public abstract class AbstractProcessor {
 
-    protected final static ServerHttpRequest getServerHttpRequest(final JoinPoint pjp){
+    protected final static ServerHttp getServerHttp(final JoinPoint pjp){
         if(pjp == null || pjp.getArgs() == null){
             return null;
         }
+
+        ServerHttp serverHttp = new ServerHttp();
 
         for(Object argument : pjp.getArgs()){
             if(argument instanceof ServerHttpRequest){
-                return (ServerHttpRequest) argument;
+                serverHttp.setRequest((ServerHttpRequest) argument);
+            }else if(argument instanceof ServerHttpResponse){
+                serverHttp.setResponse((ServerHttpResponse) argument);
+            }else if(argument instanceof Model){
+                serverHttp.setModel((Model) argument);
             }
         }
 
-        return null;
-    }
-
-    protected final static ServerHttpResponse getServerHttpResponse(final JoinPoint pjp){
-        if(pjp == null || pjp.getArgs() == null){
-            return null;
-        }
-
-        for(Object argument : pjp.getArgs()){
-            if(argument instanceof ServerHttpResponse){
-                return (ServerHttpResponse) argument;
-            }
-        }
-
-        return null;
-    }
-
-    protected final static Model getModel(final JoinPoint pjp){
-        if(pjp == null || pjp.getArgs() == null){
-            return null;
-        }
-
-        for(Object argument : pjp.getArgs()){
-            if(argument instanceof Model){
-                return (Model) argument;
-            }
-        }
-
-        return null;
+        return serverHttp;
     }
 
 }

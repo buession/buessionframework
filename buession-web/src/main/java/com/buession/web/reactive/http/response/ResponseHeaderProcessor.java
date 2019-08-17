@@ -25,10 +25,13 @@
 package com.buession.web.reactive.http.response;
 
 import com.buession.core.validator.Validate;
+import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.ContentType;
+import com.buession.web.http.response.PrimitiveCrossOrigin;
 import com.buession.web.http.response.ResponseHeader;
 import com.buession.web.http.response.ResponseHeaders;
 import com.buession.web.reactive.annotation.AbstractProcessor;
+import com.buession.web.reactive.http.ServerHttp;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -36,8 +39,10 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.server.ServerRequest;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -58,9 +63,9 @@ public class ResponseHeaderProcessor extends AbstractProcessor {
 
     @After("responseHeaderProcess()")
     public void doResponseHeaderProcessAfter(JoinPoint pjp){
-        ServerHttpResponse response = getServerHttpResponse(pjp);
+        ServerHttp serverHttp = getServerHttp(pjp);
 
-        if(response == null){
+        if(serverHttp == null || serverHttp.getResponse() == null){
             return;
         }
 
@@ -68,15 +73,16 @@ public class ResponseHeaderProcessor extends AbstractProcessor {
         Method method = ((MethodSignature) pjp.getSignature()).getMethod();
 
         if(clazz != null){
-            process(clazz, response);
+            process(clazz, serverHttp.getRequest(), serverHttp.getResponse());
         }
 
         if(method != null){
-            process(method, response);
+            process(method, serverHttp.getRequest(), serverHttp.getResponse());
         }
     }
 
-    private final static void process(final AnnotatedElement annotatedElement, final ServerHttpResponse response){
+    private final static void process(final AnnotatedElement annotatedElement, final ServerHttpRequest request, final
+    ServerHttpResponse response){
         if(AnnotatedElementUtils.hasAnnotation(annotatedElement, ResponseHeader.class)){
             setHeader(response, AnnotatedElementUtils.findMergedAnnotation(annotatedElement, ResponseHeader.class));
         }
@@ -87,6 +93,11 @@ public class ResponseHeaderProcessor extends AbstractProcessor {
 
         if(AnnotatedElementUtils.hasAnnotation(annotatedElement, ContentType.class)){
             setContentType(response, AnnotatedElementUtils.findMergedAnnotation(annotatedElement, ContentType.class));
+        }
+
+        if(request != null && AnnotatedElementUtils.hasAnnotation(annotatedElement, PrimitiveCrossOrigin.class)){
+            response.getHeaders().setAccessControlAllowOrigin(request.getHeaders().getFirst(HttpHeader.ORIGIN
+                    .getValue()));
         }
     }
 

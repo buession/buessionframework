@@ -25,6 +25,7 @@
 package com.buession.core.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * @author Yong.Teng
@@ -35,10 +36,28 @@ public class ReflectUtils {
 
     }
 
+    /**
+     * 设置属性权限
+     *
+     * @param field
+     *         属性
+     */
     public final static void setFieldAccessible(Field field){
         if(field != null && field.isAccessible() == false){
             field.setAccessible(true);
         }
+    }
+
+    /**
+     * 判断属性是否为静态属性
+     *
+     * @param field
+     *         属性
+     *
+     * @return 属性是为静态属性，返回 true；否则返回 false
+     */
+    public final static boolean isStaticField(Field field){
+        return field != null && Modifier.isStatic(field.getModifiers());
     }
 
 }
