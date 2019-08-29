@@ -41,8 +41,6 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.server.ServerRequest;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -52,7 +50,6 @@ import java.nio.charset.Charset;
  * @author Yong.Teng
  */
 @Aspect
-@Component
 public class ResponseHeaderProcessor extends AbstractProcessor {
 
     protected final static String EXPIRES = "Expires";

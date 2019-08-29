@@ -33,7 +33,9 @@ import com.buession.web.mvc.view.document.MetaDataConvert;
 import com.buession.web.servlet.annotation.AbstractProcessor;
 import com.buession.web.servlet.http.HttpServlet;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.ui.Model;
@@ -43,9 +45,14 @@ import java.lang.reflect.Method;
 /**
  * @author Yong.Teng
  */
+@Aspect
 public class DocumentMetaDataProcessorImpl extends AbstractProcessor implements DocumentMetaDataProcessor {
 
-    @AfterReturning("@annotation(com.buession.web.mvc.view.document.DocumentMetaData)")
+    @Pointcut("@annotation(com.buession.web.mvc.view.document.DocumentMetaData)")
+    public void documentMetaDataProcess(){
+    }
+
+    @After("documentMetaDataProcess()")
     public void documentMetaDataProcessAfter(JoinPoint pjp) throws Throwable{
         HttpServlet httpServlet = getHttpServlet(pjp);
 

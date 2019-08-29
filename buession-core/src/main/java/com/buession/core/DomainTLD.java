@@ -1159,7 +1159,7 @@ public enum DomainTLD {
             "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
             "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
             "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-            "GuinÃ©-Bissau"),
+            "" + "" + "" + "" + "" + "" + "GuinÃ©-Bissau"),
 
     GY("gy", DomainTLDType.COUNTRY, "University of Guyana"),
 
@@ -1988,7 +1988,7 @@ public enum DomainTLD {
     PFIZER("pfizer", DomainTLDType.GENERIC, "Pfizer Inc."),
 
     PG("pg", DomainTLDType.COUNTRY, "PNG DNS AdministrationVice Chancellors OfficeThe Papua New Guinea University of " +
-            "" + "" + "Technology"),
+            "" + "" + "" + "" + "" + "" + "" + "" + "Technology"),
 
     PH("ph", DomainTLDType.COUNTRY, "PH Domain Foundation"),
 
@@ -2585,7 +2585,7 @@ public enum DomainTLD {
     TN("tn", DomainTLDType.COUNTRY, "Agence Tunisienne d'Internet"),
 
     TO("to", DomainTLDType.COUNTRY, "Government of the Kingdom of TongaH.R.H. Crown Prince Tupouto'ac/o Consulate of " +
-            "" + "" + "Tonga"),
+            "" + "" + "" + "" + "" + "" + "" + "" + "Tonga"),
 
     TODAY("today", DomainTLDType.GENERIC, "Binky Moon, LLC"),
 

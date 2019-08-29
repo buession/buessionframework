@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2019 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -379,6 +379,23 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
     /**
      * 数据记录总数
      *
+     * @return 记录总数
+     */
+    @Override
+    public long count(){
+        try{
+            int count = getSlaveSqlSessionTemplate().selectOne(getStatement("count"));
+            return count * 1L;
+        }catch(OperationException e){
+            logger.error(e.getMessage());
+        }
+
+        return 0;
+    }
+
+    /**
+     * 数据记录总数
+     *
      * @param conditions
      *         查询条件
      *
@@ -520,11 +537,17 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
     protected abstract String getStatement();
 
     protected String getStatement(final DML dml){
-        return getStatement() + "." + dml;
+        return getStatement(dml.name());
     }
 
     protected String getStatement(final String dml){
-        return getStatement() + "." + dml;
+        final StringBuffer sb = new StringBuffer();
+
+        sb.append(getStatement());
+        sb.append('.');
+        sb.append(dml);
+
+        return sb.toString();
     }
 
 }

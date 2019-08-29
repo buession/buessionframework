@@ -88,6 +88,16 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
     /**
      * 获取一条记录
      *
+     * @return 查询结果
+     */
+    @Override
+    public E getOne(){
+        return selectOne();
+    }
+
+    /**
+     * 获取一条记录
+     *
      * @param conditions
      *         查询条件
      *
@@ -145,6 +155,11 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
         return selectOne(conditions, offset, orders);
     }
 
+    @Override
+    public E selectOne(){
+        return selectOne(null, null);
+    }
+
     /**
      * 获取一条记录
      *
@@ -155,7 +170,7 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
      */
     @Override
     public E selectOne(Map<String, Object> conditions){
-        return getOne(conditions, null);
+        return selectOne(conditions, null);
     }
 
     /**
@@ -170,7 +185,7 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
      */
     @Override
     public E selectOne(Map<String, Object> conditions, int offset){
-        return getOne(conditions, offset, null);
+        return selectOne(conditions, offset, null);
     }
 
     /**
@@ -185,7 +200,7 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
      */
     @Override
     public E selectOne(Map<String, Object> conditions, Map<String, Order> orders){
-        return getOne(conditions, 0, orders);
+        return selectOne(conditions, 0, orders);
     }
 
     /**

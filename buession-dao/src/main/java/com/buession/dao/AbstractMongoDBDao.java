@@ -401,6 +401,16 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
     /**
      * 数据记录总数
      *
+     * @return 记录总数
+     */
+    @Override
+    public long count(){
+        return count(new Query());
+    }
+
+    /**
+     * 数据记录总数
+     *
      * @param conditions
      *         查询条件
      *

@@ -44,6 +44,6 @@ public @interface EnableHttpCache {
     /**
      * Alias for {@link ResponseHeader#value()}.
      */
-    @AliasFor(annotation = ResponseHeader.class) String value() default "0";
+    @AliasFor(annotation = ResponseHeader.class) String value() default "1";
 
 }

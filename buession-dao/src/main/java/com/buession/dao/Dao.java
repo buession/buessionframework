@@ -115,6 +115,13 @@ public interface Dao<P, E> {
     /**
      * 获取一条记录
      *
+     * @return 查询结果
+     */
+    E getOne();
+
+    /**
+     * 获取一条记录
+     *
      * @param conditions
      *         查询条件
      *
@@ -159,6 +166,13 @@ public interface Dao<P, E> {
      * @return 查询结果
      */
     E getOne(Map<String, Object> conditions, int offset, Map<String, Order> orders);
+
+    /**
+     * 获取一条记录
+     *
+     * @return 查询结果
+     */
+    E selectOne();
 
     /**
      * 获取一条记录
@@ -322,6 +336,13 @@ public interface Dao<P, E> {
      * @return 结果集
      */
     List<E> getAll();
+
+    /**
+     * 数据记录总数
+     *
+     * @return 记录总数
+     */
+    long count();
 
     /**
      * 数据记录总数

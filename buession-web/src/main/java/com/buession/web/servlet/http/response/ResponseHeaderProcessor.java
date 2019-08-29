@@ -40,7 +40,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +50,6 @@ import java.lang.reflect.Method;
  * @author Yong.Teng
  */
 @Aspect
-@Component
 public class ResponseHeaderProcessor extends AbstractProcessor {
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")

@@ -28,6 +28,7 @@ package org.apache.ibatis.type;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
