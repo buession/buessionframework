@@ -467,10 +467,6 @@ public abstract class RedisAccessor {
         return result;
     }
 
-    protected final static Status returnStatus(final boolean value){
-        return value ? Status.SUCCESS : Status.FAILURE;
-    }
-
     protected interface Executor<R> extends com.buession.redis.core.Executor<RedisClient, R> {
 
     }

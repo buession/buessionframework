@@ -159,12 +159,12 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
     @Override
     public Status del(final String key){
-        return returnStatus(del(new String[]{key}) > 0);
+        return Status.valueOf(del(new String[]{key}) > 0);
     }
 
     @Override
     public Status del(final byte[] key){
-        return returnStatus(del(new byte[][]{key}) > 0);
+        return Status.valueOf(del(new byte[][]{key}) > 0);
     }
 
     @Override
@@ -537,12 +537,12 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
     @Override
     public Status hDel(final String key, final String field){
-        return returnStatus(hDel(key, new String[]{field}) > 0);
+        return Status.valueOf(hDel(key, new String[]{field}) > 0);
     }
 
     @Override
     public Status hDel(final byte[] key, final byte[] field){
-        return returnStatus(hDel(key, new byte[][]{field}) > 0);
+        return Status.valueOf(hDel(key, new byte[][]{field}) > 0);
     }
 
     @Override

@@ -33,6 +33,18 @@ public enum Status {
 
     SUCCESS,
 
-    FAILURE
+    FAILURE;
+
+    public final static Status valueOf(final boolean v){
+        return v ? SUCCESS : FAILURE;
+    }
+
+    public final static Status valueOf(final int v){
+        return v == 0 ? FAILURE : SUCCESS;
+    }
+
+    public final static Status valueOf(final long v){
+        return v == 0 ? FAILURE : SUCCESS;
+    }
 
 }

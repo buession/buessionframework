@@ -91,7 +91,7 @@ public abstract class AbstractRedisClient implements RedisClient {
     }
 
     protected final static Status returnStatus(final boolean value){
-        return value ? Status.SUCCESS : Status.FAILURE;
+        return Status.valueOf(value);
     }
 
     protected final static <O extends Enum<O>> O returnEnum(final String str, final Class<O> enumType){
@@ -99,7 +99,7 @@ public abstract class AbstractRedisClient implements RedisClient {
     }
 
     protected final static Status returnForOK(final String str){
-        return "OK".equalsIgnoreCase(str) ? Status.SUCCESS : Status.FAILURE;
+        return Status.valueOf("OK".equalsIgnoreCase(str));
     }
 
     protected final static Status returnForOK(final byte[] str){

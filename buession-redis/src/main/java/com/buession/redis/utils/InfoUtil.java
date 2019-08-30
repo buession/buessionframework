@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.utils;
@@ -373,7 +373,7 @@ public class InfoUtil {
                     date.setTime(Integer.valueOf(v[1]) * 1000);
                     persistence.setRdbLastSaveTime(date);
                 }else if("rdb_last_bgsave_status".equals(v[0])){
-                    persistence.setRdbLastBgSaveStatus("OK".equalsIgnoreCase(v[1]) ? Status.SUCCESS : Status.FAILURE);
+                    persistence.setRdbLastBgSaveStatus(Status.valueOf("OK".equalsIgnoreCase(v[1])));
                 }else if("rdb_last_bgsave_time_sec".equals(v[0])){
                     persistence.setRdbLastBgSaveTimeSec(Integer.valueOf(v[1]));
                 }else if("rdb_current_bgsave_time_sec".equals(v[0])){
@@ -389,10 +389,9 @@ public class InfoUtil {
                 }else if("aof_current_rewrite_time_sec".equals(v[0])){
                     persistence.setAofCurrentRewriteTimeSec(Integer.valueOf(v[1]));
                 }else if("aof_last_bgrewrite_status".equals(v[0])){
-                    persistence.setAofLastBgRewriteStatus("OK".equalsIgnoreCase(v[1]) ? Status.SUCCESS : Status
-                            .FAILURE);
+                    persistence.setAofLastBgRewriteStatus(Status.valueOf("OK".equalsIgnoreCase(v[1])));
                 }else if("aof_last_write_status".equals(v[0])){
-                    persistence.setAofLastWriteStatus("OK".equalsIgnoreCase(v[1]) ? Status.SUCCESS : Status.FAILURE);
+                    persistence.setAofLastWriteStatus(Status.valueOf("OK".equalsIgnoreCase(v[1])));
                 }
             }
 
