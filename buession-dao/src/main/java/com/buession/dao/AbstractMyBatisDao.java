@@ -31,6 +31,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,6 +41,7 @@ import java.util.Random;
 import javax.annotation.Resource;
 
 import com.buession.core.utils.Assert;
+import com.buession.core.utils.ReflectUtils;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import org.apache.ibatis.mapping.ResultMap;
@@ -244,7 +246,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
      */
     @Override
     public E selectOne(Map<String, Object> conditions, int offset, Map<String, Order> orders){
-        final Map<String, Object> parameters = new LinkedHashMap<>(conditions);
+        final Map<String, Object> parameters = buildParameters(conditions);
 
         if(orders != null){
             parameters.put(ORDERS_PARAMETER_NAME, orders);
@@ -271,7 +273,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
      */
     @Override
     public List<E> select(Map<String, Object> conditions, Map<String, Order> orders){
-        final Map<String, Object> parameters = new LinkedHashMap<>(conditions);
+        final Map<String, Object> parameters = buildParameters(conditions);
 
         if(orders != null){
             parameters.put(ORDERS_PARAMETER_NAME, orders);
@@ -308,7 +310,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
             throw new IllegalArgumentException("Size argument value must be positive integer");
         }
 
-        final Map<String, Object> parameters = new LinkedHashMap<>(conditions);
+        final Map<String, Object> parameters = buildParameters(conditions);
 
         if(orders != null){
             parameters.put(ORDERS_PARAMETER_NAME, orders);
@@ -525,7 +527,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
         try{
             Field field = clazz.getDeclaredField(property);
 
-            field.setAccessible(true);
+            ReflectUtils.setFieldAccessible(field);
             field.set(e, primary);
         }catch(NoSuchFieldException ex){
             logger.warn("{}", ex.getMessage());
@@ -534,10 +536,14 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
         }
     }
 
+    protected final static Map<String, Object> buildParameters(final Map<String, Object> conditions){
+        return conditions == null ? new LinkedHashMap<>(16) : new LinkedHashMap<>(conditions);
+    }
+
     protected abstract String getStatement();
 
     protected String getStatement(final DML dml){
-        return getStatement(dml.name());
+        return getStatement(dml.toString());
     }
 
     protected String getStatement(final String dml){
