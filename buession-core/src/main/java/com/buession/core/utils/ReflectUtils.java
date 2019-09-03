@@ -25,6 +25,7 @@
 package com.buession.core.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
@@ -58,6 +59,18 @@ public class ReflectUtils {
      */
     public final static boolean isStaticField(Field field){
         return field != null && Modifier.isStatic(field.getModifiers());
+    }
+
+    /**
+     * 判断方法是否为静态方法
+     *
+     * @param method
+     *         方法
+     *
+     * @return 方法是为静态方法，返回 true；否则返回 false
+     */
+    public final static boolean isStaticMethod(Method method){
+        return method != null && Modifier.isStatic(method.getModifiers());
     }
 
 }

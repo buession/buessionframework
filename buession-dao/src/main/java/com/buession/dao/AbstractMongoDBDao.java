@@ -529,6 +529,8 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
     protected final MongoTemplate getSlaveMongoTemplate() throws OperationException{
         if(Validate.isEmpty(slaveMongoTemplates)){
             return getMasterMongoTemplate();
+        }else if(slaveMongoTemplates.size() == 1){
+            return getSlaveMongoTemplate(0);
         }else{
             Random random = new Random();
             int index = random.nextInt(slaveMongoTemplates.size());

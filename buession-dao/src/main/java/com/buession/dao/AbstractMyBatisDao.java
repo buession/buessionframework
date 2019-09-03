@@ -163,7 +163,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
             Field[] fields = clazz.getFields();
 
             for(Field field : fields){
-                if(Modifier.isStatic(field.getModifiers())){
+                if(ReflectUtils.isStaticField(field)){
                     continue;
                 }
 
@@ -175,7 +175,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
             }
 
             for(Method method : methods){
-                if(Modifier.isStatic(method.getModifiers())){
+                if(ReflectUtils.isStaticMethod(method)){
                     continue;
                 }
 
@@ -478,6 +478,8 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
     protected final SqlSessionTemplate getSlaveSqlSessionTemplate() throws OperationException{
         if(Validate.isEmpty(slaveSqlSessionTemplates)){
             return getMasterSqlSessionTemplate();
+        }else if(slaveSqlSessionTemplates.size() == 1){
+            return getSlaveSqlSessionTemplate(0);
         }else{
             Random random = new Random();
             int index = random.nextInt(slaveSqlSessionTemplates.size());
@@ -499,9 +501,10 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
                 List<ResultMapping> resultMappings = resultMap.getIdResultMappings();
 
                 if(Validate.isEmpty(resultMappings) == false){
+                    Class<E> clazz = (Class<E>) e.getClass();
+
                     for(ResultMapping resultMapping : resultMappings){
-                        updatePrimary((Class<E>) e.getClass(), e, resultMapping.getProperty(), resultMapping
-                                .getJavaType(), primary);
+                        updatePrimary(clazz, e, resultMapping.getProperty(), resultMapping.getJavaType(), primary);
                     }
                 }
                 break;
