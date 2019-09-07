@@ -20,6 +20,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.ModelAndView;
@@ -78,6 +79,7 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
         this.exceptionViews = exceptionViews;
     }
 
+    @ExceptionHandler(value = {Throwable.class, Exception.class})
     @Nullable
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, @Nullable
@@ -134,10 +136,15 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
             }
         }
 
-        return null;
+        return doDefaultResolveException(request, response, handler, ex);
     }
 
     protected ModelAndView doSpecialResolveException(final HttpServletRequest request, final HttpServletResponse
+            response, final Object handler, final Exception ex){
+        return null;
+    }
+
+    protected ModelAndView doDefaultResolveException(final HttpServletRequest request, final HttpServletResponse
             response, final Object handler, final Exception ex){
         return null;
     }
