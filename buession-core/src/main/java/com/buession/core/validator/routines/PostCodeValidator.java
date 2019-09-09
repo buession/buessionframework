@@ -26,8 +26,6 @@
  */
 package com.buession.core.validator.routines;
 
-import com.buession.core.validator.Validate;
-
 /**
  * @author Yong.Teng
  */

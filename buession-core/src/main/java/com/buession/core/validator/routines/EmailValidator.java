@@ -80,15 +80,7 @@ public class EmailValidator {
             return false;
         }
 
-        if(isValidUser(emailMatcher.group(1)) == false){
-            return false;
-        }
-
-        if(isValidDomain(emailMatcher.group(2)) == false){
-            return false;
-        }
-
-        return true;
+        return isValidUser(emailMatcher.group(1)) && isValidDomain(emailMatcher.group(2));
     }
 
     protected final static boolean isValidUser(String user){

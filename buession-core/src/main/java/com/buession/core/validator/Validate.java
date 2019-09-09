@@ -35,6 +35,7 @@ import java.util.Map;
 import com.buession.core.validator.routines.EmailValidator;
 import com.buession.core.validator.routines.IDCardValidator;
 import com.buession.core.validator.routines.ISBNValidator;
+import com.buession.core.validator.routines.IpValidator;
 import com.buession.core.validator.routines.MobileValidator;
 import com.buession.core.validator.routines.PostCodeValidator;
 import com.buession.core.validator.routines.QQValidator;
@@ -549,7 +550,7 @@ public class Validate {
      * @return Boolean
      */
     public final static boolean isXdigit(final char ch){
-        return ch >= '0' && ch <= '9' || ch >= 'a' && ch <= 'f' || ch >= 'A' || ch <= 'F';
+        return isNumeric(ch) || ch >= 'a' && ch <= 'f' || ch >= 'A' || ch <= 'F';
     }
 
     /**
@@ -682,6 +683,42 @@ public class Validate {
      */
     public final static boolean isIsbn(final CharSequence charSequence, final char separator){
         return ISBNValidator.isIsbn10(charSequence, separator) || ISBNValidator.isIsbn13(charSequence, separator);
+    }
+
+    /**
+     * 验证字符串是否为 IPv4
+     *
+     * @param charSequence
+     *         待验证的字符串
+     *
+     * @return Boolean
+     */
+    public final static boolean isIpV4(final CharSequence charSequence){
+        return IpValidator.isValid(charSequence, IpValidator.IpType.IP_V4);
+    }
+
+    /**
+     * 验证字符串是否为 IPv6
+     *
+     * @param charSequence
+     *         待验证的字符串
+     *
+     * @return Boolean
+     */
+    public final static boolean isIpV6(final CharSequence charSequence){
+        return IpValidator.isValid(charSequence, IpValidator.IpType.IP_V6);
+    }
+
+    /**
+     * 验证字符串是否为 IP
+     *
+     * @param charSequence
+     *         待验证的字符串
+     *
+     * @return Boolean
+     */
+    public final static boolean isIpv(final CharSequence charSequence){
+        return isIpV4(charSequence) || isIpV6(charSequence);
     }
 
 }

@@ -202,7 +202,6 @@ public class ISBNValidator {
 
         int j = 0;
         int sum = 0;
-        int checksum = 0;
 
         for(int i = 0; i < len; i++){
             if(j == 12){
@@ -217,7 +216,7 @@ public class ISBNValidator {
             sum += j++ % 2 == 0 ? (c - '0') : 3 * (c - '0');
         }
 
-        checksum = 10 - (sum % 10);
+        int checksum = 10 - (sum % 10);
 
         return (checksum == 10 ? '0' : checksum + '0') == lash_ch;
     }
