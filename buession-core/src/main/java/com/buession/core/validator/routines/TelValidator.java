@@ -26,10 +26,22 @@
  */
 package com.buession.core.validator.routines;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * @author Yong.Teng
  */
 public class TelValidator {
+
+    private final static String AREA_ACODE_PATTERN = "(86-?)|0)\\d{2,3}";
+
+    private final static String TEL_PATTERN = "[1-9]\\d{6,7}";
+
+    private final static String WITH_AREA_CODE_PATTERN = "^(((" + AREA_ACODE_PATTERN + "-?)|(（(" + AREA_ACODE_PATTERN
+            + "）)|(\\((" + AREA_ACODE_PATTERN + "\\)))" + TEL_PATTERN + "$";
+
+    private final static String WITHOUT_AREA_CODE_PATTERN = "^" + TEL_PATTERN + "$";
 
     private TelValidator(){
 
@@ -46,74 +58,26 @@ public class TelValidator {
             case NOT_NEED:
                 return validNotHasAreaCode(charSequence);
             default:
-                return validHasAreaCode(charSequence) == true || validNotHasAreaCode(charSequence) == true;
+                return validHasAreaCode(charSequence) || validNotHasAreaCode(charSequence);
         }
     }
 
     private static boolean validHasAreaCode(final CharSequence charSequence){
-        char c = charSequence.charAt(0);
-        int nextIndex = 0;
-        CharSequence symbol = charSequence.subSequence(0, 1);
-
-        if(symbol == "(" || symbol == "（"){
-            nextIndex = 1;
-        }
-
-        c = charSequence.charAt(nextIndex);
-        if(c == '0'){
-            nextIndex++;
-        }else if(c == '8' && charSequence.charAt(nextIndex + 1) == '6'){
-            nextIndex += 2;
-        }else{
-            return false;
-        }
-
-        c = charSequence.charAt(nextIndex++);
-        if(c < '1' || c > '9'){
-            return false;
-        }
-
-        c = charSequence.charAt(nextIndex++);
-        if(c < '0' || c > '9'){
-            return false;
-        }
-
-        c = charSequence.charAt(nextIndex++);
-        if(c >= '0' && c <= '9'){
-
-        }else if(symbol == "("){
-            if(c != ')'){
-                return false;
-            }
-        }else if(symbol == "（"){
-            if(c != '）'){
-                return false;
-            }
-        }else if(c == '-'){
-
-        }else{
-            return false;
-        }
-
-        return validNotHasAreaCode(charSequence.subSequence(nextIndex, charSequence.length() - 1));
+        Matcher matcher = Pattern.compile(WITH_AREA_CODE_PATTERN).matcher(charSequence);
+        return matcher.matches();
     }
 
-    private static boolean validNotHasAreaCode(final CharSequence charSequence){
-        if(charSequence == null){
-            return false;
-        }
-
-        int len = charSequence.length();
-        if(len != 7 && len != 8){
-            return false;
-        }
-
-        return NumberValidateUtil.type2(charSequence);
+    private final static boolean validNotHasAreaCode(final CharSequence charSequence){
+        Matcher matcher = Pattern.compile(WITHOUT_AREA_CODE_PATTERN).matcher(charSequence);
+        return matcher.matches();
     }
 
     public enum AreaCodeType {
+
         NEED,
+
         NOT_NEED,
+
         BOTH
     }
 

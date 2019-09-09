@@ -272,7 +272,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
     }
 
     protected boolean acceptJson(final HttpServletRequest request){
-        return request.getHeader("Content-Type").contains(MediaType.APPLICATION_JSON_VALUE);
+        final String contentType = request.getHeader("Content-Type");
+        return contentType != null && contentType.contains(MediaType.APPLICATION_JSON_VALUE);
     }
 
     protected ModelAndView createModelAndView(final HttpServletRequest request, final HttpServletResponse response,
