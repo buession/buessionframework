@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<name>Buession Framework Web</name>
+	<name>Buession Aop</name>
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.buession</groupId>
@@ -9,9 +9,9 @@
 		<relativePath>../buession-parent</relativePath>
 		<version>1.0.1</version>
 	</parent>
-	<artifactId>buession-web</artifactId>
+	<artifactId>buession-aop</artifactId>
 	<url>https://github.com/buession/buessionframework</url>
-	<description>Buession Web</description>
+	<description>Buession Framework Aop</description>
 	<packaging>jar</packaging>
 
 	<organization>
@@ -46,56 +46,11 @@
 			<artifactId>buession-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>com.buession</groupId>
-			<artifactId>buession-aop</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-aop</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webmvc</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-webflux</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
 
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
@@ -110,7 +65,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>buession-web</finalName>
+		<finalName>buession-aop</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

@@ -22,33 +22,46 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.servlet.aop.handler;
 
-import com.buession.core.ISBNType;
+import com.buession.aop.MethodInvocation;
+import com.buession.core.validator.Validate;
+import com.buession.web.aop.handler.AbstractContentTypeAnnotationHandler;
+import com.buession.web.http.HttpHeader;
+import com.buession.web.http.response.ContentType;
+import com.buession.web.servlet.aop.AopUtils;
+import com.buession.web.servlet.http.HttpServlet;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnnotationHandler {
 
-    String message() default "";
+    public ServletContentTypeAnnotationHandler(){
+        super();
+    }
 
-    ISBNType type();
+    @Override
+    public void execute(MethodInvocation mi, ContentType contentType) throws Throwable{
+        HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+        if(httpServlet == null || httpServlet.getResponse() == null){
+            return;
+        }
+
+        StringBuffer sb = new StringBuffer();
+
+        sb.append(contentType.mime());
+
+        if(Validate.hasText(contentType.encoding()) == false){
+            sb.append("; charset=");
+            sb.append(contentType.encoding());
+        }
+
+        HttpServletResponse response = httpServlet.getResponse();
+        response.addHeader(HttpHeader.CONTENT_TYPE.getValue(), sb.toString());
+    }
 
 }

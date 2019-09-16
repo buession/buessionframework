@@ -22,33 +22,46 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.reactive.aop.handler;
 
-import com.buession.core.ISBNType;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.buession.aop.MethodInvocation;
+import com.buession.web.aop.handler.AbstractResponseHeaderAnnotationHandler;
+import com.buession.web.http.response.ResponseHeader;
+import com.buession.web.reactive.aop.AopUtils;
+import com.buession.web.reactive.http.ServerHttp;
+import com.buession.web.reactive.http.response.ResponseUtils;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class ReactiveResponseHeaderAnnotationHandler extends AbstractResponseHeaderAnnotationHandler {
 
-    String message() default "";
+    public ReactiveResponseHeaderAnnotationHandler(){
+        super();
+    }
 
-    ISBNType type();
+    @Override
+    public void execute(MethodInvocation mi, ResponseHeader responseHeader) throws Throwable{
+        ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+        if(serverHttp == null || serverHttp.getResponse() == null){
+            return;
+        }
+
+        setHeader(serverHttp.getResponse(), responseHeader);
+    }
+
+    private final static void setHeader(final ServerHttpResponse response, final String name, final String value){
+        if(EXPIRES.equalsIgnoreCase(name) == true){
+            ResponseUtils.httpCache(response, Integer.parseInt(value));
+        }else{
+            response.getHeaders().set(name, value);
+        }
+    }
+
+    private final static void setHeader(final ServerHttpResponse response, final ResponseHeader responseHeader){
+        setHeader(response, responseHeader.name(), responseHeader.value());
+    }
 
 }

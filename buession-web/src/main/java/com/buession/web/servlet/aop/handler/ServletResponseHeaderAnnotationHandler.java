@@ -22,33 +22,48 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.servlet.aop.handler;
 
-import com.buession.core.ISBNType;
+import com.buession.aop.MethodInvocation;
+import com.buession.web.aop.handler.AbstractResponseHeaderAnnotationHandler;
+import com.buession.web.http.HttpHeader;
+import com.buession.web.http.response.ResponseHeader;
+import com.buession.web.servlet.aop.AopUtils;
+import com.buession.web.servlet.http.HttpServlet;
+import com.buession.web.servlet.http.response.ResponseUtils;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class ServletResponseHeaderAnnotationHandler extends AbstractResponseHeaderAnnotationHandler {
 
-    String message() default "";
+    public ServletResponseHeaderAnnotationHandler(){
+        super();
+    }
 
-    ISBNType type();
+    @Override
+    public void execute(MethodInvocation mi, ResponseHeader responseHeader) throws Throwable{
+        HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+        if(httpServlet == null || httpServlet.getResponse() == null){
+            return;
+        }
+
+        setHeader(httpServlet.getResponse(), responseHeader);
+    }
+
+    private final static void setHeader(final HttpServletResponse response, final String name, final String value){
+        if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(name) == true){
+            ResponseUtils.httpCache(response, Integer.parseInt(value));
+        }else{
+            response.addHeader(name, value);
+        }
+    }
+
+    private final static void setHeader(final HttpServletResponse response, final ResponseHeader responseHeader){
+        setHeader(response, responseHeader.name(), responseHeader.value());
+    }
 
 }

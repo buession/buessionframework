@@ -22,33 +22,33 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.servlet.aop.handler;
 
-import com.buession.core.ISBNType;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.buession.aop.MethodInvocation;
+import com.buession.web.aop.handler.AbstractEnableHttpCacheAnnotationHandler;
+import com.buession.web.http.response.EnableHttpCache;
+import com.buession.web.servlet.aop.AopUtils;
+import com.buession.web.servlet.http.HttpServlet;
+import com.buession.web.servlet.http.response.ResponseUtils;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class ServletEnableHttpCacheAnnotationHandler extends AbstractEnableHttpCacheAnnotationHandler {
 
-    String message() default "";
+    public ServletEnableHttpCacheAnnotationHandler(){
+        super();
+    }
 
-    ISBNType type();
+    @Override
+    public void execute(MethodInvocation mi, EnableHttpCache enableHttpCache) throws Throwable{
+        HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+        if(httpServlet == null || httpServlet.getResponse() == null){
+            return;
+        }
+
+        ResponseUtils.httpCache(httpServlet.getResponse(), Integer.valueOf(enableHttpCache.value()));
+    }
 
 }

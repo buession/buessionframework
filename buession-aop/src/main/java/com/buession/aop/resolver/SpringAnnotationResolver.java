@@ -22,33 +22,37 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.aop.resolver;
 
-import com.buession.core.ISBNType;
+import com.buession.aop.MethodInvocation;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.util.ClassUtils;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class SpringAnnotationResolver extends AbstractAnnotationResolver {
 
-    String message() default "";
+    @Override
+    public Annotation getAnnotation(MethodInvocation mi, Class<? extends Annotation> clazz){
+        Method method = mi.getMethod();
 
-    ISBNType type();
+        Annotation annotation = AnnotationUtils.findAnnotation(method, clazz);
+        if(annotation != null){
+            return annotation;
+        }
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+        Class<?> targetClass = mi.getThis().getClass();
+        method = ClassUtils.getMostSpecificMethod(method, targetClass);
+        annotation = AnnotationUtils.findAnnotation(method, clazz);
+        if(annotation != null){
+            return annotation;
+        }
+
+        return AnnotationUtils.findAnnotation(mi.getThis().getClass(), clazz);
+    }
 
 }

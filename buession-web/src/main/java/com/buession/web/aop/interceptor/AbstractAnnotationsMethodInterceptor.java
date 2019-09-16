@@ -22,33 +22,48 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.aop.interceptor;
 
-import com.buession.core.ISBNType;
+import com.buession.aop.MethodInvocation;
+import com.buession.aop.interceptor.AbstractMethodInterceptor;
+import com.buession.aop.interceptor.AnnotationMethodInterceptor;
+import com.buession.core.validator.Validate;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Collection;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public abstract class AbstractAnnotationsMethodInterceptor extends AbstractMethodInterceptor {
 
-    String message() default "";
+    private Collection<AnnotationMethodInterceptor> methodInterceptors;
 
-    ISBNType type();
+    public AbstractAnnotationsMethodInterceptor(){
+    }
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+    public AbstractAnnotationsMethodInterceptor(Collection<AnnotationMethodInterceptor> methodInterceptors){
+        this.methodInterceptors = methodInterceptors;
+    }
+
+    public Collection<AnnotationMethodInterceptor> getMethodInterceptors(){
+        return methodInterceptors;
+    }
+
+    public void setMethodInterceptors(Collection<AnnotationMethodInterceptor> methodInterceptors){
+        this.methodInterceptors = methodInterceptors;
+    }
+
+    @Override
+    protected void doInvoke(MethodInvocation mi) throws Throwable{
+        Collection<AnnotationMethodInterceptor> methodInterceptors = getMethodInterceptors();
+
+        if(Validate.isEmpty(methodInterceptors) == false){
+            for(AnnotationMethodInterceptor methodInterceptor : methodInterceptors){
+                if(methodInterceptor.isSupport(mi)){
+                    methodInterceptor.invoke(mi);
+                }
+            }
+        }
+    }
 
 }

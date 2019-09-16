@@ -22,33 +22,36 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.aop.resolver;
 
-import com.buession.core.ISBNType;
+import com.buession.aop.MethodInvocation;
+import com.buession.core.utils.Assert;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class DefaultAnnotationResolver extends AbstractAnnotationResolver {
 
-    String message() default "";
+    @Override
+    public Annotation getAnnotation(MethodInvocation mi, Class<? extends Annotation> clazz){
+        Assert.isNull(mi, "method arguments cloud not be null");
 
-    ISBNType type();
+        Method method = mi.getMethod();
+        if(method == null){
+            throw new IllegalArgumentException(MethodInvocation.class.getName() + " parameter incorrectly constructed" +
+                    ". getMethod() returned null");
+        }
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+        Annotation annotation = method.getAnnotation(clazz);
+        if(annotation == null){
+            Object miThis = mi.getThis();
+            annotation = miThis != null ? miThis.getClass().getAnnotation(clazz) : null;
+        }
+
+        return annotation;
+    }
 
 }

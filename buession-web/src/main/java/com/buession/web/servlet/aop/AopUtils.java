@@ -22,33 +22,42 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.servlet.aop;
 
-import com.buession.core.ISBNType;
+import com.buession.aop.MethodInvocation;
+import com.buession.web.servlet.http.HttpServlet;
+import org.springframework.ui.Model;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class AopUtils {
 
-    String message() default "";
+    private AopUtils(){
 
-    ISBNType type();
+    }
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+    public final static HttpServlet getHttpServlet(final MethodInvocation mi){
+        if(mi == null || mi.getArguments() == null){
+            return null;
+        }
+
+        HttpServlet httpServlet = new HttpServlet();
+
+        for(Object argument : mi.getArguments()){
+            if(argument instanceof HttpServletRequest){
+                httpServlet.setRequest((HttpServletRequest) argument);
+            }else if(argument instanceof HttpServletResponse){
+                httpServlet.setResponse((HttpServletResponse) argument);
+            }else if(argument instanceof Model){
+                httpServlet.setModel((Model) argument);
+            }
+        }
+
+        return httpServlet;
+    }
 
 }

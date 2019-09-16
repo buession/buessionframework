@@ -22,33 +22,41 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.reactive.aop;
 
-import com.buession.core.ISBNType;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.buession.aop.MethodInvocation;
+import com.buession.web.reactive.http.ServerHttp;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.ui.Model;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class AopUtils {
 
-    String message() default "";
+    private AopUtils(){
 
-    ISBNType type();
+    }
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+    public final static ServerHttp getServerHttp(final MethodInvocation mi){
+        if(mi == null || mi.getArguments() == null){
+            return null;
+        }
+
+        ServerHttp serverHttp = new ServerHttp();
+
+        for(Object argument : mi.getArguments()){
+            if(argument instanceof ServerHttpRequest){
+                serverHttp.setRequest((ServerHttpRequest) argument);
+            }else if(argument instanceof ServerHttpResponse){
+                serverHttp.setResponse((ServerHttpResponse) argument);
+            }else if(argument instanceof Model){
+                serverHttp.setModel((Model) argument);
+            }
+        }
+
+        return serverHttp;
+    }
 
 }

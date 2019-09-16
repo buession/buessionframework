@@ -22,33 +22,39 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.servlet.aop.handler;
 
-import com.buession.core.ISBNType;
+import com.buession.aop.MethodInvocation;
+import com.buession.web.aop.handler.AbstractPrimitiveCrossOriginAnnotationHandler;
+import com.buession.web.http.HttpHeader;
+import com.buession.web.http.response.PrimitiveCrossOrigin;
+import com.buession.web.servlet.aop.AopUtils;
+import com.buession.web.servlet.http.HttpServlet;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class ServletPrimitiveCrossOriginAnnotationHandler extends AbstractPrimitiveCrossOriginAnnotationHandler {
 
-    String message() default "";
+    public ServletPrimitiveCrossOriginAnnotationHandler(){
+        super();
+    }
 
-    ISBNType type();
+    @Override
+    public void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin) throws Throwable{
+        HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+        if(httpServlet == null || httpServlet.getResponse() == null){
+            return;
+        }
+
+        HttpServletRequest request = httpServlet.getRequest();
+        HttpServletResponse response = httpServlet.getResponse();
+        response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN.getValue(), request.getHeader(HttpHeader.ORIGIN
+                .getValue()));
+    }
 
 }

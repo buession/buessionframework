@@ -22,33 +22,42 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.reactive.aop.handler;
 
-import com.buession.core.ISBNType;
+import com.buession.aop.MethodInvocation;
+import com.buession.web.aop.handler.AbstractContentTypeAnnotationHandler;
+import com.buession.web.http.response.ContentType;
+import com.buession.web.reactive.aop.AopUtils;
+import com.buession.web.reactive.http.ServerHttp;
+import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.nio.charset.Charset;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnnotationHandler {
 
-    String message() default "";
+    public ReactiveContentTypeAnnotationHandler(){
+        super();
+    }
 
-    ISBNType type();
+    @Override
+    public void execute(MethodInvocation mi, ContentType contentType) throws Throwable{
+        ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+        if(serverHttp == null || serverHttp.getResponse() == null){
+            return;
+        }
+
+        ServerHttpResponse response = serverHttp.getResponse();
+        String mime = contentType.mime();
+        int i = mime.indexOf('/');
+        Charset charset = Charset.forName(contentType.charset());
+        MediaType mediaType = new MediaType(mime.substring(0, i - 1), mime.substring(i), charset);
+
+        response.getHeaders().setContentType(mediaType);
+    }
 
 }

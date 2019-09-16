@@ -22,33 +22,32 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.reactive.aop.handler;
 
-import com.buession.core.ISBNType;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.buession.aop.MethodInvocation;
+import com.buession.web.aop.handler.AbstractDocumentMetaDataAnnotationHandler;
+import com.buession.web.mvc.view.document.DocumentMetaData;
+import com.buession.web.reactive.aop.AopUtils;
+import com.buession.web.reactive.http.ServerHttp;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class ReactiveDocumentMetaDataAnnotationHandler extends AbstractDocumentMetaDataAnnotationHandler {
 
-    String message() default "";
+    public ReactiveDocumentMetaDataAnnotationHandler(){
+        super();
+    }
 
-    ISBNType type();
+    @Override
+    public void execute(MethodInvocation mi, DocumentMetaData documentMetaData) throws Throwable{
+        ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+        if(serverHttp == null || serverHttp.getModel() == null){
+            return;
+        }
+
+        addHeadToModelAttribute(serverHttp.getModel(), documentMetaData);
+    }
 
 }

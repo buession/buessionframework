@@ -22,33 +22,47 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.aop;
 
-import com.buession.core.ISBNType;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
-
-    String message() default "";
-
-    ISBNType type();
+public interface MethodInvocation {
 
     /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
+     * Continues the method invocation chain, or if the last in the chain, the method itself.
      *
-     * @return
+     * @return the result of the Method invocation.
+     *
+     * @throws Throwable
+     *         if the method or chain throws a Throwable
      */
-    boolean validWhenNull() default true;
+    Object proceed() throws Throwable;
+
+    /**
+     * Returns the object that holds the current joinpoint's static part.
+     * For instance, the target object for an invocation.
+     *
+     * @return the object that holds the current joinpoint's static part.
+     *
+     * @since 1.0
+     */
+    Object getThis();
+
+    /**
+     * Returns the actual {@link Method Method} to be invoked.
+     *
+     * @return the actual {@link Method Method} to be invoked.
+     */
+    Method getMethod();
+
+    /**
+     * Returns the (possibly null) arguments to be supplied to the method invocation.
+     *
+     * @return the (possibly null) arguments to be supplied to the method invocation.
+     */
+    Object[] getArguments();
 
 }

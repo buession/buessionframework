@@ -43,6 +43,7 @@
 	</scm>
 
 	<modules>
+		<module>../buession-aop</module>
 		<module>../buession-common</module>
 		<module>../buession-core</module>
 		<module>../buession-cron</module>

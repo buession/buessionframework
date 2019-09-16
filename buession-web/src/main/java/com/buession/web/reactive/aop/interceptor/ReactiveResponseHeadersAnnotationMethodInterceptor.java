@@ -22,33 +22,24 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.reactive.aop.interceptor;
 
-import com.buession.core.ISBNType;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.buession.aop.resolver.AnnotationResolver;
+import com.buession.web.aop.interceptor.AbstractResponseHeadersAnnotationMethodInterceptor;
+import com.buession.web.reactive.aop.handler.ReactiveResponseHeadersAnnotationHandler;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class ReactiveResponseHeadersAnnotationMethodInterceptor extends
+        AbstractResponseHeadersAnnotationMethodInterceptor {
 
-    String message() default "";
+    public ReactiveResponseHeadersAnnotationMethodInterceptor(){
+        super(new ReactiveResponseHeadersAnnotationHandler());
+    }
 
-    ISBNType type();
-
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+    public ReactiveResponseHeadersAnnotationMethodInterceptor(AnnotationResolver resolver){
+        super(new ReactiveResponseHeadersAnnotationHandler(), resolver);
+    }
 
 }

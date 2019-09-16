@@ -22,33 +22,31 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.servlet.aop.interceptor;
 
-import com.buession.core.ISBNType;
+import com.buession.aop.interceptor.AnnotationMethodInterceptor;
+import com.buession.web.aop.interceptor.AbstractAnnotationsMethodInterceptor;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public abstract class AbstractServletAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
 
-    String message() default "";
+    public AbstractServletAnnotationsMethodInterceptor(){
+        List<AnnotationMethodInterceptor> methodInterceptors = new ArrayList<>(7);
 
-    ISBNType type();
+        methodInterceptors.add(new ServletResponseHeadersAnnotationMethodInterceptor());
+        methodInterceptors.add(new ServletResponseHeaderAnnotationMethodInterceptor());
+        methodInterceptors.add(new ServletContentTypeAnnotationMethodInterceptor());
+        methodInterceptors.add(new ServletPrimitiveCrossOriginAnnotationMethodInterceptor());
+        methodInterceptors.add(new ServletEnableHttpCacheAnnotationMethodInterceptor());
+        methodInterceptors.add(new ServletDisableHttpCacheAnnotationMethodInterceptor());
+        methodInterceptors.add(new ServletDocumentMetaDataAnnotationMethodInterceptor());
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+        setMethodInterceptors(methodInterceptors);
+    }
 
 }

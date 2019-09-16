@@ -22,33 +22,31 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.reactive.aop.interceptor;
 
-import com.buession.core.ISBNType;
+import com.buession.aop.interceptor.AnnotationMethodInterceptor;
+import com.buession.web.aop.interceptor.AbstractAnnotationsMethodInterceptor;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public abstract class AbstractReactiveAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
 
-    String message() default "";
+    public AbstractReactiveAnnotationsMethodInterceptor(){
+        List<AnnotationMethodInterceptor> methodInterceptors = new ArrayList<>(7);
 
-    ISBNType type();
+        methodInterceptors.add(new ReactiveResponseHeadersAnnotationMethodInterceptor());
+        methodInterceptors.add(new ReactiveResponseHeaderAnnotationMethodInterceptor());
+        methodInterceptors.add(new ReactiveContentTypeAnnotationMethodInterceptor());
+        methodInterceptors.add(new ReactivePrimitiveCrossOriginAnnotationMethodInterceptor());
+        methodInterceptors.add(new ReactiveEnableHttpCacheAnnotationMethodInterceptor());
+        methodInterceptors.add(new ReactiveDisableHttpCacheAnnotationMethodInterceptor());
+        methodInterceptors.add(new ReactiveDocumentMetaDataAnnotationMethodInterceptor());
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+        setMethodInterceptors(methodInterceptors);
+    }
 
 }

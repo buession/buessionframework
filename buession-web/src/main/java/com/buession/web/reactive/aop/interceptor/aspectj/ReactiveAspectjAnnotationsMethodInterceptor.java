@@ -22,33 +22,37 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.reactive.aop.interceptor.aspectj;
 
-import com.buession.core.ISBNType;
+import com.buession.aop.aspectj.AfterAdviceMethodInvocationAdapter;
+import com.buession.web.reactive.aop.interceptor.AbstractReactiveAnnotationsMethodInterceptor;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.util.Arrays;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class ReactiveAspectjAnnotationsMethodInterceptor extends AbstractReactiveAnnotationsMethodInterceptor {
 
-    String message() default "";
+    private final static Logger logger = LoggerFactory.getLogger(ReactiveAspectjAnnotationsMethodInterceptor.class);
 
-    ISBNType type();
+    public ReactiveAspectjAnnotationsMethodInterceptor(){
+        super();
+    }
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+    protected void performAfterInterception(JoinPoint joinPoint) throws Throwable{
+        if(logger.isTraceEnabled()){
+            logger.trace("Invoking a method decorated with a Buession annotation\n\tkind       : {}\n\tjoinPoint  : "
+                    + "{}\n\tannotations: {}\n\ttarget     : {}", joinPoint.getKind(), joinPoint, Arrays.toString((
+                            (MethodSignature) joinPoint.getSignature()).getMethod().getAnnotations()), joinPoint
+                    .getTarget());
+        }
+
+        super.invoke(AfterAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint));
+    }
 
 }

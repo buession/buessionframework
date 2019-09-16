@@ -26,6 +26,7 @@
  */
 package com.buession.core.validator.routines;
 
+import com.buession.core.IpType;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 
@@ -215,14 +216,6 @@ public class IpValidator {
 
         int length = str.length();
         return length >= 1 && length <= 4 && Validate.isXdigit(str);
-    }
-
-    public enum IpType {
-
-        IP_V4,
-
-        IP_V6
-
     }
 
 }

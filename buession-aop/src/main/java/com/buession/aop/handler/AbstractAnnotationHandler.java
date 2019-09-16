@@ -22,33 +22,31 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.aop.handler;
 
-import com.buession.core.ISBNType;
+import com.buession.core.utils.Assert;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.Annotation;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public abstract class AbstractAnnotationHandler<A extends Annotation> implements AnnotationHandler<A> {
 
-    String message() default "";
+    protected Class<A> annotationClass;
 
-    ISBNType type();
+    public AbstractAnnotationHandler(Class<A> annotationClass){
+        setAnnotationClass(annotationClass);
+    }
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+    @Override
+    public Class<A> getAnnotationClass(){
+        return annotationClass;
+    }
+
+    protected void setAnnotationClass(Class<A> annotationClass) throws IllegalArgumentException{
+        Assert.isNull(annotationClass, "annotationClass argument could not be null");
+        this.annotationClass = annotationClass;
+    }
 
 }

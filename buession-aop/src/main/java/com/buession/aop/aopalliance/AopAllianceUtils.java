@@ -22,33 +22,60 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.aop.aopalliance;
 
-import com.buession.core.ISBNType;
+import org.aopalliance.intercept.MethodInvocation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class AopAllianceUtils {
 
-    String message() default "";
+    private AopAllianceUtils(){
 
-    ISBNType type();
+    }
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+    public final static com.buession.aop.MethodInvocation createMethodInvocation(MethodInvocation
+                                                                                         implSpecificMethodInvocation){
+        return new com.buession.aop.MethodInvocation() {
+
+            @Override
+            public Object proceed() throws Throwable{
+                return implSpecificMethodInvocation.proceed();
+            }
+
+            @Override
+            public Object getThis(){
+                return implSpecificMethodInvocation.getThis();
+            }
+
+            @Override
+            public Method getMethod(){
+                return implSpecificMethodInvocation.getMethod();
+            }
+
+            @Override
+            public Object[] getArguments(){
+                return implSpecificMethodInvocation.getArguments();
+            }
+
+            @Override
+            public String toString(){
+                StringBuffer sb = new StringBuffer();
+
+                sb.append("Method invocation [");
+                sb.append(implSpecificMethodInvocation.getThis().getClass().getName());
+                sb.append("::");
+                sb.append(implSpecificMethodInvocation.getMethod());
+                sb.append("()]");
+
+                return sb.toString();
+            }
+
+        };
+
+    }
 
 }

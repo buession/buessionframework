@@ -22,33 +22,31 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.reactive.aop.interceptor.aspectj;
 
-import com.buession.core.ISBNType;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.buession.web.aop.aspect.WebAnnotationAspect;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Pointcut;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public class ReactiveWebAnnotationAspect implements WebAnnotationAspect {
 
-    String message() default "";
+    private ReactiveAspectjAnnotationsMethodInterceptor interceptor = new ReactiveAspectjAnnotationsMethodInterceptor();
 
-    ISBNType type();
+    @Pointcut(EXPRESSIONS)
+    public void anyAnnotatedMethod(){
+    }
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+    @Pointcut(EXPRESSIONS)
+    void anyAnnotatedMethodCall(JoinPoint joinPoint){
+    }
+
+    @After("anyAnnotatedMethodCall(joinPoint)")
+    public void executeAnnotatedMethod(JoinPoint joinPoint) throws Throwable{
+        interceptor.performAfterInterception(joinPoint);
+    }
 
 }

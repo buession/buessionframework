@@ -22,33 +22,31 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator.annotation;
+package com.buession.web.aop.handler;
 
-import com.buession.core.ISBNType;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.buession.aop.handler.AbstractAnnotationHandler;
+import com.buession.core.validator.Validate;
+import com.buession.web.mvc.view.document.DocumentMetaData;
+import com.buession.web.mvc.view.document.MetaDataConvert;
+import org.springframework.ui.Model;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Isbn {
+public abstract class AbstractDocumentMetaDataAnnotationHandler extends AbstractAnnotationHandler<DocumentMetaData>
+        implements DocumentMetaDataAnnotationHandler {
 
-    String message() default "";
+    public AbstractDocumentMetaDataAnnotationHandler(){
+        super(DocumentMetaData.class);
+    }
 
-    ISBNType type();
+    protected final static void addHeadToModelAttribute(final Model model, final DocumentMetaData metaData){
+        if(model == null || metaData == null){
+            return;
+        }
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+        String attrName = Validate.hasText(metaData.attrName()) ? metaData.attrName() : DEFAULT_ATTR_NAME;
+        model.addAttribute(attrName, MetaDataConvert.convert(metaData));
+    }
 
 }

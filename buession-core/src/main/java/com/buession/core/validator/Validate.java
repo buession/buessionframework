@@ -32,6 +32,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.buession.core.IpType;
 import com.buession.core.validator.routines.EmailValidator;
 import com.buession.core.validator.routines.IDCardValidator;
 import com.buession.core.validator.routines.ISBNValidator;
@@ -694,7 +695,7 @@ public class Validate {
      * @return Boolean
      */
     public final static boolean isIpV4(final CharSequence charSequence){
-        return IpValidator.isValid(charSequence, IpValidator.IpType.IP_V4);
+        return IpValidator.isValid(charSequence, IpType.IP_V4);
     }
 
     /**
@@ -706,7 +707,7 @@ public class Validate {
      * @return Boolean
      */
     public final static boolean isIpV6(final CharSequence charSequence){
-        return IpValidator.isValid(charSequence, IpValidator.IpType.IP_V6);
+        return IpValidator.isValid(charSequence, IpType.IP_V6);
     }
 
     /**
@@ -717,7 +718,7 @@ public class Validate {
      *
      * @return Boolean
      */
-    public final static boolean isIpv(final CharSequence charSequence){
+    public final static boolean isIp(final CharSequence charSequence){
         return isIpV4(charSequence) || isIpV6(charSequence);
     }
 

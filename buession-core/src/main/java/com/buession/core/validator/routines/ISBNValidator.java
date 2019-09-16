@@ -26,6 +26,7 @@
  */
 package com.buession.core.validator.routines;
 
+import com.buession.core.ISBNType;
 import com.buession.core.validator.Validate;
 
 /**
@@ -223,13 +224,6 @@ public class ISBNValidator {
 
     private final static boolean validSeparator(final char separator){
         return separator == '\0' || separator == '-' || separator == ' ';
-    }
-
-    public enum ISBNType {
-
-        ISBN_TYPE_10,
-
-        ISBN_TYPE_13
     }
 
 }
