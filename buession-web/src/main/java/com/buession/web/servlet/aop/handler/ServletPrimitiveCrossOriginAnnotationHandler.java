@@ -47,14 +47,13 @@ public class ServletPrimitiveCrossOriginAnnotationHandler extends AbstractPrimit
     public void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin) throws Throwable{
         HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
 
-        if(httpServlet == null || httpServlet.getResponse() == null){
+        if(httpServlet == null || httpServlet.getRequest() == null || httpServlet.getResponse() == null){
             return;
         }
 
-        HttpServletRequest request = httpServlet.getRequest();
-        HttpServletResponse response = httpServlet.getResponse();
-        response.setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN.getValue(), request.getHeader(HttpHeader.ORIGIN
-                .getValue()));
+        String accessControlAllowOrigin = httpServlet.getRequest().getHeader(HttpHeader.ORIGIN.getValue());
+        httpServlet.getResponse().setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN.getValue(),
+                accessControlAllowOrigin);
     }
 
 }

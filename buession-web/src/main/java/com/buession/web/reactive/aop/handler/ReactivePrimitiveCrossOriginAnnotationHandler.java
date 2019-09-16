@@ -30,8 +30,6 @@ import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.PrimitiveCrossOrigin;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 
 /**
  * @author Yong.Teng
@@ -46,13 +44,12 @@ public class ReactivePrimitiveCrossOriginAnnotationHandler extends AbstractPrimi
     public void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin) throws Throwable{
         ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 
-        if(serverHttp == null || serverHttp.getResponse() == null){
+        if(serverHttp == null || serverHttp.getRequest() == null || serverHttp.getResponse() == null){
             return;
         }
 
-        ServerHttpRequest request = serverHttp.getRequest();
-        ServerHttpResponse response = serverHttp.getResponse();
-        response.getHeaders().setAccessControlAllowOrigin(request.getHeaders().getFirst(HttpHeader.ORIGIN.getValue()));
+        String accessControlAllowOrigin = serverHttp.getRequest().getHeaders().getFirst(HttpHeader.ORIGIN.getValue());
+        serverHttp.getResponse().getHeaders().setAccessControlAllowOrigin(accessControlAllowOrigin);
     }
 
 }

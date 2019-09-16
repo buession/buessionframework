@@ -22,40 +22,17 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet.aop.interceptor.aspectj;
+package com.buession.web.reactive.aop.interceptor.aopalliance;
 
-import com.buession.web.aop.aspect.WebAnnotationAspect;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.buession.web.aop.interceptor.AbstractWebAttributeSourcePointcutAdvisor;
 
 /**
  * @author Yong.Teng
  */
-@Aspect
-public class ServletWebAnnotationAspect implements WebAnnotationAspect {
+public class ReactiveWebAttributeSourcePointcutAdvisor extends AbstractWebAttributeSourcePointcutAdvisor {
 
-    private ServletAspectjAnnotationsMethodInterceptor interceptor = new ServletAspectjAnnotationsMethodInterceptor();
-
-    private final static Logger logger = LoggerFactory.getLogger(ServletWebAnnotationAspect.class);
-
-    @Pointcut(EXPRESSIONS)
-    public void anyAnnotatedMethod(){
-        logger.debug("Call ServletWebAnnotationAspect::anyAnnotatedMethod()");
-    }
-
-    @Pointcut(EXPRESSIONS)
-    void anyAnnotatedMethodCall(JoinPoint joinPoint){
-        logger.debug("Call ServletWebAnnotationAspect::anyAnnotatedMethodCall()");
-    }
-
-    @After("anyAnnotatedMethodCall(joinPoint)")
-    public void executeAnnotatedMethod(JoinPoint joinPoint) throws Throwable{
-        logger.debug("Call ServletWebAnnotationAspect::executeAnnotatedMethod()");
-        interceptor.performAfterInterception(joinPoint);
+    public ReactiveWebAttributeSourcePointcutAdvisor(){
+        setAdvice(new ReactiveAopAllianceAnnotationsMethodInterceptor());
     }
 
 }

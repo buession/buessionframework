@@ -32,8 +32,6 @@ import com.buession.web.http.response.ContentType;
 import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.http.HttpServlet;
 
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author Yong.Teng
  */
@@ -60,8 +58,7 @@ public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnno
             sb.append(contentType.encoding());
         }
 
-        HttpServletResponse response = httpServlet.getResponse();
-        response.addHeader(HttpHeader.CONTENT_TYPE.getValue(), sb.toString());
+        httpServlet.getResponse().addHeader(HttpHeader.CONTENT_TYPE.getValue(), sb.toString());
     }
 
 }

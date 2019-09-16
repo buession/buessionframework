@@ -29,11 +29,23 @@ package com.buession.web.aop.aspect;
  */
 public interface WebAnnotationAspect {
 
-    String EXPRESSIONS = "execution(@com.buession.web.http.response.ContentType * *(..)) || execution(@com.buession"
-            + ".web.http.response.DisableHttpCache * *(..)) || execution(@com.buession.web.http.response" + "" +
-            ".EnableHttpCache * *(..)) || execution(@com.buession.web.http.response.PrimitiveCrossOrigin * *(..)) || " +
-            "execution(@com.buession.web.http.response.ResponseHeader * *(..)) || execution(@com.buession.web.http" +
-            ".response.ResponseHeaders * *(..)) || execution(@com.buession.web.mvc.view.document.DocumentMetaData * *" +
+    String CONTENT_TYPE_EXPRESSION = "execution(@com.buession.web.http.response.ContentType * *(..))";
+
+    String DISABLE_HTTP_CACHE_EXPRESSION = "execution(@com.buession.web.http.response.DisableHttpCache * *(..))";
+
+    String ENABLE_HTTP_CACHE_EXPRESSION = "execution(@com.buession.web.http.response.EnableHttpCache * *(..))";
+
+    String PRIMITIVE_CROSS_ORIGIN_EXPRESSION = "execution(@com.buession.web.http.response.PrimitiveCrossOrigin * *" +
             "(..))";
+
+    String RESPONSE_HEADER_EXPRESSION = "execution(@com.buession.web.http.response.ResponseHeader * *(..))";
+
+    String RESPONSE_HEADERS_EXPRESSION = "execution(@com.buession.web.http.response.ResponseHeaders * *(..))";
+
+    String DOCUMENT_META_DATA_EXPRESSION = "execution(@com.buession.web.mvc.view.document.DocumentMetaData * *(..))";
+
+    String EXPRESSIONS = CONTENT_TYPE_EXPRESSION + " || " + DISABLE_HTTP_CACHE_EXPRESSION + " || " +
+            ENABLE_HTTP_CACHE_EXPRESSION + " || " + PRIMITIVE_CROSS_ORIGIN_EXPRESSION + " || " +
+            RESPONSE_HEADER_EXPRESSION + " || " + RESPONSE_HEADERS_EXPRESSION + " || " + DOCUMENT_META_DATA_EXPRESSION;
 
 }

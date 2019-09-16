@@ -30,7 +30,6 @@ import com.buession.web.http.response.ContentType;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 
 import java.nio.charset.Charset;
 
@@ -51,13 +50,13 @@ public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnn
             return;
         }
 
-        ServerHttpResponse response = serverHttp.getResponse();
         String mime = contentType.mime();
         int i = mime.indexOf('/');
         Charset charset = Charset.forName(contentType.charset());
-        MediaType mediaType = new MediaType(mime.substring(0, i - 1), mime.substring(i), charset);
+        String type = mime.substring(0, i - 1);
+        String subType = mime.substring(i);
 
-        response.getHeaders().setContentType(mediaType);
+        serverHttp.getResponse().getHeaders().setContentType(new MediaType(type, subType, charset));
     }
 
 }

@@ -63,16 +63,12 @@ public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHea
         }
     }
 
-    private final static void setHeader(final HttpServletResponse response, final String name, final String value){
-        if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(name) == true){
-            ResponseUtils.httpCache(response, Integer.parseInt(value));
-        }else{
-            response.addHeader(name, value);
-        }
-    }
-
     private final static void setHeader(final HttpServletResponse response, final ResponseHeader responseHeader){
-        setHeader(response, responseHeader.name(), responseHeader.value());
+        if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(responseHeader.name()) == true){
+            ResponseUtils.httpCache(response, Integer.parseInt(responseHeader.value()));
+        }else{
+            response.addHeader(responseHeader.name(), responseHeader.value());
+        }
     }
 
 }

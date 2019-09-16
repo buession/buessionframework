@@ -61,16 +61,12 @@ public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHe
         }
     }
 
-    private final static void setHeader(final ServerHttpResponse response, final String name, final String value){
-        if(EXPIRES.equalsIgnoreCase(name) == true){
-            ResponseUtils.httpCache(response, Integer.parseInt(value));
-        }else{
-            response.getHeaders().set(name, value);
-        }
-    }
-
     private final static void setHeader(final ServerHttpResponse response, final ResponseHeader responseHeader){
-        setHeader(response, responseHeader.name(), responseHeader.value());
+        if(EXPIRES.equalsIgnoreCase(responseHeader.name()) == true){
+            ResponseUtils.httpCache(response, Integer.parseInt(responseHeader.value()));
+        }else{
+            response.getHeaders().set(responseHeader.name(), responseHeader.value());
+        }
     }
 
 }

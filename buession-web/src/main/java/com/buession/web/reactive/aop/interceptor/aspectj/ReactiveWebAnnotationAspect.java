@@ -27,25 +27,34 @@ package com.buession.web.reactive.aop.interceptor.aspectj;
 import com.buession.web.aop.aspect.WebAnnotationAspect;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
+@Aspect
 public class ReactiveWebAnnotationAspect implements WebAnnotationAspect {
 
     private ReactiveAspectjAnnotationsMethodInterceptor interceptor = new ReactiveAspectjAnnotationsMethodInterceptor();
 
+    private final static Logger logger = LoggerFactory.getLogger(ReactiveWebAnnotationAspect.class);
+
     @Pointcut(EXPRESSIONS)
     public void anyAnnotatedMethod(){
+        logger.debug("Call ReactiveWebAnnotationAspect::anyAnnotatedMethod()");
     }
 
     @Pointcut(EXPRESSIONS)
     void anyAnnotatedMethodCall(JoinPoint joinPoint){
+        logger.debug("Call ReactiveWebAnnotationAspect::anyAnnotatedMethodCall()");
     }
 
     @After("anyAnnotatedMethodCall(joinPoint)")
     public void executeAnnotatedMethod(JoinPoint joinPoint) throws Throwable{
+        logger.debug("Call ReactiveWebAnnotationAspect::executeAnnotatedMethod()");
         interceptor.performAfterInterception(joinPoint);
     }
 

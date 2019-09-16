@@ -26,6 +26,7 @@ package com.buession.web.servlet.aop;
 
 import com.buession.aop.MethodInvocation;
 import com.buession.web.servlet.http.HttpServlet;
+import org.aspectj.lang.JoinPoint;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,6 +55,26 @@ public class AopUtils {
                 httpServlet.setResponse((HttpServletResponse) argument);
             }else if(argument instanceof Model){
                 httpServlet.setModel((Model) argument);
+            }
+        }
+
+        return httpServlet;
+    }
+
+    public final static HttpServlet getHttpServlet(final JoinPoint joinPoint){
+        if(joinPoint == null || joinPoint.getArgs() == null){
+            return null;
+        }
+
+        HttpServlet httpServlet = new HttpServlet();
+
+        for(Object arg : joinPoint.getArgs()){
+            if(arg instanceof HttpServletRequest){
+                httpServlet.setRequest((HttpServletRequest) arg);
+            }else if(arg instanceof HttpServletResponse){
+                httpServlet.setResponse((HttpServletResponse) arg);
+            }else if(arg instanceof Model){
+                httpServlet.setModel((Model) arg);
             }
         }
 

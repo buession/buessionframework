@@ -26,6 +26,7 @@ package com.buession.web.reactive.aop;
 
 import com.buession.aop.MethodInvocation;
 import com.buession.web.reactive.http.ServerHttp;
+import org.aspectj.lang.JoinPoint;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.ui.Model;
@@ -53,6 +54,26 @@ public class AopUtils {
                 serverHttp.setResponse((ServerHttpResponse) argument);
             }else if(argument instanceof Model){
                 serverHttp.setModel((Model) argument);
+            }
+        }
+
+        return serverHttp;
+    }
+
+    public final static ServerHttp getServerHttp(final JoinPoint joinPoint){
+        if(joinPoint == null || joinPoint.getArgs() == null){
+            return null;
+        }
+
+        ServerHttp serverHttp = new ServerHttp();
+
+        for(Object arg : joinPoint.getArgs()){
+            if(arg instanceof ServerHttpRequest){
+                serverHttp.setRequest((ServerHttpRequest) arg);
+            }else if(arg instanceof ServerHttpResponse){
+                serverHttp.setResponse((ServerHttpResponse) arg);
+            }else if(arg instanceof Model){
+                serverHttp.setModel((Model) arg);
             }
         }
 
