@@ -30,21 +30,26 @@ import com.buession.web.http.response.EnableHttpCache;
 import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.http.HttpServlet;
 import com.buession.web.servlet.http.response.ResponseUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
 public class ServletEnableHttpCacheAnnotationHandler extends AbstractEnableHttpCacheAnnotationHandler {
 
+    private final static Logger logger = LoggerFactory.getLogger(ServletEnableHttpCacheAnnotationHandler.class);
+
     public ServletEnableHttpCacheAnnotationHandler(){
         super();
     }
 
     @Override
-    public void execute(MethodInvocation mi, EnableHttpCache enableHttpCache) throws Throwable{
+    public void execute(MethodInvocation mi, EnableHttpCache enableHttpCache){
         HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
 
         if(httpServlet == null || httpServlet.getResponse() == null){
+            logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "ServerHttpResponse");
             return;
         }
 

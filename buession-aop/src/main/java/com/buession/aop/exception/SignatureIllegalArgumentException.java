@@ -22,51 +22,32 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.aspectj;
+package com.buession.aop.exception;
 
-import com.buession.aop.MethodInvocation;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
-import org.aspectj.lang.reflect.AdviceSignature;
-import org.aspectj.lang.reflect.MethodSignature;
-
-import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractAdviceMethodInvocationAdapter implements MethodInvocation {
+public class SignatureIllegalArgumentException extends IllegalArgumentException {
 
-    private Object object;
+    private Signature signature;
 
-    private Method method;
-
-    private Object[] arguments;
-
-    public AbstractAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments){
-        this.object = object;
-        this.method = method;
-        this.arguments = arguments;
+    public SignatureIllegalArgumentException(Signature signature){
+        this(signature, "The join point signature is invalid: expected a MethodSignature or an AdviceSignature but "
+                + "was ");
     }
 
-    @Override
-    public Object proceed() throws Throwable{
-        return null;
+    public SignatureIllegalArgumentException(Signature signature, String message){
+        super(message + signature);
     }
 
-    @Override
-    public Object getThis(){
-        return object;
+    public SignatureIllegalArgumentException(Signature signature, String message, Throwable cause){
+        super(message + signature, cause);
     }
 
-    @Override
-    public Method getMethod(){
-        return method;
-    }
-
-    @Override
-    public Object[] getArguments(){
-        return arguments;
+    public Signature getSignature(){
+        return signature;
     }
 
 }

@@ -29,6 +29,8 @@ import com.buession.web.aop.handler.AbstractContentTypeAnnotationHandler;
 import com.buession.web.http.response.ContentType;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 
 import java.nio.charset.Charset;
@@ -38,15 +40,18 @@ import java.nio.charset.Charset;
  */
 public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnnotationHandler {
 
+    private final static Logger logger = LoggerFactory.getLogger(ReactiveContentTypeAnnotationHandler.class);
+
     public ReactiveContentTypeAnnotationHandler(){
         super();
     }
 
     @Override
-    public void execute(MethodInvocation mi, ContentType contentType) throws Throwable{
+    public void execute(MethodInvocation mi, ContentType contentType){
         ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 
         if(serverHttp == null || serverHttp.getResponse() == null){
+            logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
             return;
         }
 

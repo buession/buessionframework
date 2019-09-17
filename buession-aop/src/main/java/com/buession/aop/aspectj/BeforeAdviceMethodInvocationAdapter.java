@@ -24,6 +24,12 @@
  */
 package com.buession.aop.aspectj;
 
+import com.buession.aop.exception.SignatureIllegalArgumentException;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.reflect.AdviceSignature;
+import org.aspectj.lang.reflect.MethodSignature;
+
 import java.lang.reflect.Method;
 
 /**
@@ -33,6 +39,20 @@ public class BeforeAdviceMethodInvocationAdapter extends AbstractAdviceMethodInv
 
     public BeforeAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments){
         super(object, method, arguments);
+    }
+
+    public static BeforeAdviceMethodInvocationAdapter createFromJoinPoint(JoinPoint joinPoint){
+        Signature signature = joinPoint.getSignature();
+
+        if(signature instanceof MethodSignature){
+            return new BeforeAdviceMethodInvocationAdapter(joinPoint.getThis(), ((MethodSignature) signature)
+                    .getMethod(), joinPoint.getArgs());
+        }else if(signature instanceof AdviceSignature){
+            return new BeforeAdviceMethodInvocationAdapter(joinPoint.getThis(), ((AdviceSignature) signature)
+                    .getAdvice(), joinPoint.getArgs());
+        }else{
+            throw new SignatureIllegalArgumentException(signature);
+        }
     }
 
 }

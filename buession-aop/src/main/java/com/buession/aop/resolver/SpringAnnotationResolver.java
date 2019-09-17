@@ -52,7 +52,7 @@ public class SpringAnnotationResolver extends AbstractAnnotationResolver {
             return annotation;
         }
 
-        return AnnotationUtils.findAnnotation(mi.getThis().getClass(), clazz);
+        return AnnotationUtils.findAnnotation(targetClass, clazz);
     }
 
 }

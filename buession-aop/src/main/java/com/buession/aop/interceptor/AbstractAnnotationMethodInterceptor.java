@@ -31,6 +31,7 @@ import com.buession.aop.resolver.DefaultAnnotationResolver;
 import com.buession.core.utils.Assert;
 
 import java.lang.annotation.Annotation;
+import java.util.HashMap;
 
 /**
  * @author Yong.Teng
@@ -41,6 +42,8 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
     private AnnotationHandler<A> handler;
 
     private AnnotationResolver resolver;
+
+    private final static HashMap<String, Annotation> ANNOTATIONS_CACHE = new HashMap<>(64);
 
     public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler){
         this(handler, new DefaultAnnotationResolver());
@@ -74,7 +77,27 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
     }
 
     protected Annotation getAnnotation(MethodInvocation mi){
-        return getResolver().getAnnotation(mi, getHandler().getAnnotationClass());
+        final Class<A> annotationClazz = getHandler().getAnnotationClass();
+        final String key = annotationCacheKey(mi, annotationClazz);
+
+        Annotation annotation = ANNOTATIONS_CACHE.get(key);
+
+        if(annotation == null){
+            annotation = getResolver().getAnnotation(mi, annotationClazz);
+            if(annotation != null){
+                ANNOTATIONS_CACHE.put(key, annotation);
+            }
+        }
+
+        return annotation;
+    }
+
+    protected final String annotationCacheKey(final MethodInvocation mi, final Class<A> annotation){
+        final StringBuffer sb = new StringBuffer();
+
+        sb.append(mi.toString()).append('_').append(annotation.getName());
+
+        return sb.toString();
     }
 
 }

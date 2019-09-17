@@ -24,7 +24,7 @@
  */
 package com.buession.aop.aopalliance;
 
-import org.aopalliance.intercept.MethodInvocation;
+import com.buession.aop.MethodInvocation;
 
 import java.lang.reflect.Method;
 
@@ -37,9 +37,9 @@ public class AopAllianceUtils {
 
     }
 
-    public final static com.buession.aop.MethodInvocation createMethodInvocation(MethodInvocation
-                                                                                         implSpecificMethodInvocation){
-        return new com.buession.aop.MethodInvocation() {
+    public final static MethodInvocation createMethodInvocation(org.aopalliance.intercept.MethodInvocation
+                                                                        implSpecificMethodInvocation){
+        return new MethodInvocation() {
 
             @Override
             public Object proceed() throws Throwable{

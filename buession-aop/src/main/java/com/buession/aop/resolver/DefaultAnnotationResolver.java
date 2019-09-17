@@ -41,8 +41,8 @@ public class DefaultAnnotationResolver extends AbstractAnnotationResolver {
 
         Method method = mi.getMethod();
         if(method == null){
-            throw new IllegalArgumentException(MethodInvocation.class.getName() + " parameter incorrectly constructed" +
-                    ". getMethod() returned null");
+            throw new IllegalArgumentException(MethodInvocation.class.getName() + " parameter incorrectly " +
+                    "constructed" + ".getMethod() returned null");
         }
 
         Annotation annotation = method.getAnnotation(clazz);

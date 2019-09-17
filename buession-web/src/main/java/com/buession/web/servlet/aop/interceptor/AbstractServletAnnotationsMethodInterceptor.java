@@ -25,6 +25,7 @@
 package com.buession.web.servlet.aop.interceptor;
 
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
+import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.web.aop.interceptor.AbstractAnnotationsMethodInterceptor;
 
 import java.util.ArrayList;
@@ -36,15 +37,19 @@ import java.util.List;
 public abstract class AbstractServletAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
 
     public AbstractServletAnnotationsMethodInterceptor(){
+        this(null);
+    }
+
+    public AbstractServletAnnotationsMethodInterceptor(AnnotationResolver resolver){
         List<AnnotationMethodInterceptor> methodInterceptors = new ArrayList<>(7);
 
-        methodInterceptors.add(new ServletResponseHeadersAnnotationMethodInterceptor());
-        methodInterceptors.add(new ServletResponseHeaderAnnotationMethodInterceptor());
-        methodInterceptors.add(new ServletContentTypeAnnotationMethodInterceptor());
-        methodInterceptors.add(new ServletPrimitiveCrossOriginAnnotationMethodInterceptor());
-        methodInterceptors.add(new ServletEnableHttpCacheAnnotationMethodInterceptor());
-        methodInterceptors.add(new ServletDisableHttpCacheAnnotationMethodInterceptor());
-        methodInterceptors.add(new ServletDocumentMetaDataAnnotationMethodInterceptor());
+        methodInterceptors.add(new ServletResponseHeadersAnnotationMethodInterceptor(resolver));
+        methodInterceptors.add(new ServletResponseHeaderAnnotationMethodInterceptor(resolver));
+        methodInterceptors.add(new ServletContentTypeAnnotationMethodInterceptor(resolver));
+        methodInterceptors.add(new ServletPrimitiveCrossOriginAnnotationMethodInterceptor(resolver));
+        methodInterceptors.add(new ServletEnableHttpCacheAnnotationMethodInterceptor(resolver));
+        methodInterceptors.add(new ServletDisableHttpCacheAnnotationMethodInterceptor(resolver));
+        methodInterceptors.add(new ServletDocumentMetaDataAnnotationMethodInterceptor(resolver));
 
         setMethodInterceptors(methodInterceptors);
     }

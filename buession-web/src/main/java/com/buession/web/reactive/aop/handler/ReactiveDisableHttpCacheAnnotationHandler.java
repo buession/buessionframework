@@ -30,21 +30,26 @@ import com.buession.web.http.response.DisableHttpCache;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.response.ResponseUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
 public class ReactiveDisableHttpCacheAnnotationHandler extends AbstractDisableHttpCacheAnnotationHandler {
 
+    private final static Logger logger = LoggerFactory.getLogger(ReactiveDisableHttpCacheAnnotationHandler.class);
+
     public ReactiveDisableHttpCacheAnnotationHandler(){
         super();
     }
 
     @Override
-    public void execute(MethodInvocation mi, DisableHttpCache disableHttpCache) throws Throwable{
+    public void execute(MethodInvocation mi, DisableHttpCache disableHttpCache){
         ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 
         if(serverHttp == null || serverHttp.getResponse() == null){
+            logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
             return;
         }
 

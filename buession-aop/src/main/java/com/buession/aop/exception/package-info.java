@@ -22,51 +22,7 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.aspectj;
-
-import com.buession.aop.MethodInvocation;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.Signature;
-import org.aspectj.lang.reflect.AdviceSignature;
-import org.aspectj.lang.reflect.MethodSignature;
-
-import java.lang.reflect.Method;
-
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractAdviceMethodInvocationAdapter implements MethodInvocation {
-
-    private Object object;
-
-    private Method method;
-
-    private Object[] arguments;
-
-    public AbstractAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments){
-        this.object = object;
-        this.method = method;
-        this.arguments = arguments;
-    }
-
-    @Override
-    public Object proceed() throws Throwable{
-        return null;
-    }
-
-    @Override
-    public Object getThis(){
-        return object;
-    }
-
-    @Override
-    public Method getMethod(){
-        return method;
-    }
-
-    @Override
-    public Object[] getArguments(){
-        return arguments;
-    }
-
-}
+package com.buession.aop.exception;

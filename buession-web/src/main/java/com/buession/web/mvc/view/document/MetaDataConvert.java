@@ -29,22 +29,22 @@ package com.buession.web.mvc.view.document;
  */
 public class MetaDataConvert {
 
-    public final static MetaData convert(final DocumentMetaData metaData){
-        if(metaData == null){
+    public final static MetaData convert(final DocumentMetaData documentMetaData){
+        if(documentMetaData == null){
             return null;
         }
 
-        MetaData metaDataObject = new MetaData();
+        MetaData metaData = new MetaData();
 
-        metaDataObject.setTitle(metaData.title());
-        metaDataObject.setAuthor(metaData.author());
-        metaDataObject.setCharset(metaData.charset());
-        metaDataObject.setKeywords(metaData.keywords());
-        metaDataObject.setDescription(metaData.description());
-        metaDataObject.setAuthor(metaData.author());
-        metaDataObject.setCopyright(metaData.copyright());
+        metaData.setTitle(documentMetaData.title());
+        metaData.setAuthor(documentMetaData.author());
+        metaData.setCharset(documentMetaData.charset());
+        metaData.setKeywords(documentMetaData.keywords());
+        metaData.setDescription(documentMetaData.description());
+        metaData.setAuthor(documentMetaData.author());
+        metaData.setCopyright(documentMetaData.copyright());
 
-        return metaDataObject;
+        return metaData;
     }
 
 }

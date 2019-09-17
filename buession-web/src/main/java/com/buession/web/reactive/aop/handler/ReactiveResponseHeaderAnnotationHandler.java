@@ -30,6 +30,8 @@ import com.buession.web.http.response.ResponseHeader;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.response.ResponseUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 
 /**
@@ -37,15 +39,18 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
  */
 public class ReactiveResponseHeaderAnnotationHandler extends AbstractResponseHeaderAnnotationHandler {
 
+    private final static Logger logger = LoggerFactory.getLogger(ReactiveResponseHeaderAnnotationHandler.class);
+
     public ReactiveResponseHeaderAnnotationHandler(){
         super();
     }
 
     @Override
-    public void execute(MethodInvocation mi, ResponseHeader responseHeader) throws Throwable{
+    public void execute(MethodInvocation mi, ResponseHeader responseHeader){
         ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 
         if(serverHttp == null || serverHttp.getResponse() == null){
+            logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
             return;
         }
 

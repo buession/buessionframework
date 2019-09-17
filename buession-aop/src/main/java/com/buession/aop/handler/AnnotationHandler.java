@@ -35,6 +35,6 @@ public interface AnnotationHandler<A extends Annotation> {
 
     Class<A> getAnnotationClass();
 
-    void execute(MethodInvocation mi, A annotation) throws Throwable;
+    void execute(MethodInvocation mi, A annotation);
 
 }

@@ -25,31 +25,54 @@
 package com.buession.web.reactive.aop.handler;
 
 import com.buession.aop.MethodInvocation;
+import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractPrimitiveCrossOriginAnnotationHandler;
 import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.PrimitiveCrossOrigin;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
+import com.buession.web.reactive.http.request.RequestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 
 /**
  * @author Yong.Teng
  */
 public class ReactivePrimitiveCrossOriginAnnotationHandler extends AbstractPrimitiveCrossOriginAnnotationHandler {
 
+    private final static Logger logger = LoggerFactory.getLogger(ReactivePrimitiveCrossOriginAnnotationHandler.class);
+
     public ReactivePrimitiveCrossOriginAnnotationHandler(){
         super();
     }
 
     @Override
-    public void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin) throws Throwable{
+    public void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin){
         ServerHttp serverHttp = AopUtils.getServerHttp(mi);
 
         if(serverHttp == null || serverHttp.getRequest() == null || serverHttp.getResponse() == null){
+            if(serverHttp == null){
+                logger.debug("ServerHttp is null.");
+            }else if(serverHttp.getRequest() == null){
+                logger.debug("ServerHttpRequest is null.");
+            }else if(serverHttp.getResponse() == null){
+                logger.debug("ServerHttpResponse is null.");
+            }
             return;
         }
 
-        String accessControlAllowOrigin = serverHttp.getRequest().getHeaders().getFirst(HttpHeader.ORIGIN.getValue());
-        serverHttp.getResponse().getHeaders().setAccessControlAllowOrigin(accessControlAllowOrigin);
+        ServerHttpRequest request = serverHttp.getRequest();
+
+        if(RequestUtils.isAjaxRequest(request) == false){
+            logger.warn("Request '{}' without the header 'X-Requested-With'.", request.getURI());
+            return;
+        }
+
+        String accessControlAllowOrigin = request.getHeaders().getFirst(HttpHeader.ORIGIN.getValue());
+        if(Validate.hasText(accessControlAllowOrigin)){
+            serverHttp.getResponse().getHeaders().setAccessControlAllowOrigin(accessControlAllowOrigin);
+        }
     }
 
 }

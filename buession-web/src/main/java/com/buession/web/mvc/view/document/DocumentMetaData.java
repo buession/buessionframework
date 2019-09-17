@@ -40,12 +40,14 @@ import java.lang.annotation.Target;
 @Documented
 public @interface DocumentMetaData {
 
+    String DEFAULT_ATTR_NAME = "metadata";
+
     /**
      * 返回注册 Model attribute 名字
      *
      * @return 注册 Model attribute 名字
      */
-    String attrName() default "";
+    String attrName() default DEFAULT_ATTR_NAME;
 
     /**
      * 返回页面标题

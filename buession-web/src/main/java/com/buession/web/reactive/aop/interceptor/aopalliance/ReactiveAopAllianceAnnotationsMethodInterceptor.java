@@ -25,22 +25,10 @@
 package com.buession.web.reactive.aop.interceptor.aopalliance;
 
 import com.buession.aop.aopalliance.AopAllianceUtils;
-import com.buession.aop.interceptor.AnnotationMethodInterceptor;
-import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.aop.resolver.SpringAnnotationResolver;
 import com.buession.web.reactive.aop.interceptor.AbstractReactiveAnnotationsMethodInterceptor;
-import com.buession.web.reactive.aop.interceptor.ReactiveContentTypeAnnotationMethodInterceptor;
-import com.buession.web.reactive.aop.interceptor.ReactiveDisableHttpCacheAnnotationMethodInterceptor;
-import com.buession.web.reactive.aop.interceptor.ReactiveDocumentMetaDataAnnotationMethodInterceptor;
-import com.buession.web.reactive.aop.interceptor.ReactiveEnableHttpCacheAnnotationMethodInterceptor;
-import com.buession.web.reactive.aop.interceptor.ReactivePrimitiveCrossOriginAnnotationMethodInterceptor;
-import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeaderAnnotationMethodInterceptor;
-import com.buession.web.reactive.aop.interceptor.ReactiveResponseHeadersAnnotationMethodInterceptor;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Yong.Teng
@@ -49,18 +37,7 @@ public class ReactiveAopAllianceAnnotationsMethodInterceptor extends AbstractRea
         implements MethodInterceptor {
 
     public ReactiveAopAllianceAnnotationsMethodInterceptor(){
-        List<AnnotationMethodInterceptor> methodInterceptors = new ArrayList<>(7);
-        AnnotationResolver resolver = new SpringAnnotationResolver();
-
-        methodInterceptors.add(new ReactiveResponseHeadersAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ReactiveResponseHeaderAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ReactiveContentTypeAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ReactivePrimitiveCrossOriginAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ReactiveEnableHttpCacheAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ReactiveDisableHttpCacheAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ReactiveDocumentMetaDataAnnotationMethodInterceptor(resolver));
-
-        setMethodInterceptors(methodInterceptors);
+        super(new SpringAnnotationResolver());
     }
 
     @Override

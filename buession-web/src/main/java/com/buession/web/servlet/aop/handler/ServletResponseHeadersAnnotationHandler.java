@@ -33,6 +33,8 @@ import com.buession.web.http.response.ResponseHeaders;
 import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.http.HttpServlet;
 import com.buession.web.servlet.http.response.ResponseUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -41,15 +43,18 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHeadersAnnotationHandler {
 
+    private final static Logger logger = LoggerFactory.getLogger(ServletResponseHeadersAnnotationHandler.class);
+
     public ServletResponseHeadersAnnotationHandler(){
         super();
     }
 
     @Override
-    public void execute(MethodInvocation mi, ResponseHeaders responseHeaders) throws Throwable{
+    public void execute(MethodInvocation mi, ResponseHeaders responseHeaders){
         HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
 
         if(httpServlet == null || httpServlet.getResponse() == null){
+            logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "ServerHttpResponse");
             return;
         }
 

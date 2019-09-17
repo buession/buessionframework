@@ -40,12 +40,9 @@ public abstract class AbstractDocumentMetaDataAnnotationHandler extends Abstract
         super(DocumentMetaData.class);
     }
 
-    protected final static void addHeadToModelAttribute(final Model model, final DocumentMetaData metaData){
-        if(model == null || metaData == null){
-            return;
-        }
-
-        String attrName = Validate.hasText(metaData.attrName()) ? metaData.attrName() : DEFAULT_ATTR_NAME;
+    protected final static void addModelAttribute(final Model model, final DocumentMetaData metaData){
+        String attrName = Validate.hasText(metaData.attrName()) ? metaData.attrName() : DocumentMetaData
+                .DEFAULT_ATTR_NAME;
         model.addAttribute(attrName, MetaDataConvert.convert(metaData));
     }
 

@@ -25,22 +25,10 @@
 package com.buession.web.servlet.aop.interceptor.aopalliance;
 
 import com.buession.aop.aopalliance.AopAllianceUtils;
-import com.buession.aop.interceptor.AnnotationMethodInterceptor;
-import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.aop.resolver.SpringAnnotationResolver;
 import com.buession.web.servlet.aop.interceptor.AbstractServletAnnotationsMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ServletContentTypeAnnotationMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ServletDisableHttpCacheAnnotationMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ServletDocumentMetaDataAnnotationMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ServletEnableHttpCacheAnnotationMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ServletPrimitiveCrossOriginAnnotationMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ServletResponseHeaderAnnotationMethodInterceptor;
-import com.buession.web.servlet.aop.interceptor.ServletResponseHeadersAnnotationMethodInterceptor;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Yong.Teng
@@ -49,18 +37,7 @@ public class ServletAopAllianceAnnotationsMethodInterceptor extends AbstractServ
         implements MethodInterceptor {
 
     public ServletAopAllianceAnnotationsMethodInterceptor(){
-        List<AnnotationMethodInterceptor> methodInterceptors = new ArrayList<>(7);
-        AnnotationResolver resolver = new SpringAnnotationResolver();
-
-        methodInterceptors.add(new ServletResponseHeadersAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ServletResponseHeaderAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ServletContentTypeAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ServletPrimitiveCrossOriginAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ServletEnableHttpCacheAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ServletDisableHttpCacheAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ServletDocumentMetaDataAnnotationMethodInterceptor(resolver));
-
-        setMethodInterceptors(methodInterceptors);
+        super(new SpringAnnotationResolver());
     }
 
     @Override

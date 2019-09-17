@@ -22,51 +22,36 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.aspectj;
+package com.buession.web.aop.aspect;
 
-import com.buession.aop.MethodInvocation;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.Signature;
-import org.aspectj.lang.reflect.AdviceSignature;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.slf4j.Logger;
 
-import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractAdviceMethodInvocationAdapter implements MethodInvocation {
+public class AspectjAnnotationsMethodInterceptorLogUtils {
 
-    private Object object;
+    private AspectjAnnotationsMethodInterceptorLogUtils(){
 
-    private Method method;
-
-    private Object[] arguments;
-
-    public AbstractAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments){
-        this.object = object;
-        this.method = method;
-        this.arguments = arguments;
     }
 
-    @Override
-    public Object proceed() throws Throwable{
-        return null;
-    }
+    public final static void performAfterInterceptionDebug(final Logger logger, final JoinPoint joinPoint){
+        if(logger.isTraceEnabled()){
+            StringBuffer message = new StringBuffer(255);
 
-    @Override
-    public Object getThis(){
-        return object;
-    }
+            message.append("Invoking a method decorated with a Buession annotation\n");
+            message.append("\tkind       : ").append(joinPoint.getKind()).append("\n");
+            message.append("\tjoinPoint  : ").append(joinPoint).append("\n");
+            message.append("\tannotations: ").append(Arrays.toString(((MethodSignature) joinPoint.getSignature())
+                    .getMethod().getAnnotations())).append("\n");
+            message.append("\ttarget     : ").append(joinPoint.getTarget());
 
-    @Override
-    public Method getMethod(){
-        return method;
-    }
-
-    @Override
-    public Object[] getArguments(){
-        return arguments;
+            logger.trace(message.toString());
+        }
     }
 
 }

@@ -53,6 +53,12 @@ public abstract class AbstractAnnotationsMethodInterceptor extends AbstractMetho
         this.methodInterceptors = methodInterceptors;
     }
 
+    protected Object continueInvocation(Object aopAllianceMethodInvocation) throws Throwable{
+        org.aopalliance.intercept.MethodInvocation mi = (org.aopalliance.intercept.MethodInvocation)
+                aopAllianceMethodInvocation;
+        return mi.proceed();
+    }
+
     @Override
     protected void doInvoke(MethodInvocation mi) throws Throwable{
         Collection<AnnotationMethodInterceptor> methodInterceptors = getMethodInterceptors();

@@ -25,13 +25,11 @@
 package com.buession.web.reactive.aop.interceptor.aspectj;
 
 import com.buession.aop.aspectj.AfterAdviceMethodInvocationAdapter;
+import com.buession.web.aop.aspect.AspectjAnnotationsMethodInterceptorLogUtils;
 import com.buession.web.reactive.aop.interceptor.AbstractReactiveAnnotationsMethodInterceptor;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
 
 /**
  * @author Yong.Teng
@@ -45,13 +43,7 @@ public class ReactiveAspectjAnnotationsMethodInterceptor extends AbstractReactiv
     }
 
     protected void performAfterInterception(JoinPoint joinPoint) throws Throwable{
-        if(logger.isTraceEnabled()){
-            logger.trace("Invoking a method decorated with a Buession annotation\n\tkind       : {}\n\tjoinPoint  : "
-                    + "{}\n\tannotations: {}\n\ttarget     : {}", joinPoint.getKind(), joinPoint, Arrays.toString((
-                            (MethodSignature) joinPoint.getSignature()).getMethod().getAnnotations()), joinPoint
-                    .getTarget());
-        }
-
+        AspectjAnnotationsMethodInterceptorLogUtils.performAfterInterceptionDebug(logger, joinPoint);
         super.invoke(AfterAdviceMethodInvocationAdapter.createFromJoinPoint(joinPoint));
     }
 

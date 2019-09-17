@@ -25,35 +25,55 @@
 package com.buession.web.servlet.aop.handler;
 
 import com.buession.aop.MethodInvocation;
+import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractPrimitiveCrossOriginAnnotationHandler;
 import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.PrimitiveCrossOrigin;
 import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.http.HttpServlet;
+import com.buession.web.servlet.http.request.RequestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Yong.Teng
  */
 public class ServletPrimitiveCrossOriginAnnotationHandler extends AbstractPrimitiveCrossOriginAnnotationHandler {
 
+    private final static Logger logger = LoggerFactory.getLogger(ServletPrimitiveCrossOriginAnnotationHandler.class);
+
     public ServletPrimitiveCrossOriginAnnotationHandler(){
         super();
     }
 
     @Override
-    public void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin) throws Throwable{
+    public void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin){
         HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
 
         if(httpServlet == null || httpServlet.getRequest() == null || httpServlet.getResponse() == null){
+            if(httpServlet == null){
+                logger.debug("HttpServlet is null.");
+            }else if(httpServlet.getRequest() == null){
+                logger.debug("HttpServletRequest is null.");
+            }else if(httpServlet.getResponse() == null){
+                logger.debug("HttpServletResponse is null.");
+            }
             return;
         }
 
-        String accessControlAllowOrigin = httpServlet.getRequest().getHeader(HttpHeader.ORIGIN.getValue());
-        httpServlet.getResponse().setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN.getValue(),
-                accessControlAllowOrigin);
+        HttpServletRequest request = httpServlet.getRequest();
+        if(RequestUtils.isAjaxRequest(request) == false){
+            logger.warn("Request '{}' without the header 'X-Requested-With'.", request.getRequestURI());
+            return;
+        }
+
+        String accessControlAllowOrigin = request.getHeader(HttpHeader.ORIGIN.getValue());
+        if(Validate.hasText(accessControlAllowOrigin)){
+            httpServlet.getResponse().setHeader(HttpHeader.ACCESS_CONTROL_ALLOW_ORIGIN.getValue(),
+                    accessControlAllowOrigin);
+        }
     }
 
 }

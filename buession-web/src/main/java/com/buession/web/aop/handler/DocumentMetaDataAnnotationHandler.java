@@ -31,5 +31,4 @@ import com.buession.web.mvc.view.document.DocumentMetaData;
  */
 public interface DocumentMetaDataAnnotationHandler extends WebAnnotationHandler<DocumentMetaData> {
 
-    String DEFAULT_ATTR_NAME = "matadata";
 }
