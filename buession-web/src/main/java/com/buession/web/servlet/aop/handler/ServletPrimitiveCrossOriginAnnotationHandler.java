@@ -30,12 +30,14 @@ import com.buession.web.aop.handler.AbstractPrimitiveCrossOriginAnnotationHandle
 import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.PrimitiveCrossOrigin;
 import com.buession.web.servlet.aop.AopUtils;
+import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
 import com.buession.web.servlet.http.request.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
@@ -51,7 +53,17 @@ public class ServletPrimitiveCrossOriginAnnotationHandler extends AbstractPrimit
     @Override
     public void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin){
         HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
+        doExecute(httpServlet, primitiveCrossOrigin);
+    }
 
+    @Override
+    public Object execute(Object target, Method method, Object[] arguments, PrimitiveCrossOrigin primitiveCrossOrigin){
+        HttpServlet httpServlet = MethodUtils.createHttpServletFromMethodArguments(arguments);
+        doExecute(httpServlet, primitiveCrossOrigin);
+        return null;
+    }
+
+    private final static void doExecute(final HttpServlet httpServlet, final PrimitiveCrossOrigin primitiveCrossOrigin){
         if(httpServlet == null || httpServlet.getRequest() == null || httpServlet.getResponse() == null){
             if(httpServlet == null){
                 logger.debug("HttpServlet is null.");

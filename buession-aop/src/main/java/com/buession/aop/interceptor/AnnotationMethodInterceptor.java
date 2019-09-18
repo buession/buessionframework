@@ -26,10 +26,12 @@ package com.buession.aop.interceptor;
 
 import com.buession.aop.MethodInvocation;
 
+import java.lang.annotation.Annotation;
+
 /**
  * @author Yong.Teng
  */
-public interface AnnotationMethodInterceptor extends MethodInterceptor {
+public interface AnnotationMethodInterceptor<A extends Annotation> extends MethodInterceptor {
 
     boolean isSupport(MethodInvocation mi);
 

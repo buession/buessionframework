@@ -32,9 +32,13 @@ import com.buession.web.http.response.ResponseHeaders;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.response.ResponseUtils;
+import com.buession.web.reactive.aop.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+
+import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
@@ -50,7 +54,17 @@ public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHe
     @Override
     public void execute(MethodInvocation mi, ResponseHeaders responseHeaders){
         ServerHttp serverHttp = AopUtils.getServerHttp(mi);
+        doExecute(serverHttp, responseHeaders);
+    }
 
+    @Override
+    public Object execute(Object target, Method method, Object[] arguments, ResponseHeaders responseHeaders){
+        ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
+        doExecute(serverHttp, responseHeaders);
+        return null;
+    }
+
+    private final static void doExecute(final ServerHttp serverHttp, final ResponseHeaders responseHeaders){
         if(serverHttp == null || serverHttp.getResponse() == null){
             logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
             return;
@@ -60,17 +74,15 @@ public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHe
 
         if(Validate.isEmpty(headers) == false){
             ServerHttpResponse response = serverHttp.getResponse();
-            for(ResponseHeader header : headers){
-                setHeader(response, header);
-            }
-        }
-    }
+            HttpHeaders httpHeaders = response.getHeaders();
 
-    private final static void setHeader(final ServerHttpResponse response, final ResponseHeader responseHeader){
-        if(EXPIRES.equalsIgnoreCase(responseHeader.name()) == true){
-            ResponseUtils.httpCache(response, Integer.parseInt(responseHeader.value()));
-        }else{
-            response.getHeaders().set(responseHeader.name(), responseHeader.value());
+            for(ResponseHeader header : headers){
+                if(EXPIRES.equalsIgnoreCase(header.name()) == true){
+                    ResponseUtils.httpCache(response, Integer.parseInt(header.value()));
+                }else{
+                    httpHeaders.set(header.name(), header.value());
+                }
+            }
         }
     }
 

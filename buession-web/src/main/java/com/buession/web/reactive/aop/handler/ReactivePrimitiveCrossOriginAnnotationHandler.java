@@ -32,9 +32,12 @@ import com.buession.web.http.response.PrimitiveCrossOrigin;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.request.RequestUtils;
+import com.buession.web.reactive.aop.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+
+import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
@@ -50,7 +53,17 @@ public class ReactivePrimitiveCrossOriginAnnotationHandler extends AbstractPrimi
     @Override
     public void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin){
         ServerHttp serverHttp = AopUtils.getServerHttp(mi);
+        doExecute(serverHttp, primitiveCrossOrigin);
+    }
 
+    @Override
+    public Object execute(Object target, Method method, Object[] arguments, PrimitiveCrossOrigin primitiveCrossOrigin){
+        ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
+        doExecute(serverHttp, primitiveCrossOrigin);
+        return null;
+    }
+
+    private final static void doExecute(final ServerHttp serverHttp, final PrimitiveCrossOrigin primitiveCrossOrigin){
         if(serverHttp == null || serverHttp.getRequest() == null || serverHttp.getResponse() == null){
             if(serverHttp == null){
                 logger.debug("ServerHttp is null.");

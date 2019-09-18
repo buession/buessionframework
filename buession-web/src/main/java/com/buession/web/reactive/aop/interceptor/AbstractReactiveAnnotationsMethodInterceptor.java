@@ -25,11 +25,9 @@
 package com.buession.web.reactive.aop.interceptor;
 
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
-import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.web.aop.interceptor.AbstractAnnotationsMethodInterceptor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author Yong.Teng
@@ -37,21 +35,10 @@ import java.util.List;
 public abstract class AbstractReactiveAnnotationsMethodInterceptor extends AbstractAnnotationsMethodInterceptor {
 
     public AbstractReactiveAnnotationsMethodInterceptor(){
-        this(null);
+        super();
     }
 
-    public AbstractReactiveAnnotationsMethodInterceptor(final AnnotationResolver resolver){
-        List<AnnotationMethodInterceptor> methodInterceptors = new ArrayList<>(7);
-
-        methodInterceptors.add(new ReactiveResponseHeadersAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ReactiveResponseHeaderAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ReactiveContentTypeAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ReactivePrimitiveCrossOriginAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ReactiveEnableHttpCacheAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ReactiveDisableHttpCacheAnnotationMethodInterceptor(resolver));
-        methodInterceptors.add(new ReactiveDocumentMetaDataAnnotationMethodInterceptor(resolver));
-
-        setMethodInterceptors(methodInterceptors);
+    public AbstractReactiveAnnotationsMethodInterceptor(Collection<AnnotationMethodInterceptor> methodInterceptors){
+        super(methodInterceptors);
     }
-
 }

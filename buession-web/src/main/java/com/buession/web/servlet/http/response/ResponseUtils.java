@@ -40,8 +40,7 @@ public class ResponseUtils {
 
     public final static void httpCache(final HttpServletResponse response, final int lifetime){
         if(response != null){
-            long expiresAt = lifetime + System.currentTimeMillis();
-
+            long expiresAt = System.currentTimeMillis() + lifetime;
             httpCache(response, lifetime, expiresAt);
         }
     }

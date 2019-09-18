@@ -30,9 +30,11 @@ import com.buession.web.http.response.ResponseHeader;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.response.ResponseUtils;
+import com.buession.web.reactive.aop.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.server.reactive.ServerHttpResponse;
+
+import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
@@ -48,20 +50,26 @@ public class ReactiveResponseHeaderAnnotationHandler extends AbstractResponseHea
     @Override
     public void execute(MethodInvocation mi, ResponseHeader responseHeader){
         ServerHttp serverHttp = AopUtils.getServerHttp(mi);
+        doExecute(serverHttp, responseHeader);
+    }
 
+    @Override
+    public Object execute(Object target, Method method, Object[] arguments, ResponseHeader responseHeader){
+        ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
+        doExecute(serverHttp, responseHeader);
+        return null;
+    }
+
+    private final static void doExecute(final ServerHttp serverHttp, final ResponseHeader responseHeader){
         if(serverHttp == null || serverHttp.getResponse() == null){
             logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
             return;
         }
 
-        setHeader(serverHttp.getResponse(), responseHeader);
-    }
-
-    private final static void setHeader(final ServerHttpResponse response, final ResponseHeader responseHeader){
         if(EXPIRES.equalsIgnoreCase(responseHeader.name()) == true){
-            ResponseUtils.httpCache(response, Integer.parseInt(responseHeader.value()));
+            ResponseUtils.httpCache(serverHttp.getResponse(), Integer.parseInt(responseHeader.value()));
         }else{
-            response.getHeaders().set(responseHeader.name(), responseHeader.value());
+            serverHttp.getResponse().getHeaders().set(responseHeader.name(), responseHeader.value());
         }
     }
 

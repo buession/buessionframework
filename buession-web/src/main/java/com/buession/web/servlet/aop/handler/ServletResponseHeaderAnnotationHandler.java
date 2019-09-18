@@ -29,12 +29,13 @@ import com.buession.web.aop.handler.AbstractResponseHeaderAnnotationHandler;
 import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.ResponseHeader;
 import com.buession.web.servlet.aop.AopUtils;
+import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
 import com.buession.web.servlet.http.response.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
@@ -50,25 +51,27 @@ public class ServletResponseHeaderAnnotationHandler extends AbstractResponseHead
     @Override
     public void execute(MethodInvocation mi, ResponseHeader responseHeader){
         HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
+        doExecute(httpServlet, responseHeader);
+    }
 
+    @Override
+    public Object execute(Object target, Method method, Object[] arguments, ResponseHeader responseHeader){
+        HttpServlet httpServlet = MethodUtils.createHttpServletFromMethodArguments(arguments);
+        doExecute(httpServlet, responseHeader);
+        return null;
+    }
+
+    private final static void doExecute(final HttpServlet httpServlet, final ResponseHeader responseHeader){
         if(httpServlet == null || httpServlet.getResponse() == null){
             logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "ServerHttpResponse");
             return;
         }
 
-        setHeader(httpServlet.getResponse(), responseHeader);
-    }
-
-    private final static void setHeader(final HttpServletResponse response, final String name, final String value){
-        if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(name) == true){
-            ResponseUtils.httpCache(response, Integer.parseInt(value));
+        if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(responseHeader.name()) == true){
+            ResponseUtils.httpCache(httpServlet.getResponse(), Integer.parseInt(responseHeader.value()));
         }else{
-            response.addHeader(name, value);
+            httpServlet.getResponse().addHeader(responseHeader.name(), responseHeader.value());
         }
-    }
-
-    private final static void setHeader(final HttpServletResponse response, final ResponseHeader responseHeader){
-        setHeader(response, responseHeader.name(), responseHeader.value());
     }
 
 }

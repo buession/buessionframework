@@ -27,6 +27,7 @@ package com.buession.aop.handler;
 import com.buession.aop.MethodInvocation;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
@@ -36,5 +37,7 @@ public interface AnnotationHandler<A extends Annotation> {
     Class<A> getAnnotationClass();
 
     void execute(MethodInvocation mi, A annotation);
+
+    Object execute(Object target, Method method, Object[] arguments, A annotation);
 
 }

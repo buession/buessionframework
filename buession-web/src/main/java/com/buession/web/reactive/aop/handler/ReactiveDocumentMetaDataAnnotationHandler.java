@@ -29,8 +29,11 @@ import com.buession.web.aop.handler.AbstractDocumentMetaDataAnnotationHandler;
 import com.buession.web.mvc.view.document.DocumentMetaData;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
+import com.buession.web.reactive.aop.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
@@ -46,7 +49,17 @@ public class ReactiveDocumentMetaDataAnnotationHandler extends AbstractDocumentM
     @Override
     public void execute(MethodInvocation mi, DocumentMetaData documentMetaData){
         ServerHttp serverHttp = AopUtils.getServerHttp(mi);
+        doExecute(serverHttp, documentMetaData);
+    }
 
+    @Override
+    public Object execute(Object target, Method method, Object[] arguments, DocumentMetaData documentMetaData){
+        ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
+        doExecute(serverHttp, documentMetaData);
+        return null;
+    }
+
+    private final static void doExecute(final ServerHttp serverHttp, final DocumentMetaData documentMetaData){
         if(serverHttp == null || serverHttp.getModel() == null){
             logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
             return;

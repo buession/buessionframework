@@ -26,7 +26,6 @@
  */
 package com.buession.web.http.response;
 
-import com.buession.web.http.response.ResponseHeader;
 import org.springframework.web.bind.annotation.Mapping;
 
 import java.lang.annotation.Documented;

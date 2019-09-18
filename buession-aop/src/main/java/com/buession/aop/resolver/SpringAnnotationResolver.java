@@ -55,4 +55,21 @@ public class SpringAnnotationResolver extends AbstractAnnotationResolver {
         return AnnotationUtils.findAnnotation(targetClass, clazz);
     }
 
+    @Override
+    public Annotation getAnnotation(Method method, Class<? extends Annotation> clazz){
+        Annotation annotation = AnnotationUtils.findAnnotation(method, clazz);
+        if(annotation != null){
+            return annotation;
+        }
+
+        Class<?> targetClass = method.getDeclaringClass();
+        method = ClassUtils.getMostSpecificMethod(method, targetClass);
+        annotation = AnnotationUtils.findAnnotation(method, clazz);
+        if(annotation != null){
+            return annotation;
+        }
+
+        return AnnotationUtils.findAnnotation(targetClass, clazz);
+    }
+
 }

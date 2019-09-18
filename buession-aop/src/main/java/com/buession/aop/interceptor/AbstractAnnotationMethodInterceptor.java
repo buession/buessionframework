@@ -37,7 +37,7 @@ import java.util.HashMap;
  * @author Yong.Teng
  */
 public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> extends AbstractMethodInterceptor
-        implements AnnotationMethodInterceptor {
+        implements AnnotationMethodInterceptor<A> {
 
     private AnnotationHandler<A> handler;
 

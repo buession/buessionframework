@@ -27,6 +27,7 @@ package com.buession.aop.resolver;
 import com.buession.aop.MethodInvocation;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
@@ -34,5 +35,7 @@ import java.lang.annotation.Annotation;
 public interface AnnotationResolver {
 
     Annotation getAnnotation(MethodInvocation mi, Class<? extends Annotation> clazz);
+
+    Annotation getAnnotation(Method method, Class<? extends Annotation> clazz);
 
 }

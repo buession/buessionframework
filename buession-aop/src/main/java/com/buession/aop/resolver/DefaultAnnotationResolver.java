@@ -42,7 +42,7 @@ public class DefaultAnnotationResolver extends AbstractAnnotationResolver {
         Method method = mi.getMethod();
         if(method == null){
             throw new IllegalArgumentException(MethodInvocation.class.getName() + " parameter incorrectly " +
-                    "constructed" + ".getMethod() returned null");
+                    "constructed.getMethod() returned null");
         }
 
         Annotation annotation = method.getAnnotation(clazz);
@@ -54,4 +54,15 @@ public class DefaultAnnotationResolver extends AbstractAnnotationResolver {
         return annotation;
     }
 
+    @Override
+    public Annotation getAnnotation(Method method, Class<? extends Annotation> clazz){
+        Assert.isNull(method, "method arguments cloud not be null");
+
+        Annotation annotation = method.getAnnotation(clazz);
+        if(annotation == null){
+            annotation = method.getDeclaringClass().getAnnotation(clazz);
+        }
+
+        return annotation;
+    }
 }
