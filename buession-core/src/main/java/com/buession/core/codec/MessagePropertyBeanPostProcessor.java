@@ -26,6 +26,7 @@
  */
 package com.buession.core.codec;
 
+import com.buession.core.utils.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AdvisedSupport;
@@ -37,7 +38,6 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.env.Environment;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -72,15 +72,18 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException{
         Class clazz = bean.getClass();
-        List<Field> fields = getAllFields(clazz);
+        List<Field> fields = ClassUtils.getAllFields(clazz);
 
         for(Field field : fields){
+            final Message message = AnnotationUtils.getAnnotation(field, Message.class);
+            if(message == null){
+                continue;
+            }
+
             if(field.getType().isAssignableFrom(MessageObject.class) == false){
                 throw new BeanCreationException("The field " + field.getName() + " is not subclass of " +
                         MessageObject.class.getName() + ", on: " + beanName + "(" + bean.getClass().getName() + ").");
             }
-
-            final Message message = AnnotationUtils.getAnnotation(field, Message.class);
 
             try{
                 handleMessageInjected(bean, beanName, field, message);
@@ -118,25 +121,6 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
             field.set(bean, new MessageObject(code, text));
         }
         logger.debug("Parse message '{}', code: {}, text: {}", key, code, text);
-    }
-
-    private final static List<Field> getAllFields(final Class<?> clazz){
-        final List<Field> allFields = new ArrayList<>(4);
-        Class<?> currentClass = clazz;
-
-        while(currentClass != null){
-            final Field[] declaredFields = currentClass.getDeclaredFields();
-
-            for(final Field field : declaredFields){
-                if(field.isAnnotationPresent(Message.class)){
-                    allFields.add(field);
-                }
-            }
-
-            currentClass = currentClass.getSuperclass();
-        }
-
-        return allFields;
     }
 
     private static Object getCglibProxyTargetObject(Object proxy) throws Exception{
