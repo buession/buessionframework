@@ -25,7 +25,7 @@
 package com.buession.aop.resolver;
 
 import com.buession.aop.MethodInvocation;
-import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ClassUtils;
 
 import java.lang.annotation.Annotation;
@@ -40,36 +40,36 @@ public class SpringAnnotationResolver extends AbstractAnnotationResolver {
     public Annotation getAnnotation(MethodInvocation mi, Class<? extends Annotation> clazz){
         Method method = mi.getMethod();
 
-        Annotation annotation = AnnotationUtils.findAnnotation(method, clazz);
+        Annotation annotation = AnnotatedElementUtils.findMergedAnnotation(method, clazz);
         if(annotation != null){
             return annotation;
         }
 
         Class<?> targetClass = mi.getThis().getClass();
         method = ClassUtils.getMostSpecificMethod(method, targetClass);
-        annotation = AnnotationUtils.findAnnotation(method, clazz);
+        annotation = AnnotatedElementUtils.findMergedAnnotation(method, clazz);
         if(annotation != null){
             return annotation;
         }
 
-        return AnnotationUtils.findAnnotation(targetClass, clazz);
+        return AnnotatedElementUtils.findMergedAnnotation(targetClass, clazz);
     }
 
     @Override
     public Annotation getAnnotation(Method method, Class<? extends Annotation> clazz){
-        Annotation annotation = AnnotationUtils.findAnnotation(method, clazz);
+        Annotation annotation = AnnotatedElementUtils.findMergedAnnotation(method, clazz);
         if(annotation != null){
             return annotation;
         }
 
         Class<?> targetClass = method.getDeclaringClass();
         method = ClassUtils.getMostSpecificMethod(method, targetClass);
-        annotation = AnnotationUtils.findAnnotation(method, clazz);
+        annotation = AnnotatedElementUtils.findMergedAnnotation(method, clazz);
         if(annotation != null){
             return annotation;
         }
 
-        return AnnotationUtils.findAnnotation(targetClass, clazz);
+        return AnnotatedElementUtils.findMergedAnnotation(targetClass, clazz);
     }
 
 }
