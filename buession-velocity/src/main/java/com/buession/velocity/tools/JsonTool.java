@@ -24,27 +24,66 @@
  */
 package com.buession.velocity.tools;
 
+import com.buession.core.validator.Validate;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.velocity.tools.config.DefaultKey;
+import org.apache.velocity.tools.generic.SafeConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 /**
  * @author Yong.Teng
  */
 @DefaultKey("json")
-public class JsonTool {
+public class JsonTool extends SafeConfig {
 
     private final static Logger logger = LoggerFactory.getLogger(JsonTool.class);
 
     public String encode(Object object){
+        return encode(object, null, null, null);
+    }
+
+    public String encode(Object object, Boolean ignoreNullValue){
+        return encode(object, ignoreNullValue, null);
+    }
+
+    public String encode(Object object, String dateFormat){
+        return encode(object, null, dateFormat);
+    }
+
+    public String encode(Object object, String dateFormat, TimeZone timeZone){
+        return encode(object, null, dateFormat, timeZone);
+    }
+
+    public String encode(Object object, Boolean ignoreNullValue, String dateFormat){
+        return encode(object, ignoreNullValue, dateFormat, null);
+    }
+
+    public String encode(Object object, Boolean ignoreNullValue, String dateFormat, TimeZone timeZone){
         ObjectMapper objectMapper = new ObjectMapper();
+
+        if(Boolean.TRUE.equals(ignoreNullValue)){
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        }
+
+        if(Validate.hasText(dateFormat)){
+            SimpleDateFormat smt = new SimpleDateFormat(dateFormat);
+            objectMapper.setDateFormat(smt);
+
+            if(timeZone != null){
+                objectMapper.setTimeZone(timeZone);
+            }
+        }
 
         try{
             return objectMapper.writeValueAsString(object);
         }catch(JsonProcessingException e){
-            logger.warn("{} convert to string error.", object == null ? "null" : object, e);
+            logger.warn("{} convert to string error.", object == null ? "<null>" : object, e);
         }
 
         return null;
