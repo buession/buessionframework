@@ -26,6 +26,7 @@ package com.buession.oss;
 
 import com.buession.core.validator.Validate;
 import com.buession.oss.core.Result;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.InputStream;
@@ -35,6 +36,8 @@ import java.nio.file.Path;
  * @author Yong.Teng
  */
 public abstract class AbstractOSSClient implements OSSClient {
+
+    protected final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     private String endpoint;
 

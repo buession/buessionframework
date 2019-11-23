@@ -33,7 +33,6 @@ import com.aliyun.oss.model.ProcessObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import com.buession.oss.core.Result;
 import com.buession.oss.model.AliCloudResult;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,8 +114,7 @@ public class AliCloudOSSClient extends AbstractOSSClient {
             byte[] readStreamAsByteArray = IOUtils.readStreamAsByteArray(genericResult.getResponse().getContent());
             genericResult.getResponse().getContent().close();
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            AliCloudResult aliCloudResult = objectMapper.readValue(readStreamAsByteArray, AliCloudResult.class);
+            AliCloudResult aliCloudResult = OBJECT_MAPPER.readValue(readStreamAsByteArray, AliCloudResult.class);
 
             if(aliCloudResult == null){
                 return null;
