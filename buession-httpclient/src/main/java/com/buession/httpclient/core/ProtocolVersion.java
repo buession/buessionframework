@@ -31,6 +31,12 @@ import com.buession.core.utils.Assert;
  */
 public class ProtocolVersion {
 
+    public final static ProtocolVersion HTTP_1_0 = new ProtocolVersion("http", 1, 0);
+
+    public final static ProtocolVersion HTTP_1_1 = new ProtocolVersion("http", 1, 1);
+
+    public final static ProtocolVersion HTTP_2_0 = new ProtocolVersion("http", 2, 0);
+
     protected String protocol;
 
     protected int major;
