@@ -50,7 +50,7 @@
 		<dependency>
 			<groupId>com.aliyun.oss</groupId>
 			<artifactId>aliyun-sdk-oss</artifactId>
-			<version>3.4.2</version>
+			<version>3.7.0</version>
 			<scope>compile</scope>
 		</dependency>
 
