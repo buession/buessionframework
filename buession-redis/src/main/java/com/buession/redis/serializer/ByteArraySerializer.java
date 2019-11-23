@@ -30,15 +30,11 @@ import com.buession.core.exception.SerializationException;
 import com.buession.redis.Constants;
 import com.buession.redis.utils.SafeEncoder;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
 public class ByteArraySerializer implements Serializer {
-
-    private final static Logger logger = LoggerFactory.getLogger(ByteArraySerializer.class);
 
     @Override
     public <O> String encode(O o) throws SerializerException{
@@ -65,7 +61,7 @@ public class ByteArraySerializer implements Serializer {
     }
 
     @Override
-    public <O> O decode(String str, TypeReference type) throws SerializerException{
+    public <O> O decode(String str, TypeReference<O> type) throws SerializerException{
         return doDecode(str);
     }
 

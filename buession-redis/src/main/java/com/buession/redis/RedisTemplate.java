@@ -756,6 +756,36 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
     }
 
     @Override
+    public <V> List<V> blPopObject(final String key, final int timeout){
+        return returnObjectValueFromListString(blPop(key, timeout));
+    }
+
+    @Override
+    public <V> List<V> blPopObject(final byte[] key, final int timeout){
+        return returnObjectValueFromListByte(blPop(key, timeout));
+    }
+
+    @Override
+    public <V> List<V> blPopObject(final String key, final int timeout, final Class<V> clazz){
+        return returnObjectValueFromListString(blPop(key, timeout), clazz);
+    }
+
+    @Override
+    public <V> List<V> blPopObject(final byte[] key, final int timeout, final Class<V> clazz){
+        return returnObjectValueFromListByte(blPop(key, timeout), clazz);
+    }
+
+    @Override
+    public <V> List<V> blPopObject(final String key, final int timeout, final TypeReference<V> type){
+        return returnObjectValueFromListString(blPop(key, timeout), type);
+    }
+
+    @Override
+    public <V> List<V> blPopObject(final byte[] key, final int timeout, final TypeReference<V> type){
+        return returnObjectValueFromListByte(blPop(key, timeout), type);
+    }
+
+    @Override
     public <V> V rPopObject(final String key){
         return serializer.decode(rPop(key));
     }
@@ -823,6 +853,68 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
     @Override
     public List<byte[]> brPop(final byte[] key, final int timeout){
         return brPop(new byte[][]{key}, timeout);
+    }
+
+    @Override
+    public <V> List<V> brPopObject(final String key, final int timeout){
+        return returnObjectValueFromListString(brPop(key, timeout));
+    }
+
+    @Override
+    public <V> List<V> brPopObject(final byte[] key, final int timeout){
+        return returnObjectValueFromListByte(brPop(key, timeout));
+    }
+
+    @Override
+    public <V> List<V> brPopObject(final String key, final int timeout, final Class<V> clazz){
+        return returnObjectValueFromListString(brPop(key, timeout), clazz);
+    }
+
+    @Override
+    public <V> List<V> brPopObject(final byte[] key, final int timeout, final Class<V> clazz){
+        return returnObjectValueFromListByte(brPop(key, timeout), clazz);
+    }
+
+    @Override
+    public <V> List<V> brPopObject(final String key, final int timeout, final TypeReference<V> type){
+        return returnObjectValueFromListString(brPop(key, timeout), type);
+    }
+
+    @Override
+    public <V> List<V> brPopObject(final byte[] key, final int timeout, final TypeReference<V> type){
+        return returnObjectValueFromListByte(brPop(key, timeout), type);
+    }
+
+    @Override
+    public <V> V brPoplPushObject(final String source, final String destKey, final int timeout){
+        return serializer.decode(brPoplPush(source, destKey, timeout));
+    }
+
+    @Override
+    public <V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout){
+        return serializer.decode(brPoplPush(source, destKey, timeout));
+    }
+
+    @Override
+    public <V> V brPoplPushObject(final String source, final String destKey, final int timeout, final Class<V> clazz){
+        return serializer.decode(brPoplPush(source, destKey, timeout), clazz);
+    }
+
+    @Override
+    public <V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout, final Class<V> clazz){
+        return serializer.decode(brPoplPush(source, destKey, timeout), clazz);
+    }
+
+    @Override
+    public <V> V brPoplPushObject(final String source, final String destKey, final int timeout, final
+    TypeReference<V> type){
+        return serializer.decode(brPoplPush(source, destKey, timeout), type);
+    }
+
+    @Override
+    public <V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout, final
+    TypeReference<V> type){
+        return serializer.decode(brPoplPush(source, destKey, timeout), type);
     }
 
     @Override

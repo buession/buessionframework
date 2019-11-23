@@ -41,7 +41,13 @@ import java.io.IOException;
  */
 public class JSONSerializer implements Serializer {
 
+    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     private final static Logger logger = LoggerFactory.getLogger(JSONSerializer.class);
+
+    static{
+        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
 
     @Override
     public <O> String encode(O o){
@@ -64,10 +70,8 @@ public class JSONSerializer implements Serializer {
         if(str == null){
             logger.debug("String is null.");
         }else{
-            ObjectMapper mapper = createObjectMapper();
-
             try{
-                return mapper.readValue(str, new TypeReference<O>() {
+                return OBJECT_MAPPER.readValue(str, new TypeReference<O>() {
 
                 });
             }catch(IOException e){
@@ -83,10 +87,8 @@ public class JSONSerializer implements Serializer {
         if(str == null){
             logger.debug("String is null.");
         }else{
-            ObjectMapper mapper = createObjectMapper();
-
             try{
-                return mapper.readValue(str, clazz);
+                return OBJECT_MAPPER.readValue(str, clazz);
             }catch(IOException e){
                 throw new SerializerException(str + " json decode to " + (clazz == null ? "null" : clazz.getName()) +
                         " failure", e);
@@ -97,14 +99,12 @@ public class JSONSerializer implements Serializer {
     }
 
     @Override
-    public <O> O decode(String str, TypeReference type){
+    public <O> O decode(String str, TypeReference<O> type){
         if(str == null){
             logger.debug("String is null.");
         }else{
-            ObjectMapper mapper = createObjectMapper();
-
             try{
-                return mapper.readValue(str, type);
+                return OBJECT_MAPPER.readValue(str, type);
             }catch(IOException e){
                 throw new SerializerException(str + " json decode to " + (type == null ? "null" : type.getType()
                         .getTypeName()) + " failure", e);
@@ -119,10 +119,8 @@ public class JSONSerializer implements Serializer {
         if(bytes == null){
             logger.debug("String is null.");
         }else{
-            ObjectMapper mapper = createObjectMapper();
-
             try{
-                return mapper.readValue(bytes, new TypeReference<O>() {
+                return OBJECT_MAPPER.readValue(bytes, new TypeReference<O>() {
 
                 });
             }catch(IOException e){
@@ -138,10 +136,8 @@ public class JSONSerializer implements Serializer {
         if(bytes == null){
             logger.debug("String is null.");
         }else{
-            ObjectMapper mapper = createObjectMapper();
-
             try{
-                return mapper.readValue(bytes, clazz);
+                return OBJECT_MAPPER.readValue(bytes, clazz);
             }catch(IOException e){
                 throw new SerializerException(bytes + " json decode to " + (clazz == null ? "null" : clazz.getName())
                         + " failure", e);
@@ -156,10 +152,8 @@ public class JSONSerializer implements Serializer {
         if(bytes == null){
             logger.debug("String is null.");
         }else{
-            ObjectMapper mapper = createObjectMapper();
-
             try{
-                return mapper.readValue(bytes, type);
+                return OBJECT_MAPPER.readValue(bytes, type);
             }catch(IOException e){
                 throw new SerializerException(bytes + " json decode to " + (type == null ? "null" : type.getType()
                         .getTypeName()) + " failure", e);
@@ -167,14 +161,6 @@ public class JSONSerializer implements Serializer {
         }
 
         return null;
-    }
-
-    private final static ObjectMapper createObjectMapper(){
-        ObjectMapper mapper = new ObjectMapper();
-
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        return mapper;
     }
 
 }

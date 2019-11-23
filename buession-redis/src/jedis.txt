@@ -1,12 +1,5 @@
  pubsub();
 
-    Key（键）
-        OBJECT
-
-    SortedSet（有序集合）
-
-    Pub/Sub（发布/订阅）
-        PUBSUB
 
   @SuppressWarnings("rawtypes")
   public List<Map<String, String>> sentinelMasters() {

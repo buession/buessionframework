@@ -41,7 +41,7 @@ public interface Serializer {
 
     <O> O decode(String str, Class<O> clazz);
 
-    <O> O decode(String str, TypeReference type);
+    <O> O decode(String str, TypeReference<O> type);
 
     <O> O decode(byte[] bytes);
 

@@ -615,17 +615,111 @@ public interface ListOperations extends ListCommands, RedisOperations {
      */
     List<byte[]> blPop(final byte[] key, final int timeout);
 
-    /*<V> List<V> blPopObject(final String key, final int timeout);
+    /**
+     * 移除并返回 key 的头元素反序列化后的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
+     * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+     *
+     * @param key
+     *         key
+     * @param timeout
+     *         超时时间
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化后的对象。
+     */
+    <V> List<V> blPopObject(final String key, final int timeout);
 
+    /**
+     * 移除并返回 key 的头元素反序列化后的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
+     * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+     *
+     * @param key
+     *         key
+     * @param timeout
+     *         超时时间
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化后的对象。
+     */
     <V> List<V> blPopObject(final byte[] key, final int timeout);
 
+    /**
+     * 移除并返回 key 的头元素反序列化为 clazz 指定的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
+     * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+     *
+     * @param key
+     *         key
+     * @param timeout
+     *         超时时间
+     * @param clazz
+     *         值对象类
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化为 clazz 指定的对象。
+     *
+     * @see java.lang.Class
+     */
     <V> List<V> blPopObject(final String key, final int timeout, final Class<V> clazz);
 
+    /**
+     * 移除并返回 key 的头元素反序列化为 clazz 指定的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
+     * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+     *
+     * @param key
+     *         key
+     * @param timeout
+     *         超时时间
+     * @param clazz
+     *         值对象类
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化为 clazz 指定的对象。
+     *
+     * @see java.lang.Class
+     */
     <V> List<V> blPopObject(final byte[] key, final int timeout, final Class<V> clazz);
 
+    /**
+     * 移除并返回 key 的头元素反序列化为 type 指定的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
+     * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+     *
+     * @param key
+     *         key
+     * @param timeout
+     *         超时时间
+     * @param type
+     *         值类型引用
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化为 type 指定的对象。
+     *
+     * @see com.fasterxml.jackson.core.type.TypeReference
+     */
     <V> List<V> blPopObject(final String key, final int timeout, final TypeReference<V> type);
 
-    <V> List<V> blPopObject(final byte[] key, final int timeout, final TypeReference<V> type);*/
+    /**
+     * 移除并返回 key 的头元素反序列化为 type 指定的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
+     * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+     *
+     * @param key
+     *         key
+     * @param timeout
+     *         超时时间
+     * @param type
+     *         值类型引用
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化为 type 指定的对象。
+     *
+     * @see com.fasterxml.jackson.core.type.TypeReference
+     */
+    <V> List<V> blPopObject(final byte[] key, final int timeout, final TypeReference<V> type);
 
     /**
      * 移除并返回列表 key 的尾元素，并反序列化为对象
@@ -852,6 +946,260 @@ public interface ListOperations extends ListCommands, RedisOperations {
      * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值。
      */
     List<byte[]> brPop(final byte[] key, final int timeout);
+
+    /**
+     * 移除并返回列表中 key 的尾元素反序列化后的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
+     * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+     *
+     * @param key
+     *         key
+     * @param timeout
+     *         超时时间
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化后的对象。
+     */
+    <V> List<V> brPopObject(final String key, final int timeout);
+
+    /**
+     * 移除并返回列表中 key 的尾元素反序列化后的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
+     * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+     *
+     * @param key
+     *         key
+     * @param timeout
+     *         超时时间
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值反序列化后的对象。
+     */
+    <V> List<V> brPopObject(final byte[] key, final int timeout);
+
+    /**
+     * 移除并返回列表中 key 的尾元素反序列化为 clazz 指定的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
+     * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+     *
+     * @param key
+     *         key
+     * @param timeout
+     *         超时时间
+     * @param clazz
+     *         值对象类
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值序列化为 clazz 指定的对象。
+     *
+     * @see java.lang.Class
+     */
+    <V> List<V> brPopObject(final String key, final int timeout, final Class<V> clazz);
+
+    /**
+     * 移除并返回列表中 key 的尾元素反序列化为 clazz 指定的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
+     * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+     *
+     * @param key
+     *         key
+     * @param timeout
+     *         超时时间
+     * @param clazz
+     *         值对象类
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值序列化为 clazz 指定的对象。
+     *
+     * @see java.lang.Class
+     */
+    <V> List<V> brPopObject(final byte[] key, final int timeout, final Class<V> clazz);
+
+    /**
+     * 移除并返回列表中 key 的尾元素反序列化为 type 指定的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
+     * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+     *
+     * @param key
+     *         key
+     * @param timeout
+     *         超时时间
+     * @param type
+     *         值类型引用
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值序列化为 type 指定的对象。
+     *
+     * @see com.fasterxml.jackson.core.type.TypeReference
+     */
+    <V> List<V> brPopObject(final String key, final int timeout, final TypeReference<V> type);
+
+    /**
+     * 移除并返回列表中 key 的尾元素反序列化为 type 指定的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
+     * 当给定列表内没有任何元素可供弹出的时候，连接将被阻塞，直到等待超时或发现可弹出元素为止
+     *
+     * @param key
+     *         key
+     * @param timeout
+     *         超时时间
+     * @param type
+     *         值类型引用
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值序列化为 type 指定的对象。
+     *
+     * @see com.fasterxml.jackson.core.type.TypeReference
+     */
+    <V> List<V> brPopObject(final byte[] key, final int timeout, final TypeReference<V> type);
+
+    /**
+     * 将列表 source 中的最后尾元素弹出，并返回反序列化后的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+     * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
+     * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+     * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
+     *
+     * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
+     * .html</a></p>
+     *
+     * @param source
+     *         Key
+     * @param destKey
+     *         目标 Key
+     * @param timeout
+     *         超时时间（单位：秒）
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化后的对象 ，第二个等待时长
+     */
+    <V> V brPoplPushObject(final String source, final String destKey, final int timeout);
+
+    /**
+     * 将列表 source 中的最后尾元素弹出，并返回反序列化后的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+     * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
+     * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+     * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
+     *
+     * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
+     * .html</a></p>
+     *
+     * @param source
+     *         Key
+     * @param destKey
+     *         目标 Key
+     * @param timeout
+     *         超时时间（单位：秒）
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化后的对象 ，第二个等待时长
+     */
+    <V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout);
+
+    /**
+     * 将列表 source 中的最后尾元素弹出，并返回反序列化为 clazz 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+     * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
+     * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+     * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
+     *
+     * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
+     * .html</a></p>
+     *
+     * @param source
+     *         Key
+     * @param destKey
+     *         目标 Key
+     * @param timeout
+     *         超时时间（单位：秒）
+     * @param clazz
+     *         值对象类
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化为 clazz 指定的对象 ，第二个等待时长
+     *
+     * @see java.lang.Class
+     */
+    <V> V brPoplPushObject(final String source, final String destKey, final int timeout, final Class<V> clazz);
+
+    /**
+     * 将列表 source 中的最后尾元素弹出，并返回反序列化为 clazz 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+     * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
+     * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+     * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
+     *
+     * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
+     * .html</a></p>
+     *
+     * @param source
+     *         Key
+     * @param destKey
+     *         目标 Key
+     * @param timeout
+     *         超时时间（单位：秒）
+     * @param clazz
+     *         值对象类
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化为 clazz 指定的对象 ，第二个等待时长
+     *
+     * @see java.lang.Class
+     */
+    <V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout, final Class<V> clazz);
+
+    /**
+     * 将列表 source 中的最后尾元素弹出，并返回反序列化为 type 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+     * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
+     * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+     * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
+     *
+     * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
+     * .html</a></p>
+     *
+     * @param source
+     *         Key
+     * @param destKey
+     *         目标 Key
+     * @param timeout
+     *         超时时间（单位：秒）
+     * @param type
+     *         值类型引用
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化为 type 指定的对象 ，第二个等待时长
+     *
+     * @see java.lang.Class
+     */
+    <V> V brPoplPushObject(final String source, final String destKey, final int timeout, final TypeReference<V> type);
+
+    /**
+     * 将列表 source 中的最后尾元素弹出，并返回反序列化为 type 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+     * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
+     * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+     * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
+     *
+     * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
+     * .html</a></p>
+     *
+     * @param source
+     *         Key
+     * @param destKey
+     *         目标 Key
+     * @param timeout
+     *         超时时间（单位：秒）
+     * @param type
+     *         值类型引用
+     * @param <V>
+     *         值类型
+     *
+     * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化为 type 指定的对象 ，第二个等待时长
+     *
+     * @see java.lang.Class
+     */
+    <V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout, final TypeReference<V> type);
 
     /**
      * 将值 value 插入到列表 key 的表尾
