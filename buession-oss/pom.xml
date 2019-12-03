@@ -7,7 +7,7 @@
 		<groupId>com.buession</groupId>
 		<artifactId>buession-parent</artifactId>
 		<relativePath>../buession-parent</relativePath>
-		<version>1.0.2</version>
+		<version>1.1.0</version>
 	</parent>
 	<artifactId>buession-oss</artifactId>
 	<url>https://github.com/buession/buessionframework</url>
@@ -52,11 +52,6 @@
 			<artifactId>aliyun-sdk-oss</artifactId>
 			<version>3.7.0</version>
 			<scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
 		</dependency>
 
 		<dependency>

@@ -24,7 +24,6 @@
  */
 package com.buession.redis;
 
-import com.buession.core.Status;
 import com.buession.core.utils.Assert;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.RedisConnection;
