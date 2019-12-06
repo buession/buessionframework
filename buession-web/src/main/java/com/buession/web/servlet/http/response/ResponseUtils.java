@@ -46,25 +46,25 @@ public class ResponseUtils {
 
     public final static void httpCache(final HttpServletResponse response, final int lifetime){
         if(response != null){
-            long expiresAt = System.currentTimeMillis() + lifetime;
-            httpCache(response, lifetime, expiresAt);
+            Date date = new Date(System.currentTimeMillis() + lifetime * 1000);
+            httpCache(response, lifetime, date);
         }
     }
 
     public final static void httpCache(final HttpServletResponse response, final Date date){
         if(response != null){
             long maxAge = date.getTime() - System.currentTimeMillis();
-            httpCache(response, maxAge, date.getTime());
+            httpCache(response, maxAge, date);
         }
     }
 
-    private final static void httpCache(final HttpServletResponse response, final long maxAge, final long expires){
+    private final static void httpCache(final HttpServletResponse response, final long maxAge, final Date expires){
         if(maxAge <= 0){
             response.setHeader("Cache-Control", "no-cache");
         }else{
             response.setHeader("Cache-Control", "max-age=" + maxAge);
         }
-        response.setIntHeader("Expires", (int) expires);
+        response.setDateHeader("Expires", expires.getTime());
         response.setHeader("Pragma", maxAge > 0 ? null : "no-cache");
     }
 
