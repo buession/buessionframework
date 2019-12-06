@@ -39,6 +39,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @ResponseHeader(name = "Expires")
+@Deprecated
 public @interface EnableHttpCache {
 
     /**

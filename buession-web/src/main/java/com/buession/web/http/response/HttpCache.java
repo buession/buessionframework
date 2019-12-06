@@ -22,13 +22,28 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.handler;
+package com.buession.web.http.response;
 
-import com.buession.web.http.response.DisableHttpCache;
+import org.springframework.core.annotation.AliasFor;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Yong.Teng
  */
-public interface DisableHttpCacheAnnotationHandler extends WebAnnotationHandler<DisableHttpCache> {
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@ResponseHeader(name = "Expires")
+public @interface HttpCache {
+
+    /**
+     * Alias for {@link ResponseHeader#value()}.
+     */
+    @AliasFor(annotation = ResponseHeader.class) String value() default "";
 
 }

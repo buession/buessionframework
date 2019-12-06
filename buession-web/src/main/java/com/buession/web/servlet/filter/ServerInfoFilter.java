@@ -26,6 +26,7 @@
  */
 package com.buession.web.servlet.filter;
 
+import com.buession.web.http.response.ServerInfoFilterInterface;
 import com.buession.web.utils.ServerUtils;
 
 import java.util.LinkedHashMap;
@@ -34,9 +35,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class ServerInfoFilter extends ResponseHeadersFilter {
-
-    public final static String SERVER_NAME_HEADER_NAME = "Server-Name";
+public class ServerInfoFilter extends ResponseHeadersFilter implements ServerInfoFilterInterface {
 
     private static Map<String, String> headers = null;
 
@@ -53,7 +52,7 @@ public class ServerInfoFilter extends ResponseHeadersFilter {
     @Override
     public Map<String, String> getHeaders(){
         if(headers == null){
-            headers = new LinkedHashMap<>();
+            headers = new LinkedHashMap<>(1);
 
             headers.put(getHeaderName(), format(ServerUtils.getHostName()));
         }

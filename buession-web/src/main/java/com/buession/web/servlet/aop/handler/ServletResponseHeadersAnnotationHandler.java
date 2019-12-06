@@ -76,9 +76,13 @@ public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHea
             HttpServletResponse response = httpServlet.getResponse();
             for(ResponseHeader header : headers){
                 if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(header.name()) == true){
-                    ResponseUtils.httpCache(response, Integer.parseInt(header.value()));
+                    if(Validate.isNumeric(header.value())){
+                        ResponseUtils.httpCache(response, Integer.parseInt(header.value()));
+                    }else{
+                        ResponseUtils.httpCache(response, header.value());
+                    }
                 }else{
-                    response.addHeader(header.name(), header.value());
+                    response.setHeader(header.name(), header.value());
                 }
             }
         }

@@ -78,7 +78,11 @@ public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHe
 
             for(ResponseHeader header : headers){
                 if(EXPIRES.equalsIgnoreCase(header.name()) == true){
-                    ResponseUtils.httpCache(response, Integer.parseInt(header.value()));
+                    if(Validate.isNumeric(header.value())){
+                        ResponseUtils.httpCache(response, Integer.parseInt(header.value()));
+                    }else{
+                        ResponseUtils.httpCache(response, header.value());
+                    }
                 }else{
                     httpHeaders.set(header.name(), header.value());
                 }

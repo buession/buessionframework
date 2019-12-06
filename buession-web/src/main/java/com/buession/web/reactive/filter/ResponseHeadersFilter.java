@@ -62,9 +62,7 @@ public class ResponseHeadersFilter implements WebFilter {
         Map<String, String> headers = getHeaders();
         if(Validate.isEmpty(headers) == false){
             HttpHeaders httpHeaders = exchange.getResponse().getHeaders();
-            headers.forEach((name, value)->{
-                httpHeaders.set(name, value);
-            });
+            httpHeaders.setAll(headers);
         }
 
         return chain.filter(exchange);

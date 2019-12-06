@@ -22,13 +22,13 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.handler;
-
-import com.buession.web.http.response.EnableHttpCache;
+package com.buession.web.http.response;
 
 /**
  * @author Yong.Teng
  */
-public interface EnableHttpCacheAnnotationHandler extends WebAnnotationHandler<EnableHttpCache> {
+public interface ServerInfoFilterInterface {
+
+    String SERVER_NAME_HEADER_NAME = "Server-Name";
 
 }

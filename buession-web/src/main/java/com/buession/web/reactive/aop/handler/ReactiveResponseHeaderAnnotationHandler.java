@@ -25,6 +25,7 @@
 package com.buession.web.reactive.aop.handler;
 
 import com.buession.aop.MethodInvocation;
+import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractResponseHeaderAnnotationHandler;
 import com.buession.web.http.response.ResponseHeader;
 import com.buession.web.reactive.aop.AopUtils;
@@ -33,6 +34,7 @@ import com.buession.web.reactive.http.response.ResponseUtils;
 import com.buession.web.reactive.aop.MethodUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 
 import java.lang.reflect.Method;
 
@@ -66,10 +68,16 @@ public class ReactiveResponseHeaderAnnotationHandler extends AbstractResponseHea
             return;
         }
 
+        ServerHttpResponse response = serverHttp.getResponse();
+
         if(EXPIRES.equalsIgnoreCase(responseHeader.name()) == true){
-            ResponseUtils.httpCache(serverHttp.getResponse(), Integer.parseInt(responseHeader.value()));
+            if(Validate.isNumeric(responseHeader.value())){
+                ResponseUtils.httpCache(response, Integer.parseInt(responseHeader.value()));
+            }else{
+                ResponseUtils.httpCache(response, responseHeader.value());
+            }
         }else{
-            serverHttp.getResponse().getHeaders().set(responseHeader.name(), responseHeader.value());
+            response.getHeaders().set(responseHeader.name(), responseHeader.value());
         }
     }
 

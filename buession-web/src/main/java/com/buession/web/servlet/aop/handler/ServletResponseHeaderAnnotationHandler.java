@@ -25,6 +25,7 @@
 package com.buession.web.servlet.aop.handler;
 
 import com.buession.aop.MethodInvocation;
+import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractResponseHeaderAnnotationHandler;
 import com.buession.web.http.HttpHeader;
 import com.buession.web.http.response.ResponseHeader;
@@ -35,6 +36,7 @@ import com.buession.web.servlet.http.response.ResponseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
 /**
@@ -67,10 +69,16 @@ public class ServletResponseHeaderAnnotationHandler extends AbstractResponseHead
             return;
         }
 
+        HttpServletResponse response = httpServlet.getResponse();
+
         if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(responseHeader.name()) == true){
-            ResponseUtils.httpCache(httpServlet.getResponse(), Integer.parseInt(responseHeader.value()));
+            if(Validate.isNumeric(responseHeader.value())){
+                ResponseUtils.httpCache(response, Integer.parseInt(responseHeader.value()));
+            }else{
+                ResponseUtils.httpCache(response, responseHeader.value());
+            }
         }else{
-            httpServlet.getResponse().addHeader(responseHeader.name(), responseHeader.value());
+            response.setHeader(responseHeader.name(), responseHeader.value());
         }
     }
 
