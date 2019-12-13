@@ -93,9 +93,10 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
     }
 
     protected final String annotationCacheKey(final MethodInvocation mi, final Class<A> annotation){
-        final StringBuffer sb = new StringBuffer();
+        final String miStr = mi.toString();
+        final StringBuffer sb = new StringBuffer(miStr.length() + annotation.getName() + 1);
 
-        sb.append(mi.toString()).append('_').append(annotation.getName());
+        sb.append(miStr).append('_').append(annotation.getName());
 
         return sb.toString();
     }

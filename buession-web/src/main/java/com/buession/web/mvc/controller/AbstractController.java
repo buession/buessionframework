@@ -72,7 +72,7 @@ public abstract class AbstractController implements Controller {
     }
 
     protected <E> Response<E> responseFailure(final MessageObject message, final Exception e){
-        StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer(message.getText().length() + e.getMessage().length() + 4);
 
         sb.append(message.getText()).append(": ").append(e.getMessage());
 

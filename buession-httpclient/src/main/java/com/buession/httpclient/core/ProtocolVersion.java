@@ -86,7 +86,7 @@ public class ProtocolVersion {
 
     @Override
     public String toString(){
-        final StringBuilder buffer = new StringBuilder();
+        final StringBuilder buffer = new StringBuilder(32);
 
         buffer.append(protocol);
         buffer.append('/');

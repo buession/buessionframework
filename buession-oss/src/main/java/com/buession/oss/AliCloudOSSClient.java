@@ -90,7 +90,7 @@ public class AliCloudOSSClient extends AbstractOSSClient {
     public Result crop(final String bucketName, final String path, final int width, final int height, final int x,
                        final int y){
         final String objectKey = path.startsWith("/") ? path.substring(1) : path;
-        final StringBuilder sbStyle = new StringBuilder();
+        final StringBuffer sbStyle = new StringBuffer(64);
         final Formatter styleFormatter = new Formatter(sbStyle);
 
         sbStyle.append("image/crop");
@@ -153,7 +153,7 @@ public class AliCloudOSSClient extends AbstractOSSClient {
 
     @Override
     protected String getDefaultBaseUrl(final String bucketName){
-        final StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer(128);
 
         sb.append("https://");
         sb.append(bucketName);

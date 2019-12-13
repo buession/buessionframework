@@ -90,7 +90,7 @@ public class File extends java.io.File {
         FileReader reader = new FileReader(this);
 
         BufferedReader bufferedReader = new BufferedReader(reader);
-        StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer((int) length());
         String line;
 
         while((line = bufferedReader.readLine()) != null){

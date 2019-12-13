@@ -77,11 +77,13 @@ public abstract class AbstractConverter<M, S extends AbstractRecord, R extends A
     }
 
     private final static String getLanguageTag(final Locale locale, final char separator){
-        StringBuffer sb = new StringBuffer();
+        final String language = locale.getLanguage();
+        final String country = locale.getCountry();
+        StringBuffer sb = new StringBuffer(language.length() + country.length() + 1);
 
-        sb.append(locale.getLanguage());
+        sb.append(language);
         sb.append(separator);
-        sb.append(locale.getCountry());
+        sb.append(country);
 
         return sb.toString();
     }

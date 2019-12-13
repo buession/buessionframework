@@ -98,9 +98,11 @@ public abstract class AbstractAnnotationMethodAdvice<A extends Annotation> exten
     }
 
     protected final String annotationCacheKey(final Object object, final Method method, final Class<A> annotation){
-        final StringBuffer sb = new StringBuffer();
+        final String objectName = object.toString();
+        final StringBuffer sb = new StringBuffer(objectName.length() + method.getName().length()+annotation.getName()
+                .length() + 4);
 
-        sb.append(object.toString()).append("::").append(method.getName());
+        sb.append(objectName).append("::").append(method.getName());
         sb.append('_').append(annotation.getName());
 
         return sb.toString();

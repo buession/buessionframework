@@ -291,7 +291,7 @@ public class ArrayUtils {
 
         String glueSep = glue == null ? DEFAULT_GLUE : glue;
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(a.length);
         int iMax = a.length - 1;
 
         for(int i = 0; ; i++){

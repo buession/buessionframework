@@ -169,7 +169,7 @@ public class SogouParser extends AbstractParser {
             }
 
             StringBuffer buffer = new StringBuffer();
-            Map<String, Set<String>> wordMap = new LinkedHashMap<>();
+            Map<String, Set<String>> wordMap = new LinkedHashMap<>(128);
 
             while(true){
                 int size = readUnsignedShort(input);

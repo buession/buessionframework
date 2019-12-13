@@ -34,8 +34,9 @@ import java.net.UnknownHostException;
  */
 public class GlobalUtils {
 
+    private final static long mask[] = {0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000};
+
     public final static String long2ip(long l){
-        long mask[] = {0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000};
         long j = 0;
         StringBuffer sb = new StringBuffer();
 

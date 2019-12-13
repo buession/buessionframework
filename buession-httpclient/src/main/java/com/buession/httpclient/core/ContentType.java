@@ -74,7 +74,7 @@ public final class ContentType {
 
     @Override
     public String toString(){
-        StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer(mimeType.length() + 16);
 
         sb.append(mimeType);
 
@@ -91,7 +91,7 @@ public final class ContentType {
             return null;
         }
 
-        StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer(contentType.getMimeType().length() + 16);
 
         sb.append(contentType.getMimeType());
 

@@ -44,7 +44,7 @@ public abstract class AbstractEnumSetTypeHandler<E extends Enum<E>> extends Abst
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, Set<E> parameter, JdbcType jdbcType) throws
             SQLException{
-        final StringBuffer sb = new StringBuffer();
+        final StringBuffer sb = new StringBuffer(parameter.size() * 2 -1);
         int j = 0;
 
         for(Enum e : parameter){
@@ -67,8 +67,8 @@ public abstract class AbstractEnumSetTypeHandler<E extends Enum<E>> extends Abst
             return null;
         }
 
-        HashSet<E> data = new HashSet<>();
         String[] temp = str.split(",");
+        HashSet<E> data = new HashSet<>(temp.length);
 
         for(String s : temp){
             data.add(getValue(s));

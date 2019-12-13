@@ -63,12 +63,14 @@ public class AopAllianceUtils {
 
             @Override
             public String toString(){
-                StringBuffer sb = new StringBuffer();
+                final String thisName = implSpecificMethodInvocation.getThis().getClass().getName();
+                final String thisMethod = implSpecificMethodInvocation.getMethod().toString();
+                final StringBuffer sb = new StringBuffer(thisName.length() + thisMethod.length() + 24);
 
                 sb.append("Method invocation [");
-                sb.append(implSpecificMethodInvocation.getThis().getClass().getName());
+                sb.append(thisName);
                 sb.append("::");
-                sb.append(implSpecificMethodInvocation.getMethod());
+                sb.append(thisMethod);
                 sb.append("()]");
 
                 return sb.toString();

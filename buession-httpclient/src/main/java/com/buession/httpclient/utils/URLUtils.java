@@ -55,9 +55,10 @@ public class URLUtils {
         }
 
         String encoded = URLEncoder.encode(value, encoding);
-        StringBuilder sb = new StringBuilder();
+        int encodedLength = encoded.length();
+        StringBuilder sb = new StringBuilder(encodedLength + 16);
 
-        for(int i = 0; i < encoded.length(); i++){
+        for(int i = 0; i < encodedLength; i++){
             char c = encoded.charAt(i);
 
             if(c == '+'){
@@ -117,7 +118,7 @@ public class URLUtils {
     }
 
     public final static String determineRequestUrl(final String url, final Map<String, Object> parameters){
-        final StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder(url.length());
 
         sb.append(url);
 

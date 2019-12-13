@@ -550,9 +550,10 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
     }
 
     protected String getStatement(final String dml){
-        final StringBuffer sb = new StringBuffer();
+        final String statement = getStatement();
+        final StringBuffer sb = new StringBuffer(statement.length() + dml.length() + 1);
 
-        sb.append(getStatement());
+        sb.append(statement);
         sb.append('.');
         sb.append(dml);
 

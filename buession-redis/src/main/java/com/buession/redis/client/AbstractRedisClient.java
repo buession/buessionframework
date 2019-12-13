@@ -131,7 +131,7 @@ public abstract class AbstractRedisClient implements RedisClient {
     }
 
     private final static String commandParametersToSting(final OperationsCommandArguments arguments){
-        StringBuilder sb = new StringBuilder();
+        StringBuffer sb = new StringBuffer();
 
         if(Validate.isEmpty(arguments.getParameters()) == false){
             int i = 0;

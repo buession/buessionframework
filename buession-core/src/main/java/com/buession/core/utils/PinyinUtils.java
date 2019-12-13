@@ -86,7 +86,7 @@ public class PinyinUtils {
             outputFormat.setCaseType(HanyuPinyinCaseType.UPPERCASE);
         }
 
-        StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer(str.length());
 
         try{
             for(char c : str.toCharArray()){
@@ -117,7 +117,7 @@ public class PinyinUtils {
             return str;
         }
 
-        StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer(str.length());
 
         for(char c : str.toCharArray()){
             String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c);

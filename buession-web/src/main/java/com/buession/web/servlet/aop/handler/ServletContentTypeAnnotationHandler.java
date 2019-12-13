@@ -67,7 +67,7 @@ public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnno
             return;
         }
 
-        StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer(contentType.mime().length() + 24);
 
         sb.append(contentType.mime());
 

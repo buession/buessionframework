@@ -118,7 +118,7 @@ public class VersionUtils {
         }
 
         int length = version.length();
-        StringBuffer sb = new StringBuffer();
+        StringBuffer sb = new StringBuffer(length + 4);
 
         for(int i = 0; i < length; i++){
             char c = version.charAt(i);

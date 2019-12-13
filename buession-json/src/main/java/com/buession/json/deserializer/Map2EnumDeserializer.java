@@ -123,13 +123,16 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
     }
 
     private final static String parseCacheKey(final Class<?> clazz, final Field field, final JsonNode node){
-        final StringBuffer sb = new StringBuffer();
+        final String className = clazz.getName();
+        final String fieldName = field.getName();
+        final String nodeName = node.toString();
+        final StringBuffer sb = new StringBuffer(className.length() + fieldName.length() + nodeName.length() + 2);
 
-        sb.append(clazz.getName());
+        sb.append(className);
         sb.append('_');
-        sb.append(field.getName());
+        sb.append(fieldName);
         sb.append('_');
-        sb.append(node.toString());
+        sb.append(nodeName);
 
         return sb.toString();
     }
