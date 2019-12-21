@@ -122,4 +122,5 @@ public class Response {
                 statusText + '\'' + ", statusLine=" + statusLine + ", headers=" + headers + ", inputStream=" +
                 inputStream + ", body='" + body + '\'' + ", contentLength=" + contentLength + '}';
     }
+
 }

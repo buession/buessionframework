@@ -24,18 +24,18 @@
  */
 package com.buession.httpclient.core;
 
-import com.buession.core.utils.Assert;
-
 /**
  * @author Yong.Teng
  */
-public class ProtocolVersion {
+public enum ProtocolVersion {
 
-    public final static ProtocolVersion HTTP_1_0 = new ProtocolVersion("http", 1, 0);
+    HTTP_0_9("http", 0, 9),
 
-    public final static ProtocolVersion HTTP_1_1 = new ProtocolVersion("http", 1, 1);
+    HTTP_1_0("http", 1, 0),
 
-    public final static ProtocolVersion HTTP_2_0 = new ProtocolVersion("http", 2, 0);
+    HTTP_1_1("http", 1, 1),
+
+    HTTP_2_0("http", 2, 0);
 
     protected String protocol;
 
@@ -43,16 +43,8 @@ public class ProtocolVersion {
 
     protected int minor;
 
-    public ProtocolVersion(){
-
-    }
-
-    public ProtocolVersion(String protocol, int major, int minor){
-        this(major, minor);
+    ProtocolVersion(String protocol, int major, int minor){
         this.protocol = protocol;
-    }
-
-    public ProtocolVersion(int major, int minor){
         this.major = major;
         this.minor = minor;
     }
@@ -61,40 +53,59 @@ public class ProtocolVersion {
         return protocol;
     }
 
-    public void setProtocol(String protocol){
-        Assert.isBlank(protocol, "Protocol name cloud not be null or empty.");
-        this.protocol = protocol;
-    }
-
     public int getMajor(){
         return major;
-    }
-
-    public void setMajor(int major){
-        Assert.isNegative(major, "Protocol major version cloud not be negative.");
-        this.major = major;
     }
 
     public int getMinor(){
         return minor;
     }
 
-    public void setMinor(int minor){
-        Assert.isNegative(major, "Protocol minor version cloud not be negative.");
-        this.minor = minor;
+    public final static ProtocolVersion createInstance(String protocol, int major, int minor){
+        if("http".equalsIgnoreCase(protocol) == false){
+            throw new IllegalArgumentException("Unknown protocol: " + protocol);
+        }
+
+        switch(major){
+            case 0:
+                switch(minor){
+                    case 9:
+                        return HTTP_0_9;
+                    default:
+                        throw new IllegalArgumentException("Unknown protocol minor: " + minor);
+                }
+            case 1:
+                switch(minor){
+                    case 0:
+                        return HTTP_1_0;
+                    case 1:
+                        return HTTP_1_1;
+                    default:
+                        throw new IllegalArgumentException("Unknown protocol minor: " + minor);
+                }
+            case 2:
+                switch(minor){
+                    case 0:
+                        return HTTP_2_0;
+                    default:
+                        throw new IllegalArgumentException("Unknown protocol minor: " + minor);
+                }
+            default:
+                throw new IllegalArgumentException("Unknown protocol major: " + major);
+        }
     }
 
     @Override
     public String toString(){
-        final StringBuilder buffer = new StringBuilder(32);
+        final StringBuilder sb = new StringBuilder();
 
-        buffer.append(protocol);
-        buffer.append('/');
-        buffer.append(Integer.toString(major));
-        buffer.append('.');
-        buffer.append(Integer.toString(minor));
+        sb.append(protocol);
+        sb.append('/');
+        sb.append(major);
+        sb.append('.');
+        sb.append(minor);
 
-        return buffer.toString();
+        return sb.toString();
     }
 
 }

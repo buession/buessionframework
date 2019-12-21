@@ -52,7 +52,7 @@ public class HttpComponentsResponseBuilder extends AbstractResponseBuilder {
         final org.apache.http.StatusLine responseStatusLine = httpResponse.getStatusLine();
         final org.apache.http.ProtocolVersion httpResponseProtocolVersion = responseStatusLine.getProtocolVersion();
 
-        responseBuilder.setProtocolVersion(new ProtocolVersion(httpResponseProtocolVersion.getProtocol(),
+        responseBuilder.setProtocolVersion(ProtocolVersion.createInstance(httpResponseProtocolVersion.getProtocol(),
                 httpResponseProtocolVersion.getMajor(), httpResponseProtocolVersion.getMinor()));
         responseBuilder.setStatusCode(responseStatusLine.getStatusCode());
         responseBuilder.setStatusText(responseStatusLine.getReasonPhrase());

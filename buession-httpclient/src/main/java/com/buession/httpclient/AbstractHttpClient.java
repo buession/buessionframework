@@ -27,7 +27,7 @@ package com.buession.httpclient;
 import com.buession.core.utils.Assert;
 import com.buession.httpclient.conn.ConnectionManager;
 import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.HttpVersion;
+import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.Response;
@@ -48,7 +48,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 
     private ConnectionManager connectionManager;
 
-    private HttpVersion httpVersion;
+    private ProtocolVersion httpVersion;
 
     /**
      * 构造函数
@@ -89,12 +89,12 @@ public abstract class AbstractHttpClient implements HttpClient {
     }
 
     @Override
-    public HttpVersion getHttpVersion(){
+    public ProtocolVersion getHttpVersion(){
         return httpVersion;
     }
 
     @Override
-    public void setHttpVersion(HttpVersion httpVersion){
+    public void setHttpVersion(ProtocolVersion httpVersion){
         this.httpVersion = httpVersion;
     }
 

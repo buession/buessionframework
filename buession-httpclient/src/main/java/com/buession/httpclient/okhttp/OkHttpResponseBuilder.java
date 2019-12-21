@@ -67,7 +67,7 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder {
             }
         }
 
-        responseBuilder.setProtocolVersion(new ProtocolVersion(protocolName, majorVersion, minorVersion));
+        responseBuilder.setProtocolVersion(ProtocolVersion.createInstance(protocolName, majorVersion, minorVersion));
 
         Headers responseHeaders = httpResponse.headers();
         if(responseHeaders != null){

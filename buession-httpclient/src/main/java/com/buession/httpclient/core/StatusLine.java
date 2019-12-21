@@ -61,4 +61,37 @@ public class StatusLine {
         this.statusText = statusText;
     }
 
+    @Override
+    public int hashCode(){
+        int result = 16;
+
+        result = 32 * result + statusCode;
+        result = 32 * result + (statusText == null ? 0 : statusText.hashCode());
+
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        if(obj == this){
+            return true;
+        }
+
+        if((obj instanceof StatusLine) == false){
+            return false;
+        }
+
+        StatusLine that = (StatusLine) obj;
+        return that.getStatusCode() == getStatusCode();
+    }
+
+    @Override
+    public String toString(){
+        final StringBuffer sb = new StringBuffer();
+
+        sb.append(statusCode).append(" ").append(statusText);
+
+        return sb.toString();
+    }
+
 }

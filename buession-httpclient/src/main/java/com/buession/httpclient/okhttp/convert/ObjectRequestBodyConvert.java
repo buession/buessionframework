@@ -51,7 +51,7 @@ public class ObjectRequestBodyConvert implements RequestBodyConvert<ObjectFormRe
 
         try{
             String str = objectMapper.writeValueAsString(source.getContent());
-            return okhttp3.RequestBody.create(MediaType.parse(ContentType.APPLICATION_JSON.valueOf()), str);
+            return okhttp3.RequestBody.create(str, MediaType.parse(ContentType.APPLICATION_JSON.valueOf()));
         }catch(JsonProcessingException e){
             logger.error("{} convert to JSON String error.", RequestBody.class.getName(), e);
         }
