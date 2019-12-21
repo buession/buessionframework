@@ -27,7 +27,6 @@
 package com.buession.geoip.converter;
 
 import com.buession.geoip.model.Continent;
-import com.buession.geoip.utils.GlobalUtils;
 import com.maxmind.geoip2.model.AbstractResponse;
 
 import java.util.Locale;
@@ -46,8 +45,7 @@ public class ContinentConverter extends AbstractConverter<Continent, com.maxmind
 
         final String name = getName(continent.getNames(), locale);
 
-        return new Continent(GlobalUtils.getInteger(continent.getGeoNameId()), continent.getCode(), continent.getName
-                (), name);
+        return new Continent(continent.getGeoNameId(), continent.getCode(), continent.getName(), name);
     }
 
     @Override

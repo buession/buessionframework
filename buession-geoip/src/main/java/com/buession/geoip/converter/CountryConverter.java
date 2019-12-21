@@ -28,7 +28,6 @@ package com.buession.geoip.converter;
 
 import com.buession.geoip.model.Country;
 import com.buession.geoip.utils.CountryDict;
-import com.buession.geoip.utils.GlobalUtils;
 import com.maxmind.geoip2.model.CountryResponse;
 
 import java.util.Locale;
@@ -45,10 +44,11 @@ public class CountryConverter extends AbstractConverter<Country, com.maxmind.geo
         }
 
         final String name = getName(country.getNames(), locale);
-        final String fullName = CountryDict.COUNTRY_FULLNAME.get(country.getIsoCode());
+        final String fullName = country.getIsoCode() == null ? null : CountryDict.COUNTRY_FULLNAME.get(country
+                .getIsoCode());
 
-        return new Country(GlobalUtils.getInteger(country.getGeoNameId()), GlobalUtils.getInteger(country
-                .getConfidence()), country.getIsoCode(), country.getName(), name, fullName);
+        return new Country(country.getGeoNameId(), country.getConfidence(), country.getIsoCode(), country.getName(),
+                name, fullName);
     }
 
     @Override

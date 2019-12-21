@@ -28,7 +28,6 @@ package com.buession.geoip.converter;
 
 import com.buession.geoip.model.District;
 import com.buession.geoip.model.Postal;
-import com.buession.geoip.utils.GlobalUtils;
 import com.maxmind.geoip2.model.CityResponse;
 
 import java.util.Locale;
@@ -58,8 +57,7 @@ public class CityConverter extends AbstractConverter<District, com.maxmind.geoip
         final District parent = response == null ? null : subdivisionConverter.converter(response
                 .getLeastSpecificSubdivision(), response, locale);
 
-        return new District(GlobalUtils.getInteger(city.getGeoNameId()), GlobalUtils.getInteger(city.getConfidence())
-                , city.getName(), name, postal, parent);
+        return new District(city.getGeoNameId(), city.getConfidence(), city.getName(), name, postal, parent);
     }
 
 }

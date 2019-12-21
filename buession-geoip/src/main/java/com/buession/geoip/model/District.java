@@ -37,9 +37,9 @@ public final class District implements Serializable {
 
     private final static long serialVersionUID = -8098424244620246891L;
 
-    private final int geoNameId;
+    private final Integer geoNameId;
 
-    private final int code;
+    private final Integer code;
 
     private final String originalName;
 
@@ -51,8 +51,8 @@ public final class District implements Serializable {
 
     private final District parent;
 
-    public District(final int geoNameId, final int code, final String originalName, final String name, final Postal
-            postal, final District parent){
+    public District(final Integer geoNameId, final Integer code, final String originalName, final String name, final
+    Postal postal, final District parent){
         this.geoNameId = geoNameId;
         this.code = code;
         this.originalName = originalName;
@@ -67,11 +67,11 @@ public final class District implements Serializable {
         }
     }
 
-    public int getGeoNameId(){
+    public Integer getGeoNameId(){
         return geoNameId;
     }
 
-    public int getCode(){
+    public Integer getCode(){
         return code;
     }
 

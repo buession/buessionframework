@@ -37,9 +37,9 @@ public final class Country implements Serializable {
 
     private final static long serialVersionUID = -7665239490542479833L;
 
-    private final int geoNameId;
+    private final Integer geoNameId;
 
-    private final int confidence;
+    private final Integer confidence;
 
     private final String code;
 
@@ -49,8 +49,8 @@ public final class Country implements Serializable {
 
     private final String fullName;
 
-    public Country(final int geoNameId, final int confidence, final String code, final String originalName, final
-    String name, final String fullName){
+    public Country(final Integer geoNameId, final Integer confidence, final String code, final String originalName,
+                   final String name, final String fullName){
         this.geoNameId = geoNameId;
         this.confidence = confidence;
         this.code = code;
@@ -59,11 +59,11 @@ public final class Country implements Serializable {
         this.fullName = fullName;
     }
 
-    public int getGeoNameId(){
+    public Integer getGeoNameId(){
         return geoNameId;
     }
 
-    public int getConfidence(){
+    public Integer getConfidence(){
         return confidence;
     }
 

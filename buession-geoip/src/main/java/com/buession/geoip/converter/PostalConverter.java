@@ -27,7 +27,6 @@
 package com.buession.geoip.converter;
 
 import com.buession.geoip.model.Postal;
-import com.buession.geoip.utils.GlobalUtils;
 import com.maxmind.geoip2.model.CityResponse;
 
 import java.util.Locale;
@@ -44,11 +43,7 @@ public class PostalConverter extends AbstractConverter<Postal, com.maxmind.geoip
 
     @Override
     public Postal converter(com.maxmind.geoip2.record.Postal postal, CityResponse response, Locale locale){
-        if(postal == null){
-            return null;
-        }
-
-        return new Postal(postal.getCode(), GlobalUtils.getInteger(postal.getConfidence()));
+        return postal == null ? null : new Postal(postal.getCode(), postal.getConfidence());
     }
 
 }

@@ -63,8 +63,4 @@ public class GlobalUtils {
         }
     }
 
-    public final static int getInteger(final Integer v){
-        return v == null ? 0 : v;
-    }
-
 }

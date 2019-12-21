@@ -37,7 +37,7 @@ public final class Continent implements Serializable {
 
     private final static long serialVersionUID = -5463257987682894006L;
 
-    private final int geoNameId;
+    private final Integer geoNameId;
 
     private final String code;
 
@@ -45,14 +45,14 @@ public final class Continent implements Serializable {
 
     private final String name;
 
-    public Continent(final int geoNameId, final String code, final String originalName, final String name){
+    public Continent(final Integer geoNameId, final String code, final String originalName, final String name){
         this.geoNameId = geoNameId;
         this.code = code;
         this.originalName = originalName;
         this.name = name;
     }
 
-    public int getGeoNameId(){
+    public Integer getGeoNameId(){
         return geoNameId;
     }
 
@@ -73,4 +73,5 @@ public final class Continent implements Serializable {
         return "Continent{" + "geoNameId=" + geoNameId + ", code='" + code + '\'' + ", originalName='" + originalName
                 + '\'' + ", name='" + name + '\'' + '}';
     }
+
 }

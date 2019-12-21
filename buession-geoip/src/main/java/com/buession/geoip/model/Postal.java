@@ -37,9 +37,9 @@ public class Postal implements Serializable {
 
     private final String code;
 
-    private final int confidence;
+    private final Integer confidence;
 
-    public Postal(final String code, final int confidence){
+    public Postal(final String code, final Integer confidence){
         this.code = code;
         this.confidence = confidence;
     }
@@ -48,7 +48,7 @@ public class Postal implements Serializable {
         return code;
     }
 
-    public int getConfidence(){
+    public Integer getConfidence(){
         return confidence;
     }
 

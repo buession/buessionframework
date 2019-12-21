@@ -27,12 +27,10 @@
 package com.buession.geoip.converter;
 
 import com.buession.geoip.model.District;
-import com.buession.geoip.utils.GlobalUtils;
 import com.maxmind.geoip2.model.CityResponse;
 import com.maxmind.geoip2.record.Subdivision;
 
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * @author Yong.Teng
@@ -60,8 +58,8 @@ public class SubdivisionConverter extends AbstractConverter<District, com.maxmin
             }
         }
 
-        return new District(GlobalUtils.getInteger(subdivision.getGeoNameId()), GlobalUtils.getInteger(subdivision
-                .getConfidence()), subdivision.getName(), name, null, parent);
+        return new District(subdivision.getGeoNameId(), subdivision.getConfidence(), subdivision.getName(), name,
+                null, parent);
     }
 
     private static District converter(Subdivision subdivision, CityResponse response, Locale locale, boolean isPrivate){
@@ -69,12 +67,11 @@ public class SubdivisionConverter extends AbstractConverter<District, com.maxmin
             return null;
         }
 
-        final Map<String, String> names = subdivision.getNames();
         final String name = getName(subdivision.getNames(), locale);
         District parent = null;
 
-        return new District(GlobalUtils.getInteger(subdivision.getGeoNameId()), GlobalUtils.getInteger(subdivision
-                .getConfidence()), subdivision.getName(), name, null, parent);
+        return new District(subdivision.getGeoNameId(), subdivision.getConfidence(), subdivision.getName(), name,
+                null, parent);
     }
 
 }

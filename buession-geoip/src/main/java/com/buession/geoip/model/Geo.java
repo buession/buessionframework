@@ -37,27 +37,27 @@ public final class Geo implements Serializable {
 
     private final static long serialVersionUID = 3166412069316195061L;
 
-    private final double latitude;
+    private final Double latitude;
 
-    private final double longitude;
+    private final Double longitude;
 
-    private final int accuracyRadius;
+    private final Integer accuracyRadius;
 
-    public Geo(final double latitude, final double longitude, final int accuracyRadius){
+    public Geo(final Double latitude, final Double longitude, final Integer accuracyRadius){
         this.latitude = latitude;
         this.longitude = longitude;
         this.accuracyRadius = accuracyRadius;
     }
 
-    public double getLatitude(){
+    public Double getLatitude(){
         return latitude;
     }
 
-    public double getLongitude(){
+    public Double getLongitude(){
         return longitude;
     }
 
-    public int getAccuracyRadius(){
+    public Integer getAccuracyRadius(){
         return accuracyRadius;
     }
 

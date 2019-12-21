@@ -44,16 +44,15 @@ public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip
             return null;
         }
 
-        final String isp = traits.getIsp();
-        final Organization organization = new Organization(traits.getOrganization());
-        final Organization autonomousSystemOrganization = new Organization(traits.getAutonomousSystemOrganization());
-        final int autonomousSystemNumber = traits.getAutonomousSystemNumber() == null ? 0 : traits
-                .getAutonomousSystemNumber();
+        final Organization organization = traits.getOrganization() == null ? null : new Organization(traits
+                .getOrganization());
+        final Organization autonomousSystemOrganization = traits.getAutonomousSystemOrganization() == null ? null :
+                new Organization(traits.getAutonomousSystemOrganization());
 
-        return new Traits(traits.getIpAddress(), traits.getDomain(), isp, organization, autonomousSystemOrganization,
-                autonomousSystemNumber, traits.isAnonymous(), traits.isAnonymousProxy(), traits.isAnonymousVpn(),
-                traits.isHostingProvider(), traits.isLegitimateProxy(), traits.isPublicProxy(), traits
-                .isSatelliteProvider(), traits.isTorExitNode());
+        return new Traits(traits.getIpAddress(), traits.getDomain(), traits.getIsp(), organization,
+                autonomousSystemOrganization, traits.getAutonomousSystemNumber(), traits.isAnonymous(), traits
+                .isAnonymousProxy(), traits.isAnonymousVpn(), traits.isHostingProvider(), traits.isLegitimateProxy(),
+                traits.isPublicProxy(), traits.isSatelliteProvider(), traits.isTorExitNode());
     }
 
     @Override

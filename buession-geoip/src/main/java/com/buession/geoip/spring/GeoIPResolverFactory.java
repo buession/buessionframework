@@ -25,7 +25,6 @@
 package com.buession.geoip.spring;
 
 import com.buession.core.utils.Assert;
-import com.buession.geoip.DatabaseResolver;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
@@ -38,11 +37,9 @@ import java.nio.file.Path;
  */
 public class GeoIPResolverFactory {
 
-    public final static InputStream DEFAULT_STREAM = DatabaseResolver.class.getResourceAsStream("/maxmind/City.mmdb");
-
     private File dbPath;
 
-    private InputStream stream = DEFAULT_STREAM;
+    private InputStream stream;
 
     private LoadMode loadMode = LoadMode.STREAM;
 
@@ -80,6 +77,10 @@ public class GeoIPResolverFactory {
     }
 
     public InputStream getStream(){
+        if(stream == null){
+            stream = GeoIPResolverFactory.class.getResourceAsStream("/maxmind/City.mmdb");
+        }
+
         return stream;
     }
 

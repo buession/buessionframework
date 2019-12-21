@@ -193,8 +193,7 @@ public class DatabaseResolver extends AbstractResolver {
         final Country country = countryConverter.converter(response.getCountry(), locale);
         final District district = cityConverter.converter(response.getCity(), response, locale);
         final Traits traits = traitsConverter.converter(response.getTraits(), locale);
-        final Geo geo = new Geo(location.getLatitude(), location.getLongitude(), GlobalUtils.getInteger(location
-                .getAccuracyRadius()));
+        final Geo geo = new Geo(location.getLatitude(), location.getLongitude(), location.getAccuracyRadius());
         final TimeZone timeZone = location.getTimeZone() == null ? null : TimeZone.getTimeZone(location.getTimeZone());
 
         return new Location(continent, country, district, traits, geo, timeZone);

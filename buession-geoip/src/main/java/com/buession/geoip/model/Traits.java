@@ -47,7 +47,7 @@ public final class Traits implements Serializable {
 
     private final Organization autonomousSystemOrganization;
 
-    private final int autonomousSystemNumber;
+    private final Integer autonomousSystemNumber;
 
     private final boolean isAnonymous;
 
@@ -66,8 +66,8 @@ public final class Traits implements Serializable {
     private final boolean isTorExitNode;
 
     public Traits(final String ipAddress, final String domain, final String isp, final Organization organization,
-                  final Organization autonomousSystemOrganization, final int autonomousSystemNumber, final boolean
-                          isAnonymous, final boolean isAnonymousProxy, final boolean isAnonymousVpn, final boolean
+                  final Organization autonomousSystemOrganization, final Integer autonomousSystemNumber, final
+                  boolean isAnonymous, final boolean isAnonymousProxy, final boolean isAnonymousVpn, final boolean
                           isHostingProvider, final boolean isLegitimateProxy, final boolean isPublicProxy, final
                   boolean isSatelliteProvider, final boolean isTorExitNode){
         this.ipAddress = ipAddress;
@@ -106,7 +106,7 @@ public final class Traits implements Serializable {
         return autonomousSystemOrganization;
     }
 
-    public int getAutonomousSystemNumber(){
+    public Integer getAutonomousSystemNumber(){
         return autonomousSystemNumber;
     }
 
