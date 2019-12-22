@@ -141,9 +141,9 @@ public class VelocityView extends AbstractTemplateView {
                     VelocityConfig.class, true, false);
             return velocityConfig.getVelocityEngine();
         }catch(NoSuchBeanDefinitionException ex){
-            throw new ApplicationContextException("Must define a single VelocityConfig bean in this web application " +
-                    "context " + "(may be inherited): VelocityConfigurer is the usual implementation. " + "This bean " +
-                    "may be given any name.", ex);
+            throw new ApplicationContextException("Must define a single VelocityConfig bean in this web application "
+                    + "context (may be inherited): VelocityConfigurer is the usual implementation. " + "This bean " +
+                    "may" + " be given any name.", ex);
         }
     }
 
@@ -163,7 +163,6 @@ public class VelocityView extends AbstractTemplateView {
     @Override
     protected void renderMergedTemplateModel(Map<String, Object> model, HttpServletRequest request,
                                              HttpServletResponse response) throws Exception{
-
         exposeHelpers(model, request);
 
         Context velocityContext = createVelocityContext(model, request, response);
@@ -186,14 +185,12 @@ public class VelocityView extends AbstractTemplateView {
 
     protected Context createVelocityContext(Map<String, Object> model, HttpServletRequest request,
                                             HttpServletResponse response) throws Exception{
-
         return createVelocityContext(model);
     }
 
     protected Context createVelocityContext(Map<String, Object> model) throws Exception{
         return new VelocityContext(model);
     }
-
 
     protected void exposeToolAttributes(Context velocityContext, HttpServletRequest request) throws Exception{
         // Expose generic attributes.

@@ -24,9 +24,13 @@
  */
 package com.buession.core.utils;
 
+import org.springframework.lang.Nullable;
+
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.UndeclaredThrowableException;
 
 /**
  * @author Yong.Teng
@@ -71,6 +75,53 @@ public class ReflectUtils {
      */
     public final static boolean isStaticMethod(Method method){
         return method != null && Modifier.isStatic(method.getModifiers());
+    }
+
+    /**
+     * 给对象属性的赋于新值
+     *
+     * @param object
+     *         对象
+     * @param field
+     *         属性
+     * @param value
+     *         值
+     */
+    public final static void setField(@Nullable Object object, @Nullable Field field, Object value){
+        setFieldAccessible(field);
+        try{
+            field.set(object, value);
+        }catch(IllegalAccessException ex){
+            handleReflectionException(ex);
+        }
+    }
+
+    public static void handleReflectionException(Exception ex){
+        if(ex instanceof NoSuchMethodException){
+            throw new IllegalStateException("Method not found: " + ex.getMessage());
+        }else if(ex instanceof IllegalAccessException){
+            throw new IllegalStateException("Could not access method or field: " + ex.getMessage());
+        }else if(ex instanceof InvocationTargetException){
+            handleInvocationTargetException((InvocationTargetException) ex);
+        }else if(ex instanceof RuntimeException){
+            throw (RuntimeException) ex;
+        }else{
+            throw new UndeclaredThrowableException(ex);
+        }
+    }
+
+    protected final static void handleInvocationTargetException(InvocationTargetException ex){
+        rethrowRuntimeException(ex.getTargetException());
+    }
+
+    protected final static void rethrowRuntimeException(Throwable ex){
+        if(ex instanceof RuntimeException){
+            throw (RuntimeException) ex;
+        }else if(ex instanceof Error){
+            throw (Error) ex;
+        }else{
+            throw new UndeclaredThrowableException(ex);
+        }
     }
 
 }

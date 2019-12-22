@@ -43,17 +43,17 @@ public class VelocityLayoutView extends VelocityToolboxView {
     /**
      * The default {@link #setLayoutUrl(String) layout url}.
      */
-    public static final String DEFAULT_LAYOUT_URL = "layout.vm";
+    public final static String DEFAULT_LAYOUT_URL = "layout.vm";
 
     /**
      * The default {@link #setLayoutKey(String) layout key}.
      */
-    public static final String DEFAULT_LAYOUT_KEY = "layout";
+    public final static String DEFAULT_LAYOUT_KEY = "layout";
 
     /**
      * The default {@link #setScreenContentKey(String) screen content key}.
      */
-    public static final String DEFAULT_SCREEN_CONTENT_KEY = "screen_content";
+    public final static String DEFAULT_SCREEN_CONTENT_KEY = "screen_content";
 
     private String layoutUrl = DEFAULT_LAYOUT_URL;
 

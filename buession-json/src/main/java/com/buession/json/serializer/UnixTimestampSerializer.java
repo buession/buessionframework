@@ -39,8 +39,6 @@ import java.util.Date;
 @JacksonStdImpl
 public class UnixTimestampSerializer extends DateTimeSerializerBase<Date> {
 
-    public static final UnixTimestampSerializer instance = new UnixTimestampSerializer();
-
     public UnixTimestampSerializer(){
         this(null, null);
     }

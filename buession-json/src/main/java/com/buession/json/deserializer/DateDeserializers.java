@@ -86,8 +86,9 @@ public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.
                             timestamp = p.getLongValue();
                         }catch(JsonParseException e){
                             Number v = (Number) context.handleWeirdNumberValue(_valueClass, p.getNumberValue(), "not " +
-                                    "" + "" + "" + "" + "a valid 64-bit long for creating `java.util.Date`", new
-                                    Object[0]);
+                                    "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                                    "" + "" + "" + "" + "a " + "valid " + "64-bit " + "long " + "for " + "creating "
+                                    + "`java" + "" + ".util" + "" + ".Date`", new Object[0]);
                             timestamp = v.longValue();
                         }
 
