@@ -31,11 +31,14 @@ import com.buession.core.Pagination;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author Yong.Teng
  */
 public abstract class AbstractDao<P, E> implements Dao<P, E> {
+
+    protected final static Random RANDOM = new Random();
 
     /**
      * 批量插入数据

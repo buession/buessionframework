@@ -29,14 +29,11 @@ package com.buession.dao;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import javax.annotation.Resource;
 
@@ -481,8 +478,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
         }else if(slaveSqlSessionTemplates.size() == 1){
             return getSlaveSqlSessionTemplate(0);
         }else{
-            Random random = new Random();
-            int index = random.nextInt(slaveSqlSessionTemplates.size());
+            int index = RANDOM.nextInt(slaveSqlSessionTemplates.size());
 
             return getSlaveSqlSessionTemplate(index);
         }

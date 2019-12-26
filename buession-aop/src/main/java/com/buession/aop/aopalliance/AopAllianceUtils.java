@@ -71,7 +71,7 @@ public class AopAllianceUtils {
                 sb.append(thisName);
                 sb.append("::");
                 sb.append(thisMethod);
-                sb.append("()]");
+                sb.append("]");
 
                 return sb.toString();
             }

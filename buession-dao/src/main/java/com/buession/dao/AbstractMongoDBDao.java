@@ -47,7 +47,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * @author Yong.Teng
@@ -532,8 +531,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
         }else if(slaveMongoTemplates.size() == 1){
             return getSlaveMongoTemplate(0);
         }else{
-            Random random = new Random();
-            int index = random.nextInt(slaveMongoTemplates.size());
+            int index = RANDOM.nextInt(slaveMongoTemplates.size());
 
             return getSlaveMongoTemplate(index);
         }

@@ -57,6 +57,8 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 
     private final static int CLEAN_CACHE_DIVISOR = 15;
 
+    private final static Random RANDOM = new Random();
+
     public CacheDatabaseResolver(final String database) throws IOException{
         super(database);
     }
@@ -220,12 +222,10 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 
     private final static <O> void cleanCache(Map<String, O> cacheData){
         if(Validate.isEmpty(cacheData) == false){
-            Random random = new Random();
-
             /**
              * 随机清理
              */
-            if(random.nextInt(cacheData.size()) % CLEAN_CACHE_DIVISOR == 0){
+            if(RANDOM.nextInt(cacheData.size()) % CLEAN_CACHE_DIVISOR == 0){
                 cacheData.clear();
             }
         }

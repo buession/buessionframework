@@ -38,7 +38,7 @@ public abstract class AbstractAdvice implements Advice {
 
     @Override
     public Object invoke(Object target, Method method, Object[] arguments) throws Throwable{
-        logger.debug("Invoke advice method {}::()", target.getClass().getName(), method.getName());
+        logger.debug("Invoke advice method {}::{}", target.getClass().getName(), method);
         return doInvoke(target, method, arguments);
     }
 
