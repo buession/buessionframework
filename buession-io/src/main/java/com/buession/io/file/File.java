@@ -38,7 +38,7 @@ import java.net.URI;
  */
 public class File extends java.io.File {
 
-    private static final long serialVersionUID = 1512573860637989192L;
+    private final static long serialVersionUID = 1512573860637989192L;
 
     /**
      * @param parent
