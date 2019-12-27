@@ -37,8 +37,6 @@ public final class ContentType {
 
     public final static ContentType APPLICATION_JSON = new ContentType("application/json", StandardCharsets.UTF_8);
 
-    public final static ContentType TEXT_JSON = new ContentType("text/json", StandardCharsets.UTF_8);
-
     public final static ContentType TEXT_PLAIN = new ContentType("text/plain", Charset.defaultCharset());
 
     public final static ContentType APPLICATION_FORM_URLENCODED = new ContentType

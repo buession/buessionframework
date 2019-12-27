@@ -1378,44 +1378,45 @@ public abstract class AbstractHttpClient implements HttpClient {
             ReadTimeoutException, RequestAbortedException, RequestException{
         Assert.isBlank(url, "Request url could not be null or empty.");
 
-        if(requestMethod == RequestMethod.POST){
-            return post(url, data, parameters, headers);
-        }else if(requestMethod == RequestMethod.PUT){
-            return put(url, data, parameters, headers);
-        }else if(requestMethod == RequestMethod.PATCH){
-            return patch(url, data, parameters, headers);
-        }else if(requestMethod == RequestMethod.DELETE){
-            return delete(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.CONNECT){
-            return connect(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.TRACE){
-            return trace(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.COPY){
-            return copy(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.MOVE){
-            return move(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.HEAD){
-            return head(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.OPTIONS){
-            return options(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.LINK){
-            return link(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.UNLINK){
-            return unlink(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.PURGE){
-            return purge(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.LOCK){
-            return lock(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.UNLOCK){
-            return unlock(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.PROPFIND){
-            return propfind(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.VIEW){
-            return view(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.WRAPPED){
-            return wrapped(url, parameters, headers);
-        }else{
-            return get(url, parameters, headers);
+        switch(requestMethod){
+            case POST:
+                return post(url, data, parameters, headers);
+            case PUT:
+                return put(url, data, parameters, headers);
+            case PATCH:
+                return patch(url, data, parameters, headers);
+            case DELETE:
+                return delete(url, parameters, headers);
+            case CONNECT:
+                return connect(url, parameters, headers);
+            case TRACE:
+                return trace(url, parameters, headers);
+            case COPY:
+                return copy(url, parameters, headers);
+            case MOVE:
+                return move(url, parameters, headers);
+            case HEAD:
+                return head(url, parameters, headers);
+            case OPTIONS:
+                return options(url, parameters, headers);
+            case LINK:
+                return link(url, parameters, headers);
+            case UNLINK:
+                return unlink(url, parameters, headers);
+            case PURGE:
+                return purge(url, parameters, headers);
+            case LOCK:
+                return lock(url, parameters, headers);
+            case UNLOCK:
+                return unlock(url, parameters, headers);
+            case PROPFIND:
+                return propfind(url, parameters, headers);
+            case VIEW:
+                return view(url, parameters, headers);
+            case WRAPPED:
+                return wrapped(url, parameters, headers);
+            default:
+                return get(url, parameters, headers);
         }
     }
 
@@ -1425,44 +1426,45 @@ public abstract class AbstractHttpClient implements HttpClient {
             ReadTimeoutException, RequestAbortedException, RequestException{
         Assert.isNull(url, "Request url could not be null.");
 
-        if(requestMethod == RequestMethod.POST){
-            return post(url, data, parameters, headers);
-        }else if(requestMethod == RequestMethod.PUT){
-            return put(url, data, parameters, headers);
-        }else if(requestMethod == RequestMethod.PATCH){
-            return patch(url, data, parameters, headers);
-        }else if(requestMethod == RequestMethod.DELETE){
-            return delete(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.CONNECT){
-            return connect(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.TRACE){
-            return trace(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.COPY){
-            return copy(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.MOVE){
-            return move(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.HEAD){
-            return head(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.OPTIONS){
-            return options(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.LINK){
-            return link(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.UNLINK){
-            return unlink(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.PURGE){
-            return purge(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.LOCK){
-            return lock(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.UNLOCK){
-            return unlock(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.PROPFIND){
-            return propfind(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.VIEW){
-            return view(url, parameters, headers);
-        }else if(requestMethod == RequestMethod.WRAPPED){
-            return wrapped(url, parameters, headers);
-        }else{
-            return get(url, parameters, headers);
+        switch(requestMethod){
+            case POST:
+                return post(url, data, parameters, headers);
+            case PUT:
+                return put(url, data, parameters, headers);
+            case PATCH:
+                return patch(url, data, parameters, headers);
+            case DELETE:
+                return delete(url, parameters, headers);
+            case CONNECT:
+                return connect(url, parameters, headers);
+            case TRACE:
+                return trace(url, parameters, headers);
+            case COPY:
+                return copy(url, parameters, headers);
+            case MOVE:
+                return move(url, parameters, headers);
+            case HEAD:
+                return head(url, parameters, headers);
+            case OPTIONS:
+                return options(url, parameters, headers);
+            case LINK:
+                return link(url, parameters, headers);
+            case UNLINK:
+                return unlink(url, parameters, headers);
+            case PURGE:
+                return purge(url, parameters, headers);
+            case LOCK:
+                return lock(url, parameters, headers);
+            case UNLOCK:
+                return unlock(url, parameters, headers);
+            case PROPFIND:
+                return propfind(url, parameters, headers);
+            case VIEW:
+                return view(url, parameters, headers);
+            case WRAPPED:
+                return wrapped(url, parameters, headers);
+            default:
+                return get(url, parameters, headers);
         }
     }
 
