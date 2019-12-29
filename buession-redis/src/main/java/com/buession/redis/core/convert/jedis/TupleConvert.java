@@ -36,38 +36,45 @@ import java.util.Set;
 public class TupleConvert implements Convert<Tuple, redis.clients.jedis.Tuple> {
 
     @Override
-    public redis.clients.jedis.Tuple convert(Tuple source){
-        if(source == null){
-            return null;
-        }
-        return null;
+    public redis.clients.jedis.Tuple convert(final Tuple source){
+        return source == null ? null : new redis.clients.jedis.Tuple(source.getBinaryElement(), source.getScore());
     }
 
     @Override
-    public Tuple deconvert(redis.clients.jedis.Tuple target){
-        return target == null ? null : new Tuple(target.getElement(), target.getScore());
+    public Tuple deconvert(final redis.clients.jedis.Tuple target){
+        return target == null ? null : new Tuple(target.getBinaryElement(), target.getScore());
     }
 
-    public final static class SetTupleConvert implements Convert<Set<Tuple>, Set<redis.clients.jedis.Tuple>> {
+    public static class SetTupleConvert implements Convert<Set<Tuple>, Set<redis.clients.jedis.Tuple>> {
 
         @Override
-        public Set<redis.clients.jedis.Tuple> convert(Set<Tuple> source){
-            return null;
+        public Set<redis.clients.jedis.Tuple> convert(final Set<Tuple> source){
+            if(source == null){
+                return null;
+            }
+
+            final Set<redis.clients.jedis.Tuple> result = new LinkedHashSet<>(source.size());
+
+            for(Tuple e : source){
+                result.add(new redis.clients.jedis.Tuple(e.getElement(), e.getScore()));
+            }
+
+            return result;
         }
 
         @Override
-        public Set<Tuple> deconvert(Set<redis.clients.jedis.Tuple> target){
+        public Set<Tuple> deconvert(final Set<redis.clients.jedis.Tuple> target){
             if(target == null){
                 return null;
-            }else{
-                final Set<Tuple> result = new LinkedHashSet<>(target.size());
-
-                for(redis.clients.jedis.Tuple e : target){
-                    result.add(new Tuple(e.getElement(), e.getScore()));
-                }
-
-                return result;
             }
+
+            final Set<Tuple> result = new LinkedHashSet<>(target.size());
+
+            for(redis.clients.jedis.Tuple e : target){
+                result.add(new Tuple(e.getElement(), e.getScore()));
+            }
+
+            return result;
         }
     }
 

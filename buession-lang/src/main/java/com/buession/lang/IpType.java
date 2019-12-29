@@ -22,44 +22,15 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
-
-import com.buession.redis.core.command.GeoCommands;
-import com.buession.redis.core.convert.Convert;
-import redis.clients.jedis.GeoUnit;
+package com.buession.lang;
 
 /**
  * @author Yong.Teng
  */
-public class GeoUnitConvert implements Convert<GeoCommands.GeoUnit, GeoUnit> {
+public enum IpType {
 
-    @Override
-    public GeoUnit convert(GeoCommands.GeoUnit source){
-        if(source == GeoCommands.GeoUnit.M){
-            return GeoUnit.M;
-        }else if(source == GeoCommands.GeoUnit.KM){
-            return GeoUnit.KM;
-        }else if(source == GeoCommands.GeoUnit.MI){
-            return GeoUnit.MI;
-        }else if(source == GeoCommands.GeoUnit.FT){
-            return GeoUnit.FT;
-        }else{
-            return null;
-        }
-    }
+    IP_V4,
 
-    @Override
-    public GeoCommands.GeoUnit deconvert(GeoUnit target){
-        if(target == GeoUnit.M){
-            return GeoCommands.GeoUnit.M;
-        }else if(target == GeoUnit.KM){
-            return GeoCommands.GeoUnit.KM;
-        }else if(target == GeoUnit.MI){
-            return GeoCommands.GeoUnit.MI;
-        }else if(target == GeoUnit.FT){
-            return GeoCommands.GeoUnit.FT;
-        }else{
-            return null;
-        }
-    }
+    IP_V6
+
 }

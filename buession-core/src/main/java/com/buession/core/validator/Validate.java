@@ -32,7 +32,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.buession.core.IpType;
 import com.buession.core.validator.routines.EmailValidator;
 import com.buession.core.validator.routines.IDCardValidator;
 import com.buession.core.validator.routines.ISBNValidator;
@@ -41,6 +40,7 @@ import com.buession.core.validator.routines.MobileValidator;
 import com.buession.core.validator.routines.PostCodeValidator;
 import com.buession.core.validator.routines.QQValidator;
 import com.buession.core.validator.routines.TelValidator;
+import com.buession.lang.IpType;
 
 /**
  * 数据验证类
@@ -245,9 +245,7 @@ public class Validate {
      */
     public final static boolean hasText(final CharSequence charSequence){
         if(isEmpty(charSequence) == false){
-            int length = charSequence.length();
-
-            for(int i = 0; i < length; i++){
+            for(int i = 0, j = charSequence.length(); i < j; i++){
                 if(Character.isWhitespace(charSequence.charAt(i)) == false){
                     return true;
                 }
@@ -407,7 +405,7 @@ public class Validate {
             return false;
         }
 
-        for(int i = 0; i < charSequence.length(); i++){
+        for(int i = 0, j = charSequence.length(); i < j; i++){
             if(isAlpha(charSequence.charAt(i)) == false){
                 return false;
             }
@@ -441,7 +439,7 @@ public class Validate {
             return false;
         }
 
-        for(int i = 0; i < charSequence.length(); i++){
+        for(int i = 0, j = charSequence.length(); i < j; i++){
             if(isNumeric(charSequence.charAt(i)) == false){
                 return false;
             }
@@ -499,7 +497,7 @@ public class Validate {
             return false;
         }
 
-        for(int i = 0; i < charSequence.length(); i++){
+        for(int i = 0, j = charSequence.length(); i < j; i++){
             if(isAlnum(charSequence.charAt(i)) == false){
                 return false;
             }
@@ -533,7 +531,7 @@ public class Validate {
             return false;
         }
 
-        for(int i = 0; i < charSequence.length(); i++){
+        for(int i = 0, j = charSequence.length(); i < j; i++){
             if(isXdigit(charSequence.charAt(i)) == false){
                 return false;
             }

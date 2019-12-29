@@ -24,7 +24,7 @@
  */
 package com.buession.core.validator.annotation;
 
-import com.buession.core.ISBNType;
+import com.buession.lang.ISBNType;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

@@ -35,25 +35,26 @@ public class HttpConnect extends HttpRequestBase {
 
     public final static String METHOD_NAME = RequestMethod.CONNECT.name();
 
-    public HttpConnect() {
+    public HttpConnect(){
         super();
     }
 
-    public HttpConnect(final URI uri) {
+    public HttpConnect(final URI uri){
         super();
         setURI(uri);
     }
 
     /**
-     * @throws IllegalArgumentException if the uri is invalid.
+     * @throws IllegalArgumentException
+     *         if the uri is invalid.
      */
-    public HttpConnect(final String uri) {
+    public HttpConnect(final String uri){
         super();
         setURI(URI.create(uri));
     }
 
     @Override
-    public String getMethod() {
+    public String getMethod(){
         return METHOD_NAME;
     }
 

@@ -24,9 +24,9 @@
  */
 package com.buession.redis.core.command;
 
+import com.buession.lang.KeyValue;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
-import com.buession.redis.core.types.KeyValue;
 
 import java.util.List;
 import java.util.Map;

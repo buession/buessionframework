@@ -26,9 +26,9 @@
  */
 package com.buession.core.validator.routines;
 
-import com.buession.core.IpType;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
+import com.buession.lang.IpType;
 
 /**
  * IP 验证器

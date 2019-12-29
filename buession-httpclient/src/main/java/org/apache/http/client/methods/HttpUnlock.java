@@ -35,25 +35,26 @@ public class HttpUnlock extends HttpRequestBase {
 
     public final static String METHOD_NAME = RequestMethod.UNLOCK.name();
 
-    public HttpUnlock() {
+    public HttpUnlock(){
         super();
     }
 
-    public HttpUnlock(final URI uri) {
+    public HttpUnlock(final URI uri){
         super();
         setURI(uri);
     }
 
     /**
-     * @throws IllegalArgumentException if the uri is invalid.
+     * @throws IllegalArgumentException
+     *         if the uri is invalid.
      */
-    public HttpUnlock(final String uri) {
+    public HttpUnlock(final String uri){
         super();
         setURI(URI.create(uri));
     }
 
     @Override
-    public String getMethod() {
+    public String getMethod(){
         return METHOD_NAME;
     }
 

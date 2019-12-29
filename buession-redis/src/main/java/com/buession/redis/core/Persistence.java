@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core;
 
-import com.buession.core.Status;
+import com.buession.lang.Status;
 
 import java.util.Date;
 
@@ -587,14 +587,15 @@ public class Persistence {
         return "Persistence{" + "loading=" + loading + ", rdbChangesSinceLastSave=" + rdbChangesSinceLastSave + ", "
                 + "rdbBgSaveInProgress=" + rdbBgSaveInProgress + ", rdbLastSaveTime=" + rdbLastSaveTime + ", " +
                 "rdbLastBgSaveStatus=" + rdbLastBgSaveStatus + ", rdbLastBgSaveTimeSec=" + rdbLastBgSaveTimeSec + ", " +
-                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "rdbCurrentBgSaveTimeSec=" +
-                rdbCurrentBgSaveTimeSec + ", " + "aofEnabled=" + aofEnabled + ", " + "aofRewriteInProgress=" +
-                aofRewriteInProgress + ", " + "aofRewriteScheduled=" + aofRewriteScheduled + ", " + "" +
-                "aofLastRewriteTimeSec=" + aofLastRewriteTimeSec + ", " + "aofCurrentRewriteTimeSec=" +
-                aofCurrentRewriteTimeSec + ", " + "aofLastBgRewriteStatus=" + aofLastBgRewriteStatus + ", " +
-                "aofLastWriteStatus=" + aofLastWriteStatus + ", aofCurrentSize=" + aofCurrentSize + ", aofBaseSize="
-                + aofBaseSize + ", " + "aofPendingRewrite=" + aofPendingRewrite + ", " + "aofBufferLength=" +
-                aofBufferLength + ", " + "aofRewriteBufferLength=" + aofRewriteBufferLength + ", " +
-                "aofPendingBioFsync=" + aofPendingBioFsync + ", aofDelayedFsync=" + aofDelayedFsync + '}';
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "rdbCurrentBgSaveTimeSec=" + rdbCurrentBgSaveTimeSec + ", " + "aofEnabled=" + aofEnabled +
+                ", " + "aofRewriteInProgress=" + aofRewriteInProgress + ", " + "aofRewriteScheduled=" +
+                aofRewriteScheduled + ", " + "" + "aofLastRewriteTimeSec=" + aofLastRewriteTimeSec + ", " +
+                "aofCurrentRewriteTimeSec=" + aofCurrentRewriteTimeSec + ", " + "aofLastBgRewriteStatus=" +
+                aofLastBgRewriteStatus + ", " + "aofLastWriteStatus=" + aofLastWriteStatus + ", aofCurrentSize=" +
+                aofCurrentSize + ", aofBaseSize=" + aofBaseSize + ", " + "aofPendingRewrite=" + aofPendingRewrite +
+                ", " + "aofBufferLength=" + aofBufferLength + ", " + "aofRewriteBufferLength=" +
+                aofRewriteBufferLength + ", " + "aofPendingBioFsync=" + aofPendingBioFsync + ", aofDelayedFsync=" +
+                aofDelayedFsync + '}';
     }
 }

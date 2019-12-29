@@ -24,7 +24,7 @@
  * | Copyright @ 2013-2017 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.core;
+package com.buession.lang;
 
 /**
  * @author Yong.Teng

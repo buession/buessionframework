@@ -22,15 +22,35 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.client.jedis;
+
+import com.buession.redis.core.Transaction;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public enum Order {
+public class JedisTransaction implements Transaction {
 
-    ASC,
+    private redis.clients.jedis.Transaction transaction;
 
-    DESC
+    public JedisTransaction(redis.clients.jedis.Transaction transaction){
+        this.transaction = transaction;
+    }
 
+    @Override
+    public List<Object> exec(){
+        return transaction.exec();
+    }
+
+    @Override
+    public String discard(){
+        return transaction.discard();
+    }
+
+    @Override
+    public void close(){
+        transaction.close();
+    }
 }

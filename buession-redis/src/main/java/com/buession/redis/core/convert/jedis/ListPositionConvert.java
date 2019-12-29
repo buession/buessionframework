@@ -34,7 +34,7 @@ import redis.clients.jedis.ListPosition;
 public class ListPositionConvert implements Convert<ListCommands.ListPosition, redis.clients.jedis.ListPosition> {
 
     @Override
-    public redis.clients.jedis.ListPosition convert(ListCommands.ListPosition source){
+    public redis.clients.jedis.ListPosition convert(final ListCommands.ListPosition source){
         if(source == ListCommands.ListPosition.BEFORE){
             return ListPosition.BEFORE;
         }else if(source == ListCommands.ListPosition.AFTER){
@@ -45,7 +45,7 @@ public class ListPositionConvert implements Convert<ListCommands.ListPosition, r
     }
 
     @Override
-    public ListCommands.ListPosition deconvert(redis.clients.jedis.ListPosition target){
+    public ListCommands.ListPosition deconvert(final redis.clients.jedis.ListPosition target){
         if(target == ListPosition.BEFORE){
             return ListCommands.ListPosition.BEFORE;
         }else if(target == ListPosition.AFTER){
@@ -54,4 +54,5 @@ public class ListPositionConvert implements Convert<ListCommands.ListPosition, r
             return null;
         }
     }
+
 }

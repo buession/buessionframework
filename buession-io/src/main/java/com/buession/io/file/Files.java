@@ -46,7 +46,7 @@ import java.util.Set;
  */
 public class Files {
 
-    private final static UserPrincipalLookupService lookupService = FileSystems.getDefault()
+    public final static UserPrincipalLookupService LOOKUP_SERVICE = FileSystems.getDefault()
             .getUserPrincipalLookupService();
 
     /**
@@ -109,7 +109,7 @@ public class Files {
         Assert.isNull(path, "File path cloud not be null.");
         Assert.isNull(group, "Group cloud not be null.");
 
-        GroupPrincipal groupPrincipal = lookupService.lookupPrincipalByGroupName(group);
+        GroupPrincipal groupPrincipal = LOOKUP_SERVICE.lookupPrincipalByGroupName(group);
         PosixFileAttributeView view = java.nio.file.Files.getFileAttributeView(path, PosixFileAttributeView.class,
                 LinkOption.NOFOLLOW_LINKS);
 
@@ -212,9 +212,7 @@ public class Files {
         Assert.isNull(path, "File path cloud not be null.");
         Assert.isNull(owner, "Owner coult not be null.");
 
-        UserPrincipal userPrincipal = lookupService.lookupPrincipalByName(owner);
-
-        java.nio.file.Files.setOwner(path, userPrincipal);
+        java.nio.file.Files.setOwner(path, LOOKUP_SERVICE.lookupPrincipalByName(owner));
     }
 
     /**

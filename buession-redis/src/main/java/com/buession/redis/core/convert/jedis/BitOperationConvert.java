@@ -50,6 +50,17 @@ public class BitOperationConvert implements Convert<BitMapCommands.Operation, Bi
 
     @Override
     public BitMapCommands.Operation deconvert(final BitOP target){
-        return null;
+        if(target == BitOP.AND){
+            return BitMapCommands.Operation.AND;
+        }else if(target == BitOP.OR){
+            return BitMapCommands.Operation.OR;
+        }else if(target == BitOP.NOT){
+            return BitMapCommands.Operation.NOT;
+        }else if(target == BitOP.XOR){
+            return BitMapCommands.Operation.XOR;
+        }else{
+            return null;
+        }
     }
+
 }

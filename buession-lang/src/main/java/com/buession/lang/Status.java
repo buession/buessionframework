@@ -21,17 +21,30 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2015 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.dao;
+package com.buession.lang;
 
 /**
- * 排序方式
- *
  * @author Yong.Teng
  */
-public enum Order {
-    ASC,
-    DESC
+public enum Status {
+
+    SUCCESS,
+
+    FAILURE;
+
+    public final static Status valueOf(final boolean v){
+        return v ? SUCCESS : FAILURE;
+    }
+
+    public final static Status valueOf(final int v){
+        return v == 0 ? FAILURE : SUCCESS;
+    }
+
+    public final static Status valueOf(final long v){
+        return v == 0 ? FAILURE : SUCCESS;
+    }
+
 }

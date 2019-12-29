@@ -35,25 +35,26 @@ public class HttpMove extends HttpRequestBase {
 
     public final static String METHOD_NAME = RequestMethod.MOVE.name();
 
-    public HttpMove() {
+    public HttpMove(){
         super();
     }
 
-    public HttpMove(final URI uri) {
+    public HttpMove(final URI uri){
         super();
         setURI(uri);
     }
 
     /**
-     * @throws IllegalArgumentException if the uri is invalid.
+     * @throws IllegalArgumentException
+     *         if the uri is invalid.
      */
-    public HttpMove(final String uri) {
+    public HttpMove(final String uri){
         super();
         setURI(URI.create(uri));
     }
 
     @Override
-    public String getMethod() {
+    public String getMethod(){
         return METHOD_NAME;
     }
 

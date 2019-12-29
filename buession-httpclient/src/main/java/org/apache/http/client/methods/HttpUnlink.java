@@ -35,25 +35,26 @@ public class HttpUnlink extends HttpRequestBase {
 
     public final static String METHOD_NAME = RequestMethod.UNLINK.name();
 
-    public HttpUnlink() {
+    public HttpUnlink(){
         super();
     }
 
-    public HttpUnlink(final URI uri) {
+    public HttpUnlink(final URI uri){
         super();
         setURI(uri);
     }
 
     /**
-     * @throws IllegalArgumentException if the uri is invalid.
+     * @throws IllegalArgumentException
+     *         if the uri is invalid.
      */
-    public HttpUnlink(final String uri) {
+    public HttpUnlink(final String uri){
         super();
         setURI(URI.create(uri));
     }
 
     @Override
-    public String getMethod() {
+    public String getMethod(){
         return METHOD_NAME;
     }
 

@@ -466,7 +466,7 @@ public abstract class RedisAccessor {
         return result;
     }
 
-    protected interface Executor<R> extends com.buession.redis.core.Executor<RedisClient, R> {
+    protected interface Executor<R> extends com.buession.core.Executor<RedisClient, R> {
 
     }
 

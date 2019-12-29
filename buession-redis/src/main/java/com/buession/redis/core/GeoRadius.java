@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core;
 
-import com.buession.core.Geo;
+import com.buession.lang.Geo;
 import com.buession.redis.Constants;
 
 import java.util.Arrays;

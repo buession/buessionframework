@@ -24,9 +24,9 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.core.Status;
+import com.buession.lang.Order;
+import com.buession.lang.Status;
 import com.buession.redis.core.Limit;
-import com.buession.redis.core.Order;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
 

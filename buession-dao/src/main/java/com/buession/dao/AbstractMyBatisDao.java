@@ -41,6 +41,7 @@ import com.buession.core.utils.Assert;
 import com.buession.core.utils.ReflectUtils;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
+import com.buession.lang.Order;
 import org.apache.ibatis.mapping.ResultMap;
 import org.apache.ibatis.mapping.ResultMapping;
 import org.apache.ibatis.session.RowBounds;

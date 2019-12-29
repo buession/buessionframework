@@ -35,25 +35,26 @@ public class HttpReport extends HttpEntityEnclosingRequestBase {
 
     public final static String METHOD_NAME = RequestMethod.REPORT.name();
 
-    public HttpReport() {
+    public HttpReport(){
         super();
     }
 
-    public HttpReport(final URI uri) {
+    public HttpReport(final URI uri){
         super();
         setURI(uri);
     }
 
     /**
-     * @throws IllegalArgumentException if the uri is invalid.
+     * @throws IllegalArgumentException
+     *         if the uri is invalid.
      */
-    public HttpReport(final String uri) {
+    public HttpReport(final String uri){
         super();
         setURI(URI.create(uri));
     }
 
     @Override
-    public String getMethod() {
+    public String getMethod(){
         return METHOD_NAME;
     }
 

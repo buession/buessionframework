@@ -24,10 +24,15 @@
  */
 package com.buession.redis.core.convert.jedis;
 
-import com.buession.redis.core.Order;
+import com.buession.lang.Order;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.convert.Convert;
+import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.Protocol;
 import redis.clients.jedis.SortingParams;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * @author Yong.Teng
@@ -35,7 +40,7 @@ import redis.clients.jedis.SortingParams;
 public class SortArgumentConvert implements Convert<KeyCommands.SortArgument, SortingParams> {
 
     @Override
-    public SortingParams convert(KeyCommands.SortArgument source){
+    public SortingParams convert(final KeyCommands.SortArgument source){
         if(source == null){
             return null;
         }
@@ -64,7 +69,37 @@ public class SortArgumentConvert implements Convert<KeyCommands.SortArgument, So
     }
 
     @Override
-    public KeyCommands.SortArgument deconvert(SortingParams target){
-        return null;
+    public KeyCommands.SortArgument deconvert(final SortingParams target){
+        if(target == null){
+            return null;
+        }
+
+        final KeyCommands.SortArgument.Builder sortArgumentBuilder = KeyCommands.SortArgument.Builder.create();
+
+        Collection<byte[]> collections = target.getParams();
+        Iterator<byte[]> iterator = collections.iterator();
+
+        while(iterator.hasNext()){
+            byte[] v = iterator.next();
+
+            if(v == Protocol.Keyword.BY.raw){
+                v = iterator.next();
+                sortArgumentBuilder.by(SafeEncoder.encode(v));
+            }else if(v == Protocol.Keyword.ASC.raw){
+                sortArgumentBuilder.asc();
+            }else if(v == Protocol.Keyword.DESC.raw){
+                sortArgumentBuilder.desc();
+            }else if(v == Protocol.Keyword.LIMIT.raw){
+                byte[] start = iterator.next();
+                byte[] end = iterator.next();
+                sortArgumentBuilder.limit(Long.valueOf(SafeEncoder.encode(start)), Long.valueOf(SafeEncoder.encode
+                        (end)));
+            }else if(v == Protocol.Keyword.ALPHA.raw){
+                sortArgumentBuilder.alpha();
+            }
+        }
+
+        return sortArgumentBuilder.build();
     }
+
 }

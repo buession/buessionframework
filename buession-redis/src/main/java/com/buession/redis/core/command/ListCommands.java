@@ -24,8 +24,7 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.core.Status;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.buession.lang.Status;
 
 import java.util.List;
 

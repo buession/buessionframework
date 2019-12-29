@@ -35,25 +35,26 @@ public class HttpCopy extends HttpRequestBase {
 
     public final static String METHOD_NAME = RequestMethod.COPY.name();
 
-    public HttpCopy() {
+    public HttpCopy(){
         super();
     }
 
-    public HttpCopy(final URI uri) {
+    public HttpCopy(final URI uri){
         super();
         setURI(uri);
     }
 
     /**
-     * @throws IllegalArgumentException if the uri is invalid.
+     * @throws IllegalArgumentException
+     *         if the uri is invalid.
      */
-    public HttpCopy(final String uri) {
+    public HttpCopy(final String uri){
         super();
         setURI(URI.create(uri));
     }
 
     @Override
-    public String getMethod() {
+    public String getMethod(){
         return METHOD_NAME;
     }
 

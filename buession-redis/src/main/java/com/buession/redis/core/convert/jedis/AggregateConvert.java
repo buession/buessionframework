@@ -34,7 +34,7 @@ import redis.clients.jedis.ZParams;
 public class AggregateConvert implements Convert<SortedSetCommands.Aggregate, ZParams.Aggregate> {
 
     @Override
-    public ZParams.Aggregate convert(SortedSetCommands.Aggregate source){
+    public ZParams.Aggregate convert(final SortedSetCommands.Aggregate source){
         if(source == SortedSetCommands.Aggregate.MIN){
             return ZParams.Aggregate.MIN;
         }else if(source == SortedSetCommands.Aggregate.MAX){
@@ -47,7 +47,7 @@ public class AggregateConvert implements Convert<SortedSetCommands.Aggregate, ZP
     }
 
     @Override
-    public SortedSetCommands.Aggregate deconvert(ZParams.Aggregate target){
+    public SortedSetCommands.Aggregate deconvert(final ZParams.Aggregate target){
         if(target == ZParams.Aggregate.MIN){
             return SortedSetCommands.Aggregate.MIN;
         }else if(target == ZParams.Aggregate.MAX){
@@ -58,4 +58,5 @@ public class AggregateConvert implements Convert<SortedSetCommands.Aggregate, ZP
             return null;
         }
     }
+
 }

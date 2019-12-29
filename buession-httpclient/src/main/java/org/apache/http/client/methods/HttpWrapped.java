@@ -35,25 +35,26 @@ public class HttpWrapped extends HttpRequestBase {
 
     public final static String METHOD_NAME = RequestMethod.WRAPPED.name();
 
-    public HttpWrapped() {
+    public HttpWrapped(){
         super();
     }
 
-    public HttpWrapped(final URI uri) {
+    public HttpWrapped(final URI uri){
         super();
         setURI(uri);
     }
 
     /**
-     * @throws IllegalArgumentException if the uri is invalid.
+     * @throws IllegalArgumentException
+     *         if the uri is invalid.
      */
-    public HttpWrapped(final String uri) {
+    public HttpWrapped(final String uri){
         super();
         setURI(URI.create(uri));
     }
 
     @Override
-    public String getMethod() {
+    public String getMethod(){
         return METHOD_NAME;
     }
 

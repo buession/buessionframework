@@ -34,7 +34,7 @@ import redis.clients.jedis.params.MigrateParams;
 public class MigrateOperationConvert implements Convert<KeyCommands.MigrateOperation, MigrateParams> {
 
     @Override
-    public MigrateParams convert(KeyCommands.MigrateOperation source){
+    public MigrateParams convert(final KeyCommands.MigrateOperation source){
         if(source == KeyCommands.MigrateOperation.COPY){
             return MigrateParams.migrateParams().copy();
         }else if(source == KeyCommands.MigrateOperation.REPLACE){
@@ -45,7 +45,7 @@ public class MigrateOperationConvert implements Convert<KeyCommands.MigrateOpera
     }
 
     @Override
-    public KeyCommands.MigrateOperation deconvert(MigrateParams target){
+    public KeyCommands.MigrateOperation deconvert(final MigrateParams target){
         if(target.getParam(KeyCommands.MigrateOperation.COPY.name())){
             return KeyCommands.MigrateOperation.COPY;
         }else if(target.getParam(KeyCommands.MigrateOperation.REPLACE.name())){
@@ -54,4 +54,5 @@ public class MigrateOperationConvert implements Convert<KeyCommands.MigrateOpera
             return null;
         }
     }
+
 }

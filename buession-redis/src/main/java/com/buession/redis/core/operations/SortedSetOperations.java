@@ -24,10 +24,8 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.lang.KeyValue;
 import com.buession.redis.core.command.SortedSetCommands;
-import com.buession.redis.core.types.KeyValue;
-
-import java.util.List;
 
 /**
  * 有序集合运算

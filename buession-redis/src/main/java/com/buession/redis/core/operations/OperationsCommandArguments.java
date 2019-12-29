@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.core.utils.ArrayUtils;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -44,6 +46,11 @@ public class OperationsCommandArguments {
 
     public OperationsCommandArguments put(final String key, final Object value){
         parameters.put(key, value);
+        return this;
+    }
+
+    public OperationsCommandArguments put(final String key, final Object... value){
+        parameters.put(key, ArrayUtils.toString(value));
         return this;
     }
 

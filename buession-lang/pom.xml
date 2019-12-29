@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<name>Buession HttpClient</name>
+	<name>Buession Lang</name>
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.buession</groupId>
@@ -9,9 +9,12 @@
 		<relativePath>../buession-parent</relativePath>
 		<version>1.1.0</version>
 	</parent>
-	<artifactId>buession-httpclient</artifactId>
+	<artifactId>buession-lang</artifactId>
 	<url>https://github.com/buession/buessionframework</url>
-	<description>Buession Framework Http Client</description>
+	<description>Buession Framework Lang, a package of Java utility classes for the
+		classes that are in java.lang's hierarchy, or are considered to be so
+		standard as to justify existence in java.lang.
+	</description>
 	<packaging>jar</packaging>
 
 	<organization>
@@ -42,50 +45,6 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.buession</groupId>
-			<artifactId>buession-core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpcore</artifactId>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>com.squareup.okhttp3</groupId>
-			<artifactId>okhttp</artifactId>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-		</dependency>
-
-		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
@@ -97,7 +56,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>buession-httpclient</finalName>
+		<finalName>buession-lang</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

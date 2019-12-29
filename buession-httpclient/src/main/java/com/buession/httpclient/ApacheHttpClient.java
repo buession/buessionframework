@@ -217,7 +217,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
     public Response link(String url, Map<String, Object> parameters, List<Header> headers) throws
             ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
             RequestException{
-        return doRequest(new HttpLink(url),headers, parameters);
+        return doRequest(new HttpLink(url), headers, parameters);
     }
 
     @Override
@@ -283,12 +283,11 @@ public class ApacheHttpClient extends AbstractHttpClient {
         return doRequest(new HttpWrapped(url), headers, parameters);
     }
 
-    protected Response doRequest(final HttpRequestBase httpRequest, final List<Header> headers,
-                                 final Map<String, Object> parameters) throws ConnectTimeoutException,
-            ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
-        final Request request = HttpComponentsRequestBuilder.create(httpRequest).setUrl(httpRequest.getURI().toString())
-                .setParameters
-                (parameters).setHeaders(headers).build();
+    protected Response doRequest(final HttpRequestBase httpRequest, final List<Header> headers, final Map<String,
+            Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
+            RequestAbortedException, RequestException{
+        final Request request = HttpComponentsRequestBuilder.create(httpRequest).setUrl(httpRequest.getURI().toString
+                ()).setParameters(parameters).setHeaders(headers).build();
         final ProtocolVersion httpVersion = getHttpVersion();
 
         httpRequest.setConfig(getRequestConfig());
@@ -326,9 +325,8 @@ public class ApacheHttpClient extends AbstractHttpClient {
         }
     }
 
-    protected Response doRequest(final HttpEntityEnclosingRequestBase httpRequest, final List<Header> headers,
-                                 final Map<String, Object> parameters, final RequestBody data) throws
-            ConnectTimeoutException,
+    protected Response doRequest(final HttpEntityEnclosingRequestBase httpRequest, final List<Header> headers, final
+    Map<String, Object> parameters, final RequestBody data) throws ConnectTimeoutException,
             ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
         return doRequest(httpRequest, headers, parameters);
     }

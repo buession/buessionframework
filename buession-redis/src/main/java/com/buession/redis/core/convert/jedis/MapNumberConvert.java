@@ -37,92 +37,116 @@ public interface MapNumberConvert<K, T extends Number> extends Convert<Map<K, Nu
     class MapNumberFloatConvert<K> implements MapNumberConvert<K, Float> {
 
         @Override
-        public Map<K, Float> convert(Map<K, Number> source){
+        public Map<K, Float> convert(final Map<K, Number> source){
             if(source == null){
                 return null;
-            }else{
-                final Map<K, Float> result = new LinkedHashMap<>(source.size());
-
-                source.forEach((key, value)->{
-                    result.put(key, value.floatValue());
-                });
-
-                return result;
             }
+
+            final Map<K, Float> result = new LinkedHashMap<>(source.size());
+
+            source.forEach((key, value)->result.put(key, value.floatValue()));
+
+            return result;
         }
 
         @Override
-        public Map<K, Number> deconvert(Map<K, Float> target){
-            return null;
+        public Map<K, Number> deconvert(final Map<K, Float> target){
+            if(target == null){
+                return null;
+            }
+
+            final Map<K, Number> result = new LinkedHashMap<>(target.size());
+
+            target.forEach((key, value)->result.put(key, value.floatValue()));
+
+            return result;
         }
     }
 
     class MapNumberDoubleConvert<K> implements MapNumberConvert<K, Double> {
 
         @Override
-        public Map<K, Double> convert(Map<K, Number> source){
+        public Map<K, Double> convert(final Map<K, Number> source){
             if(source == null){
                 return null;
-            }else{
-                final Map<K, Double> result = new LinkedHashMap<>(source.size());
-
-                source.forEach((key, value)->{
-                    result.put(key, value.doubleValue());
-                });
-
-                return result;
             }
+
+            final Map<K, Double> result = new LinkedHashMap<>(source.size());
+
+            source.forEach((key, value)->result.put(key, value.doubleValue()));
+
+            return result;
         }
 
         @Override
-        public Map<K, Number> deconvert(Map<K, Double> target){
-            return null;
+        public Map<K, Number> deconvert(final Map<K, Double> target){
+            if(target == null){
+                return null;
+            }
+
+            final Map<K, Number> result = new LinkedHashMap<>(target.size());
+
+            target.forEach((key, value)->result.put(key, value.doubleValue()));
+
+            return result;
         }
     }
 
     class MapNumberIntegerConvert<K> implements MapNumberConvert<K, Integer> {
 
         @Override
-        public Map<K, Integer> convert(Map<K, Number> source){
+        public Map<K, Integer> convert(final Map<K, Number> source){
             if(source == null){
                 return null;
-            }else{
-                final Map<K, Integer> result = new LinkedHashMap<>(source.size());
-
-                source.forEach((key, value)->{
-                    result.put(key, value.intValue());
-                });
-
-                return result;
             }
+
+            final Map<K, Integer> result = new LinkedHashMap<>(source.size());
+
+            source.forEach((key, value)->result.put(key, value.intValue()));
+
+            return result;
         }
 
         @Override
-        public Map<K, Number> deconvert(Map<K, Integer> target){
-            return null;
+        public Map<K, Number> deconvert(final Map<K, Integer> target){
+            if(target == null){
+                return null;
+            }
+
+            final Map<K, Number> result = new LinkedHashMap<>(target.size());
+
+            target.forEach((key, value)->result.put(key, value.intValue()));
+
+            return result;
         }
     }
 
     class MapNumberLongConvert<K> implements MapNumberConvert<K, Long> {
 
         @Override
-        public Map<K, Long> convert(Map<K, Number> source){
+        public Map<K, Long> convert(final Map<K, Number> source){
             if(source == null){
                 return null;
-            }else{
-                final Map<K, Long> result = new LinkedHashMap<>(source.size());
-
-                source.forEach((key, value)->{
-                    result.put(key, value.longValue());
-                });
-
-                return result;
             }
+
+            final Map<K, Long> result = new LinkedHashMap<>(source.size());
+
+            source.forEach((key, value)->result.put(key, value.longValue()));
+
+            return result;
         }
 
         @Override
-        public Map<K, Number> deconvert(Map<K, Long> target){
-            return null;
+        public Map<K, Number> deconvert(final Map<K, Long> target){
+            if(target == null){
+                return null;
+            }
+
+            final Map<K, Number> result = new LinkedHashMap<>(target.size());
+
+            target.forEach((key, value)->result.put(key, value.longValue()));
+
+            return result;
         }
     }
 

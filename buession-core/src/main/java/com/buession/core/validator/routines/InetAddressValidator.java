@@ -27,6 +27,7 @@
 package com.buession.core.validator.routines;
 
 import com.buession.core.validator.Validate;
+import com.buession.lang.IpType;
 
 /**
  * @author Yong.Teng
@@ -41,10 +42,10 @@ public class InetAddressValidator {
         return isValidInet4Address(charSequence) || isValidInet6Address(charSequence);
     }
 
-    public final static boolean isValid(final CharSequence charSequence, final InetAddressType inetAddressType){
-        if(InetAddressType.INET_4_ADDRESS.equals(inetAddressType) == true){
+    public final static boolean isValid(final CharSequence charSequence, final IpType ipType){
+        if(IpType.IP_V4.equals(ipType) == true){
             return isValidInet4Address(charSequence);
-        }else if(InetAddressType.INET_6_ADDRESS.equals(inetAddressType) == true){
+        }else if(IpType.IP_V6.equals(ipType) == true){
             return isValidInet6Address(charSequence);
         }else{
             return false;
@@ -141,14 +142,6 @@ public class InetAddressValidator {
 
         int len = str.length();
         return (len >= 1 && len <= 4) && Validate.isXdigit(str);
-    }
-
-    public enum InetAddressType {
-
-        INET_4_ADDRESS,
-
-        INET_6_ADDRESS
-
     }
 
 }

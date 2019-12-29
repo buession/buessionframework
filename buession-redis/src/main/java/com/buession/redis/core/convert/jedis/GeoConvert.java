@@ -24,9 +24,13 @@
  */
 package com.buession.redis.core.convert.jedis;
 
-import com.buession.core.Geo;
+import com.buession.lang.Geo;
+import com.buession.redis.core.GeoRadius;
+import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.convert.Convert;
 import redis.clients.jedis.GeoCoordinate;
+import redis.clients.jedis.GeoRadiusResponse;
+import redis.clients.jedis.GeoUnit;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -39,52 +43,48 @@ import java.util.Map;
 public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 
     @Override
-    public GeoCoordinate convert(Geo source){
+    public GeoCoordinate convert(final Geo source){
         return source == null ? null : new GeoCoordinate(source.getLongitude(), source.getLatitude());
     }
 
     @Override
-    public Geo deconvert(GeoCoordinate target){
+    public Geo deconvert(final GeoCoordinate target){
         return target == null ? null : new Geo(target.getLongitude(), target.getLatitude());
     }
 
-    public final static class GeoMapConvert<K> implements Convert<Map<K, Geo>, Map<K, GeoCoordinate>> {
+    public static class GeoMapConvert<K> implements Convert<Map<K, Geo>, Map<K, GeoCoordinate>> {
 
         @Override
-        public Map<K, GeoCoordinate> convert(Map<K, Geo> source){
+        public Map<K, GeoCoordinate> convert(final Map<K, Geo> source){
             if(source == null){
                 return null;
-            }else{
-                final Map<K, GeoCoordinate> result = new LinkedHashMap<>(source.size());
-
-                source.forEach((key, value)->{
-                    result.put(key, new GeoCoordinate(value.getLongitude(), value.getLatitude()));
-                });
-
-                return result;
             }
+
+            final Map<K, GeoCoordinate> result = new LinkedHashMap<>(source.size());
+
+            source.forEach((key, value)->result.put(key, new GeoCoordinate(value.getLongitude(), value.getLatitude())));
+
+            return result;
         }
 
         @Override
-        public Map<K, Geo> deconvert(Map<K, GeoCoordinate> target){
+        public Map<K, Geo> deconvert(final Map<K, GeoCoordinate> target){
             if(target == null){
                 return null;
             }else{
                 final Map<K, Geo> result = new LinkedHashMap<>();
 
-                target.forEach((key, value)->{
-                    result.put(key, new Geo(value.getLongitude(), value.getLatitude()));
-                });
+                target.forEach((key, value)->result.put(key, new Geo(value.getLongitude(), value.getLatitude())));
 
                 return result;
             }
         }
     }
 
-    public final static class ListMapConvert implements Convert<List<Geo>, List<GeoCoordinate>> {
+    public static class ListMapConvert implements Convert<List<Geo>, List<GeoCoordinate>> {
 
         @Override
-        public List<GeoCoordinate> convert(List<Geo> source){
+        public List<GeoCoordinate> convert(final List<Geo> source){
             if(source == null){
                 return null;
             }else{
@@ -99,7 +99,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
         }
 
         @Override
-        public List<Geo> deconvert(List<GeoCoordinate> target){
+        public List<Geo> deconvert(final List<GeoCoordinate> target){
             if(target == null){
                 return null;
             }else{
@@ -112,6 +112,119 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
                 return result;
             }
         }
+    }
+
+    public static class GeoUnitConvert implements Convert<GeoCommands.GeoUnit, GeoUnit> {
+
+        @Override
+        public GeoUnit convert(final GeoCommands.GeoUnit source){
+            if(source == GeoCommands.GeoUnit.M){
+                return GeoUnit.M;
+            }else if(source == GeoCommands.GeoUnit.KM){
+                return GeoUnit.KM;
+            }else if(source == GeoCommands.GeoUnit.MI){
+                return GeoUnit.MI;
+            }else if(source == GeoCommands.GeoUnit.FT){
+                return GeoUnit.FT;
+            }else{
+                return null;
+            }
+        }
+
+        @Override
+        public GeoCommands.GeoUnit deconvert(final GeoUnit target){
+            if(target == GeoUnit.M){
+                return GeoCommands.GeoUnit.M;
+            }else if(target == GeoUnit.KM){
+                return GeoCommands.GeoUnit.KM;
+            }else if(target == GeoUnit.MI){
+                return GeoCommands.GeoUnit.MI;
+            }else if(target == GeoUnit.FT){
+                return GeoCommands.GeoUnit.FT;
+            }else{
+                return null;
+            }
+        }
+
+    }
+
+    public static class GeoRadiusConvert implements Convert<GeoRadius, GeoRadiusResponse> {
+
+        @Override
+        public GeoRadiusResponse convert(final GeoRadius source){
+            if(source == null){
+                return null;
+            }
+
+            final GeoRadiusResponse geoRadiusResponse = new GeoRadiusResponse(source.getMember());
+
+            geoRadiusResponse.setDistance(source.getDistance());
+            geoRadiusResponse.setCoordinate((new GeoConvert()).convert(source.getGeo()));
+
+            return geoRadiusResponse;
+        }
+
+        @Override
+        public GeoRadius deconvert(final GeoRadiusResponse target){
+            if(target == null){
+                return null;
+            }
+
+            final GeoRadius geoRadius = new GeoRadius();
+
+            geoRadius.setMember(target.getMember());
+            geoRadius.setDistance(target.getDistance());
+            geoRadius.setGeo((new GeoConvert()).deconvert(target.getCoordinate()));
+
+            return geoRadius;
+        }
+
+        public static class ListGeoRadiusConvert implements Convert<List<GeoRadius>, List<GeoRadiusResponse>> {
+
+            @Override
+            public List<GeoRadiusResponse> convert(final List<GeoRadius> source){
+                if(source == null){
+                    return null;
+                }
+
+                final List<GeoRadiusResponse> geoRadiusResponses = new ArrayList<>(source.size());
+                final GeoConvert geoConvert = new GeoConvert();
+
+                for(GeoRadius geoRadius : source){
+                    GeoRadiusResponse geoRadiusResponse = new GeoRadiusResponse(geoRadius.getMember());
+
+                    geoRadiusResponse.setDistance(geoRadius.getDistance());
+                    geoRadiusResponse.setCoordinate(geoConvert.convert(geoRadius.getGeo()));
+
+                    geoRadiusResponses.add(geoRadiusResponse);
+                }
+
+                return geoRadiusResponses;
+            }
+
+            @Override
+            public List<GeoRadius> deconvert(final List<GeoRadiusResponse> target){
+                if(target == null){
+                    return null;
+                }
+
+                final List<GeoRadius> result = new ArrayList<>();
+                final GeoConvert geoConvert = new GeoConvert();
+
+                for(GeoRadiusResponse geoRadiusResponse : target){
+                    GeoRadius geoRadius = new GeoRadius();
+
+                    geoRadius.setMember(geoRadiusResponse.getMember());
+                    geoRadius.setDistance(geoRadiusResponse.getDistance());
+                    geoRadius.setGeo(geoConvert.deconvert(geoRadiusResponse.getCoordinate()));
+
+                    result.add(geoRadius);
+                }
+
+                return result;
+            }
+        }
+
     }
 
 }

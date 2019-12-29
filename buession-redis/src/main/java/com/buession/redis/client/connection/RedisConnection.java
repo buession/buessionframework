@@ -24,8 +24,8 @@
  */
 package com.buession.redis.client.connection;
 
+import com.buession.core.Executor;
 import com.buession.redis.client.connection.datasource.RedisDataSource;
-import com.buession.redis.core.Executor;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
 

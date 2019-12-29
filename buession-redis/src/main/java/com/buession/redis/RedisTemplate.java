@@ -24,10 +24,11 @@
  */
 package com.buession.redis;
 
-import com.buession.core.Geo;
-import com.buession.core.Status;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
+import com.buession.lang.Geo;
+import com.buession.lang.KeyValue;
+import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.Server;
@@ -42,7 +43,6 @@ import com.buession.redis.core.operations.SetOperations;
 import com.buession.redis.core.operations.SortedSetOperations;
 import com.buession.redis.core.operations.StringOperations;
 import com.buession.redis.core.operations.TransactionOperations;
-import com.buession.redis.core.types.KeyValue;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.ArrayList;

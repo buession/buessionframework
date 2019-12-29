@@ -22,23 +22,7 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core;
-
 /**
  * @author Yong.Teng
  */
-public enum DomainTLDType {
-
-    GENERIC,
-
-    GENERIC_RESTRICTED,
-
-    COUNTRY,
-
-    SPONSORED,
-
-    INFRASTRUCTURE,
-
-    TEST
-
-}
+package com.buession.lang;

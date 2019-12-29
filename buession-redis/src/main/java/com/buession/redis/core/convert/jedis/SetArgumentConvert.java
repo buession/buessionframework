@@ -26,6 +26,7 @@ package com.buession.redis.core.convert.jedis;
 
 import com.buession.redis.core.command.StringCommands;
 import com.buession.redis.core.convert.Convert;
+import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.params.SetParams;
 
 /**
@@ -34,7 +35,7 @@ import redis.clients.jedis.params.SetParams;
 public class SetArgumentConvert implements Convert<StringCommands.SetArgument, SetParams> {
 
     @Override
-    public SetParams convert(StringCommands.SetArgument source){
+    public SetParams convert(final StringCommands.SetArgument source){
         if(source == null){
             return null;
         }
@@ -59,7 +60,29 @@ public class SetArgumentConvert implements Convert<StringCommands.SetArgument, S
     }
 
     @Override
-    public StringCommands.SetArgument deconvert(SetParams target){
-        return null;
+    public StringCommands.SetArgument deconvert(final SetParams target){
+        if(target == null){
+            return null;
+        }
+
+        final StringCommands.SetArgument.Builder setArgumentBuilder = StringCommands.SetArgument.Builder.create();
+        byte[][] params = target.getByteParams();
+
+        for(int i = 0; i < params.length; i++){
+            String s = SafeEncoder.encode(params[i]);
+
+            if("ex".equals(s)){
+                setArgumentBuilder.ex(Integer.valueOf(SafeEncoder.encode(params[++i])));
+            }else if("px".equals(s)){
+                setArgumentBuilder.px(Integer.valueOf(SafeEncoder.encode(params[++i])));
+            }else if("nx".equals(s)){
+                setArgumentBuilder.nxXX(StringCommands.NxXx.NX);
+            }else if("xx".equals(s)){
+                setArgumentBuilder.nxXX(StringCommands.NxXx.XX);
+            }
+        }
+
+        return setArgumentBuilder.build();
     }
+
 }

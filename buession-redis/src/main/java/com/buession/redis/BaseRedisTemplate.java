@@ -24,8 +24,9 @@
  */
 package com.buession.redis;
 
-import com.buession.core.Geo;
-import com.buession.core.Status;
+import com.buession.lang.Geo;
+import com.buession.lang.KeyValue;
+import com.buession.lang.Status;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.GeoRadius;
@@ -45,7 +46,6 @@ import com.buession.redis.core.command.SetCommands;
 import com.buession.redis.core.command.SortedSetCommands;
 import com.buession.redis.core.command.StringCommands;
 import com.buession.redis.core.command.TransactionCommands;
-import com.buession.redis.core.types.KeyValue;
 
 import java.util.List;
 import java.util.Map;
@@ -57,8 +57,8 @@ import java.util.Set;
  * @author Yong.Teng
  */
 public class BaseRedisTemplate extends RedisAccessor implements KeyCommands, StringCommands, HashCommands,
-ListCommands, SetCommands, SortedSetCommands, GeoCommands, BitMapCommands, TransactionCommands, PubSubCommands,
-LuaCommands {
+        ListCommands, SetCommands, SortedSetCommands, GeoCommands, BitMapCommands, TransactionCommands, PubSubCommands,
+        LuaCommands {
 
     /**
      * 构造函数
@@ -79,2366 +79,1007 @@ LuaCommands {
 
     @Override
     public boolean exists(final String key){
-        return execute(new Executor<Boolean>() {
-
-            @Override
-            public Boolean execute(RedisClient client){
-                return client.exists(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.exists(makeRawKey(key)));
     }
 
     @Override
     public boolean exists(final byte[] key){
-        return execute(new Executor<Boolean>() {
-
-            @Override
-            public Boolean execute(RedisClient client){
-                return client.exists(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.exists(makeByteKey(key)));
     }
 
     @Override
     public Type type(final String key){
-        return execute(new Executor<Type>() {
-
-            @Override
-            public Type execute(RedisClient client){
-                return client.type(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.type(makeRawKey(key)));
     }
 
     @Override
     public Type type(final byte[] key){
-        return execute(new Executor<Type>() {
-
-            @Override
-            public Type execute(RedisClient client){
-                return client.type(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.type(makeByteKey(key)));
     }
 
     @Override
     public Status rename(final String key, final String newKey){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.rename(makeRawKey(key), makeRawKey(newKey));
-            }
-
-        });
+        return execute((RedisClient client)->client.rename(makeRawKey(key), makeRawKey(newKey)));
     }
 
     @Override
     public Status rename(final byte[] key, final byte[] newKey){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.rename(makeByteKey(key), makeByteKey(newKey));
-            }
-
-        });
+        return execute((RedisClient client)->client.rename(makeByteKey(key), makeByteKey(newKey)));
     }
 
     @Override
     public Status renameNx(final String key, final String newKey){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.renameNx(makeRawKey(key), makeRawKey(newKey));
-            }
-
-        });
+        return execute((RedisClient client)->client.renameNx(makeRawKey(key), makeRawKey(newKey)));
     }
 
     @Override
     public Status renameNx(final byte[] key, final byte[] newKey){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.renameNx(makeByteKey(key), makeByteKey(newKey));
-            }
-
-        });
+        return execute((RedisClient client)->client.renameNx(makeByteKey(key), makeByteKey(newKey)));
     }
 
     @Override
     public String randomKey(){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.randomKey();
-            }
-
-        });
+        return execute((RedisClient client)->client.randomKey());
     }
 
     @Override
     public Set<String> keys(final String pattern){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.keys(pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.keys(pattern));
     }
 
     @Override
     public Set<byte[]> keys(final byte[] pattern){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.keys(pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.keys(pattern));
     }
 
     @Override
     public Status expire(final String key, final int lifetime){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.expire(makeRawKey(key), lifetime);
-            }
-
-        });
+        return execute((RedisClient client)->client.expire(makeRawKey(key), lifetime));
     }
 
     @Override
     public Status expire(final byte[] key, final int lifetime){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.expire(makeByteKey(key), lifetime);
-            }
-
-        });
+        return execute((RedisClient client)->client.expire(makeByteKey(key), lifetime));
     }
 
     @Override
     public Status expireAt(final String key, final long unixTimestamp){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.expireAt(makeRawKey(key), unixTimestamp);
-            }
-
-        });
+        return execute((RedisClient client)->client.expireAt(makeRawKey(key), unixTimestamp));
     }
 
     @Override
     public Status expireAt(final byte[] key, final long unixTimestamp){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.expireAt(makeByteKey(key), unixTimestamp);
-            }
-
-        });
+        return execute((RedisClient client)->client.expireAt(makeByteKey(key), unixTimestamp));
     }
 
     @Override
     public Status pExpire(final String key, final int lifetime){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.pExpire(makeRawKey(key), lifetime);
-            }
-
-        });
+        return execute((RedisClient client)->client.pExpire(makeRawKey(key), lifetime));
     }
 
     @Override
     public Status pExpire(final byte[] key, final int lifetime){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.pExpire(makeByteKey(key), lifetime);
-            }
-
-        });
+        return execute((RedisClient client)->client.pExpire(makeByteKey(key), lifetime));
     }
 
     @Override
     public Status pExpireAt(final String key, final long unixTimestamp){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.pExpireAt(makeRawKey(key), unixTimestamp);
-            }
-
-        });
+        return execute((RedisClient client)->client.pExpireAt(makeRawKey(key), unixTimestamp));
     }
 
     @Override
     public Status pExpireAt(final byte[] key, final long unixTimestamp){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.pExpireAt(makeByteKey(key), unixTimestamp);
-            }
-
-        });
+        return execute((RedisClient client)->client.pExpireAt(makeByteKey(key), unixTimestamp));
     }
 
     @Override
     public Long ttl(final String key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.ttl(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.ttl(makeRawKey(key)));
     }
 
     @Override
     public Long ttl(final byte[] key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.ttl(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.ttl(makeByteKey(key)));
     }
 
     @Override
     public Long pTtl(final String key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.pTtl(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.pTtl(makeRawKey(key)));
     }
 
     @Override
     public Long pTtl(final byte[] key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.pTtl(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.pTtl(makeByteKey(key)));
     }
 
     @Override
     public Status persist(final String key){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.persist(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.persist(makeRawKey(key)));
     }
 
     @Override
     public Status persist(final byte[] key){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.persist(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.persist(makeByteKey(key)));
     }
 
     @Override
     public ScanResult<List<String>> scan(final int cursor){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.scan(cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor));
     }
 
     @Override
     public ScanResult<List<String>> scan(final long cursor){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.scan(cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor));
     }
 
     @Override
     public ScanResult<List<String>> scan(final String cursor){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.scan(cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor));
     }
 
     @Override
     public ScanResult<List<byte[]>> scan(final byte[] cursor){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.scan(cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor));
     }
 
     @Override
     public ScanResult<List<String>> scan(final int cursor, final String pattern){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.scan(cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, pattern));
     }
 
     @Override
     public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.scan(cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, pattern));
     }
 
     @Override
     public ScanResult<List<String>> scan(final long cursor, final String pattern){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.scan(cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, pattern));
     }
 
     @Override
     public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.scan(cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, pattern));
     }
 
     @Override
     public ScanResult<List<String>> scan(final String cursor, final String pattern){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.scan(cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, pattern));
     }
 
     @Override
     public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.scan(cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, pattern));
     }
 
     @Override
     public ScanResult<List<String>> scan(final int cursor, final int count){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.scan(cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, count));
     }
 
     @Override
     public ScanResult<List<String>> scan(final long cursor, final int count){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.scan(cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, count));
     }
 
     @Override
     public ScanResult<List<String>> scan(final String cursor, final int count){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.scan(cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, count));
     }
 
     @Override
     public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.scan(cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, count));
     }
 
     @Override
     public ScanResult<List<String>> scan(final int cursor, final String pattern, final int count){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.scan(cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern, final int count){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.scan(cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<String>> scan(final long cursor, final String pattern, final int count){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.scan(cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.scan(cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.scan(cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.scan(cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.scan(cursor, pattern, count));
     }
 
     @Override
     public List<String> sort(final String key){
-        return execute(new Executor<List<String>>() {
-
-            @Override
-            public List<String> execute(RedisClient client){
-                return client.sort(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.sort(makeRawKey(key)));
     }
 
     @Override
     public List<byte[]> sort(final byte[] key){
-        return execute(new Executor<List<byte[]>>() {
-
-            @Override
-            public List<byte[]> execute(RedisClient client){
-                return client.sort(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.sort(makeByteKey(key)));
     }
 
     @Override
     public List<String> sort(final String key, final SortArgument sortArgument){
-        return execute(new Executor<List<String>>() {
-
-            @Override
-            public List<String> execute(RedisClient client){
-                return client.sort(makeRawKey(key), sortArgument);
-            }
-
-        });
+        return execute((RedisClient client)->client.sort(makeRawKey(key), sortArgument));
     }
 
     @Override
     public List<byte[]> sort(final byte[] key, final SortArgument sortArgument){
-        return execute(new Executor<List<byte[]>>() {
-
-            @Override
-            public List<byte[]> execute(RedisClient client){
-                return client.sort(makeByteKey(key), sortArgument);
-            }
-
-        });
+        return execute((RedisClient client)->client.sort(makeByteKey(key), sortArgument));
     }
 
     @Override
     public Long sort(final String key, final String destKey){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sort(makeRawKey(key), makeRawKey(destKey));
-            }
-
-        });
+        return execute((RedisClient client)->client.sort(makeRawKey(key), makeRawKey(destKey)));
     }
 
     @Override
     public Long sort(final byte[] key, final byte[] destKey){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sort(makeByteKey(key), makeByteKey(destKey));
-            }
-
-        });
+        return execute((RedisClient client)->client.sort(makeByteKey(key), makeByteKey(destKey)));
     }
 
     @Override
     public Long sort(final String key, final String destKey, final SortArgument sortArgument){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sort(makeRawKey(key), makeRawKey(destKey), sortArgument);
-            }
-
-        });
+        return execute((RedisClient client)->client.sort(makeRawKey(key), makeRawKey(destKey), sortArgument));
     }
 
     @Override
     public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sort(makeByteKey(key), makeByteKey(destKey), sortArgument);
-            }
-
-        });
+        return execute((RedisClient client)->client.sort(makeByteKey(key), makeByteKey(destKey), sortArgument));
     }
 
     @Override
     public byte[] dump(final String key){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.dump(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.dump(makeRawKey(key)));
     }
 
     @Override
     public byte[] dump(final byte[] key){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.dump(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.dump(makeByteKey(key)));
     }
 
     @Override
     public Status restore(final String key, final String serializedValue, final int ttl){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.restore(makeRawKey(key), serializedValue, ttl);
-            }
-
-        });
+        return execute((RedisClient client)->client.restore(makeRawKey(key), serializedValue, ttl));
     }
 
     @Override
     public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.restore(makeByteKey(key), serializedValue, ttl);
-            }
-
-        });
+        return execute((RedisClient client)->client.restore(makeByteKey(key), serializedValue, ttl));
     }
 
     @Override
     public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.migrate(makeRawKey(key), host, port, db, timeout);
-            }
-
-        });
+        return execute((RedisClient client)->client.migrate(makeRawKey(key), host, port, db, timeout));
     }
 
     @Override
     public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.migrate(makeByteKey(key), host, port, db, timeout);
-            }
-
-        });
+        return execute((RedisClient client)->client.migrate(makeByteKey(key), host, port, db, timeout));
     }
 
     @Override
     public Status migrate(final String key, final String host, final int port, final int db, final int timeout, final
-     MigrateOperation migrateOperation){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.migrate(makeRawKey(key), host, port, db, timeout, migrateOperation);
-            }
-
-        });
+    MigrateOperation migrateOperation){
+        return execute((RedisClient client)->client.migrate(makeRawKey(key), host, port, db, timeout,
+                migrateOperation));
     }
 
     @Override
     public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout, final
-     MigrateOperation migrateOperation){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.migrate(makeByteKey(key), host, port, db, timeout, migrateOperation);
-            }
-
-        });
+    MigrateOperation migrateOperation){
+        return execute((RedisClient client)->client.migrate(makeByteKey(key), host, port, db, timeout,
+                migrateOperation));
     }
 
     @Override
     public Long del(final String... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.del(makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.del(makeRawKeys(keys)));
     }
 
     @Override
     public Long del(final byte[]... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.del(makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.del(makeByteKeys(keys)));
     }
 
     @Override
     public Status move(final String key, final int db){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.move(makeRawKey(key), db);
-            }
-
-        });
+        return execute((RedisClient client)->client.move(makeRawKey(key), db));
     }
 
     @Override
     public Status move(final byte[] key, final int db){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.move(makeByteKey(key), db);
-            }
-
-        });
+        return execute((RedisClient client)->client.move(makeByteKey(key), db));
     }
 
     @Override
     public Status set(final String key, final String value){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.set(makeRawKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.set(makeRawKey(key), value));
     }
 
     @Override
     public Status set(final byte[] key, final byte[] value){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.set(makeByteKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.set(makeByteKey(key), value));
     }
 
     @Override
     public Status set(final String key, final String value, final SetArgument setArgument){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.set(makeRawKey(key), value, setArgument);
-            }
-
-        });
+        return execute((RedisClient client)->client.set(makeRawKey(key), value, setArgument));
     }
 
     @Override
     public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.set(makeByteKey(key), value, setArgument);
-            }
-
-        });
+        return execute((RedisClient client)->client.set(makeByteKey(key), value, setArgument));
     }
 
     @Override
     public Status setEx(final String key, final String value, final int lifetime){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.setEx(makeRawKey(key), value, lifetime);
-            }
-        });
+        return execute((RedisClient client)->client.setEx(makeRawKey(key), value, lifetime));
     }
 
     @Override
     public Status setEx(final byte[] key, final byte[] value, final int lifetime){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.setEx(makeByteKey(key), value, lifetime);
-            }
-        });
+        return execute((RedisClient client)->client.setEx(makeByteKey(key), value, lifetime));
     }
 
     @Override
     public Status pSetEx(final String key, final String value, final int lifetime){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.pSetEx(makeRawKey(key), value, lifetime);
-            }
-
-        });
+        return execute((RedisClient client)->client.pSetEx(makeRawKey(key), value, lifetime));
     }
 
     @Override
     public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.pSetEx(makeByteKey(key), value, lifetime);
-            }
-
-        });
+        return execute((RedisClient client)->client.pSetEx(makeByteKey(key), value, lifetime));
     }
 
     @Override
     public Status setNx(final String key, final String value){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.setNx(makeRawKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.setNx(makeRawKey(key), value));
     }
 
     @Override
     public Status setNx(final byte[] key, final byte[] value){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.setNx(makeByteKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.setNx(makeByteKey(key), value));
     }
 
     @Override
     public Long append(final String key, final String value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.append(makeRawKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.append(makeRawKey(key), value));
     }
 
     @Override
     public Long append(final byte[] key, final byte[] value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.append(makeByteKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.append(makeByteKey(key), value));
     }
 
     @Override
     public String get(final String key){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.get(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.get(makeRawKey(key)));
     }
 
     @Override
     public byte[] get(final byte[] key){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.get(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.get(makeByteKey(key)));
     }
 
     @Override
     public String getSet(final String key, final String value){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.getSet(makeRawKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.getSet(makeRawKey(key), value));
     }
 
     @Override
     public byte[] getSet(final byte[] key, final byte[] value){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.getSet(makeByteKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.getSet(makeByteKey(key), value));
     }
 
     @Override
     public Status mSet(final Map<String, String> values){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.mSet(values);
-            }
-
-        });
+        return execute((RedisClient client)->client.mSet(values));
     }
 
     @Override
     public Status mSetNx(final Map<String, String> values){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.mSetNx(values);
-            }
-
-        });
+        return execute((RedisClient client)->client.mSetNx(values));
     }
 
     @Override
     public List<String> mGet(final String... keys){
-        return execute(new Executor<List<String>>() {
-
-            @Override
-            public List<String> execute(RedisClient client){
-                return client.mGet(makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.mGet(makeRawKeys(keys)));
     }
 
     @Override
     public List<byte[]> mGet(final byte[]... keys){
-        return execute(new Executor<List<byte[]>>() {
-
-            @Override
-            public List<byte[]> execute(RedisClient client){
-                return client.mGet(makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.mGet(makeByteKeys(keys)));
     }
 
     @Override
     public Long incr(final String key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.incr(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.incr(makeRawKey(key)));
     }
 
     @Override
     public Long incr(final byte[] key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.incr(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.incr(makeByteKey(key)));
     }
 
     @Override
     public Long incrBy(final String key, final int value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.incrBy(makeRawKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.incrBy(makeRawKey(key), value));
     }
 
     @Override
     public Long incrBy(final byte[] key, final int value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.incrBy(makeByteKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.incrBy(makeByteKey(key), value));
     }
 
     @Override
     public Long incrBy(final String key, final long value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.incrBy(makeRawKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.incrBy(makeRawKey(key), value));
     }
 
     @Override
     public Long incrBy(final byte[] key, final long value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.incrBy(makeByteKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.incrBy(makeByteKey(key), value));
     }
 
     @Override
     public Double incrByFloat(final String key, final float value){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.incrByFloat(makeRawKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.incrByFloat(makeRawKey(key), value));
     }
 
     @Override
     public Double incrByFloat(final byte[] key, final float value){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.incrByFloat(makeByteKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.incrByFloat(makeByteKey(key), value));
     }
 
     @Override
     public Double incrByFloat(final String key, final double value){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.incrByFloat(makeRawKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.incrByFloat(makeRawKey(key), value));
     }
 
     @Override
     public Double incrByFloat(final byte[] key, final double value){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.incrByFloat(makeByteKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.incrByFloat(makeByteKey(key), value));
     }
 
     @Override
     public Long decr(final String key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.decr(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.decr(makeRawKey(key)));
     }
 
     @Override
     public Long decr(final byte[] key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.decr(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.decr(makeByteKey(key)));
     }
 
     @Override
     public Long decrBy(final String key, final int value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.decrBy(makeRawKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.decrBy(makeRawKey(key), value));
     }
 
     @Override
     public Long decrBy(final byte[] key, final int value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.decrBy(makeByteKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.decrBy(makeByteKey(key), value));
     }
 
     @Override
     public Long decrBy(final String key, final long value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.decrBy(makeRawKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.decrBy(makeRawKey(key), value));
     }
 
     @Override
     public Long decrBy(final byte[] key, final long value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.decrBy(makeByteKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.decrBy(makeByteKey(key), value));
     }
 
     @Override
     public Long setRange(final String key, final int offset, final String value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.setRange(makeRawKey(key), offset, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.setRange(makeRawKey(key), offset, value));
     }
 
     @Override
     public Long setRange(final byte[] key, final int offset, final byte[] value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.setRange(makeByteKey(key), offset, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.setRange(makeByteKey(key), offset, value));
     }
 
     @Override
     public Long setRange(final String key, final long offset, final String value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.setRange(makeRawKey(key), offset, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.setRange(makeRawKey(key), offset, value));
     }
 
     @Override
     public Long setRange(final byte[] key, final long offset, final byte[] value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.setRange(makeByteKey(key), offset, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.setRange(makeByteKey(key), offset, value));
     }
 
     @Override
     public String getRange(final String key, final int start, final int end){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.getRange(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.getRange(makeRawKey(key), start, end));
     }
 
     @Override
     public byte[] getRange(final byte[] key, final int start, final int end){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.getRange(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.getRange(makeByteKey(key), start, end));
     }
 
     @Override
     public String getRange(final String key, final long start, final long end){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.getRange(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.getRange(makeRawKey(key), start, end));
     }
 
     @Override
     public byte[] getRange(final byte[] key, final long start, final long end){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.getRange(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.getRange(makeByteKey(key), start, end));
     }
 
     @Override
     public String substr(final String key, final int start, final int end){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.substr(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.substr(makeRawKey(key), start, end));
     }
 
     @Override
     public byte[] substr(final byte[] key, final int start, final int end){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.substr(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.substr(makeByteKey(key), start, end));
     }
 
     @Override
     public String substr(final String key, final long start, final long end){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.substr(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.substr(makeRawKey(key), start, end));
     }
 
     @Override
     public byte[] substr(final byte[] key, final long start, final long end){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.substr(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.substr(makeByteKey(key), start, end));
     }
 
     @Override
     public Long strlen(final String key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.strlen(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.strlen(makeRawKey(key)));
     }
 
     @Override
     public Long strlen(final byte[] key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.strlen(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.strlen(makeByteKey(key)));
     }
 
     @Override
     public boolean hExists(final String key, final String field){
-        return execute(new Executor<Boolean>() {
-
-            @Override
-            public Boolean execute(RedisClient client){
-                return client.hExists(makeRawKey(key), field);
-            }
-        });
+        return execute((RedisClient client)->client.hExists(makeRawKey(key), field));
     }
 
     @Override
     public boolean hExists(final byte[] key, final byte[] field){
-        return execute(new Executor<Boolean>() {
-
-            @Override
-            public Boolean execute(RedisClient client){
-                return client.hExists(makeByteKey(key), field);
-            }
-        });
+        return execute((RedisClient client)->client.hExists(makeByteKey(key), field));
     }
 
     @Override
     public Set<String> hKeys(final String key){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.hKeys(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.hKeys(makeRawKey(key)));
     }
 
     @Override
     public Set<byte[]> hKeys(final byte[] key){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.hKeys(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.hKeys(makeByteKey(key)));
     }
 
     @Override
     public List<String> hVals(final String key){
-        return execute(new Executor<List<String>>() {
-
-            @Override
-            public List<String> execute(RedisClient client){
-                return client.hVals(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.hVals(makeRawKey(key)));
     }
 
     @Override
     public List<byte[]> hVals(final byte[] key){
-        return execute(new Executor<List<byte[]>>() {
-
-            @Override
-            public List<byte[]> execute(RedisClient client){
-                return client.hVals(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.hVals(makeByteKey(key)));
     }
 
     @Override
     public Status hSet(final String key, final String field, final String value){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.hSet(makeRawKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hSet(makeRawKey(key), field, value));
     }
 
     @Override
     public Status hSet(final byte[] key, final byte[] field, final byte[] value){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.hSet(makeByteKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hSet(makeByteKey(key), field, value));
     }
 
     @Override
     public Status hSetNx(final String key, final String field, final String value){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.hSetNx(makeRawKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hSetNx(makeRawKey(key), field, value));
     }
 
     @Override
     public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.hSetNx(makeByteKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hSetNx(makeByteKey(key), field, value));
     }
 
     @Override
     public String hGet(final String key, final String field){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.hGet(makeRawKey(key), field);
-            }
-
-        });
+        return execute((RedisClient client)->client.hGet(makeRawKey(key), field));
     }
 
     @Override
     public byte[] hGet(final byte[] key, final byte[] field){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.hGet(makeByteKey(key), field);
-            }
-
-        });
+        return execute((RedisClient client)->client.hGet(makeByteKey(key), field));
     }
 
     @Override
     public Status hMSet(final String key, final Map<String, String> data){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.hMSet(makeRawKey(key), data);
-            }
-
-        });
+        return execute((RedisClient client)->client.hMSet(makeRawKey(key), data));
     }
 
     @Override
     public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.hMSet(key, data);
-            }
-
-        });
+        return execute((RedisClient client)->client.hMSet(key, data));
     }
 
     @Override
     public List<String> hMGet(final String key, final String... fields){
-        return execute(new Executor<List<String>>() {
-
-            @Override
-            public List<String> execute(RedisClient client){
-                return client.hMGet(makeRawKey(key), fields);
-            }
-
-        });
+        return execute((RedisClient client)->client.hMGet(makeRawKey(key), fields));
     }
 
     @Override
     public List<byte[]> hMGet(final byte[] key, final byte[]... fields){
-        return execute(new Executor<List<byte[]>>() {
-
-            @Override
-            public List<byte[]> execute(RedisClient client){
-                return client.hMGet(makeByteKey(key), fields);
-            }
-
-        });
+        return execute((RedisClient client)->client.hMGet(makeByteKey(key), fields));
     }
 
     @Override
     public Map<String, String> hGetAll(final String key){
-        return execute(new Executor<Map<String, String>>() {
-
-            @Override
-            public Map<String, String> execute(RedisClient client){
-                return client.hGetAll(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.hGetAll(makeRawKey(key)));
     }
 
     @Override
     public Map<byte[], byte[]> hGetAll(final byte[] key){
-        return execute(new Executor<Map<byte[], byte[]>>() {
-
-            @Override
-            public Map<byte[], byte[]> execute(RedisClient client){
-                return client.hGetAll(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.hGetAll(makeByteKey(key)));
     }
 
     @Override
     public Long hDel(final String key, final String... fields){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hDel(makeRawKey(key), fields);
-            }
-
-        });
+        return execute((RedisClient client)->client.hDel(makeRawKey(key), fields));
     }
 
     @Override
     public Long hDel(final byte[] key, final byte[]... fields){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hDel(makeByteKey(key), fields);
-            }
-
-        });
+        return execute((RedisClient client)->client.hDel(makeByteKey(key), fields));
     }
 
     @Override
     public Long hStrLen(final String key, final String field){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hStrLen(makeRawKey(key), field);
-            }
-
-        });
+        return execute((RedisClient client)->client.hStrLen(makeRawKey(key), field));
     }
 
     @Override
     public Long hStrLen(final byte[] key, final byte[] field){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hStrLen(makeByteKey(key), field);
-            }
-
-        });
+        return execute((RedisClient client)->client.hStrLen(makeByteKey(key), field));
     }
 
     @Override
     public Long hLen(final String key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hLen(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.hLen(makeRawKey(key)));
     }
 
     @Override
     public Long hLen(final byte[] key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hLen(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.hLen(makeByteKey(key)));
     }
 
     @Override
     public Long hIncrBy(final String key, final String field, final int value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hIncrBy(makeRawKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hIncrBy(makeRawKey(key), field, value));
     }
 
     @Override
     public Long hIncrBy(final byte[] key, final byte[] field, final int value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hIncrBy(makeByteKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hIncrBy(makeByteKey(key), field, value));
     }
 
     @Override
     public Long hIncrBy(final String key, final String field, final long value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hIncrBy(makeRawKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hIncrBy(makeRawKey(key), field, value));
     }
 
     @Override
     public Long hIncrBy(final byte[] key, final byte[] field, final long value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hIncrBy(makeByteKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hIncrBy(makeByteKey(key), field, value));
     }
 
     @Override
     public Double hIncrByFloat(final String key, final String field, final float value){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.hIncrByFloat(makeRawKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hIncrByFloat(makeRawKey(key), field, value));
     }
 
     @Override
     public Double hIncrByFloat(final byte[] key, final byte[] field, final float value){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.hIncrByFloat(makeByteKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hIncrByFloat(makeByteKey(key), field, value));
     }
 
     @Override
     public Double hIncrByFloat(final String key, final String field, final double value){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.hIncrByFloat(makeRawKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hIncrByFloat(makeRawKey(key), field, value));
     }
 
     @Override
     public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.hIncrByFloat(makeByteKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hIncrByFloat(makeByteKey(key), field, value));
     }
 
     @Override
     public Long hDecrBy(final String key, final String field, final int value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hDecrBy(makeRawKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hDecrBy(makeRawKey(key), field, value));
     }
 
     @Override
     public Long hDecrBy(final byte[] key, final byte[] field, final int value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hDecrBy(makeByteKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hDecrBy(makeByteKey(key), field, value));
     }
 
     @Override
     public Long hDecrBy(final String key, final String field, final long value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hDecrBy(makeRawKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hDecrBy(makeRawKey(key), field, value));
     }
 
     @Override
     public Long hDecrBy(final byte[] key, final byte[] field, final long value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.hDecrBy(makeByteKey(key), field, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.hDecrBy(makeByteKey(key), field, value));
     }
 
     @Override
     public ScanResult<Map<String, String>> hScan(final String key, final int cursor){
-        return execute(new Executor<ScanResult<Map<String, String>>>() {
-
-            @Override
-            public ScanResult<Map<String, String>> execute(RedisClient client){
-                return client.hScan(makeRawKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeRawKey(key), cursor));
     }
 
     @Override
     public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor){
-        return execute(new Executor<ScanResult<Map<byte[], byte[]>>>() {
-
-            @Override
-            public ScanResult<Map<byte[], byte[]>> execute(RedisClient client){
-                return client.hScan(makeByteKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor));
     }
 
     @Override
     public ScanResult<Map<String, String>> hScan(final String key, final long cursor){
-        return execute(new Executor<ScanResult<Map<String, String>>>() {
-
-            @Override
-            public ScanResult<Map<String, String>> execute(RedisClient client){
-                return client.hScan(makeRawKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeRawKey(key), cursor));
     }
 
     @Override
     public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor){
-        return execute(new Executor<ScanResult<Map<byte[], byte[]>>>() {
-
-            @Override
-            public ScanResult<Map<byte[], byte[]>> execute(RedisClient client){
-                return client.hScan(makeByteKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor));
     }
 
     @Override
     public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
-        return execute(new Executor<ScanResult<Map<String, String>>>() {
-
-            @Override
-            public ScanResult<Map<String, String>> execute(RedisClient client){
-                return client.hScan(makeRawKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeRawKey(key), cursor));
     }
 
     @Override
     public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
-        return execute(new Executor<ScanResult<Map<byte[], byte[]>>>() {
-
-            @Override
-            public ScanResult<Map<byte[], byte[]>> execute(RedisClient client){
-                return client.hScan(makeByteKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor));
     }
 
     @Override
     public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern){
-        return execute(new Executor<ScanResult<Map<String, String>>>() {
-
-            @Override
-            public ScanResult<Map<String, String>> execute(RedisClient client){
-                return client.hScan(makeRawKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeRawKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern){
-        return execute(new Executor<ScanResult<Map<byte[], byte[]>>>() {
-
-            @Override
-            public ScanResult<Map<byte[], byte[]>> execute(RedisClient client){
-                return client.hScan(makeByteKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
-        return execute(new Executor<ScanResult<Map<String, String>>>() {
-
-            @Override
-            public ScanResult<Map<String, String>> execute(RedisClient client){
-                return client.hScan(makeRawKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeRawKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern){
-        return execute(new Executor<ScanResult<Map<byte[], byte[]>>>() {
-
-            @Override
-            public ScanResult<Map<byte[], byte[]>> execute(RedisClient client){
-                return client.hScan(makeByteKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
-        return execute(new Executor<ScanResult<Map<String, String>>>() {
-
-            @Override
-            public ScanResult<Map<String, String>> execute(RedisClient client){
-                return client.hScan(makeRawKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeRawKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-        return execute(new Executor<ScanResult<Map<byte[], byte[]>>>() {
-
-            @Override
-            public ScanResult<Map<byte[], byte[]>> execute(RedisClient client){
-                return client.hScan(makeByteKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final int count){
-        return execute(new Executor<ScanResult<Map<String, String>>>() {
-
-            @Override
-            public ScanResult<Map<String, String>> execute(RedisClient client){
-                return client.hScan(makeRawKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeRawKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final int count){
-        return execute(new Executor<ScanResult<Map<byte[], byte[]>>>() {
-
-            @Override
-            public ScanResult<Map<byte[], byte[]>> execute(RedisClient client){
-                return client.hScan(makeByteKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count){
-        return execute(new Executor<ScanResult<Map<String, String>>>() {
-
-            @Override
-            public ScanResult<Map<String, String>> execute(RedisClient client){
-                return client.hScan(makeRawKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeRawKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count){
-        return execute(new Executor<ScanResult<Map<byte[], byte[]>>>() {
-
-            @Override
-            public ScanResult<Map<byte[], byte[]>> execute(RedisClient client){
-                return client.hScan(makeByteKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count){
-        return execute(new Executor<ScanResult<Map<String, String>>>() {
-
-            @Override
-            public ScanResult<Map<String, String>> execute(RedisClient client){
-                return client.hScan(makeRawKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeRawKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
-        return execute(new Executor<ScanResult<Map<byte[], byte[]>>>() {
-
-            @Override
-            public ScanResult<Map<byte[], byte[]>> execute(RedisClient client){
-                return client.hScan(makeByteKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern, final int
-    count){
-        return execute(new Executor<ScanResult<Map<String, String>>>() {
-
-            @Override
-            public ScanResult<Map<String, String>> execute(RedisClient client){
-                return client.hScan(makeRawKey(key), cursor, pattern, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.hScan(makeRawKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern, final int
-    count){
-        return execute(new Executor<ScanResult<Map<byte[], byte[]>>>() {
-
-            @Override
-            public ScanResult<Map<byte[], byte[]>> execute(RedisClient client){
-                return client.hScan(makeByteKey(key), cursor, pattern, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern, final int
-     count){
-        return execute(new Executor<ScanResult<Map<String, String>>>() {
-
-            @Override
-            public ScanResult<Map<String, String>> execute(RedisClient client){
-                return client.hScan(makeRawKey(key), cursor, pattern, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.hScan(makeRawKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern, final int
-     count){
-        return execute(new Executor<ScanResult<Map<byte[], byte[]>>>() {
-
-            @Override
-            public ScanResult<Map<byte[], byte[]>> execute(RedisClient client){
-                return client.hScan(makeByteKey(key), cursor, pattern, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern, final
     int count){
-        return execute(new Executor<ScanResult<Map<String, String>>>() {
-
-            @Override
-            public ScanResult<Map<String, String>> execute(RedisClient client){
-                return client.hScan(makeRawKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeRawKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern, final
     int count){
-        return execute(new Executor<ScanResult<Map<byte[], byte[]>>>() {
-
-            @Override
-            public ScanResult<Map<byte[], byte[]>> execute(RedisClient client){
-                return client.hScan(makeByteKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor, pattern, count));
     }
 
     @Override
     public Long lPush(final String key, final String... values){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.lPush(makeRawKey(key), values);
-            }
-
-        });
+        return execute((RedisClient client)->client.lPush(makeRawKey(key), values));
     }
 
     @Override
     public Long lPush(final byte[] key, final byte[]... values){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.lPush(makeByteKey(key), values);
-            }
-
-        });
+        return execute((RedisClient client)->client.lPush(makeByteKey(key), values));
     }
 
     @Override
     public Long lPushX(final String key, final String... values){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.lPushX(makeRawKey(key), values);
-            }
-
-        });
+        return execute((RedisClient client)->client.lPushX(makeRawKey(key), values));
     }
 
     @Override
     public Long lPushX(final byte[] key, final byte[]... values){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.lPushX(makeByteKey(key), values);
-            }
-
-        });
+        return execute((RedisClient client)->client.lPushX(makeByteKey(key), values));
     }
 
     @Override
     public Long lInsert(final String key, final String value, final ListPosition position, final String pivot){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.lInsert(makeRawKey(key), value, position, pivot);
-            }
-
-        });
+        return execute((RedisClient client)->client.lInsert(makeRawKey(key), value, position, pivot));
     }
 
     @Override
     public Long lInsert(final byte[] key, final byte[] value, final ListPosition position, final byte[] pivot){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.lInsert(makeByteKey(key), value, position, pivot);
-            }
-
-        });
+        return execute((RedisClient client)->client.lInsert(makeByteKey(key), value, position, pivot));
     }
 
     @Override
     public Status lSet(final String key, final int index, final String value){
-        return client.lSet(makeRawKey(key), index, value);
+        return execute((RedisClient client)->client.lSet(makeRawKey(key), index, value));
     }
 
     @Override
     public Status lSet(final byte[] key, final int index, final byte[] value){
-        return client.lSet(makeByteKey(key), index, value);
+        return execute((RedisClient client)->client.lSet(makeByteKey(key), index, value));
     }
 
     @Override
     public Status lSet(final String key, final long index, final String value){
-        return client.lSet(makeRawKey(key), index, value);
+        return execute((RedisClient client)->client.lSet(makeRawKey(key), index, value));
     }
 
     @Override
     public Status lSet(final byte[] key, final long index, final byte[] value){
-        return client.lSet(makeByteKey(key), index, value);
+        return execute((RedisClient client)->client.lSet(makeByteKey(key), index, value));
     }
 
     @Override
     public String lIndex(final String key, final int index){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.lIndex(makeRawKey(key), index);
-            }
-
-        });
+        return execute((RedisClient client)->client.lIndex(makeRawKey(key), index));
     }
 
     @Override
     public byte[] lIndex(final byte[] key, final int index){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.lIndex(makeByteKey(key), index);
-            }
-
-        });
+        return execute((RedisClient client)->client.lIndex(makeByteKey(key), index));
     }
 
     @Override
     public String lIndex(final String key, final long index){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.lIndex(makeRawKey(key), index);
-            }
-
-        });
+        return execute((RedisClient client)->client.lIndex(makeRawKey(key), index));
     }
 
     @Override
     public byte[] lIndex(final byte[] key, final long index){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.lIndex(makeByteKey(key), index);
-            }
-
-        });
+        return execute((RedisClient client)->client.lIndex(makeByteKey(key), index));
     }
 
     @Override
     public String lPop(final String key){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.lPop(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.lPop(makeRawKey(key)));
     }
 
     @Override
     public byte[] lPop(final byte[] key){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.lPop(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.lPop(makeByteKey(key)));
     }
 
     @Override
     public List<String> blPop(final String[] keys, final int timeout){
-        return execute(new Executor<List<String>>() {
-
-            @Override
-            public List<String> execute(RedisClient client){
-                return client.blPop(makeRawKeys(keys), timeout);
-            }
-
-        });
+        return execute((RedisClient client)->client.blPop(makeRawKeys(keys), timeout));
     }
 
     @Override
     public List<byte[]> blPop(final byte[][] keys, final int timeout){
-        return execute(new Executor<List<byte[]>>() {
-
-            @Override
-            public List<byte[]> execute(RedisClient client){
-                return client.blPop(makeByteKeys(keys), timeout);
-            }
-
-        });
+        return execute((RedisClient client)->client.blPop(makeByteKeys(keys), timeout));
     }
 
     @Override
     public String rPop(final String key){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.rPop(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.rPop(makeRawKey(key)));
     }
 
     @Override
     public byte[] rPop(final byte[] key){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.rPop(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.rPop(makeByteKey(key)));
     }
 
     @Override
     public String rPoplPush(final String source, final String destKey){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.rPoplPush(makeRawKey(source), makeRawKey(destKey));
-            }
-
-        });
+        return execute((RedisClient client)->client.rPoplPush(makeRawKey(source), makeRawKey(destKey)));
     }
 
     @Override
     public byte[] rPoplPush(final byte[] source, final byte[] destKey){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.rPoplPush(makeByteKey(source), makeByteKey(destKey));
-            }
-
-        });
+        return execute((RedisClient client)->client.rPoplPush(makeByteKey(source), makeByteKey(destKey)));
     }
 
     @Override
     public List<String> brPop(final String[] keys, final int timeout){
-        return execute(new Executor<List<String>>() {
-
-            @Override
-            public List<String> execute(RedisClient client){
-                return client.brPop(makeRawKeys(keys), timeout);
-            }
-
-        });
+        return execute((RedisClient client)->client.brPop(makeRawKeys(keys), timeout));
     }
 
     @Override
     public List<byte[]> brPop(final byte[][] keys, final int timeout){
-        return execute(new Executor<List<byte[]>>() {
-
-            @Override
-            public List<byte[]> execute(RedisClient client){
-                return client.brPop(makeByteKeys(keys), timeout);
-            }
-
-        });
+        return execute((RedisClient client)->client.brPop(makeByteKeys(keys), timeout));
     }
 
     @Override
@@ -2453,4521 +1094,1953 @@ LuaCommands {
 
     @Override
     public Long rPush(final String key, final String... values){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.rPush(makeRawKey(key), values);
-            }
-
-        });
+        return execute((RedisClient client)->client.rPush(makeRawKey(key), values));
     }
 
     @Override
     public Long rPush(final byte[] key, final byte[]... values){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.rPush(makeByteKey(key), values);
-            }
-
-        });
+        return execute((RedisClient client)->client.rPush(makeByteKey(key), values));
     }
 
     @Override
     public Long rPushX(final String key, final String... values){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.rPushX(makeRawKey(key), values);
-            }
-
-        });
+        return execute((RedisClient client)->client.rPushX(makeRawKey(key), values));
     }
 
     @Override
     public Long rPushX(final byte[] key, final byte[]... values){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.rPushX(makeByteKey(key), values);
-            }
-
-        });
+        return execute((RedisClient client)->client.rPushX(makeByteKey(key), values));
     }
 
     @Override
     public Status lTrim(final String key, final int start, final int end){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.lTrim(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.lTrim(makeRawKey(key), start, end));
     }
 
     @Override
     public Status lTrim(final byte[] key, final int start, final int end){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.lTrim(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.lTrim(makeByteKey(key), start, end));
     }
 
     @Override
     public Status lTrim(final String key, final long start, final long end){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.lTrim(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.lTrim(makeRawKey(key), start, end));
     }
 
     @Override
     public Status lTrim(final byte[] key, final long start, final long end){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.lTrim(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.lTrim(makeByteKey(key), start, end));
     }
 
     @Override
     public Long lRem(final String key, final String value, final int count){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.lRem(makeRawKey(key), value, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.lRem(makeRawKey(key), value, count));
     }
 
     @Override
     public Long lRem(final byte[] key, final byte[] value, final int count){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.lRem(makeByteKey(key), value, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.lRem(makeByteKey(key), value, count));
     }
 
     @Override
     public Long lRem(final String key, final String value, final long count){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.lRem(makeRawKey(key), value, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.lRem(makeRawKey(key), value, count));
     }
 
     @Override
     public Long lRem(final byte[] key, final byte[] value, final long count){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.lRem(makeByteKey(key), value, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.lRem(makeByteKey(key), value, count));
     }
 
     @Override
     public List<String> lRange(final String key, final int start, final int end){
-        return execute(new Executor<List<String>>() {
-
-            @Override
-            public List<String> execute(RedisClient client){
-                return client.lRange(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.lRange(makeRawKey(key), start, end));
     }
 
     @Override
     public List<byte[]> lRange(final byte[] key, final int start, final int end){
-        return execute(new Executor<List<byte[]>>() {
-
-            @Override
-            public List<byte[]> execute(RedisClient client){
-                return client.lRange(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.lRange(makeByteKey(key), start, end));
     }
 
     @Override
     public List<String> lRange(final String key, final long start, final long end){
-        return execute(new Executor<List<String>>() {
-
-            @Override
-            public List<String> execute(RedisClient client){
-                return client.lRange(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.lRange(makeRawKey(key), start, end));
     }
 
     @Override
     public List<byte[]> lRange(final byte[] key, final long start, final long end){
-        return execute(new Executor<List<byte[]>>() {
-
-            @Override
-            public List<byte[]> execute(RedisClient client){
-                return client.lRange(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.lRange(makeByteKey(key), start, end));
     }
 
     @Override
     public Long lLen(final String key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.lLen(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.lLen(makeRawKey(key)));
     }
 
     @Override
     public Long lLen(final byte[] key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.lLen(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.lLen(makeByteKey(key)));
     }
 
     @Override
     public Long sAdd(final String key, final String... members){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sAdd(makeRawKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.sAdd(makeRawKey(key), members));
     }
 
     @Override
     public Long sAdd(final byte[] key, final byte[]... members){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sAdd(makeByteKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.sAdd(makeByteKey(key), members));
     }
 
     @Override
     public Long sCard(final String key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sCard(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.sCard(makeRawKey(key)));
     }
 
     @Override
     public Long sCard(final byte[] key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sCard(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.sCard(makeByteKey(key)));
     }
 
     @Override
     public boolean sisMember(final String key, final String member){
-        return execute(new Executor<Boolean>() {
-
-            @Override
-            public Boolean execute(RedisClient client){
-                return client.sisMember(makeRawKey(key), member);
-            }
-        });
+        return execute((RedisClient client)->client.sisMember(makeRawKey(key), member));
     }
 
     @Override
     public boolean sisMember(final byte[] key, final byte[] member){
-        return execute(new Executor<Boolean>() {
-
-            @Override
-            public Boolean execute(RedisClient client){
-                return client.sisMember(makeByteKey(key), member);
-            }
-        });
+        return execute((RedisClient client)->client.sisMember(makeByteKey(key), member));
     }
 
     @Override
     public Set<String> sMembers(final String key){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.sMembers(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.sMembers(makeRawKey(key)));
     }
 
     @Override
     public Set<byte[]> sMembers(final byte[] key){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.sMembers(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.sMembers(makeByteKey(key)));
     }
 
     @Override
     public String sPop(final String key){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.sPop(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.sPop(makeRawKey(key)));
     }
 
     @Override
     public byte[] sPop(final byte[] key){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.sPop(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.sPop(makeByteKey(key)));
     }
 
     @Override
     public String sRandMember(final String key){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.sRandMember(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.sRandMember(makeRawKey(key)));
     }
 
     @Override
     public byte[] sRandMember(final byte[] key){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.sRandMember(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.sRandMember(makeByteKey(key)));
     }
 
     @Override
     public List<String> sRandMember(final String key, final int count){
-        return execute(new Executor<List<String>>() {
-
-            @Override
-            public List<String> execute(RedisClient client){
-                return client.sRandMember(makeRawKey(key), count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sRandMember(makeRawKey(key), count));
     }
 
     @Override
     public List<byte[]> sRandMember(final byte[] key, final int count){
-        return execute(new Executor<List<byte[]>>() {
-
-            @Override
-            public List<byte[]> execute(RedisClient client){
-                return client.sRandMember(makeByteKey(key), count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sRandMember(makeByteKey(key), count));
     }
 
     @Override
     public List<String> sRandMember(final String key, final long count){
-        return execute(new Executor<List<String>>() {
-
-            @Override
-            public List<String> execute(RedisClient client){
-                return client.sRandMember(makeRawKey(key), count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sRandMember(makeRawKey(key), count));
     }
 
     @Override
     public List<byte[]> sRandMember(final byte[] key, final long count){
-        return execute(new Executor<List<byte[]>>() {
-
-            @Override
-            public List<byte[]> execute(RedisClient client){
-                return client.sRandMember(makeByteKey(key), count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sRandMember(makeByteKey(key), count));
     }
 
     @Override
     public Long sRem(final String key, final String... members){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sRem(makeRawKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.sRem(makeRawKey(key), members));
     }
 
     @Override
     public Long sRem(final byte[] key, final byte[]... members){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sRem(makeByteKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.sRem(makeByteKey(key), members));
     }
 
     @Override
     public Set<String> sDiff(final String... keys){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.sDiff(makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.sDiff(makeRawKeys(keys)));
     }
 
     @Override
     public Set<byte[]> sDiff(final byte[]... keys){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.sDiff(makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.sDiff(makeByteKeys(keys)));
     }
 
     @Override
     public Long sDiffStore(final String destKey, final String... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sDiffStore(makeRawKey(destKey), makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.sDiffStore(makeRawKey(destKey), makeRawKeys(keys)));
     }
 
     @Override
     public Long sDiffStore(final byte[] destKey, final byte[]... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sDiffStore(makeByteKey(destKey), makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.sDiffStore(makeByteKey(destKey), makeByteKeys(keys)));
     }
 
     @Override
     public Set<String> sInter(final String... keys){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.sInter(makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.sInter(makeRawKeys(keys)));
     }
 
     @Override
     public Set<byte[]> sInter(final byte[]... keys){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.sInter(makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.sInter(makeByteKeys(keys)));
     }
 
     @Override
     public Long sInterStore(final String destKey, final String... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sDiffStore(makeRawKey(destKey), makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.sDiffStore(makeRawKey(destKey), makeRawKeys(keys)));
     }
 
     @Override
     public Long sInterStore(final byte[] destKey, final byte[]... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sDiffStore(makeByteKey(destKey), makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.sDiffStore(makeByteKey(destKey), makeByteKeys(keys)));
     }
 
     @Override
     public Set<String> sUnion(final String... keys){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.sUnion(makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.sUnion(makeRawKeys(keys)));
     }
 
     @Override
     public Set<byte[]> sUnion(final byte[]... keys){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.sUnion(makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.sUnion(makeByteKeys(keys)));
     }
 
     @Override
     public Long sUnionStore(final String destKey, final String... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sUnionStore(makeRawKey(destKey), makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.sUnionStore(makeRawKey(destKey), makeRawKeys(keys)));
     }
 
     @Override
     public Long sUnionStore(final byte[] destKey, final byte[]... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.sUnionStore(makeByteKey(destKey), makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.sUnionStore(makeByteKey(destKey), makeByteKeys(keys)));
     }
 
     @Override
     public Status sMove(final String source, final String destKey, final String member){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.sMove(makeRawKey(source), makeRawKey(destKey), member);
-            }
-
-        });
+        return execute((RedisClient client)->client.sMove(makeRawKey(source), makeRawKey(destKey), member));
     }
 
     @Override
     public Status sMove(final byte[] source, final byte[] destKey, final byte[] member){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.sMove(makeByteKey(source), makeByteKey(destKey), member);
-            }
-
-        });
+        return execute((RedisClient client)->client.sMove(makeByteKey(source), makeByteKey(destKey), member));
     }
 
     @Override
     public ScanResult<List<String>> sScan(final String key, final int cursor){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.sScan(makeRawKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeRawKey(key), cursor));
     }
 
     @Override
     public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.sScan(makeByteKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeByteKey(key), cursor));
     }
 
     @Override
     public ScanResult<List<String>> sScan(final String key, final long cursor){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.sScan(makeRawKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeRawKey(key), cursor));
     }
 
     @Override
     public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.sScan(makeByteKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeByteKey(key), cursor));
     }
 
     @Override
     public ScanResult<List<String>> sScan(final String key, final String cursor){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.sScan(makeRawKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeRawKey(key), cursor));
     }
 
     @Override
     public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.sScan(makeByteKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeByteKey(key), cursor));
     }
 
     @Override
     public ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.sScan(makeRawKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeRawKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.sScan(makeByteKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeByteKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.sScan(makeRawKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeRawKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.sScan(makeByteKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeByteKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.sScan(makeRawKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeRawKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.sScan(makeByteKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeByteKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<List<String>> sScan(final String key, final int cursor, final int count){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.sScan(makeRawKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeRawKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final int count){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.sScan(makeByteKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeByteKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<List<String>> sScan(final String key, final long cursor, final int count){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.sScan(makeRawKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeRawKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final int count){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.sScan(makeByteKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeByteKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<List<String>> sScan(final String key, final String cursor, final int count){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.sScan(makeRawKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeRawKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.sScan(makeByteKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeByteKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern, final int count){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.sScan(makeRawKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeRawKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern, final int count){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.sScan(makeByteKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeByteKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final int count){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.sScan(makeRawKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeRawKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.sScan(makeByteKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeByteKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern, final int count){
-        return execute(new Executor<ScanResult<List<String>>>() {
-
-            @Override
-            public ScanResult<List<String>> execute(RedisClient client){
-                return client.sScan(makeRawKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeRawKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
-        return execute(new Executor<ScanResult<List<byte[]>>>() {
-
-            @Override
-            public ScanResult<List<byte[]>> execute(RedisClient client){
-                return client.sScan(makeByteKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.sScan(makeByteKey(key), cursor, pattern, count));
     }
 
     @Override
     public Long zAdd(final String key, final Map<String, Number> members){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zAdd(makeRawKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.zAdd(makeRawKey(key), members));
     }
 
     @Override
     public Long zAdd(final byte[] key, final Map<byte[], Number> members){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zAdd(makeByteKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.zAdd(makeByteKey(key), members));
     }
 
     @Override
     public Long zAdd(final String key, final List<KeyValue<String, Number>> members){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zAdd(makeRawKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.zAdd(makeRawKey(key), members));
     }
 
     @Override
     public Long zAdd(final byte[] key, final List<KeyValue<byte[], Number>> members){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zAdd(makeByteKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.zAdd(makeByteKey(key), members));
     }
 
     @Override
     public Double zScore(final String key, final String member){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.zScore(makeRawKey(key), member);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScore(makeRawKey(key), member));
     }
 
     @Override
     public Double zScore(final byte[] key, final byte[] member){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.zScore(makeByteKey(key), member);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScore(makeByteKey(key), member));
     }
 
     @Override
     public Long zCard(final String key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zCard(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.zCard(makeRawKey(key)));
     }
 
     @Override
     public Long zCard(final byte[] key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zCard(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.zCard(makeByteKey(key)));
     }
 
     @Override
     public Double zIncrBy(final String key, final String member, final float increment){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.zIncrBy(makeRawKey(key), member, increment);
-            }
-
-        });
+        return execute((RedisClient client)->client.zIncrBy(makeRawKey(key), member, increment));
     }
 
     @Override
     public Double zIncrBy(final byte[] key, final byte[] member, final float increment){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.zIncrBy(makeByteKey(key), member, increment);
-            }
-
-        });
+        return execute((RedisClient client)->client.zIncrBy(makeByteKey(key), member, increment));
     }
 
     @Override
     public Double zIncrBy(final String key, final String member, final double increment){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.zIncrBy(makeRawKey(key), member, increment);
-            }
-
-        });
+        return execute((RedisClient client)->client.zIncrBy(makeRawKey(key), member, increment));
     }
 
     @Override
     public Double zIncrBy(final byte[] key, final byte[] member, final double increment){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.zIncrBy(makeByteKey(key), member, increment);
-            }
-
-        });
+        return execute((RedisClient client)->client.zIncrBy(makeByteKey(key), member, increment));
     }
 
     @Override
     public Double zIncrBy(final String key, final String member, final int increment){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.zIncrBy(makeRawKey(key), member, increment);
-            }
-
-        });
+        return execute((RedisClient client)->client.zIncrBy(makeRawKey(key), member, increment));
     }
 
     @Override
     public Double zIncrBy(final byte[] key, final byte[] member, final int increment){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.zIncrBy(makeByteKey(key), member, increment);
-            }
-
-        });
+        return execute((RedisClient client)->client.zIncrBy(makeByteKey(key), member, increment));
     }
 
     @Override
     public Double zIncrBy(final String key, final String member, final long increment){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.zIncrBy(makeRawKey(key), member, increment);
-            }
-
-        });
+        return execute((RedisClient client)->client.zIncrBy(makeRawKey(key), member, increment));
     }
 
     @Override
     public Double zIncrBy(final byte[] key, final byte[] member, final long increment){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.zIncrBy(makeByteKey(key), member, increment);
-            }
-
-        });
+        return execute((RedisClient client)->client.zIncrBy(makeByteKey(key), member, increment));
     }
 
     @Override
     public Long zCount(final String key, final float min, final float max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zCount(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zCount(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zCount(final byte[] key, final float min, final float max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zCount(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zCount(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zCount(final String key, final double min, final double max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zCount(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zCount(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zCount(final byte[] key, final double min, final double max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zCount(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zCount(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zCount(final String key, final int min, final int max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zCount(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zCount(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zCount(final byte[] key, final int min, final int max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zCount(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zCount(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zCount(final String key, final long min, final long max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zCount(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zCount(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zCount(final byte[] key, final long min, final long max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zCount(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zCount(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRange(final String key, final int start, final int end){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRange(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRange(makeRawKey(key), start, end));
     }
 
     @Override
     public Set<byte[]> zRange(final byte[] key, final int start, final int end){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRange(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRange(makeByteKey(key), start, end));
     }
 
     @Override
     public Set<String> zRange(final String key, final long start, final long end){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRange(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRange(makeRawKey(key), start, end));
     }
 
     @Override
     public Set<byte[]> zRange(final byte[] key, final long start, final long end){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRange(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRange(makeByteKey(key), start, end));
     }
 
     @Override
     public Set<Tuple> zRangeWithScores(final String key, final int start, final int end){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeWithScores(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeWithScores(makeRawKey(key), start, end));
     }
 
     @Override
     public Set<Tuple> zRangeWithScores(final byte[] key, final int start, final int end){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeWithScores(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeWithScores(makeByteKey(key), start, end));
     }
 
     @Override
     public Set<Tuple> zRangeWithScores(final String key, final long start, final long end){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeWithScores(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeWithScores(makeRawKey(key), start, end));
     }
 
     @Override
     public Set<Tuple> zRangeWithScores(final byte[] key, final long start, final long end){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeWithScores(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeWithScores(makeByteKey(key), start, end));
     }
 
     @Override
     public Set<String> zRangeByScore(final String key, final float min, final float max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByScore(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRangeByScore(final byte[] key, final float min, final float max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByScore(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRangeByScore(final String key, final double min, final double max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByScore(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByScore(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRangeByScore(final String key, final int min, final int max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByScore(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRangeByScore(final byte[] key, final int min, final int max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByScore(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRangeByScore(final String key, final long min, final long max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByScore(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByScore(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRangeByScore(final String key, final String min, final String max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByScore(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByScore(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRangeByScore(final String key, final float min, final float max, final int offset, final int
-    count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByScore(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRangeByScore(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRangeByScore(final byte[] key, final float min, final float max, final int offset, final int
-    count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByScore(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRangeByScore(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<String> zRangeByScore(final String key, final double min, final double max, final int offset, final
     int count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByScore(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final int offset, final
     int count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByScore(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<String> zRangeByScore(final String key, final int min, final int max, final int offset, final int count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByScore(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRangeByScore(final byte[] key, final int min, final int max, final int offset, final int count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByScore(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<String> zRangeByScore(final String key, final long min, final long max, final int offset, final int
-    count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByScore(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRangeByScore(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max, final int offset, final int
-    count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByScore(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRangeByScore(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<String> zRangeByScore(final String key, final String min, final String max, final int offset, final
     int count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByScore(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset, final
     int count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByScore(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScore(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final long min, final long max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
-    final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+                                              final int count){
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset,
-    final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+                                              final int count){
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
-     final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+                                              final int count){
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
-     final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+                                              final int count){
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max, final int offset, final
-     int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+    int count){
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset, final
-     int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+    int count){
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
-    final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+                                              final int count){
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
-    final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+                                              final int count){
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final int offset,
-     final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+                                              final int count){
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int offset,
-     final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+                                              final int count){
+        return execute((RedisClient client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<String> zRangeByLex(final String key, final float min, final float max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRangeByLex(final String key, final double min, final double max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRangeByLex(final String key, final int min, final int max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRangeByLex(final String key, final long min, final long max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRangeByLex(final String key, final String min, final String max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRangeByLex(final String key, final float min, final float max, final int offset, final int
-    count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByLex(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max, final int offset, final int
-    count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByLex(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRangeByLex(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<String> zRangeByLex(final String key, final double min, final double max, final int offset, final int
-    count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByLex(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final int offset, final int
-    count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByLex(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRangeByLex(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<String> zRangeByLex(final String key, final int min, final int max, final int offset, final int count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByLex(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max, final int offset, final int count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByLex(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<String> zRangeByLex(final String key, final long min, final long max, final int offset, final int count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByLex(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max, final int offset, final int count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByLex(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRangeByLex(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<String> zRangeByLex(final String key, final String min, final String max, final int offset, final int
-    count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRangeByLex(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset, final int
-    count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRangeByLex(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRangeByLex(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Long zRank(final String key, final String member){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRank(makeRawKey(key), member);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRank(makeRawKey(key), member));
     }
 
     @Override
     public Long zRank(final byte[] key, final byte[] member){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRank(makeByteKey(key), member);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRank(makeByteKey(key), member));
     }
 
     @Override
     public Long zRevRank(final String key, final String member){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRevRank(makeRawKey(key), member);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRank(makeRawKey(key), member));
     }
 
     @Override
     public Long zRevRank(final byte[] key, final byte[] member){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRevRank(makeByteKey(key), member);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRank(makeByteKey(key), member));
     }
 
     @Override
     public Long zRem(final String key, final String... members){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRem(makeRawKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRem(makeRawKey(key), members));
     }
 
     @Override
     public Long zRem(final byte[] key, final byte[]... members){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRem(makeByteKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRem(makeByteKey(key), members));
     }
 
     @Override
     public Long zRemRangeByRank(final String key, final int start, final int end){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByRank(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByRank(makeRawKey(key), start, end));
     }
 
     @Override
     public Long zRemRangeByRank(final byte[] key, final int start, final int end){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByRank(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByRank(makeByteKey(key), start, end));
     }
 
     @Override
     public Long zRemRangeByRank(final String key, final long start, final long end){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByRank(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByRank(makeRawKey(key), start, end));
     }
 
     @Override
     public Long zRemRangeByRank(final byte[] key, final long start, final long end){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByRank(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByRank(makeByteKey(key), start, end));
     }
 
     @Override
     public Long zRemRangeByScore(final String key, final float min, final float max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByScore(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByScore(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByScore(final byte[] key, final float min, final float max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByScore(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByScore(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByScore(final String key, final double min, final double max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByScore(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByScore(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByScore(final byte[] key, final double min, final double max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByScore(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByScore(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByScore(final String key, final int min, final int max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByScore(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByScore(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByScore(final byte[] key, final int min, final int max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByScore(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByScore(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByScore(final String key, final long min, final long max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByScore(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByScore(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByScore(final byte[] key, final long min, final long max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByScore(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByScore(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByScore(final String key, final String min, final String max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByScore(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByScore(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByScore(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByScore(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByLex(final String key, final float min, final float max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByLex(final byte[] key, final float min, final float max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByLex(final String key, final double min, final double max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByLex(final byte[] key, final double min, final double max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByLex(final String key, final int min, final int max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByLex(final byte[] key, final int min, final int max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByLex(final String key, final long min, final long max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByLex(final byte[] key, final long min, final long max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByLex(final String key, final String min, final String max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zRemRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRemRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRevRange(final String key, final int start, final int end){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRange(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRange(makeRawKey(key), start, end));
     }
 
     @Override
     public Set<byte[]> zRevRange(final byte[] key, final int start, final int end){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRange(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRange(makeByteKey(key), start, end));
     }
 
     @Override
     public Set<String> zRevRange(final String key, final long start, final long end){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRange(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRange(makeRawKey(key), start, end));
     }
 
     @Override
     public Set<byte[]> zRevRange(final byte[] key, final long start, final long end){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRange(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRange(makeByteKey(key), start, end));
     }
 
     @Override
     public Set<Tuple> zRevRangeWithScores(final String key, final int start, final int end){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeWithScores(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeWithScores(makeRawKey(key), start, end));
     }
 
     @Override
     public Set<Tuple> zRevRangeWithScores(final byte[] key, final int start, final int end){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeWithScores(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeWithScores(makeByteKey(key), start, end));
     }
 
     @Override
     public Set<Tuple> zRevRangeWithScores(final String key, final long start, final long end){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeWithScores(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeWithScores(makeRawKey(key), start, end));
     }
 
     @Override
     public Set<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeWithScores(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeWithScores(makeByteKey(key), start, end));
     }
 
     @Override
     public Set<String> zRevRangeByScore(final String key, final float min, final float max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByScore(makeRawKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScore(makeRawKey(key), max, min));
     }
 
     @Override
     public Set<byte[]> zRevRangeByScore(final byte[] key, final float min, final float max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByScore(makeByteKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScore(makeByteKey(key), max, min));
     }
 
     @Override
     public Set<String> zRevRangeByScore(final String key, final double min, final double max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByScore(makeRawKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScore(makeRawKey(key), max, min));
     }
 
     @Override
     public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByScore(makeByteKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScore(makeByteKey(key), max, min));
     }
 
     @Override
     public Set<String> zRevRangeByScore(final String key, final int min, final int max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByScore(makeRawKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScore(makeRawKey(key), max, min));
     }
 
     @Override
     public Set<byte[]> zRevRangeByScore(final byte[] key, final int min, final int max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByScore(makeByteKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScore(makeByteKey(key), max, min));
     }
 
     @Override
     public Set<String> zRevRangeByScore(final String key, final long min, final long max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByScore(makeRawKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScore(makeRawKey(key), max, min));
     }
 
     @Override
     public Set<byte[]> zRevRangeByScore(final byte[] key, final long min, final long max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByScore(makeByteKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScore(makeByteKey(key), max, min));
     }
 
     @Override
     public Set<String> zRevRangeByScore(final String key, final String min, final String max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByScore(makeRawKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScore(makeRawKey(key), max, min));
     }
 
     @Override
     public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByScore(makeByteKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScore(makeByteKey(key), max, min));
     }
 
     @Override
     public Set<String> zRevRangeByScore(final String key, final float min, final float max, final int offset, final
     int count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByScore(makeRawKey(key), max, min, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScore(makeRawKey(key), max, min, offset, count));
     }
 
     @Override
     public Set<byte[]> zRevRangeByScore(final byte[] key, final float min, final float max, final int offset, final
     int count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByScore(makeByteKey(key), max, min, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScore(makeByteKey(key), max, min, offset, count));
     }
 
     @Override
     public Set<String> zRevRangeByScore(final String key, final double min, final double max, final int offset, final
-     int count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByScore(makeRawKey(key), max, min, offset, count);
-            }
-
-        });
+    int count){
+        return execute((RedisClient client)->client.zRevRangeByScore(makeRawKey(key), max, min, offset, count));
     }
 
     @Override
     public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset, final
-     int count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByScore(makeByteKey(key), max, min, offset, count);
-            }
-
-        });
+    int count){
+        return execute((RedisClient client)->client.zRevRangeByScore(makeByteKey(key), max, min, offset, count));
     }
 
     @Override
     public Set<String> zRevRangeByScore(final String key, final int min, final int max, final int offset, final int
-    count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByScore(makeRawKey(key), max, min, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRevRangeByScore(makeRawKey(key), max, min, offset, count));
     }
 
     @Override
     public Set<byte[]> zRevRangeByScore(final byte[] key, final int min, final int max, final int offset, final int
-    count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByScore(makeByteKey(key), max, min, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRevRangeByScore(makeByteKey(key), max, min, offset, count));
     }
 
     @Override
     public Set<String> zRevRangeByScore(final String key, final long min, final long max, final int offset, final int
-     count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByScore(makeRawKey(key), max, min, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRevRangeByScore(makeRawKey(key), max, min, offset, count));
     }
 
     @Override
     public Set<byte[]> zRevRangeByScore(final byte[] key, final long min, final long max, final int offset, final int
-     count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByScore(makeByteKey(key), max, min, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRevRangeByScore(makeByteKey(key), max, min, offset, count));
     }
 
     @Override
     public Set<String> zRevRangeByScore(final String key, final String min, final String max, final int offset, final
-     int count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByScore(makeRawKey(key), max, min, offset, count);
-            }
-
-        });
+    int count){
+        return execute((RedisClient client)->client.zRevRangeByScore(makeRawKey(key), max, min, offset, count));
     }
 
     @Override
     public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset, final
-     int count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByScore(makeByteKey(key), max, min, offset, count);
-            }
-
-        });
+    int count){
+        return execute((RedisClient client)->client.zRevRangeByScore(makeByteKey(key), max, min, offset, count));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float min, final float max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeRawKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeRawKey(key), max, min));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max){
-        return null;
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeByteKey(key), max, min));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeRawKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeRawKey(key), max, min));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeByteKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeByteKey(key), max, min));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeRawKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeRawKey(key), max, min));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeByteKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeByteKey(key), max, min));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeRawKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeRawKey(key), max, min));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeByteKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeByteKey(key), max, min));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeRawKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeRawKey(key), max, min));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeByteKey(key), max, min);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeByteKey(key), max, min));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float max, final float min, final int
-    offset, final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeRawKey(key), max, min, offset, count);
-            }
-
-        });
+            offset, final int count){
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeRawKey(key), max, min, offset,
+                count));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max, final int
-    offset, final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeByteKey(key), max, min, offset, count);
-            }
-
-        });
+            offset, final int count){
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeByteKey(key), max, min, offset,
+                count));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max, final int
-    offset, final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeRawKey(key), max, min, offset, count);
-            }
-
-        });
+            offset, final int count){
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeRawKey(key), max, min, offset,
+                count));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max, final int
-    offset, final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeByteKey(key), max, min, offset, count);
-            }
-
-        });
+            offset, final int count){
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeByteKey(key), max, min, offset,
+                count));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
-    final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeRawKey(key), max, min, offset, count);
-            }
-
-        });
+                                                 final int count){
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeRawKey(key), max, min, offset,
+                count));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset,
-    final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeByteKey(key), max, min, offset, count);
-            }
-
-        });
+                                                 final int count){
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeByteKey(key), max, min, offset,
+                count));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
-    final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeRawKey(key), max, min, offset, count);
-            }
-
-        });
+                                                 final int count){
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeRawKey(key), max, min, offset,
+                count));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
-    final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeByteKey(key), max, min, offset, count);
-            }
-
-        });
+                                                 final int count){
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeByteKey(key), max, min, offset,
+                count));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max, final int
-    offset, final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeRawKey(key), max, min, offset, count);
-            }
-
-        });
+            offset, final int count){
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeRawKey(key), max, min, offset,
+                count));
     }
 
     @Override
     public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int
-    offset, final int count){
-        return execute(new Executor<Set<Tuple>>() {
-
-            @Override
-            public Set<Tuple> execute(RedisClient client){
-                return client.zRevRangeByScoreWithScores(makeByteKey(key), max, min, offset, count);
-            }
-
-        });
+            offset, final int count){
+        return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeByteKey(key), max, min, offset,
+                count));
     }
 
     @Override
     public Set<String> zRevRangeByLex(final String key, final float min, final float max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRevRangeByLex(final String key, final double min, final double max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRevRangeByLex(final String key, final int min, final int max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRevRangeByLex(final String key, final long min, final long max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRevRangeByLex(final String key, final String min, final String max){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByLex(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeRawKey(key), min, max));
     }
 
     @Override
     public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByLex(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeByteKey(key), min, max));
     }
 
     @Override
     public Set<String> zRevRangeByLex(final String key, final float min, final float max, final int offset, final int
-     count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByLex(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRevRangeByLex(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max, final int offset, final int
-     count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByLex(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRevRangeByLex(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<String> zRevRangeByLex(final String key, final double min, final double max, final int offset, final
     int count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByLex(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset, final
     int count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByLex(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<String> zRevRangeByLex(final String key, final int min, final int max, final int offset, final int
-    count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByLex(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRevRangeByLex(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max, final int offset, final int
-    count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByLex(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRevRangeByLex(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<String> zRevRangeByLex(final String key, final long min, final long max, final int offset, final int
-    count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByLex(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRevRangeByLex(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max, final int offset, final int
-    count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByLex(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+            count){
+        return execute((RedisClient client)->client.zRevRangeByLex(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<String> zRevRangeByLex(final String key, final String min, final String max, final int offset, final
     int count){
-        return execute(new Executor<Set<String>>() {
-
-            @Override
-            public Set<String> execute(RedisClient client){
-                return client.zRevRangeByLex(makeRawKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeRawKey(key), min, max, offset, count));
     }
 
     @Override
     public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset, final
     int count){
-        return execute(new Executor<Set<byte[]>>() {
-
-            @Override
-            public Set<byte[]> execute(RedisClient client){
-                return client.zRevRangeByLex(makeByteKey(key), min, max, offset, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zRevRangeByLex(makeByteKey(key), min, max, offset, count));
     }
 
     @Override
     public Long zLexCount(final String key, final float min, final float max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zLexCount(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zLexCount(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zLexCount(final byte[] key, final float min, final float max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zLexCount(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zLexCount(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zLexCount(final String key, final double min, final double max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zLexCount(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zLexCount(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zLexCount(final byte[] key, final double min, final double max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zLexCount(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zLexCount(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zLexCount(final String key, final int min, final int max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zLexCount(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zLexCount(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zLexCount(final byte[] key, final int min, final int max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zLexCount(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zLexCount(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zLexCount(final String key, final long min, final long max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zLexCount(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zLexCount(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zLexCount(final byte[] key, final long min, final long max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zLexCount(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zLexCount(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zLexCount(final String key, final String min, final String max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zLexCount(makeRawKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zLexCount(makeRawKey(key), min, max));
     }
 
     @Override
     public Long zLexCount(final byte[] key, final byte[] min, final byte[] max){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zLexCount(makeByteKey(key), min, max);
-            }
-
-        });
+        return execute((RedisClient client)->client.zLexCount(makeByteKey(key), min, max));
     }
 
     @Override
     public Long zInterStore(final String destKey, final String... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zInterStore(makeRawKey(destKey), makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.zInterStore(makeRawKey(destKey), makeRawKeys(keys)));
     }
 
     @Override
     public Long zInterStore(final byte[] destKey, final byte[]... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zInterStore(makeByteKey(destKey), makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.zInterStore(makeByteKey(destKey), makeByteKeys(keys)));
     }
 
     @Override
     public Long zInterStore(final String destKey, final Aggregate aggregate, final String... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zInterStore(makeRawKey(destKey), aggregate, makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.zInterStore(makeRawKey(destKey), aggregate, makeRawKeys(keys)));
     }
 
     @Override
     public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zInterStore(makeByteKey(destKey), aggregate, makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.zInterStore(makeByteKey(destKey), aggregate, makeByteKeys(keys)));
     }
 
     @Override
     public Long zInterStore(final String destKey, final double[] weights, final String... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zInterStore(makeRawKey(destKey), weights, makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.zInterStore(makeRawKey(destKey), weights, makeRawKeys(keys)));
     }
 
     @Override
     public Long zInterStore(final byte[] destKey, final double[] weights, final byte[]... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zInterStore(makeByteKey(destKey), weights, makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.zInterStore(makeByteKey(destKey), weights, makeByteKeys(keys)));
     }
 
     @Override
     public Long zInterStore(final String destKey, final Aggregate aggregate, final double[] weights, final String...
-    keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zInterStore(makeRawKey(destKey), aggregate, weights, makeRawKeys(keys));
-            }
-
-        });
+            keys){
+        return execute((RedisClient client)->client.zInterStore(makeRawKey(destKey), aggregate, weights, makeRawKeys
+                (keys)));
     }
 
     @Override
     public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double[] weights, final byte[]...
-    keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zInterStore(makeByteKey(destKey), aggregate, weights, makeByteKeys(keys));
-            }
-
-        });
+            keys){
+        return execute((RedisClient client)->client.zInterStore(makeByteKey(destKey), aggregate, weights,
+                makeByteKeys(keys)));
     }
 
     @Override
     public Long zUnionStore(final String destKey, final String... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zUnionStore(makeRawKey(destKey), makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.zUnionStore(makeRawKey(destKey), makeRawKeys(keys)));
     }
 
     @Override
     public Long zUnionStore(final byte[] destKey, final byte[]... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zUnionStore(makeByteKey(destKey), makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.zUnionStore(makeByteKey(destKey), makeByteKeys(keys)));
     }
 
     @Override
     public Long zUnionStore(final String destKey, final Aggregate aggregate, final String... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zUnionStore(makeRawKey(destKey), aggregate, makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.zUnionStore(makeRawKey(destKey), aggregate, makeRawKeys(keys)));
     }
 
     @Override
     public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zUnionStore(makeByteKey(destKey), aggregate, makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.zUnionStore(makeByteKey(destKey), aggregate, makeByteKeys(keys)));
     }
 
     @Override
     public Long zUnionStore(final String destKey, final double[] weights, final String... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zUnionStore(makeRawKey(destKey), weights, makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.zUnionStore(makeRawKey(destKey), weights, makeRawKeys(keys)));
     }
 
     @Override
     public Long zUnionStore(final byte[] destKey, final double[] weights, final byte[]... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zUnionStore(makeByteKey(destKey), weights, makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.zUnionStore(makeByteKey(destKey), weights, makeByteKeys(keys)));
     }
 
     @Override
     public Long zUnionStore(final String destKey, final Aggregate aggregate, final double[] weights, final String...
-    keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zUnionStore(makeRawKey(destKey), aggregate, weights, makeRawKeys(keys));
-            }
-
-        });
+            keys){
+        return execute((RedisClient client)->client.zUnionStore(makeRawKey(destKey), aggregate, weights, makeRawKeys
+                (keys)));
     }
 
     @Override
     public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double[] weights, final byte[]...
-    keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.zUnionStore(makeByteKey(destKey), aggregate, weights, makeByteKeys(keys));
-            }
-
-        });
+            keys){
+        return execute((RedisClient client)->client.zUnionStore(makeByteKey(destKey), aggregate, weights,
+                makeByteKeys(keys)));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final String key, final int cursor){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeRawKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeRawKey(key), cursor));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeByteKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeByteKey(key), cursor));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final String key, final long cursor){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeRawKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeRawKey(key), cursor));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeByteKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeByteKey(key), cursor));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final String key, final String cursor){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeRawKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeRawKey(key), cursor));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeByteKey(key), cursor);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeByteKey(key), cursor));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeRawKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeRawKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final byte[] pattern){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeByteKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeByteKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeRawKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeRawKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeByteKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeByteKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeRawKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeRawKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeByteKey(key), cursor, pattern);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeByteKey(key), cursor, pattern));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final int count){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeRawKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeRawKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final int count){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeByteKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeByteKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final int count){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeRawKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeRawKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final int count){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeByteKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeByteKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final int count){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeRawKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeRawKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeByteKey(key), cursor, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeByteKey(key), cursor, count));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern, final int count){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeRawKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeRawKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final byte[] pattern, final int count){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeByteKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeByteKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final int count){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeRawKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeRawKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern, final int count){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeByteKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeByteKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final int count){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeRawKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeRawKey(key), cursor, pattern, count));
     }
 
     @Override
     public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
-        return execute(new Executor<ScanResult<List<Tuple>>>() {
-
-            @Override
-            public ScanResult<List<Tuple>> execute(RedisClient client){
-                return client.zScan(makeByteKey(key), cursor, pattern, count);
-            }
-
-        });
+        return execute((RedisClient client)->client.zScan(makeByteKey(key), cursor, pattern, count));
     }
 
     @Override
     public Long geoAdd(final String key, final String member, final double longitude, final double latitude){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.geoAdd(makeRawKey(key), member, longitude, latitude);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoAdd(makeRawKey(key), member, longitude, latitude));
     }
 
     @Override
     public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.geoAdd(makeByteKey(key), member, longitude, latitude);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoAdd(makeByteKey(key), member, longitude, latitude));
     }
 
     @Override
     public Long geoAdd(final String key, final String member, final Geo geo){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.geoAdd(makeRawKey(key), member, geo);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoAdd(makeRawKey(key), member, geo));
     }
 
     @Override
     public Long geoAdd(final byte[] key, final byte[] member, final Geo geo){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.geoAdd(makeByteKey(key), member, geo);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoAdd(makeByteKey(key), member, geo));
     }
 
     @Override
     public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.geoAdd(makeRawKey(key), memberCoordinates);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoAdd(makeRawKey(key), memberCoordinates));
     }
 
     @Override
     public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.geoAdd(makeByteKey(key), memberCoordinates);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoAdd(makeByteKey(key), memberCoordinates));
     }
 
     @Override
     public List<Geo> geoPos(final String key, final String... members){
-        return execute(new Executor<List<Geo>>() {
-
-            @Override
-            public List<Geo> execute(RedisClient client){
-                return client.geoPos(makeRawKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoPos(makeRawKey(key), members));
     }
 
     @Override
     public List<Geo> geoPos(final byte[] key, final byte[]... members){
-        return execute(new Executor<List<Geo>>() {
-
-            @Override
-            public List<Geo> execute(RedisClient client){
-                return client.geoPos(makeByteKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoPos(makeByteKey(key), members));
     }
 
     @Override
     public Double geoDist(final String key, final String member1, final String member2){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.geoDist(makeRawKey(key), member1, member2);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoDist(makeRawKey(key), member1, member2));
     }
 
     @Override
     public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.geoDist(makeByteKey(key), member1, member2);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoDist(makeByteKey(key), member1, member2));
     }
 
     @Override
     public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.geoDist(makeRawKey(key), member1, member2, unit);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoDist(makeRawKey(key), member1, member2, unit));
     }
 
     @Override
     public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
-        return execute(new Executor<Double>() {
-
-            @Override
-            public Double execute(RedisClient client){
-                return client.geoDist(makeByteKey(key), member1, member2, unit);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoDist(makeByteKey(key), member1, member2, unit));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double
-    radius){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeRawKey(key), longitude, latitude, radius);
-            }
-
-        });
+            radius){
+        return execute((RedisClient client)->client.geoRadius(makeRawKey(key), longitude, latitude, radius));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double
-    radius){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeByteKey(key), longitude, latitude, radius);
-            }
-
-        });
+            radius){
+        return execute((RedisClient client)->client.geoRadius(makeByteKey(key), longitude, latitude, radius));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeRawKey(key), geo, radius);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadius(makeRawKey(key), geo, radius));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeByteKey(key), geo, radius);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadius(makeByteKey(key), geo, radius));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double
-    radius, final GeoUnit unit){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeRawKey(key), longitude, latitude, radius, unit);
-            }
-
-        });
+            radius, final GeoUnit unit){
+        return execute((RedisClient client)->client.geoRadius(makeRawKey(key), longitude, latitude, radius, unit));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double
-    radius, final GeoUnit unit){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeByteKey(key), longitude, latitude, radius, unit);
-            }
-
-        });
+            radius, final GeoUnit unit){
+        return execute((RedisClient client)->client.geoRadius(makeByteKey(key), longitude, latitude, radius, unit));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeRawKey(key), geo, radius, unit);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadius(makeRawKey(key), geo, radius, unit));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeByteKey(key), geo, radius, unit);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadius(makeByteKey(key), geo, radius, unit));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double
-    radius, final GeoArgument geoArgument){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeRawKey(key), longitude, latitude, radius, geoArgument);
-            }
-
-        });
+            radius, final GeoArgument geoArgument){
+        return execute((RedisClient client)->client.geoRadius(makeRawKey(key), longitude, latitude, radius,
+                geoArgument));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double
-    radius, final GeoArgument geoArgument){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeByteKey(key), longitude, latitude, radius, geoArgument);
-            }
-
-        });
+            radius, final GeoArgument geoArgument){
+        return execute((RedisClient client)->client.geoRadius(makeByteKey(key), longitude, latitude, radius,
+                geoArgument));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoArgument
-    geoArgument){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeRawKey(key), geo, radius, geoArgument);
-            }
-
-        });
+            geoArgument){
+        return execute((RedisClient client)->client.geoRadius(makeRawKey(key), geo, radius, geoArgument));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoArgument
-    geoArgument){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeByteKey(key), geo, radius, geoArgument);
-            }
-
-        });
+            geoArgument){
+        return execute((RedisClient client)->client.geoRadius(makeByteKey(key), geo, radius, geoArgument));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double
-    radius, final GeoUnit unit, final GeoArgument geoArgument){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeRawKey(key), longitude, latitude, radius, unit, geoArgument);
-            }
-
-        });
+            radius, final GeoUnit unit, final GeoArgument geoArgument){
+        return execute((RedisClient client)->client.geoRadius(makeRawKey(key), longitude, latitude, radius, unit,
+                geoArgument));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double
-    radius, final GeoUnit unit, final GeoArgument geoArgument){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeByteKey(key), longitude, latitude, radius, unit, geoArgument);
-            }
-
-        });
+            radius, final GeoUnit unit, final GeoArgument geoArgument){
+        return execute((RedisClient client)->client.geoRadius(makeByteKey(key), longitude, latitude, radius, unit,
+                geoArgument));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit, final
     GeoArgument geoArgument){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeRawKey(key), geo, radius, unit, geoArgument);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadius(makeRawKey(key), geo, radius, unit, geoArgument));
     }
 
     @Override
     public List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit, final
     GeoArgument geoArgument){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadius(makeByteKey(key), geo, radius, unit, geoArgument);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadius(makeByteKey(key), geo, radius, unit, geoArgument));
     }
 
     @Override
     public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadiusByMember(makeRawKey(key), member, radius);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadiusByMember(makeRawKey(key), member, radius));
     }
 
     @Override
     public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadiusByMember(makeByteKey(key), member, radius);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadiusByMember(makeByteKey(key), member, radius));
     }
 
     @Override
     public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius, final
     GeoUnit unit){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadiusByMember(makeRawKey(key), member, radius, unit);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadiusByMember(makeRawKey(key), member, radius, unit));
     }
 
     @Override
     public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final
     GeoUnit unit){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadiusByMember(makeByteKey(key), member, radius, unit);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadiusByMember(makeByteKey(key), member, radius, unit));
     }
 
     @Override
     public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius, final
     GeoArgument geoArgument){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadiusByMember(makeRawKey(key), member, radius, geoArgument);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadiusByMember(makeRawKey(key), member, radius, geoArgument));
     }
 
     @Override
     public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final
     GeoArgument geoArgument){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadiusByMember(makeByteKey(key), member, radius, geoArgument);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadiusByMember(makeByteKey(key), member, radius, geoArgument));
     }
 
     @Override
     public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius, final
     GeoUnit unit, final GeoArgument geoArgument){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadiusByMember(makeRawKey(key), member, radius, unit, geoArgument);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadiusByMember(makeRawKey(key), member, radius, unit,
+                geoArgument));
     }
 
     @Override
     public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final
     GeoUnit unit, final GeoArgument geoArgument){
-        return execute(new Executor<List<GeoRadius>>() {
-
-            @Override
-            public List<GeoRadius> execute(RedisClient client){
-                return client.geoRadiusByMember(makeByteKey(key), member, radius, unit, geoArgument);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoRadiusByMember(makeByteKey(key), member, radius, unit,
+                geoArgument));
     }
 
     @Override
     public List<String> geoHash(final String key, final String... members){
-        return execute(new Executor<List<String>>() {
-
-            @Override
-            public List<String> execute(RedisClient client){
-                return client.geoHash(makeRawKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoHash(makeRawKey(key), members));
     }
 
     @Override
     public List<byte[]> geoHash(final byte[] key, final byte[]... members){
-        return execute(new Executor<List<byte[]>>() {
-
-            @Override
-            public List<byte[]> execute(RedisClient client){
-                return client.geoHash(makeByteKey(key), members);
-            }
-
-        });
+        return execute((RedisClient client)->client.geoHash(makeByteKey(key), members));
     }
 
     @Override
     public Status setBit(final String key, final long offset, final String value){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.setBit(makeRawKey(key), offset, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.setBit(makeRawKey(key), offset, value));
     }
 
     @Override
     public Status setBit(final byte[] key, final long offset, final byte[] value){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.setBit(makeByteKey(key), offset, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.setBit(makeByteKey(key), offset, value));
     }
 
     @Override
     public Status setBit(final String key, final long offset, final boolean value){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.setBit(makeRawKey(key), offset, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.setBit(makeRawKey(key), offset, value));
     }
 
     @Override
     public Status setBit(final byte[] key, final long offset, final boolean value){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.setBit(makeByteKey(key), offset, value);
-            }
-
-        });
+        return execute((RedisClient client)->client.setBit(makeByteKey(key), offset, value));
     }
 
     @Override
     public Status getBit(final String key, final long offset){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.getBit(makeRawKey(key), offset);
-            }
-
-        });
+        return execute((RedisClient client)->client.getBit(makeRawKey(key), offset));
     }
 
     @Override
     public Status getBit(final byte[] key, final long offset){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.getBit(makeByteKey(key), offset);
-            }
-
-        });
+        return execute((RedisClient client)->client.getBit(makeByteKey(key), offset));
     }
 
     @Override
     public Long bitPos(final String key, final boolean value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.bitPos(makeRawKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.bitPos(makeRawKey(key), value));
     }
 
     @Override
     public Long bitPos(final byte[] key, final boolean value){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.bitPos(makeByteKey(key), value);
-            }
-
-        });
+        return execute((RedisClient client)->client.bitPos(makeByteKey(key), value));
     }
 
     @Override
     public Long bitPos(final String key, final boolean value, final int start, final int end){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.bitPos(makeRawKey(key), value, start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.bitPos(makeRawKey(key), value, start, end));
     }
 
     @Override
     public Long bitPos(final byte[] key, final boolean value, final int start, final int end){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.bitPos(makeByteKey(key), value, start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.bitPos(makeByteKey(key), value, start, end));
     }
 
     @Override
     public Long bitOp(final Operation operation, final String destKey, final String... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.bitOp(operation, makeRawKey(destKey), makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.bitOp(operation, makeRawKey(destKey), makeRawKeys(keys)));
     }
 
     @Override
     public Long bitOp(final Operation operation, final byte[] destKey, final byte[]... keys){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.bitOp(operation, makeByteKey(destKey), makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.bitOp(operation, makeByteKey(destKey), makeByteKeys(keys)));
     }
 
     @Override
     public List<Long> bitField(final String key, final String... arguments){
-        return execute(new Executor<List<Long>>() {
-
-            @Override
-            public List<Long> execute(RedisClient client){
-                return client.bitField(makeRawKey(key), arguments);
-            }
-
-        });
+        return execute((RedisClient client)->client.bitField(makeRawKey(key), arguments));
     }
 
     @Override
     public List<Long> bitField(final byte[] key, final byte[]... arguments){
-        return execute(new Executor<List<Long>>() {
-
-            @Override
-            public List<Long> execute(RedisClient client){
-                return client.bitField(makeByteKey(key), arguments);
-            }
-
-        });
+        return execute((RedisClient client)->client.bitField(makeByteKey(key), arguments));
     }
 
     @Override
     public Long bitCount(final String key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.bitCount(makeRawKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.bitCount(makeRawKey(key)));
     }
 
     @Override
     public Long bitCount(final byte[] key){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.bitCount(makeByteKey(key));
-            }
-
-        });
+        return execute((RedisClient client)->client.bitCount(makeByteKey(key)));
     }
 
     @Override
     public Long bitCount(final String key, final long start, final long end){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.bitCount(makeRawKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.bitCount(makeRawKey(key), start, end));
     }
 
     @Override
     public Long bitCount(final byte[] key, final long start, final long end){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.bitCount(makeByteKey(key), start, end);
-            }
-
-        });
+        return execute((RedisClient client)->client.bitCount(makeByteKey(key), start, end));
     }
 
     @Override
     public Transaction multi(){
-        return execute(new Executor<Transaction>() {
-
-            @Override
-            public Transaction execute(RedisClient client){
-                return client.multi();
-            }
-
-        });
+        return execute((RedisClient client)->client.multi());
     }
 
     @Override
@@ -6998,62 +3071,27 @@ LuaCommands {
 
     @Override
     public Status watch(final String... keys){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.watch(makeRawKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.watch(makeRawKeys(keys)));
     }
 
     @Override
     public Status watch(final byte[]... keys){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.watch(makeByteKeys(keys));
-            }
-
-        });
+        return execute((RedisClient client)->client.watch(makeByteKeys(keys)));
     }
 
     @Override
     public Status unwatch(){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.unwatch();
-            }
-
-        });
+        return execute((RedisClient client)->client.unwatch());
     }
 
     @Override
     public Long publish(final String channel, final String message){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.publish(channel, message);
-            }
-
-        });
+        return execute((RedisClient client)->client.publish(channel, message));
     }
 
     @Override
     public Long publish(final byte[] channel, final byte[] message){
-        return execute(new Executor<Long>() {
-
-            @Override
-            public Long execute(RedisClient client){
-                return client.publish(channel, message);
-            }
-
-        });
+        return execute((RedisClient client)->client.publish(channel, message));
     }
 
     @Override
@@ -7110,290 +3148,122 @@ LuaCommands {
 
     @Override
     public Object unSubscribe(){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.unSubscribe();
-            }
-
-        });
+        return execute((RedisClient client)->client.unSubscribe());
     }
 
     @Override
     public Object unSubscribe(final String... channels){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.unSubscribe(channels);
-            }
-
-        });
+        return execute((RedisClient client)->client.unSubscribe(channels));
     }
 
     @Override
     public Object unSubscribe(final byte[]... channels){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.unSubscribe(channels);
-            }
-
-        });
+        return execute((RedisClient client)->client.unSubscribe(channels));
     }
 
     @Override
     public Object pUnSubscribe(){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.pUnSubscribe();
-            }
-
-        });
+        return execute((RedisClient client)->client.pUnSubscribe());
     }
 
     @Override
     public Object pUnSubscribe(final String... patterns){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.pUnSubscribe(patterns);
-            }
-
-        });
+        return execute((RedisClient client)->client.pUnSubscribe(patterns));
     }
 
     @Override
     public Object pUnSubscribe(final byte[]... patterns){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.pUnSubscribe(patterns);
-            }
-
-        });
+        return execute((RedisClient client)->client.pUnSubscribe(patterns));
     }
 
     @Override
     public Object eval(final String script){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.eval(script);
-            }
-
-        });
+        return execute((RedisClient client)->client.eval(script));
     }
 
     @Override
     public Object eval(final byte[] script){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.eval(script);
-            }
-
-        });
+        return execute((RedisClient client)->client.eval(script));
     }
 
     @Override
     public Object eval(final String script, final String... params){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.eval(script, params);
-            }
-
-        });
+        return execute((RedisClient client)->client.eval(script, params));
     }
 
     @Override
     public Object eval(final byte[] script, final byte[]... params){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.eval(script, params);
-            }
-
-        });
+        return execute((RedisClient client)->client.eval(script, params));
     }
 
     @Override
     public Object eval(final String script, final String[] keys, final String[] args){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.eval(script, keys, args);
-            }
-
-        });
+        return execute((RedisClient client)->client.eval(script, keys, args));
     }
 
     @Override
     public Object eval(final byte[] script, final byte[][] keys, final byte[][] args){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.eval(script, keys, args);
-            }
-
-        });
+        return execute((RedisClient client)->client.eval(script, keys, args));
     }
 
     @Override
     public Object evalSha(final String digest){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.evalSha(digest);
-            }
-
-        });
+        return execute((RedisClient client)->client.evalSha(digest));
     }
 
     @Override
     public Object evalSha(final byte[] digest){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.evalSha(digest);
-            }
-
-        });
+        return execute((RedisClient client)->client.evalSha(digest));
     }
 
     @Override
     public Object evalSha(final String digest, final String... params){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.evalSha(digest, params);
-            }
-
-        });
+        return execute((RedisClient client)->client.evalSha(digest, params));
     }
 
     @Override
     public Object evalSha(final byte[] digest, final byte[]... params){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.evalSha(digest, params);
-            }
-
-        });
+        return execute((RedisClient client)->client.evalSha(digest, params));
     }
 
     @Override
     public Object evalSha(final String digest, final String[] keys, final String[] args){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.evalSha(digest, keys, args);
-            }
-
-        });
+        return execute((RedisClient client)->client.evalSha(digest, keys, args));
     }
 
     @Override
     public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] args){
-        return execute(new Executor<Object>() {
-
-            @Override
-            public Object execute(RedisClient client){
-                return client.evalSha(digest, keys, args);
-            }
-
-        });
+        return execute((RedisClient client)->client.evalSha(digest, keys, args));
     }
 
     @Override
     public List<Boolean> scriptExists(final String... sha1){
-        return execute(new Executor<List<Boolean>>() {
-
-            @Override
-            public List<Boolean> execute(RedisClient client){
-                return client.scriptExists(sha1);
-            }
-
-        });
+        return execute((RedisClient client)->client.scriptExists(sha1));
     }
 
     @Override
     public List<Boolean> scriptExists(final byte[]... sha1){
-        return execute(new Executor<List<Boolean>>() {
-
-            @Override
-            public List<Boolean> execute(RedisClient client){
-                return client.scriptExists(sha1);
-            }
-
-        });
+        return execute((RedisClient client)->client.scriptExists(sha1));
     }
 
     @Override
     public String scriptLoad(final String script){
-        return execute(new Executor<String>() {
-
-            @Override
-            public String execute(RedisClient client){
-                return client.scriptLoad(script);
-            }
-
-        });
+        return execute((RedisClient client)->client.scriptLoad(script));
     }
 
     @Override
     public byte[] scriptLoad(final byte[] script){
-        return execute(new Executor<byte[]>() {
-
-            @Override
-            public byte[] execute(RedisClient client){
-                return client.scriptLoad(script);
-            }
-
-        });
+        return execute((RedisClient client)->client.scriptLoad(script));
     }
 
     @Override
     public Status scriptKill(){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.scriptKill();
-            }
-
-        });
+        return execute((RedisClient client)->client.scriptKill());
     }
 
     @Override
     public Status scriptFlush(){
-        return execute(new Executor<Status>() {
-
-            @Override
-            public Status execute(RedisClient client){
-                return client.scriptFlush();
-            }
-
-        });
+        return execute((RedisClient client)->client.scriptFlush());
     }
 
 }

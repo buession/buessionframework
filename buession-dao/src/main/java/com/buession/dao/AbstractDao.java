@@ -21,12 +21,13 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2019 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
 
 import com.buession.core.Pagination;
+import com.buession.lang.Order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +55,7 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
             List<Integer> result = new ArrayList<>(data.size());
 
             for(E e : data){
-                Integer primary = insert(e);
-                result.add(primary);
+                result.add(insert(e));
             }
 
             return result;
@@ -78,8 +78,7 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
             List<Integer> result = new ArrayList<>(data.size());
 
             for(E e : data){
-                Integer primary = replace(e);
-                result.add(primary);
+                result.add(replace(e));
             }
 
             return result;

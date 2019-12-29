@@ -35,25 +35,26 @@ public class HttpLock extends HttpRequestBase {
 
     public final static String METHOD_NAME = RequestMethod.LOCK.name();
 
-    public HttpLock() {
+    public HttpLock(){
         super();
     }
 
-    public HttpLock(final URI uri) {
+    public HttpLock(final URI uri){
         super();
         setURI(uri);
     }
 
     /**
-     * @throws IllegalArgumentException if the uri is invalid.
+     * @throws IllegalArgumentException
+     *         if the uri is invalid.
      */
-    public HttpLock(final String uri) {
+    public HttpLock(final String uri){
         super();
         setURI(URI.create(uri));
     }
 
     @Override
-    public String getMethod() {
+    public String getMethod(){
         return METHOD_NAME;
     }
 

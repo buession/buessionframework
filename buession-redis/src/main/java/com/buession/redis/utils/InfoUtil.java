@@ -24,8 +24,8 @@
  */
 package com.buession.redis.utils;
 
-import com.buession.core.Status;
 import com.buession.core.utils.StringUtils;
+import com.buession.lang.Status;
 import com.buession.redis.core.Clients;
 import com.buession.redis.core.Cluster;
 import com.buession.redis.core.Cpu;

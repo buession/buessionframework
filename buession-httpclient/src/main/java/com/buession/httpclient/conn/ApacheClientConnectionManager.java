@@ -91,4 +91,5 @@ public class ApacheClientConnectionManager extends AbstractConnectionManager<Htt
 
         return connectionManager;
     }
+
 }

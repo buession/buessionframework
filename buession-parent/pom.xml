@@ -52,6 +52,7 @@
 		<module>../buession-httpclient</module>
 		<module>../buession-io</module>
 		<module>../buession-json</module>
+		<module>../buession-lang</module>
 		<module>../buession-oss</module>
 		<module>../buession-redis</module>
 		<module>../buession-session</module>

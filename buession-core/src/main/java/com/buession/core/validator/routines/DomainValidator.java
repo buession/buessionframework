@@ -26,7 +26,7 @@
  */
 package com.buession.core.validator.routines;
 
-import com.buession.core.DomainTLD;
+import com.buession.lang.DomainTLD;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

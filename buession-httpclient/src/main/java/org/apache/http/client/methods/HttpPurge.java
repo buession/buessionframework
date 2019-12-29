@@ -35,25 +35,26 @@ public class HttpPurge extends HttpRequestBase {
 
     public final static String METHOD_NAME = RequestMethod.PURGE.name();
 
-    public HttpPurge() {
+    public HttpPurge(){
         super();
     }
 
-    public HttpPurge(final URI uri) {
+    public HttpPurge(final URI uri){
         super();
         setURI(uri);
     }
 
     /**
-     * @throws IllegalArgumentException if the uri is invalid.
+     * @throws IllegalArgumentException
+     *         if the uri is invalid.
      */
-    public HttpPurge(final String uri) {
+    public HttpPurge(final String uri){
         super();
         setURI(URI.create(uri));
     }
 
     @Override
-    public String getMethod() {
+    public String getMethod(){
         return METHOD_NAME;
     }
 

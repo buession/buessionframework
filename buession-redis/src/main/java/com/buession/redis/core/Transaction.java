@@ -24,9 +24,21 @@
  */
 package com.buession.redis.core;
 
+import java.util.List;
+
 /**
  * @author Yong.Teng
  */
-public class Transaction {
+public interface Transaction {
+
+    List<Object> exec();
+
+    String discard();
+
+    default void clear(){
+        close();
+    }
+
+    void close();
 
 }

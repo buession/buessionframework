@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.core.Status;
+import com.buession.lang.Status;
 import com.buession.redis.core.RoleInfo;
 
 /**

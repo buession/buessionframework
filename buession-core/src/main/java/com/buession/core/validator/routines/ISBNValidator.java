@@ -26,8 +26,8 @@
  */
 package com.buession.core.validator.routines;
 
-import com.buession.core.ISBNType;
 import com.buession.core.validator.Validate;
+import com.buession.lang.ISBNType;
 
 /**
  * ISBN 验证器

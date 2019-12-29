@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.operations;
 
-import com.buession.core.Geo;
+import com.buession.lang.Geo;
 import com.buession.redis.core.command.GeoCommands;
 
 /**

@@ -24,8 +24,8 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.core.Geo;
-import com.buession.redis.core.Order;
+import com.buession.lang.Geo;
+import com.buession.lang.Order;
 import com.buession.redis.core.GeoRadius;
 
 import java.util.List;

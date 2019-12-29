@@ -35,25 +35,26 @@ public class HttpLink extends HttpRequestBase {
 
     public final static String METHOD_NAME = RequestMethod.LINK.name();
 
-    public HttpLink() {
+    public HttpLink(){
         super();
     }
 
-    public HttpLink(final URI uri) {
+    public HttpLink(final URI uri){
         super();
         setURI(uri);
     }
 
     /**
-     * @throws IllegalArgumentException if the uri is invalid.
+     * @throws IllegalArgumentException
+     *         if the uri is invalid.
      */
-    public HttpLink(final String uri) {
+    public HttpLink(final String uri){
         super();
         setURI(URI.create(uri));
     }
 
     @Override
-    public String getMethod() {
+    public String getMethod(){
         return METHOD_NAME;
     }
 

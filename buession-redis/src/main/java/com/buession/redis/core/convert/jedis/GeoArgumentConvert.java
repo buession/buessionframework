@@ -24,10 +24,11 @@
  */
 package com.buession.redis.core.convert.jedis;
 
-import com.buession.redis.core.Order;
+import com.buession.lang.Order;
 import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.convert.Convert;
 import redis.clients.jedis.params.GeoRadiusParam;
+import redis.clients.jedis.util.SafeEncoder;
 
 /**
  * @author Yong.Teng
@@ -35,40 +36,59 @@ import redis.clients.jedis.params.GeoRadiusParam;
 public class GeoArgumentConvert implements Convert<GeoCommands.GeoArgument, GeoRadiusParam> {
 
     @Override
-    public GeoRadiusParam convert(GeoCommands.GeoArgument source){
+    public GeoRadiusParam convert(final GeoCommands.GeoArgument source){
         if(source == null){
             return null;
-        }else{
-            final GeoRadiusParam geoRadiusParam = new GeoRadiusParam();
-
-            if(source.isWithCoord()){
-                geoRadiusParam.withCoord();
-            }
-
-            if(source.isWithDist()){
-                geoRadiusParam.withDist();
-            }
-
-            if(source.isWithHash()){
-
-            }
-
-            if(source.getOrder() == Order.ASC){
-                geoRadiusParam.sortAscending();
-            }else if(source.getOrder() == Order.DESC){
-                geoRadiusParam.sortDescending();
-            }
-
-            if(source.getCount() != null){
-                geoRadiusParam.count(source.getCount());
-            }
-
-            return geoRadiusParam;
         }
+
+        final GeoRadiusParam geoRadiusParam = new GeoRadiusParam();
+
+        if(source.isWithCoord()){
+            geoRadiusParam.withCoord();
+        }
+
+        if(source.isWithDist()){
+            geoRadiusParam.withDist();
+        }
+
+        if(source.getOrder() == Order.ASC){
+            geoRadiusParam.sortAscending();
+        }else if(source.getOrder() == Order.DESC){
+            geoRadiusParam.sortDescending();
+        }
+
+        if(source.getCount() != null){
+            geoRadiusParam.count(source.getCount());
+        }
+
+        return geoRadiusParam;
     }
 
     @Override
-    public GeoCommands.GeoArgument deconvert(GeoRadiusParam target){
-        return null;
+    public GeoCommands.GeoArgument deconvert(final GeoRadiusParam target){
+        if(target == null){
+            return null;
+        }
+
+        final GeoCommands.GeoArgument.Builder geoArgumentBuilder = GeoCommands.GeoArgument.Builder.create();
+
+        for(byte[] v : target.getByteParams()){
+            String s = SafeEncoder.encode(v);
+
+            if("withcoord".equals(s)){
+                geoArgumentBuilder.withCoord();
+            }else if("withdist".equals(s)){
+                geoArgumentBuilder.withDist();
+            }else if("asc".equals(s)){
+                geoArgumentBuilder.order(Order.ASC);
+            }else if("desc".equals(s)){
+                geoArgumentBuilder.order(Order.DESC);
+            }else if("count".equals(s)){
+                geoArgumentBuilder.count(target.getParam("count"));
+            }
+        }
+
+        return geoArgumentBuilder.build();
     }
+
 }

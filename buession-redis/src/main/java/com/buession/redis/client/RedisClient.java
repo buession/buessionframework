@@ -24,9 +24,9 @@
  */
 package com.buession.redis.client;
 
-import com.buession.core.Geo;
-import com.buession.core.Status;
 import com.buession.core.utils.NumberUtils;
+import com.buession.lang.Geo;
+import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.ScanResult;

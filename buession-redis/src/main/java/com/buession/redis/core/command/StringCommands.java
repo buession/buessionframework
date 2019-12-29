@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.core.Status;
+import com.buession.lang.Status;
 import redis.clients.jedis.params.SetParams;
 
 import java.util.List;

@@ -51,4 +51,13 @@ public class Util {
         convert.convert(data);
     }
 
+    @Test
+    public void test(){
+        String s = "abc";
+        int i = 0;
+        System.out.println(s.charAt(i));
+        System.out.println(s.charAt(++i));
+        System.out.println(s.charAt(++i));
+    }
+
 }

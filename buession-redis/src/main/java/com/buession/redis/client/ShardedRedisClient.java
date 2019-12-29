@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client;
 
-import com.buession.core.Status;
+import com.buession.lang.Status;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.Info;
 import com.buession.redis.core.PubSubListener;
