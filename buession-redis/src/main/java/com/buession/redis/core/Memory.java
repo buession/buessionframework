@@ -210,10 +210,17 @@ public class Memory {
     public String toString(){
         return "Memory{" + "usedMemory=" + usedMemory + ", usedMemoryRss=" + usedMemoryRss + ", usedMemoryPeak=" +
                 usedMemoryPeak + ", totalSystemMemory=" + totalSystemMemory + ", usedMemoryLua=" + usedMemoryLua + "," +
-                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + " maxMemory=" + maxMemory + ", " +
-                "" + "" + "" + "" + "" + "maxMemoryPolicy='" + maxMemoryPolicy + '\'' + ", " +
-                "memFragmentationTatio='" + memFragmentationTatio + '\'' + ", " + "memAllocator='" + memAllocator +
-                '\'' + '}';
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + " " +
+                "maxMemory=" + maxMemory + ", " + "" + "" + "" + "" + "" + "" + "" + "" + "maxMemoryPolicy='" +
+                maxMemoryPolicy + '\'' + ", " + "memFragmentationTatio='" + memFragmentationTatio + '\'' + ", " +
+                "memAllocator='" + memAllocator + '\'' + '}';
     }
 
     public final static class MemoryInfo {
@@ -221,7 +228,7 @@ public class Memory {
         /**
          * 内存大小
          */
-        private int value;
+        private long value;
 
         /**
          * 可读格式内存大小
@@ -243,7 +250,7 @@ public class Memory {
          * @param human
          *         可读格式内存大小
          */
-        public MemoryInfo(int value, String human){
+        public MemoryInfo(long value, String human){
             this.value = value;
             this.human = human;
         }
@@ -253,7 +260,7 @@ public class Memory {
          *
          * @return 内存大小
          */
-        public int getValue(){
+        public long getValue(){
             return value;
         }
 
@@ -263,7 +270,7 @@ public class Memory {
          * @param value
          *         内存大小
          */
-        public void setValue(int value){
+        public void setValue(long value){
             this.value = value;
         }
 

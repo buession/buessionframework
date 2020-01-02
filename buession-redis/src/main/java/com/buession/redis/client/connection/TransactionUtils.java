@@ -24,55 +24,44 @@
  */
 package com.buession.redis.client.connection;
 
-import com.buession.redis.client.connection.datasource.RedisDataSource;
-import com.buession.redis.core.Transaction;
-
-import java.io.IOException;
+import com.buession.redis.transaction.RedisTransactionSynchronizationAdapter;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 /**
- * Redis 链接对象抽象类
- *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisConnection implements RedisConnection {
+public class TransactionUtils {
 
-    protected Transaction transaction;
+    private TransactionUtils(){
 
-    private RedisDataSource dataSource;
-
-    public AbstractRedisConnection(){
     }
 
-    public AbstractRedisConnection(RedisDataSource dataSource){
-        this.dataSource = dataSource;
+    public final static boolean isActualNonReadonlyTransactionActive(){
+        return TransactionSynchronizationManager.isActualTransactionActive() && TransactionSynchronizationManager
+                .isCurrentTransactionReadOnly() == false;
     }
 
-    @Override
-    public RedisDataSource getDataSource(){
-        return dataSource;
+    public final static void bindResource(final RedisConnectionFactory factory, final RedisConnectionHolder
+            connectionHolder){
+        TransactionSynchronizationManager.bindResource(factory, connectionHolder);
     }
 
-    @Override
-    public void setDataSource(RedisDataSource dataSource){
-        this.dataSource = dataSource;
+    public final static RedisConnectionHolder getResource(final RedisConnectionFactory factory){
+        return (RedisConnectionHolder) TransactionSynchronizationManager.getResource(factory);
     }
 
-    @Override
-    public void disconnect(){
-        if(getDataSource() != null){
-            getDataSource().disconnect();
-        }
+    public final static RedisConnectionHolder unbindResourceIfPossible(final RedisConnectionFactory factory){
+        return (RedisConnectionHolder) TransactionSynchronizationManager.unbindResourceIfPossible(factory);
     }
 
-    @Override
-    public boolean isClosed(){
-        return getDataSource() == null ? true : getDataSource().isClosed();
+    public final static void registerSynchronization(final RedisConnectionFactory factory, final
+    RedisConnectionHolder connectionHolder, final RedisConnection connection){
+        TransactionSynchronizationManager.registerSynchronization(new RedisTransactionSynchronizationAdapter(factory,
+                connectionHolder, connection));
     }
 
-    @Override
-    public void close() throws IOException{
-        if(getDataSource() != null){
-            getDataSource().close();
-        }
+    public final static boolean isCurrentTransactionReadOnly(){
+        return TransactionSynchronizationManager.isCurrentTransactionReadOnly();
     }
+
 }

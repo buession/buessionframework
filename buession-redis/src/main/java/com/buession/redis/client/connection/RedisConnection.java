@@ -44,6 +44,12 @@ public interface RedisConnection extends Closeable {
 
     <C, R> R execute(final ProtocolCommand command, final Executor<C, R> executor) throws RedisException;
 
+    void multi();
+
+    void exec();
+
+    void discard();
+
     /**
      * 获取连接是否关闭
      *

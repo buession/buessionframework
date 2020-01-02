@@ -60,35 +60,23 @@ public class RedisTransactionSynchronizationAdapter extends TransactionSynchroni
         try{
             switch(status){
                 case TransactionSynchronization.STATUS_COMMITTED:
-                    /*connection.execute(Protocol.Command.EXEC, new Executor<T, Object>() {
-
-                        @Override
-                        public Object execute(T client){
-                            return null;
-                        }
-
-                    });*/
+                    connection.exec();
                     break;
                 case TransactionSynchronization.STATUS_ROLLED_BACK:
                 case TransactionSynchronization.STATUS_UNKNOWN:
                 default:
-                    /*connection.execute(Protocol.Command.DISCARD, new Executor<T, Object>() {
-
-                        @Override
-                        public Object execute(T client){
-                            return null;
-                        }
-
-                    });*/
+                    connection.discard();
                     break;
             }
         }finally{
-            logger.debug("Closing bound redisConnection after transaction completed with {}", status);
+            final String message = "Closing bound redisConnection after transaction completed with {}";
+            logger.debug(message, status);
 
             connectionHolder.setTransactionSyncronisationActive(false);
             try{
                 connection.close();
             }catch(IOException e){
+                logger.error(message + " error: {}", status, e.getMessage());
             }
             TransactionSynchronizationManager.unbindResource(factory);
         }

@@ -25,6 +25,7 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.datasource.RedisDataSource;
+import com.buession.redis.client.jedis.JedisTransaction;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -39,4 +40,25 @@ public class SimpleJedisConnection extends AbstractJedisRedisConnection<Jedis> i
     public SimpleJedisConnection(RedisDataSource dataSource){
         super(dataSource);
     }
+
+    @Override
+    public void multi(){
+        Jedis client = getRedisClient(getDataSource());
+        transaction = new JedisTransaction(client.multi());
+    }
+
+    @Override
+    public void exec(){
+        if(transaction != null){
+            transaction.exec();
+        }
+    }
+
+    @Override
+    public void discard(){
+        if(transaction != null){
+            transaction.discard();
+        }
+    }
+
 }

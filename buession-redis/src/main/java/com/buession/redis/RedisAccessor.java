@@ -38,16 +38,8 @@ import com.buession.redis.serializer.JSONSerializer;
 import com.buession.redis.serializer.Serializer;
 import com.buession.redis.utils.KeyUtil;
 import com.buession.redis.utils.SafeEncoder;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Yong.Teng
@@ -71,7 +63,6 @@ public abstract class RedisAccessor {
     private final static Logger logger = LoggerFactory.getLogger(RedisAccessor.class);
 
     {
-        DEFAULT_OPTIONS.setEnableTransactionSupport(false);
         DEFAULT_OPTIONS.setSerializer(DEFAULT_SERIALIZER);
     }
 
@@ -91,12 +82,15 @@ public abstract class RedisAccessor {
         this.options = options;
     }
 
+    @Deprecated
     public Serializer getSerializer(){
         return serializer;
     }
 
+    @Deprecated
     public void setSerializer(Serializer serializer){
         this.serializer = serializer;
+        logger.warn("Use options by options.");
     }
 
     public RedisConnection getConnection(){
@@ -132,9 +126,8 @@ public abstract class RedisAccessor {
 
     protected <R> R execute(final Executor<R> executor){
         RedisConnectionFactory connectionFactory = getConnectionFactory();
-        boolean enableTransactionSupport = getOptions().isEnableTransactionSupport();
+        boolean enableTransactionSupport = false;
         RedisConnection connection;
-        R result = null;
 
         if(enableTransactionSupport){
             // only bind resources in case of potential transaction synchronization
@@ -145,14 +138,13 @@ public abstract class RedisAccessor {
 
         try{
             client.setConnection(connection);
-            result = executor.execute(client);
+            return executor.execute(client);
         }catch(Exception e){
             logger.error("Execute executor failure: {}", e);
+            throw e;
         }finally{
-            RedisConnectionUtils.releaseConnection(connectionFactory, connection);
+            RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
         }
-
-        return result;
     }
 
     protected static RedisClient doGetRedisClient(RedisConnection connection){
@@ -186,7 +178,7 @@ public abstract class RedisAccessor {
         if(values == null){
             return null;
         }else{
-            final String[] temp = new String[]{};
+            final String[] temp = new String[values.length];
 
             for(int i = 0; i < values.length; i++){
                 temp[i] = serializer.encode(values[i]);
@@ -200,7 +192,7 @@ public abstract class RedisAccessor {
         if(values == null){
             return null;
         }else{
-            final byte[][] temp = new byte[][]{};
+            final byte[][] temp = new byte[values.length][];
 
             for(int i = 0; i < values.length; i++){
                 temp[i] = serializer.encodeAsBytes(values[i]);
@@ -208,262 +200,6 @@ public abstract class RedisAccessor {
 
             return temp;
         }
-    }
-
-    protected final <V> List<V> returnObjectValueFromListString(final List<String> data){
-        if(data == null){
-            return null;
-        }
-
-        final List<V> result = new ArrayList<>(data.size());
-
-        for(String value : data){
-            result.add(serializer.decode(value));
-        }
-
-        return result;
-    }
-
-    protected final <V> List<V> returnObjectValueFromListByte(final List<byte[]> data){
-        if(data == null){
-            return null;
-        }
-
-        final List<V> result = new ArrayList<>(data.size());
-
-        for(byte[] value : data){
-            result.add(serializer.decode(value));
-        }
-
-        return result;
-    }
-
-    protected final <V> List<V> returnObjectValueFromListString(final List<String> data, final Class<V> clazz){
-        if(data == null){
-            return null;
-        }
-
-        final List<V> result = new ArrayList<>(data.size());
-
-        for(String value : data){
-            result.add(serializer.decode(value, clazz));
-        }
-
-        return result;
-    }
-
-    protected final <V> List<V> returnObjectValueFromListByte(final List<byte[]> data, final Class<V> clazz){
-        if(data == null){
-            return null;
-        }
-
-        final List<V> result = new ArrayList<>(data.size());
-
-        for(byte[] value : data){
-            result.add(serializer.decode(value, clazz));
-        }
-
-        return result;
-    }
-
-    protected final <V> List<V> returnObjectValueFromListString(final List<String> data, final TypeReference<V> type){
-        if(data == null){
-            return null;
-        }
-
-        final List<V> result = new ArrayList<>(data.size());
-
-        for(String value : data){
-            result.add(serializer.decode(value, type));
-        }
-
-        return result;
-    }
-
-    protected final <V> List<V> returnObjectValueFromListByte(final List<byte[]> data, final TypeReference<V> type){
-        if(data == null){
-            return null;
-        }
-
-        final List<V> result = new ArrayList<>(data.size());
-
-        for(byte[] value : data){
-            result.add(serializer.decode(value, type));
-        }
-
-        return result;
-    }
-
-    protected final <V> Set<V> returnObjectValueFromSetString(final Set<String> data){
-        if(data == null){
-            return null;
-        }
-
-        final Set<V> result = new LinkedHashSet<>(data.size());
-
-        for(String value : data){
-            result.add(serializer.decode(value));
-        }
-
-        return result;
-    }
-
-    protected final <V> Set<V> returnObjectValueFromSetByte(final Set<byte[]> data){
-        if(data == null){
-            return null;
-        }
-
-        final Set<V> result = new LinkedHashSet<>(data.size());
-
-        for(byte[] value : data){
-            result.add(serializer.decode(value));
-        }
-
-        return result;
-    }
-
-    protected final <V> Set<V> returnObjectValueFromSetString(final Set<String> data, final Class<V> clazz){
-        if(data == null){
-            return null;
-        }
-
-        final Set<V> result = new LinkedHashSet<>(data.size());
-
-        for(String value : data){
-            result.add(serializer.decode(value, clazz));
-        }
-
-        return result;
-    }
-
-    protected final <V> Set<V> returnObjectValueFromSetByte(final Set<byte[]> data, final Class<V> clazz){
-        if(data == null){
-            return null;
-        }
-
-        final Set<V> result = new LinkedHashSet<>(data.size());
-
-        for(byte[] value : data){
-            result.add(serializer.decode(value, clazz));
-        }
-
-        return result;
-    }
-
-    protected final <V> Set<V> returnObjectValueFromSetString(final Set<String> data, final TypeReference<V> type){
-        if(data == null){
-            return null;
-        }
-
-        final Set<V> result = new LinkedHashSet<>(data.size());
-
-        for(String value : data){
-            result.add(serializer.decode(value, type));
-        }
-
-        return result;
-    }
-
-    protected final <V> Set<V> returnObjectValueFromSetByte(final Set<byte[]> data, final TypeReference<V> type){
-        if(data == null){
-            return null;
-        }
-
-        final Set<V> result = new LinkedHashSet<>(data.size());
-
-        for(byte[] value : data){
-            result.add(serializer.decode(value, type));
-        }
-
-        return result;
-    }
-
-    protected final <V> Map<String, V> returnObjectValueFromMapString(final Map<String, String> data){
-        if(data == null){
-            return null;
-        }
-
-        final Map<String, V> result = new LinkedHashMap<>(data.size());
-
-        data.forEach((key, value)->{
-            result.put(key, serializer.decode(value));
-        });
-
-        return result;
-    }
-
-    protected final <V> Map<byte[], V> returnObjectValueFromMapByte(final Map<byte[], byte[]> data){
-        if(data == null){
-            return null;
-        }
-
-        final Map<byte[], V> result = new LinkedHashMap<>(data.size());
-
-        data.forEach((key, value)->{
-            result.put(key, serializer.decode(value));
-        });
-
-        return result;
-    }
-
-    protected final <V> Map<String, V> returnObjectValueFromMapString(final Map<String, String> data, final Class<V>
-            clazz){
-        if(data == null){
-            return null;
-        }
-
-        final Map<String, V> result = new LinkedHashMap<>(data.size());
-
-        data.forEach((key, value)->{
-            result.put(key, serializer.decode(value, clazz));
-        });
-
-        return result;
-    }
-
-    protected final <V> Map<byte[], V> returnObjectValueFromMapByte(final Map<byte[], byte[]> data, final Class<V>
-            clazz){
-        if(data == null){
-            return null;
-        }
-
-        final Map<byte[], V> result = new LinkedHashMap<>(data.size());
-
-        data.forEach((key, value)->{
-            result.put(key, serializer.decode(value, clazz));
-        });
-
-        return result;
-    }
-
-    protected final <V> Map<String, V> returnObjectValueFromMapString(final Map<String, String> data, final
-    TypeReference<V> type){
-        if(data == null){
-            return null;
-        }
-
-        final Map<String, V> result = new LinkedHashMap<>(data.size());
-
-        data.forEach((key, value)->{
-            result.put(key, serializer.decode(value, type));
-        });
-
-        return result;
-    }
-
-    protected final <V> Map<byte[], V> returnObjectValueFromMapByte(final Map<byte[], byte[]> data, final
-    TypeReference<V> type){
-        if(data == null){
-            return null;
-        }
-
-        final Map<byte[], V> result = new LinkedHashMap<>(data.size());
-
-        data.forEach((key, value)->{
-            result.put(key, serializer.decode(value, type));
-        });
-
-        return result;
     }
 
     protected interface Executor<R> extends com.buession.core.Executor<RedisClient, R> {

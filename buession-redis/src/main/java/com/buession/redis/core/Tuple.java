@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core;
 
-import com.buession.redis.utils.ByteArrayComparator;
+import com.buession.core.utils.comparator.ByteArrayComparable;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.Arrays;
@@ -69,13 +69,12 @@ public class Tuple implements Comparable<Tuple> {
         result = prime * result;
 
         if(null != element){
-            for(final byte b : element){
+            for(byte b : element){
                 result = prime * result + b;
             }
         }
 
         long temp = Double.doubleToLongBits(score);
-
         return prime * result + (int) (temp ^ (temp >>> 32));
     }
 
@@ -92,21 +91,24 @@ public class Tuple implements Comparable<Tuple> {
         }
 
         Tuple that = (Tuple) obj;
-        return Arrays.equals(element, that.element) == false ? false : Objects.equals(score, that.score);
+        return Arrays.equals(element, that.element) && Objects.equals(score, that.score);
     }
 
     @Override
     public int compareTo(Tuple that){
-        return compare(this, that);
-    }
+        int compScore = Double.compare(this.score, that.score);
 
-    public static int compare(Tuple t1, Tuple t2){
-        int compScore = Double.compare(t1.score, t2.score);
-        return compScore != 0 ? compScore : ByteArrayComparator.compare(t1.element, t2.element);
+        if(compScore != 0){
+            return compScore;
+        }else{
+            ByteArrayComparable comparable = new ByteArrayComparable(this.element);
+            return comparable.compareTo(that.element);
+        }
     }
 
     @Override
     public String toString(){
         return "Tuple{" + "element=" + Arrays.toString(element) + ", score=" + score + '}';
     }
+
 }

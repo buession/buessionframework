@@ -27,7 +27,7 @@ package com.buession.web.aop.handler;
 import com.buession.aop.handler.AbstractAnnotationHandler;
 import com.buession.core.validator.Validate;
 import com.buession.web.mvc.view.document.DocumentMetaData;
-import com.buession.web.mvc.view.document.MetaDataConvert;
+import com.buession.web.mvc.view.document.MetaData;
 import org.springframework.ui.Model;
 
 /**
@@ -43,7 +43,25 @@ public abstract class AbstractDocumentMetaDataAnnotationHandler extends Abstract
     protected final static void addModelAttribute(final Model model, final DocumentMetaData metaData){
         String attrName = Validate.hasText(metaData.attrName()) ? metaData.attrName() : DocumentMetaData
                 .DEFAULT_ATTR_NAME;
-        model.addAttribute(attrName, MetaDataConvert.convert(metaData));
+        model.addAttribute(attrName, metaDataConvert(metaData));
+    }
+
+    private final static MetaData metaDataConvert(final DocumentMetaData documentMetaData){
+        if(documentMetaData == null){
+            return null;
+        }
+
+        MetaData metaData = new MetaData();
+
+        metaData.setTitle(documentMetaData.title());
+        metaData.setAuthor(documentMetaData.author());
+        metaData.setCharset(documentMetaData.charset());
+        metaData.setKeywords(documentMetaData.keywords());
+        metaData.setDescription(documentMetaData.description());
+        metaData.setAuthor(documentMetaData.author());
+        metaData.setCopyright(documentMetaData.copyright());
+
+        return metaData;
     }
 
 }

@@ -25,7 +25,6 @@
 package com.buession.httpclient.core;
 
 import com.buession.core.utils.Assert;
-import org.apache.http.util.LangUtils;
 
 import java.io.Serializable;
 
@@ -59,16 +58,14 @@ public class RequestBodyElement implements Serializable, Cloneable {
 
     @Override
     public String toString(){
-        if(value == null){
-            return name;
-        }
-
         final int len = name.length() + 1;
         final StringBuilder sb = new StringBuilder(len);
 
         sb.append(name);
         sb.append('=');
-        sb.append(value);
+        if(value != null){
+            sb.append(value);
+        }
 
         return sb.toString();
     }
@@ -81,7 +78,7 @@ public class RequestBodyElement implements Serializable, Cloneable {
 
         if(object instanceof RequestBodyElement){
             final RequestBodyElement that = (RequestBodyElement) object;
-            return name.equals(that.name) && LangUtils.equals(value, that.value);
+            return name.equals(that.name) && (value == null ? that.value == null : value.equals(that.value));
         }
 
         return false;

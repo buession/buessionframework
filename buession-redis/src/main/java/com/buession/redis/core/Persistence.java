@@ -588,8 +588,8 @@ public class Persistence {
                 + "rdbBgSaveInProgress=" + rdbBgSaveInProgress + ", rdbLastSaveTime=" + rdbLastSaveTime + ", " +
                 "rdbLastBgSaveStatus=" + rdbLastBgSaveStatus + ", rdbLastBgSaveTimeSec=" + rdbLastBgSaveTimeSec + ", " +
                 "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-                "" + "" + "rdbCurrentBgSaveTimeSec=" + rdbCurrentBgSaveTimeSec + ", " + "aofEnabled=" + aofEnabled +
-                ", " + "aofRewriteInProgress=" + aofRewriteInProgress + ", " + "aofRewriteScheduled=" +
+                "" + "" + "" + "rdbCurrentBgSaveTimeSec=" + rdbCurrentBgSaveTimeSec + ", " + "aofEnabled=" +
+                aofEnabled + ", " + "aofRewriteInProgress=" + aofRewriteInProgress + ", " + "aofRewriteScheduled=" +
                 aofRewriteScheduled + ", " + "" + "aofLastRewriteTimeSec=" + aofLastRewriteTimeSec + ", " +
                 "aofCurrentRewriteTimeSec=" + aofCurrentRewriteTimeSec + ", " + "aofLastBgRewriteStatus=" +
                 aofLastBgRewriteStatus + ", " + "aofLastWriteStatus=" + aofLastWriteStatus + ", aofCurrentSize=" +

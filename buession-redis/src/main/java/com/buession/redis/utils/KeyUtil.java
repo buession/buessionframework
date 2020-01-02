@@ -36,7 +36,15 @@ public class KeyUtil {
     }
 
     public final static String makeRawKey(final String prefix, final String key){
-        return prefix == null ? key : prefix + key;
+        if(prefix == null){
+            return key;
+        }else{
+            StringBuffer sb = new StringBuffer(prefix.length() + key.length());
+
+            sb.append(prefix).append(key);
+
+            return sb.toString();
+        }
     }
 
     public final static String[] makeRawKeys(final String prefix, final String... keys){

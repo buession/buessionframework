@@ -33,8 +33,6 @@ public class Options {
 
     private String prefix;
 
-    private boolean enableTransactionSupport;
-
     private Serializer serializer;
 
     public String getPrefix(){
@@ -43,18 +41,6 @@ public class Options {
 
     public void setPrefix(String prefix){
         this.prefix = prefix;
-    }
-
-    public boolean isEnableTransactionSupport(){
-        return getEnableTransactionSupport();
-    }
-
-    public boolean getEnableTransactionSupport(){
-        return enableTransactionSupport;
-    }
-
-    public void setEnableTransactionSupport(boolean enableTransactionSupport){
-        this.enableTransactionSupport = enableTransactionSupport;
     }
 
     public Serializer getSerializer(){

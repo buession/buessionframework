@@ -32,6 +32,7 @@ import com.buession.redis.client.connection.RedisConnection;
  * @author Yong.Teng
  * @see RedisTemplate
  */
+@Deprecated
 public class RedisClientTemplate extends RedisTemplate {
 
     /**

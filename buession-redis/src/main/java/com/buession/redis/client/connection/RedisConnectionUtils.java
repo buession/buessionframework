@@ -25,12 +25,10 @@
 package com.buession.redis.client.connection;
 
 import com.buession.core.utils.Assert;
-import com.buession.redis.transaction.RedisTransactionSynchronizationAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.lang.Nullable;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.io.IOException;
 
@@ -45,61 +43,65 @@ public final class RedisConnectionUtils {
 
     }
 
-    public final static RedisConnection bindConnection(RedisConnectionFactory factory){
+    public final static RedisConnection bindConnection(final RedisConnectionFactory factory){
         return bindConnection(factory, false);
     }
 
-    public final static RedisConnection bindConnection(RedisConnectionFactory factory, boolean
+    public final static RedisConnection bindConnection(final RedisConnectionFactory factory, final boolean
             enableTransactionSupport){
         return doGetConnection(factory, true, true, enableTransactionSupport);
     }
 
-    public final static RedisConnection getConnection(RedisConnectionFactory factory){
+    public final static RedisConnection getConnection(final RedisConnectionFactory factory){
         return getConnection(factory, false);
     }
 
-    public final static RedisConnection getConnection(RedisConnectionFactory factory, boolean enableTransactionSupport){
+    public final static RedisConnection getConnection(final RedisConnectionFactory factory, final boolean
+            enableTransactionSupport){
         return doGetConnection(factory, true, false, enableTransactionSupport);
     }
 
-    public final static boolean isConnectionTransactional(RedisConnectionFactory factory, RedisConnection connection){
+    public final static boolean isConnectionTransactional(final RedisConnectionFactory factory, final RedisConnection
+            connection){
         Assert.isNull(factory, "No RedisConnectionFactory specified");
 
-        RedisConnectionHolder connHolder = (RedisConnectionHolder) TransactionSynchronizationManager.getResource
-                (factory);
+        RedisConnectionHolder connHolder = TransactionUtils.getResource(factory);
 
         return (connHolder != null && connection == connHolder.getConnection());
     }
 
-    public final static void releaseConnection(RedisConnectionFactory factory, @Nullable RedisConnection connection){
+    public final static void releaseConnection(final RedisConnectionFactory factory, final @Nullable RedisConnection
+            connection, final boolean transactionSupport){
         if(connection == null){
             return;
         }
 
-        RedisConnectionHolder connectionHolder = (RedisConnectionHolder) TransactionSynchronizationManager
-                .getResource(factory);
+        RedisConnectionHolder connectionHolder = TransactionUtils.getResource(factory);
 
         if(connectionHolder != null && connectionHolder.isTransactionSyncronisationActive()){
             logger.debug("Redis Connection will be closed when transaction finished.");
             return;
         }
 
-        if(isConnectionTransactional(factory, connection) && TransactionSynchronizationManager
-                .isCurrentTransactionReadOnly()){
-            unbindConnection(factory);
-        }else if(!isConnectionTransactional(factory, connection)){
+        if(isConnectionTransactional(factory, connection)){
+            if(transactionSupport && TransactionUtils.isCurrentTransactionReadOnly()){
+                logger.debug("Unbinding Redis Connection.");
+                unbindConnection(factory);
+            }else{
+                logger.debug("Leaving bound Redis Connection attached.");
+            }
+        }else{
             logger.debug("Closing Redis Connection");
             try{
                 connection.close();
             }catch(IOException e){
-                logger.error("Closing redis connection error.", e);
+                logger.error("Closing Redis Connection error.", e);
             }
         }
     }
 
-    public final static void unbindConnection(RedisConnectionFactory factory){
-        RedisConnectionHolder connectionHolder = (RedisConnectionHolder) TransactionSynchronizationManager
-                .unbindResourceIfPossible(factory);
+    public final static void unbindConnection(final RedisConnectionFactory factory){
+        RedisConnectionHolder connectionHolder = TransactionUtils.unbindResourceIfPossible(factory);
 
         if(connectionHolder == null){
             return;
@@ -113,17 +115,17 @@ public final class RedisConnectionUtils {
             try{
                 connection.close();
             }catch(IOException e){
-                logger.error("Closing redis connection error.", e);
+                logger.error("Closing Redis Connection error.", e);
             }
         }
     }
 
-    private final static RedisConnection doGetConnection(RedisConnectionFactory factory, boolean allowCreate, boolean
-            bind, boolean enableTransactionSupport){
+    private static RedisConnection doGetConnection(final RedisConnectionFactory factory, final boolean allowCreate,
+                                                   final boolean bind, final boolean enableTransactionSupport){
         Assert.isNull(factory, "No RedisConnectionFactory specified");
 
-        RedisConnectionHolder connectionHolder = (RedisConnectionHolder) TransactionSynchronizationManager
-                .getResource(factory);
+        RedisConnectionHolder connectionHolder = TransactionUtils.getResource(factory);
+
         if(connectionHolder != null){
             if(enableTransactionSupport){
                 potentiallyRegisterTransactionSynchronisation(factory, connectionHolder);
@@ -132,7 +134,7 @@ public final class RedisConnectionUtils {
             return connectionHolder.getConnection();
         }
 
-        if(!allowCreate){
+        if(allowCreate == false){
             throw new IllegalArgumentException("No redisConnection found and allowCreate = false");
         }
 
@@ -143,13 +145,13 @@ public final class RedisConnectionUtils {
         if(bind){
             RedisConnection redisConnectionToBind = connection;
 
-            if(enableTransactionSupport && isActualNonReadonlyTransactionActive()){
+            if(enableTransactionSupport && TransactionUtils.isActualNonReadonlyTransactionActive()){
                 redisConnectionToBind = createConnectionProxy(factory, connection);
             }
 
             connectionHolder = new RedisConnectionHolder(redisConnectionToBind);
 
-            TransactionSynchronizationManager.bindResource(factory, connectionHolder);
+            TransactionUtils.bindResource(factory, connectionHolder);
             if(enableTransactionSupport){
                 potentiallyRegisterTransactionSynchronisation(factory, connectionHolder);
             }
@@ -162,23 +164,24 @@ public final class RedisConnectionUtils {
 
     private static void potentiallyRegisterTransactionSynchronisation(final RedisConnectionFactory factory, final
     RedisConnectionHolder connectionHolder){
-        if(isActualNonReadonlyTransactionActive() && connectionHolder.isTransactionSyncronisationActive() == false){
-            connectionHolder.setTransactionSyncronisationActive(true);
-
-            RedisConnection connection = connectionHolder.getConnection();
-            //connection.multi();
-
-            TransactionSynchronizationManager.registerSynchronization(new RedisTransactionSynchronizationAdapter
-                    (factory, connectionHolder, connection));
+        if(TransactionUtils.isActualNonReadonlyTransactionActive()){
+            return;
         }
+
+        if(connectionHolder.isTransactionSyncronisationActive()){
+            return;
+        }
+
+        connectionHolder.setTransactionSyncronisationActive(true);
+
+        RedisConnection connection = connectionHolder.getConnection();
+        connection.multi();
+
+        TransactionUtils.registerSynchronization(factory, connectionHolder, connection);
     }
 
-    private final static boolean isActualNonReadonlyTransactionActive(){
-        return TransactionSynchronizationManager.isActualTransactionActive() && TransactionSynchronizationManager
-                .isCurrentTransactionReadOnly() == false;
-    }
-
-    private static RedisConnection createConnectionProxy(RedisConnectionFactory factory, RedisConnection connection){
+    private static RedisConnection createConnectionProxy(final RedisConnectionFactory factory, final RedisConnection
+            connection){
         ProxyFactory proxyFactory = new ProxyFactory(connection);
         proxyFactory.addAdvice(new ConnectionSplittingInterceptor(factory));
 

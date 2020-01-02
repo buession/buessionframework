@@ -67,7 +67,8 @@ public class ClientTest extends AbstractRedisTest {
         try{
             client = redisClientTemplate.getClient();
             System.out.println(client.info());
-            RedisConnectionUtils.releaseConnection(redisClientTemplate.getConnectionFactory(), client.getConnection());
+            RedisConnectionUtils.releaseConnection(redisClientTemplate.getConnectionFactory(), client.getConnection()
+                    , false);
         }catch(Exception e){
             e.printStackTrace();
         }

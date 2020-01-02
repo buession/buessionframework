@@ -46,9 +46,8 @@ public class ClientUtil {
             return null;
         }
 
-        List<Client> result = new ArrayList<>(32);
-
         String[] clients = str.split("[\\r\\n]");
+        List<Client> result = new ArrayList<>(clients.length);
 
         if(Validate.isEmpty(clients) == false){
             for(String s : clients){
@@ -144,4 +143,5 @@ public class ClientUtil {
 
         return client;
     }
+
 }

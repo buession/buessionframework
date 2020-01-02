@@ -25,6 +25,7 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.datasource.RedisDataSource;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
 
 /**
@@ -40,4 +41,5 @@ public class SimpleShardedJedisConnection extends AbstractJedisRedisConnection<S
     public SimpleShardedJedisConnection(RedisDataSource dataSource){
         super(dataSource);
     }
+
 }

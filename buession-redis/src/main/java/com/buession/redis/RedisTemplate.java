@@ -25,7 +25,6 @@
 package com.buession.redis;
 
 import com.buession.core.utils.Assert;
-import com.buession.core.validator.Validate;
 import com.buession.lang.Geo;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
@@ -43,6 +42,7 @@ import com.buession.redis.core.operations.SetOperations;
 import com.buession.redis.core.operations.SortedSetOperations;
 import com.buession.redis.core.operations.StringOperations;
 import com.buession.redis.core.operations.TransactionOperations;
+import com.buession.redis.utils.ReturnUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.ArrayList;
@@ -329,62 +329,62 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
     @Override
     public <V> List<V> mGetObject(final String... keys){
-        return returnObjectValueFromListString(mGet(keys));
+        return ReturnUtils.returnObjectValueFromListString(serializer, mGet(keys));
     }
 
     @Override
     public <V> List<V> mGetObject(final byte[]... keys){
-        return returnObjectValueFromListByte(mGet(keys));
+        return ReturnUtils.returnObjectValueFromListByte(serializer, mGet(keys));
     }
 
     @Override
     public <V> List<V> mGetObject(final String[] keys, final Class<V> clazz){
-        return returnObjectValueFromListString(mGet(keys), clazz);
+        return ReturnUtils.returnObjectValueFromListString(serializer, mGet(keys), clazz);
     }
 
     @Override
     public <V> List<V> mGetObject(final byte[][] keys, final Class<V> clazz){
-        return returnObjectValueFromListByte(mGet(keys), clazz);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, mGet(keys), clazz);
     }
 
     @Override
     public <V> List<V> mGetObject(final String[] keys, final TypeReference<V> type){
-        return returnObjectValueFromListString(mGet(keys), type);
+        return ReturnUtils.returnObjectValueFromListString(serializer, mGet(keys), type);
     }
 
     @Override
     public <V> List<V> mGetObject(final byte[][] keys, final TypeReference<V> type){
-        return returnObjectValueFromListByte(mGet(keys), type);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, mGet(keys), type);
     }
 
     @Override
     public <V> List<V> hValsObject(final String key){
-        return returnObjectValueFromListString(hVals(key));
+        return ReturnUtils.returnObjectValueFromListString(serializer, hVals(key));
     }
 
     @Override
     public <V> List<V> hValsObject(final byte[] key){
-        return returnObjectValueFromListByte(hVals(key));
+        return ReturnUtils.returnObjectValueFromListByte(serializer, hVals(key));
     }
 
     @Override
     public <V> List<V> hValsObject(final String key, final Class<V> clazz){
-        return returnObjectValueFromListString(hVals(key), clazz);
+        return ReturnUtils.returnObjectValueFromListString(serializer, hVals(key), clazz);
     }
 
     @Override
     public <V> List<V> hValsObject(final byte[] key, final Class<V> clazz){
-        return returnObjectValueFromListByte(hVals(key), clazz);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, hVals(key), clazz);
     }
 
     @Override
     public <V> List<V> hValsObject(final String key, final TypeReference<V> type){
-        return returnObjectValueFromListString(hVals(key), type);
+        return ReturnUtils.returnObjectValueFromListString(serializer, hVals(key), type);
     }
 
     @Override
     public <V> List<V> hValsObject(final byte[] key, final TypeReference<V> type){
-        return returnObjectValueFromListByte(hVals(key), type);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, hVals(key), type);
     }
 
     @Override
@@ -477,62 +477,62 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
     @Override
     public <V> List<V> hMGetObject(final String key, final String... fields){
-        return returnObjectValueFromListString(hMGet(key, fields));
+        return ReturnUtils.returnObjectValueFromListString(serializer, hMGet(key, fields));
     }
 
     @Override
     public <V> List<V> hMGetObject(final byte[] key, final byte[]... fields){
-        return returnObjectValueFromListByte(hMGet(key, fields));
+        return ReturnUtils.returnObjectValueFromListByte(serializer, hMGet(key, fields));
     }
 
     @Override
     public <V> List<V> hMGetObject(final String key, final String[] fields, final Class<V> clazz){
-        return returnObjectValueFromListString(hMGet(key, fields), clazz);
+        return ReturnUtils.returnObjectValueFromListString(serializer, hMGet(key, fields), clazz);
     }
 
     @Override
     public <V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final Class<V> clazz){
-        return returnObjectValueFromListByte(hMGet(key, fields), clazz);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, hMGet(key, fields), clazz);
     }
 
     @Override
     public <V> List<V> hMGetObject(final String key, final String[] fields, final TypeReference<V> type){
-        return returnObjectValueFromListString(hMGet(key, fields), type);
+        return ReturnUtils.returnObjectValueFromListString(serializer, hMGet(key, fields), type);
     }
 
     @Override
     public <V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final TypeReference<V> type){
-        return returnObjectValueFromListByte(hMGet(key, fields), type);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, hMGet(key, fields), type);
     }
 
     @Override
     public <V> Map<String, V> hGetAllObject(final String key){
-        return returnObjectValueFromMapString(hGetAll(key));
+        return ReturnUtils.returnObjectValueFromMapString(serializer, hGetAll(key));
     }
 
     @Override
     public <V> Map<byte[], V> hGetAllObject(final byte[] key){
-        return returnObjectValueFromMapByte(hGetAll(key));
+        return ReturnUtils.returnObjectValueFromMapByte(serializer, hGetAll(key));
     }
 
     @Override
     public <V> Map<String, V> hGetAllObject(final String key, final Class<V> clazz){
-        return returnObjectValueFromMapString(hGetAll(key), clazz);
+        return ReturnUtils.returnObjectValueFromMapString(serializer, hGetAll(key), clazz);
     }
 
     @Override
     public <V> Map<byte[], V> hGetAllObject(final byte[] key, final Class<V> clazz){
-        return returnObjectValueFromMapByte(hGetAll(key), clazz);
+        return ReturnUtils.returnObjectValueFromMapByte(serializer, hGetAll(key), clazz);
     }
 
     @Override
     public <V> Map<String, V> hGetAllObject(final String key, final TypeReference<V> type){
-        return returnObjectValueFromMapString(hGetAll(key), type);
+        return ReturnUtils.returnObjectValueFromMapString(serializer, hGetAll(key), type);
     }
 
     @Override
     public <V> Map<byte[], V> hGetAllObject(final byte[] key, final TypeReference<V> type){
-        return returnObjectValueFromMapByte(hGetAll(key), type);
+        return ReturnUtils.returnObjectValueFromMapByte(serializer, hGetAll(key), type);
     }
 
     @Override
@@ -757,32 +757,32 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
     @Override
     public <V> List<V> blPopObject(final String key, final int timeout){
-        return returnObjectValueFromListString(blPop(key, timeout));
+        return ReturnUtils.returnObjectValueFromListString(serializer, blPop(key, timeout));
     }
 
     @Override
     public <V> List<V> blPopObject(final byte[] key, final int timeout){
-        return returnObjectValueFromListByte(blPop(key, timeout));
+        return ReturnUtils.returnObjectValueFromListByte(serializer, blPop(key, timeout));
     }
 
     @Override
     public <V> List<V> blPopObject(final String key, final int timeout, final Class<V> clazz){
-        return returnObjectValueFromListString(blPop(key, timeout), clazz);
+        return ReturnUtils.returnObjectValueFromListString(serializer, blPop(key, timeout), clazz);
     }
 
     @Override
     public <V> List<V> blPopObject(final byte[] key, final int timeout, final Class<V> clazz){
-        return returnObjectValueFromListByte(blPop(key, timeout), clazz);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, blPop(key, timeout), clazz);
     }
 
     @Override
     public <V> List<V> blPopObject(final String key, final int timeout, final TypeReference<V> type){
-        return returnObjectValueFromListString(blPop(key, timeout), type);
+        return ReturnUtils.returnObjectValueFromListString(serializer, blPop(key, timeout), type);
     }
 
     @Override
     public <V> List<V> blPopObject(final byte[] key, final int timeout, final TypeReference<V> type){
-        return returnObjectValueFromListByte(blPop(key, timeout), type);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, blPop(key, timeout), type);
     }
 
     @Override
@@ -857,32 +857,32 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
     @Override
     public <V> List<V> brPopObject(final String key, final int timeout){
-        return returnObjectValueFromListString(brPop(key, timeout));
+        return ReturnUtils.returnObjectValueFromListString(serializer, brPop(key, timeout));
     }
 
     @Override
     public <V> List<V> brPopObject(final byte[] key, final int timeout){
-        return returnObjectValueFromListByte(brPop(key, timeout));
+        return ReturnUtils.returnObjectValueFromListByte(serializer, brPop(key, timeout));
     }
 
     @Override
     public <V> List<V> brPopObject(final String key, final int timeout, final Class<V> clazz){
-        return returnObjectValueFromListString(brPop(key, timeout), clazz);
+        return ReturnUtils.returnObjectValueFromListString(serializer, brPop(key, timeout), clazz);
     }
 
     @Override
     public <V> List<V> brPopObject(final byte[] key, final int timeout, final Class<V> clazz){
-        return returnObjectValueFromListByte(brPop(key, timeout), clazz);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, brPop(key, timeout), clazz);
     }
 
     @Override
     public <V> List<V> brPopObject(final String key, final int timeout, final TypeReference<V> type){
-        return returnObjectValueFromListString(brPop(key, timeout), type);
+        return ReturnUtils.returnObjectValueFromListString(serializer, brPop(key, timeout), type);
     }
 
     @Override
     public <V> List<V> brPopObject(final byte[] key, final int timeout, final TypeReference<V> type){
-        return returnObjectValueFromListByte(brPop(key, timeout), type);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, brPop(key, timeout), type);
     }
 
     @Override
@@ -979,62 +979,62 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
     @Override
     public <V> List<V> lRangeObject(final String key, final int start, final int end){
-        return returnObjectValueFromListString(lRange(key, start, end));
+        return ReturnUtils.returnObjectValueFromListString(serializer, lRange(key, start, end));
     }
 
     @Override
     public <V> List<V> lRangeObject(final byte[] key, final int start, final int end){
-        return returnObjectValueFromListByte(lRange(key, start, end));
+        return ReturnUtils.returnObjectValueFromListByte(serializer, lRange(key, start, end));
     }
 
     @Override
     public <V> List<V> lRangeObject(final String key, final long start, final long end){
-        return returnObjectValueFromListString(lRange(key, start, end));
+        return ReturnUtils.returnObjectValueFromListString(serializer, lRange(key, start, end));
     }
 
     @Override
     public <V> List<V> lRangeObject(final byte[] key, final long start, final long end){
-        return returnObjectValueFromListByte(lRange(key, start, end));
+        return ReturnUtils.returnObjectValueFromListByte(serializer, lRange(key, start, end));
     }
 
     @Override
     public <V> List<V> lRangeObject(final String key, final int start, final int end, final Class<V> clazz){
-        return returnObjectValueFromListString(lRange(key, start, end), clazz);
+        return ReturnUtils.returnObjectValueFromListString(serializer, lRange(key, start, end), clazz);
     }
 
     @Override
     public <V> List<V> lRangeObject(final byte[] key, final int start, final int end, final Class<V> clazz){
-        return returnObjectValueFromListByte(lRange(key, start, end), clazz);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, lRange(key, start, end), clazz);
     }
 
     @Override
     public <V> List<V> lRangeObject(final String key, final long start, final long end, final Class<V> clazz){
-        return returnObjectValueFromListString(lRange(key, start, end), clazz);
+        return ReturnUtils.returnObjectValueFromListString(serializer, lRange(key, start, end), clazz);
     }
 
     @Override
     public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz){
-        return returnObjectValueFromListByte(lRange(key, start, end), clazz);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, lRange(key, start, end), clazz);
     }
 
     @Override
     public <V> List<V> lRangeObject(final String key, final int start, final int end, final TypeReference<V> type){
-        return returnObjectValueFromListString(lRange(key, start, end), type);
+        return ReturnUtils.returnObjectValueFromListString(serializer, lRange(key, start, end), type);
     }
 
     @Override
     public <V> List<V> lRangeObject(final byte[] key, final int start, final int end, final TypeReference<V> type){
-        return returnObjectValueFromListByte(lRange(key, start, end), type);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, lRange(key, start, end), type);
     }
 
     @Override
     public <V> List<V> lRangeObject(final String key, final long start, final long end, final TypeReference<V> type){
-        return returnObjectValueFromListString(lRange(key, start, end), type);
+        return ReturnUtils.returnObjectValueFromListString(serializer, lRange(key, start, end), type);
     }
 
     @Override
     public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type){
-        return returnObjectValueFromListByte(lRange(key, start, end), type);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, lRange(key, start, end), type);
     }
 
     @Override
@@ -1069,32 +1069,32 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
     @Override
     public <V> Set<V> sMembersObject(final String key){
-        return returnObjectValueFromSetString(sMembers(key));
+        return ReturnUtils.returnObjectValueFromSetString(serializer, sMembers(key));
     }
 
     @Override
     public <V> Set<V> sMembersObject(final byte[] key){
-        return returnObjectValueFromSetByte(sMembers(key));
+        return ReturnUtils.returnObjectValueFromSetByte(serializer, sMembers(key));
     }
 
     @Override
     public <V> Set<V> sMembersObject(final String key, final Class<V> clazz){
-        return returnObjectValueFromSetString(sMembers(key), clazz);
+        return ReturnUtils.returnObjectValueFromSetString(serializer, sMembers(key), clazz);
     }
 
     @Override
     public <V> Set<V> sMembersObject(final byte[] key, final Class<V> clazz){
-        return returnObjectValueFromSetByte(sMembers(key), clazz);
+        return ReturnUtils.returnObjectValueFromSetByte(serializer, sMembers(key), clazz);
     }
 
     @Override
     public <V> Set<V> sMembersObject(final String key, final TypeReference<V> type){
-        return returnObjectValueFromSetString(sMembers(key), type);
+        return ReturnUtils.returnObjectValueFromSetString(serializer, sMembers(key), type);
     }
 
     @Override
     public <V> Set<V> sMembersObject(final byte[] key, final TypeReference<V> type){
-        return returnObjectValueFromSetByte(sMembers(key), type);
+        return ReturnUtils.returnObjectValueFromSetByte(serializer, sMembers(key), type);
     }
 
     @Override
@@ -1159,62 +1159,62 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
     @Override
     public <V> List<V> sRandMemberObject(final String key, final int count){
-        return returnObjectValueFromListString(sRandMember(key, count));
+        return ReturnUtils.returnObjectValueFromListString(serializer, sRandMember(key, count));
     }
 
     @Override
     public <V> List<V> sRandMemberObject(final byte[] key, final int count){
-        return returnObjectValueFromListByte(sRandMember(key, count));
+        return ReturnUtils.returnObjectValueFromListByte(serializer, sRandMember(key, count));
     }
 
     @Override
     public <V> List<V> sRandMemberObject(final String key, final long count){
-        return returnObjectValueFromListString(sRandMember(key, count));
+        return ReturnUtils.returnObjectValueFromListString(serializer, sRandMember(key, count));
     }
 
     @Override
     public <V> List<V> sRandMemberObject(final byte[] key, final long count){
-        return returnObjectValueFromListByte(sRandMember(key, count));
+        return ReturnUtils.returnObjectValueFromListByte(serializer, sRandMember(key, count));
     }
 
     @Override
     public <V> List<V> sRandMemberObject(final String key, final int count, final Class<V> clazz){
-        return returnObjectValueFromListString(sRandMember(key, count), clazz);
+        return ReturnUtils.returnObjectValueFromListString(serializer, sRandMember(key, count), clazz);
     }
 
     @Override
     public <V> List<V> sRandMemberObject(final byte[] key, final int count, final Class<V> clazz){
-        return returnObjectValueFromListByte(sRandMember(key, count), clazz);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, sRandMember(key, count), clazz);
     }
 
     @Override
     public <V> List<V> sRandMemberObject(final String key, final long count, final Class<V> clazz){
-        return returnObjectValueFromListString(sRandMember(key, count), clazz);
+        return ReturnUtils.returnObjectValueFromListString(serializer, sRandMember(key, count), clazz);
     }
 
     @Override
     public <V> List<V> sRandMemberObject(final byte[] key, final long count, final Class<V> clazz){
-        return returnObjectValueFromListByte(sRandMember(key, count), clazz);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, sRandMember(key, count), clazz);
     }
 
     @Override
     public <V> List<V> sRandMemberObject(final String key, final int count, final TypeReference<V> type){
-        return returnObjectValueFromListString(sRandMember(key, count), type);
+        return ReturnUtils.returnObjectValueFromListString(serializer, sRandMember(key, count), type);
     }
 
     @Override
     public <V> List<V> sRandMemberObject(final byte[] key, final int count, final TypeReference<V> type){
-        return returnObjectValueFromListByte(sRandMember(key, count), type);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, sRandMember(key, count), type);
     }
 
     @Override
     public <V> List<V> sRandMemberObject(final String key, final long count, final TypeReference<V> type){
-        return returnObjectValueFromListString(sRandMember(key, count), type);
+        return ReturnUtils.returnObjectValueFromListString(serializer, sRandMember(key, count), type);
     }
 
     @Override
     public <V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type){
-        return returnObjectValueFromListByte(sRandMember(key, count), type);
+        return ReturnUtils.returnObjectValueFromListByte(serializer, sRandMember(key, count), type);
     }
 
     @Override
@@ -1259,32 +1259,32 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
     @Override
     public <V> Set<V> sDiffObject(final String key){
-        return returnObjectValueFromSetString(sDiff(key));
+        return ReturnUtils.returnObjectValueFromSetString(serializer, sDiff(key));
     }
 
     @Override
     public <V> Set<V> sDiffObject(final byte[] key){
-        return returnObjectValueFromSetByte(sDiff(key));
+        return ReturnUtils.returnObjectValueFromSetByte(serializer, sDiff(key));
     }
 
     @Override
     public <V> Set<V> sDiffObject(final String key, final Class<V> clazz){
-        return returnObjectValueFromSetString(sDiff(key), clazz);
+        return ReturnUtils.returnObjectValueFromSetString(serializer, sDiff(key), clazz);
     }
 
     @Override
     public <V> Set<V> sDiffObject(final byte[] key, final Class<V> clazz){
-        return returnObjectValueFromSetByte(sDiff(key), clazz);
+        return ReturnUtils.returnObjectValueFromSetByte(serializer, sDiff(key), clazz);
     }
 
     @Override
     public <V> Set<V> sDiffObject(final String key, final TypeReference<V> type){
-        return returnObjectValueFromSetString(sDiff(key), type);
+        return ReturnUtils.returnObjectValueFromSetString(serializer, sDiff(key), type);
     }
 
     @Override
     public <V> Set<V> sDiffObject(final byte[] key, final TypeReference<V> type){
-        return returnObjectValueFromSetByte(sDiff(key), type);
+        return ReturnUtils.returnObjectValueFromSetByte(serializer, sDiff(key), type);
     }
 
     @Override
@@ -1515,26 +1515,22 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
     @Override
     public Geo geoPos(final String key, final String member){
-        List<Geo> result = geoPos(key, new String[]{member});
-        return Validate.isEmpty(result) ? null : result.get(0);
+        return ReturnUtils.returnFirst(geoPos(key, new String[]{member}));
     }
 
     @Override
     public Geo geoPos(final byte[] key, final byte[] member){
-        List<Geo> result = geoPos(key, new byte[][]{member});
-        return Validate.isEmpty(result) ? null : result.get(0);
+        return ReturnUtils.returnFirst(geoPos(key, new byte[][]{member}));
     }
 
     @Override
     public String geoHash(final String key, final String member){
-        List<String> result = geoHash(key, new String[]{member});
-        return Validate.isEmpty(result) ? null : result.get(0);
+        return ReturnUtils.returnFirst(geoHash(key, new String[]{member}));
     }
 
     @Override
     public byte[] geoHash(final byte[] key, final byte[] member){
-        List<byte[]> result = geoHash(key, new byte[][]{member});
-        return Validate.isEmpty(result) ? null : result.get(0);
+        return ReturnUtils.returnFirst(geoHash(key, new byte[][]{member}));
     }
 
     @Override
@@ -1619,14 +1615,12 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
     @Override
     public Boolean scriptExists(final String sha1){
-        final List<Boolean> result = scriptExists(new String[]{sha1});
-        return Validate.isEmpty(result) ? false : result.get(0);
+        return ReturnUtils.returnFirst(scriptExists(new String[]{sha1}), false);
     }
 
     @Override
     public Boolean scriptExists(final byte[] sha1){
-        final List<Boolean> result = scriptExists(new byte[][]{sha1});
-        return Validate.isEmpty(result) ? false : result.get(0);
+        return ReturnUtils.returnFirst(scriptExists(new byte[][]{sha1}), false);
     }
 
 }

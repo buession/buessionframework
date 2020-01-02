@@ -31,4 +31,19 @@ import redis.clients.jedis.ShardedJedis;
  */
 public interface ShardedJedisConnection extends JedisRedisConnection<ShardedJedis> {
 
+    @Override
+    default void multi(){
+
+    }
+
+    @Override
+    default void exec(){
+
+    }
+
+    @Override
+    default void discard(){
+
+    }
+
 }

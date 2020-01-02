@@ -39,7 +39,7 @@ public enum Type {
 
     HASH("Hash"),
 
-    STREAM("stream"),
+    STREAM("Stream"),
 
     NONE("None");
 
@@ -55,7 +55,7 @@ public enum Type {
 
     public static Type fromCode(String code){
         try{
-            return Enum.valueOf(Type.class, code);
+            return Enum.valueOf(Type.class, code.toUpperCase());
         }catch(Exception e){
             throw new IllegalArgumentException("unknown data type code");
         }

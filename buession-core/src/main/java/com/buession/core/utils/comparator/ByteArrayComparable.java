@@ -19,44 +19,38 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.utils;
+package com.buession.core.utils.comparator;
 
 /**
  * @author Yong.Teng
  */
-public class ByteArrayComparator {
+public class ByteArrayComparable implements Comparable<byte[]> {
 
-    private ByteArrayComparator(){
+    private final byte[] value;
 
+    public ByteArrayComparable(final byte[] value){
+        this.value = value;
     }
 
-    public final static int compare(final byte[] v1, final byte[] v2){
-        int len1 = v1.length;
-        int len2 = v2.length;
+    @Override
+    public int compareTo(byte[] other){
+        int len1 = this.value.length;
+        int len2 = other.length;
 
-        int lmin = Math.min(len1, len2);
-
-        for(int i = 0; i < lmin; i++){
-            byte b1 = v1[i];
-            byte b2 = v2[i];
-
-            if(b1 < b2){
+        for(int i = 0, j = Math.min(len1, len2); i < j; i++){
+            if(this.value[i] < other[i]){
                 return -1;
-            }
-
-            if(b1 > b2){
+            }else if(this.value[i] > other[i]){
                 return 1;
             }
         }
 
         if(len1 < len2){
             return -1;
-        }
-
-        if(len1 > len2){
+        }else if(len1 > len2){
             return 1;
         }
 

@@ -318,4 +318,14 @@ public enum HttpStatus {
     public String getText(){
         return text;
     }
+
+    @Override
+    public String toString(){
+        StringBuffer sb = new StringBuffer(36);
+
+        sb.append(code).append(" ").append(text);
+
+        return sb.toString();
+    }
+
 }

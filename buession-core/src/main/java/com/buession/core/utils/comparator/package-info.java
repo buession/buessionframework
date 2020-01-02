@@ -19,32 +19,10 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.mvc.view.document;
-
 /**
  * @author Yong.Teng
  */
-public class MetaDataConvert {
-
-    public final static MetaData convert(final DocumentMetaData documentMetaData){
-        if(documentMetaData == null){
-            return null;
-        }
-
-        MetaData metaData = new MetaData();
-
-        metaData.setTitle(documentMetaData.title());
-        metaData.setAuthor(documentMetaData.author());
-        metaData.setCharset(documentMetaData.charset());
-        metaData.setKeywords(documentMetaData.keywords());
-        metaData.setDescription(documentMetaData.description());
-        metaData.setAuthor(documentMetaData.author());
-        metaData.setCopyright(documentMetaData.copyright());
-
-        return metaData;
-    }
-
-}
+package com.buession.core.utils.comparator;

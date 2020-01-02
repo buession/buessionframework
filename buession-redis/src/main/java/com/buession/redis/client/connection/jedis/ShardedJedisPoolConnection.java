@@ -40,4 +40,5 @@ public class ShardedJedisPoolConnection extends AbstractJedisRedisConnection<Sha
     public ShardedJedisPoolConnection(RedisDataSource dataSource){
         super(dataSource);
     }
+
 }

@@ -22,57 +22,36 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection;
+package com.buession.redis;
 
-import com.buession.redis.client.connection.datasource.RedisDataSource;
 import com.buession.redis.core.Transaction;
-
-import java.io.IOException;
+import org.junit.Test;
 
 /**
- * Redis 链接对象抽象类
- *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisConnection implements RedisConnection {
+public class TransactionTest extends AbstractRedisTest {
 
-    protected Transaction transaction;
+    private RedisTemplate redisClientTemplate(){
+        RedisTemplate redisClientTemplate = null;
 
-    private RedisDataSource dataSource;
-
-    public AbstractRedisConnection(){
-    }
-
-    public AbstractRedisConnection(RedisDataSource dataSource){
-        this.dataSource = dataSource;
-    }
-
-    @Override
-    public RedisDataSource getDataSource(){
-        return dataSource;
-    }
-
-    @Override
-    public void setDataSource(RedisDataSource dataSource){
-        this.dataSource = dataSource;
-    }
-
-    @Override
-    public void disconnect(){
-        if(getDataSource() != null){
-            getDataSource().disconnect();
+        try{
+            redisClientTemplate = new RedisTemplate(connectionFactory().getObject());
+            redisClientTemplate.afterPropertiesSet();
+        }catch(Exception e){
+            e.printStackTrace();
         }
+
+        return redisClientTemplate;
     }
 
-    @Override
-    public boolean isClosed(){
-        return getDataSource() == null ? true : getDataSource().isClosed();
+    @Test
+    public void transaction(){
+        RedisTemplate redisTemplate = redisClientTemplate();
+
+        Transaction transaction = redisTemplate.multi();
+        redisTemplate.set("test_3", "ggggg");
+        redisTemplate.discard(transaction);
     }
 
-    @Override
-    public void close() throws IOException{
-        if(getDataSource() != null){
-            getDataSource().close();
-        }
-    }
 }

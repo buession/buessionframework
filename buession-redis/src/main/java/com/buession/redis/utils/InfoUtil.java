@@ -321,15 +321,15 @@ public class InfoUtil {
                 }else if("used_memory_peak_human".equals(v[0])){
                     peakMemory.setHuman(v[1]);
                 }else if("total_system_memory".equals(v[0])){
-                    totalSystemMemory.setValue(Integer.valueOf(v[1]));
+                    totalSystemMemory.setValue(Long.valueOf(v[1]));
                 }else if("total_system_memory_human".equals(v[0])){
                     totalSystemMemory.setHuman(v[1]);
                 }else if("used_memory_lua".equals(v[0])){
-                    luaUsedMemory.setValue(Integer.valueOf(v[1]));
+                    luaUsedMemory.setValue(Long.valueOf(v[1]));
                 }else if("used_memory_lua_human".equals(v[0])){
                     luaUsedMemory.setHuman(v[1]);
                 }else if("maxmemory".equals(v[0])){
-                    maxMemory.setValue(Integer.valueOf(v[1]));
+                    maxMemory.setValue(Long.valueOf(v[1]));
                 }else if("maxmemory_human".equals(v[0])){
                     maxMemory.setHuman(v[1]);
                 }else if("maxmemory_policy".equals(v[0])){
