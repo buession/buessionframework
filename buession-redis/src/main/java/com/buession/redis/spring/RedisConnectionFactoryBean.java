@@ -49,31 +49,31 @@ public abstract class RedisConnectionFactoryBean<C extends RedisConnection> exte
     }
 
     @Override
-    public Class<? extends RedisConnection> getObjectType(){
-        return connection.getClass();
-    }
-
-    @Override
     public boolean isSingleton(){
         return true;
     }
 
     @Override
     public void destroy() throws Exception{
+        beforeDestroy(connection);
         try{
             connection.close();
         }catch(IOException e){
             logger.error("Redis connection close error.", e);
         }
-
-        doDestroy(connection);
+        afterDestroy(connection);
     }
 
     protected void setConnection(C connection){
         this.connection = connection;
     }
 
-    protected void doDestroy(C connection){
+    protected void beforeDestroy(C connection){
 
     }
+
+    protected void afterDestroy(C connection){
+
+    }
+
 }

@@ -25,6 +25,7 @@
 package com.buession.redis.spring;
 
 import com.buession.core.validator.Validate;
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.jedis.JedisPoolDataSource;
 import com.buession.redis.client.connection.datasource.jedis.ShardedJedisPoolDataSource;
 import com.buession.redis.client.connection.datasource.jedis.SimpleJedisDataSource;
@@ -122,18 +123,25 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
     }
 
     @Override
+    public Class<? extends RedisConnection> getObjectType(){
+        return JedisRedisConnection.class;
+    }
+
+    @Override
     public void afterPropertiesSet() throws Exception{
         if(isUsePool()){
             if(isUseShardInfo()){
                 final ShardedJedisPoolDataSource dataSource = new ShardedJedisPoolDataSource();
 
                 dataSource.setPool(createShardedJedisPool());
+
                 setPool(dataSource.getPool());
                 setConnection(new ShardedJedisPoolConnection(dataSource));
             }else{
                 final JedisPoolDataSource dataSource = new JedisPoolDataSource();
 
                 dataSource.setPool(createPool());
+
                 setPool(dataSource.getPool());
                 setConnection(new JedisPoolConnection(dataSource));
             }
@@ -181,7 +189,7 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
     }
 
     @Override
-    protected void doDestroy(JedisRedisConnection connection){
+    protected void afterDestroy(JedisRedisConnection connection){
         if(isUsePool() && getPool() != null){
             try{
                 getPool().destroy();
@@ -192,4 +200,5 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
             setPool(null);
         }
     }
+
 }
