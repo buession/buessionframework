@@ -54,9 +54,7 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
         if(data != null){
             List<Integer> result = new ArrayList<>(data.size());
 
-            for(E e : data){
-                result.add(insert(e));
-            }
+            data.stream().map(v->result.add(insert(v)));
 
             return result;
         }
@@ -77,9 +75,7 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
         if(data != null){
             List<Integer> result = new ArrayList<>(data.size());
 
-            for(E e : data){
-                result.add(replace(e));
-            }
+            data.stream().map(v->result.add(replace(v)));
 
             return result;
         }

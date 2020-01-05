@@ -26,10 +26,12 @@
  */
 package com.buession.core.utils;
 
+import com.buession.lang.Constants;
+
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 数组工具类
@@ -37,8 +39,6 @@ import java.util.Set;
  * @author Yong.Teng
  */
 public class ArrayUtils {
-
-    public final static String EMPTY_STRING = "";
 
     public final static String DEFAULT_GLUE = ", ";
 
@@ -77,24 +77,8 @@ public class ArrayUtils {
             return null;
         }
 
-        if(a.length == 0){
-            return EMPTY_STRING;
-        }
-
-        String glueSep = glue == null ? DEFAULT_GLUE : glue;
-
-        StringBuilder sb = new StringBuilder(a.length);
-        int iMax = a.length - 1;
-
-        for(int i = 0; ; i++){
-            sb.append(a[i]);
-
-            if(i == iMax){
-                return sb.toString();
-            }
-
-            sb.append(glueSep);
-        }
+        return a.length == 0 ? Constants.EMPTY_STRING : Arrays.asList(a).stream().map(v->v.toString()).collect
+                (Collectors.joining(glue));
     }
 
     /**
@@ -122,17 +106,7 @@ public class ArrayUtils {
      * @return 转换结果
      */
     public final static <O> Set<O> toSet(O[] a){
-        if(a == null){
-            return null;
-        }
-
-        Set<O> result = new LinkedHashSet<>(a.length);
-
-        for(O e : a){
-            result.add(e);
-        }
-
-        return result;
+        return a == null ? null : Arrays.asList(a).stream().collect(Collectors.toSet());
     }
 
 }

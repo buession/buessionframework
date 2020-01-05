@@ -34,16 +34,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.buession.web.servlet.http.request.RequestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
  * @author Yong.Teng
  */
 public class MobileFilter extends OncePerRequestFilter {
-
-    private final static Logger logger = LoggerFactory.getLogger(MobileFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain
@@ -53,7 +49,6 @@ public class MobileFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
 
         final String accept = request.getHeader("Accept");
         final boolean isMobile = accept != null && (accept.contains("vnd.wap.wml") == true && accept.contains

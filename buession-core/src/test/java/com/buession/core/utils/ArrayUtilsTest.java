@@ -19,42 +19,28 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.reactive.filter;
+package com.buession.core.utils;
 
-import com.buession.web.reactive.http.request.RequestUtils;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebFilter;
-import org.springframework.web.server.WebFilterChain;
-import reactor.core.publisher.Mono;
+import org.junit.Test;
+
+import java.util.Set;
 
 /**
  * @author Yong.Teng
  */
-public class MobileFilter implements WebFilter {
+public class ArrayUtilsTest {
 
-    @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
-        if(exchange == null){
-            return chain.filter(exchange);
+    @Test
+    public void toSet(){
+        String[] strings = new String[]{"A", "B", "C"};
+        Set<String> set = ArrayUtils.toSet(strings);
+
+        for(String str : set){
+            System.out.println(str);
         }
-
-        ServerHttpRequest request = exchange.getRequest();
-
-        if(RequestUtils.isMobile(request)){
-            exchange.getAttributes().put("isMobile", true);
-            return chain.filter(exchange);
-        }
-
-        final String accept = request.getHeaders().getFirst("Accept");
-        final boolean isMobile = accept != null && (accept.contains("vnd.wap.wml") == true && accept.contains
-                ("text/html") == false || accept.indexOf("vnd.wap.wml") > accept.indexOf("text/html"));
-
-        exchange.getAttributes().put("isMobile", isMobile);
-
-        return chain.filter(exchange);
     }
+
 }

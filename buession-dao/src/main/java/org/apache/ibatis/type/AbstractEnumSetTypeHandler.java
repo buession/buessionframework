@@ -28,9 +28,9 @@ package org.apache.ibatis.type;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
@@ -44,19 +44,9 @@ public abstract class AbstractEnumSetTypeHandler<E extends Enum<E>> extends Abst
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, Set<E> parameter, JdbcType jdbcType) throws
             SQLException{
-        final StringBuffer sb = new StringBuffer(parameter.size() * 2 -1);
-        int j = 0;
+        String result = parameter.stream().map(v->v.name()).collect(Collectors.joining(";"));
 
-        for(Enum e : parameter){
-            if(j > 0){
-                sb.append(',');
-            }
-
-            sb.append(e);
-            j++;
-        }
-
-        ps.setString(i, sb.toString());
+        ps.setString(i, result);
     }
 
     protected abstract E getValue(String str);

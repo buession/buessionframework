@@ -26,6 +26,8 @@
  */
 package com.buession.core.utils;
 
+import com.buession.lang.Constants;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -38,14 +40,6 @@ import java.security.NoSuchAlgorithmException;
 public class ShortUrlGenerator {
 
     private final static String ALGO = "MD5";
-
-    private final static char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
-            'e', 'f'};
-
-    private final static char[] CHARS = new char[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-            'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
-            'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2',
-            '3', '4', '5', '6', '7', '8', '9'};
 
     private final static int LENGTH = 6;
 
@@ -73,7 +67,7 @@ public class ShortUrlGenerator {
                 // 把得到的值与 0x0000003D 进行位与运算，取得字符数组 chars 索引
                 long index = 0x0000003D & lHexLong;
                 // 把取得的字符相加
-                outChars[i] = CHARS[(int) index];
+                outChars[i] = Constants.ALNUM[(int) index];
                 // 每次循环按位右移 5 位
                 lHexLong = lHexLong >> 5;
             }
@@ -101,8 +95,8 @@ public class ShortUrlGenerator {
         final StringBuilder buffer = new StringBuilder(bytes.length * 2);
 
         for(int j = 0; j < bytes.length; j++){
-            buffer.append(HEX_DIGITS[(bytes[j] >> 4) & 0x0f]);
-            buffer.append(HEX_DIGITS[bytes[j] & 0x0f]);
+            buffer.append(Constants.HEX_DIGITS[(bytes[j] >> 4) & 0x0f]);
+            buffer.append(Constants.HEX_DIGITS[bytes[j] & 0x0f]);
         }
 
         return buffer.toString();

@@ -26,6 +26,8 @@
  */
 package com.buession.core.utils;
 
+import com.buession.lang.Constants;
+
 import java.util.Random;
 
 /**
@@ -34,11 +36,6 @@ import java.util.Random;
  * @author Yong.Teng
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
-
-    private final static char[] CHARS = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
-            'p', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
-            'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6',
-            '7', '8', '9', '0'};
 
     /**
      * 截取字符串
@@ -125,9 +122,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             Random random = new Random();
 
             for(int i = 0; i < length; i++){
-                int j = random.nextInt(CHARS.length);
+                int j = random.nextInt(Constants.ALNUM.length);
 
-                sb.append(CHARS[j]);
+                sb.append(Constants.ALNUM[j]);
             }
 
             return sb.toString();

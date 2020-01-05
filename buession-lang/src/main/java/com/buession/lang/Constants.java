@@ -19,42 +19,28 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.reactive.filter;
-
-import com.buession.web.reactive.http.request.RequestUtils;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebFilter;
-import org.springframework.web.server.WebFilterChain;
-import reactor.core.publisher.Mono;
+package com.buession.lang;
 
 /**
  * @author Yong.Teng
  */
-public class MobileFilter implements WebFilter {
+public class Constants {
 
-    @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
-        if(exchange == null){
-            return chain.filter(exchange);
-        }
+    public final static String EMPTY_STRING = "";
 
-        ServerHttpRequest request = exchange.getRequest();
+    public final static char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
+            'e', 'f'};
 
-        if(RequestUtils.isMobile(request)){
-            exchange.getAttributes().put("isMobile", true);
-            return chain.filter(exchange);
-        }
+    public final static char[] ALNUM = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+            'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+            'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4',
+            '5', '6', '7', '8', '9'};
 
-        final String accept = request.getHeaders().getFirst("Accept");
-        final boolean isMobile = accept != null && (accept.contains("vnd.wap.wml") == true && accept.contains
-                ("text/html") == false || accept.indexOf("vnd.wap.wml") > accept.indexOf("text/html"));
+    private Constants(){
 
-        exchange.getAttributes().put("isMobile", isMobile);
-
-        return chain.filter(exchange);
     }
+
 }
