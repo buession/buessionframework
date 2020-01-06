@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.filter;
@@ -44,18 +44,7 @@ public class MobileFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain
             filterChain) throws ServletException, IOException{
-        if(RequestUtils.isMobile(request)){
-            request.setAttribute("isMobile", true);
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        final String accept = request.getHeader("Accept");
-        final boolean isMobile = accept != null && (accept.contains("vnd.wap.wml") == true && accept.contains
-                ("text/html") == false || accept.indexOf("vnd.wap.wml") > accept.indexOf("text/html"));
-
-        request.setAttribute("isMobile", isMobile);
-
+        request.setAttribute("isMobile", RequestUtils.isMobile(request));
         filterChain.doFilter(request, response);
     }
 

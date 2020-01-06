@@ -22,30 +22,35 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.reactive.filter;
+package com.buession.web.servlet.annotation;
 
-import com.buession.web.reactive.http.request.RequestUtils;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebFilter;
-import org.springframework.web.server.WebFilterChain;
-import reactor.core.publisher.Mono;
+import com.buession.web.http.request.RequestClientIp;
+import com.buession.web.servlet.http.request.RequestUtils;
+import org.springframework.core.MethodParameter;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.support.WebDataBinderFactory;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.method.support.ModelAndViewContainer;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Yong.Teng
  */
-public class MobileFilter implements WebFilter {
+public class RequestClientIpHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
-        if(exchange == null){
-            return chain.filter(exchange);
-        }
+    public boolean supportsParameter(MethodParameter methodParameter){
+        return methodParameter.hasParameterAnnotation(RequestClientIp.class);
+    }
 
-        ServerHttpRequest request = exchange.getRequest();
-
-        exchange.getAttributes().put("isMobile", RequestUtils.isMobile(request));
-        return chain.filter(exchange);
+    @Override
+    public Object resolveArgument(MethodParameter methodParameter, @Nullable ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws
+            Exception{
+        HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
+        return servletRequest == null ? null : RequestUtils.getClientIp(servletRequest);
     }
 
 }

@@ -51,4 +51,5 @@ public abstract class AbstractServletHttpAnnotationsMethodAdvice extends Abstrac
 
         setMethodAdvices(methodAdvices);
     }
+
 }

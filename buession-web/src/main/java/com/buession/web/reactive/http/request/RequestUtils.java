@@ -88,7 +88,14 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
      */
     public final static boolean isMobile(final ServerHttpRequest request){
         HttpHeaders httpHeaders = request.getHeaders();
-        return isMobile(httpHeaders.getFirst("User-Agent"));
+
+        if(isMobile(httpHeaders.getFirst("User-Agent"))){
+            return true;
+        }
+
+        final String accept = httpHeaders.getFirst("Accept");
+        return accept != null && (accept.contains("vnd.wap.wml") == true && accept.contains("text/html") == false ||
+                accept.indexOf("vnd.wap.wml") > accept.indexOf("text/html"));
     }
 
 }

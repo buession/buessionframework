@@ -19,11 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Field;
@@ -31,11 +33,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Yong.Teng
  */
 public class ReflectUtils {
+
+    private final static Logger logger = LoggerFactory.getLogger(ReflectUtils.class);
 
     protected ReflectUtils(){
 
@@ -94,6 +100,100 @@ public class ReflectUtils {
         }catch(IllegalAccessException ex){
             handleReflectionException(ex);
         }
+    }
+
+    public final static <E> void setter(E entity, String setterName, Class<?> javaType, Object value) throws
+            NoSuchFieldException{
+        setter((Class<E>) entity.getClass(), entity, setterName, javaType, value);
+    }
+
+    public final static <E> void setter(Class<E> clazz, E entity, String setterName, Class<?> javaType, Object value)
+            throws NoSuchFieldException{
+        if(entity == null){
+            return;
+        }
+
+        try{
+            Method method = clazz.getMethod("set" + StringUtils.upperCase(setterName), javaType);
+
+            if(isStaticMethod(method) == false){
+                method.invoke(entity, value);
+                return;
+            }
+        }catch(NoSuchMethodException ex){
+            logger.warn("{}", ex.getMessage());
+        }catch(InvocationTargetException ex){
+            logger.warn("{}", ex.getMessage());
+        }catch(IllegalAccessException ex){
+            logger.warn("{}", ex.getMessage());
+        }
+
+        Field field = clazz.getField(setterName);
+
+        if(isStaticField(field) == false){
+            setField(entity, field, value);
+        }
+    }
+
+    /**
+     * 将实体类转换为 Map
+     *
+     * @param entity
+     *         实体类
+     * @param <E>
+     *         实体类类型
+     *
+     * @return Map 对象
+     */
+    public final static <E> Map<String, Object> entityConvertMap(final E entity){
+        if(entity == null){
+            return null;
+        }
+
+        Class<?> clazz = entity.getClass();
+        String entityName = clazz.getName();
+        Method[] methods = clazz.getMethods();
+        Field[] fields = clazz.getFields();
+        Map<String, Object> result = new HashMap<>(methods.length);
+
+        for(Method method : methods){
+            if(isStaticMethod(method)){
+                continue;
+            }
+
+            String methodName = method.getName();
+            if(methodName.startsWith("get") == false){
+                continue;
+            }
+
+            String name = StringUtils.uncapitalize(methodName.substring(3));
+
+            try{
+                result.put(name, method.invoke(entity));
+            }catch(IllegalAccessException ex){
+                logger.warn("Call method {}::{} failure: {}", entityName, method.toGenericString(), ex.getMessage());
+            }catch(InvocationTargetException ex){
+                logger.warn("Call method {}::{} failure: {}", entityName, method.toGenericString(), ex.getMessage());
+            }
+        }
+
+        for(Field field : fields){
+            if(isStaticField(field)){
+                continue;
+            }
+
+            if(result.containsKey(field.getName())){
+                continue;
+            }
+
+            try{
+                result.put(field.getName(), field.get(entity));
+            }catch(IllegalAccessException ex){
+                logger.warn("Read field {}::{} failure: {}", entityName, field.getName(), ex.getMessage());
+            }
+        }
+
+        return result;
     }
 
     public static void handleReflectionException(Exception ex){

@@ -22,30 +22,20 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.reactive.filter;
+package com.buession.web.http.request;
 
-import com.buession.web.reactive.http.request.RequestUtils;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebFilter;
-import org.springframework.web.server.WebFilterChain;
-import reactor.core.publisher.Mono;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Yong.Teng
  */
-public class MobileFilter implements WebFilter {
-
-    @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
-        if(exchange == null){
-            return chain.filter(exchange);
-        }
-
-        ServerHttpRequest request = exchange.getRequest();
-
-        exchange.getAttributes().put("isMobile", RequestUtils.isMobile(request));
-        return chain.filter(exchange);
-    }
+@Target({ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface RequestMobile {
 
 }

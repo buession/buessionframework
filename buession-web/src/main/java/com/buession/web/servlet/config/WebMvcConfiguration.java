@@ -22,30 +22,24 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.reactive.filter;
+package com.buession.web.servlet.config;
 
-import com.buession.web.reactive.http.request.RequestUtils;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebFilter;
-import org.springframework.web.server.WebFilterChain;
-import reactor.core.publisher.Mono;
+import com.buession.web.servlet.annotation.RequestClientIpHandlerMethodArgumentResolver;
+import com.buession.web.servlet.annotation.RequestMobileHandlerMethodArgumentResolver;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public class MobileFilter implements WebFilter {
+public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
-        if(exchange == null){
-            return chain.filter(exchange);
-        }
-
-        ServerHttpRequest request = exchange.getRequest();
-
-        exchange.getAttributes().put("isMobile", RequestUtils.isMobile(request));
-        return chain.filter(exchange);
+    protected void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers){
+        argumentResolvers.add(new RequestClientIpHandlerMethodArgumentResolver());
+        argumentResolvers.add(new RequestMobileHandlerMethodArgumentResolver());
     }
 
 }

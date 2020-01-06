@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
@@ -51,15 +52,7 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
      */
     @Override
     public List<Integer> batchInsert(List<E> data){
-        if(data != null){
-            List<Integer> result = new ArrayList<>(data.size());
-
-            data.stream().map(v->result.add(insert(v)));
-
-            return result;
-        }
-
-        return null;
+        return data == null ? null : data.stream().map(v->insert(v)).collect(Collectors.toList());
     }
 
     /**
@@ -72,15 +65,7 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
      */
     @Override
     public List<Integer> batchReplace(List<E> data){
-        if(data != null){
-            List<Integer> result = new ArrayList<>(data.size());
-
-            data.stream().map(v->result.add(replace(v)));
-
-            return result;
-        }
-
-        return null;
+        return data == null ? null : data.stream().map(v->replace(v)).collect(Collectors.toList());
     }
 
     /**

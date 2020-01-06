@@ -21,14 +21,11 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -39,7 +36,6 @@ import javax.annotation.Resource;
 
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.ReflectUtils;
-import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Order;
 import org.apache.ibatis.mapping.ResultMap;
@@ -156,40 +152,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
         if(e instanceof Map){
             data.putAll((Map<String, Object>) e);
         }else{
-            Class<?> clazz = e.getClass();
-            Method[] methods = clazz.getMethods();
-            Field[] fields = clazz.getFields();
-
-            for(Field field : fields){
-                if(ReflectUtils.isStaticField(field)){
-                    continue;
-                }
-
-                try{
-                    data.put(field.getName(), field.get(e));
-                }catch(IllegalAccessException ex){
-                    logger.warn("Read field {}::{} failure: {}", clazz.getName(), field.getName(), ex.getMessage());
-                }
-            }
-
-            for(Method method : methods){
-                if(ReflectUtils.isStaticMethod(method)){
-                    continue;
-                }
-
-                String methodName = method.getName();
-                if(methodName.startsWith("get")){
-                    String name = StringUtils.uncapitalize(methodName.substring(3));
-
-                    try{
-                        data.put(name, method.invoke(e));
-                    }catch(IllegalAccessException ex){
-                        logger.warn("Call method {}::{} failure: {}", clazz.getName(), methodName, ex.getMessage());
-                    }catch(InvocationTargetException ex){
-                        logger.warn("Call method {}::{} failure: {}", clazz.getName(), methodName, ex.getMessage());
-                    }
-                }
-            }
+            data.putAll(ReflectUtils.entityConvertMap(e));
         }
 
         return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE), data);
@@ -489,49 +452,27 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
     protected void updatePrimary(E e, P primary){
         final Collection<ResultMap> resultMaps = masterSqlSessionTemplate.getConfiguration().getResultMaps();
 
-        if(resultMaps == null){
+        if(Validate.isEmpty(resultMaps)){
             return;
         }
 
-        for(ResultMap resultMap : resultMaps){
-            if(resultMap.getType() == e.getClass()){
-                List<ResultMapping> resultMappings = resultMap.getIdResultMappings();
+        try{
+            for(ResultMap resultMap : resultMaps){
+                if(resultMap.getType() == e.getClass()){
+                    List<ResultMapping> resultMappings = resultMap.getIdResultMappings();
 
-                if(Validate.isEmpty(resultMappings) == false){
-                    Class<E> clazz = (Class<E>) e.getClass();
+                    if(Validate.isEmpty(resultMappings) == false){
+                        Class<E> clazz = (Class<E>) e.getClass();
 
-                    for(ResultMapping resultMapping : resultMappings){
-                        updatePrimary(clazz, e, resultMapping.getProperty(), resultMapping.getJavaType(), primary);
+                        for(ResultMapping resultMapping : resultMappings){
+                            ReflectUtils.setter(clazz, e, resultMapping.getProperty(), resultMapping.getJavaType(),
+                                    primary);
+                        }
                     }
+                    break;
                 }
-                break;
             }
-        }
-    }
-
-    protected void updatePrimary(final Class<E> clazz, final E e, final String property, final Class<?> javaType,
-                                 final P primary){
-        try{
-            Method method = clazz.getMethod("set" + StringUtils.upperCase(property), javaType);
-
-            method.invoke(e, primary);
-            return;
-        }catch(NoSuchMethodException ex){
-            logger.warn("{}", ex.getMessage());
-        }catch(InvocationTargetException ex){
-            logger.warn("{}", ex.getMessage());
-        }catch(IllegalAccessException ex){
-            logger.warn("{}", ex.getMessage());
-        }
-
-        try{
-            Field field = clazz.getDeclaredField(property);
-
-            ReflectUtils.setFieldAccessible(field);
-            field.set(e, primary);
         }catch(NoSuchFieldException ex){
-            logger.warn("{}", ex.getMessage());
-        }catch(IllegalAccessException ex){
             logger.warn("{}", ex.getMessage());
         }
     }

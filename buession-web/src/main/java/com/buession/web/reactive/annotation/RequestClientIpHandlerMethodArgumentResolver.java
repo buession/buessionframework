@@ -22,30 +22,32 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.reactive.filter;
+package com.buession.web.reactive.annotation;
 
+import com.buession.web.http.request.RequestClientIp;
 import com.buession.web.reactive.http.request.RequestUtils;
+import org.springframework.core.MethodParameter;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.web.reactive.BindingContext;
+import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
 import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebFilter;
-import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 /**
  * @author Yong.Teng
  */
-public class MobileFilter implements WebFilter {
+public class RequestClientIpHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
-        if(exchange == null){
-            return chain.filter(exchange);
-        }
+    public boolean supportsParameter(MethodParameter methodParameter){
+        return methodParameter.hasParameterAnnotation(RequestClientIp.class);
+    }
 
-        ServerHttpRequest request = exchange.getRequest();
-
-        exchange.getAttributes().put("isMobile", RequestUtils.isMobile(request));
-        return chain.filter(exchange);
+    @Override
+    public Mono<Object> resolveArgument(MethodParameter methodParameter, BindingContext bindingContext,
+                                        ServerWebExchange exchange){
+        ServerHttpRequest serverHttpRequest = exchange.getRequest();
+        return serverHttpRequest == null ? null : Mono.justOrEmpty(RequestUtils.getClientIp(serverHttpRequest));
     }
 
 }
