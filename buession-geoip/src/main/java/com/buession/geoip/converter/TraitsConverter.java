@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -38,26 +38,21 @@ import java.util.Locale;
 @SuppressWarnings({"deprecation"})
 public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip2.record.Traits, AbstractResponse> {
 
-    @Override
-    public Traits converter(com.maxmind.geoip2.record.Traits traits, Locale locale){
-        if(traits == null){
-            return null;
-        }
+	@Override
+	public Traits converter(com.maxmind.geoip2.record.Traits traits, Locale locale){
+		if(traits == null){
+			return null;
+		}
 
-        final Organization organization = traits.getOrganization() == null ? null : new Organization(traits
-                .getOrganization());
-        final Organization autonomousSystemOrganization = traits.getAutonomousSystemOrganization() == null ? null :
-                new Organization(traits.getAutonomousSystemOrganization());
+		final Organization organization = traits.getOrganization() == null ? null : new Organization(traits
+				.getOrganization());
+		final Organization autonomousSystemOrganization = traits.getAutonomousSystemOrganization() == null ? null :
+				new Organization(traits.getAutonomousSystemOrganization());
 
-        return new Traits(traits.getIpAddress(), traits.getDomain(), traits.getIsp(), organization,
-                autonomousSystemOrganization, traits.getAutonomousSystemNumber(), traits.isAnonymous(), traits
-                .isAnonymousProxy(), traits.isAnonymousVpn(), traits.isHostingProvider(), traits.isLegitimateProxy(),
-                traits.isPublicProxy(), traits.isSatelliteProvider(), traits.isTorExitNode());
-    }
-
-    @Override
-    public Traits converter(com.maxmind.geoip2.record.Traits traits, AbstractResponse response, Locale locale){
-        return converter(traits, locale);
-    }
+		return new Traits(traits.getIpAddress(), traits.getDomain(), traits.getIsp(), organization,
+				autonomousSystemOrganization, traits.getAutonomousSystemNumber(), traits.isAnonymous(), traits
+				.isAnonymousProxy(), traits.isAnonymousVpn(), traits.isHostingProvider(), traits.isLegitimateProxy(),
+				traits.isPublicProxy(), traits.isSatelliteProvider(), traits.isTorExitNode());
+	}
 
 }

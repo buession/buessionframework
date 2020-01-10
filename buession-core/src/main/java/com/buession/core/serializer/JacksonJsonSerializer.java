@@ -19,33 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.serializer;
+package com.buession.core.serializer;
 
 /**
  * @author Yong.Teng
  */
-public class SerializerException extends RuntimeException {
+public class JacksonJsonSerializer {
 
-    public SerializerException(){
-        super();
-    }
-
-    public SerializerException(String message){
-        super(message);
-    }
-
-    public SerializerException(String message, Throwable cause){
-        super(message, cause);
-    }
-
-    public SerializerException(Throwable cause){
-        super(cause);
-    }
-
-    public SerializerException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }

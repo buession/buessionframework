@@ -22,11 +22,53 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.serializer;
+package com.buession.geoip.resoources;
+
+import com.buession.core.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Yong.Teng
  */
-public interface Serializer {
+public class CountryResource {
+
+	private final static Map<String, String> data = new HashMap<>(255);
+
+	private final static Logger logger = LoggerFactory.getLogger(CountryResource.class);
+
+	public Map<String, String> getData(){
+		if(data.size() == 0){
+			InputStream stream = CountryResource.class.getResourceAsStream("/country.db");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+
+			try{
+				while(reader.ready()){
+					String line = reader.readLine();
+
+					String[] rows = StringUtils.split(line, ':');
+					data.put(rows[0], rows[1]);
+				}
+			}catch(IOException e){
+				logger.error("Load dict error.", e);
+			}
+
+			try{
+				stream.close();
+				reader.close();
+			}catch(IOException e){
+
+			}
+		}
+
+		return data;
+	}
 
 }

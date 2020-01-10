@@ -21,13 +21,13 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
 
 import com.buession.geoip.model.Country;
-import com.buession.geoip.utils.CountryDict;
+import com.buession.geoip.resoources.CountryResource;
 import com.maxmind.geoip2.model.CountryResponse;
 
 import java.util.Locale;
@@ -37,23 +37,20 @@ import java.util.Locale;
  */
 public class CountryConverter extends AbstractConverter<Country, com.maxmind.geoip2.record.Country, CountryResponse> {
 
-    @Override
-    public Country converter(com.maxmind.geoip2.record.Country country, Locale locale){
-        if(country == null){
-            return null;
-        }
+	private final static CountryResource countryResource = new CountryResource();
 
-        final String name = getName(country.getNames(), locale);
-        final String fullName = country.getIsoCode() == null ? null : CountryDict.COUNTRY_FULLNAME.get(country
-                .getIsoCode());
+	@Override
+	public Country converter(com.maxmind.geoip2.record.Country country, Locale locale){
+		if(country == null){
+			return null;
+		}
 
-        return new Country(country.getGeoNameId(), country.getConfidence(), country.getIsoCode(), country.getName(),
-                name, fullName);
-    }
+		final String name = getName(country.getNames(), locale);
+		final String fullName = country.getIsoCode() == null ? null : countryResource.getData().get(country.getIsoCode
+				());
 
-    @Override
-    public Country converter(com.maxmind.geoip2.record.Country country, CountryResponse response, Locale locale){
-        return converter(country, locale);
-    }
+		return new Country(country.getGeoNameId(), country.getConfidence(), country.getIsoCode(), country.getName(),
+				name, fullName);
+	}
 
 }

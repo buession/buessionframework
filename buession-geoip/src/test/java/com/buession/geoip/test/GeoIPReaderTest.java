@@ -38,20 +38,19 @@ import java.io.IOException;
  */
 public class GeoIPReaderTest {
 
-    @Test
-    public void location() throws IOException, GeoIp2Exception{
-        GeoIPResolverFactoryBean geoIPResolverFactoryBean = new GeoIPResolverFactoryBean();
+	@Test
+	public void location() throws IOException, GeoIp2Exception{
+		GeoIPResolverFactoryBean geoIPResolverFactoryBean = new GeoIPResolverFactoryBean();
 
-        try{
-            geoIPResolverFactoryBean.afterPropertiesSet();
+		try{
+			geoIPResolverFactoryBean.afterPropertiesSet();
 
-            DatabaseResolver resolver = geoIPResolverFactoryBean.getObject();
+			DatabaseResolver resolver = geoIPResolverFactoryBean.getObject();
 
-            System.out.println(resolver.location("180.118.86.115").getDistrict().getName());
-            System.out.println(resolver.location("180.118.86.115").getDistrict().getName());
-        }catch(Exception e){
+			System.out.println(resolver.location("180.118.86.115"));
+		}catch(Exception e){
 
-        }
-    }
+		}
+	}
 
 }

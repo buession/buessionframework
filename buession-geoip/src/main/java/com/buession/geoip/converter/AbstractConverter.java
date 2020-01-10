@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -37,55 +37,60 @@ import java.util.Map;
  * @author Yong.Teng
  */
 public abstract class AbstractConverter<M, S extends AbstractRecord, R extends AbstractResponse> implements
-        Converter<M, S, R> {
+		Converter<M, S, R> {
 
-    @Override
-    public M converter(S s){
-        return converter(s, (Locale) null);
-    }
+	@Override
+	public M converter(S s){
+		return converter(s, (Locale) null);
+	}
 
-    @Override
-    public M converter(S s, R response){
-        return converter(s, response, null);
-    }
+	@Override
+	public M converter(S s, R response){
+		return converter(s, response, null);
+	}
 
-    protected static String getName(final Map<String, String> names, Locale locale){
-        if(Validate.isEmpty(names)){
-            return null;
-        }
+	@Override
+	public M converter(S s, R response, Locale locale){
+		return converter(s, locale);
+	}
 
-        if(locale == null){
-            locale = Locale.getDefault();
-        }
+	protected static String getName(final Map<String, String> names, Locale locale){
+		if(Validate.isEmpty(names)){
+			return null;
+		}
 
-        String result = names.get(locale.getLanguage());
-        if(result != null){
-            return result;
-        }
+		if(locale == null){
+			locale = Locale.getDefault();
+		}
 
-        result = names.get(getLanguageTag(locale, '-'));
-        if(result != null){
-            return result;
-        }
+		String result = names.get(locale.getLanguage());
+		if(result != null){
+			return result;
+		}
 
-        result = names.get(getLanguageTag(locale, '_'));
-        if(result != null){
-            return result;
-        }
+		result = names.get(getLanguageTag(locale, '-'));
+		if(result != null){
+			return result;
+		}
 
-        return null;
-    }
+		result = names.get(getLanguageTag(locale, '_'));
+		if(result != null){
+			return result;
+		}
 
-    private final static String getLanguageTag(final Locale locale, final char separator){
-        final String language = locale.getLanguage();
-        final String country = locale.getCountry();
-        StringBuffer sb = new StringBuffer(language.length() + country.length() + 1);
+		return null;
+	}
 
-        sb.append(language);
-        sb.append(separator);
-        sb.append(country);
+	private final static String getLanguageTag(final Locale locale, final char separator){
+		final String language = locale.getLanguage();
+		final String country = locale.getCountry();
+		final StringBuffer sb = new StringBuffer(language.length() + country.length() + 1);
 
-        return sb.toString();
-    }
+		sb.append(language);
+		sb.append(separator);
+		sb.append(country);
+
+		return sb.toString();
+	}
 
 }

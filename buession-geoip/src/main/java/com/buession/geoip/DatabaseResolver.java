@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -33,7 +33,6 @@ import com.buession.geoip.model.Country;
 import com.buession.geoip.model.Geo;
 import com.buession.geoip.model.Location;
 import com.buession.geoip.model.Traits;
-import com.buession.geoip.utils.GlobalUtils;
 import com.maxmind.db.Reader;
 import com.maxmind.db.Metadata;
 import com.maxmind.db.NodeCache;
@@ -55,168 +54,168 @@ import java.util.TimeZone;
  */
 public class DatabaseResolver extends AbstractResolver {
 
-    private final DatabaseReader reader;
+	private final DatabaseReader reader;
 
-    public DatabaseResolver(final String database) throws IOException{
-        this(database == null ? null : new File(database));
-    }
+	public DatabaseResolver(final String database) throws IOException{
+		this(database == null ? null : new File(database));
+	}
 
-    public DatabaseResolver(final String database, final NodeCache cache) throws IOException{
-        this(database == null ? null : new File(database), cache);
-    }
+	public DatabaseResolver(final String database, final NodeCache cache) throws IOException{
+		this(database == null ? null : new File(database), cache);
+	}
 
-    public DatabaseResolver(final String database, final Reader.FileMode fileMode) throws IOException{
-        this(database == null ? null : new File(database), fileMode);
-    }
+	public DatabaseResolver(final String database, final Reader.FileMode fileMode) throws IOException{
+		this(database == null ? null : new File(database), fileMode);
+	}
 
-    public DatabaseResolver(final String database, final Reader.FileMode fileMode, final NodeCache cache) throws
-            IOException{
-        this(database == null ? null : new File(database), fileMode, cache);
-    }
+	public DatabaseResolver(final String database, final Reader.FileMode fileMode, final NodeCache cache) throws
+			IOException{
+		this(database == null ? null : new File(database), fileMode, cache);
+	}
 
-    public DatabaseResolver(final File database) throws IOException{
-        Assert.isNull(database, "Database could not be null.");
-        this.reader = databaseReaderBuilder(database).build();
-    }
+	public DatabaseResolver(final File database) throws IOException{
+		Assert.isNull(database, "Database could not be null.");
+		this.reader = databaseReaderBuilder(database).build();
+	}
 
-    public DatabaseResolver(final File database, final NodeCache cache) throws IOException{
-        Assert.isNull(database, "Database could not be null.");
-        this.reader = databaseReaderBuilder(database).withCache(cache).build();
-    }
+	public DatabaseResolver(final File database, final NodeCache cache) throws IOException{
+		Assert.isNull(database, "Database could not be null.");
+		this.reader = databaseReaderBuilder(database).withCache(cache).build();
+	}
 
-    public DatabaseResolver(final File database, final Reader.FileMode fileMode) throws IOException{
-        Assert.isNull(database, "Database could not be null.");
-        this.reader = databaseReaderBuilder(database).fileMode(fileMode).build();
-    }
+	public DatabaseResolver(final File database, final Reader.FileMode fileMode) throws IOException{
+		Assert.isNull(database, "Database could not be null.");
+		this.reader = databaseReaderBuilder(database).fileMode(fileMode).build();
+	}
 
-    public DatabaseResolver(final File database, final Reader.FileMode fileMode, final NodeCache cache) throws
-            IOException{
-        Assert.isNull(database, "Database could not be null.");
-        this.reader = databaseReaderBuilder(database).fileMode(fileMode).withCache(cache).build();
-    }
+	public DatabaseResolver(final File database, final Reader.FileMode fileMode, final NodeCache cache) throws
+			IOException{
+		Assert.isNull(database, "Database could not be null.");
+		this.reader = databaseReaderBuilder(database).fileMode(fileMode).withCache(cache).build();
+	}
 
-    public DatabaseResolver(final Path database) throws IOException{
-        this(null == null ? null : database.toFile());
-    }
+	public DatabaseResolver(final Path database) throws IOException{
+		this(null == null ? null : database.toFile());
+	}
 
-    public DatabaseResolver(final Path database, final NodeCache cache) throws IOException{
-        this(database == null ? null : database.toFile(), cache);
-    }
+	public DatabaseResolver(final Path database, final NodeCache cache) throws IOException{
+		this(database == null ? null : database.toFile(), cache);
+	}
 
-    public DatabaseResolver(final Path database, final Reader.FileMode fileMode) throws IOException{
-        this(database == null ? null : database.toFile(), fileMode);
-    }
+	public DatabaseResolver(final Path database, final Reader.FileMode fileMode) throws IOException{
+		this(database == null ? null : database.toFile(), fileMode);
+	}
 
-    public DatabaseResolver(final Path database, final Reader.FileMode fileMode, final NodeCache cache) throws
-            IOException{
-        this(database == null ? null : database.toFile(), fileMode, cache);
-    }
+	public DatabaseResolver(final Path database, final Reader.FileMode fileMode, final NodeCache cache) throws
+			IOException{
+		this(database == null ? null : database.toFile(), fileMode, cache);
+	}
 
-    public DatabaseResolver(final InputStream source) throws IOException{
-        Assert.isNull(source, "Database stream could not be null.");
-        this.reader = databaseReaderBuilder(source).build();
-    }
+	public DatabaseResolver(final InputStream source) throws IOException{
+		Assert.isNull(source, "Database stream could not be null.");
+		this.reader = databaseReaderBuilder(source).build();
+	}
 
-    public DatabaseResolver(final InputStream source, final NodeCache cache) throws IOException{
-        Assert.isNull(source, "Database stream could not be null.");
-        this.reader = databaseReaderBuilder(source).withCache(cache).build();
-    }
+	public DatabaseResolver(final InputStream source, final NodeCache cache) throws IOException{
+		Assert.isNull(source, "Database stream could not be null.");
+		this.reader = databaseReaderBuilder(source).withCache(cache).build();
+	}
 
-    public DatabaseResolver(final InputStream source, final Reader.FileMode fileMode) throws IOException{
-        Assert.isNull(source, "Database stream could not be null.");
-        this.reader = databaseReaderBuilder(source).fileMode(fileMode).build();
-    }
+	public DatabaseResolver(final InputStream source, final Reader.FileMode fileMode) throws IOException{
+		Assert.isNull(source, "Database stream could not be null.");
+		this.reader = databaseReaderBuilder(source).fileMode(fileMode).build();
+	}
 
-    public DatabaseResolver(final InputStream source, final Reader.FileMode fileMode, final NodeCache cache) throws
-            IOException{
-        Assert.isNull(source, "Database stream could not be null.");
-        this.reader = databaseReaderBuilder(source).fileMode(fileMode).withCache(cache).build();
-    }
+	public DatabaseResolver(final InputStream source, final Reader.FileMode fileMode, final NodeCache cache) throws
+			IOException{
+		Assert.isNull(source, "Database stream could not be null.");
+		this.reader = databaseReaderBuilder(source).fileMode(fileMode).withCache(cache).build();
+	}
 
-    /**
-     * @param ipAddress
-     *         the IP address as InetAddress or Inet6Address.
-     * @param locale
-     *         The locale for which to retrieve the display country name.
-     *
-     * @return A Country model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    @Override
-    public Country country(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception{
-        CountryResponse response = reader.country(ipAddress);
-        return countryConverter.converter(response.getCountry(), response, locale);
-    }
+	/**
+	 * @param ipAddress
+	 * 		the IP address as InetAddress or Inet6Address.
+	 * @param locale
+	 * 		The locale for which to retrieve the display country name.
+	 *
+	 * @return A Country model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	@Override
+	public Country country(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception{
+		CountryResponse response = reader.country(ipAddress);
+		return countryConverter.converter(response.getCountry(), response, locale);
+	}
 
-    /**
-     * @param ipAddress
-     *         the IP address as Inet4Address or Inet6Address.
-     * @param locale
-     *         The locale for which to retrieve the display city name.
-     *
-     * @return A District model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    @Override
-    public District district(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception{
-        CityResponse response = reader.city(ipAddress);
-        return cityConverter.converter(response.getCity(), response, locale);
-    }
+	/**
+	 * @param ipAddress
+	 * 		the IP address as Inet4Address or Inet6Address.
+	 * @param locale
+	 * 		The locale for which to retrieve the display city name.
+	 *
+	 * @return A District model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	@Override
+	public District district(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception{
+		CityResponse response = reader.city(ipAddress);
+		return cityConverter.converter(response.getCity(), response, locale);
+	}
 
-    /**
-     * @param ipAddress
-     *         the IP address as Inet4Address or Inet6Address.
-     * @param locale
-     *         The locale for which to retrieve the display name.
-     *
-     * @return A Location model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    @Override
-    public Location location(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception{
-        CityResponse response = reader.city(ipAddress);
-        com.maxmind.geoip2.record.Location location = response.getLocation();
+	/**
+	 * @param ipAddress
+	 * 		the IP address as Inet4Address or Inet6Address.
+	 * @param locale
+	 * 		The locale for which to retrieve the display name.
+	 *
+	 * @return A Location model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	@Override
+	public Location location(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception{
+		CityResponse response = reader.city(ipAddress);
+		com.maxmind.geoip2.record.Location location = response.getLocation();
 
-        final Continent continent = continentConverter.converter(response.getContinent(), locale);
-        final Country country = countryConverter.converter(response.getCountry(), locale);
-        final District district = cityConverter.converter(response.getCity(), response, locale);
-        final Traits traits = traitsConverter.converter(response.getTraits(), locale);
-        final Geo geo = new Geo(location.getLatitude(), location.getLongitude(), location.getAccuracyRadius());
-        final TimeZone timeZone = location.getTimeZone() == null ? null : TimeZone.getTimeZone(location.getTimeZone());
+		final Continent continent = continentConverter.converter(response.getContinent(), locale);
+		final Country country = countryConverter.converter(response.getCountry(), locale);
+		final District district = cityConverter.converter(response.getCity(), response, locale);
+		final Traits traits = traitsConverter.converter(response.getTraits(), locale);
+		final Geo geo = new Geo(location.getLatitude(), location.getLongitude(), location.getAccuracyRadius());
+		final TimeZone timeZone = location.getTimeZone() == null ? null : TimeZone.getTimeZone(location.getTimeZone());
 
-        return new Location(continent, country, district, traits, geo, timeZone);
-    }
+		return new Location(continent, country, district, traits, geo, timeZone);
+	}
 
-    @Override
-    public Metadata getMetadata(){
-        return reader.getMetadata();
-    }
+	@Override
+	public Metadata getMetadata(){
+		return reader.getMetadata();
+	}
 
-    @Override
-    public void close() throws IOException{
-        if(reader != null){
-            reader.close();
-        }
-    }
+	@Override
+	public void close() throws IOException{
+		if(reader != null){
+			reader.close();
+		}
+	}
 
-    private final static DatabaseReader.Builder databaseReaderBuilder(final File database){
-        return new DatabaseReader.Builder(database);
-    }
+	private final static DatabaseReader.Builder databaseReaderBuilder(final File database){
+		return new DatabaseReader.Builder(database);
+	}
 
-    private final static DatabaseReader.Builder databaseReaderBuilder(final InputStream source){
-        return new DatabaseReader.Builder(source);
-    }
+	private final static DatabaseReader.Builder databaseReaderBuilder(final InputStream source){
+		return new DatabaseReader.Builder(source);
+	}
 
 }

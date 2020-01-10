@@ -22,11 +22,7 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.serializer;
-
 /**
  * @author Yong.Teng
  */
-public interface Serializer {
-
-}
+package com.buession.core.net;

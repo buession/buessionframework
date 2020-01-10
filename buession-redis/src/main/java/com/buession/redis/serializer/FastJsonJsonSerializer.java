@@ -27,6 +27,6 @@ package com.buession.redis.serializer;
 /**
  * @author Yong.Teng
  */
-public interface Serializer {
+public class FastJsonJsonSerializer {
 
 }
