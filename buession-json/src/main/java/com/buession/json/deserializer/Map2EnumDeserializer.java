@@ -17,15 +17,15 @@
  * <http://www.apache.org/>.
  *
  * +-------------------------------------------------------------------------------------------------------+
- * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.deserializer;
 
 import com.buession.core.utils.EnumUtil;
-import com.buession.core.utils.ReflectUtil;
+import com.buession.core.utils.ReflectUtils;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -45,7 +45,7 @@ import java.util.Map;
  */
 public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 
-    private final static Map<String, Enum<?>> cache = new HashMap<>();
+    private final static Map<String, Enum<?>> cache = new HashMap<>(32);
 
     private final Logger logger = LoggerFactory.getLogger(Map2EnumDeserializer.class);
 
@@ -87,7 +87,7 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
                     continue;
                 }
 
-                ReflectUtil.setFieldAccessible(field);
+                ReflectUtils.setFieldAccessible(field);
 
                 Enum<?> enumValue = (Enum<?>) field.get(currentValue);
                 if(enumValue == null){
@@ -99,7 +99,7 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 
                 for(Field enumValueField : enumValueFields){
                     if(EnumUtil.notEnumValuesField(enumValueField)){
-                        ReflectUtil.setFieldAccessible(enumValueField);
+                        ReflectUtils.setFieldAccessible(enumValueField);
 
                         temp.put(enumValueField.getName(), enumValueField.get(enumValue));
                     }

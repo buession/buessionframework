@@ -17,9 +17,9 @@
  * <http://www.apache.org/>.
  *
  * +-------------------------------------------------------------------------------------------------------+
- * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.deserializer;
@@ -87,8 +87,11 @@ public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.
                         }catch(JsonParseException e){
                             Number v = (Number) context.handleWeirdNumberValue(_valueClass, p.getNumberValue(), "not " +
                                     "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-                                    "" + "" + "" + "" + "a " + "valid " + "64-bit " + "long " + "for " + "creating "
-                                    + "`java" + "" + ".util" + "" + ".Date`", new Object[0]);
+                                    "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                                    "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                                    "" + "" + "" + "" + "" + "" + "" + "a " + "valid " + "64-bit " + "" + "" + "long " +
+                                    "" + "" + "" + "for " + "creating " + "`java" + "" + "" + ".util" + "" + "" + ""
+                                    + "" + ".Date`", new Object[0]);
                             timestamp = v.longValue();
                         }
 
