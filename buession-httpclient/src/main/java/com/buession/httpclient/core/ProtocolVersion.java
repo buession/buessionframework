@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -29,83 +29,95 @@ package com.buession.httpclient.core;
  */
 public enum ProtocolVersion {
 
-    HTTP_0_9("http", 0, 9),
+	HTTP_0_9("http", 0, 9),
 
-    HTTP_1_0("http", 1, 0),
+	HTTP_1_0("http", 1, 0),
 
-    HTTP_1_1("http", 1, 1),
+	HTTP_1_1("http", 1, 1),
 
-    HTTP_2_0("http", 2, 0);
+	HTTP_2_0("http", 2, 0);
 
-    protected String protocol;
+	protected String protocol;
 
-    protected int major;
+	protected int major;
 
-    protected int minor;
+	protected int minor;
 
-    ProtocolVersion(String protocol, int major, int minor){
-        this.protocol = protocol;
-        this.major = major;
-        this.minor = minor;
-    }
+	ProtocolVersion(String protocol, int major, int minor){
+		this.protocol = protocol;
+		this.major = major;
+		this.minor = minor;
+	}
 
-    public String getProtocol(){
-        return protocol;
-    }
+	public String getProtocol(){
+		return protocol;
+	}
 
-    public int getMajor(){
-        return major;
-    }
+	public int getMajor(){
+		return major;
+	}
 
-    public int getMinor(){
-        return minor;
-    }
+	public int getMinor(){
+		return minor;
+	}
 
-    public final static ProtocolVersion createInstance(String protocol, int major, int minor){
-        if("http".equalsIgnoreCase(protocol) == false){
-            throw new IllegalArgumentException("Unknown protocol: " + protocol);
-        }
+	public final static ProtocolVersion createInstance(String protocol, int major, int minor){
+		if("http".equalsIgnoreCase(protocol) == false){
+			throw new IllegalArgumentException("Unknown protocol: " + protocol);
+		}
 
-        switch(major){
-            case 0:
-                switch(minor){
-                    case 9:
-                        return HTTP_0_9;
-                    default:
-                        throw new IllegalArgumentException("Unknown protocol minor: " + minor);
-                }
-            case 1:
-                switch(minor){
-                    case 0:
-                        return HTTP_1_0;
-                    case 1:
-                        return HTTP_1_1;
-                    default:
-                        throw new IllegalArgumentException("Unknown protocol minor: " + minor);
-                }
-            case 2:
-                switch(minor){
-                    case 0:
-                        return HTTP_2_0;
-                    default:
-                        throw new IllegalArgumentException("Unknown protocol minor: " + minor);
-                }
-            default:
-                throw new IllegalArgumentException("Unknown protocol major: " + major);
-        }
-    }
+		switch(major){
+			case 0:
+				return createProtocolVersion0(major);
+			case 1:
+				return createProtocolVersion1(major);
+			case 2:
+				return createProtocolVersion2(major);
+			default:
+				throw new IllegalArgumentException("Unknown protocol major: " + major);
+		}
+	}
 
-    @Override
-    public String toString(){
-        final StringBuilder sb = new StringBuilder();
+	@Override
+	public String toString(){
+		final StringBuilder sb = new StringBuilder();
 
-        sb.append(protocol);
-        sb.append('/');
-        sb.append(major);
-        sb.append('.');
-        sb.append(minor);
+		sb.append(protocol);
+		sb.append('/');
+		sb.append(major);
+		sb.append('.');
+		sb.append(minor);
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
+
+	private static ProtocolVersion createProtocolVersion0(final int minor){
+		switch(minor){
+			case 9:
+				return HTTP_0_9;
+			default:
+				throw new IllegalArgumentException("Unknown protocol minor: " + minor);
+		}
+	}
+
+	private static ProtocolVersion createProtocolVersion1(final int minor){
+		switch(minor){
+			case 0:
+				return HTTP_1_0;
+			case 1:
+				return HTTP_1_1;
+			default:
+				throw new IllegalArgumentException("Unknown protocol minor: " + minor);
+		}
+	}
+
+	private static ProtocolVersion createProtocolVersion2(final int minor){
+		switch(minor){
+			case 0:
+				return HTTP_2_0;
+			default:
+				throw new IllegalArgumentException("Unknown protocol minor: " + minor);
+		}
+	}
 
 }

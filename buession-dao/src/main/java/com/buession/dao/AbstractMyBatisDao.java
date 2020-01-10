@@ -55,447 +55,439 @@ import com.buession.core.exception.OperationException;
  */
 public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
 
-    public final static String ORDERS_PARAMETER_NAME = "ORDERS";
+	public final static String ORDERS_PARAMETER_NAME = "ORDERS";
 
-    @Resource
-    protected SqlSessionTemplate masterSqlSessionTemplate;
+	@Resource
+	protected SqlSessionTemplate masterSqlSessionTemplate;
 
-    @Resource
-    protected List<SqlSessionTemplate> slaveSqlSessionTemplates;
+	@Resource
+	protected List<SqlSessionTemplate> slaveSqlSessionTemplates;
 
-    private final static Logger logger = LoggerFactory.getLogger(AbstractMyBatisDao.class);
+	private final static Logger logger = LoggerFactory.getLogger(AbstractMyBatisDao.class);
 
-    /**
-     * 返回 master SqlSessionTemplate
-     *
-     * @return master SqlSessionTemplate
-     */
-    public SqlSessionTemplate getMasterSqlSessionTemplate(){
-        return masterSqlSessionTemplate;
-    }
+	/**
+	 * 返回 master SqlSessionTemplate
+	 *
+	 * @return master SqlSessionTemplate
+	 */
+	public SqlSessionTemplate getMasterSqlSessionTemplate(){
+		return masterSqlSessionTemplate;
+	}
 
-    /**
-     * 设置 master SqlSessionTemplate
-     *
-     * @param masterSqlSessionTemplate
-     *         master SqlSessionTemplate
-     */
-    public void setMasterSqlSessionTemplate(final SqlSessionTemplate masterSqlSessionTemplate){
-        this.masterSqlSessionTemplate = masterSqlSessionTemplate;
-    }
+	/**
+	 * 设置 master SqlSessionTemplate
+	 *
+	 * @param masterSqlSessionTemplate
+	 * 		master SqlSessionTemplate
+	 */
+	public void setMasterSqlSessionTemplate(final SqlSessionTemplate masterSqlSessionTemplate){
+		this.masterSqlSessionTemplate = masterSqlSessionTemplate;
+	}
 
-    /**
-     * 返回 slave SqlSessionTemplate
-     *
-     * @return slave SqlSessionTemplate
-     */
-    public List<SqlSessionTemplate> getSlaveSqlSessionTemplates(){
-        return slaveSqlSessionTemplates;
-    }
+	/**
+	 * 返回 slave SqlSessionTemplate
+	 *
+	 * @return slave SqlSessionTemplate
+	 */
+	public List<SqlSessionTemplate> getSlaveSqlSessionTemplates(){
+		return slaveSqlSessionTemplates;
+	}
 
-    /**
-     * 设置 slave SqlSessionTemplate
-     *
-     * @param slaveSqlSessionTemplates
-     *         slave SqlSessionTemplate
-     */
-    public void setSlaveSqlSessionTemplates(final List<SqlSessionTemplate> slaveSqlSessionTemplates){
-        this.slaveSqlSessionTemplates = slaveSqlSessionTemplates;
-    }
+	/**
+	 * 设置 slave SqlSessionTemplate
+	 *
+	 * @param slaveSqlSessionTemplates
+	 * 		slave SqlSessionTemplate
+	 */
+	public void setSlaveSqlSessionTemplates(final List<SqlSessionTemplate> slaveSqlSessionTemplates){
+		this.slaveSqlSessionTemplates = slaveSqlSessionTemplates;
+	}
 
-    /**
-     * 插入数据
-     *
-     * @param e
-     *         实体类
-     *
-     * @return 主键值
-     */
-    @Override
-    public int insert(E e){
-        return getMasterSqlSessionTemplate().insert(getStatement(DML.INSERT), e);
-    }
+	/**
+	 * 插入数据
+	 *
+	 * @param e
+	 * 		实体类
+	 *
+	 * @return 主键值
+	 */
+	@Override
+	public int insert(E e){
+		return getMasterSqlSessionTemplate().insert(getStatement(DML.INSERT), e);
+	}
 
-    /**
-     * 替换数据
-     *
-     * @param e
-     *         实体类
-     *
-     * @return 主键值
-     */
-    @Override
-    public int replace(E e){
-        return getMasterSqlSessionTemplate().insert(getStatement(DML.REPLACE), e);
-    }
+	/**
+	 * 替换数据
+	 *
+	 * @param e
+	 * 		实体类
+	 *
+	 * @return 主键值
+	 */
+	@Override
+	public int replace(E e){
+		return getMasterSqlSessionTemplate().insert(getStatement(DML.REPLACE), e);
+	}
 
-    /**
-     * 更新数据
-     *
-     * @param e
-     *         更新数据
-     * @param conditions
-     *         更新条件
-     *
-     * @return 更新条数
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public int update(E e, Map<String, Object> conditions){
-        Assert.isNull(e, "The data could not be empty for update.");
+	/**
+	 * 更新数据
+	 *
+	 * @param e
+	 * 		更新数据
+	 * @param conditions
+	 * 		更新条件
+	 *
+	 * @return 更新条数
+	 */
+	@Override
+	@SuppressWarnings("unchecked")
+	public int update(E e, Map<String, Object> conditions){
+		Assert.isNull(e, "The data could not be empty for update.");
 
-        Map<String, Object> data = new HashMap<>(16);
-        if(conditions != null){
-            data.putAll(conditions);
-        }
+		Map<String, Object> data = new HashMap<>(16);
+		if(conditions != null){
+			data.putAll(conditions);
+		}
 
-        if(e instanceof Map){
-            data.putAll((Map<String, Object>) e);
-        }else{
-            data.putAll(ReflectUtils.entityConvertMap(e));
-        }
+		if(e instanceof Map){
+			data.putAll((Map<String, Object>) e);
+		}else{
+			data.putAll(ReflectUtils.entityConvertMap(e));
+		}
 
-        return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE), data);
-    }
+		return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE), data);
+	}
 
-    /**
-     * 根据主键更新数据
-     *
-     * @param primary
-     *         主键值
-     * @param e
-     *         新数据
-     *
-     * @return 更新条数
-     */
-    @Override
-    public int updateByPrimary(P primary, E e){
-        updatePrimary(e, primary);
-        return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE_BY_PRIMARY), e);
-    }
+	/**
+	 * 根据主键更新数据
+	 *
+	 * @param primary
+	 * 		主键值
+	 * @param e
+	 * 		新数据
+	 *
+	 * @return 更新条数
+	 */
+	@Override
+	public int updateByPrimary(P primary, E e){
+		updatePrimary(e, primary);
+		return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE_BY_PRIMARY), e);
+	}
 
-    /**
-     * 根据主键查询数据
-     *
-     * @param primary
-     *         主键值
-     *
-     * @return 数据结果
-     */
-    @Override
-    public E getByPrimary(P primary){
-        try{
-            return getSlaveSqlSessionTemplate().selectOne(getStatement(DML.GET_BY_PRIMARY), primary);
-        }catch(OperationException e){
-            logger.error(e.getMessage());
-        }
+	/**
+	 * 根据主键查询数据
+	 *
+	 * @param primary
+	 * 		主键值
+	 *
+	 * @return 数据结果
+	 */
+	@Override
+	public E getByPrimary(P primary){
+		try{
+			return getSlaveSqlSessionTemplate().selectOne(getStatement(DML.GET_BY_PRIMARY), primary);
+		}catch(OperationException e){
+			logger.error(e.getMessage());
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * 获取一条记录
-     *
-     * @param conditions
-     *         查询条件
-     * @param offset
-     *         偏移量
-     * @param orders
-     *         排序
-     *
-     * @return 查询结果
-     */
-    @Override
-    public E selectOne(Map<String, Object> conditions, int offset, Map<String, Order> orders){
-        final Map<String, Object> parameters = buildParameters(conditions);
+	/**
+	 * 获取一条记录
+	 *
+	 * @param conditions
+	 * 		查询条件
+	 * @param offset
+	 * 		偏移量
+	 * @param orders
+	 * 		排序
+	 *
+	 * @return 查询结果
+	 */
+	@Override
+	public E selectOne(Map<String, Object> conditions, int offset, Map<String, Order> orders){
+		final Map<String, Object> parameters = buildParameters(conditions);
 
-        if(orders != null){
-            parameters.put(ORDERS_PARAMETER_NAME, orders);
-        }
+		if(orders != null){
+			parameters.put(ORDERS_PARAMETER_NAME, orders);
+		}
 
-        try{
-            return getSlaveSqlSessionTemplate().selectOne(getStatement(DML.SELECT_ONE), parameters);
-        }catch(OperationException e){
-            logger.error(e.getMessage());
-        }
+		try{
+			return getSlaveSqlSessionTemplate().selectOne(getStatement(DML.SELECT_ONE), parameters);
+		}catch(OperationException e){
+			logger.error(e.getMessage());
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * 数据查询
-     *
-     * @param conditions
-     *         查询条件
-     * @param orders
-     *         排序
-     *
-     * @return 结果集
-     */
-    @Override
-    public List<E> select(Map<String, Object> conditions, Map<String, Order> orders){
-        final Map<String, Object> parameters = buildParameters(conditions);
+	/**
+	 * 数据查询
+	 *
+	 * @param conditions
+	 * 		查询条件
+	 * @param orders
+	 * 		排序
+	 *
+	 * @return 结果集
+	 */
+	@Override
+	public List<E> select(Map<String, Object> conditions, Map<String, Order> orders){
+		final Map<String, Object> parameters = buildParameters(conditions);
 
-        if(orders != null){
-            parameters.put(ORDERS_PARAMETER_NAME, orders);
-        }
+		if(orders != null){
+			parameters.put(ORDERS_PARAMETER_NAME, orders);
+		}
 
-        try{
-            return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters);
-        }catch(OperationException e){
-            logger.error(e.getMessage());
-        }
+		try{
+			return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters);
+		}catch(OperationException e){
+			logger.error(e.getMessage());
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    /**
-     * 数据查询
-     *
-     * @param conditions
-     *         查询条件
-     * @param offset
-     *         偏移量
-     * @param size
-     *         查询条数
-     * @param orders
-     *         排序
-     *
-     * @return 结果集
-     */
-    @Override
-    public List<E> select(Map<String, Object> conditions, int offset, int size, Map<String, Order> orders){
-        Assert.isNegative(offset, "Offset argument value could not be negative integer");
+	/**
+	 * 数据查询
+	 *
+	 * @param conditions
+	 * 		查询条件
+	 * @param offset
+	 * 		偏移量
+	 * @param size
+	 * 		查询条数
+	 * @param orders
+	 * 		排序
+	 *
+	 * @return 结果集
+	 */
+	@Override
+	public List<E> select(Map<String, Object> conditions, int offset, int size, Map<String, Order> orders){
+		Assert.isNegative(offset, "Offset argument value could not be negative integer");
+		Assert.isZeroNegative(size, "Size argument value must be positive integer");
 
-        if(size < 1){
-            throw new IllegalArgumentException("Size argument value must be positive integer");
-        }
+		final Map<String, Object> parameters = buildParameters(conditions);
 
-        final Map<String, Object> parameters = buildParameters(conditions);
+		if(orders != null){
+			parameters.put(ORDERS_PARAMETER_NAME, orders);
+		}
 
-        if(orders != null){
-            parameters.put(ORDERS_PARAMETER_NAME, orders);
-        }
+		try{
+			return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters, new RowBounds(offset,
+					size));
+		}catch(OperationException e){
+			logger.error(e.getMessage());
+		}
 
-        try{
-            return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters, new RowBounds
-                    (offset, size));
-        }catch(OperationException e){
-            logger.error(e.getMessage());
-        }
+		return null;
+	}
 
-        return null;
-    }
+	/**
+	 * 数据分页查询
+	 *
+	 * @param conditions
+	 * 		查询条件
+	 * @param page
+	 * 		页码
+	 * @param pagesize
+	 * 		每页大小
+	 * @param orders
+	 * 		排序
+	 *
+	 * @return Pagination
+	 */
+	@Override
+	public Pagination<E> paging(Map<String, Object> conditions, int page, int pagesize, Map<String, Order> orders){
+		Assert.isZeroNegative(page, "Page argument value must be positive integer");
+		Assert.isZeroNegative(pagesize, "Pagesize argument value must be positive integer");
 
-    /**
-     * 数据分页查询
-     *
-     * @param conditions
-     *         查询条件
-     * @param page
-     *         页码
-     * @param pagesize
-     *         每页大小
-     * @param orders
-     *         排序
-     *
-     * @return Pagination
-     */
-    @Override
-    public Pagination<E> paging(Map<String, Object> conditions, int page, int pagesize, Map<String, Order> orders){
-        if(page < 1){
-            throw new IllegalArgumentException("Page argument value must be positive integer");
-        }
+		long totalRecords = count(conditions);
 
-        if(pagesize < 1){
-            throw new IllegalArgumentException("Pagesize argument value must be positive integer");
-        }
+		com.buession.dao.Pagination<E> pagination = new com.buession.dao.Pagination<>(page, pagesize, totalRecords);
 
-        long totalRecords = count(conditions);
+		if(totalRecords > 0){
+			List<E> result = select(conditions, pagination.getOffset(), pagination.getPagesize(), orders);
+			pagination.setData(result);
+		}
 
-        com.buession.dao.Pagination<E> pagination = new com.buession.dao.Pagination<>(page, pagesize, totalRecords);
+		return pagination;
+	}
 
-        if(totalRecords > 0){
-            List<E> result = select(conditions, pagination.getOffset(), pagination.getPagesize(), orders);
-            pagination.setData(result);
-        }
+	/**
+	 * 查询所有数据
+	 *
+	 * @return 结果集
+	 */
+	@Override
+	public List<E> getAll(){
+		try{
+			return getSlaveSqlSessionTemplate().selectList(getStatement(DML.GET_ALL));
+		}catch(OperationException e){
+			logger.error(e.getMessage());
+		}
 
-        return pagination;
-    }
+		return null;
+	}
 
-    /**
-     * 查询所有数据
-     *
-     * @return 结果集
-     */
-    @Override
-    public List<E> getAll(){
-        try{
-            return getSlaveSqlSessionTemplate().selectList(getStatement(DML.GET_ALL));
-        }catch(OperationException e){
-            logger.error(e.getMessage());
-        }
+	/**
+	 * 数据记录总数
+	 *
+	 * @return 记录总数
+	 */
+	@Override
+	public long count(){
+		try{
+			int count = getSlaveSqlSessionTemplate().selectOne(getStatement("count"));
+			return count * 1L;
+		}catch(OperationException e){
+			logger.error(e.getMessage());
+		}
 
-        return null;
-    }
+		return 0;
+	}
 
-    /**
-     * 数据记录总数
-     *
-     * @return 记录总数
-     */
-    @Override
-    public long count(){
-        try{
-            int count = getSlaveSqlSessionTemplate().selectOne(getStatement("count"));
-            return count * 1L;
-        }catch(OperationException e){
-            logger.error(e.getMessage());
-        }
+	/**
+	 * 数据记录总数
+	 *
+	 * @param conditions
+	 * 		查询条件
+	 *
+	 * @return 记录总数
+	 */
+	@Override
+	public long count(Map<String, Object> conditions){
+		try{
+			int count = getSlaveSqlSessionTemplate().selectOne(getStatement("count"), conditions);
+			return count * 1L;
+		}catch(OperationException e){
+			logger.error(e.getMessage());
+		}
 
-        return 0;
-    }
+		return 0;
+	}
 
-    /**
-     * 数据记录总数
-     *
-     * @param conditions
-     *         查询条件
-     *
-     * @return 记录总数
-     */
-    @Override
-    public long count(Map<String, Object> conditions){
-        try{
-            int count = getSlaveSqlSessionTemplate().selectOne(getStatement("count"), conditions);
-            return count * 1L;
-        }catch(OperationException e){
-            logger.error(e.getMessage());
-        }
+	/**
+	 * 删除数据
+	 *
+	 * @param conditions
+	 * 		删除条件
+	 *
+	 * @return 影响条数
+	 */
+	@Override
+	public int delete(Map<String, Object> conditions){
+		return getMasterSqlSessionTemplate().delete(getStatement(DML.DELETE), conditions);
+	}
 
-        return 0;
-    }
+	/**
+	 * 根据主键删除数据
+	 *
+	 * @param primary
+	 * 		主键值
+	 *
+	 * @return 影响条数
+	 */
+	@Override
+	public int deleteByPrimary(P primary){
+		return getMasterSqlSessionTemplate().delete(getStatement(DML.DELETE_BY_PRIMARY), primary);
+	}
 
-    /**
-     * 删除数据
-     *
-     * @param conditions
-     *         删除条件
-     *
-     * @return 影响条数
-     */
-    @Override
-    public int delete(Map<String, Object> conditions){
-        return getMasterSqlSessionTemplate().delete(getStatement(DML.DELETE), conditions);
-    }
+	/**
+	 * 清空数据
+	 *
+	 * @return 影响条数
+	 */
+	@Override
+	public int clear(){
+		return getMasterSqlSessionTemplate().delete(getStatement(DML.CLEAR));
+	}
 
-    /**
-     * 根据主键删除数据
-     *
-     * @param primary
-     *         主键值
-     *
-     * @return 影响条数
-     */
-    @Override
-    public int deleteByPrimary(P primary){
-        return getMasterSqlSessionTemplate().delete(getStatement(DML.DELETE_BY_PRIMARY), primary);
-    }
+	/**
+	 * 清空数据
+	 *
+	 * @return 影响条数
+	 */
+	@Override
+	public int truncate(){
+		return getMasterSqlSessionTemplate().delete(getStatement(DML.TRUNCATE));
+	}
 
-    /**
-     * 清空数据
-     *
-     * @return 影响条数
-     */
-    @Override
-    public int clear(){
-        return getMasterSqlSessionTemplate().delete(getStatement(DML.CLEAR));
-    }
+	protected final SqlSessionTemplate getSlaveSqlSessionTemplate(final int index) throws OperationException{
+		if(Validate.isEmpty(slaveSqlSessionTemplates)){
+			return getMasterSqlSessionTemplate();
+		}else{
+			SqlSessionTemplate sqlSessionTemplate = slaveSqlSessionTemplates.get(index);
 
-    /**
-     * 清空数据
-     *
-     * @return 影响条数
-     */
-    @Override
-    public int truncate(){
-        return getMasterSqlSessionTemplate().delete(getStatement(DML.TRUNCATE));
-    }
+			if(sqlSessionTemplate == null){
+				throw new OperationException("Could not find the \"" + index + "\" slave SqlSessionTemplate.");
+			}
 
-    protected final SqlSessionTemplate getSlaveSqlSessionTemplate(final int index) throws OperationException{
-        if(Validate.isEmpty(slaveSqlSessionTemplates)){
-            return getMasterSqlSessionTemplate();
-        }else{
-            SqlSessionTemplate sqlSessionTemplate = slaveSqlSessionTemplates.get(index);
+			return sqlSessionTemplate;
+		}
+	}
 
-            if(sqlSessionTemplate == null){
-                throw new OperationException("Could not find the \"" + index + "\" slave SqlSessionTemplate.");
-            }
+	protected final SqlSessionTemplate getSlaveSqlSessionTemplate() throws OperationException{
+		if(Validate.isEmpty(slaveSqlSessionTemplates)){
+			return getMasterSqlSessionTemplate();
+		}else if(slaveSqlSessionTemplates.size() == 1){
+			return getSlaveSqlSessionTemplate(0);
+		}else{
+			int index = RANDOM.nextInt(slaveSqlSessionTemplates.size());
 
-            return sqlSessionTemplate;
-        }
-    }
+			return getSlaveSqlSessionTemplate(index);
+		}
+	}
 
-    protected final SqlSessionTemplate getSlaveSqlSessionTemplate() throws OperationException{
-        if(Validate.isEmpty(slaveSqlSessionTemplates)){
-            return getMasterSqlSessionTemplate();
-        }else if(slaveSqlSessionTemplates.size() == 1){
-            return getSlaveSqlSessionTemplate(0);
-        }else{
-            int index = RANDOM.nextInt(slaveSqlSessionTemplates.size());
+	@SuppressWarnings("unchecked")
+	protected void updatePrimary(E e, P primary){
+		final Collection<ResultMap> resultMaps = masterSqlSessionTemplate.getConfiguration().getResultMaps();
 
-            return getSlaveSqlSessionTemplate(index);
-        }
-    }
+		if(Validate.isEmpty(resultMaps)){
+			return;
+		}
 
-    @SuppressWarnings("unchecked")
-    protected void updatePrimary(E e, P primary){
-        final Collection<ResultMap> resultMaps = masterSqlSessionTemplate.getConfiguration().getResultMaps();
+		try{
+			for(ResultMap resultMap : resultMaps){
+				if(resultMap.getType() == e.getClass()){
+					List<ResultMapping> resultMappings = resultMap.getIdResultMappings();
 
-        if(Validate.isEmpty(resultMaps)){
-            return;
-        }
+					if(Validate.isEmpty(resultMappings) == false){
+						Class<E> clazz = (Class<E>) e.getClass();
 
-        try{
-            for(ResultMap resultMap : resultMaps){
-                if(resultMap.getType() == e.getClass()){
-                    List<ResultMapping> resultMappings = resultMap.getIdResultMappings();
+						for(ResultMapping resultMapping : resultMappings){
+							ReflectUtils.setter(clazz, e, resultMapping.getProperty(), resultMapping.getJavaType(),
+									primary);
+						}
+					}
+					break;
+				}
+			}
+		}catch(NoSuchFieldException ex){
+			logger.warn("{}", ex.getMessage());
+		}
+	}
 
-                    if(Validate.isEmpty(resultMappings) == false){
-                        Class<E> clazz = (Class<E>) e.getClass();
+	protected final static Map<String, Object> buildParameters(final Map<String, Object> conditions){
+		return conditions == null ? new LinkedHashMap<>(16) : new LinkedHashMap<>(conditions);
+	}
 
-                        for(ResultMapping resultMapping : resultMappings){
-                            ReflectUtils.setter(clazz, e, resultMapping.getProperty(), resultMapping.getJavaType(),
-                                    primary);
-                        }
-                    }
-                    break;
-                }
-            }
-        }catch(NoSuchFieldException ex){
-            logger.warn("{}", ex.getMessage());
-        }
-    }
+	protected abstract String getStatement();
 
-    protected final static Map<String, Object> buildParameters(final Map<String, Object> conditions){
-        return conditions == null ? new LinkedHashMap<>(16) : new LinkedHashMap<>(conditions);
-    }
+	protected String getStatement(final DML dml){
+		return getStatement(dml.toString());
+	}
 
-    protected abstract String getStatement();
+	protected String getStatement(final String dml){
+		final String statement = getStatement();
+		final StringBuffer sb = new StringBuffer(statement.length() + dml.length() + 1);
 
-    protected String getStatement(final DML dml){
-        return getStatement(dml.toString());
-    }
+		sb.append(statement);
+		sb.append('.');
+		sb.append(dml);
 
-    protected String getStatement(final String dml){
-        final String statement = getStatement();
-        final StringBuffer sb = new StringBuffer(statement.length() + dml.length() + 1);
-
-        sb.append(statement);
-        sb.append('.');
-        sb.append(dml);
-
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
 }
