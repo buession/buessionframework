@@ -24,9 +24,30 @@
  */
 package com.buession.core.serializer;
 
+import java.nio.charset.Charset;
+
 /**
  * @author Yong.Teng
  */
-public class AbstractSerializer {
+public abstract class AbstractSerializer implements Serializer {
+
+    public final static Charset DEFAULT_CHARSET = Charset.defaultCharset();
+
+    public final static String DEFAULT_CHARSET_NAME = DEFAULT_CHARSET.name();
+
+    @Override
+    public <V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException{
+        return serializeAsBytes(object, Charset.forName(charsetName));
+    }
+
+    @Override
+    public <V> String serialize(final V object, final Charset charset) throws SerializerException{
+        return new String(serializeAsBytes(object, charset), charset);
+    }
+
+    @Override
+    public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException{
+        return serialize(object).getBytes(charset);
+    }
 
 }

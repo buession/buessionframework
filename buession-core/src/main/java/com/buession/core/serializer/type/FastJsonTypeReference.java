@@ -24,9 +24,24 @@
  */
 package com.buession.core.serializer.type;
 
+import java.lang.reflect.Type;
+
 /**
  * @author Yong.Teng
  */
-public class FastJsonTypeReference {
+public abstract class FastJsonTypeReference<T> extends com.alibaba.fastjson.TypeReference<T> implements
+		TypeReference<T> {
+
+	protected FastJsonTypeReference(){
+		super();
+	}
+
+	protected FastJsonTypeReference(TypeReference<T> reference){
+		super(reference.getType());
+	}
+
+	protected FastJsonTypeReference(Type... actualTypeArguments){
+		super(actualTypeArguments);
+	}
 
 }

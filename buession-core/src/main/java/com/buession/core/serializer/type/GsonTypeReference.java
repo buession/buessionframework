@@ -24,9 +24,32 @@
  */
 package com.buession.core.serializer.type;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+
 /**
  * @author Yong.Teng
  */
-public class GsonTypeReference {
+public abstract class GsonTypeReference<T> implements TypeReference<T> {
+
+    protected final Type type;
+
+    protected GsonTypeReference(){
+        Type superClass = getClass().getGenericSuperclass();
+
+        /** sanity check, should never happen **/
+        if(superClass instanceof Class<?>){
+            throw new IllegalArgumentException("Internal error: GsonTypeReference constructed without actual type " +
+                    "information");
+        }
+
+        type = ((ParameterizedType) superClass).getActualTypeArguments()[0];
+    }
+
+
+    @Override
+    public Type getType(){
+        return type;
+    }
 
 }

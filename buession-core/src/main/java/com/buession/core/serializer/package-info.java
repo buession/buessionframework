@@ -25,4 +25,4 @@
 /**
  * @author Yong.Teng
  */
-package com.buession.core.serialize;
+package com.buession.core.serializer;

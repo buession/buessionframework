@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -40,73 +40,73 @@ import java.util.stream.Collectors;
  */
 public class ArrayUtils {
 
-    public final static String DEFAULT_GLUE = ", ";
+	public final static String DEFAULT_GLUE = ", ";
 
-    private ArrayUtils(){
+	private ArrayUtils(){
 
-    }
+	}
 
-    /**
-     * 将 O 型数组拼接成字符串
-     *
-     * @param a
-     *         需要拼接的数组
-     * @param <O>
-     *         类
-     *
-     * @return 拼接后的字符串
-     */
-    public static <O> String toString(O[] a){
-        return toString(a, DEFAULT_GLUE);
-    }
+	/**
+	 * 将 O 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 * @param <O>
+	 * 		类
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static <O> String toString(O[] a){
+		return toString(a, DEFAULT_GLUE);
+	}
 
-    /**
-     * 将 O 型数组拼接成字符串
-     *
-     * @param a
-     *         需要拼接的数组
-     * @param glue
-     *         拼接字符串
-     * @param <O>
-     *         类
-     *
-     * @return 拼接后的字符串
-     */
-    public static <O> String toString(final O[] a, final String glue){
-        if(a == null){
-            return null;
-        }
+	/**
+	 * 将 O 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 * @param glue
+	 * 		拼接字符串
+	 * @param <O>
+	 * 		类
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static <O> String toString(final O[] a, final String glue){
+		if(a == null){
+			return null;
+		}
 
-        return a.length == 0 ? Constants.EMPTY_STRING : Arrays.asList(a).stream().map(v->v.toString()).collect
-                (Collectors.joining(glue));
-    }
+		return a.length == 0 ? Constants.EMPTY_STRING : Arrays.asList(a).stream().map(v->v.toString()).collect
+				(Collectors.joining(glue));
+	}
 
-    /**
-     * 将数组转换为 List
-     *
-     * @param a
-     *         需要转换的数组
-     * @param <O>
-     *         类
-     *
-     * @return 转换结果
-     */
-    public final static <O> List<O> toList(O[] a){
-        return a == null ? null : Arrays.asList(a);
-    }
+	/**
+	 * 将数组转换为 List
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 * @param <O>
+	 * 		类
+	 *
+	 * @return 转换结果
+	 */
+	public final static <O> List<O> toList(O[] a){
+		return a == null ? null : Arrays.asList(a);
+	}
 
-    /**
-     * 将数组转换为 Set
-     *
-     * @param a
-     *         需要转换的数组
-     * @param <O>
-     *         类
-     *
-     * @return 转换结果
-     */
-    public final static <O> Set<O> toSet(O[] a){
-        return a == null ? null : Arrays.asList(a).stream().collect(Collectors.toSet());
-    }
+	/**
+	 * 将数组转换为 Set
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 * @param <O>
+	 * 		类
+	 *
+	 * @return 转换结果
+	 */
+	public final static <O> Set<O> toSet(O[] a){
+		return a == null ? null : Arrays.asList(a).stream().collect(Collectors.toSet());
+	}
 
 }

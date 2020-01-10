@@ -17,9 +17,9 @@
  * <http://www.apache.org/>.
  *
  * +-------------------------------------------------------------------------------------------------------+
- * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 											   |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -31,50 +31,92 @@ import com.buession.core.validator.Validate;
  */
 public class Assert {
 
-    private Assert(){
+	private Assert(){
 
-    }
+	}
 
-    public final static void isNull(Object object, String message){
-        if(object == null){
-            throw new IllegalArgumentException(message);
-        }
-    }
+	public final static void isNull(final Object object, final String message){
+		if(object == null){
+			throw new IllegalArgumentException(message);
+		}
+	}
 
-    public final static void isBlank(final String str, final String message){
-        if(Validate.hasText(str) == false){
-            throw new IllegalArgumentException(message);
-        }
-    }
+	public final static void notNull(final Object object, final String message){
+		if(object != null){
+			throw new IllegalArgumentException(message);
+		}
+	}
 
-    public final static void isNegative(final Long value, final String message){
-        if(value < 0){
-            throw new IllegalArgumentException(message);
-        }
-    }
+	public final static void isBlank(final String str, final String message){
+		if(Validate.hasText(str) == false){
+			throw new IllegalArgumentException(message);
+		}
+	}
 
-    public final static void isNegative(final Integer value, final String message){
-        if(value < 0){
-            throw new IllegalArgumentException(message);
-        }
-    }
+	public final static void notBlank(final String str, final String message){
+		if(Validate.hasText(str)){
+			throw new IllegalArgumentException(message);
+		}
+	}
 
-    public final static void isNegative(final Short value, final String message){
-        if(value < 0){
-            throw new IllegalArgumentException(message);
-        }
-    }
+	public final static void isNegative(final Long value, final String message){
+		if(value < 0){
+			throw new IllegalArgumentException(message);
+		}
+	}
 
-    public final static void isNegative(final Double value, final String message){
-        if(value < 0){
-            throw new IllegalArgumentException(message);
-        }
-    }
+	public final static void isNegative(final Integer value, final String message){
+		if(value < 0){
+			throw new IllegalArgumentException(message);
+		}
+	}
 
-    public final static void isNegative(final Float value, final String message){
-        if(value < 0){
-            throw new IllegalArgumentException(message);
-        }
-    }
+	public final static void isNegative(final Short value, final String message){
+		if(value < 0){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void isNegative(final Double value, final String message){
+		if(value < 0){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void isNegative(final Float value, final String message){
+		if(value < 0){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void isZeroNegative(final Long value, final String message){
+		if(value <= 0){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void isZeroNegative(final Integer value, final String message){
+		if(value <= 0){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void isZeroNegative(final Short value, final String message){
+		if(value <= 0){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void isZeroNegative(final Double value, final String message){
+		if(value <= 0){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void isZeroNegative(final Float value, final String message){
+		if(value <= 0){
+			throw new IllegalArgumentException(message);
+		}
+	}
 
 }

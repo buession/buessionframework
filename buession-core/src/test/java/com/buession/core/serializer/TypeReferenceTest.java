@@ -24,9 +24,35 @@
  */
 package com.buession.core.serializer;
 
+import com.buession.core.serializer.type.GsonTypeReference;
+import org.junit.Test;
+
+import java.lang.reflect.Type;
+
 /**
  * @author Yong.Teng
  */
 public class TypeReferenceTest {
+
+    @Test
+    public void gson(){
+        User user = getType();
+    }
+
+    private <T> T getType(){
+        GsonTypeReference<T> reference = new GsonTypeReference<T>() {
+
+        };
+        System.out.println(reference.getType());
+        return null;
+    }
+
+    private <T> T getType(GsonTypeReference<T> reference){
+        return null;//reference.getType();
+    }
+
+    private final static class User {
+
+    }
 
 }

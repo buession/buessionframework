@@ -24,9 +24,13 @@
  */
 package com.buession.core.serializer.type;
 
+import java.lang.reflect.Type;
+
 /**
  * @author Yong.Teng
  */
-public interface TypeReference {
+public interface TypeReference<T> {
+
+    Type getType();
 
 }

@@ -24,9 +24,21 @@
  */
 package com.buession.core.serializer;
 
+import com.buession.core.validator.routines.DomainValidator;
+import org.junit.Test;
+
 /**
  * @author Yong.Teng
  */
 public class ValidatorTest {
+
+	@Test
+	public void domain(){
+		System.out.println(DomainValidator.isValid("www.domain.com"));
+		System.out.println(DomainValidator.isValid("www.domain.fff"));
+		System.out.println(DomainValidator.isValid("www.domain.com.cn"));
+		System.out.println(DomainValidator.isValid("www.domain.com.ff"));
+		System.out.println(DomainValidator.isValid("www.domain.hk"));
+	}
 
 }

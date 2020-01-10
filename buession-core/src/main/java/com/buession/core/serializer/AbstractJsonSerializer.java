@@ -27,6 +27,6 @@ package com.buession.core.serializer;
 /**
  * @author Yong.Teng
  */
-public class AbstractJsonSerializer {
+public abstract class AbstractJsonSerializer extends AbstractSerializer implements JsonSerializer {
 
 }

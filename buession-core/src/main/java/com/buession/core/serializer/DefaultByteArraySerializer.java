@@ -24,8 +24,7 @@
  */
 package com.buession.core.serializer;
 
-import com.buession.core.serializer.type.TypeReference;
-import com.buession.core.validator.Validate;
+import com.buession.core.utils.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,262 +43,175 @@ import java.nio.charset.StandardCharsets;
 /**
  * @author Yong.Teng
  */
-public class ByteArraySerializer extends AbstractSerializer {
+public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 
-    private final static int BYTE_ARRAY_OUTPUT_STREAM_SIZE = 128;
+	private final static int BYTE_ARRAY_OUTPUT_STREAM_SIZE = 128;
 
-    private final static Logger logger = LoggerFactory.getLogger(ByteArraySerializer.class);
+	private final static Logger logger = LoggerFactory.getLogger(DefaultByteArraySerializer.class);
 
-    @Override
-    public <V> String serialize(final V object) throws SerializerException{
-        return serialize(object, StandardCharsets.UTF_8.name());
-    }
+	@Override
+	public <V> String serialize(final V object) throws SerializerException{
+		return serialize(object, DEFAULT_CHARSET_NAME);
+	}
 
-    @Override
-    public <V> byte[] serialize(final V object, byte[] result) throws SerializerException{
-        if(object == null){
-            return null;
-        }
+	@Override
+	public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
+		Assert.isNull(object, "Object cloud not be null.");
 
-        if((object instanceof Serializable) == false){
-            throw new SerializerException("requires a Serializable payload but received an object of type [" + object
-                    .getClass().getName() + "]");
-        }
+		if((object instanceof Serializable) == false){
+			throw new SerializerException("requires a Serializable payload but received an object of type [" + object
+					.getClass().getName() + "]");
+		}
 
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(BYTE_ARRAY_OUTPUT_STREAM_SIZE);
-        ObjectOutputStream objectOutputStream = null;
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(BYTE_ARRAY_OUTPUT_STREAM_SIZE);
+		ObjectOutputStream objectOutputStream = null;
 
-        try{
-            objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+		try{
+			objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
 
-            objectOutputStream.writeObject(object);
-            objectOutputStream.flush();
-            return byteArrayOutputStream.toByteArray();
-        }catch(IOException e){
-            throw new SerializerException("serializer the instance of " + object.getClass().getName() + " " +
-                    "failure", e);
-        }finally{
-            if(byteArrayOutputStream != null){
-                try{
-                    byteArrayOutputStream.close();
-                }catch(IOException e){
-                    logger.error("{} close error.", ByteArrayOutputStream.class.getName(), e);
-                }
-            }
-            if(objectOutputStream != null){
-                try{
-                    objectOutputStream.close();
-                }catch(IOException e){
-                    logger.error("{} close error.", ObjectOutputStream.class.getName(), e);
-                }
-            }
-        }
-    }
+			objectOutputStream.writeObject(object);
+			objectOutputStream.flush();
+			return byteArrayOutputStream.toByteArray();
+		}catch(IOException e){
+			throw new SerializerException("serializer the instance of " + object.getClass().getName() + " " +
+					"failure", e);
+		}finally{
+			if(byteArrayOutputStream != null){
+				try{
+					byteArrayOutputStream.close();
+				}catch(IOException e){
+					logger.error("{} close error.", ByteArrayOutputStream.class.getName(), e);
+				}
+			}
+			if(objectOutputStream != null){
+				try{
+					objectOutputStream.close();
+				}catch(IOException e){
+					logger.error("{} close error.", ObjectOutputStream.class.getName(), e);
+				}
+			}
+		}
+	}
 
-    @Override
-    public <V> String serialize(final V object, final String charsetName) throws SerializerException{
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream objectOutputStream = null;
+	@Override
+	public <V> String serialize(final V object, final String charsetName) throws SerializerException{
+		try{
+			return URLEncoder.encode(baosWrite(object), charsetName);
+		}catch(IOException e){
+			throw new SerializerException("serializer the instance of " + object.getClass().getName() + " " +
+					"failure", e);
+		}
+	}
 
-        try{
-            objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+	@Override
+	public <V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException{
+		return serializeAsBytes(object, Charset.forName(charsetName));
+	}
 
-            objectOutputStream.writeObject(object);
-            objectOutputStream.flush();
+	@Override
+	public <V> String serialize(final V object, final Charset charset) throws SerializerException{
+		return serialize(object, charset.name());
+	}
 
-            String str = byteArrayOutputStream.toString(StandardCharsets.ISO_8859_1.name());
-            return URLEncoder.encode(str, charsetName);
-        }catch(IOException e){
-            throw new SerializerException("serializer the instance of " + object.getClass().getName() + " " +
-                    "failure", e);
-        }finally{
-            if(byteArrayOutputStream != null){
-                try{
-                    byteArrayOutputStream.close();
-                }catch(IOException e){
-                    logger.error("{} close error.", ObjectOutputStream.class.getName(), e);
-                }
-            }
-            if(objectOutputStream != null){
-                try{
-                    objectOutputStream.close();
-                }catch(IOException e){
-                    logger.error("{} close error.", ObjectOutputStream.class.getName(), e);
-                }
-            }
-        }
-    }
+	@Override
+	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException{
+		return serialize(object, charset).getBytes(charset);
+	}
 
-    @Override
-    public <V> byte[] serialize(final V object, final String charsetName, byte[] result) throws SerializerException{
-        return serialize(object, result);
-    }
+	@Override
+	public <V> V deserialize(final String str) throws SerializerException{
+		return deserialize(str, DEFAULT_CHARSET_NAME);
+	}
 
-    @Override
-    public <V> String serialize(final V object, final Charset charset) throws SerializerException{
-        return charset == null ? serialize(object) : serialize(object, charset.name());
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public <V> V deserialize(final byte[] bytes) throws SerializerException{
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+		return doDeserialize(bytes, "bytes");
+	}
 
-    @Override
-    public <V> byte[] serialize(final V object, final Charset charset, byte[] result) throws SerializerException{
-        return serialize(object, result);
-    }
+	@Override
+	@SuppressWarnings("unchecked")
+	public <V> V deserialize(final String str, final String charsetName) throws SerializerException{
+		Assert.isNull(str, "String cloud not be null.");
 
-    @Override
-    public <V> V deserialize(final String str) throws SerializerException{
-        return deserialize(str, StandardCharsets.UTF_8.name());
-    }
+		try{
+			String s = URLDecoder.decode(str, charsetName);
+			return doDeserialize(s.getBytes(StandardCharsets.ISO_8859_1), "bytes");
+		}catch(UnsupportedEncodingException e){
+			throw new SerializerException("deserialize the string " + str + " failure.", e);
+		}
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <V> V deserialize(final byte[] bytes) throws SerializerException{
-        if(Validate.isEmpty(bytes)){
-            throw new IllegalArgumentException("Bytes could not be empty or null");
-        }
+	@Override
+	public <V> V deserialize(final String str, final Charset charset) throws SerializerException{
+		return deserialize(str, charset.name());
+	}
 
-        try{
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(bytes);
-            ObjectInputStream objectInputStream = new ObjectInputStream(byteStream);
+	protected static <V> String baosWrite(final V value) throws IOException{
+		Assert.isNull(value, "Object cloud not be null.");
 
-            return (V) objectInputStream.readObject();
-        }catch(ClassNotFoundException e){
-            throw new SerializerException("Failed to deserialize object type", e);
-        }catch(Exception e){
-            throw new SerializerException("Failed to deserialize", e);
-        }
-    }
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		ObjectOutputStream objectOutputStream = null;
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public <V> V deserialize(final String str, final String charsetName) throws SerializerException{
-        if(Validate.isEmpty(str)){
-            throw new IllegalArgumentException("String could not be empty or null");
-        }
+		try{
+			objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
 
-        try{
-            String s = URLDecoder.decode(str, charsetName);
-            return doDeserialize(s.getBytes(StandardCharsets.ISO_8859_1), "bytes");
-        }catch(UnsupportedEncodingException e){
-            throw new SerializerException("deserialize the string " + str + " failure.", e);
-        }
-    }
+			objectOutputStream.writeObject(value);
+			objectOutputStream.flush();
 
-    @Override
-    public <V> V deserialize(final byte[] bytes, final String charsetName) throws SerializerException{
-        if(Validate.isEmpty(bytes)){
-            throw new IllegalArgumentException("Bytes could not be empty or null");
-        }
+			return byteArrayOutputStream.toString(StandardCharsets.ISO_8859_1.name());
+		}catch(IOException e){
+			throw e;
+		}finally{
+			if(byteArrayOutputStream != null){
+				try{
+					byteArrayOutputStream.close();
+				}catch(IOException e){
+					logger.error("{} close error.", ObjectOutputStream.class.getName(), e);
+				}
+			}
+			if(objectOutputStream != null){
+				try{
+					objectOutputStream.close();
+				}catch(IOException e){
+					logger.error("{} close error.", ObjectOutputStream.class.getName(), e);
+				}
+			}
+		}
+	}
 
-        return doDeserialize(bytes, "bytes");
-    }
+	@SuppressWarnings("unchecked")
+	protected final static <V> V doDeserialize(final byte[] bytes, final String sourceType) throws SerializerException{
+		ByteArrayInputStream byteArrayInputStream = null;
+		ObjectInputStream objectInputStream = null;
+		try{
+			byteArrayInputStream = new ByteArrayInputStream(bytes);
+			objectInputStream = new ObjectInputStream(byteArrayInputStream);
 
-    @Override
-    public <V> V deserialize(final String str, final Charset charset) throws SerializerException{
-        return charset == null ? deserialize(str) : deserialize(str, charset.name());
-    }
-
-    @Override
-    public <V> V deserialize(final byte[] bytes, final Charset charset) throws SerializerException{
-        return charset == null ? deserialize(bytes) : deserialize(bytes, charset.name());
-    }
-
-    @Override
-    public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException{
-        return deserialize(str);
-    }
-
-    @Override
-    public <V> V deserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException{
-        return deserialize(bytes);
-    }
-
-    @Override
-    public <V> V deserialize(final String str, final String charsetName, final Class<V> clazz) throws
-            SerializerException{
-        return deserialize(str);
-    }
-
-    @Override
-    public <V> V deserialize(final byte[] bytes, final String charsetName, final Class<V> clazz) throws
-            SerializerException{
-        return deserialize(bytes);
-    }
-
-    @Override
-    public <V> V deserialize(final String str, final Charset charset, final Class<V> clazz) throws SerializerException{
-        return deserialize(str);
-    }
-
-    @Override
-    public <V> V deserialize(final byte[] bytes, final Charset charset, final Class<V> clazz) throws
-            SerializerException{
-        return deserialize(bytes);
-    }
-
-    @Override
-    public <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException{
-        return deserialize(str);
-    }
-
-    @Override
-    public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException{
-        return deserialize(bytes);
-    }
-
-    @Override
-    public <V> V deserialize(final String str, final String charsetName, final TypeReference<V> type) throws
-            SerializerException{
-        return deserialize(str);
-    }
-
-    @Override
-    public <V> V deserialize(final byte[] bytes, final String charsetName, final TypeReference<V> type) throws
-            SerializerException{
-        return deserialize(bytes);
-    }
-
-    @Override
-    public <V> V deserialize(final String str, final Charset charset, final TypeReference<V> type) throws
-            SerializerException{
-        return deserialize(str);
-    }
-
-    @Override
-    public <V> V deserialize(final byte[] bytes, final Charset charset, final TypeReference<V> type) throws
-            SerializerException{
-        return deserialize(bytes);
-    }
-
-    protected final static <V> V doDeserialize(final byte[] bytes, final String sourceType) throws SerializerException{
-        ByteArrayInputStream byteArrayInputStream = null;
-        ObjectInputStream objectInputStream = null;
-        try{
-            byteArrayInputStream = new ByteArrayInputStream(bytes);
-            objectInputStream = new ObjectInputStream(byteArrayInputStream);
-
-            return (V) objectInputStream.readObject();
-        }catch(UnsupportedEncodingException e){
-            throw new SerializerException("deserialize the " + sourceType + " " + bytes + " failure.", e);
-        }catch(ClassNotFoundException e){
-            throw new SerializerException("deserialize the " + sourceType + " " + bytes + " failure.", e);
-        }catch(IOException e){
-            throw new SerializerException("deserialize the " + sourceType + " " + bytes + " failure.", e);
-        }finally{
-            if(byteArrayInputStream != null){
-                try{
-                    byteArrayInputStream.close();
-                }catch(IOException e){
-                    logger.error("{} close error.", ByteArrayOutputStream.class.getName(), e);
-                }
-            }
-            if(objectInputStream != null){
-                try{
-                    objectInputStream.close();
-                }catch(IOException e){
-                    logger.error("{} close error.", ObjectInputStream.class.getName(), e);
-                }
-            }
-        }
-    }
+			return (V) objectInputStream.readObject();
+		}catch(UnsupportedEncodingException e){
+			throw new SerializerException("deserialize the " + sourceType + " " + bytes + " failure.", e);
+		}catch(ClassNotFoundException e){
+			throw new SerializerException("deserialize the " + sourceType + " " + bytes + " failure.", e);
+		}catch(IOException e){
+			throw new SerializerException("deserialize the " + sourceType + " " + bytes + " failure.", e);
+		}finally{
+			if(byteArrayInputStream != null){
+				try{
+					byteArrayInputStream.close();
+				}catch(IOException e){
+					logger.error("{} close error.", ByteArrayOutputStream.class.getName(), e);
+				}
+			}
+			if(objectInputStream != null){
+				try{
+					objectInputStream.close();
+				}catch(IOException e){
+					logger.error("{} close error.", ObjectInputStream.class.getName(), e);
+				}
+			}
+		}
+	}
 
 }

@@ -24,9 +24,136 @@
  */
 package com.buession.core.serializer;
 
+import com.buession.core.serializer.type.TypeReference;
+
 /**
  * @author Yong.Teng
  */
-public interface JsonSerializer {
+public interface JsonSerializer extends Serializer {
+
+    /**
+     * 字符串反序列化
+     *
+     * @param str
+     *         待反序列化字符串
+     * @param clazz
+     *         待反序列化对象类
+     * @param <V>
+     *         待反序列化对象类型
+     *
+     * @return 反序列化后对象
+     *
+     * @throws SerializerException
+     *         反序列化异常
+     */
+    <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException;
+
+    /**
+     * 字节反序列化
+     *
+     * @param bytes
+     *         待反序列化的字节
+     * @param clazz
+     *         待反序列化对象类
+     * @param <V>
+     *         待反序列化对象类型
+     *
+     * @return 反序列化后的对象
+     *
+     * @throws SerializerException
+     *         反序列化异常
+     */
+    <V> V deserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException;
+
+    /**
+     * 字符串反序列化
+     *
+     * @param str
+     *         待反序列化字符串
+     * @param type
+     *         待反序列化对象类引用
+     * @param <V>
+     *         待反序列化对象类型
+     *
+     * @return 反序列化后对象
+     *
+     * @throws SerializerException
+     *         反序列化异常
+     */
+    <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException;
+
+    /**
+     * 字节反序列化
+     *
+     * @param bytes
+     *         待反序列化的字节
+     * @param type
+     *         待反序列化对象类引用
+     * @param <V>
+     *         待反序列化对象类型
+     *
+     * @return 反序列化后的对象
+     *
+     * @throws SerializerException
+     *         反序列化异常
+     */
+    <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException;
+
+    /**
+     * 字符串反序列化
+     *
+     * @param str
+     *         待反序列化字符串
+     * @param clazz
+     *         待反序列化对象类
+     * @param <V>
+     *         待反序列化对象类型
+     *
+     * @return 反序列化后对象
+     *
+     * @throws SerializerException
+     *         反序列化异常
+     */
+    default <V> V unserialize(final String str, final Class<V> clazz) throws SerializerException{
+        return deserialize(str, clazz);
+    }
+
+    /**
+     * 字节反序列化
+     *
+     * @param bytes
+     *         待反序列化的字节
+     * @param clazz
+     *         待反序列化对象类
+     * @param <V>
+     *         待反序列化对象类型
+     *
+     * @return 反序列化后的对象
+     *
+     * @throws SerializerException
+     *         反序列化异常
+     */
+    default <V> V unserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException{
+        return deserialize(bytes, clazz);
+    }
+
+    /**
+     * 字符串反序列化
+     *
+     * @param str
+     *         待反序列化字符串
+     * @param type
+     *         待反序列化对象类引用
+     * @param <V>
+     *         待反序列化对象类型
+     *
+     * @return 反序列化后对象
+     *
+     * @throws SerializerException
+     *         反序列化异常
+     */
+    default <V> V unserialize(final String str, final TypeReference<V> type) throws SerializerException{
+        return deserialize(str, type);
+    }
 
 }

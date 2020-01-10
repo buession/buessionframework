@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -34,114 +34,113 @@ import com.buession.lang.IpType;
  */
 public class InetAddressValidator {
 
-    private InetAddressValidator(){
+	private InetAddressValidator(){
 
-    }
+	}
 
-    public final static boolean isValid(final CharSequence charSequence){
-        return isValidInet4Address(charSequence) || isValidInet6Address(charSequence);
-    }
+	public final static boolean isValid(final CharSequence charSequence){
+		return isValidInet4Address(charSequence) || isValidInet6Address(charSequence);
+	}
 
-    public final static boolean isValid(final CharSequence charSequence, final IpType ipType){
-        if(IpType.IP_V4.equals(ipType) == true){
-            return isValidInet4Address(charSequence);
-        }else if(IpType.IP_V6.equals(ipType) == true){
-            return isValidInet6Address(charSequence);
-        }else{
-            return false;
-        }
-    }
+	public final static boolean isValid(final CharSequence charSequence, final IpType ipType){
+		if(IpType.IP_V4.equals(ipType) == true){
+			return isValidInet4Address(charSequence);
+		}else if(IpType.IP_V6.equals(ipType) == true){
+			return isValidInet6Address(charSequence);
+		}else{
+			return false;
+		}
+	}
 
-    public final static boolean isValidInet4Address(final CharSequence charSequence){
-        if(charSequence == null || "".equals(charSequence) == false){
-            return false;
-        }
+	public final static boolean isValidInet4Address(final CharSequence charSequence){
+		if(charSequence == null || "".equals(charSequence) == false){
+			return false;
+		}
 
-        String[] parts = charSequence.toString().split(".");
-        if(parts == null || parts.length != 4){
-            return false;
-        }
+		String[] parts = charSequence.toString().split(".");
+		if(parts == null || parts.length != 4){
+			return false;
+		}
 
-        for(String part : parts){
-            if(isInet4AddressGroup(part) == false){
-                return false;
-            }
-        }
+		for(String part : parts){
+			if(isInet4AddressGroup(part) == false){
+				return false;
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    public final static boolean isValidInet6Address(final CharSequence charSequence){
-        if(charSequence == null || "".equals(charSequence) == false){
-            return false;
-        }
+	public final static boolean isValidInet6Address(final CharSequence charSequence){
+		if(charSequence == null || "".equals(charSequence) == false){
+			return false;
+		}
 
-        if("::".equals(charSequence) == true){
-            return true;
-        }
+		if("::".equals(charSequence) == true){
+			return true;
+		}
 
-        String[] parts = charSequence.toString().split(":");
-        if(parts == null || parts.length >= 8){
-            return false;
-        }
+		String[] parts = charSequence.toString().split(":");
+		if(parts == null || parts.length >= 8){
+			return false;
+		}
 
-        for(String part : parts){
-            if(isInet6AddressGroup(part) == false && "".equals(part) == false){
-                return false;
-            }
-        }
+		for(String part : parts){
+			if(isInet6AddressGroup(part) == false && "".equals(part) == false){
+				return false;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    private final static boolean isInet4AddressGroup(final String str){
-        if(str == null){
-            return false;
-        }
+	private final static boolean isInet4AddressGroup(final String str){
+		if(str == null){
+			return false;
+		}
 
-        int len = str.length();
-        switch(len){
-            case 1:
-            case 2:
-                if(Validate.isNumeric(str) == false){
-                    return false;
-                }
-                break;
-            case 3:
-                char c = str.charAt(0);
+		switch(str.length()){
+			case 1:
+			case 2:
+				if(Validate.isNumeric(str) == false){
+					return false;
+				}
+				break;
+			case 3:
+				char c = str.charAt(0);
 
-                if(c == '1'){
-                    if(Validate.isNumeric(str.substring(1)) == false){
-                        return false;
-                    }
-                }else if(c == '2'){
-                    c = str.charAt(1);
+				if(c == '1'){
+					if(Validate.isNumeric(str.substring(1)) == false){
+						return false;
+					}
+				}else if(c == '2'){
+					c = str.charAt(1);
 
-                    if(c >= '0' && c <= '4'){
-                        if(Validate.isNumeric(str.charAt(2)) == false){
-                            return false;
-                        }
-                    }else if(c == '5'){
-                        if(c < '0' || c > '5'){
-                            return false;
-                        }
-                    }
-                }
-                break;
-            default:
-                return false;
-        }
+					if(c >= '0' && c <= '4'){
+						if(Validate.isNumeric(str.charAt(2)) == false){
+							return false;
+						}
+					}else if(c == '5'){
+						if(c < '0' || c > '5'){
+							return false;
+						}
+					}
+				}
+				break;
+			default:
+				return false;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    private final static boolean isInet6AddressGroup(final String str){
-        if(str == null){
-            return false;
-        }
+	private final static boolean isInet6AddressGroup(final String str){
+		if(str == null){
+			return false;
+		}
 
-        int len = str.length();
-        return (len >= 1 && len <= 4) && Validate.isXdigit(str);
-    }
+		int len = str.length();
+		return (len >= 1 && len <= 4) && Validate.isXdigit(str);
+	}
 
 }

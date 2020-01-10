@@ -109,10 +109,6 @@ public class ReflectUtils {
 
     public final static <E> void setter(Class<E> clazz, E entity, String setterName, Class<?> javaType, Object value)
             throws NoSuchFieldException{
-        if(entity == null){
-            return;
-        }
-
         try{
             Method method = clazz.getMethod("set" + StringUtils.upperCase(setterName), javaType);
 
@@ -133,6 +129,10 @@ public class ReflectUtils {
         if(isStaticField(field) == false){
             setField(entity, field, value);
         }
+    }
+
+    public final static <E, V> V getter(Class<E> clazz, E entity, String setterName, Class<?> javaType){
+        return null;
     }
 
     /**

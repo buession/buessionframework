@@ -27,6 +27,7 @@ package com.buession.core.serializer.type;
 /**
  * @author Yong.Teng
  */
-public class JacksonTypeReference {
+public class JacksonTypeReference<T> extends com.fasterxml.jackson.core.type.TypeReference<T> implements
+		TypeReference<T> {
 
 }

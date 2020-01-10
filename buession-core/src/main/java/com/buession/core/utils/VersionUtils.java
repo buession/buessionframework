@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -73,8 +73,8 @@ public class VersionUtils {
 
         String ver1 = first1 == '#' ? version1 : canonicalizeVersion(version1);
         String ver2 = first2 == '#' ? version2 : canonicalizeVersion(version2);
-        String p1 = null;
-        String p2 = null;
+        String p1;
+        String p2;
         int result = 0;
 
         while(ver1 != null && ver2 != null){
@@ -113,11 +113,15 @@ public class VersionUtils {
     }
 
     private final static String canonicalizeVersion(final String version){
-        if(version == null || version.length() == 0){
+        if(version == null){
             return version;
         }
 
         int length = version.length();
+        if(length == 0){
+            return version;
+        }
+
         StringBuffer sb = new StringBuffer(length + 4);
 
         for(int i = 0; i < length; i++){

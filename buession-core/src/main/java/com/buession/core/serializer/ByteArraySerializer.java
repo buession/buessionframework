@@ -24,9 +24,83 @@
  */
 package com.buession.core.serializer;
 
+import java.nio.charset.Charset;
+
 /**
  * @author Yong.Teng
  */
-public interface ByteArraySerializer {
+public interface ByteArraySerializer extends Serializer {
+
+    /**
+     * 字符串反序列化
+     *
+     * @param str
+     *         待反序列化字符串
+     * @param charsetName
+     *         字符编码
+     * @param <V>
+     *         待反序列化对象类型
+     *
+     * @return 反序列化后对象
+     *
+     * @throws SerializerException
+     *         反序列化异常
+     */
+    <V> V deserialize(final String str, final String charsetName) throws SerializerException;
+
+    /**
+     * 字符串反序列化
+     *
+     * @param str
+     *         待反序列化字符串
+     * @param charset
+     *         字符编码
+     * @param <V>
+     *         待反序列化对象类型
+     *
+     * @return 反序列化后对象
+     *
+     * @throws SerializerException
+     *         反序列化异常
+     */
+    <V> V deserialize(final String str, final Charset charset) throws SerializerException;
+
+    /**
+     * 字符串反序列化
+     *
+     * @param str
+     *         待反序列化字符串
+     * @param charsetName
+     *         字符编码
+     * @param <V>
+     *         待反序列化对象类型
+     *
+     * @return 反序列化后对象
+     *
+     * @throws SerializerException
+     *         反序列化异常
+     */
+    default <V> V unserialize(final String str, final String charsetName) throws SerializerException{
+        return deserialize(str, charsetName);
+    }
+
+    /**
+     * 字符串反序列化
+     *
+     * @param str
+     *         待反序列化字符串
+     * @param charset
+     *         字符编码
+     * @param <V>
+     *         待反序列化对象类型
+     *
+     * @return 反序列化后对象
+     *
+     * @throws SerializerException
+     *         反序列化异常
+     */
+    default <V> V unserialize(final String str, final Charset charset) throws SerializerException{
+        return deserialize(str, charset);
+    }
 
 }

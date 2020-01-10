@@ -27,6 +27,6 @@ package com.buession.core.serializer;
 /**
  * @author Yong.Teng
  */
-public class AbstractByteArraySerializer {
+public abstract class AbstractByteArraySerializer extends AbstractSerializer implements ByteArraySerializer {
 
 }

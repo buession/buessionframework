@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -38,61 +38,50 @@ import java.util.regex.Pattern;
  */
 public class DomainValidator {
 
-    private final static String DOMAIN_LABEL_REGEX = "\\p{Alnum}(?>[\\p{Alnum}-]*\\p{Alnum})*";
+	private final static String DOMAIN_LABEL_REGEX = "\\p{Alnum}(?>[\\p{Alnum}-]*\\p{Alnum})*";
 
-    private final static String TOP_LABEL_REGEX = "\\p{Alpha}{2,}";
+	private final static String TOP_LABEL_REGEX = "\\p{Alpha}{2,}";
 
-    private final static String DOMAIN_NAME_REGEX = "^(?:" + DOMAIN_LABEL_REGEX + "\\.)+" + "(" + TOP_LABEL_REGEX +
-            ")$";
+	private final static String DOMAIN_NAME_REGEX = "^(?:" + DOMAIN_LABEL_REGEX + "\\.)+" + "(" + TOP_LABEL_REGEX +
+			")$";
 
-    private final static String[] LOCAL_TLDS = new String[]{
-            // RFC2606 defined
-            "localhost",
-            // Also widely used as localhost.localdomain
-            "localdomain"};
+	private final static String[] LOCAL_TLDS = new String[]{
+			// RFC2606 defined
+			"localhost",
+			// Also widely used as localhost.localdomain
+			"localdomain"
+	};
 
-    private DomainValidator(){
+	private DomainValidator(){
 
-    }
+	}
 
-    public final static boolean isValid(final CharSequence charSequence){
-        if(charSequence == null){
-            return false;
-        }
+	public final static boolean isValid(final CharSequence charSequence){
+		if(charSequence == null){
+			return false;
+		}
 
-        for(String tld : LOCAL_TLDS){
-            if(tld.equalsIgnoreCase(charSequence.toString())){
-                return true;
-            }
-        }
+		for(String tld : LOCAL_TLDS){
+			if(tld.equalsIgnoreCase(charSequence.toString())){
+				return true;
+			}
+		}
 
-        Matcher matcher = Pattern.compile(DOMAIN_NAME_REGEX).matcher(charSequence);
+		Matcher matcher = Pattern.compile(DOMAIN_NAME_REGEX).matcher(charSequence);
+		return matcher.matches() && isValidTld(matcher.group(1));
+	}
 
-        if(matcher.matches() == true){
-            int count = matcher.groupCount();
-            String[] groups = new String[count];
+	private final static boolean isValidTld(final String tld){
+		try{
+			Enum.valueOf(DomainTLD.class, chompLeadingDot(tld.toLowerCase()).toUpperCase());
+			return true;
+		}catch(IllegalArgumentException e){
+			return false;
+		}
+	}
 
-            for(int j = 0; j < count; j++){
-                groups[j] = matcher.group(j + 1);
-            }
-
-            return isValidTld(groups[0]);
-        }
-
-        return false;
-    }
-
-    private final static boolean isValidTld(String tld){
-        try{
-            Enum.valueOf(DomainTLD.class, chompLeadingDot(tld.toLowerCase()).toUpperCase());
-            return true;
-        }catch(IllegalArgumentException e){
-            return false;
-        }
-    }
-
-    private final static String chompLeadingDot(String str){
-        return str.startsWith(".") ? str.substring(1) : str;
-    }
+	private final static String chompLeadingDot(final String str){
+		return str.startsWith(".") ? str.substring(1) : str;
+	}
 
 }
