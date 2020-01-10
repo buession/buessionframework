@@ -19,17 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
+
+import java.io.Serializable;
 
 /**
  * CPU 的计算量统计信息
  *
  * @author Yong.Teng
  */
-public class Cpu {
+public class Cpu implements Serializable {
+
+    private final static long serialVersionUID = 7374909500664048450L;
 
     /**
      * Redis 服务器耗费的系统 CPU
@@ -132,4 +136,5 @@ public class Cpu {
         return "Cpu{" + "usedCpuSys=" + usedCpuSys + ", usedCpuUser=" + usedCpuUser + ", usedCpuSysChildren=" +
                 usedCpuSysChildren + ", usedCpuUserChildren=" + usedCpuUserChildren + '}';
     }
+
 }

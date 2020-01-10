@@ -19,12 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
 
 import com.buession.redis.client.connection.RedisConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * RedisTemplate 的别名
@@ -35,11 +37,17 @@ import com.buession.redis.client.connection.RedisConnection;
 @Deprecated
 public class RedisClientTemplate extends RedisTemplate {
 
+    private final static Logger logger = LoggerFactory.getLogger(RedisClientTemplate.class);
+
+    private final String message = "'com.buession.redis.RedisClientTemplate' is deprecated, please use 'com.buession"
+            + ".redis.RedisTemplate'.";
+
     /**
      * 构造函数
      */
     public RedisClientTemplate(){
         super();
+        logger.warn(message);
     }
 
     /**
@@ -50,5 +58,7 @@ public class RedisClientTemplate extends RedisTemplate {
      */
     public RedisClientTemplate(final RedisConnection connection){
         super(connection);
+        logger.warn(message);
     }
+
 }

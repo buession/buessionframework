@@ -21,75 +21,84 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.serializer;
 
-import com.buession.core.exception.SerializationException;
-import com.buession.redis.Constants;
-import com.buession.redis.utils.SafeEncoder;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.buession.core.serializer.DefaultByteArraySerializer;
+import com.buession.core.serializer.SerializerException;
+import com.buession.core.serializer.type.TypeReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
 public class ByteArraySerializer implements Serializer {
 
+    private final static DefaultByteArraySerializer serializer = new DefaultByteArraySerializer();
+
+    private final static Logger logger = LoggerFactory.getLogger(ByteArraySerializer.class);
+
     @Override
-    public <O> String encode(O o) throws SerializerException{
+    public <V> String serialize(final V object){
         try{
-            return com.buession.core.utils.Serialize.serialize(o, Constants.CHARSET);
-        }catch(SerializationException e){
-            throw new SerializerException(o + "encode failure", e);
-        }
-    }
-
-    @Override
-    public <O> byte[] encodeAsBytes(O o) throws SerializerException{
-        return SafeEncoder.encode(encode(o));
-    }
-
-    @Override
-    public <O> O decode(String str) throws SerializerException{
-        return doDecode(str);
-    }
-
-    @Override
-    public <O> O decode(String str, Class<O> clazz) throws SerializerException{
-        return doDecode(str);
-    }
-
-    @Override
-    public <O> O decode(String str, TypeReference<O> type) throws SerializerException{
-        return doDecode(str);
-    }
-
-    @Override
-    public <O> O decode(byte[] bytes) throws SerializerException{
-        return bytes == null ? null : doDecode(new String(bytes, Constants.CHARSET));
-    }
-
-    @Override
-    public <O> O decode(byte[] bytes, Class<O> clazz) throws SerializerException{
-        return bytes == null ? null : doDecode(new String(bytes, Constants.CHARSET));
-    }
-
-    @Override
-    public <O> O decode(byte[] bytes, TypeReference<O> type) throws SerializerException{
-        return bytes == null ? null : doDecode(new String(bytes, Constants.CHARSET));
-    }
-
-    private final static <O> O doDecode(final String str) throws SerializerException{
-        if(str == null){
+            return serializer.serialize(object);
+        }catch(SerializerException e){
+            logger.error("{}", e);
             return null;
         }
+    }
 
+    @Override
+    public <V> byte[] serializeAsBytes(final V object){
         try{
-            return com.buession.core.utils.Serialize.unserialize(str, Constants.CHARSET);
-        }catch(SerializationException e){
-            throw new SerializerException(e.getMessage(), e);
+            return serializer.serializeAsBytes(object);
+        }catch(SerializerException e){
+            logger.error("{}", e);
+            return null;
         }
+    }
+
+    @Override
+    public <V> V deserialize(final String str){
+        try{
+            return serializer.deserialize(str);
+        }catch(SerializerException e){
+            logger.error("{}", e);
+            return null;
+        }
+    }
+
+    @Override
+    public <V> V deserialize(final byte[] bytes){
+        try{
+            return serializer.deserialize(bytes);
+        }catch(SerializerException e){
+            logger.error("{}", e);
+            return null;
+        }
+    }
+
+    @Override
+    public <V> V deserialize(final String str, final Class<V> clazz){
+        return deserialize(str);
+    }
+
+    @Override
+    public <V> V deserialize(final byte[] bytes, final Class<V> clazz){
+        return deserialize(bytes);
+    }
+
+    @Override
+    public <V> V deserialize(final String str, final TypeReference<V> type){
+        return deserialize(str);
+    }
+
+    @Override
+    public <V> V deserialize(final byte[] bytes, final TypeReference<V> type){
+        return deserialize(bytes);
     }
 
 }

@@ -19,17 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
+
+import java.io.Serializable;
 
 /**
  * 一般统计信息
  *
  * @author Yong.Teng
  */
-public class Stats {
+public class Stats implements Serializable {
+
+    private final static long serialVersionUID = 1037772017536037877L;
 
     /**
      * 服务器已接受的连接请求数量

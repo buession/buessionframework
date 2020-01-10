@@ -24,9 +24,99 @@
  */
 package com.buession.redis.serializer;
 
+import com.buession.core.serializer.SerializerException;
+import com.buession.core.serializer.type.TypeReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Yong.Teng
  */
-public class GsonJsonSerializer {
+public class GsonJsonSerializer implements Serializer {
+
+    private final static com.buession.core.serializer.GsonJsonSerializer serializer = new com.buession.core
+            .serializer.GsonJsonSerializer();
+
+    private final static Logger logger = LoggerFactory.getLogger(GsonJsonSerializer.class);
+
+    @Override
+    public <V> String serialize(final V object){
+        try{
+            return serializer.serialize(object);
+        }catch(SerializerException e){
+            logger.error("{}", e);
+            return null;
+        }
+    }
+
+    @Override
+    public <V> byte[] serializeAsBytes(final V object){
+        try{
+            return serializer.serializeAsBytes(object);
+        }catch(SerializerException e){
+            logger.error("{}", e);
+            return null;
+        }
+    }
+
+    @Override
+    public <V> V deserialize(final String str){
+        try{
+            return serializer.deserialize(str);
+        }catch(SerializerException e){
+            logger.error("{}", e);
+            return null;
+        }
+    }
+
+    @Override
+    public <V> V deserialize(final byte[] bytes){
+        try{
+            return serializer.deserialize(bytes);
+        }catch(SerializerException e){
+            logger.error("{}", e);
+            return null;
+        }
+    }
+
+    @Override
+    public <V> V deserialize(final String str, final Class<V> clazz){
+        try{
+            return serializer.deserialize(str, clazz);
+        }catch(SerializerException e){
+            logger.error("{}", e);
+            return null;
+        }
+    }
+
+    @Override
+    public <V> V deserialize(final byte[] bytes, final Class<V> clazz){
+        try{
+            return serializer.deserialize(bytes, clazz);
+        }catch(SerializerException e){
+            logger.error("{}", e);
+            return null;
+        }
+    }
+
+    @Override
+    public <V> V deserialize(final String str, final TypeReference<V> type){
+        try{
+            return serializer.deserialize(str, type);
+        }catch(SerializerException e){
+            logger.error("{}", e);
+            return null;
+        }
+    }
+
+    @Override
+    public <V> V deserialize(final byte[] bytes, final TypeReference<V> type){
+        try{
+            return serializer.deserialize(bytes, type);
+        }catch(SerializerException e){
+            logger.error("{}", e);
+            return null;
+        }
+    }
 
 }

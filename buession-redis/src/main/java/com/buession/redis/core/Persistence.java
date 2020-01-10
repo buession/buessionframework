@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.lang.Status;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -33,7 +34,9 @@ import java.util.Date;
  *
  * @author Yong.Teng
  */
-public class Persistence {
+public class Persistence implements Serializable {
+
+    private final static long serialVersionUID = -7657298714606549180L;
 
     /**
      * 服务器是否正在载入持久化文件
@@ -588,8 +591,12 @@ public class Persistence {
                 + "rdbBgSaveInProgress=" + rdbBgSaveInProgress + ", rdbLastSaveTime=" + rdbLastSaveTime + ", " +
                 "rdbLastBgSaveStatus=" + rdbLastBgSaveStatus + ", rdbLastBgSaveTimeSec=" + rdbLastBgSaveTimeSec + ", " +
                 "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-                "" + "" + "" + "rdbCurrentBgSaveTimeSec=" + rdbCurrentBgSaveTimeSec + ", " + "aofEnabled=" +
-                aofEnabled + ", " + "aofRewriteInProgress=" + aofRewriteInProgress + ", " + "aofRewriteScheduled=" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "rdbCurrentBgSaveTimeSec=" + rdbCurrentBgSaveTimeSec + ", " + "aofEnabled=" + aofEnabled +
+                ", " + "aofRewriteInProgress=" + aofRewriteInProgress + ", " + "aofRewriteScheduled=" +
                 aofRewriteScheduled + ", " + "" + "aofLastRewriteTimeSec=" + aofLastRewriteTimeSec + ", " +
                 "aofCurrentRewriteTimeSec=" + aofCurrentRewriteTimeSec + ", " + "aofLastBgRewriteStatus=" +
                 aofLastBgRewriteStatus + ", " + "aofLastWriteStatus=" + aofLastWriteStatus + ", aofCurrentSize=" +
@@ -598,4 +605,5 @@ public class Persistence {
                 aofRewriteBufferLength + ", " + "aofPendingBioFsync=" + aofPendingBioFsync + ", aofDelayedFsync=" +
                 aofDelayedFsync + '}';
     }
+
 }

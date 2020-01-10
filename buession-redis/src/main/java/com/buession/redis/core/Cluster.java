@@ -19,17 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
+
+import java.io.Serializable;
 
 /**
  * 集群有关的信息
  *
  * @author Yong.Teng
  */
-public class Cluster {
+public class Cluster implements Serializable {
+
+    private final static long serialVersionUID = 1616257693468570678L;
 
     /**
      * 集群功能是否已经开启
@@ -68,4 +72,5 @@ public class Cluster {
     public String toString(){
         return "Cluster{" + "enabled=" + enabled + '}';
     }
+
 }

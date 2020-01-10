@@ -24,9 +24,27 @@
  */
 package com.buession.redis.serializer;
 
+import com.buession.core.serializer.type.TypeReference;
+
 /**
  * @author Yong.Teng
  */
 public interface Serializer {
+
+    <V> String serialize(final V object);
+
+    <V> byte[] serializeAsBytes(final V object);
+
+    <V> V deserialize(final String str);
+
+    <V> V deserialize(final byte[] bytes);
+
+    <V> V deserialize(final String str, final Class<V> clazz);
+
+    <V> V deserialize(final byte[] bytes, final Class<V> clazz);
+
+    <V> V deserialize(final String str, final TypeReference<V> type);
+
+    <V> V deserialize(final byte[] bytes, final TypeReference<V> type);
 
 }

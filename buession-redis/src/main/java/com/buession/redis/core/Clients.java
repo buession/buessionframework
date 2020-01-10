@@ -19,17 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
+
+import java.io.Serializable;
 
 /**
  * 已连接客户端的信息
  *
  * @author Yong.Teng
  */
-public class Clients {
+public class Clients implements Serializable {
+
+    private final static long serialVersionUID = 2525187017390996219L;
 
     /**
      * 已连接客户端的数量
@@ -132,4 +136,5 @@ public class Clients {
         return "Clients{" + "connecteds=" + connecteds + ", longestOutputList=" + longestOutputList + ", " +
                 "biggestInputBuffer=" + biggestInputBuffer + ", blockeds=" + blockeds + '}';
     }
+
 }

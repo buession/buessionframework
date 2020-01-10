@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.utils;
 
+import com.buession.core.serializer.type.TypeReference;
 import com.buession.core.validator.Validate;
 import com.buession.redis.serializer.Serializer;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -40,283 +40,287 @@ import java.util.Set;
  */
 public class ReturnUtils {
 
-    private ReturnUtils(){
+	private ReturnUtils(){
 
-    }
+	}
 
-    public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer, final List<String>
-            data){
-        if(data == null){
-            return null;
-        }
+	public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer, final List<String>
+			data){
+		if(data == null){
+			return null;
+		}
 
-        final List<V> result = new ArrayList<>(data.size());
+		final List<V> result = new ArrayList<>(data.size());
 
-        for(String value : data){
-            result.add(serializer.decode(value));
-        }
+		for(String value : data){
+			result.add(serializer.deserialize(value));
+		}
 
-        return result;
-    }
+		return result;
 
-    public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]> data){
-        if(data == null){
-            return null;
-        }
+		//  return data.stream().map(v->(V) serializer.decode(v)).collect(Collectors.toList());
+	}
 
-        final List<V> result = new ArrayList<>(data.size());
+	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]>
+			data){
+		if(data == null){
+			return null;
+		}
 
-        for(byte[] value : data){
-            result.add(serializer.decode(value));
-        }
+		final List<V> result = new ArrayList<>(data.size());
 
-        return result;
-    }
+		for(byte[] value : data){
+			result.add(serializer.deserialize(value));
+		}
 
-    public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer, final List<String>
-            data, final Class<V> clazz){
-        if(data == null){
-            return null;
-        }
+		return result;
+	}
 
-        final List<V> result = new ArrayList<>(data.size());
+	public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer, final List<String>
+			data, final Class<V> clazz){
+		if(data == null){
+			return null;
+		}
 
-        for(String value : data){
-            result.add(serializer.decode(value, clazz));
-        }
 
-        return result;
-    }
+		final List<V> result = new ArrayList<>(data.size());
 
-    public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]>
-            data, final Class<V> clazz){
-        if(data == null){
-            return null;
-        }
+		for(String value : data){
+			result.add(serializer.deserialize(value, clazz));
+		}
 
-        final List<V> result = new ArrayList<>(data.size());
+		return result;
+	}
 
-        for(byte[] value : data){
-            result.add(serializer.decode(value, clazz));
-        }
+	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]>
+			data, final Class<V> clazz){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final List<V> result = new ArrayList<>(data.size());
 
-    public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer, final List<String>
-            data, final TypeReference<V> type){
-        if(data == null){
-            return null;
-        }
+		for(byte[] value : data){
+			result.add(serializer.deserialize(value, clazz));
+		}
 
-        final List<V> result = new ArrayList<>(data.size());
+		return result;
+	}
 
-        for(String value : data){
-            result.add(serializer.decode(value, type));
-        }
+	public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer, final List<String>
+			data, final TypeReference<V> type){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final List<V> result = new ArrayList<>(data.size());
 
-    public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]>
-            data, final TypeReference<V> type){
-        if(data == null){
-            return null;
-        }
+		for(String value : data){
+			result.add(serializer.deserialize(value, type));
+		}
 
-        final List<V> result = new ArrayList<>(data.size());
+		return result;
+	}
 
-        for(byte[] value : data){
-            result.add(serializer.decode(value, type));
-        }
+	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]>
+			data, final TypeReference<V> type){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final List<V> result = new ArrayList<>(data.size());
 
-    public final static <V> Set<V> returnObjectValueFromSetString(final Serializer serializer, final Set<String> data){
-        if(data == null){
-            return null;
-        }
+		for(byte[] value : data){
+			result.add(serializer.deserialize(value, type));
+		}
 
-        final Set<V> result = new LinkedHashSet<>(data.size());
+		return result;
+	}
 
-        for(String value : data){
-            result.add(serializer.decode(value));
-        }
+	public final static <V> Set<V> returnObjectValueFromSetString(final Serializer serializer, final Set<String> data){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final Set<V> result = new LinkedHashSet<>(data.size());
 
-    public final static <V> Set<V> returnObjectValueFromSetByte(final Serializer serializer, final Set<byte[]> data){
-        if(data == null){
-            return null;
-        }
+		for(String value : data){
+			result.add(serializer.deserialize(value));
+		}
 
-        final Set<V> result = new LinkedHashSet<>(data.size());
+		return result;
+	}
 
-        for(byte[] value : data){
-            result.add(serializer.decode(value));
-        }
+	public final static <V> Set<V> returnObjectValueFromSetByte(final Serializer serializer, final Set<byte[]> data){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final Set<V> result = new LinkedHashSet<>(data.size());
 
-    public final static <V> Set<V> returnObjectValueFromSetString(final Serializer serializer, final Set<String>
-            data, final Class<V> clazz){
-        if(data == null){
-            return null;
-        }
+		for(byte[] value : data){
+			result.add(serializer.deserialize(value));
+		}
 
-        final Set<V> result = new LinkedHashSet<>(data.size());
+		return result;
+	}
 
-        for(String value : data){
-            result.add(serializer.decode(value, clazz));
-        }
+	public final static <V> Set<V> returnObjectValueFromSetString(final Serializer serializer, final Set<String> data,
+																  final Class<V> clazz){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final Set<V> result = new LinkedHashSet<>(data.size());
 
-    public final static <V> Set<V> returnObjectValueFromSetByte(final Serializer serializer, final Set<byte[]> data,
-                                                                final Class<V> clazz){
-        if(data == null){
-            return null;
-        }
+		for(String value : data){
+			result.add(serializer.deserialize(value, clazz));
+		}
 
-        final Set<V> result = new LinkedHashSet<>(data.size());
+		return result;
+	}
 
-        for(byte[] value : data){
-            result.add(serializer.decode(value, clazz));
-        }
+	public final static <V> Set<V> returnObjectValueFromSetByte(final Serializer serializer, final Set<byte[]> data,
+																final Class<V> clazz){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final Set<V> result = new LinkedHashSet<>(data.size());
 
-    public final static <V> Set<V> returnObjectValueFromSetString(final Serializer serializer, final Set<String>
-            data, final TypeReference<V> type){
-        if(data == null){
-            return null;
-        }
+		for(byte[] value : data){
+			result.add(serializer.deserialize(value, clazz));
+		}
 
-        final Set<V> result = new LinkedHashSet<>(data.size());
+		return result;
+	}
 
-        for(String value : data){
-            result.add(serializer.decode(value, type));
-        }
+	public final static <V> Set<V> returnObjectValueFromSetString(final Serializer serializer, final Set<String> data,
+																  final TypeReference<V> type){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final Set<V> result = new LinkedHashSet<>(data.size());
 
-    public final static <V> Set<V> returnObjectValueFromSetByte(final Serializer serializer, final Set<byte[]> data,
-                                                                final TypeReference<V> type){
-        if(data == null){
-            return null;
-        }
+		for(String value : data){
+			result.add(serializer.deserialize(value, type));
+		}
 
-        final Set<V> result = new LinkedHashSet<>(data.size());
+		return result;
+	}
 
-        for(byte[] value : data){
-            result.add(serializer.decode(value, type));
-        }
+	public final static <V> Set<V> returnObjectValueFromSetByte(final Serializer serializer, final Set<byte[]> data,
+																final TypeReference<V> type){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final Set<V> result = new LinkedHashSet<>(data.size());
 
-    public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer, final
-    Map<String, String> data){
-        if(data == null){
-            return null;
-        }
+		for(byte[] value : data){
+			result.add(serializer.deserialize(value, type));
+		}
 
-        final Map<String, V> result = new LinkedHashMap<>(data.size());
+		return result;
+	}
 
-        data.forEach((key, value)->{
-            result.put(key, serializer.decode(value));
-        });
+	public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer, final
+	Map<String, String> data){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final Map<String, V> result = new LinkedHashMap<>(data.size());
 
-    public final static <V> Map<byte[], V> returnObjectValueFromMapByte(final Serializer serializer, final
-    Map<byte[], byte[]> data){
-        if(data == null){
-            return null;
-        }
+		data.forEach((key, value)->{
+			result.put(key, serializer.deserialize(value));
+		});
 
-        final Map<byte[], V> result = new LinkedHashMap<>(data.size());
+		return result;
+	}
 
-        data.forEach((key, value)->{
-            result.put(key, serializer.decode(value));
-        });
+	public final static <V> Map<byte[], V> returnObjectValueFromMapByte(final Serializer serializer, final Map<byte[],
+			byte[]> data){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final Map<byte[], V> result = new LinkedHashMap<>(data.size());
 
-    public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer, final
-    Map<String, String> data, final Class<V> clazz){
-        if(data == null){
-            return null;
-        }
+		data.forEach((key, value)->{
+			result.put(key, serializer.deserialize(value));
+		});
 
-        final Map<String, V> result = new LinkedHashMap<>(data.size());
+		return result;
+	}
 
-        data.forEach((key, value)->{
-            result.put(key, serializer.decode(value, clazz));
-        });
+	public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer, final
+	Map<String, String> data, final Class<V> clazz){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final Map<String, V> result = new LinkedHashMap<>(data.size());
 
-    public final static <V> Map<byte[], V> returnObjectValueFromMapByte(final Serializer serializer, final
-    Map<byte[], byte[]> data, final Class<V> clazz){
-        if(data == null){
-            return null;
-        }
+		data.forEach((key, value)->{
+			result.put(key, serializer.deserialize(value, clazz));
+		});
 
-        final Map<byte[], V> result = new LinkedHashMap<>(data.size());
+		return result;
+	}
 
-        data.forEach((key, value)->{
-            result.put(key, serializer.decode(value, clazz));
-        });
+	public final static <V> Map<byte[], V> returnObjectValueFromMapByte(final Serializer serializer, final Map<byte[],
+			byte[]> data, final Class<V> clazz){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final Map<byte[], V> result = new LinkedHashMap<>(data.size());
 
-    public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer, final
-    Map<String, String> data, final TypeReference<V> type){
-        if(data == null){
-            return null;
-        }
+		data.forEach((key, value)->{
+			result.put(key, serializer.deserialize(value, clazz));
+		});
 
-        final Map<String, V> result = new LinkedHashMap<>(data.size());
+		return result;
+	}
 
-        data.forEach((key, value)->{
-            result.put(key, serializer.decode(value, type));
-        });
+	public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer, final
+	Map<String, String> data, final TypeReference<V> type){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final Map<String, V> result = new LinkedHashMap<>(data.size());
 
-    public final static <V> Map<byte[], V> returnObjectValueFromMapByte(final Serializer serializer, final
-    Map<byte[], byte[]> data, final TypeReference<V> type){
-        if(data == null){
-            return null;
-        }
+		data.forEach((key, value)->{
+			result.put(key, serializer.deserialize(value, type));
+		});
 
-        final Map<byte[], V> result = new LinkedHashMap<>(data.size());
+		return result;
+	}
 
-        data.forEach((key, value)->{
-            result.put(key, serializer.decode(value, type));
-        });
+	public final static <V> Map<byte[], V> returnObjectValueFromMapByte(final Serializer serializer, final Map<byte[],
+			byte[]> data, final TypeReference<V> type){
+		if(data == null){
+			return null;
+		}
 
-        return result;
-    }
+		final Map<byte[], V> result = new LinkedHashMap<>(data.size());
 
-    public final static <V> V returnFirst(final List<V> data){
-        return returnFirst(data, null);
-    }
+		data.forEach((key, value)->{
+			result.put(key, serializer.deserialize(value, type));
+		});
 
-    public final static <V> V returnFirst(final List<V> data, final V defaultValue){
-        return Validate.isEmpty(data) ? defaultValue : data.get(0);
-    }
+		return result;
+	}
+
+	public final static <V> V returnFirst(final List<V> data){
+		return returnFirst(data, null);
+	}
+
+	public final static <V> V returnFirst(final List<V> data, final V defaultValue){
+		return Validate.isEmpty(data) ? defaultValue : data.get(0);
+	}
 
 }

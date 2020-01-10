@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.convert.jedis;
@@ -35,6 +35,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
@@ -96,17 +97,9 @@ public interface ScanResultConvert<S, T> extends Convert<S, T> {
                 return null;
             }
 
-            List<redis.clients.jedis.Tuple> tuples;
-
-            if(source.getResults() == null){
-                tuples = null;
-            }else{
-                tuples = new ArrayList<>(source.getResults().size());
-
-                for(Tuple tuple : source.getResults()){
-                    tuples.add(new redis.clients.jedis.Tuple(tuple.getBinaryElement(), tuple.getScore()));
-                }
-            }
+            List<redis.clients.jedis.Tuple> tuples = source.getResults() == null ? null : source.getResults().stream
+                    ().map(tuple->new redis.clients.jedis.Tuple(tuple.getBinaryElement(), tuple.getScore())).collect
+                    (Collectors.toList());
 
             return new redis.clients.jedis.ScanResult<>(source.getCursor(), tuples);
         }
@@ -118,17 +111,8 @@ public interface ScanResultConvert<S, T> extends Convert<S, T> {
                 return null;
             }
 
-            List<Tuple> tuples;
-
-            if(target.getResult() == null){
-                tuples = null;
-            }else{
-                tuples = new ArrayList<>(target.getResult().size());
-
-                for(redis.clients.jedis.Tuple tuple : target.getResult()){
-                    tuples.add(new Tuple(tuple.getBinaryElement(), tuple.getScore()));
-                }
-            }
+            List<Tuple> tuples = target.getResult() == null ? null : target.getResult().stream().map(tuple->new Tuple
+                    (tuple.getBinaryElement(), tuple.getScore())).collect(Collectors.toList());
 
             return new ScanResult<>(target.getCursor(), tuples);
         }
@@ -143,17 +127,9 @@ public interface ScanResultConvert<S, T> extends Convert<S, T> {
                 return null;
             }
 
-            List<redis.clients.jedis.Tuple> tuples;
-
-            if(source.getResults() == null){
-                tuples = null;
-            }else{
-                tuples = new ArrayList<>(source.getResults().size());
-
-                for(Tuple tuple : source.getResults()){
-                    tuples.add(new redis.clients.jedis.Tuple(tuple.getBinaryElement(), tuple.getScore()));
-                }
-            }
+            List<redis.clients.jedis.Tuple> tuples = source.getResults() == null ? null : source.getResults().stream
+                    ().map(tuple->new redis.clients.jedis.Tuple(tuple.getBinaryElement(), tuple.getScore())).collect
+                    (Collectors.toList());
 
             return new redis.clients.jedis.ScanResult<>(source.getCursor(), tuples);
         }
@@ -164,17 +140,8 @@ public interface ScanResultConvert<S, T> extends Convert<S, T> {
                 return null;
             }
 
-            Set<Tuple> tuples;
-
-            if(target.getResult() == null){
-                tuples = null;
-            }else{
-                tuples = new LinkedHashSet<>(target.getResult().size());
-
-                for(redis.clients.jedis.Tuple tuple : target.getResult()){
-                    tuples.add(new Tuple(tuple.getBinaryElement(), tuple.getScore()));
-                }
-            }
+            Set<Tuple> tuples = target.getResult() == null ? null : target.getResult().stream().map(tuple->new Tuple
+                    (tuple.getBinaryElement(), tuple.getScore())).collect(Collectors.toCollection(LinkedHashSet::new));
 
             return new ScanResult<>(target.getCursor(), tuples);
         }

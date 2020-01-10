@@ -24,9 +24,43 @@
  */
 package com.buession.redis;
 
+import com.buession.redis.core.Cpu;
+import com.buession.redis.core.Info;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Yong.Teng
  */
 public class ReturnUtilsTest {
+
+    @Test
+    public void list(){
+        //Serializer serializer = null;//new JSONSerializer();
+        List<String> infos = new ArrayList<>(1);
+
+        Info info = new Info();
+        info.setCpu(new Cpu());
+
+        //infos.add(serializer.encode(info));
+
+        List<Info> infos1 = null;//retval(serializer, infos);// ReturnUtils.returnObjectValueFromListString(serializer,
+        // infos);
+        System.out.println(infos1.get(0).getCpu());
+    }
+
+    /*private <V> List<V> retval(Serializer serializer, List<String> data){
+        final List<V> result = new ArrayList<>(data.size());
+
+        for(String value : data){
+            result.add(serializer.decode(value, new TypeReference<V>() {
+
+            }));
+        }
+
+        return result;
+    }*/
 
 }

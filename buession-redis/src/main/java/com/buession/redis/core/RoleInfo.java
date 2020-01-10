@@ -19,17 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
+
+import java.io.Serializable;
 
 /**
  * 实例在复制中担任的角色信息
  *
  * @author Yong.Teng
  */
-public class RoleInfo {
+public class RoleInfo implements Serializable {
+
+    private final static long serialVersionUID = 7129823494008186715L;
 
     /**
      * 实例在复制中担任的角色
@@ -54,4 +58,5 @@ public class RoleInfo {
     public void setRole(Role role){
         this.role = role;
     }
+
 }

@@ -19,17 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
+
+import java.io.Serializable;
 
 /**
  * Redis 服务器的内存信息
  *
  * @author Yong.Teng
  */
-public class Memory {
+public class Memory implements Serializable {
+
+    private final static long serialVersionUID = -8311947921894661661L;
 
     /**
      * 由 Redis 分配器分配的内存总量
@@ -215,15 +219,14 @@ public class Memory {
                 "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
                 "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
                 "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + " " +
-                "maxMemory=" + maxMemory + ", " + "" + "" + "" + "" + "" + "" + "" + "" + "maxMemoryPolicy='" +
-                maxMemoryPolicy + '\'' + ", " + "memFragmentationTatio='" + memFragmentationTatio + '\'' + ", " +
-                "memAllocator='" + memAllocator + '\'' + '}';
+                "" + "" + "" + "" + " " + "maxMemory=" + maxMemory + ", " + "" + "" + "" + "" + "" +
+                "maxMemoryPolicy='" + maxMemoryPolicy + '\'' + ", " + "memFragmentationTatio='" +
+                memFragmentationTatio + '\'' + ", " + "memAllocator='" + memAllocator + '\'' + '}';
     }
 
-    public final static class MemoryInfo {
+    public final static class MemoryInfo implements Serializable {
+
+        private final static long serialVersionUID = -489691471556033234L;
 
         /**
          * 内存大小

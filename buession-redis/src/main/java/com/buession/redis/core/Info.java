@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -31,7 +32,9 @@ import java.util.List;
  *
  * @author Yong.Teng
  */
-public class Info {
+public class Info implements Serializable {
+
+    private final static long serialVersionUID = -2772690110674245981L;
 
     /**
      * Redis 服务器的信息
@@ -255,4 +258,5 @@ public class Info {
                 replication + ", memory=" + memory + ", cpu=" + cpu + ", persistence=" + persistence + ", keyspace="
                 + keyspace + ", stats=" + stats + '}';
     }
+
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
@@ -34,7 +34,7 @@ import com.buession.redis.client.connection.jedis.ShardedJedisConnection;
 import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.client.jedis.ShardedJedisClient;
 import com.buession.redis.core.Options;
-import com.buession.redis.serializer.JSONSerializer;
+import com.buession.redis.serializer.JacksonJsonSerializer;
 import com.buession.redis.serializer.Serializer;
 import com.buession.redis.utils.KeyUtil;
 import com.buession.redis.utils.SafeEncoder;
@@ -48,7 +48,7 @@ public abstract class RedisAccessor {
 
     protected final static Options DEFAULT_OPTIONS = new Options();
 
-    protected final static Serializer DEFAULT_SERIALIZER = new JSONSerializer();
+    protected final static Serializer DEFAULT_SERIALIZER = new JacksonJsonSerializer();
 
     protected Options options = DEFAULT_OPTIONS;
 
@@ -181,7 +181,7 @@ public abstract class RedisAccessor {
             final String[] temp = new String[values.length];
 
             for(int i = 0; i < values.length; i++){
-                temp[i] = serializer.encode(values[i]);
+                temp[i] = serializer.serialize(values[i]);
             }
 
             return temp;
@@ -195,7 +195,7 @@ public abstract class RedisAccessor {
             final byte[][] temp = new byte[values.length][];
 
             for(int i = 0; i < values.length; i++){
-                temp[i] = serializer.encodeAsBytes(values[i]);
+                temp[i] = serializer.serializeAsBytes(values[i]);
             }
 
             return temp;

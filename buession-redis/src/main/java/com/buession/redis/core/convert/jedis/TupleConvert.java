@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.convert.jedis;
@@ -29,6 +29,7 @@ import com.buession.redis.core.convert.Convert;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
@@ -51,30 +52,20 @@ public class TupleConvert implements Convert<Tuple, redis.clients.jedis.Tuple> {
         public Set<redis.clients.jedis.Tuple> convert(final Set<Tuple> source){
             if(source == null){
                 return null;
+            }else{
+                return source.stream().map(tuple->new redis.clients.jedis.Tuple(tuple.getElement(), tuple.getScore())
+                ).collect(Collectors.toCollection(LinkedHashSet::new));
             }
-
-            final Set<redis.clients.jedis.Tuple> result = new LinkedHashSet<>(source.size());
-
-            for(Tuple e : source){
-                result.add(new redis.clients.jedis.Tuple(e.getElement(), e.getScore()));
-            }
-
-            return result;
         }
 
         @Override
         public Set<Tuple> deconvert(final Set<redis.clients.jedis.Tuple> target){
             if(target == null){
                 return null;
+            }else{
+                return target.stream().map(tuple->new Tuple(tuple.getElement(), tuple.getScore())).collect(Collectors
+                        .toCollection(LinkedHashSet::new));
             }
-
-            final Set<Tuple> result = new LinkedHashSet<>(target.size());
-
-            for(redis.clients.jedis.Tuple e : target){
-                result.add(new Tuple(e.getElement(), e.getScore()));
-            }
-
-            return result;
         }
     }
 

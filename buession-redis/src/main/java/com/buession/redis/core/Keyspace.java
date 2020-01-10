@@ -19,17 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
+
+import java.io.Serializable;
 
 /**
  * 数据库相关的统计信息
  *
  * @author Yong.Teng
  */
-public class Keyspace {
+public class Keyspace implements Serializable {
+
+    private final static long serialVersionUID = -5023410132423250601L;
 
     /**
      * 数据库
@@ -117,4 +121,5 @@ public class Keyspace {
     public String toString(){
         return "Keyspace{" + "db=" + db + ", keys=" + keys + ", expires=" + expires + ", avgTtl=" + avgTtl + '}';
     }
+
 }

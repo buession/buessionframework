@@ -19,19 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import redis.clients.jedis.Protocol;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /**
  * @author Yong.Teng
  */
-public class Client {
+public class Client implements Serializable {
+
+    private final static long serialVersionUID = -8794975805619333960L;
 
     /**
      * 客户端 ID
@@ -519,10 +522,14 @@ public class Client {
                 '\'' + ", port=" + port + ", fd=" + fd + ", age=" + age + ", idle=" + idle + ", flags=" + flags + ", " +
                 "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
                 "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-                "" + "" + "" + "db=" + db + ", " + "" + "sub=" + sub + ", " + "psub=" + psub + "," + "" + "" + " " +
-                "multi=" + multi + "," + " " + "qBuf=" + qBuf + "," + "" + "" + " " + "qBufFree=" + qBufFree + "," +
-                " " + "obl=" + obl + ", " + "oll=" + oll + ", " + "" + "" + "omem=" + omem + ", " + "" + "" + "" +
-                "events=" + events + ", " + "cmd=" + cmd + '}';
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "db="
+                + db + ", " + "" + "" + "" + "" + "sub=" + sub + ", " + "psub=" + psub + "," + "" + "" + "" + "" + ""
+                + "" + "" + "" + " " + "" + "multi=" + multi + "," + " " + "" + "qBuf=" + qBuf + "," + "" + "" + "" +
+                "" + "" + " " + "qBufFree=" + qBufFree + "," + "" + " " + "obl=" + obl + ", " + "" + "oll=" + oll +
+                ", " + "" + "" + "" + "omem=" + omem + "," + "" + " " + "" + "" + "" + "events=" + events + "," + " "
+                + "" + "" + "" + "cmd=" + cmd + '}';
     }
 
     public enum Flag {

@@ -19,17 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
+
+import java.io.Serializable;
 
 /**
  * Redis 服务器的信息
  *
  * @author Yong.Teng
  */
-public class Server {
+public class Server implements Serializable {
 
     public final static String DEFAULT_HOST = "localhost";
 
@@ -38,6 +40,8 @@ public class Server {
     public final static int DEFAULT_DATABASE = 0;
 
     public final static int DEFAULT_TIMEOUT = 2000;
+
+    private final static long serialVersionUID = 2729543496870054983L;
 
     /**
      * Redis 服务器主机地址
@@ -520,9 +524,14 @@ public class Server {
                 + "multiplexingApi=" + multiplexingApi + ", gitSha1='" + gitSha1 + '\'' + ", gitDirty='" + gitDirty +
                 '\'' + ", buildId='" + buildId + '\'' + ", mode=" + mode + ", configFile='" + configFile + '\'' + ", " +
                 "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "executable='" + executable + '\'' + ", " +
-                "version='" + version + '\'' + ", " + "gccVersion='" + gccVersion + '\'' + ", " + "processId=" +
-                processId + ", " + "runId='" + runId + '\'' + ", " + "uptime=" + uptime + ", " + "lruClock=" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
+                "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "executable='" + executable + '\'' +
+                ", " + "version='" + version + '\'' + ", " + "gccVersion='" + gccVersion + '\'' + ", " + "processId="
+                + processId + ", " + "runId='" + runId + '\'' + ", " + "uptime=" + uptime + ", " + "lruClock=" +
                 lruClock + ", hz=" + hz + ", " + "isMaster=" + isMaster + '}';
     }
 

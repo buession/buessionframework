@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -27,12 +27,15 @@ package com.buession.redis.core;
 import com.buession.lang.Geo;
 import com.buession.redis.Constants;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * @author Yong.Teng
  */
-public class GeoRadius {
+public class GeoRadius implements Serializable {
+
+    private final static long serialVersionUID = 8391863034011700419L;
 
     private byte[] member;
 
@@ -72,4 +75,5 @@ public class GeoRadius {
     public String toString(){
         return "GeoRadius{" + "member=" + Arrays.toString(member) + ", distance=" + distance + ", geo=" + geo + '}';
     }
+
 }

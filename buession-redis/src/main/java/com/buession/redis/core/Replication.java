@@ -19,17 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
+
+import java.io.Serializable;
 
 /**
  * 主从复制信息
  *
  * @author Yong.Teng
  */
-public class Replication {
+public class Replication implements Serializable {
+
+    private final static long serialVersionUID = -6256893541934608564L;
 
     /**
      * Redis 服务器角色
@@ -168,7 +172,9 @@ public class Replication {
                 masterReplOffset + ", replBacklog=" + replBacklog + '}';
     }
 
-    public final static class Master {
+    public final static class Master implements Serializable {
+
+        private final static long serialVersionUID = -3978752876121812766L;
 
         /**
          * 主服务器的主机地址
@@ -336,7 +342,9 @@ public class Replication {
 
     }
 
-    public final static class ReplBacklog {
+    public final static class ReplBacklog implements Serializable {
+
+        private final static long serialVersionUID = 1468810894033878876L;
 
         private int active;
 
