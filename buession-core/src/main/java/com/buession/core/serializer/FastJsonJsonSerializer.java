@@ -27,11 +27,9 @@ package com.buession.core.serializer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.alibaba.fastjson.serializer.SerializeFilter;
-import com.buession.core.serializer.type.FastJsonTypeReference;
 import com.buession.core.serializer.type.TypeReference;
 import com.buession.core.utils.Assert;
 
-import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 /**
@@ -39,74 +37,68 @@ import java.nio.charset.Charset;
  */
 public class FastJsonJsonSerializer extends AbstractJsonSerializer {
 
-    protected final static SerializeFilter[] EMPTY_FILTERS = new SerializeFilter[0];
+	@Override
+	public <V> String serialize(final V object) throws SerializerException{
+		Assert.isNull(object, "Object cloud not be null.");
+		return JSON.toJSONString(object);
+	}
 
-    @Override
-    public <V> String serialize(final V object) throws SerializerException{
-        Assert.isNull(object, "Object cloud not be null.");
-        return JSON.toJSONString(object);
-    }
+	@Override
+	public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
+		Assert.isNull(object, "Object cloud not be null.");
+		return JSON.toJSONBytes(object);
+	}
 
-    @Override
-    public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
-        Assert.isNull(object, "Object cloud not be null.");
-        return JSON.toJSONBytes(object);
-    }
+	@Override
+	public <V> String serialize(final V object, final String charsetName) throws SerializerException{
+		return serialize(object, Charset.forName(charsetName));
+	}
 
-    @Override
-    public <V> String serialize(final V object, final String charsetName) throws SerializerException{
-        return serialize(object, Charset.forName(charsetName));
-    }
+	@Override
+	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException{
+		Assert.isNull(object, "Object cloud not be null.");
+		return JSON.toJSONBytes(charset, object, SerializeConfig.globalInstance, new SerializeFilter[0], null, JSON
+				.DEFAULT_GENERATE_FEATURE);
+	}
 
-    @Override
-    public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException{
-        Assert.isNull(object, "Object cloud not be null.");
-        return JSON.toJSONBytes(charset, object, SerializeConfig.globalInstance, EMPTY_FILTERS, null, JSON
-                .DEFAULT_GENERATE_FEATURE);
-    }
+	@Override
+	public <V> V deserialize(final String str) throws SerializerException{
+		Assert.isNull(str, "String cloud not be null.");
+		return JSON.parseObject(str, new com.alibaba.fastjson.TypeReference<V>() {
 
-    @Override
-    public <V> V deserialize(final String str) throws SerializerException{
-        Assert.isNull(str, "String cloud not be null.");
-        return JSON.parseObject(str, new com.alibaba.fastjson.TypeReference<V>() {
+		});
+	}
 
-        });
-    }
+	@Override
+	public <V> V deserialize(final byte[] bytes) throws SerializerException{
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+		return JSON.parseObject(new String(bytes), new com.alibaba.fastjson.TypeReference<V>() {
 
-    @Override
-    public <V> V deserialize(final byte[] bytes) throws SerializerException{
-        Assert.isNull(bytes, "Bytes cloud not be null.");
-        return JSON.parseObject(new String(bytes), new com.alibaba.fastjson.TypeReference<V>() {
+		});
+	}
 
-        });
-    }
+	@Override
+	public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException{
+		Assert.isNull(str, "String cloud not be null.");
+		return JSON.parseObject(str, clazz);
+	}
 
-    @Override
-    public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException{
-        Assert.isNull(str, "String cloud not be null.");
-        return JSON.parseObject(str, clazz);
-    }
+	@Override
+	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws SerializerException{
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+		return JSON.parseObject(bytes, clazz);
+	}
 
-    @Override
-    public <V> V deserialize(byte[] bytes, Class<V> clazz) throws SerializerException{
-        Assert.isNull(bytes, "Bytes cloud not be null.");
-        return JSON.parseObject(bytes, clazz);
-    }
+	@Override
+	public <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException{
+		Assert.isNull(str, "String cloud not be null.");
+		return JSON.parseObject(str, type.getType());
+	}
 
-    @Override
-    public <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException{
-        Assert.isNull(str, "String cloud not be null.");
-        return JSON.parseObject(str, new com.alibaba.fastjson.TypeReference<V>(type.getType()) {
-
-        });
-    }
-
-    @Override
-    public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException{
-        Assert.isNull(bytes, "Bytes cloud not be null.");
-        return deserialize(new String(bytes), new FastJsonTypeReference<V>() {
-
-        });
-    }
+	@Override
+	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException{
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+		return deserialize(new String(bytes), type);
+	}
 
 }

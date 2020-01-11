@@ -24,7 +24,6 @@
  */
 package com.buession.core.serializer;
 
-import com.buession.core.serializer.type.JacksonTypeReference;
 import com.buession.core.serializer.type.TypeReference;
 import com.buession.core.utils.Assert;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,6 +31,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 /**
@@ -39,116 +39,141 @@ import java.nio.charset.Charset;
  */
 public class JacksonJsonSerializer extends AbstractJsonSerializer {
 
-    private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+	private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    static{
-        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
+	static{
+		OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+	}
 
-    @Override
-    public <V> String serialize(final V object) throws SerializerException{
-        Assert.isNull(object, "Object cloud not be null.");
+	@Override
+	public <V> String serialize(final V object) throws SerializerException{
+		Assert.isNull(object, "Object cloud not be null.");
 
-        ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = new ObjectMapper();
 
-        try{
-            return mapper.writeValueAsString(object);
-        }catch(JsonProcessingException e){
-            throw new SerializerException((object == null ? "null" : object.getClass().getName()) + " json encode " +
-                    "failure", e);
-        }
-    }
+		try{
+			return mapper.writeValueAsString(object);
+		}catch(JsonProcessingException e){
+			final String s = object == null ? "null" : object.getClass().getName();
+			throw new SerializerException(s + " json serialize failure.", e);
+		}
+	}
 
-    @Override
-    public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
-        Assert.isNull(object, "Object cloud not be null.");
+	@Override
+	public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
+		Assert.isNull(object, "Object cloud not be null.");
 
-        ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = new ObjectMapper();
 
-        try{
-            return mapper.writeValueAsBytes(object);
-        }catch(JsonProcessingException e){
-            throw new SerializerException((object == null ? "null" : object.getClass().getName()) + " json encode " +
-                    "failure", e);
-        }
-    }
+		try{
+			return mapper.writeValueAsBytes(object);
+		}catch(JsonProcessingException e){
+			final String s = object == null ? "null" : object.getClass().getName();
+			throw new SerializerException(s + " json serialize failure.", e);
+		}
+	}
 
-    @Override
-    public <V> String serialize(final V object, final String charsetName) throws SerializerException{
-        return serialize(object, Charset.forName(charsetName));
-    }
+	@Override
+	public <V> String serialize(final V object, final String charsetName) throws SerializerException{
+		return serialize(object, Charset.forName(charsetName));
+	}
 
-    @Override
-    public <V> V deserialize(final String str) throws SerializerException{
-        Assert.isNull(str, "String cloud not be null.");
+	@Override
+	public <V> V deserialize(final String str) throws SerializerException{
+		Assert.isNull(str, "String cloud not be null.");
 
-        try{
-            return OBJECT_MAPPER.readValue(str, new JacksonTypeReference<V>() {
+		try{
+			return OBJECT_MAPPER.readValue(str, new com.fasterxml.jackson.core.type.TypeReference<V>() {
 
-            });
-        }catch(IOException e){
-            throw new SerializerException(str + " json decode to Object failure", e);
-        }
-    }
+			});
+		}catch(IOException e){
+			final String s = str == null ? "null" : str;
+			throw new SerializerException(s + " json deserialize to Object failure.", e);
+		}
+	}
 
-    @Override
-    public <V> V deserialize(final byte[] bytes) throws SerializerException{
-        Assert.isNull(bytes, "Bytes cloud not be null.");
+	@Override
+	public <V> V deserialize(final byte[] bytes) throws SerializerException{
+		Assert.isNull(bytes, "Bytes cloud not be null.");
 
-        try{
-            return OBJECT_MAPPER.readValue(bytes, new JacksonTypeReference<V>() {
+		try{
+			return OBJECT_MAPPER.readValue(bytes, new com.fasterxml.jackson.core.type.TypeReference<V>() {
 
-            });
-        }catch(IOException e){
-            throw new SerializerException(bytes + " json decode to Object failure", e);
-        }
-    }
+			});
+		}catch(IOException e){
+			final String s = bytes == null ? "null" : bytes.toString();
+			throw new SerializerException(s + " json deserialize to Object failure.", e);
+		}
+	}
 
-    @Override
-    public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException{
-        Assert.isNull(str, "String cloud not be null.");
+	@Override
+	public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException{
+		Assert.isNull(str, "String cloud not be null.");
 
-        try{
-            return OBJECT_MAPPER.readValue(str, clazz);
-        }catch(IOException e){
-            throw new SerializerException(str + " json decode to " + (clazz == null ? "null" : clazz.getName()) + " "
-                    + "failure", e);
-        }
-    }
+		try{
+			return OBJECT_MAPPER.readValue(str, clazz);
+		}catch(IOException e){
+			final String s = str == null ? "null" : str;
+			final String className = clazz == null ? "null" : clazz.getName();
 
-    @Override
-    public <V> V deserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException{
-        Assert.isNull(bytes, "Bytes cloud not be null.");
+			throw new SerializerException(s + " json deserialize to " + className + " failure.", e);
+		}
+	}
 
-        try{
-            return OBJECT_MAPPER.readValue(bytes, clazz);
-        }catch(IOException e){
-            throw new SerializerException(bytes + " json decode to Object failure", e);
-        }
-    }
+	@Override
+	public <V> V deserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException{
+		Assert.isNull(bytes, "Bytes cloud not be null.");
 
-    @Override
-    public <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException{
-        Assert.isNull(str, "String cloud not be null.");
+		try{
+			return OBJECT_MAPPER.readValue(bytes, clazz);
+		}catch(IOException e){
+			final String s = bytes == null ? "null" : bytes.toString();
+			final String className = clazz == null ? "null" : clazz.getName();
 
-        try{
-            return OBJECT_MAPPER.readValue(str, new JacksonTypeReference<>());
-        }catch(IOException e){
-            throw new SerializerException(str + " json decode to " + (type == null ? "null" : type.getType()) + " " +
-                    "failure", e);
-        }
-    }
+			throw new SerializerException(s + " json deserialize to " + className + " failure.", e);
+		}
+	}
 
-    @Override
-    public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException{
-        Assert.isNull(bytes, "Bytes cloud not be null.");
+	@Override
+	public <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException{
+		Assert.isNull(str, "String cloud not be null.");
 
-        try{
-            return OBJECT_MAPPER.readValue(bytes, new JacksonTypeReference<>());
-        }catch(IOException e){
-            throw new SerializerException(bytes + " json decode to " + (type == null ? "null" : type.getType()) + " "
-                    + "failure", e);
-        }
-    }
+		try{
+			return OBJECT_MAPPER.readValue(str, new com.fasterxml.jackson.core.type.TypeReference<V>() {
+
+				@Override
+				public Type getType(){
+					return type.getType();
+				}
+
+			});
+		}catch(IOException e){
+			final String s = str == null ? "null" : str;
+			final String typeName = type == null ? "null" : type.getType().getTypeName();
+
+			throw new SerializerException(s + " json deserialize to " + typeName + " failure.", e);
+		}
+	}
+
+	@Override
+	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException{
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+
+		try{
+			return OBJECT_MAPPER.readValue(bytes, new com.fasterxml.jackson.core.type.TypeReference<V>() {
+
+				@Override
+				public Type getType(){
+					return type.getType();
+				}
+
+			});
+		}catch(IOException e){
+			final String s = bytes == null ? "null" : bytes.toString();
+			final String typeName = type == null ? "null" : type.getType().getTypeName();
+
+			throw new SerializerException(s + " json deserialize to " + typeName + " failure.", e);
+		}
+	}
 
 }

@@ -24,7 +24,7 @@
  */
 package com.buession.core.serializer;
 
-import com.buession.core.serializer.type.GsonTypeReference;
+import com.buession.core.serializer.type.TypeReference;
 import org.junit.Test;
 
 import java.io.Serializable;
@@ -34,87 +34,143 @@ import java.io.Serializable;
  */
 public class SerializerTest {
 
-    private final static User user = new User();
+	private final static User user = new User();
 
-    static{
-        user.setId(1001);
-        user.setUsername("buession");
-    }
+	static{
+		user.setId(1001);
+		user.setUsername("buession");
+	}
 
-    @Test
-    public void byteArray() throws SerializerException{
-        DefaultByteArraySerializer serializer = new DefaultByteArraySerializer();
+	@Test
+	public void byteArray() throws SerializerException{
+		DefaultByteArraySerializer serializer = new DefaultByteArraySerializer();
 
-        String strRet = serializer.serialize(user);
-        byte[] byteRet = serializer.serializeAsBytes(user);
+		String strRet = serializer.serialize(user);
+		byte[] byteRet = serializer.serializeAsBytes(user);
 
-        System.out.println(strRet);
-        System.out.println(new String(byteRet));
-        System.out.println(serializer.deserialize(strRet).toString());
-        System.out.println(serializer.deserialize(byteRet).toString());
-    }
+		System.out.println(strRet);
+		System.out.println(new String(byteRet));
+		System.out.println(serializer.deserialize(strRet).toString());
+		System.out.println(serializer.deserialize(byteRet).toString());
+	}
 
-    @Test
-    public void fastjson() throws SerializerException{
-        FastJsonJsonSerializer serializer = new FastJsonJsonSerializer();
+	@Test
+	public void fastjson() throws SerializerException{
+		FastJsonJsonSerializer serializer = new FastJsonJsonSerializer();
 
-        String strRet = serializer.serialize(user);
-        byte[] byteRet = serializer.serializeAsBytes(user);
+		String strRet = serializer.serialize(user);
+		byte[] byteRet = serializer.serializeAsBytes(user);
 
-        System.out.println(strRet);
-        System.out.println(new String(byteRet));
+		System.out.println(strRet);
+		System.out.println(new String(byteRet));
 
-        //User u11 = serializer.deserialize(strRet);
-        // System.out.println(u11.toString());
+		User u11 = serializer.deserialize(strRet);
+		System.out.println(u11.toString());
 
-        //User u12 = serializer.deserialize(byteRet);
-        //System.out.println(u12.toString());
+		User u12 = serializer.deserialize(byteRet);
+		System.out.println(u12.toString());
 
-        User u21 = serializer.deserialize(strRet, User.class);
-        System.out.println(u21.toString());
+		User u21 = serializer.deserialize(strRet, User.class);
+		System.out.println(u21.toString());
 
-        User u22 = serializer.deserialize(byteRet, User.class);
-        System.out.println(u22.toString());
+		User u22 = serializer.deserialize(byteRet, User.class);
+		System.out.println(u22.toString());
 
-        User u31 = serializer.deserialize(strRet, new GsonTypeReference<User>() {
+		User u31 = serializer.deserialize(strRet, new TypeReference<User>() {
 
-        });
-        System.out.println(u31.toString());
+		});
+		System.out.println(u31.toString());
 
-        // User u32 = serializer.deserialize(byteRet, new GsonTypeReference<User>() {
+		User u32 = serializer.deserialize(byteRet, new TypeReference<User>() {
 
-        // });
-        // System.out.println(u32.toString());
-    }
+		});
+		System.out.println(u32.toString());
+	}
 
-    private final static class User implements Serializable {
+	@Test
+	public void jsckson() throws SerializerException{
+		JacksonJsonSerializer serializer = new JacksonJsonSerializer();
 
-        private final static long serialVersionUID = 3932608636651582245L;
+		String strRet = serializer.serialize(user);
+		byte[] byteRet = serializer.serializeAsBytes(user);
 
-        private int id;
+		System.out.println(strRet);
+		System.out.println(new String(byteRet));
 
-        private String username;
+		User u11 = serializer.deserialize(strRet);
+		System.out.println(u11.toString());
 
-        public int getId(){
-            return id;
-        }
+		User u12 = serializer.deserialize(byteRet);
+		System.out.println(u12.toString());
 
-        public void setId(int id){
-            this.id = id;
-        }
+		User u21 = serializer.deserialize(strRet, User.class);
+		System.out.println(u21.toString());
 
-        public String getUsername(){
-            return username;
-        }
+		User u22 = serializer.deserialize(byteRet, User.class);
+		System.out.println(u22.toString());
 
-        public void setUsername(String username){
-            this.username = username;
-        }
+		User u31 = serializer.deserialize(strRet, new TypeReference<User>() {
 
-        @Override
-        public String toString(){
-            return "User{" + "id=" + id + ", username='" + username + '\'' + '}';
-        }
-    }
+		});
+		System.out.println(u31.toString());
+	}
+
+	@Test
+	public void gson() throws SerializerException{
+		GsonJsonSerializer serializer = new GsonJsonSerializer();
+
+		String strRet = serializer.serialize(user);
+		byte[] byteRet = serializer.serializeAsBytes(user);
+
+		System.out.println(strRet);
+		System.out.println(new String(byteRet));
+
+		//User u11 = serializer.deserialize(strRet);
+		// System.out.println(u11.toString());
+
+		//User u12 = serializer.deserialize(byteRet);
+		//System.out.println(u12.toString());
+
+		User u21 = serializer.deserialize(strRet, User.class);
+		System.out.println(u21.toString());
+
+		User u22 = serializer.deserialize(byteRet, User.class);
+		System.out.println(u22.toString());
+
+		User u31 = serializer.deserialize(strRet, new TypeReference<User>() {
+
+		});
+		System.out.println(u31.toString());
+	}
+
+	private final static class User implements Serializable {
+
+		private final static long serialVersionUID = 3932608636651582245L;
+
+		private int id;
+
+		private String username;
+
+		public int getId(){
+			return id;
+		}
+
+		public void setId(int id){
+			this.id = id;
+		}
+
+		public String getUsername(){
+			return username;
+		}
+
+		public void setUsername(String username){
+			this.username = username;
+		}
+
+		@Override
+		public String toString(){
+			return "User{" + "id=" + id + ", username='" + username + '\'' + '}';
+		}
+	}
 
 }
