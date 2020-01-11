@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.servlet;
@@ -40,92 +40,93 @@ import java.util.Locale;
  */
 public class VelocityLayoutView extends VelocityToolboxView {
 
-    /**
-     * The default {@link #setLayoutUrl(String) layout url}.
-     */
-    public final static String DEFAULT_LAYOUT_URL = "layout.vm";
+	/**
+	 * The default {@link #setLayoutUrl(String) layout url}.
+	 */
+	public final static String DEFAULT_LAYOUT_URL = "layout.vm";
 
-    /**
-     * The default {@link #setLayoutKey(String) layout key}.
-     */
-    public final static String DEFAULT_LAYOUT_KEY = "layout";
+	/**
+	 * The default {@link #setLayoutKey(String) layout key}.
+	 */
+	public final static String DEFAULT_LAYOUT_KEY = "layout";
 
-    /**
-     * The default {@link #setScreenContentKey(String) screen content key}.
-     */
-    public final static String DEFAULT_SCREEN_CONTENT_KEY = "screen_content";
+	/**
+	 * The default {@link #setScreenContentKey(String) screen content key}.
+	 */
+	public final static String DEFAULT_SCREEN_CONTENT_KEY = "screen_content";
 
-    private String layoutUrl = DEFAULT_LAYOUT_URL;
+	private String layoutUrl = DEFAULT_LAYOUT_URL;
 
-    private String layoutKey = DEFAULT_LAYOUT_KEY;
+	private String layoutKey = DEFAULT_LAYOUT_KEY;
 
-    private String screenContentKey = DEFAULT_SCREEN_CONTENT_KEY;
+	private String screenContentKey = DEFAULT_SCREEN_CONTENT_KEY;
 
-    private final static Logger logger = LoggerFactory.getLogger(VelocityLayoutView.class);
+	private final static Logger logger = LoggerFactory.getLogger(VelocityLayoutView.class);
 
-    public String getLayoutUrl(){
-        return layoutUrl;
-    }
+	public String getLayoutUrl(){
+		return layoutUrl;
+	}
 
-    public void setLayoutUrl(String layoutUrl){
-        this.layoutUrl = layoutUrl;
-    }
+	public void setLayoutUrl(String layoutUrl){
+		this.layoutUrl = layoutUrl;
+	}
 
-    public String getLayoutKey(){
-        return layoutKey;
-    }
+	public String getLayoutKey(){
+		return layoutKey;
+	}
 
-    public void setLayoutKey(String layoutKey){
-        this.layoutKey = layoutKey;
-    }
+	public void setLayoutKey(String layoutKey){
+		this.layoutKey = layoutKey;
+	}
 
-    public String getScreenContentKey(){
-        return screenContentKey;
-    }
+	public String getScreenContentKey(){
+		return screenContentKey;
+	}
 
-    public void setScreenContentKey(String screenContentKey){
-        this.screenContentKey = screenContentKey;
-    }
+	public void setScreenContentKey(String screenContentKey){
+		this.screenContentKey = screenContentKey;
+	}
 
-    @Override
-    public boolean checkResource(Locale locale) throws Exception{
-        if(super.checkResource(locale) == false){
-            return false;
-        }
+	@Override
+	public boolean checkResource(Locale locale) throws Exception{
+		if(super.checkResource(locale) == false){
+			return false;
+		}
 
-        try{
-            getTemplate(layoutUrl);
-            return true;
-        }catch(ResourceNotFoundException ex){
-            throw new NestedIOException("Cannot find Velocity template for URL [" + layoutUrl + "]: Did you specify "
-                    + "the correct resource loader path?", ex);
-        }catch(Exception ex){
-            throw new NestedIOException("Could not load Velocity template for URL [" + layoutUrl + "]", ex);
-        }
-    }
+		try{
+			getTemplate(layoutUrl);
+			return true;
+		}catch(ResourceNotFoundException ex){
+			throw new NestedIOException("Cannot find Velocity template for URL [" + layoutUrl + "]: Did you specify "
+					+ "the correct resource loader path?", ex);
+		}catch(Exception ex){
+			throw new NestedIOException("Could not load Velocity template for URL [" + layoutUrl + "]", ex);
+		}
+	}
 
-    @Override
-    protected void doRender(Context context, HttpServletResponse response) throws Exception{
-        renderScreenContent(context);
+	@Override
+	protected void doRender(Context context, HttpServletResponse response) throws Exception{
+		renderScreenContent(context);
 
-        String layoutUrlToUse = (String) context.get(layoutKey);
-        if(layoutUrlToUse != null){
-            logger.debug("Screen content template has requested layout [{}]", layoutUrlToUse);
-        }else{
-            layoutUrlToUse = layoutUrl;
-        }
+		String layoutUrlToUse = (String) context.get(layoutKey);
+		if(layoutUrlToUse != null){
+			logger.debug("Screen content template has requested layout [{}]", layoutUrlToUse);
+		}else{
+			layoutUrlToUse = layoutUrl;
+		}
 
-        mergeTemplate(getTemplate(layoutUrlToUse), context, response);
-    }
+		mergeTemplate(getTemplate(layoutUrlToUse), context, response);
+	}
 
-    private void renderScreenContent(Context velocityContext) throws Exception{
-        logger.debug("Rendering screen content template [{}]", getUrl());
+	private void renderScreenContent(Context velocityContext) throws Exception{
+		logger.debug("Rendering screen content template [{}]", getUrl());
 
-        StringWriter writer = new StringWriter();
-        Template screenContentTemplate = getTemplate(getUrl());
-        screenContentTemplate.merge(velocityContext, writer);
+		StringWriter writer = new StringWriter();
+		Template screenContentTemplate = getTemplate(getUrl());
 
-        velocityContext.put(screenContentKey, writer.toString());
-    }
+		screenContentTemplate.merge(velocityContext, writer);
+
+		velocityContext.put(screenContentKey, writer.toString());
+	}
 
 }

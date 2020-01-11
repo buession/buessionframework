@@ -46,164 +46,164 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class RedisAccessor {
 
-    protected final static Options DEFAULT_OPTIONS = new Options();
+	protected final static Options DEFAULT_OPTIONS = new Options();
 
-    protected final static Serializer DEFAULT_SERIALIZER = new JacksonJsonSerializer();
+	protected final static Serializer DEFAULT_SERIALIZER = new JacksonJsonSerializer();
 
-    protected Options options = DEFAULT_OPTIONS;
+	protected Options options = DEFAULT_OPTIONS;
 
-    protected Serializer serializer;
+	protected Serializer serializer;
 
-    protected RedisConnectionFactory connectionFactory;
+	protected RedisConnectionFactory connectionFactory;
 
-    protected RedisConnection connection;
+	protected RedisConnection connection;
 
-    protected RedisClient client;
+	protected RedisClient client;
 
-    private final static Logger logger = LoggerFactory.getLogger(RedisAccessor.class);
+	private final static Logger logger = LoggerFactory.getLogger(RedisAccessor.class);
 
-    {
-        DEFAULT_OPTIONS.setSerializer(DEFAULT_SERIALIZER);
-    }
+	{
+		DEFAULT_OPTIONS.setSerializer(DEFAULT_SERIALIZER);
+	}
 
-    public RedisAccessor(){
+	public RedisAccessor(){
 
-    }
+	}
 
-    public RedisAccessor(RedisConnection connection){
-        this.connection = connection;
-    }
+	public RedisAccessor(RedisConnection connection){
+		this.connection = connection;
+	}
 
-    public Options getOptions(){
-        return options;
-    }
+	public Options getOptions(){
+		return options;
+	}
 
-    public void setOptions(Options options){
-        this.options = options;
-    }
+	public void setOptions(Options options){
+		this.options = options;
+	}
 
-    @Deprecated
-    public Serializer getSerializer(){
-        return serializer;
-    }
+	@Deprecated
+	public Serializer getSerializer(){
+		return serializer;
+	}
 
-    @Deprecated
-    public void setSerializer(Serializer serializer){
-        this.serializer = serializer;
-        logger.warn("Use options by options.");
-    }
+	@Deprecated
+	public void setSerializer(Serializer serializer){
+		this.serializer = serializer;
+		logger.warn("Use serializer by options.");
+	}
 
-    public RedisConnection getConnection(){
-        return connection;
-    }
+	public RedisConnection getConnection(){
+		return connection;
+	}
 
-    public void setConnection(RedisConnection connection){
-        this.connection = connection;
-    }
+	public void setConnection(RedisConnection connection){
+		this.connection = connection;
+	}
 
-    public RedisClient getClient(){
-        return client;
-    }
+	public RedisClient getClient(){
+		return client;
+	}
 
-    public void afterPropertiesSet(){
-        Assert.isNull(connection, "RedisConnection is required");
+	public void afterPropertiesSet(){
+		Assert.isNull(connection, "RedisConnection is required");
 
-        Options options = getOptions();
-        if(options != null){
-            serializer = options.getSerializer();
-        }
-        if(serializer == null){
-            serializer = DEFAULT_SERIALIZER;
-        }
+		Options options = getOptions();
+		if(options != null){
+			serializer = options.getSerializer();
+		}
+		if(serializer == null){
+			serializer = DEFAULT_SERIALIZER;
+		}
 
-        connectionFactory = new RedisConnectionFactory(connection);
-        client = doGetRedisClient(connection);
-    }
+		connectionFactory = new RedisConnectionFactory(connection);
+		client = doGetRedisClient(connection);
+	}
 
-    protected RedisConnectionFactory getConnectionFactory(){
-        return connectionFactory;
-    }
+	protected RedisConnectionFactory getConnectionFactory(){
+		return connectionFactory;
+	}
 
-    protected <R> R execute(final Executor<R> executor){
-        RedisConnectionFactory connectionFactory = getConnectionFactory();
-        boolean enableTransactionSupport = false;
-        RedisConnection connection;
+	protected <R> R execute(final Executor<R> executor){
+		RedisConnectionFactory connectionFactory = getConnectionFactory();
+		boolean enableTransactionSupport = false;
+		RedisConnection connection;
 
-        if(enableTransactionSupport){
-            // only bind resources in case of potential transaction synchronization
-            connection = RedisConnectionUtils.bindConnection(connectionFactory, enableTransactionSupport);
-        }else{
-            connection = RedisConnectionUtils.getConnection(connectionFactory);
-        }
+		if(enableTransactionSupport){
+			// only bind resources in case of potential transaction synchronization
+			connection = RedisConnectionUtils.bindConnection(connectionFactory, enableTransactionSupport);
+		}else{
+			connection = RedisConnectionUtils.getConnection(connectionFactory);
+		}
 
-        try{
-            client.setConnection(connection);
-            return executor.execute(client);
-        }catch(Exception e){
-            logger.error("Execute executor failure: {}", e);
-            throw e;
-        }finally{
-            RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
-        }
-    }
+		try{
+			client.setConnection(connection);
+			return executor.execute(client);
+		}catch(Exception e){
+			logger.error("Execute executor failure: {}", e);
+			throw e;
+		}finally{
+			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
+		}
+	}
 
-    protected static RedisClient doGetRedisClient(RedisConnection connection){
-        if(connection instanceof JedisPoolConnection){
-            return new JedisClient(connection);
-        }else if(connection instanceof ShardedJedisConnection){
-            return new ShardedJedisClient(connection);
-        }else{
-            return null;
-        }
-    }
+	protected static RedisClient doGetRedisClient(RedisConnection connection){
+		if(connection instanceof JedisPoolConnection){
+			return new JedisClient(connection);
+		}else if(connection instanceof ShardedJedisConnection){
+			return new ShardedJedisClient(connection);
+		}else{
+			return null;
+		}
+	}
 
-    protected final String makeRawKey(final String key){
-        return KeyUtil.makeRawKey(getOptions().getPrefix(), key);
-    }
+	protected final String makeRawKey(final String key){
+		return KeyUtil.makeRawKey(getOptions().getPrefix(), key);
+	}
 
-    protected final String[] makeRawKeys(final String... keys){
-        return KeyUtil.makeRawKeys(getOptions().getPrefix(), keys);
-    }
+	protected final String[] makeRawKeys(final String... keys){
+		return KeyUtil.makeRawKeys(getOptions().getPrefix(), keys);
+	}
 
-    protected final byte[] makeByteKey(byte[] key){
-        return KeyUtil.makeByteKey(getOptions().getPrefix(), key);
-    }
+	protected final byte[] makeByteKey(byte[] key){
+		return KeyUtil.makeByteKey(getOptions().getPrefix(), key);
+	}
 
-    protected final byte[][] makeByteKeys(final byte[]... keys){
-        String prefix = getOptions().getPrefix();
-        return KeyUtil.makeByteKeys(prefix == null ? null : SafeEncoder.encode(prefix), keys);
-    }
+	protected final byte[][] makeByteKeys(final byte[]... keys){
+		String prefix = getOptions().getPrefix();
+		return KeyUtil.makeByteKeys(prefix == null ? null : SafeEncoder.encode(prefix), keys);
+	}
 
-    protected <V> String[] serializer(final V... values){
-        if(values == null){
-            return null;
-        }else{
-            final String[] temp = new String[values.length];
+	protected <V> String[] serializer(final V... values){
+		if(values == null){
+			return null;
+		}else{
+			final String[] temp = new String[values.length];
 
-            for(int i = 0; i < values.length; i++){
-                temp[i] = serializer.serialize(values[i]);
-            }
+			for(int i = 0; i < values.length; i++){
+				temp[i] = serializer.serialize(values[i]);
+			}
 
-            return temp;
-        }
-    }
+			return temp;
+		}
+	}
 
-    protected <V> byte[][] serializerAsByte(final V... values){
-        if(values == null){
-            return null;
-        }else{
-            final byte[][] temp = new byte[values.length][];
+	protected <V> byte[][] serializerAsByte(final V... values){
+		if(values == null){
+			return null;
+		}else{
+			final byte[][] temp = new byte[values.length][];
 
-            for(int i = 0; i < values.length; i++){
-                temp[i] = serializer.serializeAsBytes(values[i]);
-            }
+			for(int i = 0; i < values.length; i++){
+				temp[i] = serializer.serializeAsBytes(values[i]);
+			}
 
-            return temp;
-        }
-    }
+			return temp;
+		}
+	}
 
-    protected interface Executor<R> extends com.buession.core.Executor<RedisClient, R> {
+	protected interface Executor<R> extends com.buession.core.Executor<RedisClient, R> {
 
-    }
+	}
 
 }

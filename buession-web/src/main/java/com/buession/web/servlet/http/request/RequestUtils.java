@@ -36,64 +36,58 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 
-    private RequestUtils(){
-    }
+	private RequestUtils(){
+	}
 
-    /**
-     * 获取客户端真实 IP 地址
-     *
-     * @param request
-     *         HttpServletRequest
-     *
-     * @return 客户端真实 IP 地址
-     */
-    public final static String getClientIp(final HttpServletRequest request){
-        Assert.isNull(request, "HttpServletRequest cloud not be null.");
+	/**
+	 * 获取客户端真实 IP 地址
+	 *
+	 * @param request
+	 * 		HttpServletRequest
+	 *
+	 * @return 客户端真实 IP 地址
+	 */
+	public final static String getClientIp(final HttpServletRequest request){
+		Assert.isNull(request, "HttpServletRequest cloud not be null.");
 
-        String ip;
-        for(String header : CLIENT_IP_HEADERS){
-            ip = request.getHeader(header);
-            if(Validate.hasText(ip) == true && "unknown".equalsIgnoreCase(ip) == false){
-                return ip;
-            }
-        }
+		String ip;
+		for(String header : CLIENT_IP_HEADERS){
+			ip = request.getHeader(header);
+			if(Validate.hasText(ip) == true && "unknown".equalsIgnoreCase(ip) == false){
+				return ip;
+			}
+		}
 
-        ip = request.getRemoteAddr();
-        if(Validate.hasText(ip) == false || "unknown".equalsIgnoreCase(ip) == true){
-            ip = "127.0.0.1";
-        }
+		ip = request.getRemoteAddr();
+		if(Validate.hasText(ip) == false || "unknown".equalsIgnoreCase(ip) == true){
+			ip = "127.0.0.1";
+		}
 
-        return ip;
-    }
+		return ip;
+	}
 
-    /**
-     * 判断是否为 Ajax 请求
-     *
-     * @param request
-     *         HttpServletRequest
-     *
-     * @return 是否为 Ajax 请求
-     */
-    public final static boolean isAjaxRequest(final HttpServletRequest request){
-        return isAjaxRequest(request.getHeader("X-Requested-With"));
-    }
+	/**
+	 * 判断是否为 Ajax 请求
+	 *
+	 * @param request
+	 * 		HttpServletRequest
+	 *
+	 * @return 是否为 Ajax 请求
+	 */
+	public final static boolean isAjaxRequest(final HttpServletRequest request){
+		return isAjaxRequest(request.getHeader("X-Requested-With"));
+	}
 
-    /**
-     * 判断是否为移动端请求
-     *
-     * @param request
-     *         HttpServletRequest
-     *
-     * @return 是否为移动端请求
-     */
-    public final static boolean isMobile(final HttpServletRequest request){
-        if(isMobile(request.getHeader("User-Agent"))){
-            return true;
-        }
-
-        final String accept = request.getHeader("Accept");
-        return accept != null && (accept.contains("vnd.wap.wml") == true && accept.contains("text/html") == false ||
-                accept.indexOf("vnd.wap.wml") > accept.indexOf("text/html"));
-    }
+	/**
+	 * 判断是否为移动端请求
+	 *
+	 * @param request
+	 * 		HttpServletRequest
+	 *
+	 * @return 是否为移动端请求
+	 */
+	public final static boolean isMobile(final HttpServletRequest request){
+		return isMobile(request.getHeader("User-Agent"), request.getHeader("Accept"));
+	}
 
 }

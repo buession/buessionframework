@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.spring;
@@ -32,88 +32,89 @@ import com.buession.redis.core.Server;
  */
 public class RedisConnectionFactory {
 
-    private String host = Server.DEFAULT_HOST;
+	private String host = Server.DEFAULT_HOST;
 
-    private int port = Server.DEFAULT_PORT;
+	private int port = Server.DEFAULT_PORT;
 
-    private String password;
+	private String password;
 
-    private int database = Server.DEFAULT_DATABASE;
+	private int database = Server.DEFAULT_DATABASE;
 
-    private int timeout = Server.DEFAULT_TIMEOUT;
+	private int timeout = Server.DEFAULT_TIMEOUT;
 
-    private boolean useSsl;
+	private boolean useSsl;
 
-    private boolean usePool = true;
+	private boolean usePool = true;
 
-    private String clientName;
+	private String clientName;
 
-    public String getHost(){
-        return host;
-    }
+	public String getHost(){
+		return host;
+	}
 
-    public void setHost(String host){
-        this.host = host;
-    }
+	public void setHost(String host){
+		this.host = host;
+	}
 
-    public int getPort(){
-        return port;
-    }
+	public int getPort(){
+		return port;
+	}
 
-    public void setPort(int port){
-        this.port = port;
-    }
+	public void setPort(int port){
+		this.port = port;
+	}
 
-    public String getPassword(){
-        return password;
-    }
+	public String getPassword(){
+		return password;
+	}
 
-    public void setPassword(String password){
-        this.password = password;
-    }
+	public void setPassword(String password){
+		this.password = password;
+	}
 
-    public int getDatabase(){
-        return database;
-    }
+	public int getDatabase(){
+		return database;
+	}
 
-    public void setDatabase(int database){
-        Assert.isNegative(database, "invalid DB index (a positive index required)");
-        this.database = database;
-    }
+	public void setDatabase(int database){
+		Assert.isNegative(database, "invalid DB index (a positive index required)");
+		this.database = database;
+	}
 
-    public int getTimeout(){
-        return timeout;
-    }
+	public int getTimeout(){
+		return timeout;
+	}
 
-    public void setTimeout(int timeout){
-        this.timeout = timeout;
-    }
+	public void setTimeout(int timeout){
+		this.timeout = timeout;
+	}
 
-    public boolean isUseSsl(){
-        return useSsl;
-    }
+	public boolean isUseSsl(){
+		return useSsl;
+	}
 
-    public void setUseSsl(boolean useSsl){
-        this.useSsl = useSsl;
-    }
+	public void setUseSsl(boolean useSsl){
+		this.useSsl = useSsl;
+	}
 
-    public boolean isUsePool(){
-        return getUsePool();
-    }
+	public boolean isUsePool(){
+		return getUsePool();
+	}
 
-    public boolean getUsePool(){
-        return usePool;
-    }
+	public boolean getUsePool(){
+		return usePool;
+	}
 
-    public void setUsePool(boolean usePool){
-        this.usePool = usePool;
-    }
+	public void setUsePool(boolean usePool){
+		this.usePool = usePool;
+	}
 
-    public String getClientName(){
-        return clientName;
-    }
+	public String getClientName(){
+		return clientName;
+	}
 
-    public void setClientName(String clientName){
-        this.clientName = clientName;
-    }
+	public void setClientName(String clientName){
+		this.clientName = clientName;
+	}
+
 }

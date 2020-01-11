@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.thesaurus.core;
@@ -33,102 +33,102 @@ import java.io.Serializable;
  */
 public class Word implements Serializable {
 
-    private static final long serialVersionUID = -515136897983248694L;
+	private final static long serialVersionUID = -515136897983248694L;
 
-    /**
-     * 词条拼音首字母
-     */
-    private char initial;
+	/**
+	 * 词条拼音首字母
+	 */
+	private char initial;
 
-    /**
-     * 词条拼音首字母集合
-     */
-    private char[] initials;
+	/**
+	 * 词条拼音首字母集合
+	 */
+	private char[] initials;
 
-    /**
-     * 词条拼音
-     */
-    private String pinyin;
+	/**
+	 * 词条拼音
+	 */
+	private String pinyin;
 
-    /**
-     * 词条
-     */
-    private String value;
+	/**
+	 * 词条
+	 */
+	private String value;
 
-    /**
-     * 返回词条拼音首字母
-     *
-     * @return 词条拼音首字母
-     */
-    public char getInitial(){
-        return initial;
-    }
+	/**
+	 * 返回词条拼音首字母
+	 *
+	 * @return 词条拼音首字母
+	 */
+	public char getInitial(){
+		return initial;
+	}
 
-    /**
-     * 设置词条拼音首字母
-     *
-     * @param initial
-     *         词条拼音首字母
-     */
-    public void setInitial(char initial){
-        this.initial = initial;
-    }
+	/**
+	 * 设置词条拼音首字母
+	 *
+	 * @param initial
+	 * 		词条拼音首字母
+	 */
+	public void setInitial(char initial){
+		this.initial = initial;
+	}
 
-    /**
-     * 返回词条拼音首字母集合
-     *
-     * @return 词条拼音首字母集合
-     */
-    public char[] getInitials(){
-        return initials;
-    }
+	/**
+	 * 返回词条拼音首字母集合
+	 *
+	 * @return 词条拼音首字母集合
+	 */
+	public char[] getInitials(){
+		return initials;
+	}
 
-    /**
-     * 设置词条拼音首字母
-     *
-     * @param initials
-     *         词条拼音首字母
-     */
-    public void setInitials(char[] initials){
-        this.initials = initials;
-    }
+	/**
+	 * 设置词条拼音首字母
+	 *
+	 * @param initials
+	 * 		词条拼音首字母
+	 */
+	public void setInitials(char[] initials){
+		this.initials = initials;
+	}
 
-    /**
-     * 返回词条拼音
-     *
-     * @return 词条拼音
-     */
-    public String getPinyin(){
-        return pinyin;
-    }
+	/**
+	 * 返回词条拼音
+	 *
+	 * @return 词条拼音
+	 */
+	public String getPinyin(){
+		return pinyin;
+	}
 
-    /**
-     * 设置词条拼音
-     *
-     * @param pinyin
-     *         词条拼音
-     */
-    public void setPinyin(String pinyin){
-        this.pinyin = pinyin;
-    }
+	/**
+	 * 设置词条拼音
+	 *
+	 * @param pinyin
+	 * 		词条拼音
+	 */
+	public void setPinyin(String pinyin){
+		this.pinyin = pinyin;
+	}
 
-    /**
-     * 返回词条
-     *
-     * @return 词条
-     */
-    public String getValue(){
-        return value;
-    }
+	/**
+	 * 返回词条
+	 *
+	 * @return 词条
+	 */
+	public String getValue(){
+		return value;
+	}
 
-    /**
-     * 设置词条
-     *
-     * @param value
-     *         词条
-     */
-    public void setValue(String value){
-        this.value = value;
-    }
+	/**
+	 * 设置词条
+	 *
+	 * @param value
+	 * 		词条
+	 */
+	public void setValue(String value){
+		this.value = value;
+	}
 
 }

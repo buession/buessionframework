@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -29,35 +29,36 @@ package com.buession.redis.core;
  */
 public enum Type {
 
-    STRING("String"),
+	STRING("String"),
 
-    LIST("List"),
+	LIST("List"),
 
-    SET("Set"),
+	SET("Set"),
 
-    ZSET("ZSet"),
+	ZSET("ZSet"),
 
-    HASH("Hash"),
+	HASH("Hash"),
 
-    STREAM("Stream"),
+	STREAM("Stream"),
 
-    NONE("None");
+	NONE("None");
 
-    private String value;
+	private String value;
 
-    Type(String value){
-        this.value = value;
-    }
+	Type(String value){
+		this.value = value;
+	}
 
-    public String getValue(){
-        return value;
-    }
+	public String getValue(){
+		return value;
+	}
 
-    public static Type fromCode(String code){
-        try{
-            return Enum.valueOf(Type.class, code.toUpperCase());
-        }catch(Exception e){
-            throw new IllegalArgumentException("unknown data type code");
-        }
-    }
+	public static Type fromCode(String code){
+		try{
+			return Enum.valueOf(Type.class, code.toUpperCase());
+		}catch(Exception e){
+			throw new IllegalArgumentException("unknown data type code");
+		}
+	}
+
 }

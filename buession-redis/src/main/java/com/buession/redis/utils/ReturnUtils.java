@@ -34,6 +34,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
@@ -57,8 +58,6 @@ public class ReturnUtils {
 		}
 
 		return result;
-
-		//  return data.stream().map(v->(V) serializer.decode(v)).collect(Collectors.toList());
 	}
 
 	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]>
@@ -82,14 +81,7 @@ public class ReturnUtils {
 			return null;
 		}
 
-
-		final List<V> result = new ArrayList<>(data.size());
-
-		for(String value : data){
-			result.add(serializer.deserialize(value, clazz));
-		}
-
-		return result;
+		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toList());
 	}
 
 	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]>
@@ -98,13 +90,7 @@ public class ReturnUtils {
 			return null;
 		}
 
-		final List<V> result = new ArrayList<>(data.size());
-
-		for(byte[] value : data){
-			result.add(serializer.deserialize(value, clazz));
-		}
-
-		return result;
+		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toList());
 	}
 
 	public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer, final List<String>
@@ -113,13 +99,7 @@ public class ReturnUtils {
 			return null;
 		}
 
-		final List<V> result = new ArrayList<>(data.size());
-
-		for(String value : data){
-			result.add(serializer.deserialize(value, type));
-		}
-
-		return result;
+		return data.stream().map((value)->serializer.deserialize(value, type)).collect(Collectors.toList());
 	}
 
 	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]>
@@ -128,13 +108,7 @@ public class ReturnUtils {
 			return null;
 		}
 
-		final List<V> result = new ArrayList<>(data.size());
-
-		for(byte[] value : data){
-			result.add(serializer.deserialize(value, type));
-		}
-
-		return result;
+		return data.stream().map((value)->serializer.deserialize(value, type)).collect(Collectors.toList());
 	}
 
 	public final static <V> Set<V> returnObjectValueFromSetString(final Serializer serializer, final Set<String> data){
@@ -171,13 +145,8 @@ public class ReturnUtils {
 			return null;
 		}
 
-		final Set<V> result = new LinkedHashSet<>(data.size());
-
-		for(String value : data){
-			result.add(serializer.deserialize(value, clazz));
-		}
-
-		return result;
+		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toCollection
+				(LinkedHashSet::new));
 	}
 
 	public final static <V> Set<V> returnObjectValueFromSetByte(final Serializer serializer, final Set<byte[]> data,
@@ -186,13 +155,8 @@ public class ReturnUtils {
 			return null;
 		}
 
-		final Set<V> result = new LinkedHashSet<>(data.size());
-
-		for(byte[] value : data){
-			result.add(serializer.deserialize(value, clazz));
-		}
-
-		return result;
+		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toCollection
+				(LinkedHashSet::new));
 	}
 
 	public final static <V> Set<V> returnObjectValueFromSetString(final Serializer serializer, final Set<String> data,
@@ -201,13 +165,8 @@ public class ReturnUtils {
 			return null;
 		}
 
-		final Set<V> result = new LinkedHashSet<>(data.size());
-
-		for(String value : data){
-			result.add(serializer.deserialize(value, type));
-		}
-
-		return result;
+		return data.stream().map((value)->serializer.deserialize(value, type)).collect(Collectors.toCollection
+				(LinkedHashSet::new));
 	}
 
 	public final static <V> Set<V> returnObjectValueFromSetByte(final Serializer serializer, final Set<byte[]> data,
@@ -216,13 +175,8 @@ public class ReturnUtils {
 			return null;
 		}
 
-		final Set<V> result = new LinkedHashSet<>(data.size());
-
-		for(byte[] value : data){
-			result.add(serializer.deserialize(value, type));
-		}
-
-		return result;
+		return data.stream().map((value)->serializer.deserialize(value, type)).collect(Collectors.toCollection
+				(LinkedHashSet::new));
 	}
 
 	public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer, final
@@ -233,9 +187,7 @@ public class ReturnUtils {
 
 		final Map<String, V> result = new LinkedHashMap<>(data.size());
 
-		data.forEach((key, value)->{
-			result.put(key, serializer.deserialize(value));
-		});
+		data.forEach((key, value)->result.put(key, serializer.deserialize(value)));
 
 		return result;
 	}
@@ -248,9 +200,7 @@ public class ReturnUtils {
 
 		final Map<byte[], V> result = new LinkedHashMap<>(data.size());
 
-		data.forEach((key, value)->{
-			result.put(key, serializer.deserialize(value));
-		});
+		data.forEach((key, value)->result.put(key, serializer.deserialize(value)));
 
 		return result;
 	}
@@ -263,9 +213,7 @@ public class ReturnUtils {
 
 		final Map<String, V> result = new LinkedHashMap<>(data.size());
 
-		data.forEach((key, value)->{
-			result.put(key, serializer.deserialize(value, clazz));
-		});
+		data.forEach((key, value)->result.put(key, serializer.deserialize(value, clazz)));
 
 		return result;
 	}
@@ -278,9 +226,7 @@ public class ReturnUtils {
 
 		final Map<byte[], V> result = new LinkedHashMap<>(data.size());
 
-		data.forEach((key, value)->{
-			result.put(key, serializer.deserialize(value, clazz));
-		});
+		data.forEach((key, value)->result.put(key, serializer.deserialize(value, clazz)));
 
 		return result;
 	}
@@ -293,9 +239,7 @@ public class ReturnUtils {
 
 		final Map<String, V> result = new LinkedHashMap<>(data.size());
 
-		data.forEach((key, value)->{
-			result.put(key, serializer.deserialize(value, type));
-		});
+		data.forEach((key, value)->result.put(key, serializer.deserialize(value, type)));
 
 		return result;
 	}
@@ -308,9 +252,7 @@ public class ReturnUtils {
 
 		final Map<byte[], V> result = new LinkedHashMap<>(data.size());
 
-		data.forEach((key, value)->{
-			result.put(key, serializer.deserialize(value, type));
-		});
+		data.forEach((key, value)->result.put(key, serializer.deserialize(value, type)));
 
 		return result;
 	}

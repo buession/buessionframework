@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.file;
@@ -38,107 +38,114 @@ import java.net.URI;
  */
 public class File extends java.io.File {
 
-    private final static long serialVersionUID = 1512573860637989192L;
+	private final static long serialVersionUID = 1512573860637989192L;
 
-    /**
-     * @param parent
-     *         父目录
-     * @param child
-     *         子文件
-     */
-    public File(java.io.File parent, String child){
-        super(parent, child);
-    }
+	/**
+	 * @param parent
+	 * 		父目录
+	 * @param child
+	 * 		子文件
+	 */
+	public File(java.io.File parent, String child){
+		super(parent, child);
+	}
 
-    /**
-     * @param path
-     *         文件路径
-     */
-    public File(String path){
-        super(path);
-    }
+	/**
+	 * @param path
+	 * 		文件路径
+	 */
+	public File(String path){
+		super(path);
+	}
 
-    /**
-     * @param parent
-     *         父目录
-     * @param child
-     *         子文件
-     */
-    public File(String parent, String child){
-        super(parent, child);
-    }
+	/**
+	 * @param parent
+	 * 		父目录
+	 * @param child
+	 * 		子文件
+	 */
+	public File(String parent, String child){
+		super(parent, child);
+	}
 
-    /**
-     * @param uri
-     *         URI
-     */
-    public File(URI uri){
-        super(uri);
-    }
+	/**
+	 * @param uri
+	 * 		URI
+	 */
+	public File(URI uri){
+		super(uri);
+	}
 
-    /**
-     * 读取文件内容
-     *
-     * @return 文件内容
-     *
-     * @throws FileNotFoundException
-     *         当文件不存在
-     * @throws IOException
-     *         IO 异常
-     */
-    public String read() throws FileNotFoundException, IOException{
-        FileReader reader = new FileReader(this);
+	/**
+	 * 读取文件内容
+	 *
+	 * @return 文件内容
+	 *
+	 * @throws FileNotFoundException
+	 * 		当文件不存在
+	 * @throws IOException
+	 * 		IO 异常
+	 */
+	public String read() throws FileNotFoundException, IOException{
+		FileReader reader = new FileReader(this);
 
-        BufferedReader bufferedReader = new BufferedReader(reader);
-        StringBuffer sb = new StringBuffer((int) length());
-        String line;
+		BufferedReader bufferedReader = new BufferedReader(reader);
+		StringBuffer sb = new StringBuffer((int) length());
+		String line;
 
-        while((line = bufferedReader.readLine()) != null){
-            sb.append(line);
-        }
+		while((line = bufferedReader.readLine()) != null){
+			sb.append(line);
+		}
 
-        if(bufferedReader != null){
-            try{
-                bufferedReader.close();
-            }catch(IOException e){
-            }
-        }
+		bufferedReader.close();
+		reader.close();
 
-        bufferedReader.close();
+		return sb.toString();
+	}
 
-        return sb.toString();
-    }
+	/**
+	 * 向文件写内容
+	 *
+	 * @param str
+	 * 		待写入内容
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 */
+	public void write(final String str) throws IOException{
+		FileWriter writer = new FileWriter(this);
 
-    /**
-     * 向文件写内容
-     *
-     * @param str
-     *         待写入内容
-     *
-     * @throws IOException
-     *         IO 异常
-     */
-    public void write(final String str) throws IOException{
-        FileWriter writer = new FileWriter(this);
+		writer.write(str);
+		writer.close();
+	}
 
-        writer.write(str);
-        writer.close();
-    }
+	/**
+	 * 向文件写内容
+	 *
+	 * @param chars
+	 * 		待写入内容
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 */
+	public void write(final char[] chars) throws IOException{
+		FileWriter writer = new FileWriter(this);
 
-    /**
-     * 向文件写内容
-     *
-     * @param chars
-     *         待写入内容
-     *
-     * @throws IOException
-     *         IO 异常
-     */
-    public void write(final char[] chars) throws IOException{
-        FileWriter writer = new FileWriter(this);
+		writer.write(chars);
+		writer.close();
+	}
 
-        writer.write(chars);
-        writer.close();
-    }
+	/**
+	 * 向文件写内容
+	 *
+	 * @param bytes
+	 * 		待写入内容
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 */
+	public void write(final byte[] bytes) throws IOException{
+		write(new String(bytes));
+	}
 
 }

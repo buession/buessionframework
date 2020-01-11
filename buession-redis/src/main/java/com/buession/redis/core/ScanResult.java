@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -27,40 +27,38 @@ package com.buession.redis.core;
 import com.buession.redis.Constants;
 import com.buession.redis.utils.SafeEncoder;
 
-import java.util.List;
-
 /**
  * @author Yong.Teng
  */
 public class ScanResult<V> {
 
-    private byte[] cursor;
+	private byte[] cursor;
 
-    private V results;
+	private V results;
 
-    public ScanResult(final byte[] cursor, final V results){
-        this.cursor = cursor;
-        this.results = results;
-    }
+	public ScanResult(final byte[] cursor, final V results){
+		this.cursor = cursor;
+		this.results = results;
+	}
 
-    public ScanResult(final String cursor, final V results){
-        this(SafeEncoder.encode(cursor), results);
-    }
+	public ScanResult(final String cursor, final V results){
+		this(SafeEncoder.encode(cursor), results);
+	}
 
-    public byte[] getCursor(){
-        return cursor;
-    }
+	public byte[] getCursor(){
+		return cursor;
+	}
 
-    public String getCursorAsString(){
-        return SafeEncoder.encode(cursor);
-    }
+	public String getCursorAsString(){
+		return SafeEncoder.encode(cursor);
+	}
 
-    public V getResults(){
-        return results;
-    }
+	public V getResults(){
+		return results;
+	}
 
-    public boolean isCompleteIteration(){
-        return Constants.SCAN_POINTER_START.equals(getCursor());
-    }
+	public boolean isCompleteIteration(){
+		return Constants.SCAN_POINTER_START.equals(getCursor());
+	}
 
 }

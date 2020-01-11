@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.http.request;
@@ -34,69 +34,62 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
  */
 public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 
-    private RequestUtils(){
-    }
+	private RequestUtils(){
+	}
 
-    /**
-     * 获取客户端真实 IP 地址
-     *
-     * @param request
-     *         ServerHttpRequest
-     *
-     * @return 客户端真实 IP 地址
-     */
-    public final static String getClientIp(final ServerHttpRequest request){
-        Assert.isNull(request, "HttpServletRequest cloud not be null.");
-        HttpHeaders httpHeaders = request.getHeaders();
+	/**
+	 * 获取客户端真实 IP 地址
+	 *
+	 * @param request
+	 * 		ServerHttpRequest
+	 *
+	 * @return 客户端真实 IP 地址
+	 */
+	public final static String getClientIp(final ServerHttpRequest request){
+		Assert.isNull(request, "HttpServletRequest cloud not be null.");
+		HttpHeaders httpHeaders = request.getHeaders();
 
-        String ip;
-        for(String header : CLIENT_IP_HEADERS){
-            ip = httpHeaders.getFirst(header);
-            if(Validate.hasText(ip) == true && "unknown".equalsIgnoreCase(ip) == false){
-                return ip;
-            }
-        }
+		String ip;
+		for(String header : CLIENT_IP_HEADERS){
+			ip = httpHeaders.getFirst(header);
+			if(Validate.hasText(ip) == true && "unknown".equalsIgnoreCase(ip) == false){
+				return ip;
+			}
+		}
 
-        ip = request.getRemoteAddress().getAddress().getHostAddress();
-        if(Validate.hasText(ip) == false || "unknown".equalsIgnoreCase(ip) == true){
-            ip = "127.0.0.1";
-        }
+		ip = request.getRemoteAddress().getAddress().getHostAddress();
+		if(Validate.hasText(ip) == false || "unknown".equalsIgnoreCase(ip) == true){
+			ip = "127.0.0.1";
+		}
 
-        return ip;
-    }
+		return ip;
+	}
 
-    /**
-     * 判断是否为 Ajax 请求
-     *
-     * @param request
-     *         ServerHttpRequest
-     *
-     * @return 是否为 Ajax 请求
-     */
-    public final static boolean isAjaxRequest(final ServerHttpRequest request){
-        HttpHeaders httpHeaders = request.getHeaders();
-        return isAjaxRequest(httpHeaders.getFirst("X-Requested-With"));
-    }
+	/**
+	 * 判断是否为 Ajax 请求
+	 *
+	 * @param request
+	 * 		ServerHttpRequest
+	 *
+	 * @return 是否为 Ajax 请求
+	 */
+	public final static boolean isAjaxRequest(final ServerHttpRequest request){
+		HttpHeaders httpHeaders = request.getHeaders();
+		return isAjaxRequest(httpHeaders.getFirst("X-Requested-With"));
+	}
 
-    /**
-     * 判断是否为移动端请求
-     *
-     * @param request
-     *         ServerHttpRequest
-     *
-     * @return 是否为移动端请求
-     */
-    public final static boolean isMobile(final ServerHttpRequest request){
-        HttpHeaders httpHeaders = request.getHeaders();
-
-        if(isMobile(httpHeaders.getFirst("User-Agent"))){
-            return true;
-        }
-
-        final String accept = httpHeaders.getFirst("Accept");
-        return accept != null && (accept.contains("vnd.wap.wml") == true && accept.contains("text/html") == false ||
-                accept.indexOf("vnd.wap.wml") > accept.indexOf("text/html"));
-    }
+	/**
+	 * 判断是否为移动端请求
+	 *
+	 * @param request
+	 * 		ServerHttpRequest
+	 *
+	 * @return 是否为移动端请求
+	 */
+	public final static boolean isMobile(final ServerHttpRequest request){
+		HttpHeaders httpHeaders = request.getHeaders();
+		return isMobile(httpHeaders.getFirst("User-Agent"), httpHeaders.getFirst("Accept"));
+	}
 
 }
 
