@@ -24,63 +24,130 @@
  */
 package com.buession.redis;
 
+import com.buession.core.serializer.type.TypeReference;
 import org.junit.Test;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
 public class JedisPoolClientTemplateTest extends AbstractRedisTest {
 
-    private RedisTemplate redisTemplate(){
-        RedisTemplate redisTemplate = new RedisTemplate();
+	private RedisTemplate redisTemplate(){
+		RedisTemplate redisTemplate = new RedisTemplate();
 
-        redisTemplate.afterPropertiesSet();
+		try{
+			redisTemplate.setConnection(connectionFactory().getObject());
+		}catch(Exception e){
+		}
 
-        return redisTemplate;
-    }
+		redisTemplate.afterPropertiesSet();
 
-    @Test
-    public void set(){
-        RedisTemplate redisTemplate = redisTemplate();
-        System.out.println(redisTemplate.hGet("menu", "2"));
+		return redisTemplate;
+	}
 
-        try{
-            Thread.sleep(10 * 1000);
+	@Test
+	public void set(){
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.hGet("menu", "2"));
 
-            System.out.println(redisTemplate.hGet("menu", "2"));
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
+		try{
+			Thread.sleep(10 * 1000);
 
-    @Test
-    public void lPush(){
-        RedisTemplate redisTemplate = redisTemplate();
-        System.out.println(redisTemplate.lPush("list", "List1"));
-        System.out.println(redisTemplate.lPush("list", "List2"));
-    }
+			System.out.println(redisTemplate.hGet("menu", "2"));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 
-    @Test
-    public void lPushX(){
-        RedisTemplate redisTemplate = redisTemplate();
-        System.out.println(redisTemplate.lPushX("list", "List1"));
-        System.out.println(redisTemplate.lPushX("list", "List2"));
-    }
+	@Test
+	public void get(){
+		User user1 = new User();
 
-    //  @Test
-    public void randomKey(){
-        RedisTemplate redisClientTemplate = redisTemplate();
-        System.out.println(redisClientTemplate.randomKey());
-    }
+		user1.setId(1);
+		user1.setUsername("A");
 
-    @Test
-    public void keys(){
-        RedisTemplate redisTemplate = redisTemplate();
-        for(int i = 0; i < 10; i++){
-            System.out.println(i + ": ");
-            System.out.println(redisTemplate.keys("*"));
-            System.out.println(redisTemplate.keys("*"));
-        }
-    }
+		User user2 = new User();
+
+		user2.setId(2);
+		user2.setUsername("B");
+
+		RedisTemplate redisTemplate = redisTemplate();
+
+		redisTemplate.set("user_1", user1);
+		redisTemplate.set("user_2", user2);
+
+		User userRet1 = redisTemplate.getObject("user_1", User.class);
+		User userRet2 = redisTemplate.getObject("user_1", new TypeReference<User>() {
+
+		});
+
+		System.out.println("user 1: " + userRet1);
+		System.out.println("user 2: " + userRet2);
+
+		redisTemplate.lPush("user", user1, user2);
+
+		List<User> result = redisTemplate.lRangeObject("user", 0, 1);
+		System.out.println(result.get(0).getId());
+	}
+
+	@Test
+	public void lPush(){
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.lPush("list", "List1"));
+		System.out.println(redisTemplate.lPush("list", "List2"));
+	}
+
+	@Test
+	public void lPushX(){
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.lPushX("list", "List1"));
+		System.out.println(redisTemplate.lPushX("list", "List2"));
+	}
+
+	//  @Test
+	public void randomKey(){
+		RedisTemplate redisClientTemplate = redisTemplate();
+		System.out.println(redisClientTemplate.randomKey());
+	}
+
+	@Test
+	public void keys(){
+		RedisTemplate redisTemplate = redisTemplate();
+		for(int i = 0; i < 10; i++){
+			System.out.println(i + ": ");
+			System.out.println(redisTemplate.keys("*"));
+			System.out.println(redisTemplate.keys("*"));
+		}
+	}
+
+	private final static class User {
+
+		private int id;
+
+		private String username;
+
+		public int getId(){
+			return id;
+		}
+
+		public void setId(int id){
+			this.id = id;
+		}
+
+		public String getUsername(){
+			return username;
+		}
+
+		public void setUsername(String username){
+			this.username = username;
+		}
+
+		@Override
+		public String toString(){
+			return "User{" + "id=" + id + ", username='" + username + '\'' + '}';
+		}
+	}
 
 }

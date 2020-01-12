@@ -465,7 +465,7 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
 			for(KeyValue<byte[], V> kv : data){
 				if(kv.getValue() instanceof CharSequence){
-					temp.put(kv.getKey(), serializer.serializeAsBytes(kv.getValue()));
+					temp.put(kv.getKey(), kv.getValue().toString().getBytes());
 				}else{
 					temp.put(kv.getKey(), serializer.serializeAsBytes(kv.getValue()));
 				}

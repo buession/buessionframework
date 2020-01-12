@@ -36,37 +36,37 @@ import java.util.stream.Collectors;
  */
 public class TupleConvert implements Convert<Tuple, redis.clients.jedis.Tuple> {
 
-    @Override
-    public redis.clients.jedis.Tuple convert(final Tuple source){
-        return source == null ? null : new redis.clients.jedis.Tuple(source.getBinaryElement(), source.getScore());
-    }
+	@Override
+	public redis.clients.jedis.Tuple convert(final Tuple source){
+		return source == null ? null : new redis.clients.jedis.Tuple(source.getBinaryElement(), source.getScore());
+	}
 
-    @Override
-    public Tuple deconvert(final redis.clients.jedis.Tuple target){
-        return target == null ? null : new Tuple(target.getBinaryElement(), target.getScore());
-    }
+	@Override
+	public Tuple deconvert(final redis.clients.jedis.Tuple target){
+		return target == null ? null : new Tuple(target.getBinaryElement(), target.getScore());
+	}
 
-    public static class SetTupleConvert implements Convert<Set<Tuple>, Set<redis.clients.jedis.Tuple>> {
+	public static class SetTupleConvert implements Convert<Set<Tuple>, Set<redis.clients.jedis.Tuple>> {
 
-        @Override
-        public Set<redis.clients.jedis.Tuple> convert(final Set<Tuple> source){
-            if(source == null){
-                return null;
-            }else{
-                return source.stream().map(tuple->new redis.clients.jedis.Tuple(tuple.getElement(), tuple.getScore())
-                ).collect(Collectors.toCollection(LinkedHashSet::new));
-            }
-        }
+		@Override
+		public Set<redis.clients.jedis.Tuple> convert(final Set<Tuple> source){
+			if(source == null){
+				return null;
+			}
 
-        @Override
-        public Set<Tuple> deconvert(final Set<redis.clients.jedis.Tuple> target){
-            if(target == null){
-                return null;
-            }else{
-                return target.stream().map(tuple->new Tuple(tuple.getElement(), tuple.getScore())).collect(Collectors
-                        .toCollection(LinkedHashSet::new));
-            }
-        }
-    }
+			return source.stream().map(tuple->new redis.clients.jedis.Tuple(tuple.getElement(), tuple.getScore()))
+					.collect(Collectors.toCollection(LinkedHashSet::new));
+		}
+
+		@Override
+		public Set<Tuple> deconvert(final Set<redis.clients.jedis.Tuple> target){
+			if(target == null){
+				return null;
+			}
+
+			return target.stream().map(tuple->new Tuple(tuple.getElement(), tuple.getScore())).collect(Collectors
+					.toCollection(LinkedHashSet::new));
+		}
+	}
 
 }

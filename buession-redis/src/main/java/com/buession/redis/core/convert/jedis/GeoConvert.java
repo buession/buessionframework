@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.convert.jedis;
@@ -42,189 +42,190 @@ import java.util.Map;
  */
 public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 
-    @Override
-    public GeoCoordinate convert(final Geo source){
-        return source == null ? null : new GeoCoordinate(source.getLongitude(), source.getLatitude());
-    }
+	@Override
+	public GeoCoordinate convert(final Geo source){
+		return source == null ? null : new GeoCoordinate(source.getLongitude(), source.getLatitude());
+	}
 
-    @Override
-    public Geo deconvert(final GeoCoordinate target){
-        return target == null ? null : new Geo(target.getLongitude(), target.getLatitude());
-    }
+	@Override
+	public Geo deconvert(final GeoCoordinate target){
+		return target == null ? null : new Geo(target.getLongitude(), target.getLatitude());
+	}
 
-    public static class GeoMapConvert<K> implements Convert<Map<K, Geo>, Map<K, GeoCoordinate>> {
+	public static class GeoMapConvert<K> implements Convert<Map<K, Geo>, Map<K, GeoCoordinate>> {
 
-        @Override
-        public Map<K, GeoCoordinate> convert(final Map<K, Geo> source){
-            if(source == null){
-                return null;
-            }
+		@Override
+		public Map<K, GeoCoordinate> convert(final Map<K, Geo> source){
+			if(source == null){
+				return null;
+			}
 
-            final Map<K, GeoCoordinate> result = new LinkedHashMap<>(source.size());
+			final Map<K, GeoCoordinate> result = new LinkedHashMap<>(source.size());
 
-            source.forEach((key, value)->result.put(key, new GeoCoordinate(value.getLongitude(), value.getLatitude())));
+			source.forEach((key, value)->result.put(key, new GeoCoordinate(value.getLongitude(), value.getLatitude()
+			)));
 
-            return result;
-        }
+			return result;
+		}
 
-        @Override
-        public Map<K, Geo> deconvert(final Map<K, GeoCoordinate> target){
-            if(target == null){
-                return null;
-            }else{
-                final Map<K, Geo> result = new LinkedHashMap<>();
+		@Override
+		public Map<K, Geo> deconvert(final Map<K, GeoCoordinate> target){
+			if(target == null){
+				return null;
+			}
 
-                target.forEach((key, value)->result.put(key, new Geo(value.getLongitude(), value.getLatitude())));
+			final Map<K, Geo> result = new LinkedHashMap<>();
 
-                return result;
-            }
-        }
-    }
+			target.forEach((key, value)->result.put(key, new Geo(value.getLongitude(), value.getLatitude())));
 
-    public static class ListMapConvert implements Convert<List<Geo>, List<GeoCoordinate>> {
+			return result;
+		}
+	}
 
-        @Override
-        public List<GeoCoordinate> convert(final List<Geo> source){
-            if(source == null){
-                return null;
-            }else{
-                final List<GeoCoordinate> result = new ArrayList<>(source.size());
+	public static class ListMapConvert implements Convert<List<Geo>, List<GeoCoordinate>> {
 
-                for(Geo geo : source){
-                    result.add(new GeoCoordinate(geo.getLongitude(), geo.getLatitude()));
-                }
+		@Override
+		public List<GeoCoordinate> convert(final List<Geo> source){
+			if(source == null){
+				return null;
+			}
 
-                return result;
-            }
-        }
+			final List<GeoCoordinate> result = new ArrayList<>(source.size());
 
-        @Override
-        public List<Geo> deconvert(final List<GeoCoordinate> target){
-            if(target == null){
-                return null;
-            }else{
-                final List<Geo> result = new ArrayList<>(target.size());
+			for(Geo geo : source){
+				result.add(new GeoCoordinate(geo.getLongitude(), geo.getLatitude()));
+			}
 
-                for(GeoCoordinate geoCoordinate : target){
-                    result.add(new Geo(geoCoordinate.getLongitude(), geoCoordinate.getLatitude()));
-                }
+			return result;
+		}
 
-                return result;
-            }
-        }
-    }
+		@Override
+		public List<Geo> deconvert(final List<GeoCoordinate> target){
+			if(target == null){
+				return null;
+			}
 
-    public static class GeoUnitConvert implements Convert<GeoCommands.GeoUnit, GeoUnit> {
+			final List<Geo> result = new ArrayList<>(target.size());
 
-        @Override
-        public GeoUnit convert(final GeoCommands.GeoUnit source){
-            if(source == GeoCommands.GeoUnit.M){
-                return GeoUnit.M;
-            }else if(source == GeoCommands.GeoUnit.KM){
-                return GeoUnit.KM;
-            }else if(source == GeoCommands.GeoUnit.MI){
-                return GeoUnit.MI;
-            }else if(source == GeoCommands.GeoUnit.FT){
-                return GeoUnit.FT;
-            }else{
-                return null;
-            }
-        }
+			for(GeoCoordinate geoCoordinate : target){
+				result.add(new Geo(geoCoordinate.getLongitude(), geoCoordinate.getLatitude()));
+			}
 
-        @Override
-        public GeoCommands.GeoUnit deconvert(final GeoUnit target){
-            if(target == GeoUnit.M){
-                return GeoCommands.GeoUnit.M;
-            }else if(target == GeoUnit.KM){
-                return GeoCommands.GeoUnit.KM;
-            }else if(target == GeoUnit.MI){
-                return GeoCommands.GeoUnit.MI;
-            }else if(target == GeoUnit.FT){
-                return GeoCommands.GeoUnit.FT;
-            }else{
-                return null;
-            }
-        }
+			return result;
+		}
+	}
 
-    }
+	public static class GeoUnitConvert implements Convert<GeoCommands.GeoUnit, GeoUnit> {
 
-    public static class GeoRadiusConvert implements Convert<GeoRadius, GeoRadiusResponse> {
+		@Override
+		public GeoUnit convert(final GeoCommands.GeoUnit source){
+			if(source == GeoCommands.GeoUnit.M){
+				return GeoUnit.M;
+			}else if(source == GeoCommands.GeoUnit.KM){
+				return GeoUnit.KM;
+			}else if(source == GeoCommands.GeoUnit.MI){
+				return GeoUnit.MI;
+			}else if(source == GeoCommands.GeoUnit.FT){
+				return GeoUnit.FT;
+			}else{
+				return null;
+			}
+		}
 
-        @Override
-        public GeoRadiusResponse convert(final GeoRadius source){
-            if(source == null){
-                return null;
-            }
+		@Override
+		public GeoCommands.GeoUnit deconvert(final GeoUnit target){
+			if(target == GeoUnit.M){
+				return GeoCommands.GeoUnit.M;
+			}else if(target == GeoUnit.KM){
+				return GeoCommands.GeoUnit.KM;
+			}else if(target == GeoUnit.MI){
+				return GeoCommands.GeoUnit.MI;
+			}else if(target == GeoUnit.FT){
+				return GeoCommands.GeoUnit.FT;
+			}else{
+				return null;
+			}
+		}
 
-            final GeoRadiusResponse geoRadiusResponse = new GeoRadiusResponse(source.getMember());
+	}
 
-            geoRadiusResponse.setDistance(source.getDistance());
-            geoRadiusResponse.setCoordinate((new GeoConvert()).convert(source.getGeo()));
+	public static class GeoRadiusConvert implements Convert<GeoRadius, GeoRadiusResponse> {
 
-            return geoRadiusResponse;
-        }
+		@Override
+		public GeoRadiusResponse convert(final GeoRadius source){
+			if(source == null){
+				return null;
+			}
 
-        @Override
-        public GeoRadius deconvert(final GeoRadiusResponse target){
-            if(target == null){
-                return null;
-            }
+			final GeoRadiusResponse geoRadiusResponse = new GeoRadiusResponse(source.getMember());
 
-            final GeoRadius geoRadius = new GeoRadius();
+			geoRadiusResponse.setDistance(source.getDistance());
+			geoRadiusResponse.setCoordinate((new GeoConvert()).convert(source.getGeo()));
 
-            geoRadius.setMember(target.getMember());
-            geoRadius.setDistance(target.getDistance());
-            geoRadius.setGeo((new GeoConvert()).deconvert(target.getCoordinate()));
+			return geoRadiusResponse;
+		}
 
-            return geoRadius;
-        }
+		@Override
+		public GeoRadius deconvert(final GeoRadiusResponse target){
+			if(target == null){
+				return null;
+			}
 
-        public static class ListGeoRadiusConvert implements Convert<List<GeoRadius>, List<GeoRadiusResponse>> {
+			final GeoRadius geoRadius = new GeoRadius();
 
-            @Override
-            public List<GeoRadiusResponse> convert(final List<GeoRadius> source){
-                if(source == null){
-                    return null;
-                }
+			geoRadius.setMember(target.getMember());
+			geoRadius.setDistance(target.getDistance());
+			geoRadius.setGeo((new GeoConvert()).deconvert(target.getCoordinate()));
 
-                final List<GeoRadiusResponse> geoRadiusResponses = new ArrayList<>(source.size());
-                final GeoConvert geoConvert = new GeoConvert();
+			return geoRadius;
+		}
 
-                for(GeoRadius geoRadius : source){
-                    GeoRadiusResponse geoRadiusResponse = new GeoRadiusResponse(geoRadius.getMember());
+		public static class ListGeoRadiusConvert implements Convert<List<GeoRadius>, List<GeoRadiusResponse>> {
 
-                    geoRadiusResponse.setDistance(geoRadius.getDistance());
-                    geoRadiusResponse.setCoordinate(geoConvert.convert(geoRadius.getGeo()));
+			@Override
+			public List<GeoRadiusResponse> convert(final List<GeoRadius> source){
+				if(source == null){
+					return null;
+				}
 
-                    geoRadiusResponses.add(geoRadiusResponse);
-                }
+				final List<GeoRadiusResponse> geoRadiusResponses = new ArrayList<>(source.size());
+				final GeoConvert geoConvert = new GeoConvert();
 
-                return geoRadiusResponses;
-            }
+				for(GeoRadius geoRadius : source){
+					GeoRadiusResponse geoRadiusResponse = new GeoRadiusResponse(geoRadius.getMember());
 
-            @Override
-            public List<GeoRadius> deconvert(final List<GeoRadiusResponse> target){
-                if(target == null){
-                    return null;
-                }
+					geoRadiusResponse.setDistance(geoRadius.getDistance());
+					geoRadiusResponse.setCoordinate(geoConvert.convert(geoRadius.getGeo()));
 
-                final List<GeoRadius> result = new ArrayList<>();
-                final GeoConvert geoConvert = new GeoConvert();
+					geoRadiusResponses.add(geoRadiusResponse);
+				}
 
-                for(GeoRadiusResponse geoRadiusResponse : target){
-                    GeoRadius geoRadius = new GeoRadius();
+				return geoRadiusResponses;
+			}
 
-                    geoRadius.setMember(geoRadiusResponse.getMember());
-                    geoRadius.setDistance(geoRadiusResponse.getDistance());
-                    geoRadius.setGeo(geoConvert.deconvert(geoRadiusResponse.getCoordinate()));
+			@Override
+			public List<GeoRadius> deconvert(final List<GeoRadiusResponse> target){
+				if(target == null){
+					return null;
+				}
 
-                    result.add(geoRadius);
-                }
+				final List<GeoRadius> result = new ArrayList<>(target.size());
+				final GeoConvert geoConvert = new GeoConvert();
 
-                return result;
-            }
-        }
+				for(GeoRadiusResponse geoRadiusResponse : target){
+					GeoRadius geoRadius = new GeoRadius();
 
-    }
+					geoRadius.setMember(geoRadiusResponse.getMember());
+					geoRadius.setDistance(geoRadiusResponse.getDistance());
+					geoRadius.setGeo(geoConvert.deconvert(geoRadiusResponse.getCoordinate()));
+
+					result.add(geoRadius);
+				}
+
+				return result;
+			}
+		}
+
+	}
 
 }

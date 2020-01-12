@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.transaction;
@@ -40,45 +40,48 @@ import java.io.IOException;
  */
 public class RedisTransactionSynchronizationAdapter extends TransactionSynchronizationAdapter {
 
-    private final RedisConnectionFactory factory;
+	private final RedisConnectionFactory factory;
 
-    private final RedisConnectionHolder connectionHolder;
+	private final RedisConnectionHolder connectionHolder;
 
-    private final RedisConnection connection;
+	private final RedisConnection connection;
 
-    private final static Logger logger = LoggerFactory.getLogger(RedisTransactionSynchronizationAdapter.class);
+	private final static Logger logger = LoggerFactory.getLogger(RedisTransactionSynchronizationAdapter.class);
 
-    public RedisTransactionSynchronizationAdapter(final RedisConnectionFactory factory, final RedisConnectionHolder
-            connectionHolder, final RedisConnection connection){
-        this.factory = factory;
-        this.connectionHolder = connectionHolder;
-        this.connection = connection;
-    }
+	public RedisTransactionSynchronizationAdapter(final RedisConnectionFactory factory, final RedisConnectionHolder
+			connectionHolder, final RedisConnection connection){
+		this.factory = factory;
+		this.connectionHolder = connectionHolder;
+		this.connection = connection;
+	}
 
-    @Override
-    public void afterCompletion(final int status){
-        try{
-            switch(status){
-                case TransactionSynchronization.STATUS_COMMITTED:
-                    connection.exec();
-                    break;
-                case TransactionSynchronization.STATUS_ROLLED_BACK:
-                case TransactionSynchronization.STATUS_UNKNOWN:
-                default:
-                    connection.discard();
-                    break;
-            }
-        }finally{
-            final String message = "Closing bound redisConnection after transaction completed with {}";
-            logger.debug(message, status);
+	@Override
+	public void afterCompletion(final int status){
+		try{
+			switch(status){
+				case TransactionSynchronization.STATUS_COMMITTED:
+					connection.exec();
+					break;
+				case TransactionSynchronization.STATUS_ROLLED_BACK:
+				case TransactionSynchronization.STATUS_UNKNOWN:
+					connection.discard();
+					break;
+				default:
+					connection.discard();
+					break;
+			}
+		}finally{
+			final String message = "Closing bound redisConnection after transaction completed with {}";
+			logger.debug(message, status);
 
-            connectionHolder.setTransactionSyncronisationActive(false);
-            try{
-                connection.close();
-            }catch(IOException e){
-                logger.error(message + " error: {}", status, e.getMessage());
-            }
-            TransactionSynchronizationManager.unbindResource(factory);
-        }
-    }
+			connectionHolder.setTransactionSyncronisationActive(false);
+			try{
+				connection.close();
+			}catch(IOException e){
+				logger.error(message + " error: {}", status, e.getMessage());
+			}
+			TransactionSynchronizationManager.unbindResource(factory);
+		}
+	}
+
 }
