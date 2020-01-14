@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.thesaurus;
@@ -50,265 +50,265 @@ import java.util.Set;
  */
 public class SogouParser extends AbstractParser {
 
-    protected final static Charset ENCODING = StandardCharsets.UTF_16LE;
+	protected final static Charset ENCODING = StandardCharsets.UTF_16LE;
 
-    private final static Logger logger = LoggerFactory.getLogger(SogouParser.class);
+	private final static Logger logger = LoggerFactory.getLogger(SogouParser.class);
 
-    @Override
-    public Type getType(){
-        return Type.SOGOU;
-    }
+	@Override
+	public Type getType(){
+		return Type.SOGOU;
+	}
 
-    @Override
-    protected Set<Word> doParse(InputStream inputStream) throws IOException{
-        SogouScelModel model = read(inputStream);
+	@Override
+	protected Set<Word> doParse(InputStream inputStream) throws IOException{
+		SogouScelModel model = read(inputStream);
 
-        logger.debug("words entry info is: name => {}, type => {}, description => {}, sample => {}.", model.getName()
-                , model.getType(), model.getDescription(), model.getSample());
+		logger.debug("words entry info is: name => {}, type => {}, description => {}, sample => {}.", model.getName(),
+				model.getType(), model.getDescription(), model.getSample());
 
-        Map<String, Set<String>> tempWords = model.getWordMap();
+		Map<String, Set<String>> tempWords = model.getWordMap();
 
-        if(tempWords == null){
-            return null;
-        }
+		if(tempWords == null){
+			return null;
+		}
 
-        Set<Word> words = new LinkedHashSet<>(tempWords.size());
-        if(tempWords.size() == 0){
-            return words;
-        }
+		Set<Word> words = new LinkedHashSet<>(tempWords.size());
+		if(tempWords.size() == 0){
+			return words;
+		}
 
-        tempWords.forEach((key, value)->{
-            if(value == null){
-                return;
-            }
+		tempWords.forEach((key, value)->{
+			if(value == null){
+				return;
+			}
 
-            final String pinyin = StringUtils.replace(key, "'", "");
-            final char[] initials = parseInitials(key, "'");
+			final String pinyin = StringUtils.replace(key, "'", "");
+			final char[] initials = parseInitials(key, "'");
 
-            value.forEach((val)->{
-                Word word = new Word();
+			value.forEach((val)->{
+				Word word = new Word();
 
-                word.setPinyin(pinyin);
-                word.setValue(val);
-                word.setInitials(initials);
+				word.setPinyin(pinyin);
+				word.setValue(val);
+				word.setInitials(initials);
 
-                if(Validate.isEmpty(initials) == false){
-                    word.setInitial(initials[0]);
-                }
+				if(Validate.isEmpty(initials) == false){
+					word.setInitial(initials[0]);
+				}
 
-                words.add(word);
-            });
-        });
+				words.add(word);
+			});
+		});
 
-        tempWords.clear();
+		tempWords.clear();
 
-        return words;
-    }
+		return words;
+	}
 
-    private final SogouScelModel read(InputStream inputStream) throws IOException{
-        SogouScelModel model = new SogouScelModel();
-        DataInputStream input = new DataInputStream(inputStream);
-        byte[] bytes = new byte[4];
-        int read;
+	private final SogouScelModel read(InputStream inputStream) throws IOException{
+		SogouScelModel model = new SogouScelModel();
+		DataInputStream input = new DataInputStream(inputStream);
+		byte[] bytes = new byte[4];
+		int read;
 
-        try{
-            input.readFully(bytes);
+		try{
+			input.readFully(bytes);
 
-            assert (bytes[0] == 0x40 && bytes[1] == 0x15 && bytes[2] == 0 && bytes[3] == 0);
+			assert (bytes[0] == 0x40 && bytes[1] == 0x15 && bytes[2] == 0 && bytes[3] == 0);
 
-            input.readFully(bytes);
+			input.readFully(bytes);
 
-            int flag1 = bytes[0];
+			int flag1 = bytes[0];
 
-            assert (bytes[1] == 0x43 && bytes[2] == 0x53 && bytes[3] == 0x01);
+			assert (bytes[1] == 0x43 && bytes[2] == 0x53 && bytes[3] == 0x01);
 
-            int[] reads = new int[]{8};
+			int[] reads = new int[]{8};
 
-            model.setName(readString(input, 0x130, reads));
-            model.setType(readString(input, 0x338, reads));
-            model.setDescription(readString(input, 0x540, reads));
-            model.setSample(readString(input, 0xd40, reads));
+			model.setName(readString(input, 0x130, reads));
+			model.setType(readString(input, 0x338, reads));
+			model.setDescription(readString(input, 0x540, reads));
+			model.setSample(readString(input, 0xd40, reads));
 
-            read = reads[0];
-            input.skip(0x1540 - read);
-            read = 0x1540;
-            input.readFully(bytes);
-            read += 4;
+			read = reads[0];
+			input.skip(0x1540 - read);
+			read = 0x1540;
+			input.readFully(bytes);
+			read += 4;
 
-            assert (bytes[0] == (byte) 0x9D && bytes[1] == 0x01 && bytes[2] == 0 && bytes[3] == 0);
+			assert (bytes[0] == (byte) 0x9D && bytes[1] == 0x01 && bytes[2] == 0 && bytes[3] == 0);
 
-            bytes = new byte[128];
-            Map<Integer, String> pinyinMap = new LinkedHashMap<>();
+			bytes = new byte[128];
+			Map<Integer, String> pinyinMap = new LinkedHashMap<>();
 
-            while(true){
-                int mark = readUnsignedShort(input);
-                int size = input.readUnsignedByte();
+			while(true){
+				int mark = readUnsignedShort(input);
+				int size = input.readUnsignedByte();
 
-                input.skip(1);
-                read += 4;
+				input.skip(1);
+				read += 4;
 
-                assert (size > 0 && (size % 2) == 0);
+				assert (size > 0 && (size % 2) == 0);
 
-                input.readFully(bytes, 0, size);
-                read += size;
-
-                String pinyin = new String(bytes, 0, size, ENCODING);
-
-                pinyinMap.put(mark, pinyin);
-                if("zuo".equals(pinyin)){
-                    break;
-                }
-            }
-
-            if(flag1 == 0x44){
-                input.skip(0x2628 - read);
-            }else if(flag1 == 0x45){
-                input.skip(0x26C4 - read);
-            }else{
-                throw new RuntimeException();
-            }
-
-            StringBuffer buffer = new StringBuffer();
-            Map<String, Set<String>> wordMap = new LinkedHashMap<>(128);
+				input.readFully(bytes, 0, size);
+				read += size;
+
+				String pinyin = new String(bytes, 0, size, ENCODING);
+
+				pinyinMap.put(mark, pinyin);
+				if("zuo".equals(pinyin)){
+					break;
+				}
+			}
+
+			if(flag1 == 0x44){
+				input.skip(0x2628 - read);
+			}else if(flag1 == 0x45){
+				input.skip(0x26C4 - read);
+			}else{
+				throw new RuntimeException();
+			}
+
+			StringBuilder buffer = new StringBuilder();
+			Map<String, Set<String>> wordMap = new LinkedHashMap<>(128);
 
-            while(true){
-                int size = readUnsignedShort(input);
-                if(size < 0){
-                    break;
-                }
-
-                int count = readUnsignedShort(input);
-                int len = count / 2;
-
-                assert (len * 2 == count);
-                buffer.setLength(0);
+			while(true){
+				int size = readUnsignedShort(input);
+				if(size < 0){
+					break;
+				}
+
+				int count = readUnsignedShort(input);
+				int len = count / 2;
+
+				assert (len * 2 == count);
+				buffer.setLength(0);
 
-                for(int i = 0; i < len; i++){
-                    int key = readUnsignedShort(input);
-                    buffer.append(pinyinMap.get(key)).append('\'');
-                }
-
-                buffer.setLength(buffer.length() - 1);
-                String pinyin = buffer.toString();
+				for(int i = 0; i < len; i++){
+					int key = readUnsignedShort(input);
+					buffer.append(pinyinMap.get(key)).append('\'');
+				}
+
+				buffer.setLength(buffer.length() - 1);
+				String pinyin = buffer.toString();
 
-                Set<String> list = wordMap.get(pinyin);
-                if(list == null){
-                    list = new LinkedHashSet<>();
-                    wordMap.put(pinyin, list);
-                }
-
-                for(int i = 0; i < size; i++){
-                    count = readUnsignedShort(input);
-                    if(count > bytes.length){
-                        bytes = new byte[count];
-                    }
+				Set<String> list = wordMap.get(pinyin);
+				if(list == null){
+					list = new LinkedHashSet<>();
+					wordMap.put(pinyin, list);
+				}
+
+				for(int i = 0; i < size; i++){
+					count = readUnsignedShort(input);
+					if(count > bytes.length){
+						bytes = new byte[count];
+					}
 
-                    input.readFully(bytes, 0, count);
-                    String word = new String(bytes, 0, count, StandardCharsets.UTF_16LE);
-                    //接下来12个字节可能是词频或者类似信息
-                    input.skip(12);
-                    list.add(word);
-                }
-            }
+					input.readFully(bytes, 0, count);
+					String word = new String(bytes, 0, count, StandardCharsets.UTF_16LE);
+					//接下来12个字节可能是词频或者类似信息
+					input.skip(12);
+					list.add(word);
+				}
+			}
 
-            model.setWordMap(wordMap);
+			model.setWordMap(wordMap);
 
-            return model;
-        }finally{
-            if(input != null){
-                input.close();
-            }
-            inputStream.close();
-        }
-    }
+			return model;
+		}finally{
+			if(input != null){
+				input.close();
+			}
+			inputStream.close();
+		}
+	}
 
-    protected final String readString(DataInputStream input, int pos, int[] reads) throws IOException{
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        int read = reads[0];
+	protected final String readString(DataInputStream input, int pos, int[] reads) throws IOException{
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		int read = reads[0];
 
-        input.skip(pos - read);
-        read = pos;
-        output.reset();
+		input.skip(pos - read);
+		read = pos;
+		output.reset();
 
-        while(true){
-            int c1 = input.read();
-            int c2 = input.read();
+		while(true){
+			int c1 = input.read();
+			int c2 = input.read();
 
-            read += 2;
-            if(c1 == 0 && c2 == 0){
-                break;
-            }else{
-                output.write(c1);
-                output.write(c2);
-            }
-        }
+			read += 2;
+			if(c1 == 0 && c2 == 0){
+				break;
+			}else{
+				output.write(c1);
+				output.write(c2);
+			}
+		}
 
-        reads[0] = read;
+		reads[0] = read;
 
-        return new String(output.toByteArray(), ENCODING);
-    }
+		return new String(output.toByteArray(), ENCODING);
+	}
 
-    protected final static int readUnsignedShort(InputStream in) throws IOException{
-        int ch1 = in.read();
-        int ch2 = in.read();
+	protected final static int readUnsignedShort(InputStream in) throws IOException{
+		int ch1 = in.read();
+		int ch2 = in.read();
 
-        return (ch1 | ch2) < 0 ? Integer.MIN_VALUE : (ch2 << 8) + (ch1 << 0);
-    }
+		return (ch1 | ch2) < 0 ? Integer.MIN_VALUE : (ch2 << 8) + (ch1 << 0);
+	}
 
-    private final static class SogouScelModel implements Serializable {
+	private final static class SogouScelModel implements Serializable {
 
-        private static final long serialVersionUID = -7930700607679364157L;
+		private final static long serialVersionUID = -7930700607679364157L;
 
-        private String name;
+		private String name;
 
-        private String type;
+		private String type;
 
-        private String description;
+		private String description;
 
-        private String sample;
+		private String sample;
 
-        private Map<String, Set<String>> wordMap;
+		private Map<String, Set<String>> wordMap;
 
-        public String getName(){
-            return name;
-        }
+		public String getName(){
+			return name;
+		}
 
-        public void setName(String name){
-            this.name = name;
-        }
+		public void setName(String name){
+			this.name = name;
+		}
 
-        public String getType(){
-            return type;
-        }
+		public String getType(){
+			return type;
+		}
 
-        public void setType(String type){
-            this.type = type;
-        }
+		public void setType(String type){
+			this.type = type;
+		}
 
-        public String getDescription(){
-            return description;
-        }
+		public String getDescription(){
+			return description;
+		}
 
-        public void setDescription(String description){
-            this.description = description;
-        }
+		public void setDescription(String description){
+			this.description = description;
+		}
 
-        public String getSample(){
-            return sample;
-        }
+		public String getSample(){
+			return sample;
+		}
 
-        public void setSample(String sample){
-            this.sample = sample;
-        }
+		public void setSample(String sample){
+			this.sample = sample;
+		}
 
-        public Map<String, Set<String>> getWordMap(){
-            return wordMap;
-        }
+		public Map<String, Set<String>> getWordMap(){
+			return wordMap;
+		}
 
-        public void setWordMap(Map<String, Set<String>> wordMap){
-            this.wordMap = wordMap;
-        }
+		public void setWordMap(Map<String, Set<String>> wordMap){
+			this.wordMap = wordMap;
+		}
 
-    }
+	}
 
 }

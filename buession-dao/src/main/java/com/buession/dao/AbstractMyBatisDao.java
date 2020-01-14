@@ -481,11 +481,9 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
 
 	protected String getStatement(final String dml){
 		final String statement = getStatement();
-		final StringBuffer sb = new StringBuffer(statement.length() + dml.length() + 1);
+		final StringBuilder sb = new StringBuilder(statement.length() + dml.length() + 1);
 
-		sb.append(statement);
-		sb.append('.');
-		sb.append(dml);
+		sb.append(statement).append('.').append(dml);
 
 		return sb.toString();
 	}

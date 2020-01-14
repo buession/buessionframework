@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.thesaurus.spring;
@@ -36,63 +36,63 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public class ThesaurusFactoryBean extends ThesaurusFactory implements FactoryBean<Parser>, InitializingBean {
 
-    private Parser parser;
+	private Parser parser;
 
-    private Class<Parser> clazz;
+	private Class<Parser> clazz;
 
-    public ThesaurusFactoryBean(){
-        super();
-    }
+	public ThesaurusFactoryBean(){
+		super();
+	}
 
-    public ThesaurusFactoryBean(Type type){
-        super(type);
-    }
+	public ThesaurusFactoryBean(Type type){
+		super(type);
+	}
 
-    public ThesaurusFactoryBean(String type){
-        super(type);
-    }
+	public ThesaurusFactoryBean(String type){
+		super(type);
+	}
 
-    @Override
-    public Parser getObject() throws Exception{
-        return parser;
-    }
+	@Override
+	public Parser getObject() throws Exception{
+		return parser;
+	}
 
-    @Override
-    public Class<Parser> getObjectType(){
-        return clazz;
-    }
+	@Override
+	public Class<Parser> getObjectType(){
+		return clazz;
+	}
 
-    @Override
-    public boolean isSingleton(){
-        return true;
-    }
+	@Override
+	public boolean isSingleton(){
+		return true;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws Exception{
-        Assert.isNull(getType(), "Thesaurus key could not be null.");
+	@Override
+	public void afterPropertiesSet() throws Exception{
+		Assert.isNull(getType(), "Thesaurus key could not be null.");
 
-        char first = getType().getId().charAt(0);
+		char first = getType().getId().charAt(0);
 
-        StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder(64);
 
-        sb.append(Parser.class.getPackage().getName());
-        sb.append('.');
+		sb.append(Parser.class.getPackage().getName());
+		sb.append('.');
 
-        if(first >= 'a' && first <= 'z'){
-            sb.append((char) (first - 32));
-            sb.append(getType().getId().substring(1));
-        }else{
-            sb.append(getType());
-        }
+		if(first >= 'a' && first <= 'z'){
+			sb.append((char) (first - 32));
+			sb.append(getType().getId().substring(1));
+		}else{
+			sb.append(getType());
+		}
 
-        sb.append("Parser");
+		sb.append("Parser");
 
-        try{
-            clazz = (Class<Parser>) Class.forName(sb.toString());
-            parser = clazz.newInstance();
-        }catch(ClassNotFoundException e){
-            throw new ThesaurusTypeNotFoundException("The " + getType() + " thesaurus not be found.");
-        }
-    }
+		try{
+			clazz = (Class<Parser>) Class.forName(sb.toString());
+			parser = clazz.newInstance();
+		}catch(ClassNotFoundException e){
+			throw new ThesaurusTypeNotFoundException("The " + getType() + " thesaurus not be found.");
+		}
+	}
 
 }

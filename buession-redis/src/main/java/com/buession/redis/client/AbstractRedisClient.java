@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client;
@@ -46,110 +46,111 @@ import java.util.Map;
  */
 public abstract class AbstractRedisClient implements RedisClient {
 
-    private RedisConnection connection;
+	private RedisConnection connection;
 
-    private final static Logger logger = LoggerFactory.getLogger(AbstractRedisClient.class);
+	private final static Logger logger = LoggerFactory.getLogger(AbstractRedisClient.class);
 
-    public AbstractRedisClient(){
-        super();
-    }
+	public AbstractRedisClient(){
+		super();
+	}
 
-    public AbstractRedisClient(RedisConnection connection){
-        this.connection = connection;
-    }
+	public AbstractRedisClient(RedisConnection connection){
+		this.connection = connection;
+	}
 
-    @Override
-    public RedisConnection getConnection(){
-        return connection;
-    }
+	@Override
+	public RedisConnection getConnection(){
+		return connection;
+	}
 
-    @Override
-    public void setConnection(RedisConnection connection){
-        this.connection = connection;
-    }
+	@Override
+	public void setConnection(RedisConnection connection){
+		this.connection = connection;
+	}
 
-    protected <C, R> R doExecute(final ProtocolCommand command, final Executor<C, R> executor) throws RedisException{
-        try{
-            logger.debug("Execute command '{}'", command);
-            return connection.execute(command, executor);
-        }catch(RedisException e){
-            logger.error("Execute command '{}', failure: {}", command, e.getMessage());
-            throw e;
-        }
-    }
+	protected <C, R> R doExecute(final ProtocolCommand command, final Executor<C, R> executor) throws RedisException{
+		try{
+			logger.debug("Execute command '{}'", command);
+			return connection.execute(command, executor);
+		}catch(RedisException e){
+			logger.error("Execute command '{}', failure: {}", command, e.getMessage());
+			throw e;
+		}
+	}
 
-    protected <C, R> R doExecute(final ProtocolCommand command, final Executor<C, R> executor, final
-    OperationsCommandArguments arguments){
-        try{
-            logger.debug("Execute command '{}'<{}>", command, commandParametersToSting(arguments));
-            return connection.execute(command, executor);
-        }catch(RedisException e){
-            logger.error("Execute command '{}'<{}>, failure: {}", command, commandParametersToSting(arguments), e
-                    .getMessage());
-            throw e;
-        }
-    }
+	protected <C, R> R doExecute(final ProtocolCommand command, final Executor<C, R> executor, final
+	OperationsCommandArguments arguments){
+		try{
+			logger.debug("Execute command '{}'<{}>", command, commandParametersToSting(arguments));
+			return connection.execute(command, executor);
+		}catch(RedisException e){
+			logger.error("Execute command '{}'<{}>, failure: {}", command, commandParametersToSting(arguments), e
+					.getMessage());
+			throw e;
+		}
+	}
 
-    protected final static Status returnStatus(final boolean value){
-        return Status.valueOf(value);
-    }
+	protected final static Status returnStatus(final boolean value){
+		return Status.valueOf(value);
+	}
 
-    protected final static <O extends Enum<O>> O returnEnum(final String str, final Class<O> enumType){
-        return Enum.valueOf(enumType, str.toUpperCase());
-    }
+	protected final static <O extends Enum<O>> O returnEnum(final String str, final Class<O> enumType){
+		return Enum.valueOf(enumType, str.toUpperCase());
+	}
 
-    protected final static Status returnForOK(final String str){
-        return Status.valueOf("OK".equalsIgnoreCase(str));
-    }
+	protected final static Status returnForOK(final String str){
+		return Status.valueOf("OK".equalsIgnoreCase(str));
+	}
 
-    protected final static Status returnForOK(final byte[] str){
-        return returnForOK(SafeEncoder.encode(str));
-    }
+	protected final static Status returnForOK(final byte[] str){
+		return returnForOK(SafeEncoder.encode(str));
+	}
 
-    protected final static RedisServerTime returnRedisServerTime(final List<String> ret){
-        if(ret == null){
-            return null;
-        }
+	protected final static RedisServerTime returnRedisServerTime(final List<String> ret){
+		if(ret == null){
+			return null;
+		}
 
-        RedisServerTime time = new RedisServerTime();
+		RedisServerTime time = new RedisServerTime();
 
-        Date date = new Date();
-        date.setTime(Long.valueOf(ret.get(0)) * 1000L);
+		Date date = new Date();
+		date.setTime(Long.valueOf(ret.get(0)) * 1000L);
 
-        time.setDate(date);
-        time.setUsec(Long.valueOf(ret.get(1)));
+		time.setDate(date);
+		time.setUsec(Long.valueOf(ret.get(1)));
 
-        return time;
-    }
+		return time;
+	}
 
-    protected void close(){
-        try{
-            connection.close();
-        }catch(IOException e){
-            logger.error("RedisConnection close error: {}", e.getMessage());
-        }
-    }
+	protected void close(){
+		try{
+			connection.close();
+		}catch(IOException e){
+			logger.error("RedisConnection close error: {}", e.getMessage());
+		}
+	}
 
-    private final static String commandParametersToSting(final OperationsCommandArguments arguments){
-        StringBuffer sb = new StringBuffer();
+	private final static String commandParametersToSting(final OperationsCommandArguments arguments){
+		boolean isEmpty = Validate.isEmpty(arguments.getParameters());
+		StringBuilder sb = isEmpty ? new StringBuilder() : new StringBuilder(arguments.getParameters().size() * 16);
 
-        if(Validate.isEmpty(arguments.getParameters()) == false){
-            int i = 0;
+		if(isEmpty == false){
+			int i = 0;
 
-            for(Map.Entry<String, Object> e : arguments.getParameters().entrySet()){
-                if(i > 0){
-                    sb.append(", ");
-                }
+			for(Map.Entry<String, Object> e : arguments.getParameters().entrySet()){
+				if(i > 0){
+					sb.append(", ");
+				}
 
-                sb.append(e.getKey());
-                sb.append(" => ");
-                sb.append(e.getValue());
+				sb.append(e.getKey());
+				sb.append(" => ");
+				sb.append(e.getValue());
 
-                i++;
-            }
-        }
+				i++;
+			}
+		}
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
 }

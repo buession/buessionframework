@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -32,73 +32,73 @@ import java.nio.charset.StandardCharsets;
  */
 public final class ContentType {
 
-    public final static ContentType APPLICATION_OBJECT_STREAM = new ContentType("application/octet-stream",
-            StandardCharsets.ISO_8859_1);
+	public final static ContentType APPLICATION_OBJECT_STREAM = new ContentType("application/octet-stream",
+			StandardCharsets.ISO_8859_1);
 
-    public final static ContentType APPLICATION_JSON = new ContentType("application/json", StandardCharsets.UTF_8);
+	public final static ContentType APPLICATION_JSON = new ContentType("application/json", StandardCharsets.UTF_8);
 
-    public final static ContentType TEXT_PLAIN = new ContentType("text/plain", Charset.defaultCharset());
+	public final static ContentType TEXT_PLAIN = new ContentType("text/plain", Charset.defaultCharset());
 
-    public final static ContentType APPLICATION_FORM_URLENCODED = new ContentType
-            ("application/x-www-form-urlencoded", StandardCharsets.ISO_8859_1);
+	public final static ContentType APPLICATION_FORM_URLENCODED = new ContentType("application/x-www-form-urlencoded",
+			StandardCharsets.ISO_8859_1);
 
-    public final static ContentType MULTIPART_FORM_DATA = new ContentType("multipart/form-data", StandardCharsets
-            .ISO_8859_1);
+	public final static ContentType MULTIPART_FORM_DATA = new ContentType("multipart/form-data", StandardCharsets
+			.ISO_8859_1);
 
-    private String mimeType;
+	private String mimeType;
 
-    private Charset charset;
+	private Charset charset;
 
-    public ContentType(String mimeType){
-        this.mimeType = mimeType;
-    }
+	public ContentType(String mimeType){
+		this.mimeType = mimeType;
+	}
 
-    public ContentType(String mimeType, Charset charset){
-        this.mimeType = mimeType;
-        this.charset = charset;
-    }
+	public ContentType(String mimeType, Charset charset){
+		this.mimeType = mimeType;
+		this.charset = charset;
+	}
 
-    public String getMimeType(){
-        return mimeType;
-    }
+	public String getMimeType(){
+		return mimeType;
+	}
 
-    public Charset getCharset(){
-        return charset;
-    }
+	public Charset getCharset(){
+		return charset;
+	}
 
-    public String valueOf(){
-        return valueOf(this);
-    }
+	public String valueOf(){
+		return valueOf(this);
+	}
 
-    @Override
-    public String toString(){
-        StringBuffer sb = new StringBuffer(mimeType.length() + 16);
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder(mimeType.length() + 16);
 
-        sb.append(mimeType);
+		sb.append(mimeType);
 
-        if(charset != null){
-            sb.append("; charset=");
-            sb.append(charset.name());
-        }
+		if(charset != null){
+			sb.append("; charset=");
+			sb.append(charset.name());
+		}
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
-    public final static String valueOf(ContentType contentType){
-        if(contentType == null){
-            return null;
-        }
+	public final static String valueOf(ContentType contentType){
+		if(contentType == null){
+			return null;
+		}
 
-        StringBuffer sb = new StringBuffer(contentType.getMimeType().length() + 16);
+		StringBuilder sb = new StringBuilder(contentType.getMimeType().length() + 16);
 
-        sb.append(contentType.getMimeType());
+		sb.append(contentType.getMimeType());
 
-        if(contentType.getCharset() != null){
-            sb.append("; charset=");
-            sb.append(contentType.getCharset().name());
-        }
+		if(contentType.getCharset() != null){
+			sb.append("; charset=");
+			sb.append(contentType.getCharset().name());
+		}
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
 }

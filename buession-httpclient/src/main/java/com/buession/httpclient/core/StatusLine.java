@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -31,67 +31,67 @@ import com.buession.core.utils.Assert;
  */
 public class StatusLine {
 
-    private int statusCode;
+	private int statusCode;
 
-    private String statusText;
+	private String statusText;
 
-    public StatusLine(){
-    }
+	public StatusLine(){
+	}
 
-    public StatusLine(int statusCode, String statusText){
-        this.statusCode = statusCode;
-        this.statusText = statusText;
-    }
+	public StatusLine(int statusCode, String statusText){
+		this.statusCode = statusCode;
+		this.statusText = statusText;
+	}
 
-    public int getStatusCode(){
-        return statusCode;
-    }
+	public int getStatusCode(){
+		return statusCode;
+	}
 
-    public void setStatusCode(final int statusCode){
-        Assert.isNegative(statusCode, "HTTP response status code cloud not be negative.");
-        this.statusCode = statusCode;
-    }
+	public void setStatusCode(final int statusCode){
+		Assert.isNegative(statusCode, "HTTP response status code cloud not be negative.");
+		this.statusCode = statusCode;
+	}
 
-    public String getStatusText(){
-        return statusText;
-    }
+	public String getStatusText(){
+		return statusText;
+	}
 
-    public void setStatusText(final String statusText){
-        Assert.isBlank(statusText, "HTTP response status text cloud not be null or empty.");
-        this.statusText = statusText;
-    }
+	public void setStatusText(final String statusText){
+		Assert.isBlank(statusText, "HTTP response status text cloud not be null or empty.");
+		this.statusText = statusText;
+	}
 
-    @Override
-    public int hashCode(){
-        int result = 16;
+	@Override
+	public int hashCode(){
+		int result = 16;
 
-        result = 32 * result + statusCode;
-        result = 32 * result + (statusText == null ? 0 : statusText.hashCode());
+		result = 32 * result + statusCode;
+		result = 32 * result + (statusText == null ? 0 : statusText.hashCode());
 
-        return result;
-    }
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj){
-        if(obj == this){
-            return true;
-        }
+	@Override
+	public boolean equals(Object obj){
+		if(obj == this){
+			return true;
+		}
 
-        if((obj instanceof StatusLine) == false){
-            return false;
-        }
+		if((obj instanceof StatusLine) == false){
+			return false;
+		}
 
-        StatusLine that = (StatusLine) obj;
-        return that.getStatusCode() == getStatusCode();
-    }
+		StatusLine that = (StatusLine) obj;
+		return that.getStatusCode() == getStatusCode();
+	}
 
-    @Override
-    public String toString(){
-        final StringBuffer sb = new StringBuffer();
+	@Override
+	public String toString(){
+		final StringBuilder sb = new StringBuilder(50);
 
-        sb.append(statusCode).append(" ").append(statusText);
+		sb.append(statusCode).append(" ").append(statusText);
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
 }

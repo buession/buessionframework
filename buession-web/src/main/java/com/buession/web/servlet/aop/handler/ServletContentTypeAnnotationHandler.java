@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.handler;
@@ -42,41 +42,41 @@ import java.lang.reflect.Method;
  */
 public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnnotationHandler {
 
-    private final static Logger logger = LoggerFactory.getLogger(ServletContentTypeAnnotationHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(ServletContentTypeAnnotationHandler.class);
 
-    public ServletContentTypeAnnotationHandler(){
-        super();
-    }
+	public ServletContentTypeAnnotationHandler(){
+		super();
+	}
 
-    @Override
-    public void execute(MethodInvocation mi, ContentType contentType){
-        HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
-        doExecute(httpServlet, contentType);
-    }
+	@Override
+	public void execute(MethodInvocation mi, ContentType contentType){
+		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
+		doExecute(httpServlet, contentType);
+	}
 
-    @Override
-    public Object execute(Object target, Method method, Object[] arguments, ContentType contentType){
-        HttpServlet httpServlet = MethodUtils.createHttpServletFromMethodArguments(arguments);
-        doExecute(httpServlet, contentType);
-        return null;
-    }
+	@Override
+	public Object execute(Object target, Method method, Object[] arguments, ContentType contentType){
+		HttpServlet httpServlet = MethodUtils.createHttpServletFromMethodArguments(arguments);
+		doExecute(httpServlet, contentType);
+		return null;
+	}
 
-    private final static void doExecute(final HttpServlet httpServlet, final ContentType contentType){
-        if(httpServlet == null || httpServlet.getResponse() == null){
-            logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "ServerHttpResponse");
-            return;
-        }
+	private final static void doExecute(final HttpServlet httpServlet, final ContentType contentType){
+		if(httpServlet == null || httpServlet.getResponse() == null){
+			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "ServerHttpResponse");
+			return;
+		}
 
-        StringBuffer sb = new StringBuffer(contentType.mime().length() + 24);
+		StringBuilder sb = new StringBuilder(contentType.mime().length() + 24);
 
-        sb.append(contentType.mime());
+		sb.append(contentType.mime());
 
-        if(Validate.hasText(contentType.encoding()) == false){
-            sb.append("; charset=");
-            sb.append(contentType.encoding());
-        }
+		if(Validate.hasText(contentType.encoding()) == false){
+			sb.append("; charset=");
+			sb.append(contentType.encoding());
+		}
 
-        httpServlet.getResponse().addHeader(HttpHeader.CONTENT_TYPE.getValue(), sb.toString());
-    }
+		httpServlet.getResponse().addHeader(HttpHeader.CONTENT_TYPE.getValue(), sb.toString());
+	}
 
 }

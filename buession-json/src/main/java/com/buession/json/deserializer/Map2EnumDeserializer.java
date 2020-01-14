@@ -128,7 +128,7 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 		final String className = clazz.getName();
 		final String fieldName = field.getName();
 		final String nodeName = node.toString();
-		final StringBuffer sb = new StringBuffer(className.length() + fieldName.length() + nodeName.length() + 2);
+		final StringBuilder sb = new StringBuilder(className.length() + fieldName.length() + nodeName.length() + 2);
 
 		sb.append(className);
 		sb.append('_');

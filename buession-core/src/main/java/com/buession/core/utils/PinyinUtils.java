@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -38,105 +38,105 @@ import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombi
  */
 public class PinyinUtils {
 
-    /**
-     * 获取汉字拼音
-     *
-     * @param str
-     *         汉字
-     *
-     * @return 汉字拼音
-     *
-     * @throws BadHanyuPinyinOutputFormatCombination
-     *         异常
-     */
-    public static String getPinyin(final String str) throws BadHanyuPinyinOutputFormatCombination{
-        return getPinyin(str, false, CaseType.LOWERCASE);
-    }
+	/**
+	 * 获取汉字拼音
+	 *
+	 * @param str
+	 * 		汉字
+	 *
+	 * @return 汉字拼音
+	 *
+	 * @throws BadHanyuPinyinOutputFormatCombination
+	 * 		异常
+	 */
+	public static String getPinyin(final String str) throws BadHanyuPinyinOutputFormatCombination{
+		return getPinyin(str, false, CaseType.LOWERCASE);
+	}
 
-    /**
-     * 获取汉字拼音
-     *
-     * @param str
-     *         汉字
-     * @param hasTone
-     *         是否包含声调
-     * @param caseType
-     *         大写或小写
-     *
-     * @return 汉字拼音
-     *
-     * @throws net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination
-     *         异常
-     */
-    public static String getPinyin(final String str, final boolean hasTone, final CaseType caseType) throws
-            BadHanyuPinyinOutputFormatCombination{
-        if(Validate.isEmpty(str)){
-            return str;
-        }
+	/**
+	 * 获取汉字拼音
+	 *
+	 * @param str
+	 * 		汉字
+	 * @param hasTone
+	 * 		是否包含声调
+	 * @param caseType
+	 * 		大写或小写
+	 *
+	 * @return 汉字拼音
+	 *
+	 * @throws net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination
+	 * 		异常
+	 */
+	public static String getPinyin(final String str, final boolean hasTone, final CaseType caseType) throws
+			BadHanyuPinyinOutputFormatCombination{
+		if(Validate.isEmpty(str)){
+			return str;
+		}
 
-        HanyuPinyinOutputFormat outputFormat = new HanyuPinyinOutputFormat();
+		HanyuPinyinOutputFormat outputFormat = new HanyuPinyinOutputFormat();
 
-        if(hasTone == false){
-            outputFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
-        }
+		if(hasTone == false){
+			outputFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+		}
 
-        if(CaseType.LOWERCASE == caseType){
-            outputFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);
-        }else if(CaseType.UPERCASE == caseType){
-            outputFormat.setCaseType(HanyuPinyinCaseType.UPPERCASE);
-        }
+		if(CaseType.LOWERCASE == caseType){
+			outputFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+		}else if(CaseType.UPERCASE == caseType){
+			outputFormat.setCaseType(HanyuPinyinCaseType.UPPERCASE);
+		}
 
-        StringBuffer sb = new StringBuffer(str.length());
+		StringBuilder sb = new StringBuilder(str.length());
 
-        try{
-            for(char c : str.toCharArray()){
-                // 如果包含有中文标点除号，需要使用正则表达式
-                if(Character.toString(c).matches("[\\u4E00-\\u9FA5]+") == true){
-                    sb.append(PinyinHelper.toHanyuPinyinStringArray(c, outputFormat)[0]);
-                }else{
-                    sb.append(Character.toString(c));
-                }
-            }
-        }catch(BadHanyuPinyinOutputFormatCombination e){
-            throw new BadHanyuPinyinOutputFormatCombination("【" + str + "】转为拼音失败：" + e.getMessage());
-        }
+		try{
+			for(char c : str.toCharArray()){
+				// 如果包含有中文标点除号，需要使用正则表达式
+				if(Character.toString(c).matches("[\\u4E00-\\u9FA5]+") == true){
+					sb.append(PinyinHelper.toHanyuPinyinStringArray(c, outputFormat)[0]);
+				}else{
+					sb.append(Character.toString(c));
+				}
+			}
+		}catch(BadHanyuPinyinOutputFormatCombination e){
+			throw new BadHanyuPinyinOutputFormatCombination("【" + str + "】转为拼音失败：" + e.getMessage());
+		}
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
-    /**
-     * 提取每个汉字的首字母
-     *
-     * @param str
-     *         汉字
-     *
-     * @return 拼音首字母集合
-     */
-    public static String getPinYinFirstChar(final String str){
-        if(Validate.isEmpty(str)){
-            return str;
-        }
+	/**
+	 * 提取每个汉字的首字母
+	 *
+	 * @param str
+	 * 		汉字
+	 *
+	 * @return 拼音首字母集合
+	 */
+	public static String getPinYinFirstChar(final String str){
+		if(Validate.isEmpty(str)){
+			return str;
+		}
 
-        StringBuffer sb = new StringBuffer(str.length());
+		StringBuilder sb = new StringBuilder(str.length());
 
-        for(char c : str.toCharArray()){
-            String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c);
-            if(pinyinArray != null){
-                sb.append(pinyinArray[0].charAt(0));
-            }else{
-                sb.append(c);
-            }
-        }
+		for(char c : str.toCharArray()){
+			String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c);
+			if(pinyinArray != null){
+				sb.append(pinyinArray[0].charAt(0));
+			}else{
+				sb.append(c);
+			}
+		}
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
-    public enum CaseType {
+	public enum CaseType {
 
-        LOWERCASE,
+		LOWERCASE,
 
-        UPERCASE
+		UPERCASE
 
-    }
+	}
 
 }

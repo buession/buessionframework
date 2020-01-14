@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.aspect;
@@ -35,23 +35,23 @@ import java.util.Arrays;
  */
 public class AspectjAnnotationsMethodInterceptorLogUtils {
 
-    private AspectjAnnotationsMethodInterceptorLogUtils(){
+	private AspectjAnnotationsMethodInterceptorLogUtils(){
 
-    }
+	}
 
-    public final static void performAfterInterceptionDebug(final Logger logger, final JoinPoint joinPoint){
-        if(logger.isTraceEnabled()){
-            StringBuffer message = new StringBuffer(255);
+	public final static void performAfterInterceptionDebug(final Logger logger, final JoinPoint joinPoint){
+		if(logger.isTraceEnabled()){
+			StringBuilder message = new StringBuilder(255);
 
-            message.append("Invoking a method decorated with a Buession annotation\n");
-            message.append("\tkind       : ").append(joinPoint.getKind()).append("\n");
-            message.append("\tjoinPoint  : ").append(joinPoint).append("\n");
-            message.append("\tannotations: ").append(Arrays.toString(((MethodSignature) joinPoint.getSignature())
-                    .getMethod().getAnnotations())).append("\n");
-            message.append("\ttarget     : ").append(joinPoint.getTarget());
+			message.append("Invoking a method decorated with a Buession annotation\n");
+			message.append("\tkind       : ").append(joinPoint.getKind()).append("\n");
+			message.append("\tjoinPoint  : ").append(joinPoint).append("\n");
+			message.append("\tannotations: ").append(Arrays.toString(((MethodSignature) joinPoint.getSignature())
+					.getMethod().getAnnotations())).append("\n");
+			message.append("\ttarget     : ").append(joinPoint.getTarget());
 
-            logger.trace(message.toString());
-        }
-    }
+			logger.trace(message.toString());
+		}
+	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.mvc.controller;
@@ -36,75 +36,75 @@ import javax.servlet.http.HttpServletRequest;
  */
 public abstract class AbstractController implements Controller {
 
-    protected <E> Response<E> responseSuccess(){
-        return responseSuccess("");
-    }
+	protected <E> Response<E> responseSuccess(){
+		return responseSuccess("");
+	}
 
-    protected <E> Response<E> responseSuccess(final String message){
-        return responseSuccess(message, (E) null);
-    }
+	protected <E> Response<E> responseSuccess(final String message){
+		return responseSuccess(message, (E) null);
+	}
 
-    protected <E> Response<E> responseSuccess(final E data){
-        return responseSuccess("", data);
-    }
+	protected <E> Response<E> responseSuccess(final E data){
+		return responseSuccess("", data);
+	}
 
-    protected <E> Response<E> responseSuccess(final String message, final E data){
-        return response(true, 0, message, data);
-    }
+	protected <E> Response<E> responseSuccess(final String message, final E data){
+		return response(true, 0, message, data);
+	}
 
-    protected <E> Response<E> responseSuccess(final Pagination<E> pagination){
-        return responseSuccess("", pagination);
-    }
+	protected <E> Response<E> responseSuccess(final Pagination<E> pagination){
+		return responseSuccess("", pagination);
+	}
 
-    @SuppressWarnings({"unchecked"})
-    protected <E> Response<E> responseSuccess(final String message, final Pagination<E> pagination){
-        final Response<E> response = new Response(true, 0, message, pagination.getData());
-        final Pagination<E> paging = new Pagination<>(pagination.getPage(), pagination.getPagesize(), pagination
-                .getTotalRecords());
+	@SuppressWarnings({"unchecked"})
+	protected <E> Response<E> responseSuccess(final String message, final Pagination<E> pagination){
+		final Response<E> response = new Response(true, 0, message, pagination.getData());
+		final Pagination<E> paging = new Pagination<>(pagination.getPage(), pagination.getPagesize(), pagination
+				.getTotalRecords());
 
-        response.setPagination(paging);
+		response.setPagination(paging);
 
-        return response;
-    }
+		return response;
+	}
 
-    protected <E> Response<E> responseFailure(final MessageObject message){
-        return responseFailure(message.getCode(), message.getText());
-    }
+	protected <E> Response<E> responseFailure(final MessageObject message){
+		return responseFailure(message.getCode(), message.getText());
+	}
 
-    protected <E> Response<E> responseFailure(final MessageObject message, final Exception e){
-        StringBuffer sb = new StringBuffer(message.getText().length() + e.getMessage().length() + 4);
+	protected <E> Response<E> responseFailure(final MessageObject message, final Exception e){
+		StringBuilder sb = new StringBuilder(message.getText().length() + e.getMessage().length() + 4);
 
-        sb.append(message.getText()).append(": ").append(e.getMessage());
+		sb.append(message.getText()).append(": ").append(e.getMessage());
 
-        return responseFailure(message.getCode(), sb.toString());
-    }
+		return responseFailure(message.getCode(), sb.toString());
+	}
 
-    protected <E> Response<E> responseFailureFormat(final MessageObject message, final Object... args){
-        return responseFailure(message.getCode(), String.format(message.getText(), args));
-    }
+	protected <E> Response<E> responseFailureFormat(final MessageObject message, final Object... args){
+		return responseFailure(message.getCode(), String.format(message.getText(), args));
+	}
 
-    protected <E> Response<E> responseFailure(final int code){
-        return responseFailure(code, "");
-    }
+	protected <E> Response<E> responseFailure(final int code){
+		return responseFailure(code, "");
+	}
 
-    protected <E> Response<E> responseFailure(final int code, final String message){
-        return response(false, code, message);
-    }
+	protected <E> Response<E> responseFailure(final int code, final String message){
+		return response(false, code, message);
+	}
 
-    protected <E> Response<E> response(final boolean state, final int code, final String message){
-        return new Response<>(state, code, message);
-    }
+	protected <E> Response<E> response(final boolean state, final int code, final String message){
+		return new Response<>(state, code, message);
+	}
 
-    protected <E> Response<E> response(final boolean state, final int code, final String message, final E data){
-        return new Response<>(state, code, message, data);
-    }
+	protected <E> Response<E> response(final boolean state, final int code, final String message, final E data){
+		return new Response<>(state, code, message, data);
+	}
 
-    protected void pageNotFound(final HttpServletRequest request) throws PageNotFoundException{
-        pageNotFound(request, request.getRequestURI());
-    }
+	protected void pageNotFound(final HttpServletRequest request) throws PageNotFoundException{
+		pageNotFound(request, request.getRequestURI());
+	}
 
-    protected void pageNotFound(final HttpServletRequest request, final String uri) throws PageNotFoundException{
-        throw new PageNotFoundException(uri);
-    }
+	protected void pageNotFound(final HttpServletRequest request, final String uri) throws PageNotFoundException{
+		throw new PageNotFoundException(uri);
+	}
 
 }

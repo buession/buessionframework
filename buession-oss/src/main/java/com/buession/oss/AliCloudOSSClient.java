@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.oss;
@@ -46,133 +46,132 @@ import java.util.Formatter;
  */
 public class AliCloudOSSClient extends AbstractOSSClient {
 
-    public final static String SUCCESSFUL_VALUE = "OK";
+	public final static String SUCCESSFUL_VALUE = "OK";
 
-    private OSS ossClient = null;
+	private OSS ossClient = null;
 
-    private final static Logger logger = LoggerFactory.getLogger(AliCloudOSSClient.class);
+	private final static Logger logger = LoggerFactory.getLogger(AliCloudOSSClient.class);
 
-    public AliCloudOSSClient(){
-        super();
-    }
+	public AliCloudOSSClient(){
+		super();
+	}
 
-    public AliCloudOSSClient(String endpoint, String accessKeyId, String secretAccessKey){
-        super(endpoint, accessKeyId, secretAccessKey);
-    }
+	public AliCloudOSSClient(String endpoint, String accessKeyId, String secretAccessKey){
+		super(endpoint, accessKeyId, secretAccessKey);
+	}
 
-    protected OSS getOssClient(){
-        if(ossClient == null){
-            ossClient = new OSSClientBuilder().build(getEndpoint(), getAccessKeyId(), getSecretAccessKey());
-        }
+	protected OSS getOssClient(){
+		if(ossClient == null){
+			ossClient = new OSSClientBuilder().build(getEndpoint(), getAccessKeyId(), getSecretAccessKey());
+		}
 
-        return ossClient;
-    }
+		return ossClient;
+	}
 
-    /**
-     * 图片裁剪
-     *
-     * @param bucketName
-     *         Bucket 名字
-     * @param path
-     *         图片路径
-     * @param width
-     *         宽度
-     * @param height
-     *         高度
-     * @param x
-     *         X 坐标起点
-     * @param y
-     *         Y 坐标起点
-     *
-     * @return 裁剪结果
-     */
-    @Override
-    public Result crop(final String bucketName, final String path, final int width, final int height, final int x,
-                       final int y){
-        final String objectKey = path.startsWith("/") ? path.substring(1) : path;
-        final StringBuffer sbStyle = new StringBuffer(64);
-        final Formatter styleFormatter = new Formatter(sbStyle);
+	/**
+	 * 图片裁剪
+	 *
+	 * @param bucketName
+	 * 		Bucket 名字
+	 * @param path
+	 * 		图片路径
+	 * @param width
+	 * 		宽度
+	 * @param height
+	 * 		高度
+	 * @param x
+	 * 		X 坐标起点
+	 * @param y
+	 * 		Y 坐标起点
+	 *
+	 * @return 裁剪结果
+	 */
+	@Override
+	public Result crop(final String bucketName, final String path, final int width, final int height, final int x,
+					   final int y){
+		final String objectKey = path.startsWith("/") ? path.substring(1) : path;
+		final StringBuilder sbStyle = new StringBuilder(64);
+		final Formatter styleFormatter = new Formatter(sbStyle);
 
-        sbStyle.append("image/crop");
-        sbStyle.append(",w_");
-        sbStyle.append(width);
-        sbStyle.append(",h_");
-        sbStyle.append(height);
-        sbStyle.append(",x_");
-        sbStyle.append(x);
-        sbStyle.append(",y_");
-        sbStyle.append(y);
-        sbStyle.append(",r_1");
+		sbStyle.append("image/crop");
+		sbStyle.append(",w_");
+		sbStyle.append(width);
+		sbStyle.append(",h_");
+		sbStyle.append(height);
+		sbStyle.append(",x_");
+		sbStyle.append(x);
+		sbStyle.append(",y_");
+		sbStyle.append(y);
+		sbStyle.append(",r_1");
 
-        styleFormatter.format("|sys/saveas,o_%s,b_%s", BinaryUtil.toBase64String(objectKey.getBytes()), BinaryUtil
-                .toBase64String(bucketName.getBytes()));
+		styleFormatter.format("|sys/saveas,o_%s,b_%s", BinaryUtil.toBase64String(objectKey.getBytes()), BinaryUtil
+				.toBase64String(bucketName.getBytes()));
 
-        ProcessObjectRequest request = new ProcessObjectRequest(bucketName, objectKey, sbStyle.toString());
-        GenericResult genericResult = getOssClient().processObject(request);
+		ProcessObjectRequest request = new ProcessObjectRequest(bucketName, objectKey, sbStyle.toString());
+		GenericResult genericResult = getOssClient().processObject(request);
 
-        try{
-            byte[] readStreamAsByteArray = IOUtils.readStreamAsByteArray(genericResult.getResponse().getContent());
-            genericResult.getResponse().getContent().close();
+		try{
+			byte[] readStreamAsByteArray = IOUtils.readStreamAsByteArray(genericResult.getResponse().getContent());
+			genericResult.getResponse().getContent().close();
 
-            AliCloudResult aliCloudResult = OBJECT_MAPPER.readValue(readStreamAsByteArray, AliCloudResult.class);
+			AliCloudResult aliCloudResult = OBJECT_MAPPER.readValue(readStreamAsByteArray, AliCloudResult.class);
 
-            if(aliCloudResult == null){
-                return null;
-            }
+			if(aliCloudResult == null){
+				return null;
+			}
 
-            if(SUCCESSFUL_VALUE.equals(aliCloudResult.getStatus())){
-                Result result = buildResult(genericResult, path);
+			if(SUCCESSFUL_VALUE.equals(aliCloudResult.getStatus())){
+				Result result = buildResult(genericResult, path);
 
-                result.setSize(aliCloudResult.getFileSize());
+				result.setSize(aliCloudResult.getFileSize());
 
-                return result;
-            }
-        }catch(IOException e){
-            logger.error("Crop images '{}' error.", path, e);
-        }
+				return result;
+			}
+		}catch(IOException e){
+			logger.error("Crop images '{}' error.", path, e);
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    @Override
-    public void close(){
-        getOssClient().shutdown();
-    }
+	@Override
+	public void close(){
+		getOssClient().shutdown();
+	}
 
-    @Override
-    protected Result doUpload(final String bucketName, final File file, final String path){
-        PutObjectResult putObjectResult = getOssClient().putObject(bucketName, path, file);
-        return buildResult(putObjectResult, path);
-    }
+	@Override
+	protected Result doUpload(final String bucketName, final File file, final String path){
+		PutObjectResult putObjectResult = getOssClient().putObject(bucketName, path, file);
+		return buildResult(putObjectResult, path);
+	}
 
-    @Override
-    protected Result doUpload(final String bucketName, final InputStream stream, final String path){
-        PutObjectResult putObjectResult = getOssClient().putObject(bucketName, path, stream);
-        return buildResult(putObjectResult, path);
-    }
+	@Override
+	protected Result doUpload(final String bucketName, final InputStream stream, final String path){
+		PutObjectResult putObjectResult = getOssClient().putObject(bucketName, path, stream);
+		return buildResult(putObjectResult, path);
+	}
 
-    @Override
-    protected String getDefaultBaseUrl(final String bucketName){
-        final StringBuffer sb = new StringBuffer(128);
+	@Override
+	protected String getDefaultBaseUrl(final String bucketName){
+		final StringBuilder sb = new StringBuilder(128);
 
-        sb.append("https://");
-        sb.append(bucketName);
-        sb.append('.');
-        sb.append(getEndpoint());
-        sb.append('/');
+		sb.append("https://");
+		sb.append(bucketName).append('.').append(getEndpoint());
+		sb.append('/');
 
-        return sb.toString();
-    }
+		return sb.toString();
+	}
 
-    private Result buildResult(final GenericResult genericResult, final String path){
-        if(genericResult == null){
-            return null;
-        }
+	private Result buildResult(final GenericResult genericResult, final String path){
+		if(genericResult == null){
+			return null;
+		}
 
-        Result result = new Result();
+		Result result = new Result();
 
-        result.setPath(path);
+		result.setPath(path);
 
-        return result;
-    }
+		return result;
+	}
+
 }

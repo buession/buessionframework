@@ -52,7 +52,7 @@ public class InetAddressUtils {
 	 */
 	public final static String long2ip(long l){
 		long j = 0;
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 
 		for(int i = 0; i < 4; i++){
 			j = (l & mask[i]) >> (i * 8);

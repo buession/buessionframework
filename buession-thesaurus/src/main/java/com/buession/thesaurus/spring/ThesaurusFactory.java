@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.thesaurus.spring;
@@ -33,33 +33,34 @@ import com.buession.thesaurus.core.Type;
  */
 public class ThesaurusFactory {
 
-    private Type type;
+	private Type type;
 
-    public ThesaurusFactory(){
-    }
+	public ThesaurusFactory(){
+	}
 
-    public ThesaurusFactory(Type type){
-        this.type = type;
-    }
+	public ThesaurusFactory(Type type){
+		this.type = type;
+	}
 
-    public ThesaurusFactory(String type){
-        try{
-            this.type = Enum.valueOf(Type.class, type);
-        }catch(Exception e){
-            for(Type row : Type.values()){
-                if(row.getId().equals(type)){
-                    this.type = row;
-                    break;
-                }
-            }
-        }
-    }
+	public ThesaurusFactory(String type){
+		try{
+			this.type = Enum.valueOf(Type.class, type);
+		}catch(Exception e){
+			for(Type row : Type.values()){
+				if(row.getId().equals(type)){
+					this.type = row;
+					break;
+				}
+			}
+		}
+	}
 
-    public Type getType(){
-        return type;
-    }
+	public Type getType(){
+		return type;
+	}
 
-    public void setType(Type type){
-        this.type = type;
-    }
+	public void setType(Type type){
+		this.type = type;
+	}
+
 }
