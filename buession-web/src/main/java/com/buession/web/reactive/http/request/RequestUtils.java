@@ -57,7 +57,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 			}
 		}
 
-		ip = request.getRemoteAddress().getAddress().getHostAddress();
+		ip = request.getRemoteAddress().getHostName();
 		if(Validate.hasText(ip) == false || "unknown".equalsIgnoreCase(ip) == true){
 			ip = "127.0.0.1";
 		}

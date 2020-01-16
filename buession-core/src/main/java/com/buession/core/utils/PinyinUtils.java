@@ -89,7 +89,9 @@ public class PinyinUtils {
 		StringBuilder sb = new StringBuilder(str.length());
 
 		try{
-			for(char c : str.toCharArray()){
+			char chars[] = str.toCharArray();
+
+			for(char c : chars){
 				// 如果包含有中文标点除号，需要使用正则表达式
 				if(Character.toString(c).matches("[\\u4E00-\\u9FA5]+") == true){
 					sb.append(PinyinHelper.toHanyuPinyinStringArray(c, outputFormat)[0]);
@@ -119,7 +121,9 @@ public class PinyinUtils {
 
 		StringBuilder sb = new StringBuilder(str.length());
 
-		for(char c : str.toCharArray()){
+		char chars[] = str.toCharArray();
+
+		for(char c : chars){
 			String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c);
 			if(pinyinArray != null){
 				sb.append(pinyinArray[0].charAt(0));

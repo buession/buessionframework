@@ -27,201 +27,180 @@ package com.buession.core.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.UndeclaredThrowableException;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Yong.Teng
  */
-public class ReflectUtils {
+public class ReflectUtils extends ReflectionUtils {
 
-    private final static Logger logger = LoggerFactory.getLogger(ReflectUtils.class);
+	private final static Logger logger = LoggerFactory.getLogger(ReflectUtils.class);
 
-    protected ReflectUtils(){
+	protected ReflectUtils(){
 
-    }
+	}
 
-    /**
-     * 设置属性权限
-     *
-     * @param field
-     *         属性
-     */
-    public final static void setFieldAccessible(Field field){
-        if(field != null && field.isAccessible() == false){
-            field.setAccessible(true);
-        }
-    }
+	/**
+	 * 设置属性权限
+	 *
+	 * @param field
+	 * 		属性
+	 */
+	public static void setFieldAccessible(Field field){
+		makeAccessible(field);
+	}
 
-    /**
-     * 判断属性是否为静态属性
-     *
-     * @param field
-     *         属性
-     *
-     * @return 属性是为静态属性，返回 true；否则返回 false
-     */
-    public final static boolean isStaticField(Field field){
-        return field != null && Modifier.isStatic(field.getModifiers());
-    }
+	/**
+	 * 判断属性是否为静态属性
+	 *
+	 * @param field
+	 * 		属性
+	 *
+	 * @return 属性是为静态属性，返回 true；否则返回 false
+	 */
+	public static boolean isStaticField(Field field){
+		return field != null && Modifier.isStatic(field.getModifiers());
+	}
 
-    /**
-     * 判断方法是否为静态方法
-     *
-     * @param method
-     *         方法
-     *
-     * @return 方法是为静态方法，返回 true；否则返回 false
-     */
-    public final static boolean isStaticMethod(Method method){
-        return method != null && Modifier.isStatic(method.getModifiers());
-    }
+	/**
+	 * 判断方法是否为静态方法
+	 *
+	 * @param method
+	 * 		方法
+	 *
+	 * @return 方法是为静态方法，返回 true；否则返回 false
+	 */
+	public static boolean isStaticMethod(Method method){
+		return method != null && Modifier.isStatic(method.getModifiers());
+	}
 
-    /**
-     * 给对象属性的赋于新值
-     *
-     * @param object
-     *         对象
-     * @param field
-     *         属性
-     * @param value
-     *         值
-     */
-    public final static void setField(@Nullable Object object, @Nullable Field field, Object value){
-        setFieldAccessible(field);
-        try{
-            field.set(object, value);
-        }catch(IllegalAccessException ex){
-            handleReflectionException(ex);
-        }
-    }
+	/**
+	 * 给对象属性的赋于新值
+	 *
+	 * @param object
+	 * 		对象
+	 * @param field
+	 * 		属性
+	 * @param value
+	 * 		值
+	 */
+	public static void setField(@Nullable Object object, @Nullable Field field, Object value){
+		setFieldAccessible(field);
+		setField(field, object, value);
+	}
 
-    public final static <E> void setter(E entity, String setterName, Class<?> javaType, Object value) throws
-            NoSuchFieldException{
-        setter((Class<E>) entity.getClass(), entity, setterName, javaType, value);
-    }
+	/**
+	 * 获取对象属性值
+	 *
+	 * @param object
+	 * 		对象
+	 * @param field
+	 * 		属性
+	 */
+	public static <T> T getField(@Nullable Object object, @Nullable Field field){
+		setFieldAccessible(field);
+		return (T) getField(field, object);
+	}
 
-    public final static <E> void setter(Class<E> clazz, E entity, String setterName, Class<?> javaType, Object value)
-            throws NoSuchFieldException{
-        try{
-            Method method = clazz.getMethod("set" + StringUtils.upperCase(setterName), javaType);
+	public static <E> void setter(E entity, String setterName, Class<?> javaType, Object value) throws
+			NoSuchFieldException{
+		setter((Class<E>) entity.getClass(), entity, setterName, javaType, value);
+	}
 
-            if(isStaticMethod(method) == false){
-                method.invoke(entity, value);
-                return;
-            }
-        }catch(NoSuchMethodException ex){
-            logger.warn("{}", ex.getMessage());
-        }catch(InvocationTargetException ex){
-            logger.warn("{}", ex.getMessage());
-        }catch(IllegalAccessException ex){
-            logger.warn("{}", ex.getMessage());
-        }
+	public static <E> void setter(Class<E> clazz, E entity, String setterName, Class<?> javaType, Object value) throws
+			NoSuchFieldException{
+		try{
+			Method method = clazz.getMethod("set" + StringUtils.upperCase(setterName), javaType);
 
-        Field field = clazz.getField(setterName);
+			if(isStaticMethod(method) == false){
+				method.invoke(entity, value);
+				return;
+			}
+		}catch(NoSuchMethodException ex){
+			logger.warn("{}", ex.getMessage());
+		}catch(InvocationTargetException ex){
+			logger.warn("{}", ex.getMessage());
+		}catch(IllegalAccessException ex){
+			logger.warn("{}", ex.getMessage());
+		}
 
-        if(isStaticField(field) == false){
-            setField(entity, field, value);
-        }
-    }
+		Field field = clazz.getField(setterName);
 
-    public final static <E, V> V getter(Class<E> clazz, E entity, String setterName, Class<?> javaType){
-        return null;
-    }
+		if(isStaticField(field) == false){
+			setField(entity, field, value);
+		}
+	}
 
-    /**
-     * 将实体类转换为 Map
-     *
-     * @param entity
-     *         实体类
-     * @param <E>
-     *         实体类类型
-     *
-     * @return Map 对象
-     */
-    public final static <E> Map<String, Object> entityConvertMap(final E entity){
-        if(entity == null){
-            return null;
-        }
+	public static <E, V> V getter(Class<E> clazz, E entity, String setterName, Class<?> javaType){
+		return null;
+	}
 
-        Class<?> clazz = entity.getClass();
-        String entityName = clazz.getName();
-        Method[] methods = clazz.getMethods();
-        Field[] fields = clazz.getFields();
-        Map<String, Object> result = new HashMap<>(methods.length);
+	/**
+	 * 将实体类转换为 Map
+	 *
+	 * @param entity
+	 * 		实体类
+	 * @param <E>
+	 * 		实体类类型
+	 *
+	 * @return Map 对象
+	 */
+	public static <E> Map<String, Object> entityConvertMap(final E entity){
+		if(entity == null){
+			return null;
+		}
 
-        for(Method method : methods){
-            if(isStaticMethod(method)){
-                continue;
-            }
+		Class<?> clazz = entity.getClass();
+		String entityName = clazz.getName();
+		Method[] methods = clazz.getMethods();
+		Field[] fields = clazz.getFields();
+		Map<String, Object> result = new HashMap<>(methods.length);
 
-            String methodName = method.getName();
-            if(methodName.startsWith("get") == false){
-                continue;
-            }
+		for(Method method : methods){
+			if(isStaticMethod(method)){
+				continue;
+			}
 
-            String name = StringUtils.uncapitalize(methodName.substring(3));
+			String methodName = method.getName();
+			if(methodName.startsWith("get") == false){
+				continue;
+			}
 
-            try{
-                result.put(name, method.invoke(entity));
-            }catch(IllegalAccessException ex){
-                logger.warn("Call method {}::{} failure: {}", entityName, method.toGenericString(), ex.getMessage());
-            }catch(InvocationTargetException ex){
-                logger.warn("Call method {}::{} failure: {}", entityName, method.toGenericString(), ex.getMessage());
-            }
-        }
+			String name = StringUtils.uncapitalize(methodName.substring(3));
 
-        for(Field field : fields){
-            if(isStaticField(field)){
-                continue;
-            }
+			try{
+				result.put(name, method.invoke(entity));
+			}catch(IllegalAccessException ex){
+				logger.warn("Call method {}::{} failure: {}", entityName, method.toGenericString(), ex.getMessage());
+			}catch(InvocationTargetException ex){
+				logger.warn("Call method {}::{} failure: {}", entityName, method.toGenericString(), ex.getMessage());
+			}
+		}
 
-            if(result.containsKey(field.getName())){
-                continue;
-            }
+		for(Field field : fields){
+			if(isStaticField(field)){
+				continue;
+			}
 
-            try{
-                result.put(field.getName(), field.get(entity));
-            }catch(IllegalAccessException ex){
-                logger.warn("Read field {}::{} failure: {}", entityName, field.getName(), ex.getMessage());
-            }
-        }
+			if(result.containsKey(field.getName())){
+				continue;
+			}
 
-        return result;
-    }
+			try{
+				result.put(field.getName(), field.get(entity));
+			}catch(IllegalAccessException ex){
+				logger.warn("Read field {}::{} failure: {}", entityName, field.getName(), ex.getMessage());
+			}
+		}
 
-    public static void handleReflectionException(Exception ex){
-        if(ex instanceof NoSuchMethodException){
-            throw new IllegalStateException("Method not found: " + ex.getMessage());
-        }else if(ex instanceof IllegalAccessException){
-            throw new IllegalStateException("Could not access method or field: " + ex.getMessage());
-        }else if(ex instanceof InvocationTargetException){
-            handleInvocationTargetException((InvocationTargetException) ex);
-        }else if(ex instanceof RuntimeException){
-            throw (RuntimeException) ex;
-        }else{
-            throw new UndeclaredThrowableException(ex);
-        }
-    }
-
-    protected final static void handleInvocationTargetException(InvocationTargetException ex){
-        rethrowRuntimeException(ex.getTargetException());
-    }
-
-    protected final static void rethrowRuntimeException(Throwable ex){
-        if(ex instanceof RuntimeException){
-            throw (RuntimeException) ex;
-        }else if(ex instanceof Error){
-            throw (Error) ex;
-        }else{
-            throw new UndeclaredThrowableException(ex);
-        }
-    }
+		return result;
+	}
 
 }

@@ -22,59 +22,7 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet.http;
-
-import org.springframework.ui.Model;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author Yong.Teng
  */
-public class HttpServlet {
-
-	private HttpServletRequest request;
-
-	private HttpServletResponse response;
-
-	private Model model;
-
-	public HttpServlet(){
-	}
-
-	public HttpServlet(HttpServletRequest request, HttpServletResponse response){
-		this.request = request;
-		this.response = response;
-	}
-
-	public HttpServlet(HttpServletRequest request, HttpServletResponse response, Model model){
-		this(request, response);
-		this.model = model;
-	}
-
-	public HttpServletRequest getRequest(){
-		return request;
-	}
-
-	public void setRequest(HttpServletRequest request){
-		this.request = request;
-	}
-
-	public HttpServletResponse getResponse(){
-		return response;
-	}
-
-	public void setResponse(HttpServletResponse response){
-		this.response = response;
-	}
-
-	public Model getModel(){
-		return model;
-	}
-
-	public void setModel(Model model){
-		this.model = model;
-	}
-
-}
+package com.buession.core.binary;

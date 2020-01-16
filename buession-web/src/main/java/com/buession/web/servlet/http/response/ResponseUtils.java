@@ -26,6 +26,8 @@
  */
 package com.buession.web.servlet.http.response;
 
+import com.buession.web.http.HttpHeader;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
@@ -34,38 +36,38 @@ import java.util.Date;
  */
 public class ResponseUtils {
 
-    private ResponseUtils(){
+	private ResponseUtils(){
 
-    }
+	}
 
-    public final static void httpCache(final HttpServletResponse response, final String value){
-        if(response != null){
-            response.setHeader("Cache-Control", value);
-        }
-    }
+	public final static void httpCache(final HttpServletResponse response, final String value){
+		if(response != null){
+			response.setHeader(HttpHeader.CACHE_CONTROL.name(), value);
+		}
+	}
 
-    public final static void httpCache(final HttpServletResponse response, final int lifetime){
-        if(response != null){
-            Date date = new Date(System.currentTimeMillis() + lifetime * 1000);
-            httpCache(response, lifetime, date);
-        }
-    }
+	public final static void httpCache(final HttpServletResponse response, final int lifetime){
+		if(response != null){
+			Date date = new Date(System.currentTimeMillis() + lifetime * 1000);
+			httpCache(response, lifetime, date);
+		}
+	}
 
-    public final static void httpCache(final HttpServletResponse response, final Date date){
-        if(response != null){
-            long maxAge = date.getTime() - System.currentTimeMillis();
-            httpCache(response, maxAge, date);
-        }
-    }
+	public final static void httpCache(final HttpServletResponse response, final Date date){
+		if(response != null){
+			long maxAge = date.getTime() - System.currentTimeMillis();
+			httpCache(response, maxAge, date);
+		}
+	}
 
-    private final static void httpCache(final HttpServletResponse response, final long maxAge, final Date expires){
-        if(maxAge <= 0){
-            response.setHeader("Cache-Control", "no-cache");
-        }else{
-            response.setHeader("Cache-Control", "max-age=" + maxAge);
-        }
-        response.setDateHeader("Expires", expires.getTime());
-        response.setHeader("Pragma", maxAge > 0 ? null : "no-cache");
-    }
+	private final static void httpCache(final HttpServletResponse response, final long maxAge, final Date expires){
+		if(maxAge <= 0){
+			response.setHeader(HttpHeader.CACHE_CONTROL.name(), "no-cache");
+		}else{
+			response.setHeader(HttpHeader.CACHE_CONTROL.name(), "max-age=" + maxAge);
+		}
+		response.setDateHeader(HttpHeader.EXPIRES.name(), expires.getTime());
+		response.setHeader(HttpHeader.PRAGMA.name(), maxAge > 0 ? null : "no-cache");
+	}
 
 }

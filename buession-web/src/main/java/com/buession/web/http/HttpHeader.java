@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http;
@@ -29,27 +29,35 @@ package com.buession.web.http;
  */
 public enum HttpHeader {
 
-    ACCESS_CONTROL_ALLOW_ORIGIN("Access-Control-Allow-Origin"),
+	ACCEPT("Accept"),
 
-    CONTENT_TYPE("Content-Type"),
+	ACCESS_CONTROL_ALLOW_ORIGIN("Access-Control-Allow-Origin"),
 
-    EXPIRES("Expires"),
+	CACHE_CONTROL("Cache-Control"),
 
-    ORIGIN("Origin");
+	CONTENT_TYPE("Content-Type"),
 
-    private String value;
+	EXPIRES("Expires"),
 
-    HttpHeader(String value){
-        this.value = value;
-    }
+	ORIGIN("Origin"),
 
-    public String getValue(){
-        return value;
-    }
+	PRAGMA("Pragma"),
 
-    @Override
-    public String toString(){
-        return value;
-    }
+	USER_AGENT("User-Agent");
+
+	private String value;
+
+	HttpHeader(String value){
+		this.value = value;
+	}
+
+	public String getValue(){
+		return value;
+	}
+
+	@Override
+	public String toString(){
+		return value;
+	}
 
 }

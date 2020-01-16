@@ -28,6 +28,7 @@ package com.buession.web.servlet.http.request;
 
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
+import com.buession.web.http.HttpHeader;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -87,7 +88,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 * @return 是否为移动端请求
 	 */
 	public final static boolean isMobile(final HttpServletRequest request){
-		return isMobile(request.getHeader("User-Agent"), request.getHeader("Accept"));
+		return isMobile(request.getHeader(HttpHeader.USER_AGENT.name()), request.getHeader(HttpHeader.ACCEPT.name()));
 	}
 
 }

@@ -29,73 +29,73 @@ package com.buession.core.math;
  */
 public class Math {
 
-    /**
-     * 计算两个数之间连续相加
-     *
-     * @param start
-     *         起始数
-     * @param end
-     *         结束数
-     *
-     * @return 两个数之间连续相加结果
-     */
-    public final static long continuousAddition(final short start, final short end){
-        int count = end - start + 1;
-        int mean = count / 2;
-        boolean isOdd = count % 2 == 1;
-        long result = (start + end) * mean;
+	/**
+	 * 计算两个数之间连续相加
+	 *
+	 * @param start
+	 * 		起始数
+	 * @param end
+	 * 		结束数
+	 *
+	 * @return 两个数之间连续相加结果
+	 */
+	public final static long continuousAddition(final short start, final short end){
+		int count = end - start + 1;
+		int mean = count >> 1; // 求相加数目的平均个数
+		boolean isOdd = count % 2 == 1;
+		long result = (start + end) * mean;
 
-        if(isOdd){
-            result += (start + mean);
-        }
+		if(isOdd){
+			result += (start + mean);
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * 计算两个数之间连续相加
-     *
-     * @param start
-     *         起始数
-     * @param end
-     *         结束数
-     *
-     * @return 两个数之间连续相加结果
-     */
-    public final static long continuousAddition(final int start, final int end){
-        int count = end - start + 1;
-        int mean = count / 2;
-        boolean isOdd = count % 2 == 1;
-        long result = (start + end) * mean;
+	/**
+	 * 计算两个数之间连续相加
+	 *
+	 * @param start
+	 * 		起始数
+	 * @param end
+	 * 		结束数
+	 *
+	 * @return 两个数之间连续相加结果
+	 */
+	public final static long continuousAddition(final int start, final int end){
+		int count = end - start + 1;
+		int mean = count >> 1; // 求相加数目的平均个数
+		boolean isOdd = count % 2 == 1;
+		long result = (start + end) * mean;
 
-        if(isOdd){
-            result += (start + mean);
-        }
+		if(isOdd){
+			result += (start + mean);
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    /**
-     * 计算两个数之间连续相加
-     *
-     * @param start
-     *         起始数
-     * @param end
-     *         结束数
-     *
-     * @return 两个数之间连续相加结果
-     */
-    public final static long continuousAddition(final long start, final long end){
-        long count = end - start + 1;
-        long mean = count / 2;
-        boolean isOdd = count % 2 == 1;
-        long result = (start + end) * mean;
+	/**
+	 * 计算两个数之间连续相加
+	 *
+	 * @param start
+	 * 		起始数
+	 * @param end
+	 * 		结束数
+	 *
+	 * @return 两个数之间连续相加结果
+	 */
+	public final static long continuousAddition(final long start, final long end){
+		long count = end - start + 1;
+		long mean = count >> 1; // 求相加数目的平均个数
+		boolean isOdd = count % 2 == 1;
+		long result = (start + end) * mean;
 
-        if(isOdd){
-            result += (start + mean);
-        }
+		if(isOdd){
+			result += (start + mean);
+		}
 
-        return result;
-    }
+		return result;
+	}
 
 }

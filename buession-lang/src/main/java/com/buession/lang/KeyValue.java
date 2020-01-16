@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
@@ -29,32 +29,77 @@ package com.buession.lang;
  */
 public class KeyValue<K, V> {
 
-    private K key;
+	private K key;
 
-    private V value;
+	private V value;
 
-    public KeyValue(){
-    }
+	public KeyValue(){
+	}
 
-    public KeyValue(K key, V value){
-        this.key = key;
-        this.value = value;
-    }
+	public KeyValue(K key, V value){
+		this.key = key;
+		this.value = value;
+	}
 
-    public K getKey(){
-        return key;
-    }
+	public K getKey(){
+		return key;
+	}
 
-    public void setKey(K key){
-        this.key = key;
-    }
+	public void setKey(K key){
+		this.key = key;
+	}
 
-    public V getValue(){
-        return value;
-    }
+	public V getValue(){
+		return value;
+	}
 
-    public void setValue(V value){
-        this.value = value;
-    }
+	public void setValue(V value){
+		this.value = value;
+	}
+
+	@Override
+	public int hashCode(){
+		return 32 * key.hashCode() + 32 * value.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(obj == null){
+			return false;
+		}
+
+		if(!(obj instanceof KeyValue)){
+			return false;
+		}
+
+		KeyValue that = (KeyValue) obj;
+
+		if(this.key == null && that.getKey() != null){
+			if(that.getKey().equals(this.key) == false){
+				return false;
+			}
+		}else{
+			if(this.key.equals(that.getKey()) == false){
+				return false;
+			}
+		}
+
+		if(this.value == null && that.getValue() != null){
+			if(that.getValue().equals(this.value) == false){
+				return false;
+			}
+		}else{
+			if(this.value.equals(that.getValue()) == false){
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	@Override
+	public String toString(){
+		return "KeyValue{" + "key=" + key + ", value=" + value + '}';
+	}
 
 }

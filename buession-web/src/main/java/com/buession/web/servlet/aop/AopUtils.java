@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop;
@@ -27,58 +27,30 @@ package com.buession.web.servlet.aop;
 import com.buession.aop.MethodInvocation;
 import com.buession.web.servlet.http.HttpServlet;
 import org.aspectj.lang.JoinPoint;
-import org.springframework.ui.Model;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Yong.Teng
  */
 public class AopUtils {
 
-    private AopUtils(){
+	private AopUtils(){
 
-    }
+	}
 
-    public final static HttpServlet getHttpServlet(final MethodInvocation mi){
-        if(mi == null || mi.getArguments() == null){
-            return null;
-        }
+	public final static HttpServlet getHttpServlet(final MethodInvocation mi){
+		if(mi == null || mi.getArguments() == null){
+			return null;
+		}else{
+			return MethodUtils.createHttpServletFromMethodArguments(mi.getArguments());
+		}
+	}
 
-        HttpServlet httpServlet = new HttpServlet();
-
-        for(Object argument : mi.getArguments()){
-            if(argument instanceof HttpServletRequest){
-                httpServlet.setRequest((HttpServletRequest) argument);
-            }else if(argument instanceof HttpServletResponse){
-                httpServlet.setResponse((HttpServletResponse) argument);
-            }else if(argument instanceof Model){
-                httpServlet.setModel((Model) argument);
-            }
-        }
-
-        return httpServlet;
-    }
-
-    public final static HttpServlet getHttpServlet(final JoinPoint joinPoint){
-        if(joinPoint == null || joinPoint.getArgs() == null){
-            return null;
-        }
-
-        HttpServlet httpServlet = new HttpServlet();
-
-        for(Object arg : joinPoint.getArgs()){
-            if(arg instanceof HttpServletRequest){
-                httpServlet.setRequest((HttpServletRequest) arg);
-            }else if(arg instanceof HttpServletResponse){
-                httpServlet.setResponse((HttpServletResponse) arg);
-            }else if(arg instanceof Model){
-                httpServlet.setModel((Model) arg);
-            }
-        }
-
-        return httpServlet;
-    }
+	public final static HttpServlet getHttpServlet(final JoinPoint joinPoint){
+		if(joinPoint == null || joinPoint.getArgs() == null){
+			return null;
+		}else{
+			return MethodUtils.createHttpServletFromMethodArguments(joinPoint.getArgs());
+		}
+	}
 
 }

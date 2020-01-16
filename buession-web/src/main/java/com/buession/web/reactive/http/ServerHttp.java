@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.http;
@@ -33,48 +33,47 @@ import org.springframework.ui.Model;
  */
 public class ServerHttp {
 
-    private ServerHttpRequest request;
+	private ServerHttpRequest request;
 
-    private ServerHttpResponse response;
+	private ServerHttpResponse response;
 
-    private Model model;
+	private Model model;
 
-    public ServerHttp(){
-    }
+	public ServerHttp(){
+	}
 
-    public ServerHttp(ServerHttpRequest request, ServerHttpResponse response){
-        this.request = request;
-        this.response = response;
-    }
+	public ServerHttp(ServerHttpRequest request, ServerHttpResponse response){
+		this.request = request;
+		this.response = response;
+	}
 
-    public ServerHttp(ServerHttpRequest request, ServerHttpResponse response, Model model){
-        this.request = request;
-        this.response = response;
-        this.model = model;
-    }
+	public ServerHttp(ServerHttpRequest request, ServerHttpResponse response, Model model){
+		this(request, response);
+		this.model = model;
+	}
 
+	public ServerHttpRequest getRequest(){
+		return request;
+	}
 
-    public ServerHttpRequest getRequest(){
-        return request;
-    }
+	public void setRequest(ServerHttpRequest request){
+		this.request = request;
+	}
 
-    public void setRequest(ServerHttpRequest request){
-        this.request = request;
-    }
+	public ServerHttpResponse getResponse(){
+		return response;
+	}
 
-    public ServerHttpResponse getResponse(){
-        return response;
-    }
+	public void setResponse(ServerHttpResponse response){
+		this.response = response;
+	}
 
-    public void setResponse(ServerHttpResponse response){
-        this.response = response;
-    }
+	public Model getModel(){
+		return model;
+	}
 
-    public Model getModel(){
-        return model;
-    }
+	public void setModel(Model model){
+		this.model = model;
+	}
 
-    public void setModel(Model model){
-        this.model = model;
-    }
 }

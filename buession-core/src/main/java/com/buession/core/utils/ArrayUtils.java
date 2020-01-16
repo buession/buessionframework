@@ -29,6 +29,7 @@ package com.buession.core.utils;
 import com.buession.lang.Constants;
 
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -106,7 +107,7 @@ public class ArrayUtils {
 	 * @return 转换结果
 	 */
 	public final static <O> Set<O> toSet(O[] a){
-		return a == null ? null : Arrays.asList(a).stream().collect(Collectors.toSet());
+		return a == null ? null : Arrays.asList(a).stream().collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 }

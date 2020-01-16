@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop;
@@ -27,57 +27,30 @@ package com.buession.web.reactive.aop;
 import com.buession.aop.MethodInvocation;
 import com.buession.web.reactive.http.ServerHttp;
 import org.aspectj.lang.JoinPoint;
-import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.ui.Model;
 
 /**
  * @author Yong.Teng
  */
 public class AopUtils {
 
-    private AopUtils(){
+	private AopUtils(){
 
-    }
+	}
 
-    public final static ServerHttp getServerHttp(final MethodInvocation mi){
-        if(mi == null || mi.getArguments() == null){
-            return null;
-        }
+	public final static ServerHttp getServerHttp(final MethodInvocation mi){
+		if(mi == null || mi.getArguments() == null){
+			return null;
+		}else{
+			return MethodUtils.createServerHttpFromMethodArguments(mi.getArguments());
+		}
+	}
 
-        ServerHttp serverHttp = new ServerHttp();
-
-        for(Object argument : mi.getArguments()){
-            if(argument instanceof ServerHttpRequest){
-                serverHttp.setRequest((ServerHttpRequest) argument);
-            }else if(argument instanceof ServerHttpResponse){
-                serverHttp.setResponse((ServerHttpResponse) argument);
-            }else if(argument instanceof Model){
-                serverHttp.setModel((Model) argument);
-            }
-        }
-
-        return serverHttp;
-    }
-
-    public final static ServerHttp getServerHttp(final JoinPoint joinPoint){
-        if(joinPoint == null || joinPoint.getArgs() == null){
-            return null;
-        }
-
-        ServerHttp serverHttp = new ServerHttp();
-
-        for(Object arg : joinPoint.getArgs()){
-            if(arg instanceof ServerHttpRequest){
-                serverHttp.setRequest((ServerHttpRequest) arg);
-            }else if(arg instanceof ServerHttpResponse){
-                serverHttp.setResponse((ServerHttpResponse) arg);
-            }else if(arg instanceof Model){
-                serverHttp.setModel((Model) arg);
-            }
-        }
-
-        return serverHttp;
-    }
+	public final static ServerHttp getServerHttp(final JoinPoint joinPoint){
+		if(joinPoint == null || joinPoint.getArgs() == null){
+			return null;
+		}else{
+			return MethodUtils.createServerHttpFromMethodArguments(joinPoint.getArgs());
+		}
+	}
 
 }

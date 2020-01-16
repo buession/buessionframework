@@ -32,14 +32,29 @@ import org.junit.Test;
  */
 public class MathTest {
 
-    @Test
-    public void continuousAddition(){
-        // System.out.println(Math.continuousAddition(2, 5));
-        System.out.println(Math.continuousAddition(2, 4));
-        System.out.println(Math.continuousAddition(3, 9));
-        //System.out.println(Math.continuousAddition(4, 10));
-        System.out.println(Math.continuousAddition(404, 406));
-        System.out.println(Math.continuousAddition(405, 407));
-    }
+	@Test
+	public void continuousAddition(){
+		System.out.println(Math.continuousAddition(2, 5));
+		System.out.println(Math.continuousAddition(2, 4));
+		System.out.println(Math.continuousAddition(3, 9));
+		System.out.println(Math.continuousAddition(4, 10));
+		System.out.println(Math.continuousAddition(404, 406));
+		System.out.println(Math.continuousAddition(405, 407));
+	}
+
+	@Test
+	public void op(){
+		System.out.println(10 / 2);
+		System.out.println(10 >> 1);
+
+		System.out.println(20 / 10);
+		System.out.println(20 >> 4);
+
+		System.out.println(10 * 2);
+		System.out.println(10 << 1);
+
+		System.out.println(20 * 10);
+		System.out.println(20 << 4);
+	}
 
 }
