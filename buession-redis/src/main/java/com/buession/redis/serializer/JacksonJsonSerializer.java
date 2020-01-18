@@ -41,6 +41,10 @@ public class JacksonJsonSerializer implements Serializer {
 
 	@Override
 	public <V> String serialize(final V object){
+		if(object == null){
+			return null;
+		}
+
 		try{
 			return serializer.serialize(object);
 		}catch(SerializerException e){
@@ -51,6 +55,10 @@ public class JacksonJsonSerializer implements Serializer {
 
 	@Override
 	public <V> byte[] serializeAsBytes(final V object){
+		if(object == null){
+			return null;
+		}
+
 		try{
 			return serializer.serializeAsBytes(object);
 		}catch(SerializerException e){
@@ -61,6 +69,10 @@ public class JacksonJsonSerializer implements Serializer {
 
 	@Override
 	public <V> V deserialize(final String str){
+		if(str == null){
+			return null;
+		}
+
 		try{
 			return serializer.deserialize(str);
 		}catch(SerializerException e){
@@ -71,6 +83,10 @@ public class JacksonJsonSerializer implements Serializer {
 
 	@Override
 	public <V> V deserialize(final byte[] bytes){
+		if(bytes == null){
+			return null;
+		}
+
 		try{
 			return serializer.deserialize(bytes);
 		}catch(SerializerException e){
@@ -81,6 +97,10 @@ public class JacksonJsonSerializer implements Serializer {
 
 	@Override
 	public <V> V deserialize(final String str, final Class<V> clazz){
+		if(str == null){
+			return null;
+		}
+
 		try{
 			return serializer.deserialize(str, clazz);
 		}catch(SerializerException e){
@@ -91,6 +111,10 @@ public class JacksonJsonSerializer implements Serializer {
 
 	@Override
 	public <V> V deserialize(final byte[] bytes, final Class<V> clazz){
+		if(bytes == null){
+			return null;
+		}
+
 		try{
 			return serializer.deserialize(bytes, clazz);
 		}catch(SerializerException e){
@@ -101,6 +125,10 @@ public class JacksonJsonSerializer implements Serializer {
 
 	@Override
 	public <V> V deserialize(final String str, final TypeReference<V> type){
+		if(str == null){
+			return null;
+		}
+
 		try{
 			return serializer.deserialize(str, type);
 		}catch(SerializerException e){
@@ -111,6 +139,10 @@ public class JacksonJsonSerializer implements Serializer {
 
 	@Override
 	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type){
+		if(bytes == null){
+			return null;
+		}
+
 		try{
 			return serializer.deserialize(bytes, type);
 		}catch(SerializerException e){

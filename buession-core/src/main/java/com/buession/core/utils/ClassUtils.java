@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -35,27 +35,22 @@ import java.util.List;
  */
 public class ClassUtils {
 
-    public final static List<Field> getFields(final Class<?> clazz){
-        Assert.isNull(clazz, "Class cloud not be null.");
-        return Collections.unmodifiableList(Arrays.asList(clazz.getDeclaredFields()));
-    }
+	public final static List<Field> getFields(final Class<?> clazz){
+		Assert.isNull(clazz, "Class cloud not be null.");
+		return Collections.unmodifiableList(Arrays.asList(clazz.getDeclaredFields()));
+	}
 
-    public final static List<Field> getAllFields(final Class<?> clazz){
-        Assert.isNull(clazz, "Class cloud not be null.");
-        final List<Field> allFields = new ArrayList<>(16);
-        Class<?> currentClass = clazz;
+	public final static List<Field> getAllFields(final Class<?> clazz){
+		Assert.isNull(clazz, "Class cloud not be null.");
+		final List<Field> allFields = new ArrayList<>(16);
+		Class<?> currentClass = clazz;
 
-        while(currentClass != null){
-            final Field[] declaredFields = currentClass.getDeclaredFields();
+		while(currentClass != null){
+			Collections.addAll(allFields, currentClass.getDeclaredFields());
+			currentClass = currentClass.getSuperclass();
+		}
 
-            for(final Field field : declaredFields){
-                allFields.add(field);
-            }
-
-            currentClass = currentClass.getSuperclass();
-        }
-
-        return Collections.unmodifiableList(allFields);
-    }
+		return Collections.unmodifiableList(allFields);
+	}
 
 }

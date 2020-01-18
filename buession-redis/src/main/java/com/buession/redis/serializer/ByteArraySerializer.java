@@ -37,68 +37,84 @@ import org.slf4j.LoggerFactory;
  */
 public class ByteArraySerializer implements Serializer {
 
-    private final static DefaultByteArraySerializer serializer = new DefaultByteArraySerializer();
+	private final static DefaultByteArraySerializer serializer = new DefaultByteArraySerializer();
 
-    private final static Logger logger = LoggerFactory.getLogger(ByteArraySerializer.class);
+	private final static Logger logger = LoggerFactory.getLogger(ByteArraySerializer.class);
 
-    @Override
-    public <V> String serialize(final V object){
-        try{
-            return serializer.serialize(object);
-        }catch(SerializerException e){
-            logger.error("{}", e);
-            return null;
-        }
-    }
+	@Override
+	public <V> String serialize(final V object){
+		if(object == null){
+			return null;
+		}
 
-    @Override
-    public <V> byte[] serializeAsBytes(final V object){
-        try{
-            return serializer.serializeAsBytes(object);
-        }catch(SerializerException e){
-            logger.error("{}", e);
-            return null;
-        }
-    }
+		try{
+			return serializer.serialize(object);
+		}catch(SerializerException e){
+			logger.error("{}", e);
+			return null;
+		}
+	}
 
-    @Override
-    public <V> V deserialize(final String str){
-        try{
-            return serializer.deserialize(str);
-        }catch(SerializerException e){
-            logger.error("{}", e);
-            return null;
-        }
-    }
+	@Override
+	public <V> byte[] serializeAsBytes(final V object){
+		if(object == null){
+			return null;
+		}
 
-    @Override
-    public <V> V deserialize(final byte[] bytes){
-        try{
-            return serializer.deserialize(bytes);
-        }catch(SerializerException e){
-            logger.error("{}", e);
-            return null;
-        }
-    }
+		try{
+			return serializer.serializeAsBytes(object);
+		}catch(SerializerException e){
+			logger.error("{}", e);
+			return null;
+		}
+	}
 
-    @Override
-    public <V> V deserialize(final String str, final Class<V> clazz){
-        return deserialize(str);
-    }
+	@Override
+	public <V> V deserialize(final String str){
+		if(str == null){
+			return null;
+		}
 
-    @Override
-    public <V> V deserialize(final byte[] bytes, final Class<V> clazz){
-        return deserialize(bytes);
-    }
+		try{
+			return serializer.deserialize(str);
+		}catch(SerializerException e){
+			logger.error("{}", e);
+			return null;
+		}
+	}
 
-    @Override
-    public <V> V deserialize(final String str, final TypeReference<V> type){
-        return deserialize(str);
-    }
+	@Override
+	public <V> V deserialize(final byte[] bytes){
+		if(bytes == null){
+			return null;
+		}
 
-    @Override
-    public <V> V deserialize(final byte[] bytes, final TypeReference<V> type){
-        return deserialize(bytes);
-    }
+		try{
+			return serializer.deserialize(bytes);
+		}catch(SerializerException e){
+			logger.error("{}", e);
+			return null;
+		}
+	}
+
+	@Override
+	public <V> V deserialize(final String str, final Class<V> clazz){
+		return deserialize(str);
+	}
+
+	@Override
+	public <V> V deserialize(final byte[] bytes, final Class<V> clazz){
+		return deserialize(bytes);
+	}
+
+	@Override
+	public <V> V deserialize(final String str, final TypeReference<V> type){
+		return deserialize(str);
+	}
+
+	@Override
+	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type){
+		return deserialize(bytes);
+	}
 
 }

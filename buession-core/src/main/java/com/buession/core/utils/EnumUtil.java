@@ -31,24 +31,16 @@ import java.lang.reflect.Field;
  */
 public class EnumUtil {
 
-    private EnumUtil(){
+	private EnumUtil(){
 
-    }
+	}
 
-    public final static boolean isEnumValuesField(final Field field){
-        if(field == null){
-            return false;
-        }else{
-            return field.isEnumConstant() == false && "$VALUES".equals(field.getName());
-        }
-    }
+	public final static boolean isEnumValuesField(final Field field){
+		return field != null && (field.isEnumConstant() == false && "$VALUES".equals(field.getName()));
+	}
 
-    public final static boolean notEnumValuesField(final Field field){
-        if(field == null){
-            return false;
-        }else{
-            return field.isEnumConstant() == false && "$VALUES".equals(field.getName()) == false;
-        }
-    }
+	public final static boolean notEnumValuesField(final Field field){
+		return field != null && (field.isEnumConstant() == false && "$VALUES".equals(field.getName()) == false);
+	}
 
 }

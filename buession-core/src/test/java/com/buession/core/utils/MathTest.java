@@ -27,6 +27,8 @@ package com.buession.core.utils;
 import com.buession.core.math.Math;
 import org.junit.Test;
 
+import java.util.stream.LongStream;
+
 /**
  * @author Yong.Teng
  */
@@ -34,12 +36,7 @@ public class MathTest {
 
 	@Test
 	public void continuousAddition(){
-		System.out.println(Math.continuousAddition(2, 5));
 		System.out.println(Math.continuousAddition(2, 4));
-		System.out.println(Math.continuousAddition(3, 9));
-		System.out.println(Math.continuousAddition(4, 10));
-		System.out.println(Math.continuousAddition(404, 406));
-		System.out.println(Math.continuousAddition(405, 407));
 	}
 
 	@Test
