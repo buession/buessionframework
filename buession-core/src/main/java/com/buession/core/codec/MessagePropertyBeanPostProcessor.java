@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.codec;
@@ -45,94 +45,102 @@ import java.util.List;
  */
 public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 
-    private Environment environment;
+	private Environment environment;
 
-    private final static Logger logger = LoggerFactory.getLogger(MessagePropertyBeanPostProcessor.class);
+	private final static Logger logger = LoggerFactory.getLogger(MessagePropertyBeanPostProcessor.class);
 
-    public MessagePropertyBeanPostProcessor(){
-    }
+	public MessagePropertyBeanPostProcessor(){
+	}
 
-    public MessagePropertyBeanPostProcessor(Environment environment){
-        this.environment = environment;
-    }
+	public MessagePropertyBeanPostProcessor(Environment environment){
+		this.environment = environment;
+	}
 
-    public Environment getEnvironment(){
-        return environment;
-    }
+	public Environment getEnvironment(){
+		return environment;
+	}
 
-    public void setEnvironment(Environment environment){
-        this.environment = environment;
-    }
+	public void setEnvironment(Environment environment){
+		this.environment = environment;
+	}
 
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException{
-        return bean;
-    }
+	@Override
+	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException{
+		return bean;
+	}
 
-    @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException{
-        Class clazz = bean.getClass();
-        List<Field> fields = ClassUtils.getAllFields(clazz);
+	@Override
+	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException{
+		Class clazz = bean.getClass();
+		List<Field> fields = ClassUtils.getAllFields(clazz);
 
-        for(Field field : fields){
-            final Message message = AnnotationUtils.getAnnotation(field, Message.class);
-            if(message == null){
-                continue;
-            }
+		for(Field field : fields){
+			final Message message = AnnotationUtils.getAnnotation(field, Message.class);
+			if(message == null){
+				continue;
+			}
 
-            if(field.getType().isAssignableFrom(MessageObject.class) == false){
-                throw new BeanCreationException("The field " + field.getName() + " is not subclass of " +
-                        MessageObject.class.getName() + ", on: " + beanName + "(" + bean.getClass().getName() + ").");
-            }
+			if(field.getType().isAssignableFrom(MessageObject.class) == false){
+				throw new BeanCreationException("The field " + field.getName() + " is not subclass of " +
+						MessageObject.class.getName() + ", on: " + beanName + "(" + bean.getClass().getName() + ").");
+			}
 
-            try{
-                handleMessageInjected(bean, beanName, field, message);
-            }catch(IllegalAccessException e){
-                if(message.required()){
-                    throw new BeanCreationException("Exception thrown when handleMessageInjected, on: " + beanName +
-                            "(" + clazz.getName() + ")", e);
-                }
-            }
-        }
+			try{
+				handleMessageInjected(bean, beanName, field, message);
+			}catch(IllegalAccessException e){
+				if(message.required()){
+					throw new BeanCreationException("Exception thrown when handleMessageInjected, on: " + beanName +
+							"" + "(" + clazz.getName() + ")", e);
+				}
+			}
+		}
 
-        return bean;
-    }
+		return bean;
+	}
 
-    private void handleMessageInjected(final Object bean, final String beanName, final Field field, final Message
-            message) throws IllegalAccessException{
-        final String key = message.value();
-        final String text = getEnvironment().getProperty(key + "." + message.textField());
+	private void handleMessageInjected(final Object bean, final String beanName, final Field field, final Message
+			message) throws IllegalAccessException{
+		final String key = message.value();
+		final String text = getEnvironment().getProperty(buildProperty(key, message.textField()));
 
-        if(message.required() && text == null){
-            throw new IllegalArgumentException("Could not resolve placeholder '" + key + "' in value \"${" + key +
-                    "}\", on: " + beanName + "(" + bean.getClass().getName() + ").");
-        }
+		if(message.required() && text == null){
+			throw new IllegalArgumentException("Could not resolve placeholder '" + key + "' in value \"${" + key +
+					"}\", on: " + beanName + "(" + bean.getClass().getName() + ").");
+		}
 
-        final int code = getEnvironment().getProperty(key + "." + message.codeField(), Integer.class);
+		final int code = getEnvironment().getProperty(buildProperty(key, message.codeField()), Integer.class);
 
-        field.setAccessible(true);
+		field.setAccessible(true);
 
-        if(AopUtils.isCglibProxy(bean)){
-            try{
-                field.set(getCglibProxyTargetObject(bean), new MessageObject(code, text));
-            }catch(Exception e){
-            }
-        }else{
-            field.set(bean, new MessageObject(code, text));
-        }
-        logger.debug("Parse message '{}', code: {}, text: {}", key, code, text);
-    }
+		if(AopUtils.isCglibProxy(bean)){
+			try{
+				field.set(getCglibProxyTargetObject(bean), new MessageObject(code, text));
+			}catch(Exception e){
+			}
+		}else{
+			field.set(bean, new MessageObject(code, text));
+		}
+		logger.debug("Parse message '{}', code: {}, text: {}", key, code, text);
+	}
 
-    private static Object getCglibProxyTargetObject(Object proxy) throws Exception{
-        Field field = proxy.getClass().getDeclaredField("CGLIB$CALLBACK_0");
+	private static Object getCglibProxyTargetObject(Object proxy) throws Exception{
+		Field field = proxy.getClass().getDeclaredField("CGLIB$CALLBACK_0");
 
-        field.setAccessible(true);
-        Object dynamicAdvisedInterceptor = field.get(proxy);
+		field.setAccessible(true);
+		Object dynamicAdvisedInterceptor = field.get(proxy);
 
-        Field advised = dynamicAdvisedInterceptor.getClass().getDeclaredField("advised");
-        advised.setAccessible(true);
+		Field advised = dynamicAdvisedInterceptor.getClass().getDeclaredField("advised");
+		advised.setAccessible(true);
 
-        return ((AdvisedSupport) advised.get(dynamicAdvisedInterceptor)).getTargetSource().getTarget();
-    }
+		return ((AdvisedSupport) advised.get(dynamicAdvisedInterceptor)).getTargetSource().getTarget();
+	}
+
+	private static String buildProperty(final String prefix, final String value){
+		StringBuilder sb = new StringBuilder(prefix.length() + value.length() + 1);
+
+		sb.append(prefix).append('.').append(value);
+
+		return sb.toString();
+	}
 
 }

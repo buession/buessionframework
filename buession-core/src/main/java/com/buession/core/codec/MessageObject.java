@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.codec;
@@ -35,34 +35,34 @@ import java.io.Serializable;
  */
 public class MessageObject implements Serializable {
 
-    private static final long serialVersionUID = -5074627895618171892L;
+	private final static long serialVersionUID = -5074627895618171892L;
 
-    private int code;
+	private int code;
 
-    private String text;
+	private String text;
 
-    public MessageObject(){
+	public MessageObject(){
+	}
 
-    }
+	public MessageObject(int code, String text){
+		this.code = code;
+		this.text = text;
+	}
 
-    public MessageObject(int code, String text){
-        this.code = code;
-        this.text = text;
-    }
+	public int getCode(){
+		return code;
+	}
 
-    public int getCode(){
-        return code;
-    }
+	public void setCode(int code){
+		this.code = code;
+	}
 
-    public void setCode(int code){
-        this.code = code;
-    }
+	public String getText(){
+		return text;
+	}
 
-    public String getText(){
-        return text;
-    }
+	public void setText(String text){
+		this.text = text;
+	}
 
-    public void setText(String text){
-        this.text = text;
-    }
 }

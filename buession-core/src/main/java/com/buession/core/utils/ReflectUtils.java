@@ -103,14 +103,16 @@ public class ReflectUtils extends ReflectionUtils {
 	 * 		对象
 	 * @param field
 	 * 		属性
+	 * @param <T>
+	 * 		对象类型
 	 */
 	public static <T> T getField(@Nullable Object object, @Nullable Field field){
 		setFieldAccessible(field);
 		return (T) getField(field, object);
 	}
 
-	public static <E> void setter(E entity, String setterName, Class<?> javaType, Object value) throws
-			NoSuchFieldException{
+	public static <E> void setter(@Nullable E entity, @Nullable String setterName, @Nullable Class<?> javaType, Object
+			value) throws NoSuchFieldException{
 		setter((Class<E>) entity.getClass(), entity, setterName, javaType, value);
 	}
 
@@ -138,7 +140,8 @@ public class ReflectUtils extends ReflectionUtils {
 		}
 	}
 
-	public static <E, V> V getter(Class<E> clazz, E entity, String setterName, Class<?> javaType){
+	public static <E, V> V getter(@Nullable Class<E> clazz, @Nullable E entity, @Nullable String setterName, @Nullable
+			Class<?> javaType){
 		return null;
 	}
 
