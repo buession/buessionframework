@@ -22,23 +22,36 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.serializer;
-
-import com.buession.core.validator.routines.DomainValidator;
-import org.junit.Test;
+package com.buession.dao;
 
 /**
  * @author Yong.Teng
  */
-public class ValidatorTest {
+public interface MongoDBDao<P, E> extends Dao<P, E> {
 
-	@Test
-	public void domain(){
-		System.out.println(DomainValidator.isValid("www.domain.com"));
-		System.out.println(DomainValidator.isValid("www.domain.fff"));
-		System.out.println(DomainValidator.isValid("www.domain.com.cn"));
-		System.out.println(DomainValidator.isValid("www.domain.com.ff"));
-		System.out.println(DomainValidator.isValid("www.domain.hk"));
+	String PRIMARY_FIELD = "_id";
+
+	/**
+	 * 插入数据
+	 *
+	 * @param e
+	 * 		实体类
+	 *
+	 * @return 成功返回 1，失败返回 0
+	 */
+	@Override
+	default int replace(E e){
+		return insert(e);
+	}
+
+	/**
+	 * 清空数据
+	 *
+	 * @return 影响条数
+	 */
+	@Override
+	default int truncate(){
+		return clear();
 	}
 
 }

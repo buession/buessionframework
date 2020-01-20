@@ -29,10 +29,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -97,6 +101,80 @@ public class ReflectUtils extends ReflectionUtils {
 	}
 
 	/**
+	 * 给对象属性的赋于新值
+	 *
+	 * @param object
+	 * 		对象
+	 * @param fieldName
+	 * 		属性名称
+	 * @param value
+	 * 		值
+	 */
+	public static void setField(@Nullable Object object, @Nullable String fieldName, Object value){
+		setField(object.getClass(), object, fieldName, value);
+	}
+
+	/**
+	 * 给对象属性的赋于新值
+	 *
+	 * @param clazz
+	 * 		对象类型
+	 * @param object
+	 * 		对象
+	 * @param fieldName
+	 * 		属性类型
+	 * @param value
+	 * 		值
+	 * @param <T>
+	 * 		对象类型
+	 */
+	public static <T> void setField(@Nullable Class<T> clazz, @Nullable Object object, @Nullable String fieldName,
+									Object value){
+		Field field = findField(clazz, fieldName);
+		setField(object, field, value);
+	}
+
+	/**
+	 * 给对象属性的赋于新值
+	 *
+	 * @param object
+	 * 		对象
+	 * @param fieldName
+	 * 		属性名称
+	 * @param fieldType
+	 * 		属性类型
+	 * @param value
+	 * 		值
+	 */
+	public static void setField(@Nullable Object object, @Nullable String fieldName, @Nullable Class<?> fieldType,
+								Object value){
+		setField(object.getClass(), object, fieldName, fieldType, value);
+	}
+
+	/**
+	 * 给对象属性的赋于新值
+	 *
+	 * @param clazz
+	 * 		对象类型
+	 * @param object
+	 * 		对象
+	 * @param fieldName
+	 * 		属性名称
+	 * @param fieldType
+	 * 		属性类型
+	 * @param value
+	 * 		值
+	 * @param <T>
+	 * 		对象类型
+	 */
+	public static <T> void setField(@Nullable Class<T> clazz, @Nullable Object object, @Nullable String fieldName,
+								 @Nullable Class<?> fieldType,
+								Object value){
+		Field field = findField(clazz, fieldName, fieldType);
+		setField(object, field, value);
+	}
+
+	/**
 	 * 获取对象属性值
 	 *
 	 * @param object
@@ -111,99 +189,224 @@ public class ReflectUtils extends ReflectionUtils {
 		return (T) getField(field, object);
 	}
 
-	public static <E> void setter(@Nullable E entity, @Nullable String setterName, @Nullable Class<?> javaType, Object
-			value) throws NoSuchFieldException{
-		setter((Class<E>) entity.getClass(), entity, setterName, javaType, value);
-	}
-
-	public static <E> void setter(Class<E> clazz, E entity, String setterName, Class<?> javaType, Object value) throws
-			NoSuchFieldException{
-		try{
-			Method method = clazz.getMethod("set" + StringUtils.upperCase(setterName), javaType);
-
-			if(isStaticMethod(method) == false){
-				method.invoke(entity, value);
-				return;
-			}
-		}catch(NoSuchMethodException ex){
-			logger.warn("{}", ex.getMessage());
-		}catch(InvocationTargetException ex){
-			logger.warn("{}", ex.getMessage());
-		}catch(IllegalAccessException ex){
-			logger.warn("{}", ex.getMessage());
-		}
-
-		Field field = clazz.getField(setterName);
-
-		if(isStaticField(field) == false){
-			setField(entity, field, value);
-		}
-	}
-
-	public static <E, V> V getter(@Nullable Class<E> clazz, @Nullable E entity, @Nullable String setterName, @Nullable
-			Class<?> javaType){
-		return null;
+	/**
+	 * 获取对象属性值
+	 *
+	 * @param object
+	 * 		对象
+	 * @param fieldName
+	 * 		属性名称
+	 * @param <T>
+	 * 		对象类型
+	 */
+	public static <T> T getField(@Nullable Object object, @Nullable String fieldName){
+		return (T) getField(object.getClass(), object, fieldName);
 	}
 
 	/**
-	 * 将实体类转换为 Map
+	 * 获取对象属性值
 	 *
-	 * @param entity
-	 * 		实体类
-	 * @param <E>
-	 * 		实体类类型
+	 * @param clazz
+	 * 		对象类型
+	 * @param object
+	 * 		对象
+	 * @param fieldName
+	 * 		属性名称
+	 * @param <T>
+	 * 		对象类型
+	 */
+	public static <T> T getField(@Nullable Class<T> clazz, @Nullable Object object, @Nullable String fieldName){
+		Field field = findField(clazz, fieldName);
+		return (T) getField(object, field);
+	}
+
+	/**
+	 * 获取对象属性值
+	 *
+	 * @param object
+	 * 		对象
+	 * @param fieldName
+	 * 		属性名称
+	 * @param fieldType
+	 * 		属性类型
+	 * @param <T>
+	 * 		对象类型
+	 */
+	public static <T> T getField(@Nullable Object object, @Nullable String fieldName, @Nullable Class<?> fieldType){
+		return (T) getField(object.getClass(), object, fieldName, fieldType);
+	}
+
+	/**
+	 * 获取对象属性值
+	 *
+	 * @param clazz
+	 * 		对象类型
+	 * @param object
+	 * 		对象
+	 * @param fieldName
+	 * 		属性名称
+	 * @param fieldType
+	 * 		属性类型
+	 * @param <T>
+	 * 		对象类型
+	 */
+	public static <T> T getField(@Nullable Class<T> clazz, @Nullable Object object, @Nullable String fieldName,
+								 @Nullable Class<?> fieldType){
+		Field field = findField(clazz, fieldName, fieldType);
+		return (T) getField(object, field);
+	}
+
+	public static <E> E setter(@Nullable Map<String, Object> data, @Nullable Class<E> clazz){
+		Assert.isNull(data, "Data cloud not be null.");
+		Assert.isNull(clazz, "Class cloud not be null.");
+
+		try{
+			return setter(data, clazz, clazz.newInstance());
+		}catch(InstantiationException e){
+			logger.error("{}", e.getMessage());
+		}catch(IllegalAccessException e){
+			logger.error("{}", e.getMessage());
+		}
+
+		return null;
+	}
+
+	public static <E> E setter(@Nullable Map<String, Object> data, @Nullable E object){
+		Assert.isNull(object, "Object cloud not be null.");
+		return setter(data, (Class<E>) object.getClass(), object);
+	}
+
+	public static <E> E setter(@Nullable Map<String, Object> data, @Nullable Class<E> clazz, @Nullable E object){
+		Assert.isNull(data, "Data cloud not be null.");
+		Assert.isNull(object, "Object cloud not be null.");
+
+		final Class<E> objectClazz = clazz == null ? (Class<E>) object.getClass() : clazz;
+
+		try{
+			BeanInfo beanInfo = Introspector.getBeanInfo(objectClazz);
+			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+
+			for(PropertyDescriptor propertyDescriptor : propertyDescriptors){
+				String propertyName = propertyDescriptor.getName();
+
+				if(data.containsKey(propertyName) == false){
+					continue;
+				}
+
+				Method method = propertyDescriptor.getWriteMethod();
+				Type genericParameterType = method.getGenericParameterTypes()[0];
+				Object value = data.get(propertyName);
+				boolean isSet = false;
+
+				try{
+					if((genericParameterType == Short.TYPE || genericParameterType == Short.class)){
+						if((value instanceof Short || value instanceof Integer || value instanceof Long)){
+							long lv = ((Number) value).longValue();
+
+							if(lv >= Short.MIN_VALUE && lv <= Short.MAX_VALUE){
+								invokeMethod(method, object, new Object[]{((Number) value).shortValue()});
+								isSet = true;
+							}
+						}
+					}else if((genericParameterType == Integer.TYPE || genericParameterType == Integer.class)){
+						if((value instanceof Short || value instanceof Integer || value instanceof Long)){
+							long lv = ((Number) value).longValue();
+
+							if(lv >= Integer.MIN_VALUE && lv <= Integer.MAX_VALUE){
+								invokeMethod(method, object, new Object[]{((Number) value).intValue()});
+								isSet = true;
+							}
+						}
+					}else if((genericParameterType == Long.TYPE || genericParameterType == Long.class)){
+						if((value instanceof Short || value instanceof Integer || value instanceof Long)){
+							long lv = ((Number) value).longValue();
+
+							if(lv >= Long.MIN_VALUE && lv <= Long.MAX_VALUE){
+								invokeMethod(method, object, new Object[]{((Number) value).longValue()});
+								isSet = true;
+							}
+						}
+					}else if((genericParameterType == Float.TYPE || genericParameterType == Float.class)){
+						if((value instanceof Short || value instanceof Integer || value instanceof Long || value
+								instanceof Double)){
+							invokeMethod(method, object, new Object[]{((Number) value).floatValue()});
+							isSet = true;
+						}
+					}else if((genericParameterType == Double.TYPE || genericParameterType == Double.class)){
+						if((value instanceof Short || value instanceof Integer || value instanceof Long || value
+								instanceof Float || value instanceof Double)){
+							invokeMethod(method, object, new Object[]{((Number) value).doubleValue()});
+							isSet = true;
+						}
+					}
+
+					if(isSet == false){
+						invokeMethod(method, object, new Object[]{value});
+					}
+				}catch(IllegalArgumentException e){
+					logger.error("Get {} failure: {}", propertyName, e.getMessage());
+				}
+			}
+		}catch(IntrospectionException e){
+			logger.error("{}", e.getMessage());
+		}
+
+		return object;
+	}
+
+	/**
+	 * 将对象转换为 Map
+	 *
+	 * @param object
+	 * 		对象
+	 * @param <T>
+	 * 		对象类型
 	 *
 	 * @return Map 对象
 	 */
-	public static <E> Map<String, Object> entityConvertMap(final E entity){
-		if(entity == null){
+	public static <T> Map<String, Object> entityConvertMap(final T object){
+		return entityConvertMap(null, object);
+	}
+
+	/**
+	 * 将对象转换为 Map
+	 *
+	 * @param clazz
+	 * 		对象类型
+	 * @param object
+	 * 		对象
+	 * @param <T>
+	 * 		对象类型
+	 *
+	 * @return Map 对象
+	 */
+	public static <T> Map<String, Object> entityConvertMap(Class<T> clazz, T object){
+		if(object == null){
 			return null;
 		}
 
-		Class<?> clazz = entity.getClass();
-		String entityName = clazz.getName();
-		Method[] methods = clazz.getMethods();
-		Field[] fields = clazz.getFields();
-		Map<String, Object> result = new HashMap<>(methods.length);
-
-		for(Method method : methods){
-			if(isStaticMethod(method)){
-				continue;
-			}
-
-			String methodName = method.getName();
-			if(methodName.startsWith("get") == false){
-				continue;
-			}
-
-			String name = StringUtils.uncapitalize(methodName.substring(3));
-
-			try{
-				result.put(name, method.invoke(entity));
-			}catch(IllegalAccessException ex){
-				logger.warn("Call method {}::{} failure: {}", entityName, method.toGenericString(), ex.getMessage());
-			}catch(InvocationTargetException ex){
-				logger.warn("Call method {}::{} failure: {}", entityName, method.toGenericString(), ex.getMessage());
-			}
+		if(clazz == null){
+			clazz = (Class<T>) object.getClass();
 		}
 
-		for(Field field : fields){
-			if(isStaticField(field)){
-				continue;
-			}
+		try{
+			BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
+			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+			Map<String, Object> result = new HashMap<>(propertyDescriptors.length);
 
-			if(result.containsKey(field.getName())){
-				continue;
-			}
+			for(PropertyDescriptor propertyDescriptor : propertyDescriptors){
+				String key = propertyDescriptor.getName();
 
-			try{
-				result.put(field.getName(), field.get(entity));
-			}catch(IllegalAccessException ex){
-				logger.warn("Read field {}::{} failure: {}", entityName, field.getName(), ex.getMessage());
+				if("class".equals(key) == false){
+					Method getter = propertyDescriptor.getReadMethod();
+					result.put(key, invokeMethod(getter, object));
+				}
 			}
+		}catch(IntrospectionException e){
+			logger.error("{}", e.getMessage());
 		}
 
-		return result;
+		return null;
 	}
 
 }

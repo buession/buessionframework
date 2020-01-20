@@ -25,6 +25,7 @@
 package com.buession.core.utils;
 
 import com.buession.core.validator.Validate;
+import com.buession.core.validator.routines.DomainValidator;
 import org.junit.Test;
 
 /**
@@ -32,49 +33,58 @@ import org.junit.Test;
  */
 public class ValidateTest {
 
-    @Test
-    public void tel(){
-        System.out.println(Validate.isTel("86-757-91440600"));
-        System.out.println(Validate.isTel("86757-91440600"));
-        System.out.println(Validate.isTel("0757-91440600"));
-        System.out.println(Validate.isTel("（0757）91440600"));
-        System.out.println(Validate.isTel("（86757）91440600"));
-        System.out.println(Validate.isTel("（86-757）91440600"));
-    }
+	@Test
+	public void tel(){
+		System.out.println(Validate.isTel("86-757-91440600"));
+		System.out.println(Validate.isTel("86757-91440600"));
+		System.out.println(Validate.isTel("0757-91440600"));
+		System.out.println(Validate.isTel("（0757）91440600"));
+		System.out.println(Validate.isTel("（86757）91440600"));
+		System.out.println(Validate.isTel("（86-757）91440600"));
+	}
 
-    @Test
-    public void ip(){
-        System.out.println(Validate.isIpV6("::13.1.68.3"));
-        System.out.println(Validate.isIpV6(":::13.1.68.3"));
-        System.out.println(Validate.isIpV6("::::13.1.68.3"));
-        System.out.println(Validate.isIpV6("ffff:13.1.68.3"));
-        System.out.println(Validate.isIpV6("2000:0000:0000:0000:0001:2345:6789:abcd"));
-        System.out.println(Validate.isIpV6("2000:::1:2345:6789:abcd"));
-        System.out.println(Validate.isIpV6("2000::1:2345:6789:abcd"));
-        System.out.println(Validate.isIpV6("2000::1"));
-        System.out.println(Validate.isIpV6("::c0a8:5909"));
-        System.out.println(Validate.isIpV6("2001:DB8:2de::e13"));
-        System.out.println(Validate.isIpV6("ffff::"));
-        System.out.println(Validate.isIpV6("::8a2e:0:0370:7344"));
-        System.out.println(Validate.isIpV6("::ffff:21:7.8.9.221"));
-        System.out.println(Validate.isIpV6("2001:DB8::2de::e13"));
+	@Test
+	public void ip(){
+		System.out.println(Validate.isIpV6("::13.1.68.3"));
+		System.out.println(Validate.isIpV6(":::13.1.68.3"));
+		System.out.println(Validate.isIpV6("::::13.1.68.3"));
+		System.out.println(Validate.isIpV6("ffff:13.1.68.3"));
+		System.out.println(Validate.isIpV6("2000:0000:0000:0000:0001:2345:6789:abcd"));
+		System.out.println(Validate.isIpV6("2000:::1:2345:6789:abcd"));
+		System.out.println(Validate.isIpV6("2000::1:2345:6789:abcd"));
+		System.out.println(Validate.isIpV6("2000::1"));
+		System.out.println(Validate.isIpV6("::c0a8:5909"));
+		System.out.println(Validate.isIpV6("2001:DB8:2de::e13"));
+		System.out.println(Validate.isIpV6("ffff::"));
+		System.out.println(Validate.isIpV6("::8a2e:0:0370:7344"));
+		System.out.println(Validate.isIpV6("::ffff:21:7.8.9.221"));
+		System.out.println(Validate.isIpV6("2001:DB8::2de::e13"));
 
-        long startTimestamp = System.currentTimeMillis();
-        System.out.println(Validate.isIpV4("192.168.1.1"));
-        System.out.println(Validate.isIpV4("0.0.0.0"));
-        System.out.println(Validate.isIpV4("255.255.255.255"));
-        System.out.println(Validate.isIpV4("255.155.255.255"));
-        System.out.println(Validate.isIpV4("256.168.1.1"));
-        long endTimestamp = System.currentTimeMillis();
-        System.out.println(endTimestamp - startTimestamp);
+		long startTimestamp = System.currentTimeMillis();
+		System.out.println(Validate.isIpV4("192.168.1.1"));
+		System.out.println(Validate.isIpV4("0.0.0.0"));
+		System.out.println(Validate.isIpV4("255.255.255.255"));
+		System.out.println(Validate.isIpV4("255.155.255.255"));
+		System.out.println(Validate.isIpV4("256.168.1.1"));
+		long endTimestamp = System.currentTimeMillis();
+		System.out.println(endTimestamp - startTimestamp);
 
-    }
+	}
 
-    @Test
-    public void str(){
-        String str = "abc";
-        System.out.println(str.substring(0, 1));
-        System.out.println(str.substring(1, 2));
-    }
+	@Test
+	public void str(){
+		String str = "abc";
+		System.out.println(str.substring(0, 1));
+		System.out.println(str.substring(1, 2));
+	}
+
+	@Test
+	public void domain(){
+		System.out.println(DomainValidator.isValid("www.domain.com"));
+		System.out.println(DomainValidator.isValid("www.domain.fff"));
+		System.out.println(DomainValidator.isValid("www.domain.com.cn"));
+		System.out.println(DomainValidator.isValid("www.domain.com.ff"));
+		System.out.println(DomainValidator.isValid("www.domain.hk"));
+	}
 
 }

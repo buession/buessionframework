@@ -52,9 +52,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
-
-	public final static String PRIMARY_FIELD = "_id";
+public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> implements MongoDBDao<P, E> {
 
 	@Resource
 	private MongoTemplate masterMongoTemplate;
@@ -119,19 +117,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
 			logger.error("Insert data failure.", ex);
 			return 0;
 		}
-	}
-
-	/**
-	 * 插入数据
-	 *
-	 * @param e
-	 * 		实体类
-	 *
-	 * @return 成功返回 1，失败返回 0
-	 */
-	@Override
-	public int replace(E e){
-		return insert(e);
 	}
 
 	/**
@@ -493,18 +478,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> {
 	@Override
 	public int clear(){
 		DeleteResult writeResult = getMasterMongoTemplate().remove(new Query(), getStatement());
-
 		return (int) writeResult.getDeletedCount();
-	}
-
-	/**
-	 * 清空数据
-	 *
-	 * @return 影响条数
-	 */
-	@Override
-	public int truncate(){
-		return clear();
 	}
 
 	protected final MongoTemplate getSlaveMongoTemplate(final int index) throws OperationException{

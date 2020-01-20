@@ -41,7 +41,7 @@ public class SerializerTest {
 		user.setUsername("buession");
 	}
 
-	@Test
+	//@Test
 	public void byteArray() throws SerializerException{
 		DefaultByteArraySerializer serializer = new DefaultByteArraySerializer();
 
@@ -54,7 +54,7 @@ public class SerializerTest {
 		System.out.println(serializer.deserialize(byteRet).toString());
 	}
 
-	@Test
+	//@Test
 	public void fastjson() throws SerializerException{
 		FastJsonJsonSerializer serializer = new FastJsonJsonSerializer();
 
@@ -87,7 +87,7 @@ public class SerializerTest {
 		System.out.println(u32.toString());
 	}
 
-	@Test
+	//@Test
 	public void jsckson() throws SerializerException{
 		JacksonJsonSerializer serializer = new JacksonJsonSerializer();
 
@@ -115,7 +115,7 @@ public class SerializerTest {
 		System.out.println(u31.toString());
 	}
 
-	@Test
+	//@Test
 	public void gson() throws SerializerException{
 		GsonJsonSerializer serializer = new GsonJsonSerializer();
 

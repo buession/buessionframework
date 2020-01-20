@@ -53,9 +53,7 @@ import com.buession.core.exception.OperationException;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
-
-	public final static String ORDERS_PARAMETER_NAME = "ORDERS";
+public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> implements MyBatisDao<P, E> {
 
 	@Resource
 	protected SqlSessionTemplate masterSqlSessionTemplate;
@@ -448,28 +446,21 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> {
 			return;
 		}
 
-		try{
-			for(ResultMap resultMap : resultMaps){
-				if(resultMap.getType() == e.getClass()){
-					List<ResultMapping> resultMappings = resultMap.getIdResultMappings();
+		for(ResultMap resultMap : resultMaps){
+			if(resultMap.getType() == e.getClass()){
+				List<ResultMapping> resultMappings = resultMap.getIdResultMappings();
 
-					if(Validate.isEmpty(resultMappings) == false){
-						Class<E> clazz = (Class<E>) e.getClass();
-
-						for(ResultMapping resultMapping : resultMappings){
-							ReflectUtils.setter(clazz, e, resultMapping.getProperty(), resultMapping.getJavaType(),
-									primary);
-						}
+				if(Validate.isEmpty(resultMappings) == false){
+					for(ResultMapping resultMapping : resultMappings){
+						ReflectUtils.setField(e, resultMapping.getProperty(), primary);
 					}
-					break;
 				}
+				break;
 			}
-		}catch(NoSuchFieldException ex){
-			logger.warn("{}", ex.getMessage());
 		}
 	}
 
-	protected final static Map<String, Object> buildParameters(final Map<String, Object> conditions){
+	protected static Map<String, Object> buildParameters(final Map<String, Object> conditions){
 		return conditions == null ? new LinkedHashMap<>(16) : new LinkedHashMap<>(conditions);
 	}
 
