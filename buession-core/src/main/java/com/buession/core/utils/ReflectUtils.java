@@ -168,8 +168,7 @@ public class ReflectUtils extends ReflectionUtils {
 	 * 		对象类型
 	 */
 	public static <T> void setField(@Nullable Class<T> clazz, @Nullable Object object, @Nullable String fieldName,
-								 @Nullable Class<?> fieldType,
-								Object value){
+									@Nullable Class<?> fieldType, Object value){
 		Field field = findField(clazz, fieldName, fieldType);
 		setField(object, field, value);
 	}
