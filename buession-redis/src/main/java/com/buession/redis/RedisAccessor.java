@@ -170,8 +170,7 @@ public abstract class RedisAccessor {
 	}
 
 	protected final byte[][] makeByteKeys(final byte[]... keys){
-		String prefix = getOptions().getPrefix();
-		return KeyUtil.makeByteKeys(prefix == null ? null : SafeEncoder.encode(prefix), keys);
+		return KeyUtil.makeByteKeys(getOptions().getPrefix(), keys);
 	}
 
 	protected <V> String[] serializer(final V... values){

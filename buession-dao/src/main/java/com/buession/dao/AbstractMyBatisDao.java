@@ -150,7 +150,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		if(e instanceof Map){
 			data.putAll((Map<String, Object>) e);
 		}else{
-			data.putAll(ReflectUtils.entityConvertMap(e));
+			data.putAll(ReflectUtils.classConvertMap(e));
 		}
 
 		return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE), data);

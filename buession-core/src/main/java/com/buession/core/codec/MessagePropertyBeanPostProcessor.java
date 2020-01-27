@@ -27,6 +27,7 @@
 package com.buession.core.codec;
 
 import com.buession.core.utils.ClassUtils;
+import com.buession.core.utils.ReflectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AdvisedSupport;
@@ -85,21 +86,14 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 						MessageObject.class.getName() + ", on: " + beanName + "(" + bean.getClass().getName() + ").");
 			}
 
-			try{
-				handleMessageInjected(bean, beanName, field, message);
-			}catch(IllegalAccessException e){
-				if(message.required()){
-					throw new BeanCreationException("Exception thrown when handleMessageInjected, on: " + beanName +
-							"" + "(" + clazz.getName() + ")", e);
-				}
-			}
+			handleMessageInjected(clazz, bean, beanName, field, message);
 		}
 
 		return bean;
 	}
 
-	private void handleMessageInjected(final Object bean, final String beanName, final Field field, final Message
-			message) throws IllegalAccessException{
+	private void handleMessageInjected(final Class clazz, final Object bean, final String beanName, final Field field,
+									   final Message message) throws BeansException{
 		final String key = message.value();
 		final String text = getEnvironment().getProperty(buildProperty(key, message.textField()));
 
@@ -110,15 +104,22 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 
 		final int code = getEnvironment().getProperty(buildProperty(key, message.codeField()), Integer.class);
 
-		field.setAccessible(true);
-
 		if(AopUtils.isCglibProxy(bean)){
 			try{
-				field.set(getCglibProxyTargetObject(bean), new MessageObject(code, text));
+				ReflectUtils.setField(getCglibProxyTargetObject(bean), field, new MessageObject(code, text));
 			}catch(Exception e){
+				throw new BeanCreationException("Exception thrown when handleMessageInjected, on: " + beanName + "(" +
+						clazz.getName() + ")", e);
 			}
 		}else{
-			field.set(bean, new MessageObject(code, text));
+			try{
+				ReflectUtils.setField(bean, field, new MessageObject(code, text));
+			}catch(Exception e){
+				if(message.required()){
+					throw new BeanCreationException("Exception thrown when handleMessageInjected, on: " + beanName +
+							"" + "(" + clazz.getName() + ")", e);
+				}
+			}
 		}
 		logger.debug("Parse message '{}', code: {}, text: {}", key, code, text);
 	}

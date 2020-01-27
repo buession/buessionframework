@@ -19,10 +19,38 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.core.utils;
+
+import com.buession.core.codec.MessageObject;
+import org.junit.Test;
+
 /**
  * @author Yong.Teng
  */
-package com.buession.core.cache;
+public class RuntimeTest {
+
+	@Test
+	public void memory(){
+		long totalMemory1 = Runtime.getRuntime().totalMemory();
+		long freeMemory1 = Runtime.getRuntime().freeMemory();
+		System.out.println("totalMemory1: " + totalMemory1 + ", freeMemory1: " + freeMemory1 + ", usedMemory1: " +
+				(totalMemory1 - freeMemory1));
+
+		//MessageObject messageObject;
+		for(int i = 0; i < 10000; i++){
+			MessageObject messageObject = new MessageObject();
+			messageObject.setCode(i);
+			messageObject.setText(Integer.toString(i));
+		}
+
+
+		long totalMemory2 = Runtime.getRuntime().totalMemory();
+		long freeMemory2 = Runtime.getRuntime().freeMemory();
+		System.out.println("totalMemory2: " + totalMemory2 + ", freeMemory2: " + freeMemory2 + ", usedMemory2: " +
+				(totalMemory2 - freeMemory2));
+	}
+
+}

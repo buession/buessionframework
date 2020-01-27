@@ -19,77 +19,32 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.cache;
+package com.buession.redis;
 
-import com.buession.core.validator.Validate;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.buession.redis.utils.KeyUtil;
+import org.junit.Test;
 
 /**
  * @author Yong.Teng
  */
-public class ThreadLocalCache<K, V> {
+public class KeyUtilTest {
 
-    private ThreadLocal<Map<K, V>> cache = new ThreadLocal<>();
+	@Test
+	public void makeByteKeys(){
+		String[] strings = new String[]{"A", "B"};
 
-    public ThreadLocalCache(){
-        cache.set(new HashMap<>(0));
-    }
+		byte[][] bytes = new byte[2][];
+		for(int i = 0; i < strings.length; i++){
+			bytes[i] = strings[i].getBytes();
+		}
 
-    public ThreadLocalCache(Map<K, V> data){
-        cache.set(data == null ? new HashMap<>(0) : data);
-    }
-
-    public ThreadLocalCache(int initialCapacity){
-        cache.set(new HashMap<>(initialCapacity));
-    }
-
-    public V get(K key){
-        Map<K, V> map = cache.get();
-        return map == null ? null : map.get(key);
-    }
-
-    public V put(K key, V value){
-        Map<K, V> map = cache.get();
-
-        if(map == null){
-            map = new HashMap<>(1);
-        }
-
-        V result = map.put(key, value);
-
-        cache.set(map);
-
-        return result;
-    }
-
-    public void putAll(Map<K, V> data){
-        if(Validate.isEmpty(data) == false){
-            Map<K, V> map = cache.get();
-
-            if(map == null){
-                cache.set(new HashMap<>(data));
-            }else{
-                map.putAll(data);
-            }
-        }
-    }
-
-    public Map<K, V> getAll(){
-        return cache.get();
-    }
-
-    public V remove(K key){
-        Map<K, V> map = cache.get();
-        return map == null ? null : map.remove(key);
-    }
-
-    public void clear(){
-        cache.remove();
-    }
+		byte[][] bytesResult = KeyUtil.makeByteKeys("test_", bytes);
+		for(int m = 0; m < bytesResult.length; m++){
+			System.out.println(new String(bytesResult[m]));
+		}
+	}
 
 }

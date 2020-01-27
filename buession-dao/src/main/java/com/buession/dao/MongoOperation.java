@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -31,57 +31,55 @@ package com.buession.dao;
  */
 public final class MongoOperation {
 
-    public final static Operator DEFAULT_OPERATOR = Operator.EQUAL;
+	private Operator operator;
 
-    private Operator operator;
+	private Object value;
 
-    private Object value;
+	public MongoOperation(Object value){
+		this(Operator.EQUAL, value);
+	}
 
-    public MongoOperation(Object value){
-        this(DEFAULT_OPERATOR, value);
-    }
+	public MongoOperation(Operator operator, Object value){
+		this.operator = operator;
+		this.value = value;
+	}
 
-    public MongoOperation(Operator operator, Object value){
-        this.operator = operator;
-        this.value = value;
-    }
+	public Operator getOperator(){
+		return operator;
+	}
 
-    public Operator getOperator(){
-        return operator;
-    }
+	public void setOperator(Operator operator){
+		this.operator = operator;
+	}
 
-    public void setOperator(Operator operator){
-        this.operator = operator;
-    }
+	public Object getValue(){
+		return value;
+	}
 
-    public Object getValue(){
-        return value;
-    }
+	public void setValue(Object value){
+		this.value = value;
+	}
 
-    public void setValue(Object value){
-        this.value = value;
-    }
+	public enum Operator {
 
-    public enum Operator {
+		EQUAL,
 
-        EQUAL,
+		NOT_EQUAL,
 
-        NOT_EQUAL,
+		LT,
 
-        LT,
+		LTE,
 
-        LTE,
+		GT,
 
-        GT,
+		GTE,
 
-        GTE,
+		IN,
 
-        IN,
+		NIN,
 
-        NIN,
+		LIKE
 
-        LIKE
-
-    }
+	}
 
 }

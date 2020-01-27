@@ -36,19 +36,19 @@ public class KeyUtil {
 	}
 
 	public final static String makeRawKey(final String prefix, final String key){
-		if(prefix == null){
-			return key;
-		}else{
+		if(Validate.isEmpty(prefix)){
 			StringBuilder sb = new StringBuilder(prefix.length() + key.length());
 
 			sb.append(prefix).append(key);
 
 			return sb.toString();
+		}else{
+			return key;
 		}
 	}
 
 	public final static String[] makeRawKeys(final String prefix, final String... keys){
-		if(Validate.isEmpty(keys)){
+		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
 			return keys;
 		}
 
@@ -88,18 +88,23 @@ public class KeyUtil {
 		return key;
 	}
 
-	public final static byte[][] makeByteKeys(final byte[] prefix, final byte[]... keys){
-		if(Validate.isEmpty(keys)){
+	public final static byte[][] makeByteKeys(final String prefix, final byte[]... keys){
+		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
 			return keys;
 		}
 
-		byte[][] byteKeys = new byte[keys.length][];
+		if(prefix != null){
+			byte[] prefixByte = SafeEncoder.encode(prefix);
+			byte[][] result = new byte[keys.length][];
 
-		for(int i = 0; i < keys.length; i++){
-			byteKeys[i] = makeByteKey(prefix, keys[i]);
+			for(int i = 0; i < keys.length; i++){
+				result[i] = makeByteKey(prefixByte, keys[i]);
+			}
+
+			return result;
 		}
 
-		return byteKeys;
+		return keys;
 	}
 
 }

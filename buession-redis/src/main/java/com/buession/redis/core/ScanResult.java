@@ -34,6 +34,8 @@ public class ScanResult<V> {
 
 	private byte[] cursor;
 
+	private String cursorAsString;
+
 	private V results;
 
 	public ScanResult(final byte[] cursor, final V results){
@@ -43,6 +45,7 @@ public class ScanResult<V> {
 
 	public ScanResult(final String cursor, final V results){
 		this(SafeEncoder.encode(cursor), results);
+		this.cursorAsString = cursor;
 	}
 
 	public byte[] getCursor(){
@@ -50,7 +53,11 @@ public class ScanResult<V> {
 	}
 
 	public String getCursorAsString(){
-		return SafeEncoder.encode(cursor);
+		if(cursorAsString == null){
+			cursorAsString = SafeEncoder.encode(cursor);
+		}
+
+		return cursorAsString;
 	}
 
 	public V getResults(){

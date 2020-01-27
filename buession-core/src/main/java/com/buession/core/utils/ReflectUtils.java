@@ -39,11 +39,16 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Yong.Teng
  */
 public class ReflectUtils extends ReflectionUtils {
+
+	private final static Map<Class<?>, Object> CLASS_SETTER_CACHE = new ConcurrentHashMap<>(64, 0.8F);
+
+	private final static Map<Class<?>, Map<String, Object>> CLASS_MAP_CACHE = new ConcurrentHashMap<>(64, 0.8F);
 
 	private final static Logger logger = LoggerFactory.getLogger(ReflectUtils.class);
 
@@ -279,10 +284,17 @@ public class ReflectUtils extends ReflectionUtils {
 		Assert.isNull(data, "Data cloud not be null.");
 		Assert.isNull(object, "Object cloud not be null.");
 
-		final Class<E> objectClazz = clazz == null ? (Class<E>) object.getClass() : clazz;
+		if(clazz == null){
+			clazz = (Class<E>) object.getClass();
+		}
+
+		object = (E) CLASS_SETTER_CACHE.get(clazz);
+		if(object != null){
+			return object;
+		}
 
 		try{
-			BeanInfo beanInfo = Introspector.getBeanInfo(objectClazz);
+			BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
 			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
 
 			for(PropertyDescriptor propertyDescriptor : propertyDescriptors){
@@ -346,6 +358,8 @@ public class ReflectUtils extends ReflectionUtils {
 					logger.error("Get {} failure: {}", propertyName, e.getMessage());
 				}
 			}
+
+			CLASS_SETTER_CACHE.put(clazz, object);
 		}catch(IntrospectionException e){
 			logger.error("{}", e.getMessage());
 		}
@@ -363,8 +377,8 @@ public class ReflectUtils extends ReflectionUtils {
 	 *
 	 * @return Map 对象
 	 */
-	public static <T> Map<String, Object> entityConvertMap(final T object){
-		return entityConvertMap(null, object);
+	public static <T> Map<String, Object> classConvertMap(final T object){
+		return classConvertMap(null, object);
 	}
 
 	/**
@@ -379,7 +393,7 @@ public class ReflectUtils extends ReflectionUtils {
 	 *
 	 * @return Map 对象
 	 */
-	public static <T> Map<String, Object> entityConvertMap(Class<T> clazz, T object){
+	public static <T> Map<String, Object> classConvertMap(Class<T> clazz, T object){
 		if(object == null){
 			return null;
 		}
@@ -388,10 +402,16 @@ public class ReflectUtils extends ReflectionUtils {
 			clazz = (Class<T>) object.getClass();
 		}
 
+		Map<String, Object> result = CLASS_MAP_CACHE.get(clazz);
+		if(result != null){
+			return result;
+		}
+
 		try{
 			BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
 			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-			Map<String, Object> result = new HashMap<>(propertyDescriptors.length);
+
+			result = new HashMap<>(propertyDescriptors.length);
 
 			for(PropertyDescriptor propertyDescriptor : propertyDescriptors){
 				String key = propertyDescriptor.getName();
@@ -401,6 +421,8 @@ public class ReflectUtils extends ReflectionUtils {
 					result.put(key, invokeMethod(getter, object));
 				}
 			}
+
+			CLASS_MAP_CACHE.put(clazz, result);
 		}catch(IntrospectionException e){
 			logger.error("{}", e.getMessage());
 		}

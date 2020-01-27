@@ -24,10 +24,14 @@
  */
 package com.buession.lang;
 
+import java.io.Serializable;
+
 /**
  * @author Yong.Teng
  */
-public class KeyValue<K, V> {
+public class KeyValue<K, V> implements Serializable {
+
+	private final static long serialVersionUID = 7107772931418041867L;
 
 	private K key;
 
@@ -37,7 +41,7 @@ public class KeyValue<K, V> {
 	}
 
 	public KeyValue(K key, V value){
-		this.key = key;
+		setKey(key);
 		this.value = value;
 	}
 
@@ -46,6 +50,9 @@ public class KeyValue<K, V> {
 	}
 
 	public void setKey(K key){
+		if(key == null){
+			throw new IllegalArgumentException("Key cloud not be null.");
+		}
 		this.key = key;
 	}
 
@@ -59,7 +66,7 @@ public class KeyValue<K, V> {
 
 	@Override
 	public int hashCode(){
-		return 32 * key.hashCode() + 32 * value.hashCode();
+		return 32 * key.hashCode() + 32 * (value == null ? 1 : value.hashCode());
 	}
 
 	@Override
@@ -74,14 +81,8 @@ public class KeyValue<K, V> {
 
 		KeyValue that = (KeyValue) obj;
 
-		if(this.key == null && that.getKey() != null){
-			if(that.getKey().equals(this.key) == false){
-				return false;
-			}
-		}else{
-			if(this.key.equals(that.getKey()) == false){
-				return false;
-			}
+		if(that.getKey().equals(this.key) == false){
+			return false;
 		}
 
 		if(this.value == null && that.getValue() != null){
@@ -99,7 +100,11 @@ public class KeyValue<K, V> {
 
 	@Override
 	public String toString(){
-		return "KeyValue{" + "key=" + key + ", value=" + value + '}';
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("{key: ").append(key).append(", value: ").append(value).append('}');
+
+		return sb.toString();
 	}
 
 }
