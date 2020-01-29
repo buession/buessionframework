@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.handler;
@@ -27,8 +27,9 @@ package com.buession.web.reactive.aop.handler;
 import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractResponseHeadersAnnotationHandler;
-import com.buession.web.http.response.ResponseHeader;
-import com.buession.web.http.response.ResponseHeaders;
+import com.buession.web.http.HttpHeader;
+import com.buession.web.http.response.annotation.ResponseHeader;
+import com.buession.web.http.response.annotation.ResponseHeaders;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.response.ResponseUtils;
@@ -45,49 +46,49 @@ import java.lang.reflect.Method;
  */
 public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHeadersAnnotationHandler {
 
-    private final static Logger logger = LoggerFactory.getLogger(ReactiveResponseHeadersAnnotationHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(ReactiveResponseHeadersAnnotationHandler.class);
 
-    public ReactiveResponseHeadersAnnotationHandler(){
-        super();
-    }
+	public ReactiveResponseHeadersAnnotationHandler(){
+		super();
+	}
 
-    @Override
-    public void execute(MethodInvocation mi, ResponseHeaders responseHeaders){
-        ServerHttp serverHttp = AopUtils.getServerHttp(mi);
-        doExecute(serverHttp, responseHeaders);
-    }
+	@Override
+	public void execute(MethodInvocation mi, ResponseHeaders responseHeaders){
+		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
+		doExecute(serverHttp, responseHeaders);
+	}
 
-    @Override
-    public Object execute(Object target, Method method, Object[] arguments, ResponseHeaders responseHeaders){
-        ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
-        doExecute(serverHttp, responseHeaders);
-        return null;
-    }
+	@Override
+	public Object execute(Object target, Method method, Object[] arguments, ResponseHeaders responseHeaders){
+		ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
+		doExecute(serverHttp, responseHeaders);
+		return null;
+	}
 
-    private final static void doExecute(final ServerHttp serverHttp, final ResponseHeaders responseHeaders){
-        if(serverHttp == null || serverHttp.getResponse() == null){
-            logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
-            return;
-        }
+	private final static void doExecute(final ServerHttp serverHttp, final ResponseHeaders responseHeaders){
+		if(serverHttp == null || serverHttp.getResponse() == null){
+			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
+			return;
+		}
 
-        ResponseHeader[] headers = responseHeaders.value();
+		ResponseHeader[] headers = responseHeaders.value();
 
-        if(Validate.isEmpty(headers) == false){
-            ServerHttpResponse response = serverHttp.getResponse();
-            HttpHeaders httpHeaders = response.getHeaders();
+		if(Validate.isEmpty(headers) == false){
+			ServerHttpResponse response = serverHttp.getResponse();
+			HttpHeaders httpHeaders = response.getHeaders();
 
-            for(ResponseHeader header : headers){
-                if(EXPIRES.equalsIgnoreCase(header.name()) == true){
-                    if(Validate.isNumeric(header.value())){
-                        ResponseUtils.httpCache(response, Integer.parseInt(header.value()));
-                    }else{
-                        ResponseUtils.httpCache(response, header.value());
-                    }
-                }else{
-                    httpHeaders.set(header.name(), header.value());
-                }
-            }
-        }
-    }
+			for(ResponseHeader header : headers){
+				if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(header.name()) == true){
+					if(Validate.isNumeric(header.value())){
+						ResponseUtils.httpCache(response, Integer.parseInt(header.value()));
+					}else{
+						ResponseUtils.httpCache(response, header.value());
+					}
+				}else{
+					httpHeaders.set(header.name(), header.value());
+				}
+			}
+		}
+	}
 
 }

@@ -19,28 +19,28 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.advice;
 
 import com.buession.aop.handler.AnnotationHandler;
 import com.buession.aop.resolver.AnnotationResolver;
-import com.buession.web.http.response.ResponseHeader;
+import com.buession.web.http.response.annotation.ResponseHeader;
 
 /**
  * @author Yong.Teng
  */
 public abstract class AbstractResponseHeaderAnnotationMethodAdvice extends
-        AbstractWebAnnotationMethodAdvice<ResponseHeader> implements ResponseHeaderAnnotationMethodAdvice {
+		AbstractWebAnnotationMethodAdvice<ResponseHeader> implements ResponseHeaderAnnotationMethodAdvice {
 
-    public AbstractResponseHeaderAnnotationMethodAdvice(AnnotationHandler<ResponseHeader> handler){
-        super(handler);
-    }
+	public AbstractResponseHeaderAnnotationMethodAdvice(AnnotationHandler<ResponseHeader> handler){
+		super(handler);
+	}
 
-    public AbstractResponseHeaderAnnotationMethodAdvice(AnnotationHandler<ResponseHeader> handler, AnnotationResolver
-            resolver){
-        super(handler, resolver);
-    }
+	public AbstractResponseHeaderAnnotationMethodAdvice(AnnotationHandler<ResponseHeader> handler, AnnotationResolver
+			resolver){
+		super(handler, resolver);
+	}
 
 }

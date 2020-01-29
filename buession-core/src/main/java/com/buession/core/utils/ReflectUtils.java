@@ -187,6 +187,8 @@ public class ReflectUtils extends ReflectionUtils {
 	 * 		属性
 	 * @param <T>
 	 * 		对象类型
+	 *
+	 * @return 对象属性
 	 */
 	public static <T> T getField(@Nullable Object object, @Nullable Field field){
 		setFieldAccessible(field);
@@ -202,6 +204,8 @@ public class ReflectUtils extends ReflectionUtils {
 	 * 		属性名称
 	 * @param <T>
 	 * 		对象类型
+	 *
+	 * @return 对象属性
 	 */
 	public static <T> T getField(@Nullable Object object, @Nullable String fieldName){
 		return (T) getField(object.getClass(), object, fieldName);
@@ -218,6 +222,8 @@ public class ReflectUtils extends ReflectionUtils {
 	 * 		属性名称
 	 * @param <T>
 	 * 		对象类型
+	 *
+	 * @return 对象属性
 	 */
 	public static <T> T getField(@Nullable Class<T> clazz, @Nullable Object object, @Nullable String fieldName){
 		Field field = findField(clazz, fieldName);
@@ -235,6 +241,8 @@ public class ReflectUtils extends ReflectionUtils {
 	 * 		属性类型
 	 * @param <T>
 	 * 		对象类型
+	 *
+	 * @return 对象属性
 	 */
 	public static <T> T getField(@Nullable Object object, @Nullable String fieldName, @Nullable Class<?> fieldType){
 		return (T) getField(object.getClass(), object, fieldName, fieldType);
@@ -253,6 +261,8 @@ public class ReflectUtils extends ReflectionUtils {
 	 * 		属性类型
 	 * @param <T>
 	 * 		对象类型
+	 *
+	 * @return 对象属性
 	 */
 	public static <T> T getField(@Nullable Class<T> clazz, @Nullable Object object, @Nullable String fieldName,
 								 @Nullable Class<?> fieldType){
@@ -288,9 +298,9 @@ public class ReflectUtils extends ReflectionUtils {
 			clazz = (Class<E>) object.getClass();
 		}
 
-		object = (E) CLASS_SETTER_CACHE.get(clazz);
-		if(object != null){
-			return object;
+		E result = (E) CLASS_SETTER_CACHE.get(clazz);
+		if(result != null){
+			return result;
 		}
 
 		try{

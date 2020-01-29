@@ -88,7 +88,8 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 * @return 是否为移动端请求
 	 */
 	public final static boolean isMobile(final HttpServletRequest request){
-		return isMobile(request.getHeader(HttpHeader.USER_AGENT.name()), request.getHeader(HttpHeader.ACCEPT.name()));
+		return isMobile(request.getHeader(HttpHeader.USER_AGENT.getValue()), request.getHeader(HttpHeader.ACCEPT
+				.getValue()));
 	}
 
 }

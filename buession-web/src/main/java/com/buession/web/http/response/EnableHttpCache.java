@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http.response;
@@ -38,13 +38,13 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ResponseHeader(name = "Expires")
+@com.buession.web.http.response.annotation.ResponseHeader(name = "Expires")
 @Deprecated
 public @interface EnableHttpCache {
 
-    /**
-     * Alias for {@link ResponseHeader#value()}.
-     */
-    @AliasFor(annotation = ResponseHeader.class) String value() default "1";
+	/**
+	 * Alias for {@link com.buession.web.http.response.annotation.ResponseHeader#value()}.
+	 */
+	@AliasFor(annotation = com.buession.web.http.response.annotation.ResponseHeader.class) String value() default "1";
 
 }

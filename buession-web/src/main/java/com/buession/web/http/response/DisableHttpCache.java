@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http.response;
@@ -36,8 +36,11 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@ResponseHeaders({@ResponseHeader(name = "Cache-Control", value = "no-cache"), @ResponseHeader(name = "Pragma", value
-        = "no-cache"), @ResponseHeader(name = "Expires", value = "0")})
+@com.buession.web.http.response.annotation.ResponseHeaders({
+		@com.buession.web.http.response.annotation.ResponseHeader(name = "Cache-Control", value = "no-cache"),
+		@com.buession.web.http.response.annotation.ResponseHeader(name = "Pragma", value = "no-cache"),
+		@com.buession.web.http.response.annotation.ResponseHeader(name = "Expires", value = "0")})
+@Deprecated
 public @interface DisableHttpCache {
 
 }

@@ -22,7 +22,9 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.http.request;
+package com.buession.web.http.response.annotation;
+
+import org.springframework.web.bind.annotation.Mapping;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -33,9 +35,12 @@ import java.lang.annotation.Target;
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.PARAMETER})
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface RequestMobile {
+@ResponseHeaders({@ResponseHeader(name = "Cache-Control", value = "no-cache"),
+		@ResponseHeader(name = "Pragma", value = "no-cache"), @ResponseHeader(name = "Expires", value = "0")})
+@Mapping
+public @interface DisableHttpCache {
 
 }

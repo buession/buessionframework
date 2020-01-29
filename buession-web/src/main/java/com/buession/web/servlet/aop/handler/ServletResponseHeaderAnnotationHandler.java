@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.handler;
@@ -28,7 +28,7 @@ import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractResponseHeaderAnnotationHandler;
 import com.buession.web.http.HttpHeader;
-import com.buession.web.http.response.ResponseHeader;
+import com.buession.web.http.response.annotation.ResponseHeader;
 import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
@@ -44,42 +44,42 @@ import java.lang.reflect.Method;
  */
 public class ServletResponseHeaderAnnotationHandler extends AbstractResponseHeaderAnnotationHandler {
 
-    private final static Logger logger = LoggerFactory.getLogger(ServletResponseHeaderAnnotationHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(ServletResponseHeaderAnnotationHandler.class);
 
-    public ServletResponseHeaderAnnotationHandler(){
-        super();
-    }
+	public ServletResponseHeaderAnnotationHandler(){
+		super();
+	}
 
-    @Override
-    public void execute(MethodInvocation mi, ResponseHeader responseHeader){
-        HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
-        doExecute(httpServlet, responseHeader);
-    }
+	@Override
+	public void execute(MethodInvocation mi, ResponseHeader responseHeader){
+		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
+		doExecute(httpServlet, responseHeader);
+	}
 
-    @Override
-    public Object execute(Object target, Method method, Object[] arguments, ResponseHeader responseHeader){
-        HttpServlet httpServlet = MethodUtils.createHttpServletFromMethodArguments(arguments);
-        doExecute(httpServlet, responseHeader);
-        return null;
-    }
+	@Override
+	public Object execute(Object target, Method method, Object[] arguments, ResponseHeader responseHeader){
+		HttpServlet httpServlet = MethodUtils.createHttpServletFromMethodArguments(arguments);
+		doExecute(httpServlet, responseHeader);
+		return null;
+	}
 
-    private final static void doExecute(final HttpServlet httpServlet, final ResponseHeader responseHeader){
-        if(httpServlet == null || httpServlet.getResponse() == null){
-            logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "ServerHttpResponse");
-            return;
-        }
+	private final static void doExecute(final HttpServlet httpServlet, final ResponseHeader responseHeader){
+		if(httpServlet == null || httpServlet.getResponse() == null){
+			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "ServerHttpResponse");
+			return;
+		}
 
-        HttpServletResponse response = httpServlet.getResponse();
+		HttpServletResponse response = httpServlet.getResponse();
 
-        if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(responseHeader.name()) == true){
-            if(Validate.isNumeric(responseHeader.value())){
-                ResponseUtils.httpCache(response, Integer.parseInt(responseHeader.value()));
-            }else{
-                ResponseUtils.httpCache(response, responseHeader.value());
-            }
-        }else{
-            response.setHeader(responseHeader.name(), responseHeader.value());
-        }
-    }
+		if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(responseHeader.name()) == true){
+			if(Validate.isNumeric(responseHeader.value())){
+				ResponseUtils.httpCache(response, Integer.parseInt(responseHeader.value()));
+			}else{
+				ResponseUtils.httpCache(response, responseHeader.value());
+			}
+		}else{
+			response.setHeader(responseHeader.name(), responseHeader.value());
+		}
+	}
 
 }

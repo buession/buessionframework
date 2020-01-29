@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.handler;
 
 import com.buession.aop.MethodInvocation;
 import com.buession.web.aop.handler.AbstractContentTypeAnnotationHandler;
-import com.buession.web.http.response.ContentType;
+import com.buession.web.http.response.annotation.ContentType;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.aop.MethodUtils;
@@ -42,38 +42,38 @@ import java.nio.charset.Charset;
  */
 public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnnotationHandler {
 
-    private final static Logger logger = LoggerFactory.getLogger(ReactiveContentTypeAnnotationHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(ReactiveContentTypeAnnotationHandler.class);
 
-    public ReactiveContentTypeAnnotationHandler(){
-        super();
-    }
+	public ReactiveContentTypeAnnotationHandler(){
+		super();
+	}
 
-    @Override
-    public void execute(MethodInvocation mi, ContentType contentType){
-        ServerHttp serverHttp = AopUtils.getServerHttp(mi);
-        doExecute(serverHttp, contentType);
-    }
+	@Override
+	public void execute(MethodInvocation mi, ContentType contentType){
+		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
+		doExecute(serverHttp, contentType);
+	}
 
-    @Override
-    public Object execute(Object target, Method method, Object[] arguments, ContentType contentType){
-        ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
-        doExecute(serverHttp, contentType);
-        return null;
-    }
+	@Override
+	public Object execute(Object target, Method method, Object[] arguments, ContentType contentType){
+		ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
+		doExecute(serverHttp, contentType);
+		return null;
+	}
 
-    private final static void doExecute(final ServerHttp serverHttp, final ContentType contentType){
-        if(serverHttp == null || serverHttp.getResponse() == null){
-            logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
-            return;
-        }
+	private final static void doExecute(final ServerHttp serverHttp, final ContentType contentType){
+		if(serverHttp == null || serverHttp.getResponse() == null){
+			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
+			return;
+		}
 
-        String mime = contentType.mime();
-        int i = mime.indexOf('/');
-        Charset charset = Charset.forName(contentType.charset());
-        String type = mime.substring(0, i - 1);
-        String subType = mime.substring(i);
+		String mime = contentType.mime();
+		int i = mime.indexOf('/');
+		Charset charset = Charset.forName(contentType.charset());
+		String type = mime.substring(0, i - 1);
+		String subType = mime.substring(i);
 
-        serverHttp.getResponse().getHeaders().setContentType(new MediaType(type, subType, charset));
-    }
+		serverHttp.getResponse().getHeaders().setContentType(new MediaType(type, subType, charset));
+	}
 
 }

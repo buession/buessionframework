@@ -24,9 +24,8 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.http.response;
+package com.buession.web.http.response.annotation;
 
-import org.springframework.core.annotation.AliasFor;
 import org.springframework.web.bind.annotation.Mapping;
 
 import java.lang.annotation.Documented;
@@ -41,19 +40,17 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@com.buession.web.http.response.annotation.ResponseHeader
 @Mapping
-@Deprecated
 public @interface ResponseHeader {
 
 	/**
 	 * 响应头名称
 	 */
-	@AliasFor(annotation = com.buession.web.http.response.annotation.ResponseHeader.class) String name() default "";
+	String name() default "";
 
 	/**
 	 * 响应头值
 	 */
-	@AliasFor(annotation = com.buession.web.http.response.annotation.ResponseHeader.class) String value() default "";
+	String value() default "";
 
 }

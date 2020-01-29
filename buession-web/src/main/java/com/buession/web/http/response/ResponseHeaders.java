@@ -26,6 +26,7 @@
  */
 package com.buession.web.http.response;
 
+import org.springframework.core.annotation.AliasFor;
 import org.springframework.web.bind.annotation.Mapping;
 
 import java.lang.annotation.Documented;
@@ -37,12 +38,15 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@com.buession.web.http.response.annotation.ResponseHeaders
 @Mapping
+@Deprecated
 public @interface ResponseHeaders {
 
-    /**
-     * 响应头列表
-     */
-    ResponseHeader[] value();
+	/**
+	 * 响应头列表
+	 */
+	@AliasFor(annotation = com.buession.web.http.response.annotation.ResponseHeaders.class) com.buession.web.http
+			.response.annotation.ResponseHeader[] value();
 
 }

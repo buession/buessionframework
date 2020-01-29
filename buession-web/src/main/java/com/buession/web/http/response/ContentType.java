@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http.response;
@@ -40,30 +40,32 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Mapping
+@com.buession.web.http.response.annotation.ContentType
+@Deprecated
 public @interface ContentType {
 
-    String DEFAULT_MIME = "text/html";
+	/**
+	 * MIME
+	 */
+	@AliasFor(annotation = com.buession.web.http.response.annotation.ContentType.class) String mime() default com
+			.buession.web.http.response.annotation.ContentType.DEFAULT_MIME;
 
-    String DEFAULT_ENCODING = "UTF-8";
+	/**
+	 * MIME
+	 */
+	@AliasFor(annotation = com.buession.web.http.response.annotation.ContentType.class) String value() default com
+			.buession.web.http.response.annotation.ContentType.DEFAULT_MIME;
 
-    /**
-     * MIME
-     */
-    @AliasFor("value") String mime() default DEFAULT_MIME;
+	/**
+	 * 编码
+	 */
+	@AliasFor(annotation = com.buession.web.http.response.annotation.ContentType.class) String charset() default com
+			.buession.web.http.response.annotation.ContentType.DEFAULT_ENCODING;
 
-    /**
-     * MIME
-     */
-    @AliasFor("mime") String value() default DEFAULT_MIME;
-
-    /**
-     * 编码
-     */
-    @AliasFor("encoding") String charset() default DEFAULT_ENCODING;
-
-    /**
-     * 编码
-     */
-    @AliasFor("charset") String encoding() default DEFAULT_ENCODING;
+	/**
+	 * 编码
+	 */
+	@AliasFor(annotation = com.buession.web.http.response.annotation.ContentType.class) String encoding() default com
+			.buession.web.http.response.annotation.ContentType.DEFAULT_ENCODING;
 
 }

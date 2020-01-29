@@ -19,18 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.handler;
 
-import com.buession.web.http.response.ResponseHeaders;
+import com.buession.web.http.response.annotation.ResponseHeaders;
 
 /**
  * @author Yong.Teng
  */
 public interface ResponseHeadersAnnotationHandler extends WebAnnotationHandler<ResponseHeaders> {
 
-    String EXPIRES = "Expires";
+	String EXPIRES = "Expires";
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.handler;
@@ -28,8 +28,8 @@ import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractResponseHeadersAnnotationHandler;
 import com.buession.web.http.HttpHeader;
-import com.buession.web.http.response.ResponseHeader;
-import com.buession.web.http.response.ResponseHeaders;
+import com.buession.web.http.response.annotation.ResponseHeader;
+import com.buession.web.http.response.annotation.ResponseHeaders;
 import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
@@ -45,47 +45,47 @@ import java.lang.reflect.Method;
  */
 public class ServletResponseHeadersAnnotationHandler extends AbstractResponseHeadersAnnotationHandler {
 
-    private final static Logger logger = LoggerFactory.getLogger(ServletResponseHeadersAnnotationHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(ServletResponseHeadersAnnotationHandler.class);
 
-    public ServletResponseHeadersAnnotationHandler(){
-        super();
-    }
+	public ServletResponseHeadersAnnotationHandler(){
+		super();
+	}
 
-    @Override
-    public void execute(MethodInvocation mi, ResponseHeaders responseHeaders){
-        HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
-        doExecute(httpServlet, responseHeaders);
-    }
+	@Override
+	public void execute(MethodInvocation mi, ResponseHeaders responseHeaders){
+		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
+		doExecute(httpServlet, responseHeaders);
+	}
 
-    @Override
-    public Object execute(Object target, Method method, Object[] arguments, ResponseHeaders responseHeaders){
-        HttpServlet httpServlet = MethodUtils.createHttpServletFromMethodArguments(arguments);
-        doExecute(httpServlet, responseHeaders);
-        return null;
-    }
+	@Override
+	public Object execute(Object target, Method method, Object[] arguments, ResponseHeaders responseHeaders){
+		HttpServlet httpServlet = MethodUtils.createHttpServletFromMethodArguments(arguments);
+		doExecute(httpServlet, responseHeaders);
+		return null;
+	}
 
-    private final static void doExecute(final HttpServlet httpServlet, final ResponseHeaders responseHeaders){
-        if(httpServlet == null || httpServlet.getResponse() == null){
-            logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "ServerHttpResponse");
-            return;
-        }
+	private final static void doExecute(final HttpServlet httpServlet, final ResponseHeaders responseHeaders){
+		if(httpServlet == null || httpServlet.getResponse() == null){
+			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "ServerHttpResponse");
+			return;
+		}
 
-        ResponseHeader[] headers = responseHeaders.value();
+		ResponseHeader[] headers = responseHeaders.value();
 
-        if(Validate.isEmpty(headers) == false){
-            HttpServletResponse response = httpServlet.getResponse();
-            for(ResponseHeader header : headers){
-                if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(header.name()) == true){
-                    if(Validate.isNumeric(header.value())){
-                        ResponseUtils.httpCache(response, Integer.parseInt(header.value()));
-                    }else{
-                        ResponseUtils.httpCache(response, header.value());
-                    }
-                }else{
-                    response.setHeader(header.name(), header.value());
-                }
-            }
-        }
-    }
+		if(Validate.isEmpty(headers) == false){
+			HttpServletResponse response = httpServlet.getResponse();
+			for(ResponseHeader header : headers){
+				if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(header.name()) == true){
+					if(Validate.isNumeric(header.value())){
+						ResponseUtils.httpCache(response, Integer.parseInt(header.value()));
+					}else{
+						ResponseUtils.httpCache(response, header.value());
+					}
+				}else{
+					response.setHeader(header.name(), header.value());
+				}
+			}
+		}
+	}
 
 }

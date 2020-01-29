@@ -22,14 +22,30 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.advice;
+package com.buession.web.http.response.annotation;
 
-import com.buession.aop.advice.AnnotationMethodAdvice;
-import com.buession.web.http.response.annotation.ContentType;
+import org.springframework.core.annotation.AliasFor;
+import org.springframework.web.bind.annotation.Mapping;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Yong.Teng
  */
-public interface ContentTypeAnnotationMethodAdvice extends AnnotationMethodAdvice<ContentType> {
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@ResponseHeader(name = "Expires")
+@Mapping
+public @interface HttpCache {
+
+	/**
+	 * Alias for {@link ResponseHeader#value()}.
+	 */
+	@AliasFor(annotation = ResponseHeader.class) String value() default "";
 
 }

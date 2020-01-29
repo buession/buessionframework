@@ -22,14 +22,48 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.advice;
+package com.buession.web.http.response.annotation;
 
-import com.buession.aop.advice.AnnotationMethodAdvice;
-import com.buession.web.http.response.annotation.ContentType;
+import org.springframework.core.annotation.AliasFor;
+import org.springframework.web.bind.annotation.Mapping;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Yong.Teng
  */
-public interface ContentTypeAnnotationMethodAdvice extends AnnotationMethodAdvice<ContentType> {
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Mapping
+public @interface ContentType {
+
+	String DEFAULT_MIME = "text/html";
+
+	String DEFAULT_ENCODING = "UTF-8";
+
+	/**
+	 * MIME
+	 */
+	@AliasFor("value") String mime() default DEFAULT_MIME;
+
+	/**
+	 * MIME
+	 */
+	@AliasFor("mime") String value() default DEFAULT_MIME;
+
+	/**
+	 * 编码
+	 */
+	@AliasFor("encoding") String charset() default DEFAULT_ENCODING;
+
+	/**
+	 * 编码
+	 */
+	@AliasFor("charset") String encoding() default DEFAULT_ENCODING;
 
 }

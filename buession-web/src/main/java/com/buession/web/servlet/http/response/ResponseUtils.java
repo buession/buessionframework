@@ -42,7 +42,7 @@ public class ResponseUtils {
 
 	public final static void httpCache(final HttpServletResponse response, final String value){
 		if(response != null){
-			response.setHeader(HttpHeader.CACHE_CONTROL.name(), value);
+			response.setHeader(HttpHeader.CACHE_CONTROL.getValue(), value);
 		}
 	}
 
@@ -62,12 +62,12 @@ public class ResponseUtils {
 
 	private final static void httpCache(final HttpServletResponse response, final long maxAge, final Date expires){
 		if(maxAge <= 0){
-			response.setHeader(HttpHeader.CACHE_CONTROL.name(), "no-cache");
+			response.setHeader(HttpHeader.CACHE_CONTROL.getValue(), "no-cache");
 		}else{
-			response.setHeader(HttpHeader.CACHE_CONTROL.name(), "max-age=" + maxAge);
+			response.setHeader(HttpHeader.CACHE_CONTROL.getValue(), "max-age=" + maxAge);
 		}
-		response.setDateHeader(HttpHeader.EXPIRES.name(), expires.getTime());
-		response.setHeader(HttpHeader.PRAGMA.name(), maxAge > 0 ? null : "no-cache");
+		response.setDateHeader(HttpHeader.EXPIRES.getValue(), expires.getTime());
+		response.setHeader(HttpHeader.PRAGMA.getValue(), maxAge > 0 ? null : "no-cache");
 	}
 
 }

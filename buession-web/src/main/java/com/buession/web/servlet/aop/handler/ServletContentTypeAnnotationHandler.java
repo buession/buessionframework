@@ -28,7 +28,7 @@ import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractContentTypeAnnotationHandler;
 import com.buession.web.http.HttpHeader;
-import com.buession.web.http.response.ContentType;
+import com.buession.web.http.response.annotation.ContentType;
 import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;

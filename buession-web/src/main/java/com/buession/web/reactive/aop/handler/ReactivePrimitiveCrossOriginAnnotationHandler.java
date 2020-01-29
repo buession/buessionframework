@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.handler;
@@ -28,7 +28,7 @@ import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractPrimitiveCrossOriginAnnotationHandler;
 import com.buession.web.http.HttpHeader;
-import com.buession.web.http.response.PrimitiveCrossOrigin;
+import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.request.RequestUtils;
@@ -44,48 +44,48 @@ import java.lang.reflect.Method;
  */
 public class ReactivePrimitiveCrossOriginAnnotationHandler extends AbstractPrimitiveCrossOriginAnnotationHandler {
 
-    private final static Logger logger = LoggerFactory.getLogger(ReactivePrimitiveCrossOriginAnnotationHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(ReactivePrimitiveCrossOriginAnnotationHandler.class);
 
-    public ReactivePrimitiveCrossOriginAnnotationHandler(){
-        super();
-    }
+	public ReactivePrimitiveCrossOriginAnnotationHandler(){
+		super();
+	}
 
-    @Override
-    public void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin){
-        ServerHttp serverHttp = AopUtils.getServerHttp(mi);
-        doExecute(serverHttp, primitiveCrossOrigin);
-    }
+	@Override
+	public void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin){
+		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
+		doExecute(serverHttp, primitiveCrossOrigin);
+	}
 
-    @Override
-    public Object execute(Object target, Method method, Object[] arguments, PrimitiveCrossOrigin primitiveCrossOrigin){
-        ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
-        doExecute(serverHttp, primitiveCrossOrigin);
-        return null;
-    }
+	@Override
+	public Object execute(Object target, Method method, Object[] arguments, PrimitiveCrossOrigin primitiveCrossOrigin){
+		ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
+		doExecute(serverHttp, primitiveCrossOrigin);
+		return null;
+	}
 
-    private final static void doExecute(final ServerHttp serverHttp, final PrimitiveCrossOrigin primitiveCrossOrigin){
-        if(serverHttp == null || serverHttp.getRequest() == null || serverHttp.getResponse() == null){
-            if(serverHttp == null){
-                logger.debug("ServerHttp is null.");
-            }else if(serverHttp.getRequest() == null){
-                logger.debug("ServerHttpRequest is null.");
-            }else if(serverHttp.getResponse() == null){
-                logger.debug("ServerHttpResponse is null.");
-            }
-            return;
-        }
+	private final static void doExecute(final ServerHttp serverHttp, final PrimitiveCrossOrigin primitiveCrossOrigin){
+		if(serverHttp == null || serverHttp.getRequest() == null || serverHttp.getResponse() == null){
+			if(serverHttp == null){
+				logger.debug("ServerHttp is null.");
+			}else if(serverHttp.getRequest() == null){
+				logger.debug("ServerHttpRequest is null.");
+			}else if(serverHttp.getResponse() == null){
+				logger.debug("ServerHttpResponse is null.");
+			}
+			return;
+		}
 
-        ServerHttpRequest request = serverHttp.getRequest();
+		ServerHttpRequest request = serverHttp.getRequest();
 
-        if(RequestUtils.isAjaxRequest(request) == false){
-            logger.warn("Request '{}' without the header 'X-Requested-With'.", request.getURI());
-            return;
-        }
+		if(RequestUtils.isAjaxRequest(request) == false){
+			logger.warn("Request '{}' without the header 'X-Requested-With'.", request.getURI());
+			return;
+		}
 
-        String accessControlAllowOrigin = request.getHeaders().getFirst(HttpHeader.ORIGIN.getValue());
-        if(Validate.hasText(accessControlAllowOrigin)){
-            serverHttp.getResponse().getHeaders().setAccessControlAllowOrigin(accessControlAllowOrigin);
-        }
-    }
+		String accessControlAllowOrigin = request.getHeaders().getFirst(HttpHeader.ORIGIN.getValue());
+		if(Validate.hasText(accessControlAllowOrigin)){
+			serverHttp.getResponse().getHeaders().setAccessControlAllowOrigin(accessControlAllowOrigin);
+		}
+	}
 
 }

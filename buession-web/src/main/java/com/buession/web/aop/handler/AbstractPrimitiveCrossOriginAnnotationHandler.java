@@ -19,22 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-20209 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.handler;
 
 import com.buession.aop.handler.AbstractAnnotationHandler;
-import com.buession.web.http.response.PrimitiveCrossOrigin;
+import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
 
 /**
  * @author Yong.Teng
  */
 public abstract class AbstractPrimitiveCrossOriginAnnotationHandler extends
-        AbstractAnnotationHandler<PrimitiveCrossOrigin> implements PrimitiveCrossOriginAnnotationHandler {
+		AbstractAnnotationHandler<PrimitiveCrossOrigin> implements PrimitiveCrossOriginAnnotationHandler {
 
-    public AbstractPrimitiveCrossOriginAnnotationHandler(){
-        super(PrimitiveCrossOrigin.class);
-    }
+	public AbstractPrimitiveCrossOriginAnnotationHandler(){
+		super(PrimitiveCrossOrigin.class);
+	}
 
 }

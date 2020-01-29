@@ -19,18 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.interceptor;
 
-import com.buession.web.http.response.ContentType;
-import com.buession.web.http.response.DisableHttpCache;
 import com.buession.web.http.response.EnableHttpCache;
-import com.buession.web.http.response.HttpCache;
-import com.buession.web.http.response.PrimitiveCrossOrigin;
-import com.buession.web.http.response.ResponseHeader;
-import com.buession.web.http.response.ResponseHeaders;
+import com.buession.web.http.response.annotation.ContentType;
+import com.buession.web.http.response.annotation.DisableHttpCache;
+import com.buession.web.http.response.annotation.HttpCache;
+import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
+import com.buession.web.http.response.annotation.ResponseHeader;
+import com.buession.web.http.response.annotation.ResponseHeaders;
 import com.buession.web.mvc.view.document.DocumentMetaData;
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -43,49 +43,49 @@ import java.lang.reflect.Method;
  */
 public abstract class AbstractWebAttributeSourcePointcutAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
-    private final static Class<? extends Annotation>[] WEB_ANNOTATION_CLASSES = new Class[]{ResponseHeader.class,
-            ResponseHeaders.class, ContentType.class, PrimitiveCrossOrigin.class, EnableHttpCache.class, HttpCache
-            .class, DisableHttpCache.class, DocumentMetaData.class};
+	private final static Class<? extends Annotation>[] WEB_ANNOTATION_CLASSES = new Class[]{ResponseHeader.class,
+			ResponseHeaders.class, ContentType.class, PrimitiveCrossOrigin.class, EnableHttpCache.class,
+			HttpCache.class, DisableHttpCache.class, DocumentMetaData.class};
 
-    @Override
-    public boolean matches(Method method, Class targetClass){
-        Method m = method;
+	@Override
+	public boolean matches(Method method, Class<?> targetClass){
+		Method m = method;
 
-        if(hasMethodAnnotationPresent(m)){
-            return true;
-        }
+		if(hasMethodAnnotationPresent(m)){
+			return true;
+		}
 
-        if(targetClass != null){
-            try{
-                m = targetClass.getMethod(m.getName(), m.getParameterTypes());
-                return hasMethodAnnotationPresent(m) || hasClassAnnotationPresent(targetClass);
-            }catch(NoSuchMethodException e){
-            }
-        }
+		if(targetClass != null){
+			try{
+				m = targetClass.getMethod(m.getName(), m.getParameterTypes());
+				return hasMethodAnnotationPresent(m) || hasClassAnnotationPresent(targetClass);
+			}catch(NoSuchMethodException e){
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    private boolean hasClassAnnotationPresent(Class<?> targetClazz){
-        for(Class<? extends Annotation> clazz : WEB_ANNOTATION_CLASSES){
-            Annotation annotation = AnnotationUtils.findAnnotation(targetClazz, clazz);
-            if(annotation != null){
-                return true;
-            }
-        }
+	private boolean hasClassAnnotationPresent(Class<?> targetClazz){
+		for(Class<? extends Annotation> clazz : WEB_ANNOTATION_CLASSES){
+			Annotation annotation = AnnotationUtils.findAnnotation(targetClazz, clazz);
+			if(annotation != null){
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
-    private boolean hasMethodAnnotationPresent(Method method){
-        for(Class<? extends Annotation> clazz : WEB_ANNOTATION_CLASSES){
-            Annotation annotation = AnnotationUtils.findAnnotation(method, clazz);
-            if(annotation != null){
-                return true;
-            }
-        }
+	private boolean hasMethodAnnotationPresent(Method method){
+		for(Class<? extends Annotation> clazz : WEB_ANNOTATION_CLASSES){
+			Annotation annotation = AnnotationUtils.findAnnotation(method, clazz);
+			if(annotation != null){
+				return true;
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 }

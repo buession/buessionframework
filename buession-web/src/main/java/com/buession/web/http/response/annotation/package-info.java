@@ -22,14 +22,7 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.aop.advice;
-
-import com.buession.aop.advice.AnnotationMethodAdvice;
-import com.buession.web.http.response.annotation.ContentType;
-
 /**
  * @author Yong.Teng
  */
-public interface ContentTypeAnnotationMethodAdvice extends AnnotationMethodAdvice<ContentType> {
-
-}
+package com.buession.web.http.response.annotation;

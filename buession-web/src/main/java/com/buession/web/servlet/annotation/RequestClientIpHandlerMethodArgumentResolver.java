@@ -24,7 +24,7 @@
  */
 package com.buession.web.servlet.annotation;
 
-import com.buession.web.http.request.RequestClientIp;
+import com.buession.web.http.request.annotation.RequestClientIp;
 import com.buession.web.servlet.http.request.RequestUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
@@ -40,17 +40,17 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RequestClientIpHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-    @Override
-    public boolean supportsParameter(MethodParameter methodParameter){
-        return methodParameter.hasParameterAnnotation(RequestClientIp.class);
-    }
+	@Override
+	public boolean supportsParameter(MethodParameter methodParameter){
+		return methodParameter.hasParameterAnnotation(RequestClientIp.class);
+	}
 
-    @Override
-    public Object resolveArgument(MethodParameter methodParameter, @Nullable ModelAndViewContainer mavContainer,
-                                  NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws
-            Exception{
-        HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-        return servletRequest == null ? null : RequestUtils.getClientIp(servletRequest);
-    }
+	@Override
+	public Object resolveArgument(MethodParameter methodParameter, @Nullable ModelAndViewContainer mavContainer,
+								  NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws
+			Exception{
+		HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
+		return servletRequest == null ? null : RequestUtils.getClientIp(servletRequest);
+	}
 
 }
