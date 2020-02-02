@@ -47,8 +47,7 @@ public class RequestUtils {
 			/* */
 			"WL-Proxy-Client-IP",
 			/* */
-			"Real-ClientIP"
-	};
+			"Real-ClientIP"};
 
 	public final static String[] MOBILE_MAPS = new String[]{
 			/* Android*/
@@ -58,26 +57,13 @@ public class RequestUtils {
 			/* IPod */
 			"ipod",
 			/* Windows Phone */
-			"windows phone",
-			"windowsce",
-			"mobile",
-			"coolpad",
-			"mmp",
-			"smartphone",
-			"midp",
-			"wap",
-			"xoom",
+			"windows phone", "windowsce", "mobile", "coolpad", "mmp", "smartphone", "midp", "wap", "xoom",
 			/* Symbian */
-			"symbian",
-			"j2me",
-			"ucweb",
-			"operamini",
-			"operamobi",
+			"symbian", "j2me", "ucweb", "operamini", "operamobi",
 			/* 微信 */
 			"MicroMessenger",
 			/* QQ 浏览器 */
-			"MQQBrowser",
-			"wince",
+			"MQQBrowser", "wince",
 			/* 诺基亚 */
 			"Nokia",
 			/* 索尼爱立信 */
@@ -156,7 +142,7 @@ public class RequestUtils {
 			"Dopod",
 			/* 康佳 */
 			"KONKA",
-			/*  科健 */
+			/* 科健 */
 			"Kejian",
 			/* 明基 */
 			"BenQ",
@@ -168,11 +154,10 @@ public class RequestUtils {
 			"SIE",
 			/* 夏新 */
 			"Amoi",
-			/*  中兴 */
+			/* 中兴 */
 			"ZTE",
 			/* 小米 */
-			"Xiaomi"
-	};
+			"Xiaomi"};
 
 	/**
 	 * 判断是否为 Ajax 请求

@@ -22,96 +22,22 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.http;
+package com.buession.web.reactive.config;
+
+import com.buession.web.reactive.annotation.RequestClientIpHandlerMethodArgumentResolver;
+import com.buession.web.reactive.annotation.RequestMobileHandlerMethodArgumentResolver;
+import org.springframework.web.reactive.config.WebFluxConfigurer;
+import org.springframework.web.reactive.result.method.annotation.ArgumentResolverConfigurer;
 
 /**
  * @author Yong.Teng
  */
-public enum HttpHeader {
-
-	ACCEPT("Accept"),
-
-	ACCEPT_CHARSET("Accept-Charset"),
-
-	ACCEPT_ENCODING("Accept-Encoding"),
-
-	ACCEPT_LANGUAGE("Accept-Language"),
-
-	ACCEPT_RANGES("Accept-Ranges"),
-
-	ACCESS_CONTROL_ALLOW_ORIGIN("Access-Control-Allow-Origin"),
-
-	AGE("Age"),
-
-	ALLOW("Allow"),
-
-	AUTHORIZATION("Authorization"),
-
-	CACHE_CONTROL("Cache-Control"),
-
-	CONNECTION("Connection"),
-
-	CONTENT_LENGTH("Content-Length"),
-
-	CONTENT_TYPE("Content-Type"),
-
-	COOKIE("Cookie"),
-
-	ETAG("ETag"),
-
-	EXPIRES("Expires"),
-
-	HOST("Host"),
-
-	IF_MATCH("If-Match"),
-
-	IF_MODIFIED_SINCE("If-Modified-Since"),
-
-	IF_NONE_MATCH("If-None-Match"),
-
-	IF_RANGE("If-Range"),
-
-	IF_UNMODIFIED_SINCE("If-Unmodified-Since"),
-
-	LOCATION("Location"),
-
-	LAST_MODIFIED("Last-Modified"),
-
-	ORIGIN("Origin"),
-
-	PRAGMA("Pragma"),
-
-	RANGE("Range"),
-
-	REFERER("Referer"),
-
-	SERVER("Server"),
-
-	SET_COOKIE("Set-Cookie"),
-
-	TRANSFER_ENCODING("Transfer-Encoding"),
-
-	USER_AGENT("User-Agent"),
-
-	VARY("Vary"),
-
-	VIA("Via"),
-
-	X_REQUESTED_WITH("X-Requested-With");
-
-	private String value;
-
-	HttpHeader(String value){
-		this.value = value;
-	}
-
-	public String getValue(){
-		return value;
-	}
+public class WebFluxConfiguration implements WebFluxConfigurer {
 
 	@Override
-	public String toString(){
-		return value;
+	public void configureArgumentResolvers(ArgumentResolverConfigurer configurer){
+		configurer.addCustomResolver(new RequestClientIpHandlerMethodArgumentResolver());
+		configurer.addCustomResolver(new RequestMobileHandlerMethodArgumentResolver());
 	}
 
 }

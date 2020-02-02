@@ -26,6 +26,7 @@ package com.buession.web.reactive.http.request;
 
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
+import com.buession.web.http.HttpHeader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 
@@ -57,7 +58,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 			}
 		}
 
-		ip = request.getRemoteAddress().getHostName();
+		ip = request.getRemoteAddress().getAddress().getHostAddress();
 		if(Validate.hasText(ip) == false || "unknown".equalsIgnoreCase(ip) == true){
 			ip = "127.0.0.1";
 		}
@@ -75,7 +76,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 */
 	public final static boolean isAjaxRequest(final ServerHttpRequest request){
 		HttpHeaders httpHeaders = request.getHeaders();
-		return isAjaxRequest(httpHeaders.getFirst("X-Requested-With"));
+		return isAjaxRequest(httpHeaders.getFirst(HttpHeader.X_REQUESTED_WITH.getValue()));
 	}
 
 	/**
@@ -88,7 +89,49 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 */
 	public final static boolean isMobile(final ServerHttpRequest request){
 		HttpHeaders httpHeaders = request.getHeaders();
-		return isMobile(httpHeaders.getFirst("User-Agent"), httpHeaders.getFirst("Accept"));
+		return isMobile(httpHeaders.getFirst(HttpHeader.USER_AGENT.getValue()), httpHeaders.getFirst(HttpHeader.ACCEPT
+				.getValue()));
+	}
+
+	/**
+	 * 获取当前 Scheme
+	 *
+	 * @param request
+	 * 		HttpServletRequest
+	 *
+	 * @return 当前 Scheme
+	 */
+	public final static String getScheme(final ServerHttpRequest request){
+		HttpHeaders httpHeaders = request.getHeaders();
+		String scheme = httpHeaders.getFirst("X-Forwarded-Protocol");
+		if(Validate.hasText(scheme)){
+			return scheme;
+		}
+
+		scheme = httpHeaders.getFirst("X-Forwarded-Proto");
+		if(Validate.hasText(scheme)){
+			return scheme;
+		}
+
+		return request.getURI().getScheme();
+	}
+
+	/**
+	 * 获取当前域名
+	 *
+	 * @param request
+	 * 		HttpServletRequest
+	 *
+	 * @return 当前域名
+	 */
+	public final static String getDomain(final ServerHttpRequest request){
+		HttpHeaders httpHeaders = request.getHeaders();
+		String host = httpHeaders.getFirst("X-Forwarded-Host");
+		if(Validate.hasText(host)){
+			return host;
+		}
+
+		return request.getURI().getHost();
 	}
 
 }

@@ -63,307 +63,362 @@ import java.util.Map;
  * @author Yong.Teng
  */
 public abstract class AbstractHandlerExceptionResolver extends org.springframework.web.servlet.handler
-        .AbstractHandlerExceptionResolver implements ExceptionHandlerResolver {
+		.AbstractHandlerExceptionResolver implements ExceptionHandlerResolver {
 
-    private String exceptionAttribute = DEFAULT_EXCEPTION_ATTRIBUTE;
+	private String exceptionAttribute = DEFAULT_EXCEPTION_ATTRIBUTE;
 
-    private String defaultErrorView = DEFAULT_ERROR_VIEW;
+	private String defaultErrorView = DEFAULT_ERROR_VIEW;
 
-    private String cacheControl = CACHE_CONTROL;
+	private String cacheControl = CACHE_CONTROL;
 
-    private Map<HttpStatus, String> errorViews;
+	private Map<HttpStatus, String> errorViews;
 
-    private Map<Exception, String> exceptionViews;
+	private Map<Exception, String> exceptionViews;
 
-    private final static Logger logger = LoggerFactory.getLogger(AbstractHandlerExceptionResolver.class);
+	private final static Logger logger = LoggerFactory.getLogger(AbstractHandlerExceptionResolver.class);
 
-    private final static Logger pageNotFoundLogger = LoggerFactory.getLogger(PAGE_NOT_FOUND_LOG_CATEGORY);
+	private final static Logger pageNotFoundLogger = LoggerFactory.getLogger(PAGE_NOT_FOUND_LOG_CATEGORY);
 
-    public String getCacheControl(){
-        return cacheControl;
-    }
+	public String getCacheControl(){
+		return cacheControl;
+	}
 
-    public void setCacheControl(String cacheControl){
-        this.cacheControl = cacheControl;
-    }
+	public void setCacheControl(String cacheControl){
+		this.cacheControl = cacheControl;
+	}
 
-    public Map<HttpStatus, String> getErrorViews(){
-        return errorViews;
-    }
+	public Map<HttpStatus, String> getErrorViews(){
+		return errorViews;
+	}
 
-    public void setErrorViews(Map<HttpStatus, String> errorViews){
-        this.errorViews = errorViews;
-    }
+	public void setErrorViews(Map<HttpStatus, String> errorViews){
+		this.errorViews = errorViews;
+	}
 
-    public Map<Exception, String> getExceptionViews(){
-        return exceptionViews;
-    }
+	public Map<Exception, String> getExceptionViews(){
+		return exceptionViews;
+	}
 
-    public void setExceptionViews(Map<Exception, String> exceptionViews){
-        this.exceptionViews = exceptionViews;
-    }
+	public void setExceptionViews(Map<Exception, String> exceptionViews){
+		this.exceptionViews = exceptionViews;
+	}
 
-    @ExceptionHandler(value = {Throwable.class, Exception.class})
-    @Nullable
-    @Override
-    protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, @Nullable
-            Object handler, Exception ex){
-        ModelAndView mv = doSpecialResolveException(request, response, handler, ex);
+	@ExceptionHandler(value = {Throwable.class, Exception.class})
+	@Nullable
+	@Override
+	protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, @Nullable
+			Object handler, Exception ex){
+		ModelAndView mv = doSpecialResolveException(request, response, handler, ex);
 
-        if(mv != null){
-            return mv;
-        }
+		if(mv != null){
+			return mv;
+		}
 
-        try{
-            if(ex instanceof HttpRequestMethodNotSupportedException){
-                return handleHttpRequestMethodNotSupported(request, response, handler,
-                        (HttpRequestMethodNotSupportedException) ex);
-            }else if(ex instanceof HttpMediaTypeNotSupportedException){
-                return handleHttpMediaTypeNotSupported(request, response, handler,
-                        (HttpMediaTypeNotSupportedException) ex);
-            }else if(ex instanceof HttpMediaTypeNotAcceptableException){
-                return handleHttpMediaTypeNotAcceptable(request, response, handler,
-                        (HttpMediaTypeNotAcceptableException) ex);
-            }else if(ex instanceof MissingPathVariableException){
-                return handleMissingPathVariable(request, response, handler, (MissingPathVariableException) ex);
-            }else if(ex instanceof MissingServletRequestParameterException){
-                return handleMissingServletRequestParameter(request, response, handler,
-                        (MissingServletRequestParameterException) ex);
-            }else if(ex instanceof ServletRequestBindingException){
-                return handleServletRequestBindingException(request, response, handler,
-                        (ServletRequestBindingException) ex);
-            }else if(ex instanceof ConversionNotSupportedException){
-                return handleConversionNotSupported(request, response, handler, (ConversionNotSupportedException) ex);
-            }else if(ex instanceof TypeMismatchException){
-                return handleTypeMismatch(request, response, handler, (TypeMismatchException) ex);
-            }else if(ex instanceof HttpMessageNotReadableException){
-                return handleHttpMessageNotReadable(request, response, handler, (HttpMessageNotReadableException) ex);
-            }else if(ex instanceof HttpMessageNotWritableException){
-                return handleHttpMessageNotWritable(request, response, handler, (HttpMessageNotWritableException) ex);
-            }else if(ex instanceof MethodArgumentNotValidException){
-                return handleMethodArgumentNotValidException(request, response, handler,
-                        (MethodArgumentNotValidException) ex);
-            }else if(ex instanceof MissingServletRequestPartException){
-                return handleMissingServletRequestPartException(request, response, handler,
-                        (MissingServletRequestPartException) ex);
-            }else if(ex instanceof BindException){
-                return handleBindException(request, response, handler, (BindException) ex);
-            }else if(ex instanceof NoHandlerFoundException){
-                return handleNoHandlerFoundException(request, response, handler, (NoHandlerFoundException) ex);
-            }else if(ex instanceof AsyncRequestTimeoutException){
-                return handleAsyncRequestTimeoutException(request, response, handler, (AsyncRequestTimeoutException)
-                        ex);
-            }
-        }catch(Exception handlerEx){
-            if(logger.isWarnEnabled()){
-                logger.warn("Failure while trying to resolve exception [{}]", ex.getClass().getName(), handlerEx);
-            }
-        }
+		try{
+			if(ex instanceof MethodArgumentNotValidException){
+				return handleMethodArgumentNotValidException(request, response, handler,
+						(MethodArgumentNotValidException) ex);
+			}else if(ex instanceof MissingServletRequestPartException){
+				return handleMissingServletRequestPartException(request, response, handler,
+						(MissingServletRequestPartException) ex);
+			}else if(ex instanceof BindException){
+				return handleBindException(request, response, handler, (BindException) ex);
+			}else if(ex instanceof TypeMismatchException){
+				return handleTypeMismatchException(request, response, handler, (TypeMismatchException) ex);
+			}else if(ex instanceof HttpMessageNotReadableException){
+				return handleHttpMessageNotReadableException(request, response, handler,
+						(HttpMessageNotReadableException) ex);
+			}else if(ex instanceof MissingServletRequestParameterException){
+				return handleMissingServletRequestParameterException(request, response, handler,
+						(MissingServletRequestParameterException) ex);
+			}else if(ex instanceof ServletRequestBindingException){
+				return handleServletRequestBindingException(request, response, handler,
+						(ServletRequestBindingException) ex);
+			}else if(ex instanceof NoHandlerFoundException){
+				return handleNoHandlerFoundException(request, response, handler, (NoHandlerFoundException) ex);
+			}else if(ex instanceof HttpRequestMethodNotSupportedException){
+				return handleHttpRequestMethodNotSupportedException(request, response, handler,
+						(HttpRequestMethodNotSupportedException) ex);
+			}else if(ex instanceof HttpMediaTypeNotAcceptableException){
+				return handleHttpMediaTypeNotAcceptableException(request, response, handler,
+						(HttpMediaTypeNotAcceptableException) ex);
+			}else if(ex instanceof HttpMediaTypeNotSupportedException){
+				return handleHttpMediaTypeNotSupportedException(request, response, handler,
+						(HttpMediaTypeNotSupportedException) ex);
+			}else if(ex instanceof MissingPathVariableException){
+				return handleMissingPathVariableException(request, response, handler, (MissingPathVariableException)
+						ex);
+			}else if(ex instanceof ConversionNotSupportedException){
+				return handleConversionNotSupportedException(request, response, handler,
+						(ConversionNotSupportedException) ex);
+			}else if(ex instanceof HttpMessageNotWritableException){
+				return handleHttpMessageNotWritableException(request, response, handler,
+						(HttpMessageNotWritableException) ex);
+			}else if(ex instanceof AsyncRequestTimeoutException){
+				return handleAsyncRequestTimeoutException(request, response, handler, (AsyncRequestTimeoutException)
+						ex);
+			}
+		}catch(Exception handlerEx){
+			if(logger.isWarnEnabled()){
+				logger.warn("Failure while trying to resolve exception [{}]", ex.getClass().getName(), handlerEx);
+			}
+		}
 
-        return doDefaultResolveException(request, response, handler, ex);
-    }
+		return
 
-    protected ModelAndView doSpecialResolveException(final HttpServletRequest request, final HttpServletResponse
-            response, final Object handler, final Exception ex){
-        return null;
-    }
+				doDefaultResolveException(request, response, handler, ex);
 
-    protected ModelAndView doDefaultResolveException(final HttpServletRequest request, final HttpServletResponse
-            response, final Object handler, final Exception ex){
-        return null;
-    }
+	}
 
-    protected ModelAndView handleHttpRequestMethodNotSupported(final HttpServletRequest request, final
-    HttpServletResponse response, @Nullable final Object handler, final HttpRequestMethodNotSupportedException ex)
-            throws IOException{
-        response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, ex.getMessage());
+	protected ModelAndView doSpecialResolveException(final HttpServletRequest request, final HttpServletResponse
+			response, final Object handler, final Exception ex){
+		return null;
+	}
 
-        String[] supportedMethods = ex.getSupportedMethods();
-        if(supportedMethods != null){
-            response.setHeader("Allow", ArrayUtils.toString(supportedMethods, ", "));
-        }
+	protected ModelAndView doDefaultResolveException(final HttpServletRequest request, final HttpServletResponse
+			response, final Object handler, final Exception ex){
+		return null;
+	}
 
-        return doResolve(request, response, ex);
-    }
+	/**
+	 * Status code: 400
+	 */
+	protected ModelAndView handleMethodArgumentNotValidException(final HttpServletRequest request, final
+	HttpServletResponse response, @Nullable final Object handler, final MethodArgumentNotValidException ex) throws
+			IOException{
+		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+		return doResolve(request, response, ex);
+	}
 
-    protected ModelAndView handleHttpMediaTypeNotSupported(final HttpServletRequest request, final
-    HttpServletResponse response, @Nullable final Object handler, final HttpMediaTypeNotSupportedException ex) throws
-            IOException{
-        response.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
+	/**
+	 * Status code: 400
+	 */
+	protected ModelAndView handleMissingServletRequestPartException(final HttpServletRequest request, final
+	HttpServletResponse response, @Nullable final Object handler, final MissingServletRequestPartException ex) throws
+			IOException{
+		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+		return doResolve(request, response, ex);
+	}
 
-        List<MediaType> mediaTypes = ex.getSupportedMediaTypes();
-        if(!CollectionUtils.isEmpty(mediaTypes)){
-            response.setHeader("Accept", MediaType.toString(mediaTypes));
-        }
+	/**
+	 * Status code: 400
+	 */
+	protected ModelAndView handleBindException(final HttpServletRequest request, final HttpServletResponse response,
+											   @Nullable final Object handler, final BindException ex) throws
+			IOException{
+		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+		return doResolve(request, response, ex);
+	}
 
-        return doResolve(request, response, ex);
-    }
+	/**
+	 * Status code: 400
+	 */
+	protected ModelAndView handleMissingServletRequestParameterException(final HttpServletRequest request, final
+	HttpServletResponse response, @Nullable final Object handler, final MissingServletRequestParameterException ex)
+			throws IOException{
+		response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+		return doResolve(request, response, ex);
+	}
 
-    protected ModelAndView handleHttpMediaTypeNotAcceptable(final HttpServletRequest request, final
-    HttpServletResponse response, @Nullable final Object handler, final HttpMediaTypeNotAcceptableException ex)
-            throws IOException{
-        response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
-        return doResolve(request, response, ex);
-    }
+	/**
+	 * Status code: 400
+	 */
+	protected ModelAndView handleServletRequestBindingException(final HttpServletRequest request, final
+	HttpServletResponse response, @Nullable final Object handler, final ServletRequestBindingException ex) throws
+			IOException{
+		response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+		return doResolve(request, response, ex);
+	}
 
-    protected ModelAndView handleMissingPathVariable(final HttpServletRequest request, final HttpServletResponse
-            response, @Nullable final Object handler, final MissingPathVariableException ex) throws IOException{
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
-        return doResolve(request, response, ex);
-    }
+	/**
+	 * Status code: 400
+	 */
+	protected ModelAndView handleTypeMismatchException(final HttpServletRequest request, final HttpServletResponse
+			response, @Nullable final Object handler, final TypeMismatchException ex) throws IOException{
+		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+		return doResolve(request, response, ex);
+	}
 
-    protected ModelAndView handleMissingServletRequestParameter(final HttpServletRequest request, final
-    HttpServletResponse response, @Nullable final Object handler, final MissingServletRequestParameterException ex)
-            throws IOException{
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
-        return doResolve(request, response, ex);
-    }
+	/**
+	 * Status code: 400
+	 */
+	protected ModelAndView handleHttpMessageNotReadableException(final HttpServletRequest request, final
+	HttpServletResponse response, @Nullable final Object handler, final HttpMessageNotReadableException ex) throws
+			IOException{
+		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+		return doResolve(request, response, ex);
+	}
 
-    protected ModelAndView handleServletRequestBindingException(final HttpServletRequest request, final
-    HttpServletResponse response, @Nullable final Object handler, final ServletRequestBindingException ex) throws
-            IOException{
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
-        return doResolve(request, response, ex);
-    }
+	/**
+	 * Status code: 404
+	 */
+	protected ModelAndView handleNoHandlerFoundException(final HttpServletRequest request, final HttpServletResponse
+			response, @Nullable final Object handler, final NoHandlerFoundException ex) throws IOException{
+		pageNotFoundLogger.warn(ex.getMessage());
+		response.sendError(HttpServletResponse.SC_NOT_FOUND);
+		return doResolve(request, response, ex);
+	}
 
-    protected ModelAndView handleConversionNotSupported(final HttpServletRequest request, final HttpServletResponse
-            response, @Nullable final Object handler, final ConversionNotSupportedException ex) throws IOException{
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        return doResolve(request, response, ex);
-    }
+	/**
+	 * Status code: 405
+	 */
+	protected ModelAndView handleHttpRequestMethodNotSupportedException(final HttpServletRequest request, final
+	HttpServletResponse response, @Nullable final Object handler, final HttpRequestMethodNotSupportedException ex)
+			throws IOException{
+		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, ex.getMessage());
 
-    protected ModelAndView handleTypeMismatch(final HttpServletRequest request, final HttpServletResponse response,
-                                              @Nullable final Object handler, final TypeMismatchException ex) throws
-            IOException{
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-        return doResolve(request, response, ex);
-    }
+		String[] supportedMethods = ex.getSupportedMethods();
+		if(supportedMethods != null){
+			response.setHeader("Allow", ArrayUtils.toString(supportedMethods, ", "));
+		}
 
-    protected ModelAndView handleHttpMessageNotReadable(final HttpServletRequest request, final HttpServletResponse
-            response, @Nullable final Object handler, final HttpMessageNotReadableException ex) throws IOException{
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-        return doResolve(request, response, ex);
-    }
+		return doResolve(request, response, ex);
+	}
 
-    protected ModelAndView handleHttpMessageNotWritable(final HttpServletRequest request, final HttpServletResponse
-            response, @Nullable final Object handler, final HttpMessageNotWritableException ex) throws IOException{
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        return doResolve(request, response, ex);
-    }
+	/**
+	 * Status code: 406
+	 */
+	protected ModelAndView handleHttpMediaTypeNotAcceptableException(final HttpServletRequest request, final
+	HttpServletResponse response, @Nullable final Object handler, final HttpMediaTypeNotAcceptableException ex) throws
+			IOException{
+		response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
+		return doResolve(request, response, ex);
+	}
 
-    protected ModelAndView handleMethodArgumentNotValidException(final HttpServletRequest request, final
-    HttpServletResponse response, @Nullable final Object handler, final MethodArgumentNotValidException ex) throws
-            IOException{
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-        return doResolve(request, response, ex);
-    }
+	/**
+	 * Status code: 415
+	 */
+	protected ModelAndView handleHttpMediaTypeNotSupportedException(final HttpServletRequest request, final
+	HttpServletResponse response, @Nullable final Object handler, final HttpMediaTypeNotSupportedException ex) throws
+			IOException{
+		response.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
 
-    protected ModelAndView handleMissingServletRequestPartException(final HttpServletRequest request, final
-    HttpServletResponse response, @Nullable final Object handler, final MissingServletRequestPartException ex) throws
-            IOException{
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
-        return doResolve(request, response, ex);
-    }
+		List<MediaType> mediaTypes = ex.getSupportedMediaTypes();
+		if(!CollectionUtils.isEmpty(mediaTypes)){
+			response.setHeader("Accept", MediaType.toString(mediaTypes));
+		}
 
-    protected ModelAndView handleBindException(final HttpServletRequest request, final HttpServletResponse response,
-                                               @Nullable final Object handler, final BindException ex) throws
-            IOException{
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-        return doResolve(request, response, ex);
-    }
+		return doResolve(request, response, ex);
+	}
 
-    protected ModelAndView handleNoHandlerFoundException(final HttpServletRequest request, final HttpServletResponse
-            response, @Nullable final Object handler, final NoHandlerFoundException ex) throws IOException{
-        pageNotFoundLogger.warn(ex.getMessage());
-        response.sendError(HttpServletResponse.SC_NOT_FOUND);
-        return doResolve(request, response, ex);
-    }
+	/**
+	 * Status code: 500
+	 */
+	protected ModelAndView handleMissingPathVariableException(final HttpServletRequest request, final
+	HttpServletResponse response, @Nullable final Object handler, final MissingPathVariableException ex) throws
+			IOException{
+		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
+		return doResolve(request, response, ex);
+	}
 
-    protected ModelAndView handleAsyncRequestTimeoutException(final HttpServletRequest request, final
-    HttpServletResponse response, @Nullable final Object handler, final AsyncRequestTimeoutException ex) throws
-            IOException{
-        if(response.isCommitted() == false){
-            response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
-        }else{
-            logger.warn("Async request timed out");
-        }
+	/**
+	 * Status code: 500
+	 */
+	protected ModelAndView handleConversionNotSupportedException(final HttpServletRequest request, final
+	HttpServletResponse response, @Nullable final Object handler, final ConversionNotSupportedException ex) throws
+			IOException{
+		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		return doResolve(request, response, ex);
+	}
 
-        return doResolve(request, response, ex);
-    }
+	/**
+	 * Status code: 500
+	 */
+	protected ModelAndView handleHttpMessageNotWritableException(final HttpServletRequest request, final
+	HttpServletResponse response, @Nullable final Object handler, final HttpMessageNotWritableException ex) throws
+			IOException{
+		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		return doResolve(request, response, ex);
+	}
 
-    protected boolean acceptTextHtml(final HttpServletRequest request){
-        return true;
-    }
+	/**
+	 * Status code: 503
+	 */
+	protected ModelAndView handleAsyncRequestTimeoutException(final HttpServletRequest request, final
+	HttpServletResponse response, @Nullable final Object handler, final AsyncRequestTimeoutException ex) throws
+			IOException{
+		if(response.isCommitted() == false){
+			response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+		}else{
+			logger.warn("Async request timed out");
+		}
 
-    protected boolean acceptJson(final HttpServletRequest request){
-        final String contentType = request.getHeader("Content-Type");
-        return contentType != null && contentType.contains(MediaType.APPLICATION_JSON_VALUE);
-    }
+		return doResolve(request, response, ex);
+	}
 
-    protected ModelAndView createModelAndView(final HttpServletRequest request, final HttpServletResponse response,
-                                              final HttpStatus httpStatus, final Exception ex){
-        return acceptJson(request) ? new ModelAndView(new MappingJackson2JsonView()) : new ModelAndView
-                (determineViewName(request, response, ex, httpStatus));
-    }
+	protected boolean acceptTextHtml(final HttpServletRequest request){
+		return true;
+	}
 
-    protected ModelAndView doResolve(final HttpServletRequest request, final HttpServletResponse response, final
-    Exception ex){
-        request.setAttribute("javax.servlet.error.exception", ex);
+	protected boolean acceptJson(final HttpServletRequest request){
+		final String contentType = request.getHeader("Content-Type");
+		return contentType != null && contentType.contains(MediaType.APPLICATION_JSON_VALUE);
+	}
 
-        HttpStatus httpStatus = HttpStatus.resolve(response.getStatus());
+	protected ModelAndView createModelAndView(final HttpServletRequest request, final HttpServletResponse response,
+											  final HttpStatus httpStatus, final Exception ex){
+		return acceptJson(request) ? new ModelAndView(new MappingJackson2JsonView()) : new ModelAndView
+				(determineViewName(request, response, ex, httpStatus));
+	}
 
-        ModelAndView mv = createModelAndView(request, response, httpStatus, ex);
+	protected ModelAndView doResolve(final HttpServletRequest request, final HttpServletResponse response, final
+	Exception ex){
+		request.setAttribute("javax.servlet.error.exception", ex);
 
-        mv.addObject("state", false);
-        mv.addObject("code", response.getStatus());
-        mv.addObject("message", httpStatus.getReasonPhrase());
-        mv.addObject("status", httpStatus);
-        mv.addObject("timestamp", new Date());
-        mv.addObject(exceptionAttribute, ex);
+		HttpStatus httpStatus = HttpStatus.resolve(response.getStatus());
 
-        applyStatusCodeIfPossible(request, response, httpStatus);
+		ModelAndView mv = createModelAndView(request, response, httpStatus, ex);
 
-        return mv;
-    }
+		mv.addObject("state", false);
+		mv.addObject("code", response.getStatus());
+		mv.addObject("message", httpStatus.getReasonPhrase());
+		mv.addObject("status", httpStatus);
+		mv.addObject("timestamp", new Date());
+		mv.addObject(exceptionAttribute, ex);
 
-    protected String determineViewName(final HttpServletRequest request, final HttpServletResponse response, final
-    Exception ex, final HttpStatus httpStatus){
-        String viewName = null;
+		applyStatusCodeIfPossible(request, response, httpStatus);
 
-        if(getExceptionViews() != null){
-            viewName = getExceptionViews().get(ex);
-        }
+		return mv;
+	}
 
-        if(viewName == null && getErrorViews() != null){
-            viewName = getErrorViews().get(httpStatus);
-        }
+	protected String determineViewName(final HttpServletRequest request, final HttpServletResponse response, final
+	Exception ex, final HttpStatus httpStatus){
+		String viewName = null;
 
-        if(viewName == null){
-            viewName = SERIES_VIEWS.get(httpStatus.series());
-        }
+		if(getExceptionViews() != null){
+			viewName = getExceptionViews().get(ex);
+		}
 
-        if(viewName == null && defaultErrorView != null){
-            if(logger.isDebugEnabled()){
-                logger.debug("Resolving to default view '{}' for exception of type [{}]", defaultErrorView, ex
-                        .getClass().getName());
-            }
+		if(viewName == null && getErrorViews() != null){
+			viewName = getErrorViews().get(httpStatus);
+		}
 
-            viewName = defaultErrorView;
-        }
+		if(viewName == null){
+			viewName = SERIES_VIEWS.get(httpStatus.series());
+		}
 
-        return viewName;
-    }
+		if(viewName == null && defaultErrorView != null){
+			if(logger.isDebugEnabled()){
+				logger.debug("Resolving to default view '{}' for exception of type [{}]", defaultErrorView, ex
+						.getClass().getName());
+			}
 
-    protected void applyStatusCodeIfPossible(final HttpServletRequest request, final HttpServletResponse response,
-                                             final HttpStatus statusCode){
-        if(WebUtils.isIncludeRequest(request) == false){
-            logger.debug("Applying HTTP status code {}", statusCode);
+			viewName = defaultErrorView;
+		}
 
-            if(getCacheControl() != null){
-                response.setHeader("Cache-Control", getCacheControl());
-            }
-            request.setAttribute(WebUtils.ERROR_STATUS_CODE_ATTRIBUTE, statusCode);
-        }
-    }
+		return viewName;
+	}
+
+	protected void applyStatusCodeIfPossible(final HttpServletRequest request, final HttpServletResponse response,
+											 final HttpStatus statusCode){
+		if(WebUtils.isIncludeRequest(request) == false){
+			logger.debug("Applying HTTP status code {}", statusCode);
+
+			if(getCacheControl() != null){
+				response.setHeader("Cache-Control", getCacheControl());
+			}
+			request.setAttribute(WebUtils.ERROR_STATUS_CODE_ATTRIBUTE, statusCode);
+		}
+	}
 
 }

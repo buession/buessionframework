@@ -76,7 +76,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 * @return 是否为 Ajax 请求
 	 */
 	public final static boolean isAjaxRequest(final HttpServletRequest request){
-		return isAjaxRequest(request.getHeader("X-Requested-With"));
+		return isAjaxRequest(request.getHeader(HttpHeader.X_REQUESTED_WITH.getValue()));
 	}
 
 	/**
@@ -90,6 +90,45 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	public final static boolean isMobile(final HttpServletRequest request){
 		return isMobile(request.getHeader(HttpHeader.USER_AGENT.getValue()), request.getHeader(HttpHeader.ACCEPT
 				.getValue()));
+	}
+
+	/**
+	 * 获取当前 Scheme
+	 *
+	 * @param request
+	 * 		HttpServletRequest
+	 *
+	 * @return 当前 Scheme
+	 */
+	public final static String getScheme(final HttpServletRequest request){
+		String scheme = request.getHeader("X-Forwarded-Protocol");
+		if(Validate.hasText(scheme)){
+			return scheme;
+		}
+
+		scheme = request.getHeader("X-Forwarded-Proto");
+		if(Validate.hasText(scheme)){
+			return scheme;
+		}
+
+		return request.getScheme();
+	}
+
+	/**
+	 * 获取当前域名
+	 *
+	 * @param request
+	 * 		HttpServletRequest
+	 *
+	 * @return 当前域名
+	 */
+	public final static String getDomain(final HttpServletRequest request){
+		String host = request.getHeader("X-Forwarded-Host");
+		if(Validate.hasText(host)){
+			return host;
+		}
+
+		return request.getServerName();
 	}
 
 }

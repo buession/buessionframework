@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.spring;
@@ -41,63 +41,64 @@ import java.io.IOException;
  * @author Yong.Teng
  */
 public class VelocityConfigurer extends VelocityEngineFactory implements VelocityConfig, InitializingBean,
-        ResourceLoaderAware, ServletContextAware {
+		ResourceLoaderAware, ServletContextAware {
 
-    /**
-     * the name of the resource loader for Spring's bind macros
-     */
-    private final static String SPRING_MACRO_RESOURCE_LOADER_NAME = "springMacro";
+	/**
+	 * the name of the resource loader for Spring's bind macros
+	 */
+	private final static String SPRING_MACRO_RESOURCE_LOADER_NAME = "springMacro";
 
-    /**
-     * the key for the class of Spring's bind macro resource loader
-     */
-    private final static String SPRING_MACRO_RESOURCE_LOADER_CLASS = "springMacro.resource.loader.class";
+	/**
+	 * the key for the class of Spring's bind macro resource loader
+	 */
+	private final static String SPRING_MACRO_RESOURCE_LOADER_CLASS = "springMacro.resource.loader.class";
 
-    /**
-     * the name of Spring's default bind macro library
-     */
-    private final static String SPRING_MACRO_LIBRARY = "com/buession/velocity/spring/view/spring.vm";
+	/**
+	 * the name of Spring's default bind macro library
+	 */
+	private final static String SPRING_MACRO_LIBRARY = "com/buession/velocity/spring/view/spring.vm";
 
-    private VelocityEngine velocityEngine;
+	private VelocityEngine velocityEngine;
 
-    private ServletContext servletContext;
+	private ServletContext servletContext;
 
-    private final static Logger logger = LoggerFactory.getLogger(VelocityConfigurer.class);
+	private final static Logger logger = LoggerFactory.getLogger(VelocityConfigurer.class);
 
-    @Override
-    public VelocityEngine getVelocityEngine(){
-        return velocityEngine;
-    }
+	@Override
+	public VelocityEngine getVelocityEngine(){
+		return velocityEngine;
+	}
 
-    public void setVelocityEngine(VelocityEngine velocityEngine){
-        this.velocityEngine = velocityEngine;
-    }
+	public void setVelocityEngine(VelocityEngine velocityEngine){
+		this.velocityEngine = velocityEngine;
+	}
 
-    public ServletContext getServletContext(){
-        return servletContext;
-    }
+	public ServletContext getServletContext(){
+		return servletContext;
+	}
 
-    @Override
-    public void setServletContext(ServletContext servletContext){
-        this.servletContext = servletContext;
-    }
+	@Override
+	public void setServletContext(ServletContext servletContext){
+		this.servletContext = servletContext;
+	}
 
-    @Override
-    public void afterPropertiesSet() throws IOException, VelocityException{
-        if(velocityEngine == null){
-            velocityEngine = createVelocityEngine();
-        }
-    }
+	@Override
+	public void afterPropertiesSet() throws IOException, VelocityException{
+		if(velocityEngine == null){
+			velocityEngine = createVelocityEngine();
+		}
+	}
 
-    @Override
-    protected void postProcessVelocityEngine(VelocityEngine velocityEngine){
-        velocityEngine.setApplicationAttribute(ServletContext.class.getName(), this.servletContext);
-        velocityEngine.setProperty(SPRING_MACRO_RESOURCE_LOADER_CLASS, ClasspathResourceLoader.class.getName());
-        velocityEngine.addProperty(VelocityEngine.RESOURCE_LOADER, SPRING_MACRO_RESOURCE_LOADER_NAME);
-        velocityEngine.addProperty(VelocityEngine.VM_LIBRARY, SPRING_MACRO_LIBRARY);
+	@Override
+	protected void postProcessVelocityEngine(VelocityEngine velocityEngine){
+		velocityEngine.setApplicationAttribute(ServletContext.class.getName(), servletContext);
 
-        logger.info("ClasspathResourceLoader with name '{}' added to configured VelocityEngine",
-                SPRING_MACRO_RESOURCE_LOADER_NAME);
-    }
+		velocityEngine.setProperty(SPRING_MACRO_RESOURCE_LOADER_CLASS, ClasspathResourceLoader.class.getName());
+		velocityEngine.addProperty(VelocityEngine.RESOURCE_LOADER, SPRING_MACRO_RESOURCE_LOADER_NAME);
+		velocityEngine.addProperty(VelocityEngine.VM_LIBRARY, SPRING_MACRO_LIBRARY);
+
+		logger.info("ClasspathResourceLoader with name '{}' added to configured VelocityEngine.",
+				SPRING_MACRO_RESOURCE_LOADER_NAME);
+	}
 
 }
