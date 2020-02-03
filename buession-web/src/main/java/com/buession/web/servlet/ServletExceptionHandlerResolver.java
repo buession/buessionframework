@@ -19,26 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.http;
+package com.buession.web.servlet;
 
-import org.springframework.http.HttpStatus;
-
-import java.util.Map;
+import com.buession.web.http.ExceptionHandlerResolver;
 
 /**
  * @author Yong.Teng
  */
-public interface ExceptionHandlerResolver {
+public interface ServletExceptionHandlerResolver extends ExceptionHandlerResolver {
 
-	String DEFAULT_EXCEPTION_ATTRIBUTE = "exception";
-
-	String DEFAULT_ERROR_VIEW = "error";
-
-	String CACHE_CONTROL = "no-cache";
-
-	Map<HttpStatus.Series, String> SERIES_VIEWS = Error.seriesViews();
+	String PAGE_NOT_FOUND_LOG_CATEGORY = "org.springframework.web.servlet.PageNotFound";
 
 }

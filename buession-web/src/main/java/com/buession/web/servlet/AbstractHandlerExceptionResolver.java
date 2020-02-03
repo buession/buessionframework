@@ -25,7 +25,6 @@
 package com.buession.web.servlet;
 
 import com.buession.core.utils.ArrayUtils;
-import com.buession.web.http.ExceptionHandlerResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
@@ -63,7 +62,7 @@ import java.util.Map;
  * @author Yong.Teng
  */
 public abstract class AbstractHandlerExceptionResolver extends org.springframework.web.servlet.handler
-		.AbstractHandlerExceptionResolver implements ExceptionHandlerResolver {
+		.AbstractHandlerExceptionResolver implements ServletExceptionHandlerResolver {
 
 	private String exceptionAttribute = DEFAULT_EXCEPTION_ATTRIBUTE;
 

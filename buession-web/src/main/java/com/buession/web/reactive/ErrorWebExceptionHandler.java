@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive;
@@ -32,5 +32,7 @@ import org.springframework.web.server.WebExceptionHandler;
  */
 @FunctionalInterface
 public interface ErrorWebExceptionHandler extends WebExceptionHandler, ExceptionHandlerResolver {
+
+	String PAGE_NOT_FOUND_LOG_CATEGORY = "org.springframework.web.reactive.PageNotFound";
 
 }
