@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -37,34 +37,33 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractEnumSetTypeHandler<E extends Enum<E>> extends AbstractSetTypeHandler<E> {
 
-    public AbstractEnumSetTypeHandler(Class<E> type){
-        super(type);
-    }
+	public AbstractEnumSetTypeHandler(Class<E> type){
+		super(type);
+	}
 
-    @Override
-    public void setNonNullParameter(PreparedStatement ps, int i, Set<E> parameter, JdbcType jdbcType) throws
-            SQLException{
-        String result = parameter.stream().map(v->v.name()).collect(Collectors.joining(";"));
+	@Override
+	public void setNonNullParameter(PreparedStatement ps, int i, Set<E> parameter, JdbcType jdbcType) throws
+			SQLException{
+		String result = parameter.stream().map(v->v.name()).collect(Collectors.joining(";"));
+		ps.setString(i, result);
+	}
 
-        ps.setString(i, result);
-    }
+	protected abstract E getValue(String str);
 
-    protected abstract E getValue(String str);
+	@Override
+	protected HashSet<E> parseResult(final String str){
+		if(str == null){
+			return null;
+		}
 
-    @Override
-    protected HashSet<E> parseResult(final String str){
-        if(str == null){
-            return null;
-        }
+		String[] temp = str.split(",");
+		HashSet<E> data = new HashSet<>(temp.length);
 
-        String[] temp = str.split(",");
-        HashSet<E> data = new HashSet<>(temp.length);
+		for(String s : temp){
+			data.add(getValue(s));
+		}
 
-        for(String s : temp){
-            data.add(getValue(s));
-        }
-
-        return data;
-    }
+		return data;
+	}
 
 }

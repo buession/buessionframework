@@ -19,29 +19,37 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aop.advice;
+package org.apache.ibatis.type;
 
+import com.buession.core.validator.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Method;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractAdvice implements Advice {
+public class DefaultEnumSetTypeHandler<E extends Enum<E>> extends AbstractEnumSetTypeHandler<E> {
 
-	private final static Logger logger = LoggerFactory.getLogger(AbstractAdvice.class);
+	private final static Logger logger = LoggerFactory.getLogger(DefaultEnumSetTypeHandler.class);
 
-	@Override
-	public Object invoke(Object target, Method method, Object[] arguments) throws Throwable{
-		logger.debug("Invoke advice method {}::{}", target.getClass().getName(), method);
-		return doInvoke(target, method, arguments);
+	public DefaultEnumSetTypeHandler(Class<E> type){
+		super(type);
 	}
 
-	protected abstract Object doInvoke(Object target, Method method, Object[] arguments) throws Throwable;
+	@Override
+	protected E getValue(String str){
+		if(Validate.hasText(str)){
+			try{
+				return Enum.valueOf(type, str.toUpperCase());
+			}catch(IllegalArgumentException e){
+				logger.error("Database value '{}' convert to '{}' failure: {}", str, type.getName(), e.getMessage());
+			}
+		}
+
+		return null;
+	}
 
 }

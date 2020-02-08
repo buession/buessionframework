@@ -39,16 +39,11 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Yong.Teng
  */
 public class ReflectUtils extends ReflectionUtils {
-
-	private final static Map<Class<?>, Object> CLASS_SETTER_CACHE = new ConcurrentHashMap<>(64, 0.8F);
-
-	private final static Map<Class<?>, Map<String, Object>> CLASS_MAP_CACHE = new ConcurrentHashMap<>(64, 0.8F);
 
 	private final static Logger logger = LoggerFactory.getLogger(ReflectUtils.class);
 
@@ -298,11 +293,6 @@ public class ReflectUtils extends ReflectionUtils {
 			clazz = (Class<E>) object.getClass();
 		}
 
-		E result = (E) CLASS_SETTER_CACHE.get(clazz);
-		if(result != null){
-			return result;
-		}
-
 		try{
 			BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
 			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
@@ -311,7 +301,21 @@ public class ReflectUtils extends ReflectionUtils {
 				String propertyName = propertyDescriptor.getName();
 
 				if(data.containsKey(propertyName) == false){
-					continue;
+					StringBuilder sb = new StringBuilder(propertyName.length() + 8);
+
+					for(char c : propertyName.toCharArray()){
+						if(c >= 'A' && c <= 'Z'){
+							sb.append('_');
+							sb.append(Character.toLowerCase(c));
+						}else{
+							sb.append(c);
+						}
+					}
+
+					propertyName = sb.toString();
+					if(data.containsKey(propertyName) == false){
+						continue;
+					}
 				}
 
 				Method method = propertyDescriptor.getWriteMethod();
@@ -368,8 +372,6 @@ public class ReflectUtils extends ReflectionUtils {
 					logger.error("Get {} failure: {}", propertyName, e.getMessage());
 				}
 			}
-
-			CLASS_SETTER_CACHE.put(clazz, object);
 		}catch(IntrospectionException e){
 			logger.error("{}", e.getMessage());
 		}
@@ -412,10 +414,7 @@ public class ReflectUtils extends ReflectionUtils {
 			clazz = (Class<T>) object.getClass();
 		}
 
-		Map<String, Object> result = CLASS_MAP_CACHE.get(clazz);
-		if(result != null){
-			return result;
-		}
+		Map<String, Object> result;
 
 		try{
 			BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
@@ -431,8 +430,6 @@ public class ReflectUtils extends ReflectionUtils {
 					result.put(key, invokeMethod(getter, object));
 				}
 			}
-
-			CLASS_MAP_CACHE.put(clazz, result);
 		}catch(IntrospectionException e){
 			logger.error("{}", e.getMessage());
 		}
