@@ -37,6 +37,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -319,58 +320,9 @@ public class ReflectUtils extends ReflectionUtils {
 				}
 
 				Method method = propertyDescriptor.getWriteMethod();
-				Type genericParameterType = method.getGenericParameterTypes()[0];
 				Object value = data.get(propertyName);
-				boolean isSet = false;
 
-				try{
-					if((genericParameterType == Short.TYPE || genericParameterType == Short.class)){
-						if((value instanceof Short || value instanceof Integer || value instanceof Long)){
-							long lv = ((Number) value).longValue();
-
-							if(lv >= Short.MIN_VALUE && lv <= Short.MAX_VALUE){
-								invokeMethod(method, object, new Object[]{((Number) value).shortValue()});
-								isSet = true;
-							}
-						}
-					}else if((genericParameterType == Integer.TYPE || genericParameterType == Integer.class)){
-						if((value instanceof Short || value instanceof Integer || value instanceof Long)){
-							long lv = ((Number) value).longValue();
-
-							if(lv >= Integer.MIN_VALUE && lv <= Integer.MAX_VALUE){
-								invokeMethod(method, object, new Object[]{((Number) value).intValue()});
-								isSet = true;
-							}
-						}
-					}else if((genericParameterType == Long.TYPE || genericParameterType == Long.class)){
-						if((value instanceof Short || value instanceof Integer || value instanceof Long)){
-							long lv = ((Number) value).longValue();
-
-							if(lv >= Long.MIN_VALUE && lv <= Long.MAX_VALUE){
-								invokeMethod(method, object, new Object[]{((Number) value).longValue()});
-								isSet = true;
-							}
-						}
-					}else if((genericParameterType == Float.TYPE || genericParameterType == Float.class)){
-						if((value instanceof Short || value instanceof Integer || value instanceof Long || value
-								instanceof Double)){
-							invokeMethod(method, object, new Object[]{((Number) value).floatValue()});
-							isSet = true;
-						}
-					}else if((genericParameterType == Double.TYPE || genericParameterType == Double.class)){
-						if((value instanceof Short || value instanceof Integer || value instanceof Long || value
-								instanceof Float || value instanceof Double)){
-							invokeMethod(method, object, new Object[]{((Number) value).doubleValue()});
-							isSet = true;
-						}
-					}
-
-					if(isSet == false){
-						invokeMethod(method, object, new Object[]{value});
-					}
-				}catch(IllegalArgumentException e){
-					logger.error("Get {} failure: {}", propertyName, e.getMessage());
-				}
+				invokeSetterMethod(object, method, propertyName, value);
 			}
 		}catch(IntrospectionException e){
 			logger.error("{}", e.getMessage());
@@ -435,6 +387,69 @@ public class ReflectUtils extends ReflectionUtils {
 		}
 
 		return null;
+	}
+
+	private final static <E> void invokeSetterMethod(final E object, final Method method, final String propertyName,
+													 final Object value){
+		Type genericParameterType = method.getGenericParameterTypes()[0];
+
+		try{
+			if((genericParameterType == Short.TYPE || genericParameterType == Short.class || genericParameterType ==
+					short.class)){
+				if((value instanceof Short || value instanceof Integer || value instanceof Long)){
+					long lv = ((Number) value).longValue();
+
+					if(lv >= Short.MIN_VALUE && lv <= Short.MAX_VALUE){
+						invokeMethod(method, object, new Object[]{((Number) value).shortValue()});
+						return;
+					}
+				}
+			}else if((genericParameterType == Integer.TYPE || genericParameterType == Integer.class ||
+					genericParameterType == int.class)){
+				if((value instanceof Short || value instanceof Integer || value instanceof Long)){
+					long lv = ((Number) value).longValue();
+
+					if(lv >= Integer.MIN_VALUE && lv <= Integer.MAX_VALUE){
+						invokeMethod(method, object, new Object[]{((Number) value).intValue()});
+						return;
+					}
+				}
+			}else if((genericParameterType == Long.TYPE || genericParameterType == Long.class || genericParameterType
+					== long.class)){
+				if((value instanceof Short || value instanceof Integer || value instanceof Long)){
+					long lv = ((Number) value).longValue();
+
+					if(lv >= Long.MIN_VALUE && lv <= Long.MAX_VALUE){
+						invokeMethod(method, object, new Object[]{((Number) value).longValue()});
+						return;
+					}
+				}
+			}else if((genericParameterType == Float.TYPE || genericParameterType == Float.class ||
+					genericParameterType == float.class)){
+				if((value instanceof Short || value instanceof Integer || value instanceof Long || value instanceof
+						Double)){
+					invokeMethod(method, object, new Object[]{((Number) value).floatValue()});
+					return;
+				}
+			}else if((genericParameterType == Double.TYPE || genericParameterType == Double.class ||
+					genericParameterType == double.class)){
+				if((value instanceof Short || value instanceof Integer || value instanceof Long || value instanceof
+						Float || value instanceof Double)){
+					invokeMethod(method, object, new Object[]{((Number) value).doubleValue()});
+					return;
+				}
+			}else if(genericParameterType == Date.class){
+				if(value instanceof Long){
+					Date date = new Date(((Number) value).longValue());
+					invokeMethod(method, object, new Object[]{date});
+					return;
+				}
+			}
+
+			invokeMethod(method, object, new Object[]{value});
+		}catch(IllegalArgumentException e){
+			logger.error("Get {} failure: {}", propertyName, e.getMessage());
+		}
 	}
 
 }

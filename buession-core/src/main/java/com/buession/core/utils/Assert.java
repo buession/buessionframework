@@ -35,6 +35,18 @@ public class Assert {
 
 	}
 
+	public final static void isTrue(final boolean expression, final String message){
+		if(expression){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void isFalse(final boolean expression, final String message){
+		if(expression == false){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
 	public final static void isNull(final Object object, final String message){
 		if(object == null){
 			throw new IllegalArgumentException(message);

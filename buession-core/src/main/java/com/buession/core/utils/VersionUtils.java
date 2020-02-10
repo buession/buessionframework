@@ -26,8 +26,16 @@ package com.buession.core.utils;
 
 import com.buession.core.validator.Validate;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.security.CodeSource;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.jar.Attributes;
+import java.util.jar.JarFile;
 
 /**
  * @author Yong.Teng
@@ -110,6 +118,36 @@ public class VersionUtils {
 		}
 
 		return result;
+	}
+
+	public final static String determineClassVersion(final Class<?> clazz){
+		String implementationVersion = clazz.getPackage().getImplementationVersion();
+		if(implementationVersion != null){
+			return implementationVersion;
+		}
+
+		CodeSource codeSource = clazz.getProtectionDomain().getCodeSource();
+		if(codeSource == null){
+			return null;
+		}
+
+		URL codeSourceLocation = codeSource.getLocation();
+		try{
+			URLConnection connection = codeSourceLocation.openConnection();
+
+			if(connection instanceof JarURLConnection){
+				return getJarFileImplementationVersion(((JarURLConnection) connection).getJarFile());
+			}
+
+			JarFile jarFile = new JarFile(new File(codeSourceLocation.toURI()));
+			return getJarFileImplementationVersion(jarFile);
+		}catch(Exception ex){
+			return null;
+		}
+	}
+
+	public final static String getJarFileImplementationVersion(final JarFile jarFile) throws IOException{
+		return jarFile.getManifest().getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_VERSION);
 	}
 
 	private final static String canonicalizeVersion(final String version){
