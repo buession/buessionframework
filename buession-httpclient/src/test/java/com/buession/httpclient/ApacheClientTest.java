@@ -37,12 +37,12 @@ import org.junit.Test;
  */
 public class ApacheClientTest {
 
-    @Test
-    public void get() throws RequestAbortedException, ReadTimeoutException, ConnectionPoolTimeoutException,
-            ConnectTimeoutException, RequestException{
-        HttpClient httpClient = new ApacheHttpClient();
-        Response response = httpClient.get("https://aws.amazon.com/cn/");
-        System.out.print(response);
-    }
+	//@Test
+	public void get() throws RequestAbortedException, ReadTimeoutException, ConnectionPoolTimeoutException,
+			ConnectTimeoutException, RequestException{
+		HttpClient httpClient = new ApacheHttpClient();
+		Response response = httpClient.get("https://aws.amazon.com/cn/");
+		System.out.print(response);
+	}
 
 }

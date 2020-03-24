@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.helper.AbstractResponseBuilder;
 import com.buession.httpclient.helper.ResponseBuilder;
@@ -42,64 +43,61 @@ import java.util.Map;
  */
 public class OkHttpResponseBuilder extends AbstractResponseBuilder {
 
-    private final static Logger logger = LoggerFactory.getLogger(OkHttpResponseBuilder.class);
+	private final static Logger logger = LoggerFactory.getLogger(OkHttpResponseBuilder.class);
 
-    public final static ResponseBuilder create(){
-        return new OkHttpResponseBuilder();
-    }
+	public final static ResponseBuilder create(){
+		return new OkHttpResponseBuilder();
+	}
 
-    public final static ResponseBuilder create(okhttp3.Response httpResponse){
-        final ResponseBuilder responseBuilder = new OkHttpResponseBuilder().setStatusCode(httpResponse.code())
-                .setStatusText(httpResponse.message());
+	public final static ResponseBuilder create(okhttp3.Response httpResponse){
+		final ResponseBuilder responseBuilder = new OkHttpResponseBuilder().setStatusCode(httpResponse.code())
+				.setStatusText(httpResponse.message());
 
-        String protocol = httpResponse.protocol().toString();
-        String[] temp = protocol.split("/");
-        String protocolName = temp[0];
-        int majorVersion = 0;
-        int minorVersion = 0;
+		String[] temp = StringUtils.split(httpResponse.protocol().toString(), '/');
+		String protocolName = temp[0];
+		int majorVersion = 0;
+		int minorVersion = 0;
 
-        if(temp.length > 2){
-            String[] versionTemp = temp[1].split(".");
+		if(temp.length >= 2){
+			String[] versionTemp = StringUtils.split(temp[1], '.');
 
-            majorVersion = Integer.parseInt(versionTemp[0]);
-            if(versionTemp.length > 2){
-                minorVersion = Integer.parseInt(versionTemp[1]);
-            }
-        }
+			majorVersion = Integer.parseInt(versionTemp[0]);
+			minorVersion = Integer.parseInt(versionTemp[1]);
+		}
 
-        responseBuilder.setProtocolVersion(ProtocolVersion.createInstance(protocolName, majorVersion, minorVersion));
+		responseBuilder.setProtocolVersion(ProtocolVersion.createInstance(protocolName, majorVersion, minorVersion));
 
-        Headers responseHeaders = httpResponse.headers();
-        if(responseHeaders != null){
-            final Map<String, String> headersMap = new LinkedHashMap<>();
+		Headers responseHeaders = httpResponse.headers();
+		if(responseHeaders != null){
+			final Map<String, String> headersMap = new LinkedHashMap<>();
 
-            for(String name : responseHeaders.names()){
-                String value = headersMap.get(name);
+			for(String name : responseHeaders.names()){
+				String value = headersMap.get(name);
 
-                if(value == null){
-                    headersMap.put(name, responseHeaders.get(name));
-                }else{
-                    headersMap.put(name, value + ", " + responseHeaders.get(name));
-                }
-            }
+				if(value == null){
+					headersMap.put(name, responseHeaders.get(name));
+				}else{
+					headersMap.put(name, value + ", " + responseHeaders.get(name));
+				}
+			}
 
-            responseBuilder.setHeaders(headersMap2List(headersMap));
-        }
+			responseBuilder.setHeaders(headersMap2List(headersMap));
+		}
 
 
-        final ResponseBody responseBody = httpResponse.body();
+		final ResponseBody responseBody = httpResponse.body();
 
-        responseBuilder.setContentLength(responseBody.contentLength());
-        responseBuilder.setInputStream(responseBody.byteStream());
-        try{
-            responseBuilder.setBody(responseBody.string());
-        }catch(IOException e){
-            logger.error("Response entity to body error.", e);
-        }
+		responseBuilder.setContentLength(responseBody.contentLength());
+		responseBuilder.setInputStream(responseBody.byteStream());
+		try{
+			responseBuilder.setBody(responseBody.string());
+		}catch(IOException e){
+			logger.error("Response entity to body error.", e);
+		}
 
-        httpResponse.close();
+		httpResponse.close();
 
-        return responseBuilder;
-    }
+		return responseBuilder;
+	}
 
 }

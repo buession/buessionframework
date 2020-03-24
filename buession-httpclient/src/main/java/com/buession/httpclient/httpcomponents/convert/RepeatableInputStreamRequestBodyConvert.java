@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.httpcomponents.convert;
@@ -39,4 +39,5 @@ public class RepeatableInputStreamRequestBodyConvert implements RequestBodyConve
         return source.getContent() == null ? null : new RepeatableInputStreamEntity(source.getContent(), source
                 .getContentLength(), source.getContentType());
     }
+
 }

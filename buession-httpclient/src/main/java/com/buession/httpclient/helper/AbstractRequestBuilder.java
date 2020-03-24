@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.helper;
@@ -38,50 +38,50 @@ import java.util.Map;
  */
 public abstract class AbstractRequestBuilder implements RequestBuilder {
 
-    protected Request request = new Request();
+	protected Request request = new Request();
 
-    private ProtocolVersion protocolVersion;
+	private ProtocolVersion protocolVersion;
 
-    private String url;
+	private String url;
 
-    private Map<String, Object> parameters;
+	private Map<String, Object> parameters;
 
-    @Override
-    public RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion){
-        this.protocolVersion = protocolVersion;
-        return this;
-    }
+	@Override
+	public RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion){
+		this.protocolVersion = protocolVersion;
+		return this;
+	}
 
-    @Override
-    public RequestBuilder setUrl(String url){
-        this.url = url;
-        return this;
-    }
+	@Override
+	public RequestBuilder setUrl(String url){
+		this.url = url;
+		return this;
+	}
 
-    @Override
-    public RequestBuilder setHeaders(List<Header> headers){
-        request.setHeaders(headers);
-        return this;
-    }
+	@Override
+	public RequestBuilder setHeaders(List<Header> headers){
+		request.setHeaders(headers);
+		return this;
+	}
 
-    @Override
-    public RequestBuilder setParameters(Map<String, Object> parameters){
-        this.parameters = parameters;
-        return this;
-    }
+	@Override
+	public RequestBuilder setParameters(Map<String, Object> parameters){
+		this.parameters = parameters;
+		return this;
+	}
 
-    @Override
-    public RequestBuilder setNameValuePairs(RequestBody requestBody){
-        request.setRequestBody(requestBody);
-        return this;
-    }
+	@Override
+	public RequestBuilder setNameValuePairs(RequestBody requestBody){
+		request.setRequestBody(requestBody);
+		return this;
+	}
 
-    @Override
-    public Request build(){
-        final String requestUrl = URLUtils.determineRequestUrl(url, parameters);
+	@Override
+	public Request build(){
+		final String requestUrl = URLUtils.determineRequestUrl(url, parameters);
 
-        request.setUrl(requestUrl);
-        return request;
-    }
+		request.setUrl(requestUrl);
+		return request;
+	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -31,310 +31,310 @@ package com.buession.httpclient.core;
  */
 public class Configuration {
 
-    /**
-     * 最大连接数
-     */
-    private int maxConnections = 5000;
+	/**
+	 * 最大连接数
+	 */
+	private int maxConnections = 5000;
 
-    /**
-     * 每个路由的最大连接数
-     */
-    private int maxPerRoute = 500;
+	/**
+	 * 每个路由的最大连接数
+	 */
+	private int maxPerRoute = 500;
 
 
-    private int idleConnectionTime = 60 * 1000;
+	private int idleConnectionTime = 60 * 1000;
 
-    /**
-     * 连接超时时间，单位：毫秒
-     */
-    private int connectTimeout = 3000;
+	/**
+	 * 连接超时时间，单位：毫秒
+	 */
+	private int connectTimeout = 3000;
 
-    /**
-     * 从连接池获取连接的超时时间，单位：毫秒
-     */
-    private int connectionRequestTimeout = 5000;
+	/**
+	 * 从连接池获取连接的超时时间，单位：毫秒
+	 */
+	private int connectionRequestTimeout = 5000;
 
-    /**
-     * 读取超时时间，单位：毫秒
-     */
-    private int readTimeout = 3000;
+	/**
+	 * 读取超时时间，单位：毫秒
+	 */
+	private int readTimeout = 5000;
 
-    /**
-     * 是否允许重定向
-     */
-    private boolean allowRedirects;
+	/**
+	 * 是否允许重定向
+	 */
+	private boolean allowRedirects;
 
-    private boolean relativeRedirectsAllowed;
+	private boolean relativeRedirectsAllowed;
 
-    private boolean circularRedirectsAllowed;
+	private boolean circularRedirectsAllowed;
 
-    /**
-     * 最大允许重定向次数
-     */
-    private int maxRedirects;
+	/**
+	 * 最大允许重定向次数
+	 */
+	private int maxRedirects;
 
-    /**
-     * 是否开启 Http Basic 认证
-     */
-    private boolean authenticationEnabled;
+	/**
+	 * 是否开启 Http Basic 认证
+	 */
+	private boolean authenticationEnabled;
 
-    /**
-     * 是否启用内容压缩
-     */
-    private boolean contentCompressionEnabled;
+	/**
+	 * 是否启用内容压缩
+	 */
+	private boolean contentCompressionEnabled;
 
-    private boolean normalizeUri;
+	private boolean normalizeUri;
 
-    /**
-     * 获取最大连接数
-     *
-     * @return 最大连接数
-     */
-    public int getMaxConnections(){
-        return maxConnections;
-    }
+	/**
+	 * 获取最大连接数
+	 *
+	 * @return 最大连接数
+	 */
+	public int getMaxConnections(){
+		return maxConnections;
+	}
 
-    /**
-     * 设置最大连接数
-     *
-     * @param maxConnections
-     *         最大连接数
-     */
-    public void setMaxConnections(int maxConnections){
-        this.maxConnections = maxConnections;
-    }
+	/**
+	 * 设置最大连接数
+	 *
+	 * @param maxConnections
+	 * 		最大连接数
+	 */
+	public void setMaxConnections(int maxConnections){
+		this.maxConnections = maxConnections;
+	}
 
-    /**
-     * 获取每个路由的最大连接数
-     *
-     * @return 每个路由的最大连接数
-     */
-    public int getMaxPerRoute(){
-        return maxPerRoute;
-    }
+	/**
+	 * 获取每个路由的最大连接数
+	 *
+	 * @return 每个路由的最大连接数
+	 */
+	public int getMaxPerRoute(){
+		return maxPerRoute;
+	}
 
-    /**
-     * 设置每个路由的最大连接数
-     *
-     * @param maxPerRoute
-     *         每个路由的最大连接数
-     */
-    public void setMaxPerRoute(int maxPerRoute){
-        this.maxPerRoute = maxPerRoute;
-    }
+	/**
+	 * 设置每个路由的最大连接数
+	 *
+	 * @param maxPerRoute
+	 * 		每个路由的最大连接数
+	 */
+	public void setMaxPerRoute(int maxPerRoute){
+		this.maxPerRoute = maxPerRoute;
+	}
 
-    /**
-     * 获取 IDLE 连接超时，单位：毫秒
-     *
-     * @return IDLE 连接超时
-     */
-    public int getIdleConnectionTime(){
-        return idleConnectionTime;
-    }
+	/**
+	 * 获取 IDLE 连接超时，单位：毫秒
+	 *
+	 * @return IDLE 连接超时
+	 */
+	public int getIdleConnectionTime(){
+		return idleConnectionTime;
+	}
 
-    /**
-     * 设置 IDLE 连接超时
-     *
-     * @param idleConnectionTime
-     *         IDLE 连接超时，单位：毫秒
-     */
-    public void setIdleConnectionTime(int idleConnectionTime){
-        this.idleConnectionTime = idleConnectionTime;
-    }
+	/**
+	 * 设置 IDLE 连接超时
+	 *
+	 * @param idleConnectionTime
+	 * 		IDLE 连接超时，单位：毫秒
+	 */
+	public void setIdleConnectionTime(int idleConnectionTime){
+		this.idleConnectionTime = idleConnectionTime;
+	}
 
-    /**
-     * 获取连接超时时间，单位：毫秒
-     *
-     * @return 连接超时时间
-     */
-    public int getConnectTimeout(){
-        return connectTimeout;
-    }
+	/**
+	 * 获取连接超时时间，单位：毫秒
+	 *
+	 * @return 连接超时时间
+	 */
+	public int getConnectTimeout(){
+		return connectTimeout;
+	}
 
-    /**
-     * 设置连接超时时间
-     *
-     * @param connectTimeout
-     *         连接超时时间，单位：毫秒
-     */
-    public void setConnectTimeout(int connectTimeout){
-        this.connectTimeout = connectTimeout;
-    }
+	/**
+	 * 设置连接超时时间
+	 *
+	 * @param connectTimeout
+	 * 		连接超时时间，单位：毫秒
+	 */
+	public void setConnectTimeout(int connectTimeout){
+		this.connectTimeout = connectTimeout;
+	}
 
-    /**
-     * 获取从连接池获取连接的超时时间，单位：毫秒
-     *
-     * @return 从连接池获取连接的超时时间
-     */
-    public int getConnectionRequestTimeout(){
-        return connectionRequestTimeout;
-    }
+	/**
+	 * 获取从连接池获取连接的超时时间，单位：毫秒
+	 *
+	 * @return 从连接池获取连接的超时时间
+	 */
+	public int getConnectionRequestTimeout(){
+		return connectionRequestTimeout;
+	}
 
-    /**
-     * 设置从连接池获取连接的超时时间
-     *
-     * @param connectionRequestTimeout
-     *         从连接池获取连接的超时时间，单位：毫秒
-     */
-    public void setConnectionRequestTimeout(int connectionRequestTimeout){
-        this.connectionRequestTimeout = connectionRequestTimeout;
-    }
+	/**
+	 * 设置从连接池获取连接的超时时间
+	 *
+	 * @param connectionRequestTimeout
+	 * 		从连接池获取连接的超时时间，单位：毫秒
+	 */
+	public void setConnectionRequestTimeout(int connectionRequestTimeout){
+		this.connectionRequestTimeout = connectionRequestTimeout;
+	}
 
-    /**
-     * 获取读取超时时间，单位：毫秒
-     *
-     * @return 读取超时时间
-     */
-    public int getReadTimeout(){
-        return readTimeout;
-    }
+	/**
+	 * 获取读取超时时间，单位：毫秒
+	 *
+	 * @return 读取超时时间
+	 */
+	public int getReadTimeout(){
+		return readTimeout;
+	}
 
-    /**
-     * 设置读取超时时间，单位：毫秒
-     *
-     * @param readTimeout
-     *         读取超时时间，单位：毫秒
-     */
-    public void setReadTimeout(int readTimeout){
-        this.readTimeout = readTimeout;
-    }
+	/**
+	 * 设置读取超时时间，单位：毫秒
+	 *
+	 * @param readTimeout
+	 * 		读取超时时间，单位：毫秒
+	 */
+	public void setReadTimeout(int readTimeout){
+		this.readTimeout = readTimeout;
+	}
 
-    /**
-     * 获取是否允许重定向
-     *
-     * @return 是否允许重定向
-     */
-    public boolean isAllowRedirects(){
-        return getAllowRedirects();
-    }
+	/**
+	 * 获取是否允许重定向
+	 *
+	 * @return 是否允许重定向
+	 */
+	public boolean isAllowRedirects(){
+		return getAllowRedirects();
+	}
 
-    /**
-     * 获取是否允许重定向
-     *
-     * @return 是否允许重定向
-     */
-    public boolean getAllowRedirects(){
-        return allowRedirects;
-    }
+	/**
+	 * 获取是否允许重定向
+	 *
+	 * @return 是否允许重定向
+	 */
+	public boolean getAllowRedirects(){
+		return allowRedirects;
+	}
 
-    /**
-     * 设置是否允许重定向
-     *
-     * @param allowRedirects
-     *         是否允许重定向
-     */
-    public void setAllowRedirects(boolean allowRedirects){
-        this.allowRedirects = allowRedirects;
-    }
+	/**
+	 * 设置是否允许重定向
+	 *
+	 * @param allowRedirects
+	 * 		是否允许重定向
+	 */
+	public void setAllowRedirects(boolean allowRedirects){
+		this.allowRedirects = allowRedirects;
+	}
 
-    public boolean isRelativeRedirectsAllowed(){
-        return getRelativeRedirectsAllowed();
-    }
+	public boolean isRelativeRedirectsAllowed(){
+		return getRelativeRedirectsAllowed();
+	}
 
-    public boolean getRelativeRedirectsAllowed(){
-        return relativeRedirectsAllowed;
-    }
+	public boolean getRelativeRedirectsAllowed(){
+		return relativeRedirectsAllowed;
+	}
 
-    public void setRelativeRedirectsAllowed(boolean relativeRedirectsAllowed){
-        this.relativeRedirectsAllowed = relativeRedirectsAllowed;
-    }
+	public void setRelativeRedirectsAllowed(boolean relativeRedirectsAllowed){
+		this.relativeRedirectsAllowed = relativeRedirectsAllowed;
+	}
 
-    public boolean isCircularRedirectsAllowed(){
-        return getCircularRedirectsAllowed();
-    }
+	public boolean isCircularRedirectsAllowed(){
+		return getCircularRedirectsAllowed();
+	}
 
-    public boolean getCircularRedirectsAllowed(){
-        return circularRedirectsAllowed;
-    }
+	public boolean getCircularRedirectsAllowed(){
+		return circularRedirectsAllowed;
+	}
 
-    public void setCircularRedirectsAllowed(boolean circularRedirectsAllowed){
-        this.circularRedirectsAllowed = circularRedirectsAllowed;
-    }
+	public void setCircularRedirectsAllowed(boolean circularRedirectsAllowed){
+		this.circularRedirectsAllowed = circularRedirectsAllowed;
+	}
 
-    /**
-     * 获取最大允许重定向次数
-     *
-     * @return 最大允许重定向次数
-     */
-    public int getMaxRedirects(){
-        return maxRedirects;
-    }
+	/**
+	 * 获取最大允许重定向次数
+	 *
+	 * @return 最大允许重定向次数
+	 */
+	public int getMaxRedirects(){
+		return maxRedirects;
+	}
 
-    /**
-     * 设置最大允许重定向次数
-     *
-     * @param maxRedirects
-     *         最大允许重定向次数
-     */
-    public void setMaxRedirects(int maxRedirects){
-        this.maxRedirects = maxRedirects;
-    }
+	/**
+	 * 设置最大允许重定向次数
+	 *
+	 * @param maxRedirects
+	 * 		最大允许重定向次数
+	 */
+	public void setMaxRedirects(int maxRedirects){
+		this.maxRedirects = maxRedirects;
+	}
 
-    /**
-     * 获取是否开启 Http Basic 认证
-     *
-     * @return 是否开启 Http Basic 认证
-     */
-    public boolean isAuthenticationEnabled(){
-        return getAuthenticationEnabled();
-    }
+	/**
+	 * 获取是否开启 Http Basic 认证
+	 *
+	 * @return 是否开启 Http Basic 认证
+	 */
+	public boolean isAuthenticationEnabled(){
+		return getAuthenticationEnabled();
+	}
 
-    /**
-     * 获取是否开启 Http Basic 认证
-     *
-     * @return 是否开启 Http Basic 认证
-     */
-    public boolean getAuthenticationEnabled(){
-        return authenticationEnabled;
-    }
+	/**
+	 * 获取是否开启 Http Basic 认证
+	 *
+	 * @return 是否开启 Http Basic 认证
+	 */
+	public boolean getAuthenticationEnabled(){
+		return authenticationEnabled;
+	}
 
-    /**
-     * 设置是否开启 Http Basic 认证
-     *
-     * @param authenticationEnabled
-     *         是否开启 Http Basic 认证
-     */
-    public void setAuthenticationEnabled(boolean authenticationEnabled){
-        this.authenticationEnabled = authenticationEnabled;
-    }
+	/**
+	 * 设置是否开启 Http Basic 认证
+	 *
+	 * @param authenticationEnabled
+	 * 		是否开启 Http Basic 认证
+	 */
+	public void setAuthenticationEnabled(boolean authenticationEnabled){
+		this.authenticationEnabled = authenticationEnabled;
+	}
 
-    /**
-     * 获取是否启用内容压缩
-     *
-     * @return 是否启用内容压缩
-     */
-    public boolean isContentCompressionEnabled(){
-        return getContentCompressionEnabled();
-    }
+	/**
+	 * 获取是否启用内容压缩
+	 *
+	 * @return 是否启用内容压缩
+	 */
+	public boolean isContentCompressionEnabled(){
+		return getContentCompressionEnabled();
+	}
 
-    /**
-     * 获取是否启用内容压缩
-     *
-     * @return 是否启用内容压缩
-     */
-    public boolean getContentCompressionEnabled(){
-        return contentCompressionEnabled;
-    }
+	/**
+	 * 获取是否启用内容压缩
+	 *
+	 * @return 是否启用内容压缩
+	 */
+	public boolean getContentCompressionEnabled(){
+		return contentCompressionEnabled;
+	}
 
-    /**
-     * 设置是否启用内容压缩
-     *
-     * @param contentCompressionEnabled
-     *         是否启用内容压缩
-     */
-    public void setContentCompressionEnabled(boolean contentCompressionEnabled){
-        this.contentCompressionEnabled = contentCompressionEnabled;
-    }
+	/**
+	 * 设置是否启用内容压缩
+	 *
+	 * @param contentCompressionEnabled
+	 * 		是否启用内容压缩
+	 */
+	public void setContentCompressionEnabled(boolean contentCompressionEnabled){
+		this.contentCompressionEnabled = contentCompressionEnabled;
+	}
 
-    public boolean isNormalizeUri(){
-        return getNormalizeUri();
-    }
+	public boolean isNormalizeUri(){
+		return getNormalizeUri();
+	}
 
-    public boolean getNormalizeUri(){
-        return normalizeUri;
-    }
+	public boolean getNormalizeUri(){
+		return normalizeUri;
+	}
 
-    public void setNormalizeUri(boolean normalizeUri){
-        this.normalizeUri = normalizeUri;
-    }
+	public void setNormalizeUri(boolean normalizeUri){
+		this.normalizeUri = normalizeUri;
+	}
 }
