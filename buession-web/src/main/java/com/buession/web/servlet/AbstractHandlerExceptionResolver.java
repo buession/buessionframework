@@ -163,10 +163,7 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 			}
 		}
 
-		return
-
-				doDefaultResolveException(request, response, handler, ex);
-
+		return doDefaultResolveException(request, response, handler, ex);
 	}
 
 	protected ModelAndView doSpecialResolveException(final HttpServletRequest request, final HttpServletResponse
