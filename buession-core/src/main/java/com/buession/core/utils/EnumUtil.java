@@ -29,7 +29,7 @@ import java.lang.reflect.Field;
 /**
  * @author Yong.Teng
  */
-public class EnumUtil {
+public class EnumUtil extends org.apache.commons.lang3.EnumUtils {
 
 	private EnumUtil(){
 

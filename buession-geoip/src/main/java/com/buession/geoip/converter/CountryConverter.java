@@ -27,7 +27,7 @@
 package com.buession.geoip.converter;
 
 import com.buession.geoip.model.Country;
-import com.buession.geoip.resoources.CountryResource;
+import com.buession.geoip.resource.CountryResource;
 import com.maxmind.geoip2.model.CountryResponse;
 
 import java.util.Locale;

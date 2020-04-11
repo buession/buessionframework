@@ -43,8 +43,138 @@ public class ArrayUtils {
 
 	public final static String DEFAULT_GLUE = ", ";
 
+	public final static int INDEX_NOT_FOUND = -1;
+
 	private ArrayUtils(){
 
+	}
+
+	/**
+	 * 检查数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param <O>
+	 * 		数组类型
+	 *
+	 * @return 数组中否存在该值，则返回 true；否则，返回 false
+	 */
+	public static <O> boolean contains(final O[] a, final Object value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param <O>
+	 * 		数组类型
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static <O> int indexOf(final O[] a, final Object value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 * @param <O>
+	 * 		数组类型
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static <O> int indexOf(final O[] a, final Object value, int startIndex){
+		if(a == null){
+			return INDEX_NOT_FOUND;
+		}
+
+		if(startIndex < 0){
+			startIndex = 0;
+		}
+
+		if(value == null){
+			for(int i = startIndex; i < a.length; i++){
+				if(a[i] == null){
+					return i;
+				}
+			}
+		}else{
+			for(int i = startIndex; i < a.length; i++){
+				if(value.equals(a[i])){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param <O>
+	 * 		数组类型
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static <O> int lastIndexOf(final O[] a, final Object value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 * @param <O>
+	 * 		数组类型
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static <O> int lastIndexOf(final O[] a, final Object value, int startIndex){
+		if(a == null){
+			return INDEX_NOT_FOUND;
+		}
+
+		if(startIndex < 0){
+			startIndex = 0;
+		}
+
+		if(value == null){
+			for(int i = a.length - 1; i >= startIndex; i--){
+				if(a[i] == null){
+					return i;
+				}
+			}
+		}else{
+			for(int i = a.length - 1; i >= startIndex; i--){
+				if(value.equals(a[i])){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
 	}
 
 	/**
@@ -57,7 +187,7 @@ public class ArrayUtils {
 	 *
 	 * @return 拼接后的字符串
 	 */
-	public static <O> String toString(O[] a){
+	public static <O> String toString(final O[] a){
 		return toString(a, DEFAULT_GLUE);
 	}
 
@@ -162,7 +292,7 @@ public class ArrayUtils {
 	 *
 	 * @return 转换结果
 	 */
-	public final static <O> List<O> toList(O[] a){
+	public final static <O> List<O> toList(final O[] a){
 		return a == null ? null : Arrays.asList(a);
 	}
 
@@ -176,7 +306,7 @@ public class ArrayUtils {
 	 *
 	 * @return 转换结果
 	 */
-	public final static <O> Set<O> toSet(O[] a){
+	public final static <O> Set<O> toSet(final O[] a){
 		return a == null ? null : Arrays.asList(a).stream().collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 

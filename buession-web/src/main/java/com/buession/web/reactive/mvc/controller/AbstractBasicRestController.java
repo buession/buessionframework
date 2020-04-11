@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.mvc.controller;
@@ -38,32 +38,33 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 public abstract class AbstractBasicRestController<P, E> extends AbstractRestController {
 
-    @RequestMapping(path = "", method = RequestMethod.POST)
-    public com.buession.web.mvc.Response add(ServerHttpRequest request, ServerHttpResponse response, @RequestBody E e){
-        return pageNotFound(request, response);
-    }
+	@RequestMapping(path = "", method = RequestMethod.POST)
+	public com.buession.web.mvc.Response<E> add(ServerHttpRequest request, ServerHttpResponse response, @RequestBody E
+			e){
+		return pageNotFound(request, response);
+	}
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
-    public com.buession.web.mvc.Response edit(ServerHttpRequest request, ServerHttpResponse response, @PathVariable
-            (name = "id") P id, @RequestBody E e){
-        return pageNotFound(request, response);
-    }
+	@RequestMapping(path = "/{id}", method = RequestMethod.PUT)
+	public com.buession.web.mvc.Response<E> edit(ServerHttpRequest request, ServerHttpResponse response, @PathVariable
+			(name = "id") P id, @RequestBody E e){
+		return pageNotFound(request, response);
+	}
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
-    public com.buession.web.mvc.Response detail(ServerHttpRequest request, ServerHttpResponse response, @PathVariable
-            (name = "id") P id){
-        return pageNotFound(request, response);
-    }
+	@RequestMapping(path = "/{id}", method = RequestMethod.GET)
+	public com.buession.web.mvc.Response<E> detail(ServerHttpRequest request, ServerHttpResponse response,
+												   @PathVariable(name = "id") P id){
+		return pageNotFound(request, response);
+	}
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
-    public com.buession.web.mvc.Response delete(ServerHttpRequest request, ServerHttpResponse response, @PathVariable
-            (name = "id") P id){
-        return pageNotFound(request, response);
-    }
+	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+	public com.buession.web.mvc.Response<E> delete(ServerHttpRequest request, ServerHttpResponse response,
+												   @PathVariable(name = "id") P id){
+		return pageNotFound(request, response);
+	}
 
-    protected com.buession.web.mvc.Response pageNotFound(final ServerHttpRequest request, final ServerHttpResponse
-            response){
-        return new Response(false, PAGE_NOT_FOUND_ERROR_CODE, request.getPath().toString());
-    }
+	protected com.buession.web.mvc.Response<E> pageNotFound(final ServerHttpRequest request, final ServerHttpResponse
+			response){
+		return new Response<>(false, PAGE_NOT_FOUND_ERROR_CODE, request.getPath().toString());
+	}
 
 }

@@ -19,18 +19,56 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.utils;
+package com.buession.geoip.resource;
+
+import com.buession.core.utils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Yong.Teng
  */
-@Deprecated
-public class ReflectUtil extends ReflectUtils {
+public class CountryResource {
 
-    private ReflectUtil(){
-    }
+	private final static Map<String, String> data = new HashMap<>(255);
+
+	private final static Logger logger = LoggerFactory.getLogger(CountryResource.class);
+
+	public Map<String, String> getData(){
+		if(data.size() == 0){
+			InputStream stream = CountryResource.class.getResourceAsStream("/country.db");
+			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+
+			try{
+				while(reader.ready()){
+					String line = reader.readLine();
+
+					String[] rows = StringUtils.split(line, ':');
+					data.put(rows[0], rows[1]);
+				}
+			}catch(IOException e){
+				logger.error("Load dict error.", e);
+			}
+
+			try{
+				stream.close();
+				reader.close();
+			}catch(IOException e){
+
+			}
+		}
+
+		return data;
+	}
 
 }

@@ -39,68 +39,63 @@ import java.util.Date;
  */
 public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.DateDeserializers {
 
-    @JacksonStdImpl
-    public static class UnixTimestampDeserializer extends DateDeserializers.DateBasedDeserializer<Date> {
+	@JacksonStdImpl
+	public static class UnixTimestampDeserializer extends DateDeserializers.DateBasedDeserializer<Date> {
 
-        public final static DateDeserializer instance = new DateDeserializer();
+		public final static DateDeserializer instance = new DateDeserializer();
 
-        public UnixTimestampDeserializer(){
-            super(Date.class);
-        }
+		public UnixTimestampDeserializer(){
+			super(Date.class);
+		}
 
-        public UnixTimestampDeserializer(UnixTimestampDeserializer base, DateFormat df, String formatString){
-            super(base, df, formatString);
-        }
+		public UnixTimestampDeserializer(UnixTimestampDeserializer base, DateFormat df, String formatString){
+			super(base, df, formatString);
+		}
 
-        @Override
-        protected UnixTimestampDeserializer withDateFormat(DateFormat df, String formatString){
-            return new UnixTimestampDeserializer(this, df, formatString);
-        }
+		@Override
+		protected UnixTimestampDeserializer withDateFormat(DateFormat df, String formatString){
+			return new UnixTimestampDeserializer(this, df, formatString);
+		}
 
-        @Override
-        public Date deserialize(JsonParser parser, DeserializationContext context) throws IOException{
-            return _parseDate(parser, context);
-        }
+		@Override
+		public Date deserialize(JsonParser parser, DeserializationContext context) throws IOException{
+			return _parseDate(parser, context);
+		}
 
-        @Override
-        protected Date _parseDate(JsonParser p, DeserializationContext context) throws IOException{
-            if(_customFormat != null && p.hasToken(JsonToken.VALUE_STRING)){
-                return super._parseDate(p, context);
-            }else{
-                switch(p.getCurrentTokenId()){
-                    case 3:
-                        return _parseDateFromArray(p, context);
-                    case 4:
-                    case 5:
-                    case 8:
-                    case 9:
-                    case 10:
-                    default:
-                        return (Date) context.handleUnexpectedToken(_valueClass, p);
-                    case 6:
-                        return _parseDate(p.getText().trim(), context);
-                    case 7:
-                        long timestamp;
+		@Override
+		protected Date _parseDate(JsonParser p, DeserializationContext context) throws IOException{
+			if(_customFormat != null && p.hasToken(JsonToken.VALUE_STRING)){
+				return super._parseDate(p, context);
+			}
 
-                        try{
-                            timestamp = p.getLongValue();
-                        }catch(JsonParseException e){
-                            Number v = (Number) context.handleWeirdNumberValue(_valueClass, p.getNumberValue(), "not " +
-                                    "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-                                    "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-                                    "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-                                    "" + "" + "" + "" + "" + "" + "" + "a " + "valid " + "64-bit " + "" + "" + "long " +
-                                    "" + "" + "" + "for " + "creating " + "`java" + "" + "" + ".util" + "" + "" + ""
-                                    + "" + ".Date`", new Object[0]);
-                            timestamp = v.longValue();
-                        }
+			switch(p.getCurrentTokenId()){
+				case 3:
+					return _parseDateFromArray(p, context);
+				case 4:
+				case 5:
+				case 8:
+				case 9:
+				case 10:
+				default:
+					return (Date) context.handleUnexpectedToken(_valueClass, p);
+				case 6:
+					return _parseDate(p.getText().trim(), context);
+				case 7:
+					long timestamp;
 
-                        return new Date(timestamp * 1000);
-                    case 11:
-                        return getNullValue(context);
-                }
-            }
-        }
-    }
+					try{
+						timestamp = p.getLongValue();
+					}catch(JsonParseException e){
+						Number v = (Number) context.handleWeirdNumberValue(_valueClass, p.getNumberValue(), "not a " +
+								"valid 64-bit long for creating `java.util.Date`", new Object[0]);
+						timestamp = v.longValue();
+					}
+
+					return new Date(timestamp * 1000);
+				case 11:
+					return getNullValue(context);
+			}
+		}
+	}
 
 }

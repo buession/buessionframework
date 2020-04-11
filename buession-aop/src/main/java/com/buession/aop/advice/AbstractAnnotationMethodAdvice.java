@@ -79,10 +79,11 @@ public abstract class AbstractAnnotationMethodAdvice<A extends Annotation> exten
 
 	@Override
 	protected Object doInvoke(Object target, Method method, Object[] arguments) throws Throwable{
-		return getHandler().execute(target, method, arguments, (A) getAnnotation(target, method));
+		return getHandler().execute(target, method, arguments, getAnnotation(target, method));
 	}
 
-	protected Annotation getAnnotation(Object object, Method method){
+	@SuppressWarnings({"unchecked"})
+	protected A getAnnotation(Object object, Method method){
 		final Class<A> annotationClazz = getHandler().getAnnotationClass();
 		final String key = annotationCacheKey(object, method, annotationClazz);
 
@@ -95,7 +96,7 @@ public abstract class AbstractAnnotationMethodAdvice<A extends Annotation> exten
 			}
 		}
 
-		return annotation;
+		return (A) annotation;
 	}
 
 	protected final String annotationCacheKey(final Object object, final Method method, final Class<A> annotation){

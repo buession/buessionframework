@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -32,27 +32,28 @@ import java.util.Set;
 
 /**
  * List 工具类
+ * More {@link org.apache.commons.collections4.ListUtils}
  *
  * @author Yong.Teng
  */
 public class ListUtils {
 
-    private ListUtils(){
+	private ListUtils(){
 
-    }
+	}
 
-    /**
-     * 将 List 转换为 Set
-     *
-     * @param list
-     *         需要转换的 List
-     * @param <V>
-     *         元素
-     *
-     * @return 转换结果
-     */
-    public final static <V> Set<V> toSet(List<V> list){
-        return list == null ? null : new LinkedHashSet<>(list.size());
-    }
+	/**
+	 * 将 List 转换为 Set
+	 *
+	 * @param list
+	 * 		需要转换的 List
+	 * @param <V>
+	 * 		元素
+	 *
+	 * @return 转换结果
+	 */
+	public static <V> Set<V> toSet(final List<V> list){
+		return list == null ? null : new LinkedHashSet<>(list.size());
+	}
 
 }

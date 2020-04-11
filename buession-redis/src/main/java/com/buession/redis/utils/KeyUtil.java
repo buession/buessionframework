@@ -37,14 +37,14 @@ public class KeyUtil {
 
 	public final static String makeRawKey(final String prefix, final String key){
 		if(Validate.isEmpty(prefix)){
-			StringBuilder sb = new StringBuilder(prefix.length() + key.length());
-
-			sb.append(prefix).append(key);
-
-			return sb.toString();
-		}else{
 			return key;
 		}
+
+		StringBuilder sb = new StringBuilder(prefix.length() + key.length());
+
+		sb.append(prefix).append(key);
+
+		return sb.toString();
 	}
 
 	public final static String[] makeRawKeys(final String prefix, final String... keys){

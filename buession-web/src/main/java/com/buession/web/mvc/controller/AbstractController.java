@@ -24,8 +24,6 @@
  */
 package com.buession.web.mvc.controller;
 
-import com.buession.core.Pagination;
-import com.buession.core.codec.MessageObject;
 import com.buession.web.exception.PageNotFoundException;
 import com.buession.web.mvc.Response;
 
@@ -35,61 +33,6 @@ import javax.servlet.http.HttpServletRequest;
  * @author Yong.Teng
  */
 public abstract class AbstractController implements Controller {
-
-	protected <E> Response<E> responseSuccess(){
-		return responseSuccess("");
-	}
-
-	protected <E> Response<E> responseSuccess(final String message){
-		return responseSuccess(message, (E) null);
-	}
-
-	protected <E> Response<E> responseSuccess(final E data){
-		return responseSuccess("", data);
-	}
-
-	protected <E> Response<E> responseSuccess(final String message, final E data){
-		return response(true, 0, message, data);
-	}
-
-	protected <E> Response<E> responseSuccess(final Pagination<E> pagination){
-		return responseSuccess("", pagination);
-	}
-
-	@SuppressWarnings({"unchecked"})
-	protected <E> Response<E> responseSuccess(final String message, final Pagination<E> pagination){
-		final Response<E> response = new Response(true, 0, message, pagination.getData());
-		final Pagination<E> paging = new Pagination<>(pagination.getPage(), pagination.getPagesize(), pagination
-				.getTotalRecords());
-
-		response.setPagination(paging);
-
-		return response;
-	}
-
-	protected <E> Response<E> responseFailure(final MessageObject message){
-		return responseFailure(message.getCode(), message.getText());
-	}
-
-	protected <E> Response<E> responseFailure(final MessageObject message, final Exception e){
-		StringBuilder sb = new StringBuilder(message.getText().length() + e.getMessage().length() + 4);
-
-		sb.append(message.getText()).append(": ").append(e.getMessage());
-
-		return responseFailure(message.getCode(), sb.toString());
-	}
-
-	protected <E> Response<E> responseFailureFormat(final MessageObject message, final Object... args){
-		return responseFailure(message.getCode(), String.format(message.getText(), args));
-	}
-
-	protected <E> Response<E> responseFailure(final int code){
-		return responseFailure(code, "");
-	}
-
-	protected <E> Response<E> responseFailure(final int code, final String message){
-		return response(false, code, message);
-	}
 
 	protected <E> Response<E> response(final boolean state, final int code, final String message){
 		return new Response<>(state, code, message);

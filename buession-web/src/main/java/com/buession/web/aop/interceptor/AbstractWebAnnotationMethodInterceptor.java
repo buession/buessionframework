@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.interceptor;
@@ -35,19 +35,19 @@ import java.lang.annotation.Annotation;
  * @author Yong.Teng
  */
 public abstract class AbstractWebAnnotationMethodInterceptor<A extends Annotation> extends
-        AbstractAnnotationMethodInterceptor<A> {
+		AbstractAnnotationMethodInterceptor<A> {
 
-    public AbstractWebAnnotationMethodInterceptor(AnnotationHandler<A> handler){
-        super(handler);
-    }
+	public AbstractWebAnnotationMethodInterceptor(AnnotationHandler<A> handler){
+		super(handler);
+	}
 
-    public AbstractWebAnnotationMethodInterceptor(AnnotationHandler<A> handler, AnnotationResolver resolver){
-        super(handler, resolver);
-    }
+	public AbstractWebAnnotationMethodInterceptor(AnnotationHandler<A> handler, AnnotationResolver resolver){
+		super(handler, resolver);
+	}
 
-    @Override
-    protected void doInvoke(MethodInvocation mi) throws Throwable{
-        getHandler().execute(mi, (A) getAnnotation(mi));
-    }
+	@Override
+	protected void doInvoke(MethodInvocation mi) throws Throwable{
+		getHandler().execute(mi, getAnnotation(mi));
+	}
 
 }

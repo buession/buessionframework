@@ -33,7 +33,11 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-public class ClassUtils {
+public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
+
+	private ClassUtils(){
+
+	}
 
 	public final static List<Field> getFields(final Class<?> clazz){
 		Assert.isNull(clazz, "Class cloud not be null.");

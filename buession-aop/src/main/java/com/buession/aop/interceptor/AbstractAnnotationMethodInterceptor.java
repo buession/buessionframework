@@ -77,7 +77,8 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 		return getAnnotation(mi) != null;
 	}
 
-	protected Annotation getAnnotation(MethodInvocation mi){
+	@SuppressWarnings({"unchecked"})
+	protected A getAnnotation(MethodInvocation mi){
 		final Class<A> annotationClazz = getHandler().getAnnotationClass();
 		final String key = annotationCacheKey(mi, annotationClazz);
 
@@ -90,7 +91,7 @@ public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> 
 			}
 		}
 
-		return annotation;
+		return (A) annotation;
 	}
 
 	protected final String annotationCacheKey(final MethodInvocation mi, final Class<A> annotation){

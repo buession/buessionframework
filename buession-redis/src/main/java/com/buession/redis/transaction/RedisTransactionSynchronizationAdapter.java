@@ -78,7 +78,7 @@ public class RedisTransactionSynchronizationAdapter extends TransactionSynchroni
 			try{
 				connection.close();
 			}catch(IOException e){
-				logger.error(message + " error: {}", status, e.getMessage());
+				logger.error(message + ", error: {}", status, e.getMessage());
 			}
 			TransactionSynchronizationManager.unbindResource(factory);
 		}

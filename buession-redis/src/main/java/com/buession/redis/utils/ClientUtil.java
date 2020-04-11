@@ -47,7 +47,7 @@ public class ClientUtil {
 			return null;
 		}
 
-		String[] clients = str.split("[\\r\\n]");
+		String[] clients = StringUtils.split(str, "[\\r\\n]");
 		List<Client> result = new ArrayList<>(clients.length);
 
 		if(Validate.isEmpty(clients) == false){
@@ -64,7 +64,7 @@ public class ClientUtil {
 	}
 
 	private final static Client doParse(final String str){
-		String[] properties = str.split(" ");
+		String[] properties = StringUtils.split(str, " ");
 
 		if(Validate.isEmpty(properties)){
 			return null;

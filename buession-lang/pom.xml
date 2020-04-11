@@ -7,14 +7,11 @@
 		<groupId>com.buession</groupId>
 		<artifactId>buession-parent</artifactId>
 		<relativePath>../buession-parent</relativePath>
-		<version>1.1.0</version>
+		<version>1.1.2</version>
 	</parent>
 	<artifactId>buession-lang</artifactId>
 	<url>https://github.com/buession/buessionframework</url>
-	<description>Buession Framework Lang, a package of Java utility classes for the
-		classes that are in java.lang's hierarchy, or are considered to be so
-		standard as to justify existence in java.lang.
-	</description>
+	<description>Buession Framework Lang, a package of Java utility classes for the classes that are in java.lang's hierarchy, or are considered to be so standard as to justify existence in java.lang.</description>
 	<packaging>jar</packaging>
 
 	<organization>

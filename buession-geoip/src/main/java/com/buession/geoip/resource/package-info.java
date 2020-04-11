@@ -22,43 +22,7 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
-
-import com.buession.redis.client.connection.RedisConnection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * RedisTemplate 的别名
- *
  * @author Yong.Teng
- * @see RedisTemplate
  */
-@Deprecated
-public class RedisClientTemplate extends RedisTemplate {
-
-    private final static Logger logger = LoggerFactory.getLogger(RedisClientTemplate.class);
-
-    private final String message = "'com.buession.redis.RedisClientTemplate' is deprecated, please use 'com.buession"
-            + ".redis.RedisTemplate'.";
-
-    /**
-     * 构造函数
-     */
-    public RedisClientTemplate(){
-        super();
-        logger.warn(message);
-    }
-
-    /**
-     * 构造函数
-     *
-     * @param connection
-     *         Redis 连接对称
-     */
-    public RedisClientTemplate(final RedisConnection connection){
-        super(connection);
-        logger.warn(message);
-    }
-
-}
+package com.buession.geoip.resource;

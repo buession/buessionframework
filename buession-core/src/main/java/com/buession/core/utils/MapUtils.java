@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -34,45 +34,46 @@ import java.util.Set;
 
 /**
  * Map 工具类
+ * More {@link org.apache.commons.collections4.MapUtils}
  *
  * @author Yong.Teng
  */
 public class MapUtils {
 
-    private MapUtils(){
+	private MapUtils(){
 
-    }
+	}
 
-    /**
-     * 将 Map 转换为 List
-     *
-     * @param map
-     *         需要转换的 Map
-     * @param <K>
-     *         Key
-     * @param <V>
-     *         Value
-     *
-     * @return 转换结果
-     */
-    public final static <K, V> List<V> toList(Map<K, V> map){
-        return map == null ? null : new ArrayList<>(map.values());
-    }
+	/**
+	 * 将 Map 转换为 List
+	 *
+	 * @param map
+	 * 		需要转换的 Map
+	 * @param <K>
+	 * 		Key
+	 * @param <V>
+	 * 		Value
+	 *
+	 * @return 转换结果
+	 */
+	public final static <K, V> List<V> toList(final Map<K, V> map){
+		return map == null ? null : new ArrayList<>(map.values());
+	}
 
-    /**
-     * 将 Map 转换为 Set
-     *
-     * @param map
-     *         需要转换的 Map
-     * @param <K>
-     *         Key
-     * @param <V>
-     *         Value
-     *
-     * @return 转换结果
-     */
-    public final static <K, V> Set<V> toSet(Map<K, V> map){
-        return map == null ? null : new LinkedHashSet<>(map.values());
-    }
+	/**
+	 * 将 Map 转换为 Set
+	 *
+	 * @param map
+	 * 		需要转换的 Map
+	 * @param <K>
+	 * 		Key
+	 * @param <V>
+	 * 		Value
+	 *
+	 * @return 转换结果
+	 */
+	public final static <K, V> Set<V> toSet(final Map<K, V> map){
+		return map == null ? null : new LinkedHashSet<>(map.values());
+	}
 
 }

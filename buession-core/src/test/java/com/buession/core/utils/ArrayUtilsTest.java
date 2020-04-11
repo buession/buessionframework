@@ -33,14 +33,22 @@ import java.util.Set;
  */
 public class ArrayUtilsTest {
 
-    @Test
-    public void toSet(){
-        String[] strings = new String[]{"A", "B", "C"};
-        Set<String> set = ArrayUtils.toSet(strings);
+	@Test
+	public void toSet(){
+		String[] strings = new String[]{"A", "B", "C"};
+		Set<String> set = ArrayUtils.toSet(strings);
 
-        for(String str : set){
-            System.out.println(str);
-        }
-    }
+		for(String str : set){
+			System.out.println(str);
+		}
+	}
+
+	@Test
+	public void indexOf(){
+		String[] strings = new String[]{"A", "B", "B", "C"};
+
+		System.out.println(ArrayUtils.indexOf(strings, "B"));
+		System.out.println(ArrayUtils.lastIndexOf(strings, "B"));
+	}
 
 }
