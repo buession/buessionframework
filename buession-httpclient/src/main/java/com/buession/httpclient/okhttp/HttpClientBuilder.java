@@ -22,51 +22,71 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core;
+package com.buession.httpclient.okhttp;
 
-import java.io.InputStream;
-import java.nio.charset.Charset;
+import okhttp3.OkHttpClient;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yong.Teng
  */
-public class InputStreamRequestBody extends AbstractRequestBody<InputStream> {
+public class HttpClientBuilder {
 
-	public InputStreamRequestBody(){
-		super();
+	private OkHttpClientConnectionManager connectionManager;
+
+	private long connectTimeout = -1;
+
+	private long readTimeout = -1;
+
+	private Boolean followRedirects;
+
+	private HttpClientBuilder(){
+
 	}
 
-	public InputStreamRequestBody(ContentType contentType, InputStream content){
-		super(contentType, content);
+	public final static HttpClientBuilder create(){
+		return new HttpClientBuilder();
 	}
 
-	public InputStreamRequestBody(ContentType contentType, InputStream content, long contentLength){
-		super(contentType, content, contentLength);
+	public HttpClientBuilder setConnectionManager(OkHttpClientConnectionManager connectionManager){
+		this.connectionManager = connectionManager;
+		return this;
 	}
 
-	public InputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content){
-		super(contentType, contentEncoding, content);
+	public HttpClientBuilder setConnectTimeout(long connectTimeout){
+		this.connectTimeout = connectTimeout;
+		return this;
 	}
 
-	public InputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content, long
-			contentLength){
-		super(contentType, contentEncoding, content, contentLength);
+	public HttpClientBuilder setReadTimeout(long readTimeout){
+		this.readTimeout = readTimeout;
+		return this;
 	}
 
-	public InputStreamRequestBody(InputStream content, Charset charset){
-		super(content, charset);
+	public HttpClientBuilder setFollowRedirects(Boolean followRedirects){
+		this.followRedirects = followRedirects;
+		return this;
 	}
 
-	public InputStreamRequestBody(InputStream content, long contentLength, Charset charset){
-		super(content, contentLength, charset);
-	}
+	public OkHttpClient build(){
+		OkHttpClient.Builder okHttpClientBuilder = new okhttp3.OkHttpClient.Builder();
 
-	public InputStreamRequestBody(Header contentEncoding, InputStream content, Charset charset){
-		super(contentEncoding, content, charset);
-	}
+		if(connectTimeout > -1){
+			okHttpClientBuilder.connectTimeout(connectTimeout, TimeUnit.MILLISECONDS);
+		}
 
-	public InputStreamRequestBody(Header contentEncoding, InputStream content, long contentLength, Charset charset){
-		super(contentEncoding, content, contentLength, charset);
+		if(readTimeout > -1){
+			okHttpClientBuilder.readTimeout(readTimeout, TimeUnit.MILLISECONDS);
+		}
+
+		if(followRedirects != null){
+			okHttpClientBuilder.followRedirects(followRedirects);
+		}
+
+		okHttpClientBuilder.connectionPool(connectionManager.getConnectionPool());
+
+		return okHttpClientBuilder.build();
 	}
 
 }

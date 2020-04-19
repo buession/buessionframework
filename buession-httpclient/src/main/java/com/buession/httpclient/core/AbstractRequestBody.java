@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -31,97 +31,115 @@ import java.nio.charset.Charset;
  */
 public abstract class AbstractRequestBody<T> implements RequestBody<T> {
 
-    private ContentType contentType;
+	private ContentType contentType;
 
-    private Header contentEncoding;
+	private Header contentEncoding;
 
-    private long contentLength;
+	private T content;
 
-    private T content;
+	private long contentLength;
 
-    protected boolean chunked;
+	protected boolean chunked;
 
-    public AbstractRequestBody(){
-        this.contentLength = -1;
-    }
+	public AbstractRequestBody(){
+		this.contentLength = -1;
+	}
 
-    public AbstractRequestBody(ContentType contentType, T content, long contentLength){
-        this.contentType = contentType;
-        this.contentLength = contentLength;
-        this.content = content;
-    }
+	public AbstractRequestBody(ContentType contentType, T content){
+		this.contentType = contentType;
+		this.content = content;
+	}
 
-    public AbstractRequestBody(ContentType contentType, Header contentEncoding, T content, long contentLength){
-        this(contentType, content, contentLength);
-        this.contentEncoding = contentEncoding;
-    }
+	public AbstractRequestBody(ContentType contentType, T content, long contentLength){
+		this(contentType, content);
+		this.contentLength = contentLength;
+	}
 
-    public AbstractRequestBody(T content, long contentLength, Charset charset){
-        this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), content, contentLength);
-    }
+	public AbstractRequestBody(ContentType contentType, Header contentEncoding, T content){
+		this(contentType, content);
+		this.contentEncoding = contentEncoding;
+	}
 
-    public AbstractRequestBody(Header contentEncoding, T content, long contentLength, Charset charset){
-        this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), contentEncoding, content, contentLength);
-    }
+	public AbstractRequestBody(ContentType contentType, Header contentEncoding, T content, long contentLength){
+		this(contentType, content, contentLength);
+		this.contentEncoding = contentEncoding;
+	}
 
-    @Override
-    public ContentType getContentType(){
-        return contentType;
-    }
+	public AbstractRequestBody(T content, Charset charset){
+		this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), content);
+	}
 
-    public void setContentType(ContentType contentType){
-        this.contentType = contentType;
-    }
+	public AbstractRequestBody(T content, long contentLength, Charset charset){
+		this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), content, contentLength);
+	}
 
-    @Override
-    public Header getContentEncoding(){
-        return contentEncoding;
-    }
+	public AbstractRequestBody(Header contentEncoding, T content, Charset charset){
+		this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), contentEncoding, content);
+	}
 
-    public void setContentEncoding(Header contentEncoding){
-        this.contentEncoding = contentEncoding;
-    }
+	public AbstractRequestBody(Header contentEncoding, T content, long contentLength, Charset charset){
+		this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), contentEncoding, content, contentLength);
+	}
 
-    public void setContentEncoding(String contentEncoding){
-        if(contentEncoding != null){
-            setContentEncoding(new Header(HttpHeader.CONTENT_ENCODING, contentEncoding));
-        }
-    }
+	@Override
+	public ContentType getContentType(){
+		return contentType;
+	}
 
-    @Override
-    public long getContentLength(){
-        return contentLength;
-    }
+	public void setContentType(ContentType contentType){
+		this.contentType = contentType;
+	}
 
-    public void setContentLength(final long contentLength){
-        this.contentLength = contentLength;
-    }
+	@Override
+	public Header getContentEncoding(){
+		return contentEncoding;
+	}
 
-    @Override
-    public T getContent(){
-        return content;
-    }
+	public void setContentEncoding(Header contentEncoding){
+		this.contentEncoding = contentEncoding;
+	}
 
-    public void setContent(final T content){
-        this.content = content;
-    }
+	public void setContentEncoding(String contentEncoding){
+		if(contentEncoding != null){
+			setContentEncoding(new Header(HttpHeader.CONTENT_ENCODING, contentEncoding));
+		}
+	}
 
-    @Override
-    public boolean isRepeatable(){
-        return false;
-    }
+	@Override
+	public T getContent(){
+		return content;
+	}
 
-    public void setChunked(boolean chunked){
-        this.chunked = chunked;
-    }
+	public void setContent(final T content){
+		this.content = content;
+	}
 
-    @Override
-    public boolean isChunked(){
-        return chunked;
-    }
+	@Override
+	public long getContentLength(){
+		return contentLength;
+	}
 
-    @Override
-    public boolean isStreaming(){
-        return false;
-    }
+	public void setContentLength(final long contentLength){
+		this.contentLength = contentLength;
+	}
+
+	@Override
+	public boolean isRepeatable(){
+		return false;
+	}
+
+	public void setChunked(boolean chunked){
+		this.chunked = chunked;
+	}
+
+	@Override
+	public boolean isChunked(){
+		return chunked;
+	}
+
+	@Override
+	public boolean isStreaming(){
+		return false;
+	}
+
 }

@@ -39,9 +39,11 @@ import com.buession.httpclient.exception.RequestAbortedException;
 import com.buession.httpclient.exception.RequestException;
 import com.buession.httpclient.httpcomponents.HttpComponentsRequestBuilder;
 import com.buession.httpclient.httpcomponents.HttpComponentsResponseBuilder;
+import com.buession.httpclient.httpcomponents.RequestBuilder;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
@@ -81,9 +83,33 @@ public class ApacheHttpClient extends AbstractHttpClient {
 		super(httpClientConnectionManager);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param httpClient
+	 * 		Apache Http Client
+	 */
+	public ApacheHttpClient(HttpClient httpClient){
+		this.httpClient = httpClient;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param httpClient
+	 * 		Apache Http Client
+	 * @param requestConfig
+	 * 		请求配置
+	 */
+	public ApacheHttpClient(HttpClient httpClient, RequestConfig requestConfig){
+		this.httpClient = httpClient;
+		this.requestConfig = requestConfig;
+	}
+
 	public RequestConfig getRequestConfig(){
 		if(requestConfig == null){
-			Configuration configuration = getConnectionManager().getConfiguration();
+			final Configuration configuration = getConnectionManager().getConfiguration();
+
 			requestConfig = RequestConfig.custom().setConnectTimeout(configuration.getConnectTimeout())
 					.setConnectionRequestTimeout(configuration.getConnectionRequestTimeout()).setSocketTimeout
 							(configuration.getReadTimeout()).setRedirectsEnabled(configuration.isAllowRedirects())
@@ -118,147 +144,147 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	public Response get(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpGet(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).get(), headers, parameters);
 	}
 
 	@Override
 	public Response post(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpPost(url), headers, parameters, data);
+		return doRequest(new RequestBuilder(url).post(data), headers, parameters);
 	}
 
 	@Override
 	public Response patch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpPatch(url), headers, parameters, data);
+		return doRequest(new RequestBuilder(url).patch(data), headers, parameters);
 	}
 
 	@Override
 	public Response put(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpPut(url), headers, parameters, data);
+		return doRequest(new RequestBuilder(url).put(data), headers, parameters);
 	}
 
 	@Override
 	public Response delete(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpDelete(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).delete(), headers, parameters);
 	}
 
 	@Override
 	public Response connect(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpConnect(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).connect(), headers, parameters);
 	}
 
 	@Override
 	public Response trace(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpTrace(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).trace(), headers, parameters);
 	}
 
 	@Override
 	public Response copy(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpCopy(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).copy(), headers, parameters);
 	}
 
 	@Override
 	public Response move(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpMove(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).move(), headers, parameters);
 	}
 
 	@Override
 	public Response head(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpHead(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).head(), headers, parameters);
 	}
 
 	@Override
 	public Response options(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpOptions(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).options(), headers, parameters);
 	}
 
 	@Override
 	public Response link(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpLink(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).link(), headers, parameters);
 	}
 
 	@Override
 	public Response unlink(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpUnlink(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).unlink(), headers, parameters);
 	}
 
 	@Override
 	public Response purge(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpPurge(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).purge(), headers, parameters);
 	}
 
 	@Override
 	public Response lock(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpLock(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).lock(), headers, parameters);
 	}
 
 	@Override
 	public Response unlock(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpUnlock(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).unlock(), headers, parameters);
 	}
 
 	@Override
 	public Response propfind(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpPropfind(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).propfind(), headers, parameters);
 	}
 
 	@Override
 	public Response proppatch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers)
 			throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
 			RequestAbortedException, RequestException{
-		return doRequest(new HttpPropPatch(url), headers, parameters, data);
+		return doRequest(new RequestBuilder(url).proppatch(data), headers, parameters);
 	}
 
 	@Override
 	public Response report(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpReport(url), headers, parameters, data);
+		return doRequest(new RequestBuilder(url).report(data), headers, parameters);
 	}
 
 	@Override
 	public Response view(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpView(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).view(), headers, parameters);
 	}
 
 	@Override
 	public Response wrapped(String url, Map<String, Object> parameters, List<Header> headers) throws
 			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
 			RequestException{
-		return doRequest(new HttpWrapped(url), headers, parameters);
+		return doRequest(new RequestBuilder(url).wrapped(), headers, parameters);
 	}
 
 	protected Response doRequest(final HttpRequestBase httpRequest, final List<Header> headers, final Map<String,
@@ -266,20 +292,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
 			RequestAbortedException, RequestException{
 		final Request request = HttpComponentsRequestBuilder.create(httpRequest).setUrl(httpRequest.getURI().toString
 				()).setParameters(parameters).setHeaders(headers).build();
-		return doRequest(httpRequest, request);
-	}
 
-	protected Response doRequest(final HttpEntityEnclosingRequestBase httpRequest, final List<Header> headers, final
-	Map<String, Object> parameters, final RequestBody data) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
-		final Request request = HttpComponentsRequestBuilder.create(httpRequest).setUrl(httpRequest.getURI().toString
-				()).setParameters(parameters).setHeaders(headers).setNameValuePairs(data).build();
-		return doRequest(httpRequest, request);
-	}
-
-	protected Response doRequest(final HttpRequestBase httpRequest, final Request request) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
 		httpRequest.setConfig(getRequestConfig());
 
 		final ProtocolVersion httpVersion = getHttpVersion();

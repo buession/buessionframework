@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
@@ -38,75 +38,76 @@ import java.io.InputStream;
  */
 public class ChunkedInputStreamRequestBody extends InputStreamRequestBody implements Releasable {
 
-    private final static Logger logger = LoggerFactory.getLogger(ChunkedInputStreamRequestBody.class);
+	private final static Logger logger = LoggerFactory.getLogger(ChunkedInputStreamRequestBody.class);
 
-    ChunkedInputStreamRequestBody(InputStream content, long contentLength, ContentType contentType){
-        super(content, contentLength, contentType);
-    }
+	ChunkedInputStreamRequestBody(InputStream content, long contentLength, ContentType contentType){
+		super(content, contentLength, contentType);
+	}
 
-    @Override
-    public boolean isChunked(){
-        return true;
-    }
+	@Override
+	public boolean isChunked(){
+		return true;
+	}
 
-    @Override
-    public void writeTo(BufferedSink sink) throws IOException{
-        if(isFirstAttempt() == false && isRepeatable()){
-            getContent().reset();
-        }
+	@Override
+	public void writeTo(BufferedSink sink) throws IOException{
+		if(isFirstAttempt() == false && isRepeatable()){
+			getContent().reset();
+		}
 
-        setFirstAttempt(false);
-        super.writeTo(sink);
-    }
+		setFirstAttempt(false);
+		super.writeTo(sink);
+	}
 
-    @Override
-    public void release(){
-        try{
-            getContent().close();
-        }catch(IOException e){
-            logger.error("Unexpected io exception when trying to close input stream", e);
-        }
-    }
+	@Override
+	public void release(){
+		try{
+			getContent().close();
+		}catch(IOException e){
+			logger.error("Unexpected io exception when trying to close input stream", e);
+		}
+	}
 
-    public static final class Builder {
+	public static final class Builder {
 
-        private InputStream content;
+		private InputStream content;
 
-        private ContentType contentType;
+		private ContentType contentType;
 
-        private long contentLength;
+		private long contentLength;
 
-        public Builder(){
-            this.contentType = ContentType.APPLICATION_OBJECT_STREAM;
-            this.contentLength = -1;
-        }
+		public Builder(){
+			this.contentType = ContentType.APPLICATION_OBJECT_STREAM;
+			this.contentLength = -1;
+		}
 
-        public Builder(InputStream content, ContentType contentType){
-            this.content = content;
-            this.contentType = contentType;
+		public Builder(InputStream content, ContentType contentType){
+			this.content = content;
+			this.contentType = contentType;
 
-            try{
-                this.contentLength = content == null ? -1 : content.available();
-            }catch(IOException e){
-                this.contentLength = -1;
-            }
-        }
+			try{
+				this.contentLength = content == null ? -1 : content.available();
+			}catch(IOException e){
+				this.contentLength = -1;
+			}
+		}
 
-        public Builder(InputStream content, long contentLength){
-            this.content = content;
-            this.contentType = ContentType.APPLICATION_OBJECT_STREAM;
-            this.contentLength = contentLength;
-        }
+		public Builder(InputStream content, long contentLength){
+			this.content = content;
+			this.contentType = ContentType.APPLICATION_OBJECT_STREAM;
+			this.contentLength = contentLength;
+		}
 
-        public Builder(InputStream content, long contentLength, ContentType contentType){
-            this.content = content;
-            this.contentType = contentType;
-            this.contentLength = contentLength;
-        }
+		public Builder(InputStream content, long contentLength, ContentType contentType){
+			this.content = content;
+			this.contentType = contentType;
+			this.contentLength = contentLength;
+		}
 
-        public ChunkedInputStreamRequestBody build(){
-            return new ChunkedInputStreamRequestBody(content, contentLength, contentType);
-        }
+		public ChunkedInputStreamRequestBody build(){
+			return new ChunkedInputStreamRequestBody(content, contentLength, contentType);
+		}
 
-    }
+	}
+
 }

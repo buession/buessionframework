@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -32,30 +32,47 @@ import java.nio.charset.Charset;
  */
 public class RepeatableInputStreamRequestBody extends InputStreamRequestBody {
 
-    public RepeatableInputStreamRequestBody(){
-        super();
-    }
+	public RepeatableInputStreamRequestBody(){
+		super();
+	}
 
-    public RepeatableInputStreamRequestBody(ContentType contentType, InputStream content, long contentLength){
-        super(contentType, content, contentLength);
-    }
+	public RepeatableInputStreamRequestBody(ContentType contentType, InputStream content){
+		super(contentType, content);
+	}
 
-    public RepeatableInputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content,
-                                            long contentLength){
-        super(contentType, contentEncoding, content, contentLength);
-    }
+	public RepeatableInputStreamRequestBody(ContentType contentType, InputStream content, long contentLength){
+		super(contentType, content, contentLength);
+	}
 
-    public RepeatableInputStreamRequestBody(InputStream content, long contentLength, Charset charset){
-        super(content, contentLength, charset);
-    }
+	public RepeatableInputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content){
+		super(contentType, contentEncoding, content);
+	}
 
-    public RepeatableInputStreamRequestBody(Header contentEncoding, InputStream content, long contentLength, Charset
-            charset){
-        super(contentEncoding, content, contentLength, charset);
-    }
+	public RepeatableInputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content, long
+			contentLength){
+		super(contentType, contentEncoding, content, contentLength);
+	}
 
-    @Override
-    public boolean isChunked(){
-        return false;
-    }
+	public RepeatableInputStreamRequestBody(InputStream content, Charset charset){
+		super(content, charset);
+	}
+
+	public RepeatableInputStreamRequestBody(InputStream content, long contentLength, Charset charset){
+		super(content, contentLength, charset);
+	}
+
+	public RepeatableInputStreamRequestBody(Header contentEncoding, InputStream content, Charset charset){
+		super(contentEncoding, content, charset);
+	}
+
+	public RepeatableInputStreamRequestBody(Header contentEncoding, InputStream content, long contentLength, Charset
+			charset){
+		super(contentEncoding, content, contentLength, charset);
+	}
+
+	@Override
+	public boolean isChunked(){
+		return false;
+	}
+
 }

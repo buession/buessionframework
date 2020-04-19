@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.httpcomponents;
@@ -40,166 +40,166 @@ import java.io.OutputStream;
  */
 public class ChunkedInputStreamEntity extends InputStreamEntity {
 
-    private ReleasableInputStreamEntity notClosableRequestEntity;
+	private ReleasableInputStreamEntity notClosableRequestEntity;
 
-    private final static Logger logger = LoggerFactory.getLogger(ChunkedInputStreamEntity.class);
+	private final static Logger logger = LoggerFactory.getLogger(ChunkedInputStreamEntity.class);
 
-    public ChunkedInputStreamEntity(InputStream content, long contentLength, ContentType contentType){
-        super(content, contentLength, contentType);
+	public ChunkedInputStreamEntity(InputStream content, long contentLength, ContentType contentType){
+		super(content, contentLength, contentType);
 
-        setChunked(true);
+		setChunked(true);
 
-        notClosableRequestEntity = new ReleasableInputStreamEntity(content, contentLength);
+		notClosableRequestEntity = new ReleasableInputStreamEntity(content, contentLength);
 
-        notClosableRequestEntity.setCloseDisabled(true);
-        notClosableRequestEntity.setContentType(contentType.toString());
-    }
+		notClosableRequestEntity.setCloseDisabled(true);
+		notClosableRequestEntity.setContentType(contentType.toString());
+	}
 
-    @Override
-    public boolean isChunked(){
-        return true;
-    }
+	@Override
+	public boolean isChunked(){
+		return true;
+	}
 
-    @Override
-    public boolean isRepeatable(){
-        return getContent().markSupported() || notClosableRequestEntity.isRepeatable();
-    }
+	@Override
+	public boolean isRepeatable(){
+		return getContent().markSupported() || notClosableRequestEntity.isRepeatable();
+	}
 
-    @Override
-    public void writeTo(OutputStream output) throws IOException{
-        if(isFirstAttempt() == false && isRepeatable()){
-            getContent().reset();
-        }
+	@Override
+	public void writeTo(OutputStream output) throws IOException{
+		if(isFirstAttempt() == false && isRepeatable()){
+			getContent().reset();
+		}
 
-        setFirstAttempt(false);
-        notClosableRequestEntity.writeTo(output);
-    }
+		setFirstAttempt(false);
+		notClosableRequestEntity.writeTo(output);
+	}
 
-    /**
-     * A releaseable HTTP entity that can control its inner inputstream's
-     * auto-close functionality on/off, and it will try to close its inner
-     * inputstream by default when the inputstream reaches EOF.
-     */
-    public static class ReleasableInputStreamEntity extends AbstractHttpEntity implements Releasable {
+	/**
+	 * A releaseable HTTP entity that can control its inner inputstream's
+	 * auto-close functionality on/off, and it will try to close its inner
+	 * inputstream by default when the inputstream reaches EOF.
+	 */
+	public static class ReleasableInputStreamEntity extends AbstractHttpEntity implements Releasable {
 
-        private final InputStream content;
+		private final InputStream content;
 
-        private final long length;
+		private final long length;
 
-        private boolean closeDisabled;
+		private boolean closeDisabled;
 
-        public ReleasableInputStreamEntity(final InputStream inputStream){
-            this(inputStream, -1);
-        }
+		public ReleasableInputStreamEntity(final InputStream inputStream){
+			this(inputStream, -1);
+		}
 
-        public ReleasableInputStreamEntity(final InputStream inputStream, final long length){
-            this(inputStream, length, null);
-        }
+		public ReleasableInputStreamEntity(final InputStream inputStream, final long length){
+			this(inputStream, length, null);
+		}
 
-        public ReleasableInputStreamEntity(final InputStream inputStream, final ContentType contentType){
-            this(inputStream, -1, contentType);
-        }
+		public ReleasableInputStreamEntity(final InputStream inputStream, final ContentType contentType){
+			this(inputStream, -1, contentType);
+		}
 
-        public ReleasableInputStreamEntity(final InputStream inputStream, final long length, final ContentType
-                contentType){
-            super();
+		public ReleasableInputStreamEntity(final InputStream inputStream, final long length, final ContentType
+				contentType){
+			super();
 
-            Assert.notNull(inputStream, "Source input stream");
+			Assert.notNull(inputStream, "Source input stream");
 
-            this.content = inputStream;
-            this.length = length;
+			this.content = inputStream;
+			this.length = length;
 
-            if(contentType != null){
-                setContentType(contentType.toString());
-            }
+			if(contentType != null){
+				setContentType(contentType.toString());
+			}
 
-            closeDisabled = false;
-        }
+			closeDisabled = false;
+		}
 
-        @Override
-        public boolean isRepeatable(){
-            return content.markSupported();
-        }
+		@Override
+		public boolean isRepeatable(){
+			return content.markSupported();
+		}
 
-        @Override
-        public InputStream getContent() throws IOException{
-            return content;
-        }
+		@Override
+		public InputStream getContent() throws IOException{
+			return content;
+		}
 
-        @Override
-        public long getContentLength(){
-            return length;
-        }
+		@Override
+		public long getContentLength(){
+			return length;
+		}
 
-        @Override
-        public void writeTo(final OutputStream outputStream) throws IOException{
-            Assert.notNull(outputStream, "Output stream");
+		@Override
+		public void writeTo(final OutputStream outputStream) throws IOException{
+			Assert.notNull(outputStream, "Output stream");
 
-            final InputStream inputStream = content;
+			final InputStream inputStream = content;
 
-            try{
-                final byte[] buffer = new byte[OUTPUT_BUFFER_SIZE];
-                int l;
+			try{
+				final byte[] buffer = new byte[OUTPUT_BUFFER_SIZE];
+				int l;
 
-                if(length < 0){
-                    // consume until EOF
-                    while((l = inputStream.read(buffer)) != -1){
-                        outputStream.write(buffer, 0, l);
-                    }
-                }else{
-                    // consume no more than length
-                    long remaining = length;
+				if(length < 0){
+					// consume until EOF
+					while((l = inputStream.read(buffer)) != -1){
+						outputStream.write(buffer, 0, l);
+					}
+				}else{
+					// consume no more than length
+					long remaining = length;
 
-                    while(remaining > 0){
-                        l = inputStream.read(buffer, 0, (int) Math.min(OUTPUT_BUFFER_SIZE, remaining));
-                        if(l == -1){
-                            break;
-                        }
+					while(remaining > 0){
+						l = inputStream.read(buffer, 0, (int) Math.min(OUTPUT_BUFFER_SIZE, remaining));
+						if(l == -1){
+							break;
+						}
 
-                        outputStream.write(buffer, 0, l);
-                        remaining -= l;
-                    }
-                }
-            }finally{
-                close();
-            }
-        }
+						outputStream.write(buffer, 0, l);
+						remaining -= l;
+					}
+				}
+			}finally{
+				close();
+			}
+		}
 
-        @Override
-        public boolean isStreaming(){
-            return true;
-        }
+		@Override
+		public boolean isStreaming(){
+			return true;
+		}
 
-        public boolean isCloseDisabled(){
-            return getCloseDisabled();
-        }
+		public boolean isCloseDisabled(){
+			return getCloseDisabled();
+		}
 
-        public boolean getCloseDisabled(){
-            return closeDisabled;
-        }
+		public boolean getCloseDisabled(){
+			return closeDisabled;
+		}
 
-        public void setCloseDisabled(boolean closeDisabled){
-            this.closeDisabled = closeDisabled;
-        }
+		public void setCloseDisabled(boolean closeDisabled){
+			this.closeDisabled = closeDisabled;
+		}
 
-        @Override
-        public void release(){
-            doRelease();
-        }
+		@Override
+		public void release(){
+			doRelease();
+		}
 
-        public void close(){
-            if(closeDisabled == false){
-                doRelease();
-            }
-        }
+		public void close(){
+			if(closeDisabled == false){
+				doRelease();
+			}
+		}
 
-        private void doRelease(){
-            try{
-                content.close();
-            }catch(Exception e){
-                logger.error("Unexpected io exception when trying to close input stream", e);
-            }
-        }
-    }
+		private void doRelease(){
+			try{
+				content.close();
+			}catch(Exception e){
+				logger.error("Unexpected io exception when trying to close input stream", e);
+			}
+		}
+	}
+
 }
-

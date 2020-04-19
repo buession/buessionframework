@@ -19,13 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
 
+import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
+import com.buession.httpclient.core.EncodedFormRequestBody;
+import com.buession.httpclient.core.ObjectFormRequestBody;
+import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
+import com.buession.httpclient.okhttp.convert.ChunkedInputStreamRequestBodyConvert;
+import com.buession.httpclient.okhttp.convert.EncodedFormRequestBodyConvert;
+import com.buession.httpclient.okhttp.convert.ObjectRequestBodyConvert;
+import com.buession.httpclient.okhttp.convert.RepeatableInputStreamRequestBodyConvert;
+import okhttp3.FormBody;
 import okhttp3.Request;
 
 /**
@@ -33,117 +42,139 @@ import okhttp3.Request;
  */
 public class RequestBuilder extends okhttp3.Request.Builder {
 
-    public RequestBuilder(){
-        super();
-    }
+	public RequestBuilder(){
+		super();
+	}
 
-    public RequestBuilder(String url){
-        this();
-        url(url);
-    }
+	public RequestBuilder(String url){
+		this();
+		url(url);
+	}
 
-    public RequestBuilder(Request request){
-        super(request);
-    }
+	public RequestBuilder(Request request){
+		super(request);
+	}
 
-    public Request.Builder post(){
-        return this.method(RequestMethod.POST);
-    }
+	public Request.Builder post(){
+		return this.method(RequestMethod.POST);
+	}
 
-    public Request.Builder post(RequestBody body){
-        return this.method(RequestMethod.POST, body);
-    }
+	public Request.Builder post(RequestBody body){
+		return super.post(buildRequestBody(body));
+	}
 
-    public Request.Builder patch(){
-        return this.method(RequestMethod.PATCH);
-    }
+	public Request.Builder patch(){
+		return this.method(RequestMethod.PATCH);
+	}
 
-    public Request.Builder patch(RequestBody body){
-        return this.method(RequestMethod.PATCH, body);
-    }
+	public Request.Builder patch(RequestBody body){
+		return super.patch(buildRequestBody(body));
+	}
 
-    public Request.Builder put(){
-        return this.method(RequestMethod.PUT);
-    }
+	public Request.Builder put(){
+		return this.method(RequestMethod.PUT);
+	}
 
-    public Request.Builder put(RequestBody body){
-        return this.method(RequestMethod.PUT, body);
-    }
+	public Request.Builder put(RequestBody body){
+		return super.put(buildRequestBody(body));
+	}
 
-    public Request.Builder connect(){
-        return this.method(RequestMethod.CONNECT);
-    }
+	public Request.Builder connect(){
+		return this.method(RequestMethod.CONNECT);
+	}
 
-    public Request.Builder trace(){
-        return this.method(RequestMethod.TRACE);
-    }
+	public Request.Builder trace(){
+		return this.method(RequestMethod.TRACE);
+	}
 
-    public Request.Builder copy(){
-        return this.method(RequestMethod.COPY);
-    }
+	public Request.Builder copy(){
+		return this.method(RequestMethod.COPY);
+	}
 
-    public Request.Builder move(){
-        return this.method(RequestMethod.MOVE);
-    }
+	public Request.Builder move(){
+		return this.method(RequestMethod.MOVE);
+	}
 
-    public Request.Builder options(){
-        return this.method(RequestMethod.OPTIONS);
-    }
+	public Request.Builder options(){
+		return this.method(RequestMethod.OPTIONS);
+	}
 
-    public Request.Builder link(){
-        return this.method(RequestMethod.LINK);
-    }
+	public Request.Builder link(){
+		return this.method(RequestMethod.LINK);
+	}
 
-    public Request.Builder unlink(){
-        return this.method(RequestMethod.UNLINK);
-    }
+	public Request.Builder unlink(){
+		return this.method(RequestMethod.UNLINK);
+	}
 
-    public Request.Builder purge(){
-        return this.method(RequestMethod.PURGE);
-    }
+	public Request.Builder purge(){
+		return this.method(RequestMethod.PURGE);
+	}
 
-    public Request.Builder lock(){
-        return this.method(RequestMethod.LOCK);
-    }
+	public Request.Builder lock(){
+		return this.method(RequestMethod.LOCK);
+	}
 
-    public Request.Builder unlock(){
-        return this.method(RequestMethod.UNLOCK);
-    }
+	public Request.Builder unlock(){
+		return this.method(RequestMethod.UNLOCK);
+	}
 
-    public Request.Builder propfind(){
-        return this.method(RequestMethod.PROPFIND);
-    }
+	public Request.Builder propfind(){
+		return this.method(RequestMethod.PROPFIND);
+	}
 
-    public Request.Builder proppatch(){
-        return this.method(RequestMethod.PROPPATCH);
-    }
+	public Request.Builder proppatch(){
+		return this.method(RequestMethod.PROPPATCH);
+	}
 
-    public Request.Builder proppatch(RequestBody body){
-        return this.method(RequestMethod.PROPPATCH, body);
-    }
+	public Request.Builder proppatch(RequestBody body){
+		return this.method(RequestMethod.PROPPATCH, body);
+	}
 
-    public Request.Builder report(){
-        return this.method(RequestMethod.REPORT);
-    }
+	public Request.Builder report(){
+		return this.method(RequestMethod.REPORT);
+	}
 
-    public Request.Builder report(RequestBody body){
-        return this.method(RequestMethod.REPORT, body);
-    }
+	public Request.Builder report(RequestBody body){
+		return this.method(RequestMethod.REPORT, body);
+	}
 
-    public Request.Builder view(){
-        return this.method(RequestMethod.VIEW);
-    }
+	public Request.Builder view(){
+		return this.method(RequestMethod.VIEW);
+	}
 
-    public Request.Builder wrapped(){
-        return this.method(RequestMethod.WRAPPED);
-    }
+	public Request.Builder wrapped(){
+		return this.method(RequestMethod.WRAPPED);
+	}
 
-    private Request.Builder method(final RequestMethod method){
-        return this.method(method.name(), null);
-    }
+	private Request.Builder method(final RequestMethod method){
+		return this.method(method.name(), null);
+	}
 
-    private Request.Builder method(final RequestMethod method, final RequestBody body){
-        return this.method(method.name(), OkHttpRequestBuilder.buildRequestBody(body));
-    }
+	private Request.Builder method(final RequestMethod method, final RequestBody body){
+		return this.method(method.name(), buildRequestBody(body));
+	}
+
+	private okhttp3.RequestBody buildRequestBody(RequestBody data){
+		if(data == null){
+			return null;
+		}
+
+		if(data instanceof EncodedFormRequestBody){
+			EncodedFormRequestBodyConvert convert = new EncodedFormRequestBodyConvert();
+			return convert.convert((EncodedFormRequestBody) data);
+		}else if(data instanceof com.buession.httpclient.core.ChunkedInputStreamRequestBody){
+			ChunkedInputStreamRequestBodyConvert convert = new ChunkedInputStreamRequestBodyConvert();
+			return convert.convert((ChunkedInputStreamRequestBody) data);
+		}else if(data instanceof com.buession.httpclient.core.RepeatableInputStreamRequestBody){
+			RepeatableInputStreamRequestBodyConvert convert = new RepeatableInputStreamRequestBodyConvert();
+			return convert.convert((RepeatableInputStreamRequestBody) data);
+		}else if(data instanceof ObjectFormRequestBody){
+			ObjectRequestBodyConvert convert = new ObjectRequestBodyConvert();
+			return convert.convert((ObjectFormRequestBody) data);
+		}else{
+			return new FormBody.Builder().build();
+		}
+	}
 
 }

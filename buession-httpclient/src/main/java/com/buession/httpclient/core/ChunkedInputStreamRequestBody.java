@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -32,30 +32,47 @@ import java.nio.charset.Charset;
  */
 public class ChunkedInputStreamRequestBody extends InputStreamRequestBody {
 
-    public ChunkedInputStreamRequestBody(){
-        super();
-    }
+	public ChunkedInputStreamRequestBody(){
+		super();
+	}
 
-    public ChunkedInputStreamRequestBody(ContentType contentType, InputStream content, long contentLength){
-        super(contentType, content, contentLength);
-    }
+	public ChunkedInputStreamRequestBody(ContentType contentType, InputStream content){
+		super(contentType, content);
+	}
 
-    public ChunkedInputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content, long
-            contentLength){
-        super(contentType, contentEncoding, content, contentLength);
-    }
+	public ChunkedInputStreamRequestBody(ContentType contentType, InputStream content, long contentLength){
+		super(contentType, content, contentLength);
+	}
 
-    public ChunkedInputStreamRequestBody(InputStream content, long contentLength, Charset charset){
-        super(content, contentLength, charset);
-    }
+	public ChunkedInputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content){
+		super(contentType, contentEncoding, content);
+	}
 
-    public ChunkedInputStreamRequestBody(Header contentEncoding, InputStream content, long contentLength, Charset
-            charset){
-        super(contentEncoding, content, contentLength, charset);
-    }
+	public ChunkedInputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content, long
+			contentLength){
+		super(contentType, contentEncoding, content, contentLength);
+	}
 
-    @Override
-    public boolean isChunked(){
-        return true;
-    }
+	public ChunkedInputStreamRequestBody(InputStream content, Charset charset){
+		super(content, charset);
+	}
+
+	public ChunkedInputStreamRequestBody(InputStream content, long contentLength, Charset charset){
+		super(content, contentLength, charset);
+	}
+
+	public ChunkedInputStreamRequestBody(Header contentEncoding, InputStream content, Charset charset){
+		super(contentEncoding, content, charset);
+	}
+
+	public ChunkedInputStreamRequestBody(Header contentEncoding, InputStream content, long contentLength, Charset
+			charset){
+		super(contentEncoding, content, contentLength, charset);
+	}
+
+	@Override
+	public boolean isChunked(){
+		return true;
+	}
+
 }

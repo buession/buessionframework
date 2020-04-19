@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -33,48 +33,69 @@ import java.util.List;
  */
 public class EncodedFormRequestBody extends AbstractRequestBody<List<RequestBodyElement>> {
 
-    public final static ContentType CONTENT_TYPE = ContentType.APPLICATION_FORM_URLENCODED;
+	public final static ContentType CONTENT_TYPE = ContentType.APPLICATION_FORM_URLENCODED;
 
-    public EncodedFormRequestBody(List<RequestBodyElement> content, long contentLength){
-        super(CONTENT_TYPE, content, contentLength);
-    }
+	public EncodedFormRequestBody(){
+		super(CONTENT_TYPE, null);
+	}
 
-    public EncodedFormRequestBody(Header contentEncoding, List<RequestBodyElement> content, long contentLength){
-        super(CONTENT_TYPE, contentEncoding, content, contentLength);
-    }
+	public EncodedFormRequestBody(List<RequestBodyElement> content){
+		super(CONTENT_TYPE, content);
+	}
 
-    public EncodedFormRequestBody(List<RequestBodyElement> content, long contentLength, Charset charset){
-        super(new ContentType(CONTENT_TYPE.getMimeType(), charset), content, contentLength);
-    }
+	public EncodedFormRequestBody(List<RequestBodyElement> content, long contentLength){
+		super(CONTENT_TYPE, content, contentLength);
+	}
 
-    public EncodedFormRequestBody(Header contentEncoding, List<RequestBodyElement> content, long contentLength,
-                                  Charset charset){
-        super(new ContentType(CONTENT_TYPE.getMimeType(), charset), contentEncoding, content, contentLength);
-    }
+	public EncodedFormRequestBody(Header contentEncoding, List<RequestBodyElement> content){
+		super(CONTENT_TYPE, contentEncoding, content);
+	}
 
-    public void addRequestBodyElement(RequestBodyElement requestBodyElement){
-        if(getContent() == null){
-            setContent(new ArrayList<>(1));
-        }
+	public EncodedFormRequestBody(Header contentEncoding, List<RequestBodyElement> content, long contentLength){
+		super(CONTENT_TYPE, contentEncoding, content, contentLength);
+	}
 
-        getContent().add(requestBodyElement);
-    }
+	public EncodedFormRequestBody(List<RequestBodyElement> content, Charset charset){
+		this(content, -1, charset);
+	}
 
-    public void addRequestBodyElement(String name, String value){
-        if(getContent() == null){
-            setContent(new ArrayList<>(1));
-        }
+	public EncodedFormRequestBody(List<RequestBodyElement> content, long contentLength, Charset charset){
+		super(new ContentType(CONTENT_TYPE.getMimeType(), charset), content, contentLength);
+	}
 
-        getContent().add(new RequestBodyElement(name, value));
-    }
+	public EncodedFormRequestBody(Header contentEncoding, List<RequestBodyElement> content, Charset charset){
+		this(contentEncoding, content, -1, charset);
+	}
 
-    @Override
-    public boolean isRepeatable(){
-        return true;
-    }
+	public EncodedFormRequestBody(Header contentEncoding, List<RequestBodyElement> content, long contentLength,
+								  Charset charset){
+		super(new ContentType(CONTENT_TYPE.getMimeType(), charset), contentEncoding, content, contentLength);
+	}
 
-    @Override
-    public boolean isStreaming(){
-        return false;
-    }
+	public void addRequestBodyElement(RequestBodyElement requestBodyElement){
+		if(getContent() == null){
+			setContent(new ArrayList<>(1));
+		}
+
+		getContent().add(requestBodyElement);
+	}
+
+	public void addRequestBodyElement(String name, String value){
+		if(getContent() == null){
+			setContent(new ArrayList<>(1));
+		}
+
+		getContent().add(new RequestBodyElement(name, value));
+	}
+
+	@Override
+	public boolean isRepeatable(){
+		return true;
+	}
+
+	@Override
+	public boolean isStreaming(){
+		return false;
+	}
+
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -29,23 +29,28 @@ import java.nio.charset.Charset;
 /**
  * @author Yong.Teng
  */
-public class ObjectFormRequestBody extends AbstractRequestBody<Object> {
+public class ObjectFormRequestBody<E> extends AbstractRequestBody<E> {
 
-    public final static ContentType CONTENT_TYPE = ContentType.APPLICATION_JSON;
+	public final static ContentType CONTENT_TYPE = ContentType.APPLICATION_JSON;
 
-    public ObjectFormRequestBody(Object content, long contentLength){
-        super(CONTENT_TYPE, content, contentLength);
-    }
+	public ObjectFormRequestBody(){
+		super(CONTENT_TYPE, null);
+	}
 
-    public ObjectFormRequestBody(Header contentEncoding, Object content, long contentLength){
-        super(CONTENT_TYPE, contentEncoding, content, contentLength);
-    }
+	public ObjectFormRequestBody(E content){
+		super(CONTENT_TYPE, content);
+	}
 
-    public ObjectFormRequestBody(Object content, long contentLength, Charset charset){
-        super(new ContentType(CONTENT_TYPE.getMimeType(), charset), content, contentLength);
-    }
+	public ObjectFormRequestBody(Header contentEncoding, E content){
+		super(CONTENT_TYPE, contentEncoding, content);
+	}
 
-    public ObjectFormRequestBody(Header contentEncoding, Object content, long contentLength, Charset charset){
-        super(new ContentType(CONTENT_TYPE.getMimeType(), charset), contentEncoding, content, contentLength);
-    }
+	public ObjectFormRequestBody(E content, Charset charset){
+		super(new ContentType(CONTENT_TYPE.getMimeType(), charset), content);
+	}
+
+	public ObjectFormRequestBody(Header contentEncoding, E content, Charset charset){
+		super(new ContentType(CONTENT_TYPE.getMimeType(), charset), contentEncoding, content);
+	}
+
 }

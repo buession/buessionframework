@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.helper;
@@ -37,16 +37,16 @@ import java.util.Map;
  */
 public interface RequestBuilder {
 
-    RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion);
+	RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion);
 
-    RequestBuilder setUrl(String url);
+	RequestBuilder setUrl(String url);
 
-    RequestBuilder setHeaders(List<Header> headers);
+	RequestBuilder setHeaders(List<Header> headers);
 
-    RequestBuilder setParameters(Map<String, Object> parameters);
+	RequestBuilder setParameters(Map<String, Object> parameters);
 
-    RequestBuilder setNameValuePairs(RequestBody requestBody);
+	RequestBuilder setBody(RequestBody requestBody);
 
-    Request build();
+	Request build();
 
 }

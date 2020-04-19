@@ -37,6 +37,7 @@ import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
 import com.buession.httpclient.exception.ReadTimeoutException;
 import com.buession.httpclient.exception.RequestAbortedException;
 import com.buession.httpclient.exception.RequestException;
+import com.buession.httpclient.okhttp.HttpClientBuilder;
 import com.buession.httpclient.okhttp.OkHttpRequestBuilder;
 import com.buession.httpclient.okhttp.OkHttpResponseBuilder;
 import com.buession.httpclient.okhttp.RequestBuilder;
@@ -77,7 +78,26 @@ public class OkHttpClient extends AbstractHttpClient {
 		super(connectionManager);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param httpClient
+	 * 		OkHttp Client
+	 */
+	public OkHttpClient(okhttp3.OkHttpClient httpClient){
+		this.httpClient = httpClient;
+	}
+
 	public okhttp3.OkHttpClient getHttpClient(){
+		if(httpClient == null){
+			final Configuration configuration = getConnectionManager().getConfiguration();
+
+			httpClient = HttpClientBuilder.create().setConnectionManager(((OkHttpClientConnectionManager)
+					getConnectionManager()).getClientConnectionManager()).setConnectTimeout(configuration
+					.getConnectTimeout()).setReadTimeout(configuration.getReadTimeout()).setFollowRedirects
+					(configuration.isAllowRedirects()).build();
+		}
+
 		return httpClient;
 	}
 
@@ -235,18 +255,7 @@ public class OkHttpClient extends AbstractHttpClient {
 	protected Response doRequest(final okhttp3.Request.Builder requestBuilder, final List<Header> headers, final
 	Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
 			ReadTimeoutException, RequestAbortedException, RequestException{
-		final Configuration configuration = getConnectionManager().getConfiguration();
 		final Headers.Builder headersBuilder = new Headers.Builder();
-
-		if(httpClient == null){
-			com.buession.httpclient.okhttp.OkHttpClientConnectionManager okHttpClientConnectionManager = (
-					(OkHttpClientConnectionManager) getConnectionManager()).getClientConnectionManager();
-
-			httpClient = new okhttp3.OkHttpClient.Builder().connectTimeout(configuration.getConnectTimeout(), TimeUnit
-					.MILLISECONDS).readTimeout(configuration.getReadTimeout(), TimeUnit.MILLISECONDS).followRedirects
-					(configuration.getAllowRedirects()).connectionPool(okHttpClientConnectionManager.getConnectionPool
-					()).build();
-		}
 
 		if(headers != null){
 			for(Header header : headers){
@@ -260,7 +269,7 @@ public class OkHttpClient extends AbstractHttpClient {
 		okhttp3.Response httpResponse = null;
 
 		try{
-			httpResponse = httpClient.newCall(okHttpRequest).execute();
+			httpResponse = getHttpClient().newCall(okHttpRequest).execute();
 
 			return OkHttpResponseBuilder.create(httpResponse).build();
 		}catch(IOException e){

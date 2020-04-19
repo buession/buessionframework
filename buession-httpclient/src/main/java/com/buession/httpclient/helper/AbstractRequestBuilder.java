@@ -28,7 +28,6 @@ import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.Request;
-import com.buession.httpclient.utils.URLUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -71,16 +70,17 @@ public abstract class AbstractRequestBuilder implements RequestBuilder {
 	}
 
 	@Override
-	public RequestBuilder setNameValuePairs(RequestBody requestBody){
+	public RequestBuilder setBody(RequestBody requestBody){
 		request.setRequestBody(requestBody);
 		return this;
 	}
 
 	@Override
 	public Request build(){
-		final String requestUrl = URLUtils.determineRequestUrl(url, parameters);
+		final String requestUrl = URLHelper.determineRequestUrl(url, parameters);
 
 		request.setUrl(requestUrl);
+
 		return request;
 	}
 

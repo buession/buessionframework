@@ -19,58 +19,25 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
 
-import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
-import com.buession.httpclient.core.EncodedFormRequestBody;
-import com.buession.httpclient.core.ObjectFormRequestBody;
-import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
-import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.helper.AbstractRequestBuilder;
-import com.buession.httpclient.helper.RequestBuilder;
-import com.buession.httpclient.okhttp.convert.ChunkedInputStreamRequestBodyConvert;
-import com.buession.httpclient.okhttp.convert.EncodedFormRequestBodyConvert;
-import com.buession.httpclient.okhttp.convert.ObjectRequestBodyConvert;
-import com.buession.httpclient.okhttp.convert.RepeatableInputStreamRequestBodyConvert;
-import okhttp3.FormBody;
 
 /**
  * @author Yong.Teng
  */
 public class OkHttpRequestBuilder extends AbstractRequestBuilder {
 
-    public final static RequestBuilder create(){
-        return new OkHttpRequestBuilder();
-    }
+	public final static OkHttpRequestBuilder create(){
+		return new OkHttpRequestBuilder();
+	}
 
-    public final static RequestBuilder create(okhttp3.Request request){
-        final RequestBuilder requestBuilder = new OkHttpRequestBuilder();
-        return requestBuilder;
-    }
-
-    public final static okhttp3.RequestBody buildRequestBody(RequestBody data){
-        if(data == null){
-            return new FormBody.Builder().build();
-        }
-
-        if(data instanceof EncodedFormRequestBody){
-            EncodedFormRequestBodyConvert convert = new EncodedFormRequestBodyConvert();
-            return convert.convert((EncodedFormRequestBody) data);
-        }else if(data instanceof ChunkedInputStreamRequestBody){
-            ChunkedInputStreamRequestBodyConvert convert = new ChunkedInputStreamRequestBodyConvert();
-            return convert.convert((ChunkedInputStreamRequestBody) data);
-        }else if(data instanceof RepeatableInputStreamRequestBody){
-            RepeatableInputStreamRequestBodyConvert convert = new RepeatableInputStreamRequestBodyConvert();
-            return convert.convert((RepeatableInputStreamRequestBody) data);
-        }else if(data instanceof ObjectFormRequestBody){
-            ObjectRequestBodyConvert convert = new ObjectRequestBodyConvert();
-            return convert.convert((ObjectFormRequestBody) data);
-        }else{
-            return new FormBody.Builder().build();
-        }
-    }
+	public final static OkHttpRequestBuilder create(okhttp3.Request request){
+		final OkHttpRequestBuilder requestBuilder = new OkHttpRequestBuilder();
+		return requestBuilder;
+	}
 
 }

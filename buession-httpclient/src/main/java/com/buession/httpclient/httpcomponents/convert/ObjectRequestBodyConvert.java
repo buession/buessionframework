@@ -38,24 +38,25 @@ import org.slf4j.LoggerFactory;
  */
 public class ObjectRequestBodyConvert implements RequestBodyConvert<ObjectFormRequestBody, StringEntity> {
 
-    private final static Logger logger = LoggerFactory.getLogger(ObjectRequestBodyConvert.class);
+	private final static Logger logger = LoggerFactory.getLogger(ObjectRequestBodyConvert.class);
 
-    @Override
-    public StringEntity convert(ObjectFormRequestBody source){
-        if(source.getContent() == null){
-            return null;
-        }
+	@Override
+	public StringEntity convert(ObjectFormRequestBody source){
+		if(source.getContent() == null){
+			return null;
+		}
 
-        ObjectMapper objectMapper = new ObjectMapper();
+		ObjectMapper objectMapper = new ObjectMapper();
 
-        try{
-            String str = objectMapper.writeValueAsString(source.getContent());
-            return new StringEntity(str, org.apache.http.entity.ContentType.APPLICATION_JSON);
-        }catch(JsonProcessingException e){
-            logger.error("{} convert to JSON String error.", RequestBody.class.getName(), e);
-        }
+		try{
+			String str = objectMapper.writeValueAsString(source.getContent());
+			return new StringEntity(str, org.apache.http.entity.ContentType.create(source.getContentType().getMimeType
+					(), source.getContentType().getCharset()));
+		}catch(JsonProcessingException e){
+			logger.error("{} convert to JSON String error.", RequestBody.class.getName(), e);
+		}
 
-        return null;
-    }
+		return null;
+	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -31,38 +31,39 @@ import java.util.List;
  */
 public class Request {
 
-    private String url;
+	private String url;
 
-    private List<Header> headers;
+	private List<Header> headers;
 
-    private RequestBody requestBody;
+	private RequestBody requestBody;
 
-    public String getUrl(){
-        return url;
-    }
+	public String getUrl(){
+		return url;
+	}
 
-    public void setUrl(String url){
-        this.url = url;
-    }
+	public void setUrl(String url){
+		this.url = url;
+	}
 
-    public List<Header> getHeaders(){
-        return headers;
-    }
+	public List<Header> getHeaders(){
+		return headers;
+	}
 
-    public void setHeaders(List<Header> headers){
-        this.headers = headers;
-    }
+	public void setHeaders(List<Header> headers){
+		this.headers = headers;
+	}
 
-    public RequestBody getRequestBody(){
-        return requestBody;
-    }
+	public RequestBody getRequestBody(){
+		return requestBody;
+	}
 
-    public void setRequestBody(RequestBody requestBody){
-        this.requestBody = requestBody;
-    }
+	public void setRequestBody(RequestBody requestBody){
+		this.requestBody = requestBody;
+	}
 
-    @Override
-    public String toString(){
-        return "Request{" + "url='" + url + '\'' + ", headers=" + headers + ", requestBody=" + requestBody + '}';
-    }
+	@Override
+	public String toString(){
+		return "Request{" + "url='" + url + '\'' + ", headers=" + headers + ", requestBody=" + requestBody + '}';
+	}
+
 }
