@@ -1,3 +1,10 @@
+### 安装及使用
+
+Maven 中央仓库搜索
+
+- [https://search.maven.org/search?q=g:com.buession](https://search.maven.org/search?q=g:com.buession)
+- [https://mvnrepository.com/search?q=com.buession](https://mvnrepository.com/search?q=com.buession)
+
 **Maven**
 
 ```xml

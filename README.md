@@ -25,8 +25,9 @@
 ## Documentation
 ---
 
-- 中文 https://github.com/buession/buessionframework/wiki/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98
-- English https://github.com/buession/buessionframework/wiki/FAQ
+- 参考文档 [https://www.buession.com/](https://www.buession.com/)
+- Wiki [https://github.com/buession/buessionframework/wiki](https://github.com/buession/buessionframework/wiki)
+- API Reference [https://www.buession.com/doc/](https://www.buession.com/doc/)
 
 ## License
 

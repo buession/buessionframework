@@ -17,10 +17,9 @@
 - [https://mvnrepository.com/search?q=com.buession](https://mvnrepository.com/search?q=com.buession)
 
 ## Documentation
----
 
-- 中文 [https://github.com/buession/buessionframework/wiki](https://github.com/buession/buessionframework/wiki)
-- English [https://github.com/buession/buessionframework/wiki/FAQ](https://github.com/buession/buessionframework/wiki/FAQ)
+- Wiki [https://github.com/buession/buessionframework/wiki](https://github.com/buession/buessionframework/wiki)
+- API Reference [https://www.buession.com/doc/](https://www.buession.com/doc/)
 
 ## License
 
