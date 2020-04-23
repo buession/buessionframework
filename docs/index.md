@@ -2,13 +2,7 @@
 
 基于各开源框架的二次开发和封装。
 
-[![Build Status](https://travis-ci.org/buession/buessionframework.svg?branch=master)](https://travis-ci.org/buession/buessionframework)
-[![Coverage Status](https://img.shields.io/codecov/c/github/buession/buessionframework/master.svg)](https://codecov.io/github/buession/buessionframework?branch=master&view=all#sort=coverage&dir=asc)
-[![Maven Central](https://img.shields.io/maven-central/v/com.buession/buession-core.svg)](https://search.maven.org/search?q=g:com.buession)
-[![GitHub release](https://img.shields.io/github/release/buession/buessionframework.svg)](https://github.com/buession/buessionframework/releases)
-[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
-
-## Requirements
+## 环境要求
 
 - JDK 1.8+
 
@@ -19,14 +13,14 @@
 
 ## Maven
 
-- https://search.maven.org/search?q=g:com.buession
-- https://mvnrepository.com/search?q=com.buession
+- [https://search.maven.org/search?q=g:com.buession](https://search.maven.org/search?q=g:com.buession)
+- [https://mvnrepository.com/search?q=com.buession](https://mvnrepository.com/search?q=com.buession)
 
 ## Documentation
 ---
 
-- 中文 [https://github.com/buession/buessionframework/wiki/](https://github.com/buession/buessionframework/wiki/)
-- English https://github.com/buession/buessionframework/wiki/FAQ
+- 中文 [https://github.com/buession/buessionframework/wiki](https://github.com/buession/buessionframework/wiki)
+- English [https://github.com/buession/buessionframework/wiki/FAQ](https://github.com/buession/buessionframework/wiki/FAQ)
 
 ## License
 
