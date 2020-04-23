@@ -5,6 +5,11 @@ Maven 中央仓库搜索
 - [https://search.maven.org/search?q=g:com.buession](https://search.maven.org/search?q=g:com.buession)
 - [https://mvnrepository.com/search?q=com.buession](https://mvnrepository.com/search?q=com.buession)
 
+**手动编译**
+
+- git clone https://github.com/buession/buessionframework
+- cd buessionframework/buession-parent && mvn install
+
 **Maven**
 
 ```xml
