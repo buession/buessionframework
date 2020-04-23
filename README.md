@@ -19,8 +19,8 @@
 
 ## Maven
 
-- https://search.maven.org/search?q=g:com.buession
-- https://mvnrepository.com/search?q=com.buession
+- [https://search.maven.org/search?q=g:com.buession](https://search.maven.org/search?q=g:com.buession)
+- [https://mvnrepository.com/search?q=com.buession](https://mvnrepository.com/search?q=com.buession)
 
 ## Documentation
 ---
