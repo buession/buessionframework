@@ -7,8 +7,10 @@ Maven 中央仓库搜索
 
 **手动编译**
 
-- git clone https://github.com/buession/buessionframework
-- cd buessionframework/buession-parent && mvn install
+```bash
+git clone https://github.com/buession/buessionframework
+cd buessionframework/buession-parent && mvn install
+```
 
 **Maven**
 
