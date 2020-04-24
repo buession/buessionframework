@@ -13,7 +13,7 @@ git clone https://github.com/buession/buessionframework
 cd buessionframework/buession-parent && mvn install
 ```
 
-[更多安装及使用方式](https://cas.buession.com/installation)
+[更多安装及使用方式](https://www.buession.com/installation)
 
 ## 文档
 

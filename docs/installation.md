@@ -2,8 +2,8 @@
 
 Maven 中央仓库搜索
 
-- [https://search.maven.org/search?q=g:com.buession](https://search.maven.org/search?q=g:com.buession)
-- [https://mvnrepository.com/search?q=com.buession](https://mvnrepository.com/search?q=com.buession)
+- [https://search.maven.org/search?q=g:com.buession](https://search.maven.org/search?q=g:com.buession){:target="_blank"}
+- [https://mvnrepository.com/search?q=com.buession](https://mvnrepository.com/search?q=com.buession){:target="_blank"}
 
 **手动编译**
 
