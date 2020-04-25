@@ -25,7 +25,7 @@
 package com.buession.core.validator.constraintvalidators;
 
 import com.buession.core.validator.Validate;
-import com.buession.core.validator.annotation.NotEmpty;
+import com.buession.core.validator.annotation.Empty;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -37,58 +37,58 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public abstract class NotEmptyConstraintValidator<T> implements ConstraintValidator<NotEmpty, T> {
+public abstract class EmptyConstraintValidator<T> implements ConstraintValidator<Empty, T> {
 
-	public final static class CharSequenceNotEmptyConstraintValidator extends NotEmptyConstraintValidator<CharSequence> {
+	public final static class CharSequenceEmptyConstraintValidator extends EmptyConstraintValidator<CharSequence> {
 
 		@Override
 		public boolean isValid(CharSequence value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
+			return Validate.isEmpty(value);
 		}
 
 	}
 
-	public final static class ArrayNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Object[]> {
+	public final static class ArrayEmptyConstraintValidator extends EmptyConstraintValidator<Object[]> {
 
 		@Override
 		public boolean isValid(Object[] value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
+			return Validate.isEmpty(value);
 		}
 
 	}
 
-	public final static class MapNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Map> {
+	public final static class MapEmptyConstraintValidator extends EmptyConstraintValidator<Map> {
 
 		@Override
 		public boolean isValid(Map value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
+			return Validate.isEmpty(value);
 		}
 
 	}
 
-	public final static class CollectionNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Collection> {
+	public final static class CollectionEmptyConstraintValidator extends EmptyConstraintValidator<Collection> {
 
 		@Override
 		public boolean isValid(Collection value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
+			return Validate.isEmpty(value);
 		}
 
 	}
 
-	public final static class IteratorNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Iterator> {
+	public final static class IteratorEmptyConstraintValidator extends EmptyConstraintValidator<Iterator> {
 
 		@Override
 		public boolean isValid(Iterator value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
+			return Validate.isEmpty(value);
 		}
 
 	}
 
-	public final static class EnumerationNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Enumeration> {
+	public final static class EnumerationEmptyConstraintValidator extends EmptyConstraintValidator<Enumeration> {
 
 		@Override
 		public boolean isValid(Enumeration value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
+			return Validate.isEmpty(value);
 		}
 
 	}

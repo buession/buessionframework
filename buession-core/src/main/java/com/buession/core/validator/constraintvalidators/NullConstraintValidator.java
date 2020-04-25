@@ -25,7 +25,7 @@
 package com.buession.core.validator.constraintvalidators;
 
 import com.buession.core.validator.Validate;
-import com.buession.core.validator.annotation.NotNull;
+import com.buession.core.validator.annotation.Null;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -33,11 +33,11 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * @author Yong.Teng
  */
-public class NotNullConstraintValidator<T> implements ConstraintValidator<NotNull, Object> {
+public class NullConstraintValidator implements ConstraintValidator<Null, Object> {
 
 	@Override
 	public boolean isValid(Object value, ConstraintValidatorContext context){
-		return Validate.isNull(value) == false;
+		return Validate.isNull(value);
 	}
 
 }

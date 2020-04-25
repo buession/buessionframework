@@ -25,8 +25,7 @@
 package com.buession.core.validator.constraintvalidators;
 
 import com.buession.core.validator.Validate;
-import com.buession.core.validator.annotation.NotNull;
-import com.buession.core.validator.annotation.Null;
+import com.buession.core.validator.annotation.Numeric;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -34,11 +33,24 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * @author Yong.Teng
  */
-public class NullConstraintValidator<T> implements ConstraintValidator<Null, Object> {
+public abstract class NumericConstraintValidator<T> implements ConstraintValidator<Numeric, T> {
 
-	@Override
-	public boolean isValid(Object value, ConstraintValidatorContext context){
-		return Validate.isNull(value);
+	public final static class CharSequenceNumericConstraintValidator extends NumericConstraintValidator<CharSequence> {
+
+		@Override
+		public boolean isValid(CharSequence value, ConstraintValidatorContext context){
+			return Validate.isNumeric(value);
+		}
+
+	}
+
+	public final static class CharNumericConstraintValidator extends NumericConstraintValidator<Character> {
+
+		@Override
+		public boolean isValid(Character value, ConstraintValidatorContext context){
+			return Validate.isNumeric(value);
+		}
+
 	}
 
 }

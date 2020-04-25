@@ -22,11 +22,17 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.aria2;
+package com.buession.lang;
 
 /**
+ * 字母大小写枚举
+ *
  * @author Yong.Teng
  */
-public class DefaultAria2Client {
+public enum CaseType {
+
+	LOWERCASE,
+
+	UPERCASE
 
 }

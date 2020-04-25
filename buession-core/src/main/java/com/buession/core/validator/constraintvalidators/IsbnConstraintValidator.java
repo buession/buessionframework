@@ -25,39 +25,44 @@
 package com.buession.core.validator.constraintvalidators;
 
 import com.buession.core.validator.Validate;
-import com.buession.core.validator.annotation.Between;
-import com.buession.core.validator.annotation.IDCard;
+import com.buession.core.validator.annotation.Isbn;
+import com.buession.lang.ISBNType;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * @author Yong.Teng
  */
-public class IDCardConstraintValidator implements ConstraintValidator<IDCard, CharSequence> {
+public class IsbnConstraintValidator implements ConstraintValidator<Isbn, CharSequence> {
 
-	protected boolean strict;
+	protected ISBNType type;
 
-	private Date birthday;
+	protected char separator;
 
 	protected boolean validWhenNull;
 
 	@Override
-	public void initialize(IDCard idCard){
-		this.strict = strict;
-		try{
-			this.birthday = idCard.birthday() == null ? null : (new SimpleDateFormat()).parse(idCard.birthday());
-		}catch(ParseException e){
-		}
-		this.validWhenNull = idCard.validWhenNull();
+	public void initialize(Isbn isbn){
+		this.type = isbn.type();
+		this.separator = isbn.separator();
+		this.validWhenNull = isbn.validWhenNull();
 	}
 
 	@Override
 	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
-		return validWhenNull == false ? true : Validate.isIDCard(value, strict, birthday);
+		if(validWhenNull == false){
+			return true;
+		}
+
+		switch(type){
+			case ISBN_TYPE_10:
+				return Validate.isIsbn10(value, separator);
+			case ISBN_TYPE_13:
+				return Validate.isIsbn13(value, separator);
+			default:
+				return Validate.isIsbn(value, separator);
+		}
 	}
 
 }

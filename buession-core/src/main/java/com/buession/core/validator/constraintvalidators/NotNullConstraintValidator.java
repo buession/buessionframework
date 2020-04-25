@@ -25,73 +25,19 @@
 package com.buession.core.validator.constraintvalidators;
 
 import com.buession.core.validator.Validate;
-import com.buession.core.validator.annotation.NotEmpty;
+import com.buession.core.validator.annotation.NotNull;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author Yong.Teng
  */
-public abstract class NotEmptyConstraintValidator<T> implements ConstraintValidator<NotEmpty, T> {
+public class NotNullConstraintValidator implements ConstraintValidator<NotNull, Object> {
 
-	public final static class CharSequenceNotEmptyConstraintValidator extends
-			NotEmptyConstraintValidator<CharSequence> {
-
-		@Override
-		public boolean isValid(CharSequence value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
-		}
-
-	}
-
-	public final static class ArrayNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Object[]> {
-
-		@Override
-		public boolean isValid(Object[] value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
-		}
-
-	}
-
-	public final static class MapNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Map> {
-
-		@Override
-		public boolean isValid(Map value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
-		}
-
-	}
-
-	public final static class CollectionNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Collection> {
-
-		@Override
-		public boolean isValid(Collection value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
-		}
-
-	}
-
-	public final static class IteratorNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Iterator> {
-
-		@Override
-		public boolean isValid(Iterator value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
-		}
-
-	}
-
-	public final static class EnumerationNotEmptyConstraintValidator extends NotEmptyConstraintValidator<Enumeration> {
-
-		@Override
-		public boolean isValid(Enumeration value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
-		}
-
+	@Override
+	public boolean isValid(Object value, ConstraintValidatorContext context){
+		return Validate.isNull(value) == false;
 	}
 
 }

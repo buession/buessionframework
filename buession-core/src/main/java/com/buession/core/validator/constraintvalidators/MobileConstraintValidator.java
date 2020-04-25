@@ -25,8 +25,7 @@
 package com.buession.core.validator.constraintvalidators;
 
 import com.buession.core.validator.Validate;
-import com.buession.core.validator.annotation.Isbn;
-import com.buession.lang.ISBNType;
+import com.buession.core.validator.annotation.Mobile;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -34,35 +33,18 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * @author Yong.Teng
  */
-public class IsbnConstraintValidator implements ConstraintValidator<Isbn, CharSequence> {
-
-	protected ISBNType type;
-
-	protected char separator;
+public class MobileConstraintValidator implements ConstraintValidator<Mobile, CharSequence> {
 
 	protected boolean validWhenNull;
 
 	@Override
-	public void initialize(Isbn isbn){
-		this.type = isbn.type();
-		this.separator = isbn.separator();
-		this.validWhenNull = isbn.validWhenNull();
+	public void initialize(Mobile mobile){
+		this.validWhenNull = mobile.validWhenNull();
 	}
 
 	@Override
 	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
-		if(validWhenNull == false){
-			return true;
-		}
-
-		switch(type){
-			case ISBN_TYPE_10:
-				return Validate.isIsbn10(value, separator);
-			case ISBN_TYPE_13:
-				return Validate.isIsbn13(value, separator);
-			default:
-				return Validate.isIsbn(value, separator);
-		}
+		return validWhenNull == false || Validate.isMobile(value);
 	}
 
 }

@@ -39,8 +39,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = {})
-public @interface NotEmpty {
+public @interface Empty {
 
-	String message() default "{buession.validation.constraints.NotEmpty.message}";
+	String message() default "{buession.validation.constraints.Empty.message}";
 
 }

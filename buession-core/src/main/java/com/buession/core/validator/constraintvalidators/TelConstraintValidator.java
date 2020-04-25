@@ -25,7 +25,8 @@
 package com.buession.core.validator.constraintvalidators;
 
 import com.buession.core.validator.Validate;
-import com.buession.core.validator.annotation.QQ;
+import com.buession.core.validator.annotation.Tel;
+import com.buession.core.validator.routines.TelValidator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -33,18 +34,21 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * @author Yong.Teng
  */
-public class QQConstraintValidator<T> implements ConstraintValidator<QQ, CharSequence> {
+public class TelConstraintValidator implements ConstraintValidator<Tel, CharSequence> {
+
+	protected TelValidator.AreaCodeType areaCodeType;
 
 	protected boolean validWhenNull;
 
 	@Override
-	public void initialize(QQ postCode){
-		this.validWhenNull = postCode.validWhenNull();
+	public void initialize(Tel tel){
+		this.areaCodeType = tel.areaCodeType();
+		this.validWhenNull = tel.validWhenNull();
 	}
 
 	@Override
 	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
-		return validWhenNull == false ? true : Validate.isPostCode(value);
+		return validWhenNull == false || Validate.isTel(value, areaCodeType);
 	}
 
 }

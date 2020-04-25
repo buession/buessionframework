@@ -25,35 +25,38 @@
 package com.buession.core.validator.constraintvalidators;
 
 import com.buession.core.validator.Validate;
-import com.buession.core.validator.annotation.Between;
+import com.buession.core.validator.annotation.IDCard;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author Yong.Teng
  */
-public class BetweenConstraintValidator implements ConstraintValidator<Between, Double> {
+public class IDCardConstraintValidator implements ConstraintValidator<IDCard, CharSequence> {
 
-	protected double minValue;
+	protected boolean strict;
 
-	protected double maxValue;
-
-	protected boolean isContain;
+	protected Date birthday;
 
 	protected boolean validWhenNull;
 
 	@Override
-	public void initialize(Between between){
-		this.minValue = between.min();
-		this.maxValue = between.max();
-		this.isContain = between.contain();
-		this.validWhenNull = between.validWhenNull();
+	public void initialize(IDCard idCard){
+		this.strict = idCard.strict();
+		try{
+			this.birthday = idCard.birthday() == null ? null : (new SimpleDateFormat()).parse(idCard.birthday());
+		}catch(ParseException e){
+		}
+		this.validWhenNull = idCard.validWhenNull();
 	}
 
 	@Override
-	public boolean isValid(Double value, ConstraintValidatorContext context){
-		return validWhenNull == false ? true : Validate.isBetween(value, minValue, maxValue, isContain);
+	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
+		return validWhenNull == false || Validate.isIDCard(value, strict, birthday);
 	}
 
 }

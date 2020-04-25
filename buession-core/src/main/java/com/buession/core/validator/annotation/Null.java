@@ -35,12 +35,12 @@ import java.lang.annotation.Target;
  * @author Yong.Teng
  */
 @Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
-        ElementType.PARAMETER, ElementType.TYPE_USE})
+		ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = {})
-public @interface NotNull {
+public @interface Null {
 
-    String message() default "{buession.validation.constraints.NotNull.message}";
+	String message() default "{buession.validation.constraints.Null.message}";
 
 }

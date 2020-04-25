@@ -25,6 +25,7 @@
 package com.buession.core.utils;
 
 import com.buession.core.validator.Validate;
+import com.buession.lang.CaseType;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
 import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
@@ -133,14 +134,6 @@ public class PinyinUtils {
 		}
 
 		return sb.toString();
-	}
-
-	public enum CaseType {
-
-		LOWERCASE,
-
-		UPERCASE
-
 	}
 
 }

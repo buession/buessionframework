@@ -38,6 +38,8 @@ import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 
 /**
+ * 版本工具类
+ *
  * @author Yong.Teng
  */
 public class VersionUtils {

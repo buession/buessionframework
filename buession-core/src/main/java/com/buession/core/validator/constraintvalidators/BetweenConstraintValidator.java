@@ -24,9 +24,36 @@
  */
 package com.buession.core.validator.constraintvalidators;
 
+import com.buession.core.validator.Validate;
+import com.buession.core.validator.annotation.Between;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+
 /**
  * @author Yong.Teng
  */
-public class BetweenConstraintValidator {
+public class BetweenConstraintValidator implements ConstraintValidator<Between, Double> {
+
+	protected double minValue;
+
+	protected double maxValue;
+
+	protected boolean isContain;
+
+	protected boolean validWhenNull;
+
+	@Override
+	public void initialize(Between between){
+		this.minValue = between.min();
+		this.maxValue = between.max();
+		this.isContain = between.contain();
+		this.validWhenNull = between.validWhenNull();
+	}
+
+	@Override
+	public boolean isValid(Double value, ConstraintValidatorContext context){
+		return validWhenNull == false || Validate.isBetween(value, minValue, maxValue, isContain);
+	}
 
 }

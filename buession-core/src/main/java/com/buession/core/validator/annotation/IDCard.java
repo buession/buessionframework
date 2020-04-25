@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.annotation;
 
+import javax.validation.Constraint;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -33,18 +34,34 @@ import java.lang.annotation.Target;
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.ANNOTATION_TYPE, ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD,
+		ElementType.PARAMETER, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Constraint(validatedBy = {})
 public @interface IDCard {
 
-    String message() default "";
+	String message() default "{buession.validation.constraints.IDCard.message}";
 
-    /**
-     * 当值为 null ，是否验证；true：需验证，false：不验证
-     *
-     * @return
-     */
-    boolean validWhenNull() default true;
+	/**
+	 * 是否严格验证，严格验证时，需要传 birthday
+	 *
+	 * @return
+	 */
+	boolean strict() default true;
+
+	/**
+	 * 生日
+	 *
+	 * @return
+	 */
+	String birthday() default "";
+
+	/**
+	 * 当值为 null ，是否验证；true：需验证，false：不验证
+	 *
+	 * @return
+	 */
+	boolean validWhenNull() default true;
 
 }

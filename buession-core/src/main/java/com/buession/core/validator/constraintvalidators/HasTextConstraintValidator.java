@@ -25,7 +25,7 @@
 package com.buession.core.validator.constraintvalidators;
 
 import com.buession.core.validator.Validate;
-import com.buession.core.validator.annotation.Between;
+import com.buession.core.validator.annotation.HasText;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -33,27 +33,11 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * @author Yong.Teng
  */
-public class BetweenConstraintValidator implements ConstraintValidator<Between, Double> {
-
-	protected double minValue;
-
-	protected double maxValue;
-
-	protected boolean isContain;
-
-	protected boolean validWhenNull;
+public class HasTextConstraintValidator implements ConstraintValidator<HasText, CharSequence> {
 
 	@Override
-	public void initialize(Between between){
-		this.minValue = between.min();
-		this.maxValue = between.max();
-		this.isContain = between.contain();
-		this.validWhenNull = between.validWhenNull();
-	}
-
-	@Override
-	public boolean isValid(Double value, ConstraintValidatorContext context){
-		return validWhenNull == false ? true : Validate.isBetween(value, minValue, maxValue, isContain);
+	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
+		return Validate.hasText(value);
 	}
 
 }

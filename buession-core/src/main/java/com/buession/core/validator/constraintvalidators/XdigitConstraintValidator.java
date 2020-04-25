@@ -25,9 +25,7 @@
 package com.buession.core.validator.constraintvalidators;
 
 import com.buession.core.validator.Validate;
-import com.buession.core.validator.annotation.QQ;
-import com.buession.core.validator.annotation.Tel;
-import com.buession.core.validator.routines.TelValidator;
+import com.buession.core.validator.annotation.Xdigit;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -35,21 +33,31 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * @author Yong.Teng
  */
-public class TelConstraintValidator<T> implements ConstraintValidator<Tel, CharSequence> {
-
-	protected TelValidator.AreaCodeType areaCodeType;
+public abstract class XdigitConstraintValidator<T> implements ConstraintValidator<Xdigit, T> {
 
 	protected boolean validWhenNull;
 
 	@Override
-	public void initialize(Tel tel){
-		this.areaCodeType = tel.areaCodeType();
-		this.validWhenNull = tel.validWhenNull();
+	public void initialize(Xdigit xdigit){
+		this.validWhenNull = xdigit.validWhenNull();
 	}
 
-	@Override
-	public boolean isValid(CharSequence value, ConstraintValidatorContext context){
-		return validWhenNull == false ? true : Validate.isTel(value, areaCodeType);
+	public final static class CharSequenceXdigitConstraintValidator extends XdigitConstraintValidator<CharSequence> {
+
+		@Override
+		public boolean isValid(CharSequence value, ConstraintValidatorContext context){
+			return validWhenNull == false || Validate.isXdigit(value);
+		}
+
+	}
+
+	public final static class CharXdigitConstraintValidator extends XdigitConstraintValidator<Character> {
+
+		@Override
+		public boolean isValid(Character value, ConstraintValidatorContext context){
+			return validWhenNull == false || Validate.isXdigit(value);
+		}
+
 	}
 
 }

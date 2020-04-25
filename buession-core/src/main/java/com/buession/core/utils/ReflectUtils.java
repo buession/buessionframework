@@ -42,6 +42,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 反射工具类
+ * More {@link org.springframework.util.ReflectionUtils}
+ *
  * @author Yong.Teng
  */
 public class ReflectUtils extends ReflectionUtils {

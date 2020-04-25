@@ -24,9 +24,37 @@
  */
 package com.buession.core.validator;
 
+import com.buession.core.validator.annotation.Numeric;
+import org.junit.Test;
+
+import javax.validation.constraints.Null;
+
 /**
  * @author Yong.Teng
  */
 public class NumericTest {
+
+	@Test
+	public void numeric(){
+		Obj obj = new Obj();
+		obj.getD();
+	}
+
+	private final static class Obj {
+
+		@Numeric
+		private Double d;
+
+		@Null
+		private String str;
+
+		public Double getD(){
+			return d;
+		}
+
+		public void setD(Double d){
+			this.d = d;
+		}
+	}
 
 }

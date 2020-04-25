@@ -31,6 +31,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * 类工具类
+ * More {@link org.apache.commons.lang3.ClassUtils}
+ *
  * @author Yong.Teng
  */
 public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
@@ -39,11 +42,27 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 
 	}
 
+	/**
+	 * 获取类的所有声明的字段，即包括 public、protected、private 和 default，但是不包括父类申明的字段
+	 *
+	 * @param clazz
+	 * 		类
+	 *
+	 * @return 类的所有声明的字段
+	 */
 	public final static List<Field> getFields(final Class<?> clazz){
 		Assert.isNull(clazz, "Class cloud not be null.");
 		return Collections.unmodifiableList(Arrays.asList(clazz.getDeclaredFields()));
 	}
 
+	/**
+	 * 获取类的所有声明的字段，即包括 public、protected、private 和 default，包括父类申明的字段
+	 *
+	 * @param clazz
+	 * 		类
+	 *
+	 * @return 类的所有声明的字段
+	 */
 	public final static List<Field> getAllFields(final Class<?> clazz){
 		Assert.isNull(clazz, "Class cloud not be null.");
 		final List<Field> allFields = new ArrayList<>(16);

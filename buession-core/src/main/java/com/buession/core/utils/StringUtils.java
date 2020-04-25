@@ -32,6 +32,7 @@ import java.util.Random;
 
 /**
  * 字符串工具
+ * More {@link org.apache.commons.lang3.StringUtils}
  *
  * @author Yong.Teng
  */
