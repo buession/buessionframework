@@ -7,7 +7,7 @@
 
 #### buession-common
 
-*
+* - - -
 
 
 #### buession-core
@@ -25,7 +25,7 @@
 
 #### buession-cron
 
-对 org.quartz-scheduler:quartz 的二次封装
+* 对 org.quartz-scheduler:quartz 的二次封装
 
 
 #### buession-dao
@@ -76,7 +76,7 @@
 
 #### buession-session
 
-*
+* - - -
 
 
 #### buession-thesaurus
