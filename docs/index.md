@@ -1,10 +1,10 @@
 ## 简介
 
-基于各开源框架的二次开发和封装。[更多](https://www.buession.com/introduction)
+基于各开源框架的二次开发和封装。[更多](https://www.buession.com/introduction.html)
 
 ## 环境要求
 
-- JDK 1.8+ [更多](https://www.buession.com/requirements)
+- JDK 1.8+ [更多](https://www.buession.com/requirements.html)
 
 ## 安装及使用
 
@@ -13,7 +13,7 @@ git clone https://github.com/buession/buessionframework
 cd buessionframework/buession-parent && mvn install
 ```
 
-[更多安装及使用方式](https://www.buession.com/installation)
+[更多安装及使用方式](https://www.buession.com/installation.html)
 
 ## 文档
 
