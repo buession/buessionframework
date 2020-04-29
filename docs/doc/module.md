@@ -23,6 +23,7 @@
 * 数据验证
 * 带 code 和 message 消息消息对象，通过 properties 的形式注入
 
+
 **示例**
 
 
@@ -87,10 +88,67 @@ Validate.isMobile(str, separator)
 * 从代码层面上支持数据库一主多从实现读写分离，insert、update、delete 操作主库，select 操作从库
 
 
+**示例**
+
+
+```java
+/**
+ * 插入数据
+ */
+insert(entity)
+
+/**
+ * 批量插入数据
+ */
+batchInsert(entities)
+
+/**
+ * 更新数据
+ */
+update(entity, conditions)
+
+/**
+ * 根据主键更新数据
+ */
+updateByPrimary(primary, entity)
+
+/**
+ * 根据主键查询数据
+ */
+getByPrimary(primary)
+
+/**
+ * 数据分页查询
+ */
+paging(conditions, page, pagesize, orders)
+```
+
+
 #### buession-geoip
 
 * 对 com.maxmind.geoip2:geoip2 进行二次封装，实现支持根据 IP 地址获取所属 ISP、所属国家、所属城市等等信息
 * 支持内存实现建议缓存，避免多次扫描 maxmind db
+
+
+**示例**
+
+
+```java
+/**
+ * 获取国家信息
+ */
+Resolver.country(ipAddress)
+
+/**
+ * 获取地区信息
+ */
+Resolver.district(ipAddress)
+
+/**
+ * 获取位置信息
+ */
+Resolver.location(ipAddress)
+```
 
 
 #### buession-httpclient
@@ -104,10 +162,61 @@ Validate.isMobile(str, separator)
 * 封装了对文件的操作
 
 
+**示例**
+
+
+```java
+import com.buession.io.file.File;
+import com.buession.io.file.Files;
+
+/**
+ * 读取文件
+ */
+File.read()
+
+/**
+ * 向文件里面写内容
+ */
+File.write(content)
+
+/**
+ * 修改用户组
+ */
+Files.changeGroup(path, group)
+
+/**
+ * 修改用户组
+ */
+Files.chgrp(path, group)
+
+/**
+ * 修改文件权限
+ */
+Files.chmod(path, mode)
+```
+
+
 #### buession-json
 
 * 主要实现了一些 jackson 的自定义注解及序列化、反序列化的实现
 * 目前支持 Unix Timestamp (10 位时间戳)、Enum 和 Map 的相互转换
+
+
+**示例**
+
+
+枚举和 Map 相互转换
+```java
+import com.buession.json.annotation.JsonEnum2Map;
+import com.buession.io.file.Files;
+
+public class User {
+
+	@JsonEnum2Map
+	private Enum enum;
+
+}
+```
 
 
 #### buession-lang
@@ -125,6 +234,31 @@ Validate.isMobile(str, separator)
 
 * Redis 操作类，基于 jedis 实现，RedisTemplate 方法名、参数几乎同 redis 命令保持一致
 * 对对象读写 redis 进行了扩展，支持二进制、json方式序列化和反序列化，例如：通过 RedisTemplate.getObject("key", Class) 可以将 redis 中的数据读取出来后，直接反序列化成一个对象
+
+
+**示例**
+
+
+枚举和 Map 相互转换
+```java
+import com.buession.redis.RedisTemplate;
+import com.buession.core.serializer.type.TypeReference;
+
+/**
+ * 获取键 key 相关联的字符串值，并将值反序列化为对象
+ */
+redisTemplate.getObject(key)
+
+/**
+ * 获取键 key 相关联的字符串值，并将值反序列化为 clazz 指定的对象
+ */
+redisTemplate.getObject(key, clazz)
+
+/**
+ * 获取键 key 相关联的字符串值，并将值反序列化为 type 指定的对象
+ */
+redisTemplate.getObject(key, type)
+```
 
 
 #### buession-session
