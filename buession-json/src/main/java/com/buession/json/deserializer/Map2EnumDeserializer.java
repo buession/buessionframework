@@ -24,7 +24,7 @@
  */
 package com.buession.json.deserializer;
 
-import com.buession.core.utils.EnumUtil;
+import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.ReflectUtils;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
@@ -100,7 +100,7 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 				Map<String, Object> temp = new HashMap<>(enumValueFields.length);
 
 				for(Field enumValueField : enumValueFields){
-					if(EnumUtil.notEnumValuesField(enumValueField)){
+					if(EnumUtils.notEnumValuesField(enumValueField)){
 						ReflectUtils.setFieldAccessible(enumValueField);
 
 						temp.put(enumValueField.getName(), enumValueField.get(enumValue));

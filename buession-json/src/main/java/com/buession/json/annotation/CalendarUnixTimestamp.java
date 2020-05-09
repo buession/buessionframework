@@ -24,9 +24,25 @@
  */
 package com.buession.json.annotation;
 
+import com.buession.json.deserializer.DateDeserializers;
+import com.buession.json.serializer.DateSerializers;
+import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * @author Yong.Teng
  */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.METHOD})
+@JacksonAnnotationsInside
+@JsonSerialize(using = DateSerializers.CalendarUnixTimestampSerializer.class)
+@JsonDeserialize(using = DateDeserializers.CalendarUnixTimestampDeserializer.class)
 public @interface CalendarUnixTimestamp {
 
 }

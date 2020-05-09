@@ -24,14 +24,13 @@
  */
 package com.buession.json.deserializer;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.annotation.JacksonStdImpl;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -39,63 +38,110 @@ import java.util.Date;
  */
 public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.DateDeserializers {
 
-	@JacksonStdImpl
-	public static class UnixTimestampDeserializer extends DateDeserializers.DateBasedDeserializer<Date> {
-
-		public final static DateDeserializer instance = new DateDeserializer();
-
-		public UnixTimestampDeserializer(){
-			super(Date.class);
+	protected final static Date operatorTime(Date date){
+		if(date != null){
+			date.setTime(date.getTime() * 1000);
 		}
 
-		public UnixTimestampDeserializer(UnixTimestampDeserializer base, DateFormat df, String formatString){
+		return date;
+	}
+
+	@JacksonStdImpl
+	public static class DateUnixTimestampDeserializer extends DateDeserializer {
+
+		public DateUnixTimestampDeserializer(){
+			super();
+		}
+
+		public DateUnixTimestampDeserializer(DateUnixTimestampDeserializer base, DateFormat df, String formatString){
 			super(base, df, formatString);
 		}
 
 		@Override
-		protected UnixTimestampDeserializer withDateFormat(DateFormat df, String formatString){
-			return new UnixTimestampDeserializer(this, df, formatString);
+		protected DateUnixTimestampDeserializer withDateFormat(DateFormat df, String formatString){
+			return new DateUnixTimestampDeserializer(this, df, formatString);
 		}
 
 		@Override
-		public Date deserialize(JsonParser parser, DeserializationContext context) throws IOException{
-			return _parseDate(parser, context);
+		protected Date _parseDate(JsonParser parser, DeserializationContext context) throws IOException{
+			return operatorTime(super._parseDate(parser, context));
+		}
+
+	}
+
+	@JacksonStdImpl
+	public static class SqlDateUnixTimestampDeserializer extends SqlDateDeserializer {
+
+		public SqlDateUnixTimestampDeserializer(){
+			super();
+		}
+
+		public SqlDateUnixTimestampDeserializer(SqlDateUnixTimestampDeserializer base, DateFormat df, String
+				formatString){
+			super(base, df, formatString);
 		}
 
 		@Override
-		protected Date _parseDate(JsonParser p, DeserializationContext context) throws IOException{
-			if(_customFormat != null && p.hasToken(JsonToken.VALUE_STRING)){
-				return super._parseDate(p, context);
-			}
-
-			switch(p.getCurrentTokenId()){
-				case 3:
-					return _parseDateFromArray(p, context);
-				case 4:
-				case 5:
-				case 8:
-				case 9:
-				case 10:
-				default:
-					return (Date) context.handleUnexpectedToken(_valueClass, p);
-				case 6:
-					return _parseDate(p.getText().trim(), context);
-				case 7:
-					long timestamp;
-
-					try{
-						timestamp = p.getLongValue();
-					}catch(JsonParseException e){
-						Number v = (Number) context.handleWeirdNumberValue(_valueClass, p.getNumberValue(), "not a " +
-								"valid 64-bit long for creating `java.util.Date`", new Object[0]);
-						timestamp = v.longValue();
-					}
-
-					return new Date(timestamp * 1000);
-				case 11:
-					return getNullValue(context);
-			}
+		protected SqlDateUnixTimestampDeserializer withDateFormat(DateFormat df, String formatString){
+			return new SqlDateUnixTimestampDeserializer(this, df, formatString);
 		}
+
+		@Override
+		protected Date _parseDate(JsonParser parser, DeserializationContext context) throws IOException{
+			return operatorTime(super._parseDate(parser, context));
+		}
+
+	}
+
+	@JacksonStdImpl
+	public static class CalendarUnixTimestampDeserializer extends CalendarDeserializer {
+
+		public CalendarUnixTimestampDeserializer(){
+			super();
+		}
+
+		public CalendarUnixTimestampDeserializer(Class<? extends Calendar> clazz){
+			super(clazz);
+		}
+
+		public CalendarUnixTimestampDeserializer(CalendarDeserializer src, DateFormat df, String formatString){
+			super(src, df, formatString);
+		}
+
+		@Override
+		protected CalendarUnixTimestampDeserializer withDateFormat(DateFormat df, String formatString){
+			return new CalendarUnixTimestampDeserializer(this, df, formatString);
+		}
+
+		@Override
+		protected Date _parseDate(JsonParser parser, DeserializationContext context) throws IOException{
+			return operatorTime(super._parseDate(parser, context));
+		}
+
+	}
+
+	@JacksonStdImpl
+	public static class TimestampUnixTimestampDeserializer extends TimestampDeserializer {
+
+		public TimestampUnixTimestampDeserializer(){
+			super();
+		}
+
+		public TimestampUnixTimestampDeserializer(TimestampUnixTimestampDeserializer src, DateFormat df, String
+				formatString){
+			super(src, df, formatString);
+		}
+
+		@Override
+		protected TimestampUnixTimestampDeserializer withDateFormat(DateFormat df, String formatString){
+			return new TimestampUnixTimestampDeserializer(this, df, formatString);
+		}
+
+		@Override
+		protected Date _parseDate(JsonParser parser, DeserializationContext context) throws IOException{
+			return operatorTime(super._parseDate(parser, context));
+		}
+
 	}
 
 }

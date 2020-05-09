@@ -24,7 +24,7 @@
  */
 package com.buession.json.serializer;
 
-import com.buession.core.utils.EnumUtil;
+import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.ReflectUtils;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -40,33 +40,33 @@ import java.lang.reflect.Field;
  */
 public class Enum2MapSerializer extends JsonSerializer<Enum<?>> {
 
-    private final static Logger logger = LoggerFactory.getLogger(Enum2MapSerializer.class);
+	private final static Logger logger = LoggerFactory.getLogger(Enum2MapSerializer.class);
 
-    @Override
-    public void serialize(Enum<?> en, JsonGenerator generator, SerializerProvider provider) throws IOException{
-        Field[] fields = en.getClass().getDeclaredFields();
-        generator.writeStartObject();
+	@Override
+	public void serialize(Enum<?> en, JsonGenerator generator, SerializerProvider provider) throws IOException{
+		Field[] fields = en.getClass().getDeclaredFields();
+		generator.writeStartObject();
 
-        for(Field field : fields){
-            if(field.isEnumConstant() == false && EnumUtil.isEnumValuesField(field) == false){
-                writeFieldValue(generator, en, field);
-            }
-        }
+		for(Field field : fields){
+			if(field.isEnumConstant() == false && EnumUtils.isEnumValuesField(field) == false){
+				writeFieldValue(generator, en, field);
+			}
+		}
 
-        generator.writeEndObject();
-    }
+		generator.writeEndObject();
+	}
 
-    private final static void writeFieldValue(final JsonGenerator generator, final Enum<?> en, final Field field)
-            throws IOException{
-        ReflectUtils.setFieldAccessible(field);
+	private final static void writeFieldValue(final JsonGenerator generator, final Enum<?> en, final Field field)
+			throws IOException{
+		ReflectUtils.setFieldAccessible(field);
 
-        try{
-            generator.writeFieldName(field.getName());
-            generator.writeObject(field.get(en));
-        }catch(IllegalAccessException e){
-            logger.error("Read {}::{} failure: {}", field.getDeclaringClass().getName(), field.getName(), e
-                    .getMessage());
-        }
-    }
+		try{
+			generator.writeFieldName(field.getName());
+			generator.writeObject(field.get(en));
+		}catch(IllegalAccessException e){
+			logger.error("Read {}::{} failure: {}", field.getDeclaringClass().getName(), field.getName(), e.getMessage
+					());
+		}
+	}
 
 }
