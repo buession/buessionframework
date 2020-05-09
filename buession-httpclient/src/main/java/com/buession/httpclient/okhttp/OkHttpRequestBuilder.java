@@ -37,6 +37,9 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder {
 
 	public final static OkHttpRequestBuilder create(okhttp3.Request request){
 		final OkHttpRequestBuilder requestBuilder = new OkHttpRequestBuilder();
+
+		requestBuilder.setUrl(request.url().toString());
+
 		return requestBuilder;
 	}
 

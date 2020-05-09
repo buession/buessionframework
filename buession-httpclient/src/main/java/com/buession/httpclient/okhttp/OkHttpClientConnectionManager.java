@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
@@ -34,26 +34,27 @@ import java.io.IOException;
  */
 public class OkHttpClientConnectionManager implements Closeable {
 
-    private ConnectionPool connectionPool;
+	private ConnectionPool connectionPool;
 
-    public OkHttpClientConnectionManager(){
-        connectionPool = new ConnectionPool();
-    }
+	public OkHttpClientConnectionManager(){
+		connectionPool = new ConnectionPool();
+	}
 
-    public OkHttpClientConnectionManager(ConnectionPool connectionPool){
-        this.connectionPool = connectionPool;
-    }
+	public OkHttpClientConnectionManager(ConnectionPool connectionPool){
+		this.connectionPool = connectionPool;
+	}
 
-    public ConnectionPool getConnectionPool(){
-        return connectionPool;
-    }
+	public ConnectionPool getConnectionPool(){
+		return connectionPool;
+	}
 
-    public void setConnectionPool(ConnectionPool connectionPool){
-        this.connectionPool = connectionPool;
-    }
+	public void setConnectionPool(ConnectionPool connectionPool){
+		this.connectionPool = connectionPool;
+	}
 
-    @Override
-    public void close() throws IOException{
+	@Override
+	public void close() throws IOException{
 
-    }
+	}
+
 }

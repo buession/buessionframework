@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
@@ -38,105 +38,105 @@ import java.io.InputStream;
  */
 public class InputStreamRequestBody extends okhttp3.RequestBody {
 
-    protected static final int OUTPUT_BUFFER_SIZE = 4096;
+	protected static final int OUTPUT_BUFFER_SIZE = 4096;
 
-    private InputStream content;
+	private InputStream content;
 
-    private ContentType contentType;
+	private ContentType contentType;
 
-    private long contentLength;
+	private long contentLength;
 
-    private boolean firstAttempt = true;
+	private boolean firstAttempt = true;
 
-    InputStreamRequestBody(InputStream content, long contentLength, ContentType contentType){
-        this.content = content;
-        this.contentType = contentType;
-        this.contentLength = contentLength;
-    }
+	InputStreamRequestBody(InputStream content, long contentLength, ContentType contentType){
+		this.content = content;
+		this.contentType = contentType;
+		this.contentLength = contentLength;
+	}
 
-    public boolean isFirstAttempt(){
-        return firstAttempt;
-    }
+	public boolean isFirstAttempt(){
+		return firstAttempt;
+	}
 
-    public void setFirstAttempt(boolean firstAttempt){
-        this.firstAttempt = firstAttempt;
-    }
+	public void setFirstAttempt(boolean firstAttempt){
+		this.firstAttempt = firstAttempt;
+	}
 
-    @Nullable
-    @Override
-    public MediaType contentType(){
-        return MediaType.parse(contentType.toString());
-    }
+	@Nullable
+	@Override
+	public MediaType contentType(){
+		return MediaType.parse(contentType.toString());
+	}
 
-    public InputStream getContent(){
-        return content;
-    }
+	public InputStream getContent(){
+		return content;
+	}
 
-    @Override
-    public void writeTo(BufferedSink sink) throws IOException{
-        Assert.isNull(sink, "Buffered sink cloud not be null");
+	@Override
+	public void writeTo(BufferedSink sink) throws IOException{
+		Assert.isNull(sink, "Buffered sink cloud not be null");
 
-        final InputStream inStream = content;
-        try{
-            final byte[] tmp = new byte[OUTPUT_BUFFER_SIZE];
-            int l;
+		final InputStream inputStream = content;
+		try{
+			final byte[] tmp = new byte[OUTPUT_BUFFER_SIZE];
+			int l;
 
-            while((l = inStream.read(tmp)) != -1){
-                sink.outputStream().write(tmp, 0, l);
-            }
-        }finally{
-            inStream.close();
-        }
-    }
+			while((l = inputStream.read(tmp)) != -1){
+				sink.outputStream().write(tmp, 0, l);
+			}
+		}finally{
+			inputStream.close();
+		}
+	}
 
-    public boolean isChunked(){
-        return false;
-    }
+	public boolean isChunked(){
+		return false;
+	}
 
-    public boolean isRepeatable(){
-        return content.markSupported();
-    }
+	public boolean isRepeatable(){
+		return content.markSupported();
+	}
 
-    public static final class Builder {
+	public static final class Builder {
 
-        private InputStream content;
+		private InputStream content;
 
-        private ContentType contentType;
+		private ContentType contentType;
 
-        private long contentLength;
+		private long contentLength;
 
-        public Builder(){
-            this.contentType = ContentType.APPLICATION_OBJECT_STREAM;
-            this.contentLength = -1;
-        }
+		public Builder(){
+			this.contentType = ContentType.APPLICATION_OBJECT_STREAM;
+			this.contentLength = -1;
+		}
 
-        public Builder(InputStream content, ContentType contentType){
-            this.content = content;
-            this.contentType = contentType;
+		public Builder(InputStream content, ContentType contentType){
+			this.content = content;
+			this.contentType = contentType;
 
-            try{
-                this.contentLength = content == null ? -1 : content.available();
-            }catch(IOException e){
-                this.contentLength = -1;
-            }
-        }
+			try{
+				this.contentLength = content == null ? -1 : content.available();
+			}catch(IOException e){
+				this.contentLength = -1;
+			}
+		}
 
-        public Builder(InputStream content, long contentLength){
-            this.content = content;
-            this.contentType = ContentType.APPLICATION_OBJECT_STREAM;
-            this.contentLength = contentLength;
-        }
+		public Builder(InputStream content, long contentLength){
+			this.content = content;
+			this.contentType = ContentType.APPLICATION_OBJECT_STREAM;
+			this.contentLength = contentLength;
+		}
 
-        public Builder(InputStream content, long contentLength, ContentType contentType){
-            this.content = content;
-            this.contentType = contentType;
-            this.contentLength = contentLength;
-        }
+		public Builder(InputStream content, long contentLength, ContentType contentType){
+			this.content = content;
+			this.contentType = contentType;
+			this.contentLength = contentLength;
+		}
 
-        public InputStreamRequestBody build(){
-            return new InputStreamRequestBody(content, contentLength, contentType);
-        }
+		public InputStreamRequestBody build(){
+			return new InputStreamRequestBody(content, contentLength, contentType);
+		}
 
-    }
+	}
 
 }

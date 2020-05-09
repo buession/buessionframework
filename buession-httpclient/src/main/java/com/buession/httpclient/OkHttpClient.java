@@ -49,7 +49,6 @@ import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yong.Teng
@@ -264,8 +263,8 @@ public class OkHttpClient extends AbstractHttpClient {
 		}
 
 		okhttp3.Request okHttpRequest = requestBuilder.headers(headersBuilder.build()).build();
-		final Request request = OkHttpRequestBuilder.create().setUrl(okHttpRequest.url().toString()).setHeaders
-				(headers).setParameters(parameters).build();
+		final Request request = OkHttpRequestBuilder.create(okHttpRequest).setHeaders(headers).setParameters
+				(parameters).build();
 		okhttp3.Response httpResponse = null;
 
 		try{

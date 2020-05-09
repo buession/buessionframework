@@ -290,8 +290,8 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	protected Response doRequest(final HttpRequestBase httpRequest, final List<Header> headers, final Map<String,
 			Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
 			RequestAbortedException, RequestException{
-		final Request request = HttpComponentsRequestBuilder.create(httpRequest).setUrl(httpRequest.getURI().toString
-				()).setParameters(parameters).setHeaders(headers).build();
+		final Request request = HttpComponentsRequestBuilder.create(httpRequest).setParameters(parameters).setHeaders
+				(headers).build();
 
 		httpRequest.setConfig(getRequestConfig());
 

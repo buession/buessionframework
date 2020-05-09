@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.httpcomponents;
@@ -37,100 +37,101 @@ import java.io.OutputStream;
  */
 public class RepeatableInputStreamEntity extends InputStreamEntity {
 
-    private NoAutoClosedInputStreamEntity innerEntity;
+	private NoAutoClosedInputStreamEntity innerEntity;
 
-    public RepeatableInputStreamEntity(InputStream content, long contentLength, ContentType contentType){
-        super(content, contentLength, contentType);
+	public RepeatableInputStreamEntity(InputStream content, long contentLength, ContentType contentType){
+		super(content, contentLength, contentType);
 
-        setChunked(false);
+		setChunked(false);
 
-        innerEntity = new NoAutoClosedInputStreamEntity(content, contentLength);
-        innerEntity.setContentType(contentType.toString());
-    }
+		innerEntity = new NoAutoClosedInputStreamEntity(content, contentLength);
+		innerEntity.setContentType(contentType.toString());
+	}
 
-    @Override
-    public boolean isChunked(){
-        return false;
-    }
+	@Override
+	public boolean isChunked(){
+		return false;
+	}
 
-    @Override
-    public boolean isRepeatable(){
-        return getContent().markSupported() || innerEntity.isRepeatable();
-    }
+	@Override
+	public boolean isRepeatable(){
+		return getContent().markSupported() || innerEntity.isRepeatable();
+	}
 
-    @Override
-    public void writeTo(OutputStream output) throws IOException{
-        if(isFirstAttempt() == false && isRepeatable()){
-            getContent().reset();
-        }
+	@Override
+	public void writeTo(OutputStream output) throws IOException{
+		if(isFirstAttempt() == false && isRepeatable()){
+			getContent().reset();
+		}
 
-        setFirstAttempt(false);
-        innerEntity.writeTo(output);
-    }
+		setFirstAttempt(false);
+		innerEntity.writeTo(output);
+	}
 
-    public static class NoAutoClosedInputStreamEntity extends AbstractHttpEntity {
+	public static class NoAutoClosedInputStreamEntity extends AbstractHttpEntity {
 
-        private final static int BUFFER_SIZE = 2048;
+		private final static int BUFFER_SIZE = 2048;
 
-        private final long length;
+		private final long length;
 
-        private final InputStream content;
+		private final InputStream content;
 
-        public NoAutoClosedInputStreamEntity(final InputStream inputStream, long length){
-            super();
+		public NoAutoClosedInputStreamEntity(final InputStream inputStream, long length){
+			super();
 
-            Assert.isNull(inputStream, "Source input stream may not be null");
-            this.content = inputStream;
-            this.length = length;
-        }
+			Assert.isNull(inputStream, "Source input stream may not be null");
+			this.content = inputStream;
+			this.length = length;
+		}
 
-        @Override
-        public boolean isRepeatable(){
-            return false;
-        }
+		@Override
+		public boolean isRepeatable(){
+			return false;
+		}
 
-        @Override
-        public InputStream getContent() throws IOException{
-            return content;
-        }
+		@Override
+		public InputStream getContent() throws IOException{
+			return content;
+		}
 
-        @Override
-        public long getContentLength(){
-            return length;
-        }
+		@Override
+		public long getContentLength(){
+			return length;
+		}
 
-        @Override
-        public void writeTo(final OutputStream outStream) throws IOException{
-            Assert.isNull(outStream, "Output stream may not be null.");
+		@Override
+		public void writeTo(final OutputStream outStream) throws IOException{
+			Assert.isNull(outStream, "Output stream may not be null.");
 
-            InputStream inStream = content;
-            byte[] buffer = new byte[BUFFER_SIZE];
-            int l;
+			InputStream inStream = content;
+			byte[] buffer = new byte[BUFFER_SIZE];
+			int l;
 
-            if(this.length < 0){
-                // consume until EOF
-                while((l = inStream.read(buffer)) != -1){
-                    outStream.write(buffer, 0, l);
-                }
-            }else{
-                // consume no more than length
-                long remaining = this.length;
+			if(this.length < 0){
+				// consume until EOF
+				while((l = inStream.read(buffer)) != -1){
+					outStream.write(buffer, 0, l);
+				}
+			}else{
+				// consume no more than length
+				long remaining = this.length;
 
-                while(remaining > 0){
-                    l = inStream.read(buffer, 0, (int) Math.min(BUFFER_SIZE, remaining));
-                    if(l == -1){
-                        break;
-                    }
+				while(remaining > 0){
+					l = inStream.read(buffer, 0, (int) Math.min(BUFFER_SIZE, remaining));
+					if(l == -1){
+						break;
+					}
 
-                    outStream.write(buffer, 0, l);
-                    remaining -= l;
-                }
-            }
-        }
+					outStream.write(buffer, 0, l);
+					remaining -= l;
+				}
+			}
+		}
 
-        @Override
-        public boolean isStreaming(){
-            return true;
-        }
-    }
+		@Override
+		public boolean isStreaming(){
+			return true;
+		}
+	}
+
 }

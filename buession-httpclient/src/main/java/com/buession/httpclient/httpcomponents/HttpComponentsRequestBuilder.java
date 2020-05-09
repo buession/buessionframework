@@ -38,6 +38,9 @@ public class HttpComponentsRequestBuilder extends AbstractRequestBuilder {
 
 	public final static HttpComponentsRequestBuilder create(final HttpRequestBase httpRequest){
 		HttpComponentsRequestBuilder requestBuilder = new HttpComponentsRequestBuilder();
+
+		requestBuilder.setUrl(httpRequest.getURI().toString());
+
 		return requestBuilder;
 	}
 
