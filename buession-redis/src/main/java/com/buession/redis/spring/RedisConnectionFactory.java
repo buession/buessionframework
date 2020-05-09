@@ -25,28 +25,42 @@
 package com.buession.redis.spring;
 
 import com.buession.core.utils.Assert;
-import com.buession.redis.core.Server;
+import com.buession.redis.client.ClientConfiguration;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * @author Yong.Teng
  */
 public class RedisConnectionFactory {
 
-	private String host = Server.DEFAULT_HOST;
+	private String host = ClientConfiguration.DEFAULT_HOST;
 
-	private int port = Server.DEFAULT_PORT;
+	private int port = ClientConfiguration.DEFAULT_PORT;
 
 	private String password;
 
-	private int database = Server.DEFAULT_DATABASE;
+	private int database = ClientConfiguration.DEFAULT_DATABASE;
 
-	private int timeout = Server.DEFAULT_TIMEOUT;
+	private String clientName;
+
+	private int connectTimeout = ClientConfiguration.DEFAULT_TIMEOUT;
+
+	private int soTimeout = ClientConfiguration.DEFAULT_TIMEOUT;
 
 	private boolean useSsl;
 
-	private boolean usePool = true;
+	private SSLSocketFactory sslSocketFactory;
 
-	private String clientName;
+	private SSLParameters sslParameters;
+
+	private HostnameVerifier hostnameVerifier;
+
+	private int weight;
+
+	private boolean usePool = true;
 
 	public String getHost(){
 		return host;
@@ -81,12 +95,36 @@ public class RedisConnectionFactory {
 		this.database = database;
 	}
 
-	public int getTimeout(){
-		return timeout;
+	public int getDb(){
+		return getDatabase();
 	}
 
-	public void setTimeout(int timeout){
-		this.timeout = timeout;
+	public void setDb(int database){
+		setDatabase(database);
+	}
+
+	public String getClientName(){
+		return clientName;
+	}
+
+	public void setClientName(String clientName){
+		this.clientName = clientName;
+	}
+
+	public int getConnectTimeout(){
+		return connectTimeout;
+	}
+
+	public void setConnectTimeout(int connectTimeout){
+		this.connectTimeout = connectTimeout;
+	}
+
+	public int getSoTimeout(){
+		return soTimeout;
+	}
+
+	public void setSoTimeout(int soTimeout){
+		this.soTimeout = soTimeout;
 	}
 
 	public boolean isUseSsl(){
@@ -95,6 +133,38 @@ public class RedisConnectionFactory {
 
 	public void setUseSsl(boolean useSsl){
 		this.useSsl = useSsl;
+	}
+
+	public SSLSocketFactory getSslSocketFactory(){
+		return sslSocketFactory;
+	}
+
+	public void setSslSocketFactory(SSLSocketFactory sslSocketFactory){
+		this.sslSocketFactory = sslSocketFactory;
+	}
+
+	public SSLParameters getSslParameters(){
+		return sslParameters;
+	}
+
+	public void setSslParameters(SSLParameters sslParameters){
+		this.sslParameters = sslParameters;
+	}
+
+	public HostnameVerifier getHostnameVerifier(){
+		return hostnameVerifier;
+	}
+
+	public void setHostnameVerifier(HostnameVerifier hostnameVerifier){
+		this.hostnameVerifier = hostnameVerifier;
+	}
+
+	public int getWeight(){
+		return weight;
+	}
+
+	public void setWeight(int weight){
+		this.weight = weight;
 	}
 
 	public boolean isUsePool(){
@@ -107,14 +177,6 @@ public class RedisConnectionFactory {
 
 	public void setUsePool(boolean usePool){
 		this.usePool = usePool;
-	}
-
-	public String getClientName(){
-		return clientName;
-	}
-
-	public void setClientName(String clientName){
-		this.clientName = clientName;
 	}
 
 }

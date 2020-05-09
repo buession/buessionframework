@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.convert.jedis;
@@ -33,30 +33,34 @@ import redis.clients.jedis.ZParams;
  */
 public class AggregateConvert implements Convert<SortedSetCommands.Aggregate, ZParams.Aggregate> {
 
-    @Override
-    public ZParams.Aggregate convert(final SortedSetCommands.Aggregate source){
-        if(source == SortedSetCommands.Aggregate.MIN){
-            return ZParams.Aggregate.MIN;
-        }else if(source == SortedSetCommands.Aggregate.MAX){
-            return ZParams.Aggregate.MAX;
-        }else if(source == SortedSetCommands.Aggregate.SUM){
-            return ZParams.Aggregate.SUM;
-        }else{
-            return null;
-        }
-    }
+	@Override
+	public ZParams.Aggregate convert(final SortedSetCommands.Aggregate source){
+		switch(source){
+			case MIN:
+				return ZParams.Aggregate.MIN;
+			case MAX:
+				return ZParams.Aggregate.MAX;
+			case SUM:
+				return ZParams.Aggregate.SUM;
+			default:
+				return null;
 
-    @Override
-    public SortedSetCommands.Aggregate deconvert(final ZParams.Aggregate target){
-        if(target == ZParams.Aggregate.MIN){
-            return SortedSetCommands.Aggregate.MIN;
-        }else if(target == ZParams.Aggregate.MAX){
-            return SortedSetCommands.Aggregate.MAX;
-        }else if(target == ZParams.Aggregate.SUM){
-            return SortedSetCommands.Aggregate.SUM;
-        }else{
-            return null;
-        }
-    }
+		}
+	}
+
+	@Override
+	public SortedSetCommands.Aggregate deconvert(final ZParams.Aggregate target){
+		switch(target){
+			case MIN:
+				return SortedSetCommands.Aggregate.MIN;
+			case MAX:
+				return SortedSetCommands.Aggregate.MAX;
+			case SUM:
+				return SortedSetCommands.Aggregate.SUM;
+			default:
+				return null;
+
+		}
+	}
 
 }

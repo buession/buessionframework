@@ -19,480 +19,494 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
+
+import com.buession.core.validator.Validate;
 
 /**
  * @author Yong.Teng
  */
 public enum ProtocolCommand {
 
-    /**
-     * key command start
-     **/
-    EXISTS,
+	/**
+	 * key command start
+	 **/
+	EXISTS("r"),
 
-    TYPE,
+	TYPE("r"),
 
-    RENAME,
+	RENAME("w"),
 
-    RENAMENX,
+	RENAMENX("w"),
 
-    KEYS,
+	KEYS("r"),
 
-    EXPIRE,
+	EXPIRE("rw"),
 
-    EXPIREAT,
+	EXPIREAT("rw"),
 
-    PEXPIRE,
+	PEXPIRE("rw"),
 
-    PEXPIREAT,
+	PEXPIREAT("rw"),
 
-    RANDOMKEY,
+	RANDOMKEY("r"),
 
-    TTL,
+	TTL("r"),
 
-    PTTL,
+	PTTL("r"),
 
-    PERSIST,
+	PERSIST("rw"),
 
-    SCAN,
+	SCAN("r"),
 
-    SORT,
+	SORT("rw"),
 
-    DUMP,
+	DUMP("r"),
 
-    RESTORE,
+	RESTORE("w"),
 
-    MIGRATE,
+	MIGRATE("rw"),
 
-    DEL,
+	DEL("rw"),
 
-    MOVE,
-    /** key command end **/
+	MOVE("rw"),
+	/** key command end **/
 
-    /**
-     * string command start
-     **/
-    SET,
+	/**
+	 * string command start
+	 **/
+	SET("w"),
 
-    SETEX,
+	SETEX("w"),
 
-    PSETEX,
+	PSETEX("w"),
 
-    SETNX,
+	SETNX("w"),
 
-    APPEND,
+	APPEND("rw"),
 
-    GET,
+	GET("r"),
 
-    GETSET,
+	GETSET("rw"),
 
-    MSET,
+	MSET("w"),
 
-    MSETNX,
+	MSETNX("w"),
 
-    MGET,
+	MGET("r"),
 
-    INCR,
+	INCR("rw"),
 
-    INCRBY,
+	INCRBY("rw"),
 
-    INCRBYFLOAT,
+	INCRBYFLOAT("rw"),
 
-    DECR,
+	DECR("w"),
 
-    DECRBY,
+	DECRBY("w"),
 
-    SETRANGE,
+	SETRANGE("rw"),
 
-    GETRANGE,
+	GETRANGE("r"),
 
-    SUBSTR,
+	SUBSTR("r"),
 
-    STRLEN,
-    /** string command end **/
+	STRLEN("r"),
+	/** string command end **/
 
-    /**
-     * hash command start
-     **/
-    HEXISTS,
+	/**
+	 * hash command start
+	 **/
+	HEXISTS("r"),
 
-    HKEYS,
+	HKEYS("r"),
 
-    HVALS,
+	HVALS("r"),
 
-    HSET,
+	HSET("w"),
 
-    HSETNX,
+	HSETNX("w"),
 
-    HGET,
+	HGET("r"),
 
-    HMSET,
+	HMSET("w"),
 
-    HMGET,
+	HMGET("r"),
 
-    HGETALL,
+	HGETALL("r"),
 
-    HDEL,
+	HDEL("rw"),
 
-    HSTRLEN,
+	HSTRLEN("r"),
 
-    HLEN,
+	HLEN("r"),
 
-    HINCRBY,
+	HINCRBY("rw"),
 
-    HINCRBYFLOAT,
+	HINCRBYFLOAT("rw"),
 
-    HSCAN,
-    /**
-     * hash command end
-     **/
+	HSCAN("r"),
+	/**
+	 * hash command end
+	 **/
 
-    /**
-     * list command start
-     **/
-    LPUSH,
+	/**
+	 * list command start
+	 **/
+	LPUSH("rw"),
 
-    LPUSHX,
+	LPUSHX("rw"),
 
-    RPUSH,
+	RPUSH("rw"),
 
-    RPUSHX,
+	RPUSHX("rw"),
 
-    LPOP,
+	LPOP("rw"),
 
-    RPOP,
+	RPOP("rw"),
 
-    RPOPLPUSH,
+	RPOPLPUSH("rw"),
 
-    LREM,
+	LREM("rw"),
 
-    LLEN,
+	LLEN("r"),
 
-    LINDEX,
+	LINDEX("r"),
 
-    LINSERT,
+	LINSERT("rw"),
 
-    LSET,
+	LSET("w"),
 
-    LRANGE,
+	LRANGE("r"),
 
-    LTRIM,
+	LTRIM("w"),
 
-    BLPOP,
+	BLPOP("rw"),
 
-    BRPOP,
+	BRPOP("rw"),
 
-    BRPOPLPUSH,
-    /**
-     * list command end
-     **/
+	BRPOPLPUSH("rw"),
+	/**
+	 * list command end
+	 **/
 
-    /**
-     * set command start
-     **/
-    SADD,
+	/**
+	 * set command start
+	 **/
+	SADD("rw"),
 
-    SISMEMBER,
+	SISMEMBER("r"),
 
-    SPOP,
+	SPOP("rw"),
 
-    SRANDMEMBER,
+	SRANDMEMBER("r"),
 
-    SREM,
+	SREM("rw"),
 
-    SMOVE,
+	SMOVE("rw"),
 
-    SCARD,
+	SCARD("r"),
 
-    SMEMBERS,
+	SMEMBERS("r"),
 
-    SSCAN,
+	SSCAN("r"),
 
-    SINTER,
+	SINTER("r"),
 
-    SINTERSTORE,
+	SINTERSTORE("rw"),
 
-    SUNION,
+	SUNION("r"),
 
-    SUNIONSTORE,
+	SUNIONSTORE("rw"),
 
-    SDIFF,
+	SDIFF("r"),
 
-    SDIFFSTORE,
-    /**
-     * set command end
-     **/
+	SDIFFSTORE("rw"),
+	/**
+	 * set command end
+	 **/
 
-    /**
-     * sorted set command start
-     **/
-    ZADD,
+	/**
+	 * sorted set command start
+	 **/
+	ZADD("rw"),
 
-    ZSCORE,
+	ZSCORE("r"),
 
-    ZINCRBY,
+	ZINCRBY("rw"),
 
-    ZCARD,
+	ZCARD("r"),
 
-    ZCOUNT,
+	ZCOUNT("r"),
 
-    ZRANGE,
+	ZRANGE("r"),
 
-    ZREVRANGE,
+	ZREVRANGE("r"),
 
-    ZRANGEBYSCORE,
+	ZRANGEBYSCORE("r"),
 
-    ZREVRANGEBYSCORE,
+	ZREVRANGEBYSCORE("r"),
 
-    ZRANK,
+	ZRANK("r"),
 
-    ZREVRANK,
+	ZREVRANK("r"),
 
-    ZREM,
+	ZREM("rw"),
 
-    ZREMRANGEBYRANK,
+	ZREMRANGEBYRANK("rw"),
 
-    ZREMRANGEBYSCORE,
+	ZREMRANGEBYSCORE("rw"),
 
-    ZRANGEBYLEX,
+	ZRANGEBYLEX("rw"),
 
-    ZLEXCOUNT,
+	ZLEXCOUNT("rw"),
 
-    ZREMRANGEBYLEX,
+	ZREMRANGEBYLEX("rw"),
 
-    ZREVRANGEBYLEX,
+	ZREVRANGEBYLEX("rw"),
 
-    ZSCAN,
+	ZSCAN("r"),
 
-    ZINTERSTORE,
+	ZINTERSTORE("rw"),
 
-    ZUNIONSTORE,
-    /**
-     * sorted set command end
-     **/
+	ZUNIONSTORE("rw"),
+	/**
+	 * sorted set command end
+	 **/
 
-    /**
-     * hyperloglog command start
-     **/
-    PFADD,
+	/**
+	 * hyperloglog command start
+	 **/
+	PFADD("w"),
 
-    PFCOUNT,
+	PFCOUNT("r"),
 
-    PFMERGE,
-    /**
-     * hyperloglog command end
-     **/
+	PFMERGE("w"),
+	/**
+	 * hyperloglog command end
+	 **/
 
-    /**
-     * geo command start
-     **/
-    GEOADD,
+	/**
+	 * geo command start
+	 **/
+	GEOADD("w"),
 
-    GEOPOS,
+	GEOPOS("r"),
 
-    GEODIST,
+	GEODIST("r"),
 
-    GEORADIUS,
+	GEORADIUS("r"),
 
-    GEORADIUSBYMEMBER,
+	GEORADIUSBYMEMBER("r"),
 
-    GEOHASH,
-    /**
-     * geo command end
-     **/
+	GEOHASH("r"),
+	/**
+	 * geo command end
+	 **/
 
-    /**
-     * bitmap command start
-     **/
-    SETBIT,
+	/**
+	 * bitmap command start
+	 **/
+	SETBIT("rw"),
 
-    GETBIT,
+	GETBIT("r"),
 
-    BITPOS,
+	BITPOS("r"),
 
-    BITCOUNT,
+	BITCOUNT("r"),
 
-    BITOP,
+	BITOP("rw"),
 
-    BITFIELD,
-    /**
-     * bitmap command end
-     **/
+	BITFIELD("rw"),
+	/**
+	 * bitmap command end
+	 **/
 
-    /**
-     * database command start
-     **/
-    DBSIZE,
+	/**
+	 * database command start
+	 **/
+	DBSIZE("r"),
 
-    FLUSHDB,
+	FLUSHDB("w"),
 
-    FLUSHALL,
+	FLUSHALL("w"),
 
-    SELECT,
+	SELECT("rw"),
 
-    SWAPDB,
-    /**
-     * database command end
-     **/
+	SWAPDB("w"),
+	/**
+	 * database command end
+	 **/
 
-    /**
-     * transaction command start
-     **/
-    MULTI,
+	/**
+	 * transaction command start
+	 **/
+	MULTI("rw"),
 
-    EXEC,
+	EXEC("rw"),
 
-    DISCARD,
+	DISCARD("rw"),
 
-    WATCH,
+	WATCH("rw"),
 
-    UNWATCH,
-    /**
-     * transaction command end
-     **/
+	UNWATCH("rw"),
+	/**
+	 * transaction command end
+	 **/
 
-    /**
-     * lua command start
-     **/
-    EVAL,
+	/**
+	 * lua command start
+	 **/
+	EVAL("rw"),
 
-    EVALSHA,
+	EVALSHA("rw"),
 
-    SCRIPT_LOAD,
+	SCRIPT_LOAD("rw"),
 
-    SCRIPT_EXISTS,
+	SCRIPT_EXISTS("r"),
 
-    SCRIPT_FLUSH,
+	SCRIPT_FLUSH("rw"),
 
-    SCRIPT_KILL,
-    /**
-     * lua command end
-     **/
+	SCRIPT_KILL("rw"),
+	/**
+	 * lua command end
+	 **/
 
-    /**
-     * persistence command start
-     **/
-    SAVE,
+	/**
+	 * persistence command start
+	 **/
+	SAVE("rw"),
 
-    BGSAVE,
+	BGSAVE("r"),
 
-    BGREWRITEAOF,
+	BGREWRITEAOF("r"),
 
-    LASTSAVE,
-    /**
-     * persistence command end
-     **/
+	LASTSAVE("r"),
+	/**
+	 * persistence command end
+	 **/
 
-    /**
-     * pubsub command start
-     **/
-    PUBLISH,
+	/**
+	 * pubsub command start
+	 **/
+	PUBLISH("rw"),
 
-    SUBSCRIBE,
+	SUBSCRIBE("rw"),
 
-    PSUBSCRIBE,
+	PSUBSCRIBE("r"),
 
-    UNSUBSCRIBE,
+	UNSUBSCRIBE("rw"),
 
-    PUNSUBSCRIBE,
+	PUNSUBSCRIBE("rw"),
 
-    PUBSUB,
-    /**
-     * pubsub command end
-     **/
+	PUBSUB("rw"),
+	/**
+	 * pubsub command end
+	 **/
 
-    /**
-     * replication command start
-     **/
-    SLAVEOF,
+	/**
+	 * replication command start
+	 **/
+	SLAVEOF("w"),
 
-    ROLE,
-    /**
-     * replication command end
-     **/
+	ROLE("r"),
+	/**
+	 * replication command end
+	 **/
 
-    /**
-     * client and server command start
-     **/
-    AUTH,
+	/**
+	 * client and server command start
+	 **/
+	AUTH("rw"),
 
-    QUIT,
+	QUIT("rw"),
 
-    INFO,
+	INFO("r"),
 
-    SHUTDOWN,
+	SHUTDOWN("rw"),
 
-    TIME,
+	TIME("r"),
 
-    CLIENT_GETNAME,
+	CLIENT_GETNAME("r"),
 
-    CLIENT_KILL,
+	CLIENT_KILL("rw"),
 
-    CLIENT_LIST,
+	CLIENT_LIST("r"),
 
-    CLIENT_SETNAME,
-    /**
-     * client and server command end
-     **/
+	CLIENT_SETNAME("w"),
+	/**
+	 * client and server command end
+	 **/
 
-    /**
-     * config command start
-     **/
-    CONFIG_SET,
+	/**
+	 * config command start
+	 **/
+	CONFIG_SET("w"),
 
-    CONFIG_GET,
+	CONFIG_GET("r"),
 
-    CONFIG_RESETSTAT,
+	CONFIG_RESETSTAT("w"),
 
-    CONFIG_REWRITE,
-    /**
-     * config command end
-     **/
+	CONFIG_REWRITE("rw"),
+	/**
+	 * config command end
+	 **/
 
-    /**
-     * debug command start
-     **/
-    PING,
+	/**
+	 * debug command start
+	 **/
+	PING("r"),
 
-    ECHO,
+	ECHO("r"),
 
-    OBJECT,
+	OBJECT("r"),
 
-    SLOWLOG,
+	SLOWLOG("rw"),
 
-    MONITOR,
+	MONITOR("rw"),
 
-    DEBUG_OBJECT,
+	DEBUG_OBJECT("rw"),
 
-    DEBUG_SEGFAULT,
-    /**
-     * debug command end
-     **/
+	DEBUG_SEGFAULT("rw"),
+	/**
+	 * debug command end
+	 **/
 
-    /**
-     * internal command start
-     **/
-    SYNC,
+	/**
+	 * internal command start
+	 **/
+	SYNC("rw"),
 
-    PSYNC,
-    /**
-     * internal command end
-     **/
+	PSYNC("rw");
 
-    /*UNLINK,
-    RENAMEX,
-    SENTINEL,
-    CLIENT,
-    WAIT,
-    CLUSTER,
-    ASKING,
-    READONLY,
-    GEORADIUS_RO,
-    GEORADIUSBYMEMBER_RO,
-    MODULE,
-    TOUCH;*/
+	/**
+	 * internal command end
+	 **/
+
+	private boolean isRead = true;
+
+	private boolean isWrite = true;
+
+	ProtocolCommand(String mode){
+		if(Validate.hasText(mode)){
+			this.isRead = mode.indexOf('r') > -1;
+			this.isWrite = mode.indexOf('w') > -1;
+		}
+	}
+
+	public boolean isRead(){
+		return isRead;
+	}
+
+	public boolean isReadOnly(){
+		return isRead && isWrite == false;
+	}
+
+	public boolean isWrite(){
+		return isWrite;
+	}
+
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
@@ -33,32 +33,32 @@ import redis.clients.jedis.Jedis;
  */
 public class SimpleJedisConnection extends AbstractJedisRedisConnection<Jedis> implements JedisConnection {
 
-    public SimpleJedisConnection(){
-        super();
-    }
+	public SimpleJedisConnection(){
+		super();
+	}
 
-    public SimpleJedisConnection(RedisDataSource dataSource){
-        super(dataSource);
-    }
+	public SimpleJedisConnection(RedisDataSource dataSource){
+		super(dataSource);
+	}
 
-    @Override
-    public void multi(){
-        Jedis client = getRedisClient(getDataSource());
-        transaction = new JedisTransaction(client.multi());
-    }
+	@Override
+	public void multi(){
+		Jedis delegate = getDelegate();
+		transaction = new JedisTransaction(delegate.multi());
+	}
 
-    @Override
-    public void exec(){
-        if(transaction != null){
-            transaction.exec();
-        }
-    }
+	@Override
+	public void exec(){
+		if(transaction != null){
+			transaction.exec();
+		}
+	}
 
-    @Override
-    public void discard(){
-        if(transaction != null){
-            transaction.discard();
-        }
-    }
+	@Override
+	public void discard(){
+		if(transaction != null){
+			transaction.discard();
+		}
+	}
 
 }

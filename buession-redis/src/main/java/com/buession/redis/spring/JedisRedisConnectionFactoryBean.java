@@ -19,12 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.spring;
 
 import com.buession.core.validator.Validate;
+import com.buession.redis.client.ClientConfiguration;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.jedis.JedisPoolDataSource;
 import com.buession.redis.client.connection.datasource.jedis.ShardedJedisPoolDataSource;
@@ -38,167 +39,122 @@ import com.buession.redis.client.connection.jedis.SimpleShardedJedisConnection;
 import com.buession.redis.exception.PoolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.ReflectionUtils;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.JedisShardInfo;
-import redis.clients.jedis.ShardedJedisPool;
 import redis.clients.jedis.commands.JedisCommands;
 import redis.clients.jedis.util.Pool;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Yong.Teng
  */
 public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<JedisRedisConnection> {
 
-    private final static Method SET_TIMEOUT_METHOD;
+	private JedisPoolConfig poolConfig = new JedisPoolConfig();
 
-    private final static Method GET_TIMEOUT_METHOD;
+	private Pool<? extends JedisCommands> pool;
 
-    private JedisPoolConfig poolConfig = new JedisPoolConfig();
+	private boolean useShardInfo;
 
-    private Pool<? extends JedisCommands> pool;
+	private final static Logger logger = LoggerFactory.getLogger(JedisRedisConnectionFactoryBean.class);
 
-    private boolean useShardInfo;
+	public JedisPoolConfig getPoolConfig(){
+		return poolConfig;
+	}
 
-    private final static Logger logger = LoggerFactory.getLogger(JedisRedisConnectionFactoryBean.class);
+	public void setPoolConfig(JedisPoolConfig poolConfig){
+		this.poolConfig = poolConfig;
+	}
 
-    static{
-        // We need to configure Jedis socket timeout via reflection since the method-name was changed between
-        // releases.
-        Method setJedisShardInfoTimeoutMethod = ReflectionUtils.findMethod(JedisShardInfo.class, "setTimeout", int
-                .class);
-        if(setJedisShardInfoTimeoutMethod == null){
-            // Jedis V 2.7.x changed the setTimeout method to setSoTimeout
-            setJedisShardInfoTimeoutMethod = ReflectionUtils.findMethod(JedisShardInfo.class, "setSoTimeout", int
-                    .class);
-        }
-        SET_TIMEOUT_METHOD = setJedisShardInfoTimeoutMethod;
+	public Pool<? extends JedisCommands> getPool(){
+		return pool;
+	}
 
-        Method getJedisShardInfoTimeoutMethod = ReflectionUtils.findMethod(JedisShardInfo.class, "getTimeout");
-        if(getJedisShardInfoTimeoutMethod == null){
-            getJedisShardInfoTimeoutMethod = ReflectionUtils.findMethod(JedisShardInfo.class, "getSoTimeout");
-        }
+	public void setPool(Pool<? extends JedisCommands> pool){
+		this.pool = pool;
+	}
 
-        GET_TIMEOUT_METHOD = getJedisShardInfoTimeoutMethod;
-    }
+	public boolean isUseShardInfo(){
+		return getUseShardInfo();
+	}
 
-    public JedisPoolConfig getPoolConfig(){
-        JedisPoolConfig poolConfig = null;
+	public boolean getUseShardInfo(){
+		return useShardInfo;
+	}
 
-        if(poolConfig == null){
-            poolConfig = new JedisPoolConfig();
-            setPoolConfig(poolConfig);
-        }
+	public void setUseShardInfo(boolean useShardInfo){
+		this.useShardInfo = useShardInfo;
+	}
 
-        return poolConfig;
-    }
+	@Override
+	public Class<? extends RedisConnection> getObjectType(){
+		return JedisRedisConnection.class;
+	}
 
-    public void setPoolConfig(JedisPoolConfig poolConfig){
-        this.poolConfig = poolConfig;
-    }
+	@Override
+	public void afterPropertiesSet() throws Exception{
+		ClientConfiguration configuration = new ClientConfiguration();
 
-    public Pool<? extends JedisCommands> getPool(){
-        return pool;
-    }
+		configuration.setHost(getHost());
+		configuration.setPort(getPort());
+		configuration.setPassword(getPassword());
+		configuration.setDatabase(getDatabase());
+		configuration.setClientName(getClientName());
+		configuration.setConnectTimeout(getConnectTimeout());
+		configuration.setSoTimeout(getSoTimeout());
+		configuration.setUseSsl(isUseSsl());
+		configuration.setSslSocketFactory(getSslSocketFactory());
+		configuration.setSslParameters(getSslParameters());
+		configuration.setHostnameVerifier(getHostnameVerifier());
+		configuration.setWeight(getWeight());
 
-    public void setPool(Pool<? extends JedisCommands> pool){
-        this.pool = pool;
-    }
+		if(isUsePool()){
+			if(isUseShardInfo()){
+				final ShardedJedisPoolDataSource dataSource = new ShardedJedisPoolDataSource(configuration,
+						poolConfig);
 
-    public boolean isUseShardInfo(){
-        return getUseShardInfo();
-    }
+				dataSource.connect();
 
-    public boolean getUseShardInfo(){
-        return useShardInfo;
-    }
+				setPool(dataSource.getPool());
+				setConnection(new ShardedJedisPoolConnection(dataSource));
+				logger.debug("Initialize connection for pool and shard info.");
+			}else{
+				final JedisPoolDataSource dataSource = new JedisPoolDataSource(configuration, poolConfig);
 
-    public void setUseShardInfo(boolean useShardInfo){
-        this.useShardInfo = useShardInfo;
-    }
+				dataSource.connect();
 
-    @Override
-    public Class<? extends RedisConnection> getObjectType(){
-        return JedisRedisConnection.class;
-    }
+				setPool(dataSource.getPool());
+				setConnection(new JedisPoolConnection(dataSource));
+				logger.debug("Initialize connection for pool.");
+			}
+		}else{
+			if(isUseShardInfo()){
+				final SimpleShardedJedisDataSource dataSource = new SimpleShardedJedisDataSource(configuration);
 
-    @Override
-    public void afterPropertiesSet() throws Exception{
-        if(isUsePool()){
-            if(isUseShardInfo()){
-                final ShardedJedisPoolDataSource dataSource = new ShardedJedisPoolDataSource();
+				dataSource.connect();
 
-                dataSource.setPool(createShardedJedisPool());
+				setConnection(new SimpleShardedJedisConnection(dataSource));
+				logger.debug("Initialize connection for shard info.");
+			}else{
+				final SimpleJedisDataSource dataSource = new SimpleJedisDataSource(configuration);
 
-                setPool(dataSource.getPool());
-                setConnection(new ShardedJedisPoolConnection(dataSource));
-            }else{
-                final JedisPoolDataSource dataSource = new JedisPoolDataSource();
+				dataSource.connect();
 
-                dataSource.setPool(createPool());
+				setConnection(new SimpleJedisConnection(dataSource));
+				logger.debug("Initialize connection simple.");
+			}
+		}
+	}
 
-                setPool(dataSource.getPool());
-                setConnection(new JedisPoolConnection(dataSource));
-            }
-        }else{
-            if(isUseShardInfo()){
-                final SimpleShardedJedisDataSource dataSource = new SimpleShardedJedisDataSource();
-
-                setConnection(new SimpleShardedJedisConnection(dataSource));
-            }else{
-                final SimpleJedisDataSource dataSource = new SimpleJedisDataSource();
-
-                setConnection(new SimpleJedisConnection(dataSource));
-            }
-        }
-    }
-
-    protected JedisPool createPool(){
-        JedisPool pool = new JedisPool(getPoolConfig(), getHost(), getPort(), getTimeout(), getPassword(),
-                getDatabase(), getClientName(), isUseSsl());
-
-        logger.info("Jedis pool bean init width db {} success, name: {}.", getDatabase(), getClientName());
-
-        return pool;
-    }
-
-    protected ShardedJedisPool createShardedJedisPool(){
-        List<JedisShardInfo> shardInfos = new ArrayList<>(1);
-        JedisShardInfo shardInfo = new JedisShardInfo(getHost(), getPort(), getClientName(), isUseSsl());
-
-        if(Validate.hasText(getPassword()) == false){
-            shardInfo.setPassword(getPassword());
-        }
-
-        if(getTimeout() > 0){
-            ReflectionUtils.invokeMethod(SET_TIMEOUT_METHOD, shardInfo, getTimeout());
-        }
-
-        shardInfos.add(shardInfo);
-
-        ShardedJedisPool pool = new ShardedJedisPool(getPoolConfig(), shardInfos);
-
-        logger.info("Sharded jedis pool bean init width for {} shard info.", shardInfos.size());
-
-        return pool;
-    }
-
-    @Override
-    protected void afterDestroy(JedisRedisConnection connection){
-        if(isUsePool() && getPool() != null){
-            try{
-                getPool().destroy();
-            }catch(Exception e){
-                logger.warn("Cannot properly close Jedis pool", e);
-                throw new PoolException(e.getMessage(), e);
-            }
-            setPool(null);
-        }
-    }
+	@Override
+	protected void afterDestroy(JedisRedisConnection connection){
+		if(isUsePool() && getPool() != null){
+			try{
+				getPool().destroy();
+			}catch(Exception e){
+				logger.warn("Cannot properly close Jedis pool", e);
+				throw new PoolException(e.getMessage(), e);
+			}
+			setPool(null);
+		}
+	}
 
 }

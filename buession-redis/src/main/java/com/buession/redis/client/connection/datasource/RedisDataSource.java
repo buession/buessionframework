@@ -19,12 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource;
 
+import com.buession.lang.Status;
+
 import java.io.Closeable;
+import java.io.IOException;
 
 /**
  * Redis 数据源
@@ -33,18 +36,23 @@ import java.io.Closeable;
  */
 public interface RedisDataSource extends Closeable {
 
-    <C> C getRedisClient();
+	Status connect();
 
-    /**
-     * 获取数据源是否关闭
-     *
-     * @return 数据源是否关闭
-     */
-    boolean isClosed();
+	<C> C getRedisClient();
 
-    /**
-     * 切断链接
-     */
-    void disconnect();
+	/**
+	 * 获取数据源是否关闭
+	 *
+	 * @return 数据源是否关闭
+	 */
+	boolean isClosed();
+
+	/**
+	 * 切断链接
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 */
+	void disconnect() throws IOException;
 
 }

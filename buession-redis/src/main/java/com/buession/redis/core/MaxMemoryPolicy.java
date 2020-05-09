@@ -28,4 +28,55 @@ package com.buession.redis.core;
  * @author Yong.Teng
  */
 public enum MaxMemoryPolicy {
+
+	/**
+	 * 最近最少使用算法，从设置了过期时间的键中选择空转时间最长的键值对清除掉
+	 */
+	VOLATILE_LRU("volatile-lru"),
+
+	/**
+	 * 最近最不经常使用算法，从设置了过期时间的键中选择某段时间之内使用频次最小的键值对清除掉
+	 */
+	VOLATILE_LFU("volatile-lfu"),
+
+	/**
+	 * 从设置了过期时间的键中选择过期时间最早的键值对清除
+	 */
+	VOLATILE_TTL("volatile-ttl"),
+
+	/**
+	 * 从设置了过期时间的键中，随机选择键进行清除
+	 */
+	VOLATILE_RANDOM("volatile-random"),
+
+	/**
+	 * 最近最少使用算法，从所有的键中选择空转时间最长的键值对清除
+	 */
+	ALLKEYS_LRU("allkeys-lru"),
+
+	/**
+	 * 最近最不经常使用算法，从所有的键中选择某段时间之内使用频次最少的键值对清除
+	 */
+	ALLKEYS_LFU("allkeys-lfu"),
+
+	/**
+	 * 所有的键中，随机选择键进行删除
+	 */
+	ALLKEYS_RANDOM("allkeys-random"),
+
+	/**
+	 * 不做任何的清理工作，在redis的内存超过限制之后，所有的写入操作都会返回错误；但是读操作都能正常的进行
+	 */
+	NOEVICTION("noeviction");
+
+	private String value;
+
+	MaxMemoryPolicy(final String value){
+		this.value = value;
+	}
+
+	public String getValue(){
+		return value;
+	}
+
 }

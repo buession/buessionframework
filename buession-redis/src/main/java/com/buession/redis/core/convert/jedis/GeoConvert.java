@@ -119,31 +119,33 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 
 		@Override
 		public GeoUnit convert(final GeoCommands.GeoUnit source){
-			if(source == GeoCommands.GeoUnit.M){
-				return GeoUnit.M;
-			}else if(source == GeoCommands.GeoUnit.KM){
-				return GeoUnit.KM;
-			}else if(source == GeoCommands.GeoUnit.MI){
-				return GeoUnit.MI;
-			}else if(source == GeoCommands.GeoUnit.FT){
-				return GeoUnit.FT;
-			}else{
-				return null;
+			switch(source){
+				case M:
+					return GeoUnit.M;
+				case KM:
+					return GeoUnit.KM;
+				case MI:
+					return GeoUnit.MI;
+				case FT:
+					return GeoUnit.FT;
+				default:
+					return null;
 			}
 		}
 
 		@Override
 		public GeoCommands.GeoUnit deconvert(final GeoUnit target){
-			if(target == GeoUnit.M){
-				return GeoCommands.GeoUnit.M;
-			}else if(target == GeoUnit.KM){
-				return GeoCommands.GeoUnit.KM;
-			}else if(target == GeoUnit.MI){
-				return GeoCommands.GeoUnit.MI;
-			}else if(target == GeoUnit.FT){
-				return GeoCommands.GeoUnit.FT;
-			}else{
-				return null;
+			switch(target){
+				case M:
+					return GeoCommands.GeoUnit.M;
+				case KM:
+					return GeoCommands.GeoUnit.KM;
+				case MI:
+					return GeoCommands.GeoUnit.MI;
+				case FT:
+					return GeoCommands.GeoUnit.FT;
+				default:
+					return null;
 			}
 		}
 

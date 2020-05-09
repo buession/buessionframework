@@ -24,9 +24,32 @@
  */
 package com.buession.redis.client.connection;
 
+import com.buession.redis.core.NamedNode;
+import com.buession.redis.core.RedisNode;
+
+import java.util.Collection;
+
 /**
  * @author Yong.Teng
  */
-public interface RedisSentinelConnection {
+public interface RedisSentinelConnection extends RedisConnection {
+
+	boolean isOpen();
+
+	Collection<RedisNode> masters();
+
+	Collection<RedisNode> slaves(NamedNode master);
+
+	void monitor(RedisNode server);
+
+	/**
+	 * 故障转移
+	 *
+	 * @param master
+	 * 		Master
+	 */
+	void failover(NamedNode master);
+
+	void remove(NamedNode master);
 
 }

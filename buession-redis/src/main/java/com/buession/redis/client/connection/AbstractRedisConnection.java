@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
 
+import com.buession.lang.Status;
 import com.buession.redis.client.connection.datasource.RedisDataSource;
 import com.buession.redis.core.Transaction;
 
@@ -36,43 +37,53 @@ import java.io.IOException;
  */
 public abstract class AbstractRedisConnection implements RedisConnection {
 
-    protected Transaction transaction;
+	protected Transaction transaction;
 
-    private RedisDataSource dataSource;
+	private RedisDataSource dataSource;
 
-    public AbstractRedisConnection(){
-    }
+	public AbstractRedisConnection(){
+	}
 
-    public AbstractRedisConnection(RedisDataSource dataSource){
-        this.dataSource = dataSource;
-    }
+	public AbstractRedisConnection(RedisDataSource dataSource){
+		this.dataSource = dataSource;
+	}
 
-    @Override
-    public RedisDataSource getDataSource(){
-        return dataSource;
-    }
+	@Override
+	public RedisDataSource getDataSource(){
+		return dataSource;
+	}
 
-    @Override
-    public void setDataSource(RedisDataSource dataSource){
-        this.dataSource = dataSource;
-    }
+	@Override
+	public void setDataSource(RedisDataSource dataSource){
+		this.dataSource = dataSource;
+	}
 
-    @Override
-    public void disconnect(){
-        if(getDataSource() != null){
-            getDataSource().disconnect();
-        }
-    }
+	@Override
+	public Status connect(){
+		if(isClosed()){
+			dataSource.connect();
+		}
 
-    @Override
-    public boolean isClosed(){
-        return getDataSource() == null ? true : getDataSource().isClosed();
-    }
+		return Status.SUCCESS;
+	}
 
-    @Override
-    public void close() throws IOException{
-        if(getDataSource() != null){
-            getDataSource().close();
-        }
-    }
+	@Override
+	public void disconnect() throws IOException{
+		if(getDataSource() != null){
+			getDataSource().disconnect();
+		}
+	}
+
+	@Override
+	public boolean isClosed(){
+		return getDataSource() == null ? true : getDataSource().isClosed();
+	}
+
+	@Override
+	public void close() throws IOException{
+		if(getDataSource() != null){
+			getDataSource().close();
+		}
+	}
+
 }

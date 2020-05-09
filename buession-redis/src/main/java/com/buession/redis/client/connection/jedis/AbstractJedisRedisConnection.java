@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
@@ -37,28 +37,38 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
  * @author Yong.Teng
  */
 public abstract class AbstractJedisRedisConnection<T extends JedisCommands> extends AbstractRedisConnection
-        implements JedisRedisConnection<T> {
+		implements JedisRedisConnection<T> {
 
-    public AbstractJedisRedisConnection(){
-        super();
-    }
+	private T delegate;
 
-    public AbstractJedisRedisConnection(RedisDataSource dataSource){
-        super(dataSource);
-    }
+	public AbstractJedisRedisConnection(){
+		super();
+	}
 
-    @Override
-    public <C, R> R execute(final ProtocolCommand command, final Executor<C, R> executor) throws RedisException{
-        try{
-            C client = getRedisClient(getDataSource());
-            return executor.execute(client);
-        }catch(JedisConnectionException e){
-            throw new RedisConnectionFailureException(e.getMessage(), e);
-        }
-    }
+	public AbstractJedisRedisConnection(RedisDataSource dataSource){
+		super(dataSource);
+	}
 
-    public <C extends JedisCommands, D extends RedisDataSource> C getRedisClient(D dataSource){
-        return dataSource == null ? null : dataSource.getRedisClient();
-    }
+	@Override
+	public <C, R> R execute(final ProtocolCommand command, final Executor<C, R> executor) throws RedisException{
+		try{
+			C delegate = (C) getDelegate();
+			return executor.execute(delegate);
+		}catch(JedisConnectionException e){
+			throw new RedisConnectionFailureException(e.getMessage(), e);
+		}
+	}
+
+	public <D extends RedisDataSource> T getDelegate(D dataSource){
+		return dataSource == null ? null : dataSource.getRedisClient();
+	}
+
+	protected T getDelegate(){
+		if(delegate == null){
+			delegate = getDelegate(getDataSource());
+		}
+
+		return delegate;
+	}
 
 }

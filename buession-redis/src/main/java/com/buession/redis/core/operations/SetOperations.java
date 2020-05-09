@@ -39,848 +39,848 @@ import java.util.Set;
  */
 public interface SetOperations extends SetCommands, RedisOperations {
 
-    /**
-     * 将 member 元素加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
-     *
-     * @param key
-     *         Key
-     * @param member
-     *         元素
-     *
-     * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
-     */
-    Long sAdd(final String key, final String member);
+	/**
+	 * 将 member 元素加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		元素
+	 *
+	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
+	 */
+	Long sAdd(final String key, final String member);
 
-    /**
-     * 将 member 元素加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
-     *
-     * @param key
-     *         Key
-     * @param member
-     *         元素
-     *
-     * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
-     */
-    Long sAdd(final byte[] key, final byte[] member);
+	/**
+	 * 将 member 元素加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		元素
+	 *
+	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
+	 */
+	Long sAdd(final byte[] key, final byte[] member);
 
-    /**
-     * 将 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
-     *
-     * @param key
-     *         Key
-     * @param member
-     *         元素
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
-     */
-    <V> Long sAdd(final String key, final V member);
+	/**
+	 * 将 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		元素
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
+	 */
+	<V> Long sAdd(final String key, final V member);
 
-    /**
-     * 将 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
-     *
-     * @param key
-     *         Key
-     * @param member
-     *         元素
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
-     */
-    <V> Long sAdd(final byte[] key, final V member);
+	/**
+	 * 将 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		元素
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
+	 */
+	<V> Long sAdd(final byte[] key, final V member);
 
-    /**
-     * 将一个或多个 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
-     *
-     * @param key
-     *         Key
-     * @param members
-     *         元素
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
-     */
-    <V> Long sAdd(final String key, final V... members);
+	/**
+	 * 将一个或多个 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		元素
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
+	 */
+	<V> Long sAdd(final String key, final V... members);
 
-    /**
-     * 将一个或多个 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
-     *
-     * @param key
-     *         Key
-     * @param members
-     *         元素
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
-     */
-    <V> Long sAdd(final byte[] key, final V... members);
+	/**
+	 * 将一个或多个 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		元素
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
+	 */
+	<V> Long sAdd(final byte[] key, final V... members);
 
-    /**
-     * 获取集合 key 中的所有成员反序列化后的对象
-     *
-     * @param key
-     *         Key
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合中的所有成员
-     */
-    <V> Set<V> sMembersObject(final String key);
+	/**
+	 * 获取集合 key 中的所有成员反序列化后的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合中的所有成员
+	 */
+	<V> Set<V> sMembersObject(final String key);
 
-    /**
-     * 获取集合 key 中的所有成员反序列化后的对象
-     *
-     * @param key
-     *         Key
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合中的所有成员
-     */
-    <V> Set<V> sMembersObject(final byte[] key);
+	/**
+	 * 获取集合 key 中的所有成员反序列化后的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合中的所有成员
+	 */
+	<V> Set<V> sMembersObject(final byte[] key);
 
-    /**
-     * 获取集合 key 中的所有成员反序列化 clazz 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param clazz
-     *         元素值对象类
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合中的所有成员
-     *
-     * @see java.lang.Class
-     */
-    <V> Set<V> sMembersObject(final String key, final Class<V> clazz);
+	/**
+	 * 获取集合 key 中的所有成员反序列化 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合中的所有成员
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> Set<V> sMembersObject(final String key, final Class<V> clazz);
 
-    /**
-     * 获取集合 key 中的所有成员反序列化 clazz 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param clazz
-     *         元素值对象类
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合中的所有成员
-     *
-     * @see java.lang.Class
-     */
-    <V> Set<V> sMembersObject(final byte[] key, final Class<V> clazz);
+	/**
+	 * 获取集合 key 中的所有成员反序列化 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合中的所有成员
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> Set<V> sMembersObject(final byte[] key, final Class<V> clazz);
 
-    /**
-     * 获取集合 key 中的所有成员反序列化 type 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param type
-     *         元素值类型引用
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合中的所有成员
-     *
-     * @see com.fasterxml.jackson.core.type.TypeReference
-     */
-    <V> Set<V> sMembersObject(final String key, final TypeReference<V> type);
+	/**
+	 * 获取集合 key 中的所有成员反序列化 type 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合中的所有成员
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> sMembersObject(final String key, final TypeReference<V> type);
 
-    /**
-     * 获取集合 key 中的所有成员反序列化 type 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param type
-     *         元素值类型引用
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合中的所有成员
-     *
-     * @see com.fasterxml.jackson.core.type.TypeReference
-     */
-    <V> Set<V> sMembersObject(final byte[] key, final TypeReference<V> type);
+	/**
+	 * 获取集合 key 中的所有成员反序列化 type 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合中的所有成员
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> sMembersObject(final byte[] key, final TypeReference<V> type);
 
-    /**
-     * 移除并返回集合 key 中的一个随机元素反序列化后的对象
-     *
-     * @param key
-     *         Key
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被移除的随机元素反序列化后的对象
-     */
-    <V> V sPopObject(final String key);
+	/**
+	 * 移除并返回集合 key 中的一个随机元素反序列化后的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除的随机元素反序列化后的对象
+	 */
+	<V> V sPopObject(final String key);
 
-    /**
-     * 移除并返回集合 key 中的一个随机元素反序列化后的对象
-     *
-     * @param key
-     *         Key
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被移除的随机元素反序列化后的对象
-     */
-    <V> V sPopObject(final byte[] key);
+	/**
+	 * 移除并返回集合 key 中的一个随机元素反序列化后的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除的随机元素反序列化后的对象
+	 */
+	<V> V sPopObject(final byte[] key);
 
-    /**
-     * 移除并返回集合 key 中的一个随机元素反序列化 clazz 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param clazz
-     *         元素值对象类
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被移除的随机元素反序列化后的对象
-     *
-     * @see java.lang.Class
-     */
-    <V> V sPopObject(final String key, final Class<V> clazz);
+	/**
+	 * 移除并返回集合 key 中的一个随机元素反序列化 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除的随机元素反序列化后的对象
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> V sPopObject(final String key, final Class<V> clazz);
 
-    /**
-     * 移除并返回集合 key 中的一个随机元素反序列化 clazz 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param clazz
-     *         元素值对象类
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被移除的随机元素反序列化后的对象
-     *
-     * @see java.lang.Class
-     */
-    <V> V sPopObject(final byte[] key, final Class<V> clazz);
+	/**
+	 * 移除并返回集合 key 中的一个随机元素反序列化 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除的随机元素反序列化后的对象
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> V sPopObject(final byte[] key, final Class<V> clazz);
 
-    /**
-     * 移除并返回集合 key 中的一个随机元素反序列化 type 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param type
-     *         元素值类型引用
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被移除的随机元素反序列化后的对象
-     *
-     * @see com.fasterxml.jackson.core.type.TypeReference
-     */
-    <V> V sPopObject(final String key, final TypeReference<V> type);
+	/**
+	 * 移除并返回集合 key 中的一个随机元素反序列化 type 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除的随机元素反序列化后的对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V sPopObject(final String key, final TypeReference<V> type);
 
-    /**
-     * 移除并返回集合 key 中的一个随机元素反序列化 type 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param type
-     *         元素值类型引用
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被移除的随机元素反序列化后的对象
-     *
-     * @see com.fasterxml.jackson.core.type.TypeReference
-     */
-    <V> V sPopObject(final byte[] key, final TypeReference<V> type);
+	/**
+	 * 移除并返回集合 key 中的一个随机元素反序列化 type 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除的随机元素反序列化后的对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V sPopObject(final byte[] key, final TypeReference<V> type);
 
-    /**
-     * 返回集合 key 中的一个随机元素，并反序列化为对象
-     *
-     * @param key
-     *         Key
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的一个随机元素，反序列化后的对象
-     */
-    <V> V sRandMemberObject(final String key);
+	/**
+	 * 返回集合 key 中的一个随机元素，并反序列化为对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的一个随机元素，反序列化后的对象
+	 */
+	<V> V sRandMemberObject(final String key);
 
-    /**
-     * 返回集合 key 中的一个随机元素，并反序列化为对象
-     *
-     * @param key
-     *         Key
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的一个随机元素，反序列化后的对象
-     */
-    <V> V sRandMemberObject(final byte[] key);
+	/**
+	 * 返回集合 key 中的一个随机元素，并反序列化为对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的一个随机元素，反序列化后的对象
+	 */
+	<V> V sRandMemberObject(final byte[] key);
 
-    /**
-     * 返回集合 key 中的一个随机元素，并反序列化为 clazz 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param clazz
-     *         元素值对象类
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的一个随机元素，反序列化后的对象
-     *
-     * @see java.lang.Class
-     */
-    <V> V sRandMemberObject(final String key, final Class<V> clazz);
+	/**
+	 * 返回集合 key 中的一个随机元素，并反序列化为 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的一个随机元素，反序列化后的对象
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> V sRandMemberObject(final String key, final Class<V> clazz);
 
-    /**
-     * 返回集合 key 中的一个随机元素，并反序列化为 clazz 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param clazz
-     *         元素值对象类
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的一个随机元素，反序列化后的对象
-     *
-     * @see java.lang.Class
-     */
-    <V> V sRandMemberObject(final byte[] key, final Class<V> clazz);
+	/**
+	 * 返回集合 key 中的一个随机元素，并反序列化为 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的一个随机元素，反序列化后的对象
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> V sRandMemberObject(final byte[] key, final Class<V> clazz);
 
-    /**
-     * 返回集合 key 中的一个随机元素，并反序列化为 type 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param type
-     *         元素值类型引用
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的一个随机元素，反序列化后的对象
-     *
-     * @see com.fasterxml.jackson.core.type.TypeReference
-     */
-    <V> V sRandMemberObject(final String key, final TypeReference<V> type);
+	/**
+	 * 返回集合 key 中的一个随机元素，并反序列化为 type 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的一个随机元素，反序列化后的对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V sRandMemberObject(final String key, final TypeReference<V> type);
 
-    /**
-     * 返回集合 key 中的一个随机元素，并反序列化为 type 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param type
-     *         元素值类型引用
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的一个随机元素，反序列化后的对象
-     *
-     * @see com.fasterxml.jackson.core.type.TypeReference
-     */
-    <V> V sRandMemberObject(final byte[] key, final TypeReference<V> type);
+	/**
+	 * 返回集合 key 中的一个随机元素，并反序列化为 type 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的一个随机元素，反序列化后的对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V sRandMemberObject(final byte[] key, final TypeReference<V> type);
 
-    /**
-     * 返回集合 key 中的 count 个随机元素，并反序列化为对象
-     *
-     * @param key
-     *         Key
-     * @param count
-     *         需要返回的元素数量
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的随机元素，反序列化后的对象列表
-     */
-    <V> List<V> sRandMemberObject(final String key, final int count);
+	/**
+	 * 返回集合 key 中的 count 个随机元素，并反序列化为对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的随机元素，反序列化后的对象列表
+	 */
+	<V> List<V> sRandMemberObject(final String key, final int count);
 
-    /**
-     * 返回集合 key 中的 count 个随机元素，并反序列化为对象
-     *
-     * @param key
-     *         Key
-     * @param count
-     *         需要返回的元素数量
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的随机元素，反序列化后的对象列表
-     */
-    <V> List<V> sRandMemberObject(final byte[] key, final int count);
+	/**
+	 * 返回集合 key 中的 count 个随机元素，并反序列化为对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的随机元素，反序列化后的对象列表
+	 */
+	<V> List<V> sRandMemberObject(final byte[] key, final int count);
 
-    /**
-     * 返回集合 key 中的 count 个随机元素，并反序列化为对象
-     *
-     * @param key
-     *         Key
-     * @param count
-     *         需要返回的元素数量
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的随机元素，反序列化后的对象列表
-     */
-    <V> List<V> sRandMemberObject(final String key, final long count);
+	/**
+	 * 返回集合 key 中的 count 个随机元素，并反序列化为对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的随机元素，反序列化后的对象列表
+	 */
+	<V> List<V> sRandMemberObject(final String key, final long count);
 
-    /**
-     * 返回集合 key 中的 count 个随机元素，并反序列化为对象
-     *
-     * @param key
-     *         Key
-     * @param count
-     *         需要返回的元素数量
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的随机元素，反序列化后的对象列表
-     */
-    <V> List<V> sRandMemberObject(final byte[] key, final long count);
+	/**
+	 * 返回集合 key 中的 count 个随机元素，并反序列化为对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的随机元素，反序列化后的对象列表
+	 */
+	<V> List<V> sRandMemberObject(final byte[] key, final long count);
 
-    /**
-     * 返回集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param count
-     *         需要返回的元素数量
-     * @param clazz
-     *         元素值对象类
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的随机元素，反序列化后的对象列表
-     *
-     * @see java.lang.Class
-     */
-    <V> List<V> sRandMemberObject(final String key, final int count, final Class<V> clazz);
+	/**
+	 * 返回集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的随机元素，反序列化后的对象列表
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> List<V> sRandMemberObject(final String key, final int count, final Class<V> clazz);
 
-    /**
-     * 返回集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param count
-     *         需要返回的元素数量
-     * @param clazz
-     *         元素值对象类
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的随机元素，反序列化后的对象列表
-     *
-     * @see java.lang.Class
-     */
-    <V> List<V> sRandMemberObject(final byte[] key, final int count, final Class<V> clazz);
+	/**
+	 * 返回集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的随机元素，反序列化后的对象列表
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> List<V> sRandMemberObject(final byte[] key, final int count, final Class<V> clazz);
 
-    /**
-     * 返回集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param count
-     *         需要返回的元素数量
-     * @param clazz
-     *         元素值对象类
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的随机元素，反序列化后的对象列表
-     *
-     * @see java.lang.Class
-     */
-    <V> List<V> sRandMemberObject(final String key, final long count, final Class<V> clazz);
+	/**
+	 * 返回集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的随机元素，反序列化后的对象列表
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> List<V> sRandMemberObject(final String key, final long count, final Class<V> clazz);
 
-    /**
-     * 返回集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param count
-     *         需要返回的元素数量
-     * @param clazz
-     *         元素值对象类
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的随机元素，反序列化后的对象列表
-     *
-     * @see java.lang.Class
-     */
-    <V> List<V> sRandMemberObject(final byte[] key, final long count, final Class<V> clazz);
+	/**
+	 * 返回集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的随机元素，反序列化后的对象列表
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> List<V> sRandMemberObject(final byte[] key, final long count, final Class<V> clazz);
 
-    /**
-     * 返回集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param count
-     *         需要返回的元素数量
-     * @param type
-     *         元素值类型引用
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的随机元素，序列化后的对象列表
-     *
-     * @see com.fasterxml.jackson.core.type.TypeReference
-     */
-    <V> List<V> sRandMemberObject(final String key, final int count, final TypeReference<V> type);
+	/**
+	 * 返回集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的随机元素，序列化后的对象列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> sRandMemberObject(final String key, final int count, final TypeReference<V> type);
 
-    /**
-     * 返回集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param count
-     *         需要返回的元素数量
-     * @param type
-     *         元素值类型引用
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的随机元素，序列化后的对象列表
-     *
-     * @see com.fasterxml.jackson.core.type.TypeReference
-     */
-    <V> List<V> sRandMemberObject(final byte[] key, final int count, final TypeReference<V> type);
+	/**
+	 * 返回集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的随机元素，序列化后的对象列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> sRandMemberObject(final byte[] key, final int count, final TypeReference<V> type);
 
-    /**
-     * 返回集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param count
-     *         需要返回的元素数量
-     * @param type
-     *         元素值类型引用
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的随机元素，序列化后的对象列表
-     *
-     * @see com.fasterxml.jackson.core.type.TypeReference
-     */
-    <V> List<V> sRandMemberObject(final String key, final long count, final TypeReference<V> type);
+	/**
+	 * 返回集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的随机元素，序列化后的对象列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> sRandMemberObject(final String key, final long count, final TypeReference<V> type);
 
-    /**
-     * 返回集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param count
-     *         需要返回的元素数量
-     * @param type
-     *         元素值类型引用
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 集合 key 中的随机元素，序列化后的对象列表
-     *
-     * @see com.fasterxml.jackson.core.type.TypeReference
-     */
-    <V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type);
+	/**
+	 * 返回集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 集合 key 中的随机元素，序列化后的对象列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type);
 
-    /**
-     * 移除集合 key 中的 member 元素，不存在的 member 元素会被忽略
-     *
-     * @param key
-     *         Key
-     * @param member
-     *         元素
-     *
-     * @return 被成功移除的元素的数量，不包括被忽略的元素
-     */
-    Long sRem(final String key, final String member);
+	/**
+	 * 移除集合 key 中的 member 元素，不存在的 member 元素会被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		元素
+	 *
+	 * @return 被成功移除的元素的数量，不包括被忽略的元素
+	 */
+	Long sRem(final String key, final String member);
 
-    /**
-     * 移除集合 key 中的 member 元素，不存在的 member 元素会被忽略
-     *
-     * @param key
-     *         Key
-     * @param member
-     *         元素
-     *
-     * @return 被成功移除的元素的数量，不包括被忽略的元素
-     */
-    Long sRem(final byte[] key, final byte[] member);
+	/**
+	 * 移除集合 key 中的 member 元素，不存在的 member 元素会被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		元素
+	 *
+	 * @return 被成功移除的元素的数量，不包括被忽略的元素
+	 */
+	Long sRem(final byte[] key, final byte[] member);
 
-    /**
-     * 移除集合 key 中的 member 序列化后的元素，不存在的 member 元素会被忽略
-     *
-     * @param key
-     *         Key
-     * @param member
-     *         元素
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被成功移除的元素的数量，不包括被忽略的元素
-     */
-    <V> Long sRem(final String key, final V member);
+	/**
+	 * 移除集合 key 中的 member 序列化后的元素，不存在的 member 元素会被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		元素
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功移除的元素的数量，不包括被忽略的元素
+	 */
+	<V> Long sRem(final String key, final V member);
 
-    /**
-     * 移除集合 key 中的 member 序列化后的元素，不存在的 member 元素会被忽略
-     *
-     * @param key
-     *         Key
-     * @param member
-     *         元素
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被成功移除的元素的数量，不包括被忽略的元素
-     */
-    <V> Long sRem(final byte[] key, final V member);
+	/**
+	 * 移除集合 key 中的 member 序列化后的元素，不存在的 member 元素会被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		元素
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功移除的元素的数量，不包括被忽略的元素
+	 */
+	<V> Long sRem(final byte[] key, final V member);
 
-    /**
-     * 移除集合 key 中的一个或多个 member 序列化后的元素，不存在的 member 元素会被忽略
-     *
-     * @param key
-     *         Key
-     * @param members
-     *         一个或多个元素
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被成功移除的元素的数量，不包括被忽略的元素
-     */
-    <V> Long sRem(final String key, final V... members);
+	/**
+	 * 移除集合 key 中的一个或多个 member 序列化后的元素，不存在的 member 元素会被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个元素
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功移除的元素的数量，不包括被忽略的元素
+	 */
+	<V> Long sRem(final String key, final V... members);
 
-    /**
-     * 移除集合 key 中的一个或多个 member 序列化后的元素，不存在的 member 元素会被忽略
-     *
-     * @param key
-     *         Key
-     * @param members
-     *         一个或多个元素
-     * @param <V>
-     *         元素值类型
-     *
-     * @return 被成功移除的元素的数量，不包括被忽略的元素
-     */
-    <V> Long sRem(final byte[] key, final V... members);
+	/**
+	 * 移除集合 key 中的一个或多个 member 序列化后的元素，不存在的 member 元素会被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个元素
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功移除的元素的数量，不包括被忽略的元素
+	 */
+	<V> Long sRem(final byte[] key, final V... members);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
-     *
-     * @param key
-     *         Key
-     *
-     * @return 一个包含差集成员的列表
-     */
-    Set<String> sDiff(final String key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 一个包含差集成员的列表
+	 */
+	Set<String> sDiff(final String key);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
-     *
-     * @param key
-     *         一Key
-     *
-     * @return 一个包含差集成员的列表
-     */
-    Set<byte[]> sDiff(final byte[] key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
+	 *
+	 * @param key
+	 * 		一Key
+	 *
+	 * @return 一个包含差集成员的列表
+	 */
+	Set<byte[]> sDiff(final byte[] key);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
-     *
-     * @param key
-     *         Key
-     * @param <V>
-     *         值类型
-     *
-     * @return 一个包含差集成员反序列化为对象的列表
-     */
-    <V> Set<V> sDiffObject(final String key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 一个包含差集成员反序列化为对象的列表
+	 */
+	<V> Set<V> sDiffObject(final String key);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
-     *
-     * @param key
-     *         一Key
-     * @param <V>
-     *         值类型
-     *
-     * @return 一个包含差集成员反序列化为对象的列表
-     */
-    <V> Set<V> sDiffObject(final byte[] key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
+	 *
+	 * @param key
+	 * 		一Key
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 一个包含差集成员反序列化为对象的列表
+	 */
+	<V> Set<V> sDiffObject(final byte[] key);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 clazz 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param clazz
-     *         值对象类
-     * @param <V>
-     *         值类型
-     *
-     * @return 一个包含差集成员反序列化为对象的列表
-     *
-     * @see java.lang.Class
-     */
-    <V> Set<V> sDiffObject(final String key, final Class<V> clazz);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 一个包含差集成员反序列化为对象的列表
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> Set<V> sDiffObject(final String key, final Class<V> clazz);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 clazz 指定的对象
-     *
-     * @param key
-     *         一Key
-     * @param clazz
-     *         值对象类
-     * @param <V>
-     *         值类型
-     *
-     * @return 一个包含差集成员反序列化为对象的列表
-     *
-     * @see java.lang.Class
-     */
-    <V> Set<V> sDiffObject(final byte[] key, final Class<V> clazz);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		一Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 一个包含差集成员反序列化为对象的列表
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> Set<V> sDiffObject(final byte[] key, final Class<V> clazz);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 type 指定的对象
-     *
-     * @param key
-     *         Key
-     * @param type
-     *         值类型引用
-     * @param <V>
-     *         值类型
-     *
-     * @return 一个包含差集成员反序列化为对象的列表
-     *
-     * @see com.fasterxml.jackson.core.type.TypeReference
-     */
-    <V> Set<V> sDiffObject(final String key, final TypeReference<V> type);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 type 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 一个包含差集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> sDiffObject(final String key, final TypeReference<V> type);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 type 指定的对象
-     *
-     * @param key
-     *         一Key
-     * @param type
-     *         值类型引用
-     * @param <V>
-     *         值类型
-     *
-     * @return 一个包含差集成员反序列化为对象的列表
-     *
-     * @see com.fasterxml.jackson.core.type.TypeReference
-     */
-    <V> Set<V> sDiffObject(final byte[] key, final TypeReference<V> type);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 type 指定的对象
+	 *
+	 * @param key
+	 * 		一Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 一个包含差集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> sDiffObject(final byte[] key, final TypeReference<V> type);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
-     *
-     * @param destKey
-     *         目标 Key
-     * @param key
-     *         Key
-     *
-     * @return 结果集中的元素数量
-     */
-    Long sDiffStore(final String destKey, final String key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long sDiffStore(final String destKey, final String key);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
-     *
-     * @param destKey
-     *         目标 Key
-     * @param key
-     *         Key
-     *
-     * @return 结果集中的元素数量
-     */
-    Long sDiffStore(final byte[] destKey, final byte[] key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long sDiffStore(final byte[] destKey, final byte[] key);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合的交集
-     *
-     * @param key
-     *         Key
-     *
-     * @return 交集成员的列表
-     */
-    Set<String> sInter(final String key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 交集成员的列表
+	 */
+	Set<String> sInter(final String key);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合的交集
-     *
-     * @param key
-     *         Key
-     *
-     * @return 交集成员的列表
-     */
-    Set<byte[]> sInter(final byte[] key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 交集成员的列表
+	 */
+	Set<byte[]> sInter(final byte[] key);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
-     *
-     * @param destKey
-     *         目标 Key
-     * @param key
-     *         Key
-     *
-     * @return 结果集中的元素数量
-     */
-    Long sInterStore(final String destKey, final String key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long sInterStore(final String destKey, final String key);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
-     *
-     * @param destKey
-     *         目标 Key
-     * @param key
-     *         Key
-     *
-     * @return 结果集中的元素数量
-     */
-    Long sInterStore(final byte[] destKey, final byte[] key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long sInterStore(final byte[] destKey, final byte[] key);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合的并集
-     *
-     * @param key
-     *         Key
-     *
-     * @return 并集成员的列表
-     */
-    Set<String> sUnion(final String key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 并集成员的列表
+	 */
+	Set<String> sUnion(final String key);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合的并集
-     *
-     * @param key
-     *         Key
-     *
-     * @return 并集成员的列表
-     */
-    Set<byte[]> sUnion(final byte[] key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 并集成员的列表
+	 */
+	Set<byte[]> sUnion(final byte[] key);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
-     *
-     * @param destKey
-     *         目标 Key
-     * @param key
-     *         Key
-     *
-     * @return 结果集中的元素数量
-     */
-    Long sUnionStore(final String destKey, final String key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long sUnionStore(final String destKey, final String key);
 
-    /**
-     * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
-     *
-     * @param destKey
-     *         目标 Key
-     * @param key
-     *         Key
-     *
-     * @return 结果集中的元素数量
-     */
-    Long sUnionStore(final byte[] destKey, final byte[] key);
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long sUnionStore(final byte[] destKey, final byte[] key);
 
 }

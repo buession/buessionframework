@@ -31,13 +31,14 @@ import com.buession.redis.client.connection.RedisConnectionFactory;
 import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.jedis.JedisPoolConnection;
 import com.buession.redis.client.connection.jedis.ShardedJedisConnection;
+import com.buession.redis.client.connection.jedis.SimpleJedisConnection;
+import com.buession.redis.client.connection.jedis.SimpleShardedJedisConnection;
 import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.client.jedis.ShardedJedisClient;
 import com.buession.redis.core.Options;
 import com.buession.redis.serializer.JacksonJsonSerializer;
 import com.buession.redis.serializer.Serializer;
 import com.buession.redis.utils.KeyUtil;
-import com.buession.redis.utils.SafeEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +68,6 @@ public abstract class RedisAccessor {
 	}
 
 	public RedisAccessor(){
-
 	}
 
 	public RedisAccessor(RedisConnection connection){
@@ -90,7 +90,10 @@ public abstract class RedisAccessor {
 	@Deprecated
 	public void setSerializer(Serializer serializer){
 		this.serializer = serializer;
-		logger.warn("Use serializer by options.");
+
+		if(logger.isWarnEnabled()){
+			logger.warn("Use serializer by options.");
+		}
 	}
 
 	public RedisConnection getConnection(){
@@ -140,7 +143,7 @@ public abstract class RedisAccessor {
 			client.setConnection(connection);
 			return executor.execute(client);
 		}catch(Exception e){
-			logger.error("Execute executor failure: {}", e);
+			logger.error("Execute executor failure: {}", e.getMessage(), e);
 			throw e;
 		}finally{
 			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
@@ -148,9 +151,10 @@ public abstract class RedisAccessor {
 	}
 
 	protected static RedisClient doGetRedisClient(RedisConnection connection){
-		if(connection instanceof JedisPoolConnection){
+		if((connection instanceof SimpleJedisConnection) || (connection instanceof JedisPoolConnection)){
 			return new JedisClient(connection);
-		}else if(connection instanceof ShardedJedisConnection){
+		}else if((connection instanceof SimpleShardedJedisConnection) || (connection instanceof
+				ShardedJedisConnection)){
 			return new ShardedJedisClient(connection);
 		}else{
 			return null;

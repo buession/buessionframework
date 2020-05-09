@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.convert.jedis;
@@ -33,26 +33,27 @@ import redis.clients.jedis.params.MigrateParams;
  */
 public class MigrateOperationConvert implements Convert<KeyCommands.MigrateOperation, MigrateParams> {
 
-    @Override
-    public MigrateParams convert(final KeyCommands.MigrateOperation source){
-        if(source == KeyCommands.MigrateOperation.COPY){
-            return MigrateParams.migrateParams().copy();
-        }else if(source == KeyCommands.MigrateOperation.REPLACE){
-            return MigrateParams.migrateParams().replace();
-        }else{
-            return null;
-        }
-    }
+	@Override
+	public MigrateParams convert(final KeyCommands.MigrateOperation source){
+		switch(source){
+			case COPY:
+				return MigrateParams.migrateParams().copy();
+			case REPLACE:
+				return MigrateParams.migrateParams().replace();
+			default:
+				return null;
+		}
+	}
 
-    @Override
-    public KeyCommands.MigrateOperation deconvert(final MigrateParams target){
-        if(target.getParam(KeyCommands.MigrateOperation.COPY.name())){
-            return KeyCommands.MigrateOperation.COPY;
-        }else if(target.getParam(KeyCommands.MigrateOperation.REPLACE.name())){
-            return KeyCommands.MigrateOperation.REPLACE;
-        }else{
-            return null;
-        }
-    }
+	@Override
+	public KeyCommands.MigrateOperation deconvert(final MigrateParams target){
+		if(target.getParam(KeyCommands.MigrateOperation.COPY.name())){
+			return KeyCommands.MigrateOperation.COPY;
+		}else if(target.getParam(KeyCommands.MigrateOperation.REPLACE.name())){
+			return KeyCommands.MigrateOperation.REPLACE;
+		}else{
+			return null;
+		}
+	}
 
 }

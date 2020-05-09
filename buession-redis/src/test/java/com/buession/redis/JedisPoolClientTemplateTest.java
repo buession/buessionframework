@@ -50,12 +50,10 @@ public class JedisPoolClientTemplateTest extends AbstractRedisTest {
 	@Test
 	public void set(){
 		RedisTemplate redisTemplate = redisTemplate();
-		System.out.println(redisTemplate.hGet("menu", "2"));
+		System.out.println(redisTemplate.set("test", "2"));
 
 		try{
-			Thread.sleep(10 * 1000);
-
-			System.out.println(redisTemplate.hGet("menu", "2"));
+			System.out.println(redisTemplate.get("test"));
 		}catch(Exception e){
 			e.printStackTrace();
 		}

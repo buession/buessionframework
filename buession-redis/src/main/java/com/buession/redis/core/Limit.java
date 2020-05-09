@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -29,31 +29,32 @@ package com.buession.redis.core;
  */
 public class Limit {
 
-    private long offset;
+	private long offset;
 
-    private long count;
+	private long count;
 
-    public Limit(){
-    }
+	public Limit(){
+	}
 
-    public Limit(long offset, long count){
-        this.offset = offset;
-        this.count = count;
-    }
+	public Limit(long offset, long count){
+		this.offset = offset;
+		this.count = count;
+	}
 
-    public long getOffset(){
-        return offset;
-    }
+	public long getOffset(){
+		return offset;
+	}
 
-    public void setOffset(long offset){
-        this.offset = offset;
-    }
+	public void setOffset(long offset){
+		this.offset = offset;
+	}
 
-    public long getCount(){
-        return count;
-    }
+	public long getCount(){
+		return count;
+	}
 
-    public void setCount(long count){
-        this.count = count;
-    }
+	public void setCount(long count){
+		this.count = count;
+	}
+
 }

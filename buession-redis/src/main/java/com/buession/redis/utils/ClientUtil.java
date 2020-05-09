@@ -24,6 +24,8 @@
  */
 package com.buession.redis.utils;
 
+import com.buession.core.utils.EnumUtils;
+import com.buession.core.utils.KeyValueParser;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.redis.core.Client;
@@ -47,7 +49,7 @@ public class ClientUtil {
 			return null;
 		}
 
-		String[] clients = StringUtils.split(str, "[\\r\\n]");
+		String[] clients = str.split("[\\r\\n]");
 		List<Client> result = new ArrayList<>(clients.length);
 
 		if(Validate.isEmpty(clients) == false){
@@ -71,74 +73,65 @@ public class ClientUtil {
 		}
 
 		Client client = new Client();
+		KeyValueParser keyValueParser;
 
 		for(String property : properties){
-			int ei = property.indexOf('=');
-			String name = property.substring(0, ei);
-			String value = property.length() == ei + 1 ? null : property.substring(ei + 1);
+			keyValueParser = new KeyValueParser(property, '=');
 
-			if("id".equals(name)){
-				client.setId(Integer.parseInt(value));
-			}else if("addr".equals(name)){
-				int ci = value.indexOf(':');
+			if("id".equals(keyValueParser.getKey())){
+				client.setId(keyValueParser.getIntValue());
+			}else if("addr".equals(keyValueParser.getKey())){
+				int ci = keyValueParser.getValue().indexOf(':');
 
-				client.setAddr(value);
-				client.setHost(value.substring(0, ci));
-				client.setPort(Integer.parseInt(value.substring(ci + 1)));
-			}else if("name".equals(name)){
-				client.setName(value);
-			}else if("fd".equals(name)){
-				client.setFd(Integer.parseInt(value));
-			}else if("age".equals(name)){
-				client.setAge(Integer.parseInt(value));
-			}else if("idle".equals(name)){
-				client.setIdle(Integer.parseInt(value));
-			}else if("flags".equals(name)){
-				String[] flagsArr = StringUtils.split(value, ',');
+				client.setAddr(keyValueParser.getValue());
+				client.setHost(keyValueParser.getValue().substring(0, ci));
+				client.setPort(Integer.parseInt(keyValueParser.getValue().substring(ci + 1)));
+			}else if("name".equals(keyValueParser.getKey())){
+				client.setName(keyValueParser.getValue());
+			}else if("fd".equals(keyValueParser.getKey())){
+				client.setFd(keyValueParser.getIntValue());
+			}else if("age".equals(keyValueParser.getKey())){
+				client.setAge(keyValueParser.getIntValue());
+			}else if("idle".equals(keyValueParser.getKey())){
+				client.setIdle(keyValueParser.getIntValue());
+			}else if("flags".equals(keyValueParser.getKey())){
+				String[] flagsArr = StringUtils.split(keyValueParser.getValue(), ',');
 
 				if(flagsArr != null){
 					Set<Client.Flag> flags = new LinkedHashSet<>(flagsArr.length);
 
 					for(String s : flagsArr){
-						try{
-							flags.add(Enum.valueOf(Client.Flag.class, s));
-						}catch(IllegalArgumentException e){
+						Client.Flag flag = EnumUtils.valueOf(Client.Flag.class, s);
 
+						if(flag != null){
+							flags.add(flag);
 						}
 					}
 
 					client.setFlags(flags);
 				}
-			}else if("db".equals(name)){
-				client.setDb(Integer.parseInt(value));
-			}else if("sub".equals(name)){
-				client.setSub(Integer.parseInt(value));
-			}else if("psub".equals(name)){
-				client.setPsub(Integer.parseInt(value));
-			}else if("multi".equals(name)){
-				client.setMulti(Integer.parseInt(value));
-			}else if("qbuf".equals(name)){
-				client.setQBuf(Integer.parseInt(value));
-			}else if("qbuf-free".equals(name)){
-				client.setQBufFree(Integer.parseInt(value));
-			}else if("obl".equals(name)){
-				client.setObl(Integer.parseInt(value));
-			}else if("oll".equals(name)){
-				client.setOll(Integer.parseInt(value));
-			}else if("omem".equals(name)){
-				client.setOmem(Integer.parseInt(value));
-			}else if("events".equals(name)){
-				try{
-					client.setEvents(Enum.valueOf(Client.Event.class, value.toUpperCase()));
-				}catch(IllegalArgumentException e){
-
-				}
-			}else if("cmd".equals(name)){
-				try{
-					client.setCmd(Enum.valueOf(Protocol.Command.class, value.toUpperCase()));
-				}catch(IllegalArgumentException e){
-
-				}
+			}else if("db".equals(keyValueParser.getKey())){
+				client.setDb(keyValueParser.getIntValue());
+			}else if("sub".equals(keyValueParser.getKey())){
+				client.setSub(keyValueParser.getIntValue());
+			}else if("psub".equals(keyValueParser.getKey())){
+				client.setPsub(keyValueParser.getIntValue());
+			}else if("multi".equals(keyValueParser.getKey())){
+				client.setMulti(keyValueParser.getIntValue());
+			}else if("qbuf".equals(keyValueParser.getKey())){
+				client.setQBuf(keyValueParser.getIntValue());
+			}else if("qbuf-free".equals(keyValueParser.getKey())){
+				client.setQBufFree(keyValueParser.getIntValue());
+			}else if("obl".equals(keyValueParser.getKey())){
+				client.setObl(keyValueParser.getIntValue());
+			}else if("oll".equals(keyValueParser.getKey())){
+				client.setOll(keyValueParser.getIntValue());
+			}else if("omem".equals(keyValueParser.getKey())){
+				client.setOmem(keyValueParser.getIntValue());
+			}else if("events".equals(keyValueParser.getKey())){
+				client.setEvents(keyValueParser.getEnumValue(Client.Event.class));
+			}else if("cmd".equals(keyValueParser.getKey())){
+				client.setCmd(keyValueParser.getEnumValue(Protocol.Command.class));
 			}
 		}
 

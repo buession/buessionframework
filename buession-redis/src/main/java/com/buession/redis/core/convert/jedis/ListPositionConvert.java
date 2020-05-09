@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.convert.jedis;
@@ -33,26 +33,28 @@ import redis.clients.jedis.ListPosition;
  */
 public class ListPositionConvert implements Convert<ListCommands.ListPosition, redis.clients.jedis.ListPosition> {
 
-    @Override
-    public redis.clients.jedis.ListPosition convert(final ListCommands.ListPosition source){
-        if(source == ListCommands.ListPosition.BEFORE){
-            return ListPosition.BEFORE;
-        }else if(source == ListCommands.ListPosition.AFTER){
-            return ListPosition.AFTER;
-        }else{
-            return null;
-        }
-    }
+	@Override
+	public redis.clients.jedis.ListPosition convert(final ListCommands.ListPosition source){
+		switch(source){
+			case BEFORE:
+				return ListPosition.BEFORE;
+			case AFTER:
+				return ListPosition.AFTER;
+			default:
+				return null;
+		}
+	}
 
-    @Override
-    public ListCommands.ListPosition deconvert(final redis.clients.jedis.ListPosition target){
-        if(target == ListPosition.BEFORE){
-            return ListCommands.ListPosition.BEFORE;
-        }else if(target == ListPosition.AFTER){
-            return ListCommands.ListPosition.AFTER;
-        }else{
-            return null;
-        }
-    }
+	@Override
+	public ListCommands.ListPosition deconvert(final redis.clients.jedis.ListPosition target){
+		switch(target){
+			case BEFORE:
+				return ListCommands.ListPosition.BEFORE;
+			case AFTER:
+				return ListCommands.ListPosition.AFTER;
+			default:
+				return null;
+		}
+	}
 
 }

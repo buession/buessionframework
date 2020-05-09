@@ -19,17 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
 
 import com.buession.core.Executor;
+import com.buession.lang.Status;
 import com.buession.redis.client.connection.datasource.RedisDataSource;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
 
 import java.io.Closeable;
+import java.io.IOException;
 
 /**
  * Redis 链接对象
@@ -38,28 +40,33 @@ import java.io.Closeable;
  */
 public interface RedisConnection extends Closeable {
 
-    RedisDataSource getDataSource();
+	RedisDataSource getDataSource();
 
-    void setDataSource(RedisDataSource dataSource);
+	void setDataSource(RedisDataSource dataSource);
 
-    <C, R> R execute(final ProtocolCommand command, final Executor<C, R> executor) throws RedisException;
+	Status connect();
 
-    void multi();
+	<C, R> R execute(final ProtocolCommand command, final Executor<C, R> executor) throws RedisException;
 
-    void exec();
+	void multi();
 
-    void discard();
+	void exec();
 
-    /**
-     * 获取连接是否关闭
-     *
-     * @return 连接是否关闭
-     */
-    boolean isClosed();
+	void discard();
 
-    /**
-     * 切断链接
-     */
-    void disconnect();
+	/**
+	 * 获取连接是否关闭
+	 *
+	 * @return 连接是否关闭
+	 */
+	boolean isClosed();
+
+	/**
+	 * 切断链接
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 */
+	void disconnect() throws IOException;
 
 }

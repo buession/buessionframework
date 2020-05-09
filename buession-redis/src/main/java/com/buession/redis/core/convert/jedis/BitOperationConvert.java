@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.convert.jedis;
@@ -33,34 +33,36 @@ import redis.clients.jedis.BitOP;
  */
 public class BitOperationConvert implements Convert<BitMapCommands.Operation, BitOP> {
 
-    @Override
-    public BitOP convert(final BitMapCommands.Operation source){
-        if(source == BitMapCommands.Operation.AND){
-            return BitOP.AND;
-        }else if(source == BitMapCommands.Operation.OR){
-            return BitOP.OR;
-        }else if(source == BitMapCommands.Operation.NOT){
-            return BitOP.NOT;
-        }else if(source == BitMapCommands.Operation.XOR){
-            return BitOP.XOR;
-        }else{
-            return null;
-        }
-    }
+	@Override
+	public BitOP convert(final BitMapCommands.Operation source){
+		switch(source){
+			case AND:
+				return BitOP.AND;
+			case OR:
+				return BitOP.OR;
+			case NOT:
+				return BitOP.NOT;
+			case XOR:
+				return BitOP.XOR;
+			default:
+				return null;
+		}
+	}
 
-    @Override
-    public BitMapCommands.Operation deconvert(final BitOP target){
-        if(target == BitOP.AND){
-            return BitMapCommands.Operation.AND;
-        }else if(target == BitOP.OR){
-            return BitMapCommands.Operation.OR;
-        }else if(target == BitOP.NOT){
-            return BitMapCommands.Operation.NOT;
-        }else if(target == BitOP.XOR){
-            return BitMapCommands.Operation.XOR;
-        }else{
-            return null;
-        }
-    }
+	@Override
+	public BitMapCommands.Operation deconvert(final BitOP target){
+		switch(target){
+			case AND:
+				return BitMapCommands.Operation.AND;
+			case OR:
+				return BitMapCommands.Operation.OR;
+			case NOT:
+				return BitMapCommands.Operation.NOT;
+			case XOR:
+				return BitMapCommands.Operation.XOR;
+			default:
+				return null;
+		}
+	}
 
 }

@@ -19,55 +19,101 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
+import com.buession.lang.Status;
+import com.buession.redis.client.ClientConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+
+import java.io.IOException;
 
 /**
  * @author Yong.Teng
  */
-public class JedisPoolDataSource extends AbstractJedisRedisDataSource<Jedis> implements JedisDataSource {
+public class JedisPoolDataSource extends AbstractJedisRedisDataSource<Jedis> implements JedisDataSource,
+		PoolJedisDataSource<Jedis> {
 
-    private JedisPool pool;
+	private JedisPoolConfig poolConfig;
 
-    private Jedis jedis;
+	private JedisPool pool;
 
-    public JedisPool getPool(){
-        return pool;
-    }
+	private Jedis jedis;
 
-    public void setPool(JedisPool pool){
-        this.pool = pool;
-    }
+	private final static Logger logger = LoggerFactory.getLogger(JedisPoolDataSource.class);
 
-    @Override
-    public Jedis getRedisClient(){
-        if(pool == null){
-            return null;
-        }else{
-            jedis = pool.getResource();
-            return jedis;
-        }
-    }
+	public JedisPoolDataSource(){
+		super();
+	}
 
-    @Override
-    public boolean isClosed(){
-        return pool == null ? true : pool.isClosed();
-    }
+	public JedisPoolDataSource(ClientConfiguration clientConfiguration){
+		super(clientConfiguration);
+	}
 
-    @Override
-    public void close(){
-        if(jedis != null){
-            jedis.close();
-        }
+	public JedisPoolDataSource(ClientConfiguration clientConfiguration, JedisPoolConfig poolConfig){
+		super(clientConfiguration);
+		this.poolConfig = poolConfig;
+	}
 
-        if(pool != null){
-            // pool.close();
-        }
-    }
+	public JedisPoolConfig getPoolConfig(){
+		return poolConfig;
+	}
+
+	public void setPoolConfig(JedisPoolConfig poolConfig){
+		this.poolConfig = poolConfig;
+	}
+
+	@Override
+	public JedisPool getPool(){
+		return pool;
+	}
+
+	@Override
+	public Status connect(){
+		ClientConfiguration configuration = getClientConfiguration();
+		pool = new JedisPool(getPoolConfig(), configuration.getHost(), configuration.getPort(), configuration
+				.getConnectTimeout(), configuration.getSoTimeout(), configuration.getPassword(), configuration
+				.getDatabase(), configuration.getClientName(), configuration.isUseSsl());
+
+		logger.info("Jedis pool datasource initialize with db {} success, name: {}.", configuration.getDatabase(),
+				configuration.getClientName());
+
+		return Status.SUCCESS;
+	}
+
+	@Override
+	public Jedis getRedisClient(){
+		if(pool == null){
+			return null;
+		}else{
+			jedis = pool.getResource();
+			return jedis;
+		}
+	}
+
+	@Override
+	public boolean isClosed(){
+		return jedis != null && jedis.isConnected() == false;
+	}
+
+	@Override
+	public void disconnect() throws IOException{
+		if(jedis != null){
+			jedis.disconnect();
+		}
+	}
+
+	@Override
+	public void close() throws IOException{
+		if(jedis != null){
+			jedis.close();
+		}
+	}
 
 }

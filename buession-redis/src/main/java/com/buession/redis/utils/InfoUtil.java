@@ -24,13 +24,16 @@
  */
 package com.buession.redis.utils;
 
+import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.StringUtils;
-import com.buession.lang.Status;
+import com.buession.lang.Arch;
+import com.buession.lang.Multiplexing;
 import com.buession.redis.core.Clients;
 import com.buession.redis.core.Cluster;
 import com.buession.redis.core.Cpu;
 import com.buession.redis.core.Info;
 import com.buession.redis.core.Keyspace;
+import com.buession.redis.core.MaxMemoryPolicy;
 import com.buession.redis.core.Memory;
 import com.buession.redis.core.Persistence;
 import com.buession.redis.core.Replication;
@@ -72,113 +75,108 @@ public class InfoUtil {
 			String groupValue = matcher.group(2);
 
 			if("Server".equalsIgnoreCase(groupName)){
-				final ServerCompiler serverCompiler = new ServerCompiler();
+				final ServerParser serverParser = new ServerParser();
 
-				info.setServer(serverCompiler.compile(groupValue, server));
-			}else if("Cluster".equalsIgnoreCase(groupName)){
-				final ClusterCompiler clusterCompiler = new ClusterCompiler();
-
-				info.setCluster(clusterCompiler.compile(groupValue, cluster));
+				info.setServer(serverParser.parse(groupValue, server));
 			}else if("Clients".equalsIgnoreCase(groupName)){
-				final ClientsCompiler clientsCompiler = new ClientsCompiler();
+				final ClientsParser clientsParser = new ClientsParser();
 
-				info.setClients(clientsCompiler.compile(groupValue, clients));
+				info.setClients(clientsParser.parse(groupValue, clients));
+			}else if("Cluster".equalsIgnoreCase(groupName)){
+				final ClusterParser clusterParser = new ClusterParser();
+
+				info.setCluster(clusterParser.parse(groupValue, cluster));
 			}else if("CPU".equalsIgnoreCase(groupName)){
-				final CpuCompiler cpuCompiler = new CpuCompiler();
+				final CpuParser cpuParser = new CpuParser();
 
-				info.setCpu(cpuCompiler.compile(groupValue, cpu));
+				info.setCpu(cpuParser.parse(groupValue, cpu));
 			}else if("Memory".equalsIgnoreCase(groupName)){
-				final MemoryCompiler memoryCompiler = new MemoryCompiler();
+				final MemoryParser memoryParser = new MemoryParser();
 
-				info.setMemory(memoryCompiler.compile(groupValue, memory));
+				info.setMemory(memoryParser.parse(groupValue, memory));
 			}else if("Persistence".equalsIgnoreCase(groupName)){
-				final PersistenceCompiler persistenceCompiler = new PersistenceCompiler();
+				final PersistenceParser persistenceParser = new PersistenceParser();
 
-				info.setPersistence(persistenceCompiler.compile(groupValue, persistence));
+				info.setPersistence(persistenceParser.parse(groupValue, persistence));
 			}else if("Stats".equalsIgnoreCase(groupName)){
-				final StatsCompiler statsCompiler = new StatsCompiler();
+				final StatsParser statsParser = new StatsParser();
 
-				info.setStats(statsCompiler.compile(groupValue, stats));
+				info.setStats(statsParser.parse(groupValue, stats));
 			}else if("Replication".equalsIgnoreCase(groupName)){
-				final ReplicationCompiler replicationCompiler = new ReplicationCompiler();
+				final ReplicationParser replicationParser = new ReplicationParser();
 
-				info.setReplication(replicationCompiler.compile(groupValue, replication));
+				info.setReplication(replicationParser.parse(groupValue, replication));
 
 				server.setMaster(replication.getRole() == Role.MASTER);
 			}else if("Keyspace".equalsIgnoreCase(groupName)){
-				final KeyspaceCompiler keyspaceCompiler = new KeyspaceCompiler();
+				final KeyspaceParser keyspaceParser = new KeyspaceParser();
 
-				info.setKeyspace(keyspaceCompiler.compile(groupValue, keyspace));
+				info.setKeyspace(keyspaceParser.parse(groupValue, keyspace));
 			}
 		}
 
 		return info;
 	}
 
-	protected interface Compiler<T> {
+	protected interface Parser<T> {
 
-		T compile(final String str, final T t);
+		T parse(final String str, final T t);
 
 	}
 
-	protected final static class ServerCompiler implements Compiler<Server> {
+	protected final static class ServerParser implements Parser<Server> {
 
 		@Override
-		public Server compile(final String str, final Server server){
+		public Server parse(final String str, final Server server){
 			Server.Uptime uptime = new Server.Uptime();
-			String[] rows = str.split(ROW_SEPARATOR);
+			String[] rows = StringUtils.split(str, ROW_SEPARATOR);
+			KeyValueParser keyValueParser;
 
 			for(String row : rows){
-				String[] v = StringUtils.split(row, ':');
+				keyValueParser = new KeyValueParser(row, ':');
 
-				if("redis_version".equals(v[0])){
-					server.setVersion(v[1]);
-				}else if("redis_git_sha1".equals(v[0])){
-					server.setGitSha1(v[1]);
-				}else if("redis_git_dirty".equals(v[0])){
-					server.setGitDirty(v[1]);
-				}else if("redis_build_id".equals(v[0])){
-					server.setBuildId(v[1]);
-				}else if("redis_mode".equals(v[0])){
-					try{
-						server.setMode(Enum.valueOf(Server.Mode.class, v[1].toUpperCase()));
-					}catch(IllegalArgumentException e){
-
+				if("redis_version".equals(keyValueParser.getKey())){
+					server.setVersion(keyValueParser.getValue());
+				}else if("redis_git_sha1".equals(keyValueParser.getKey())){
+					server.setGitSha1(keyValueParser.getValue());
+				}else if("redis_git_dirty".equals(keyValueParser.getKey())){
+					server.setGitDirty(keyValueParser.getValue());
+				}else if("redis_build_id".equals(keyValueParser.getKey())){
+					server.setBuildId(keyValueParser.getValue());
+				}else if("redis_mode".equals(keyValueParser.getKey())){
+					server.setMode(keyValueParser.getEnumValue(Server.Mode.class));
+				}else if("os".equals(keyValueParser.getKey())){
+					server.setOs(keyValueParser.getValue());
+				}else if("arch_bits".equals(keyValueParser.getKey())){
+					if("32".equals(keyValueParser.getValue())){
+						server.setArch(Arch.ARCH_32);
+					}else if("64".equals(keyValueParser.getValue())){
+						server.setArch(Arch.ARCH_64);
 					}
-				}else if("os".equals(v[0])){
-					server.setOs(v[1]);
-				}else if("arch_bits".equals(v[0])){
-					if("32".equals(v[1])){
-						server.setArch(Server.Arch.ARCH_32);
-					}else if("64".equals(v[1])){
-						server.setArch(Server.Arch.ARCH_64);
-					}
-				}else if("multiplexing_api".equals(v[0])){
-					try{
-						server.setMultiplexingApi(Enum.valueOf(Server.Multiplexing.class, v[1].toUpperCase()));
-					}catch(IllegalArgumentException e){
-
-					}
-				}else if("gcc_version".equals(v[0])){
-					server.setGccVersion(v[1]);
-				}else if("process_id".equals(v[0])){
-					server.setProcessId(Integer.valueOf(v[1]));
-				}else if("run_id".equals(v[0])){
-					server.setRunId(v[1]);
-				}else if("tcp_port".equals(v[0])){
-					server.setPort(Integer.valueOf(v[1]));
-				}else if("uptime_in_seconds".equals(v[0])){
-					uptime.setSeconds(Integer.valueOf(v[1]));
-				}else if("uptime_in_days".equals(v[0])){
-					uptime.setDays(Integer.valueOf(v[1]));
-				}else if("hz".equals(v[0])){
-					server.setHz(Integer.valueOf(v[1]));
-				}else if("lru_clock".equals(v[0])){
-					server.setLruClock(Integer.valueOf(v[1]));
-				}else if("executable".equals(v[0])){
-					server.setExecutable(v[1]);
-				}else if("config_file".equals(v[0])){
-					server.setConfigFile(v[1]);
+				}else if("multiplexing_api".equals(keyValueParser.getKey())){
+					server.setMultiplexingApi(keyValueParser.getEnumValue(Multiplexing.class));
+				}else if("gcc_version".equals(keyValueParser.getKey())){
+					server.setGccVersion(keyValueParser.getValue());
+				}else if("process_id".equals(keyValueParser.getKey())){
+					server.setProcessId(keyValueParser.getIntValue());
+				}else if("run_id".equals(keyValueParser.getKey())){
+					server.setRunId(keyValueParser.getValue());
+				}else if("tcp_port".equals(keyValueParser.getKey())){
+					server.setPort(keyValueParser.getIntValue());
+				}else if("uptime_in_seconds".equals(keyValueParser.getKey())){
+					uptime.setSeconds(keyValueParser.getIntValue());
+				}else if("uptime_in_days".equals(keyValueParser.getKey())){
+					uptime.setDays(keyValueParser.getIntValue());
+				}else if("hz".equals(keyValueParser.getKey())){
+					server.setHz(keyValueParser.getIntValue());
+				}else if("configured_hz".equals(keyValueParser.getKey())){
+					server.setConfiguredHz(keyValueParser.getIntValue());
+				}else if("lru_clock".equals(keyValueParser.getKey())){
+					server.setLruClock(keyValueParser.getIntValue());
+				}else if("executable".equals(keyValueParser.getKey())){
+					server.setExecutable(keyValueParser.getValue());
+				}else if("config_file".equals(keyValueParser.getKey())){
+					server.setConfigFile(keyValueParser.getValue());
 				}
 			}
 
@@ -190,78 +188,28 @@ public class InfoUtil {
 		}
 	}
 
-	protected final static class ClusterCompiler implements Compiler<Cluster> {
+	protected final static class ClientsParser implements Parser<Clients> {
 
 		@Override
-		public Cluster compile(final String str, final Cluster cluster){
-			String[] rows = str.split(ROW_SEPARATOR);
+		public Clients parse(final String str, final Clients clients){
+			String[] rows = StringUtils.split(str, ROW_SEPARATOR);
+			KeyValueParser keyValueParser;
 
 			for(String row : rows){
-				String[] v = StringUtils.split(row, ':');
+				keyValueParser = new KeyValueParser(row, ':');
 
-				if("cluster_enabled".equals(v[0])){
-					cluster.setEnabled(Boolean.valueOf(v[1]));
-				}
-			}
-
-			return cluster;
-		}
-	}
-
-	protected final static class ReplicationCompiler implements Compiler<Replication> {
-
-		@Override
-		public Replication compile(final String str, final Replication replication){
-			Replication.ReplBacklog replBacklog = new Replication.ReplBacklog();
-			String[] rows = str.split(ROW_SEPARATOR);
-
-			for(String row : rows){
-				String[] v = StringUtils.split(row, ':');
-
-				if("role".equals(v[0])){
-					try{
-						replication.setRole(Enum.valueOf(Role.class, v[1].toUpperCase()));
-					}catch(IllegalArgumentException e){
-
-					}
-				}else if("connected_slaves".equals(v[0])){
-					replication.setConnectedSlaves(Integer.valueOf(v[1]));
-				}else if("master_repl_offset".equals(v[0])){
-					replication.setMasterReplOffset(Integer.valueOf(v[1]));
-				}else if("repl_backlog_active".equals(v[0])){
-					replBacklog.setActive(Integer.valueOf(v[1]));
-				}else if("repl_backlog_size".equals(v[0])){
-					replBacklog.setSize(Integer.valueOf(v[1]));
-				}else if("repl_backlog_first_byte_offset".equals(v[0])){
-					replBacklog.setFirstByteOffset(Integer.valueOf(v[1]));
-				}else if("repl_backlog_histlen".equals(v[0])){
-					replBacklog.setHistlen(Integer.valueOf(v[1]));
-				}
-			}
-
-			replication.setReplBacklog(replBacklog);
-
-			return replication;
-		}
-	}
-
-	protected final static class ClientsCompiler implements Compiler<Clients> {
-
-		@Override
-		public Clients compile(final String str, final Clients clients){
-			String[] rows = str.split(ROW_SEPARATOR);
-
-			for(String row : rows){
-				String[] v = StringUtils.split(row, ':');
-
-				if("connected_clients".equals(v[0])){
-					clients.setConnecteds(Integer.valueOf(v[1]));
-				}else if("client_longest_output_list".equals(v[0])){
-					clients.setLongestOutputList(Integer.valueOf(v[1]));
-				}else if("client_biggest_input_buf".equals(v[0])){
-					clients.setBiggestInputBuffer(Integer.valueOf(v[1]));
-				}else if("blocked_clients".equals(v[0])){
-					clients.setBlockeds(Integer.valueOf(v[1]));
+				if("connected_clients".equals(keyValueParser.getKey())){
+					clients.setConnecteds(keyValueParser.getIntValue());
+				}else if("client_longest_output_list".equals(keyValueParser.getKey())){
+					clients.setLongestOutputList(keyValueParser.getIntValue());
+				}else if("client_biggest_input_buf".equals(keyValueParser.getKey())){
+					clients.setBiggestInputBuffer(keyValueParser.getIntValue());
+				}else if("client_recent_max_input_buffer".equals(keyValueParser.getKey())){
+					clients.setClientRecentMaxInputBuffer(keyValueParser.getIntValue());
+				}else if("client_recent_max_output_buffer".equals(keyValueParser.getKey())){
+					clients.setClientRecentMaxOutputBuffer(keyValueParser.getIntValue());
+				}else if("blocked_clients".equals(keyValueParser.getKey())){
+					clients.setBlockeds(keyValueParser.getIntValue());
 				}
 			}
 
@@ -269,23 +217,162 @@ public class InfoUtil {
 		}
 	}
 
-	protected final static class CpuCompiler implements Compiler<Cpu> {
+	protected final static class ClusterParser implements Parser<Cluster> {
 
 		@Override
-		public Cpu compile(final String str, final Cpu cpu){
-			String[] rows = str.split(ROW_SEPARATOR);
+		public Cluster parse(final String str, final Cluster cluster){
+			String[] rows = StringUtils.split(str, ROW_SEPARATOR);
+			KeyValueParser keyValueParser;
 
 			for(String row : rows){
-				String[] v = StringUtils.split(row, ':');
+				keyValueParser = new KeyValueParser(row, ':');
 
-				if("used_cpu_sys".equals(v[0])){
-					cpu.setUsedCpuSys(Double.valueOf(v[1]));
-				}else if("used_cpu_user".equals(v[0])){
-					cpu.setUsedCpuUser(Double.valueOf(v[1]));
-				}else if("used_cpu_sys_children".equals(v[0])){
-					cpu.setUsedCpuSysChildren(Double.valueOf(v[1]));
-				}else if("blocked_clients".equals(v[0])){
-					cpu.setUsedCpuUserChildren(Double.valueOf(v[1]));
+				if("cluster_enabled".equals(keyValueParser.getKey())){
+					cluster.setEnabled(keyValueParser.getBoolValue());
+				}
+			}
+
+			return cluster;
+		}
+	}
+
+	protected final static class ReplicationParser implements Parser<Replication> {
+
+		private final static Pattern SLAVE_PATTERN = Pattern.compile("slave\\d");
+
+		@Override
+		public Replication parse(final String str, final Replication replication){
+			String[] rows = StringUtils.split(str, ROW_SEPARATOR);
+			Replication.ReplBacklog replBacklog = new Replication.ReplBacklog();
+			Replication.Master master = null;
+			List<Replication.Slave> slaves = null;
+			KeyValueParser keyValueParser;
+
+			for(String row : rows){
+				keyValueParser = new KeyValueParser(row, ':');
+
+				if("role".equals(keyValueParser.getKey())){
+					replication.setRole(keyValueParser.getEnumValue(Role.class));
+
+					switch(replication.getRole()){
+						case MASTER:
+							master = new Replication.Master();
+							break;
+						case SLAVE:
+							slaves = new ArrayList<>();
+							break;
+						default:
+							break;
+					}
+				}else if(keyValueParser.isKey(SLAVE_PATTERN)){
+					if(slaves == null){
+						slaves = new ArrayList<>();
+					}
+
+					slaves.add(parseSlave(keyValueParser.getValue()));
+				}else if("master_host".equals(keyValueParser.getKey())){
+					if(master == null){
+						master = new Replication.Master();
+					}
+
+					master.setHost(keyValueParser.getValue());
+				}else if("master_port".equals(keyValueParser.getKey())){
+					if(master == null){
+						master = new Replication.Master();
+					}
+
+					master.setPort(keyValueParser.getIntValue());
+				}else if("master_link_status".equals(keyValueParser.getKey())){
+					if(master == null){
+						master = new Replication.Master();
+					}
+
+					master.setMasterLinkStatus(keyValueParser.getEnumValue(Replication.MasterLinkStatus.class));
+				}else if("master_last_io_seconds_ago".equals(keyValueParser.getKey())){
+					if(master == null){
+						master = new Replication.Master();
+					}
+
+					master.setLastIoSecondsAgo(keyValueParser.getIntValue());
+				}else if("master_sync_in_progress".equals(keyValueParser.getKey())){
+					if(master == null){
+						master = new Replication.Master();
+					}
+
+					master.setSyncInProgress(keyValueParser.getBoolValue());
+				}else if("connected_slaves".equals(keyValueParser.getKey())){
+					replication.setConnectedSlaves(keyValueParser.getIntValue());
+				}else if("master_replid".equals(keyValueParser.getKey())){
+					replication.setMasterReplid(keyValueParser.getValue());
+				}else if("master_replid2".equals(keyValueParser.getKey())){
+					replication.setMasterReplid2(keyValueParser.getValue());
+				}else if("master_repl_offset".equals(keyValueParser.getKey())){
+					replication.setMasterReplOffset(keyValueParser.getIntValue());
+				}else if("second_repl_offset".equals(keyValueParser.getKey())){
+					replication.setSecondReplOffset(keyValueParser.getIntValue());
+				}else if("repl_backlog_active".equals(keyValueParser.getKey())){
+					replBacklog.setActive(keyValueParser.getIntValue());
+				}else if("repl_backlog_size".equals(keyValueParser.getKey())){
+					replBacklog.setSize(keyValueParser.getIntValue());
+				}else if("repl_backlog_first_byte_offset".equals(keyValueParser.getKey())){
+					replBacklog.setFirstByteOffset(keyValueParser.getIntValue());
+				}else if("repl_backlog_histlen".equals(keyValueParser.getKey())){
+					replBacklog.setHistlen(keyValueParser.getIntValue());
+				}
+			}
+
+			replication.setMaster(master);
+			replication.setSlaves(slaves);
+			replication.setReplBacklog(replBacklog);
+
+			return replication;
+		}
+
+		private final static Replication.Slave parseSlave(final String str){
+			String[] groups = StringUtils.split(str, ',');
+			KeyValueParser keyValueParser;
+
+			Replication.Slave slave = new Replication.Slave();
+
+			for(String group : groups){
+				keyValueParser = new KeyValueParser(group, '=');
+
+				if("ip".equals(keyValueParser.getKey())){
+					slave.setIp(keyValueParser.getValue());
+				}else if("port".equals(keyValueParser.getKey())){
+					slave.setPort(keyValueParser.getIntValue());
+				}else if("state".equals(keyValueParser.getKey())){
+					slave.setState(keyValueParser.getEnumValue(Replication.SlaveState.class));
+				}else if("offset".equals(keyValueParser.getKey())){
+					slave.setOffset(keyValueParser.getIntValue());
+				}else if("lag".equals(keyValueParser.getKey())){
+					slave.setLag(keyValueParser.getIntValue());
+				}
+			}
+
+			return slave;
+		}
+
+	}
+
+	protected final static class CpuParser implements Parser<Cpu> {
+
+		@Override
+		public Cpu parse(final String str, final Cpu cpu){
+			String[] rows = StringUtils.split(str, ROW_SEPARATOR);
+			KeyValueParser keyValueParser;
+
+			for(String row : rows){
+				keyValueParser = new KeyValueParser(row, ':');
+
+				if("used_cpu_sys".equals(keyValueParser.getKey())){
+					cpu.setUsedCpuSys(keyValueParser.getDoubleValue());
+				}else if("used_cpu_user".equals(keyValueParser.getKey())){
+					cpu.setUsedCpuUser(keyValueParser.getDoubleValue());
+				}else if("used_cpu_sys_children".equals(keyValueParser.getKey())){
+					cpu.setUsedCpuSysChildren(keyValueParser.getDoubleValue());
+				}else if("used_cpu_user_children".equals(keyValueParser.getKey())){
+					cpu.setUsedCpuUserChildren(keyValueParser.getDoubleValue());
 				}
 			}
 
@@ -293,105 +380,163 @@ public class InfoUtil {
 		}
 	}
 
-	protected final static class MemoryCompiler implements Compiler<Memory> {
+	protected final static class MemoryParser implements Parser<Memory> {
 
 		@Override
-		public Memory compile(final String str, final Memory memory){
-			Memory.MemoryInfo usedMemory = new Memory.MemoryInfo();
-			Memory.MemoryInfo rssMemory = new Memory.MemoryInfo();
-			Memory.MemoryInfo peakMemory = new Memory.MemoryInfo();
-			Memory.MemoryInfo totalSystemMemory = new Memory.MemoryInfo();
-			Memory.MemoryInfo luaUsedMemory = new Memory.MemoryInfo();
-			Memory.MemoryInfo maxMemory = new Memory.MemoryInfo();
-			String[] rows = str.split(ROW_SEPARATOR);
+		public Memory parse(final String str, final Memory memory){
+			String[] rows = StringUtils.split(str, ROW_SEPARATOR);
+			KeyValueParser keyValueParser;
 
 			for(String row : rows){
-				String[] v = StringUtils.split(row, ':');
+				keyValueParser = new KeyValueParser(row, ':');
 
-				if("used_memory".equals(v[0])){
-					usedMemory.setValue(Integer.valueOf(v[1]));
-				}else if("used_memory_human".equals(v[0])){
-					usedMemory.setHuman(v[1]);
-				}else if("used_memory_rss".equals(v[0])){
-					rssMemory.setValue(Integer.valueOf(v[1]));
-				}else if("used_memory_rss_human".equals(v[0])){
-					rssMemory.setHuman(v[1]);
-				}else if("used_memory_peak".equals(v[0])){
-					peakMemory.setValue(Integer.valueOf(v[1]));
-				}else if("used_memory_peak_human".equals(v[0])){
-					peakMemory.setHuman(v[1]);
-				}else if("total_system_memory".equals(v[0])){
-					totalSystemMemory.setValue(Long.valueOf(v[1]));
-				}else if("total_system_memory_human".equals(v[0])){
-					totalSystemMemory.setHuman(v[1]);
-				}else if("used_memory_lua".equals(v[0])){
-					luaUsedMemory.setValue(Long.valueOf(v[1]));
-				}else if("used_memory_lua_human".equals(v[0])){
-					luaUsedMemory.setHuman(v[1]);
-				}else if("maxmemory".equals(v[0])){
-					maxMemory.setValue(Long.valueOf(v[1]));
-				}else if("maxmemory_human".equals(v[0])){
-					maxMemory.setHuman(v[1]);
-				}else if("maxmemory_policy".equals(v[0])){
-					memory.setMaxMemoryPolicy(v[1]);
-				}else if("mem_fragmentation_ratio".equals(v[0])){
-					memory.setMemFragmentationTatio(v[1]);
-				}else if("mem_allocator".equals(v[0])){
-					memory.setMemAllocator(v[1]);
+				if("used_memory".equals(keyValueParser.getKey())){
+					memory.setUsedMemory(keyValueParser.getLongValue());
+				}else if("used_memory_human".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryHuman(keyValueParser.getValue());
+				}else if("used_memory_rss".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryRss(keyValueParser.getLongValue());
+				}else if("used_memory_rss_human".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryRssHuman(keyValueParser.getValue());
+				}else if("used_memory_peak".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryPeak(keyValueParser.getLongValue());
+				}else if("used_memory_peak_human".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryPeakHuman(keyValueParser.getValue());
+				}else if("used_memory_peak_perc".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryPeakPerc(keyValueParser.getPercentValue());
+				}else if("used_memory_overhead".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryOverhead(keyValueParser.getLongValue());
+				}else if("used_memory_startup".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryStartup(keyValueParser.getLongValue());
+				}else if("used_memory_dataset".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryDataset(keyValueParser.getLongValue());
+				}else if("used_memory_dataset_perc".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryDatasetPerc(keyValueParser.getPercentValue());
+				}else if("allocator_allocated".equals(keyValueParser.getKey())){
+					memory.setAllocatorAllocated(keyValueParser.getLongValue());
+				}else if("allocator_active".equals(keyValueParser.getKey())){
+					memory.setAllocatorActive(keyValueParser.getLongValue());
+				}else if("allocator_resident".equals(keyValueParser.getKey())){
+					memory.setAllocatorResident(keyValueParser.getLongValue());
+				}else if("total_system_memory".equals(keyValueParser.getKey())){
+					memory.setTotalSystemMemory(keyValueParser.getLongValue());
+				}else if("total_system_memory_human".equals(keyValueParser.getKey())){
+					memory.setTotalSystemMemoryHuman(keyValueParser.getValue());
+				}else if("used_memory_lua".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryLua(keyValueParser.getLongValue());
+				}else if("used_memory_lua_human".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryLuaHuman(keyValueParser.getValue());
+				}else if("used_memory_scripts".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryScripts(keyValueParser.getLongValue());
+				}else if("used_memory_scripts_human".equals(keyValueParser.getKey())){
+					memory.setUsedMemoryScriptsHuman(keyValueParser.getValue());
+				}else if("number_of_cached_scripts".equals(keyValueParser.getKey())){
+					memory.setNumberOfCachedScripts(keyValueParser.getIntValue());
+				}else if("maxmemory".equals(keyValueParser.getKey())){
+					memory.setMaxMemory(keyValueParser.getLongValue());
+				}else if("maxmemory_human".equals(keyValueParser.getKey())){
+					memory.setMaxMemoryHuman(keyValueParser.getValue());
+				}else if("maxmemory_policy".equals(keyValueParser.getKey())){
+					memory.setMaxMemoryPolicy(EnumUtils.valueOf(MaxMemoryPolicy.class, StringUtils.replace
+							(keyValueParser.getValue().toUpperCase(), "-", "_")));
+				}else if("allocator_frag_ratio".equals(keyValueParser.getKey())){
+					memory.setAllocatorFragRatio(keyValueParser.getDoubleValue());
+				}else if("allocator_frag_bytes".equals(keyValueParser.getKey())){
+					memory.setAllocatorFragBytes(keyValueParser.getLongValue());
+				}else if("allocator_rss_ratio".equals(keyValueParser.getKey())){
+					memory.setAllocatorRssRatio(keyValueParser.getDoubleValue());
+				}else if("allocator_rss_bytes".equals(keyValueParser)){
+					memory.setAllocatorRssBytes(keyValueParser.getLongValue());
+				}else if("rss_overhead_ratio".equals(keyValueParser)){
+					memory.setRssOverheadRatio(keyValueParser.getDoubleValue());
+				}else if("rss_overhead_bytes".equals(keyValueParser.getKey())){
+					memory.setRssOverheadBytes(keyValueParser.getLongValue());
+				}else if("mem_fragmentation_ratio".equals(keyValueParser.getKey())){
+					memory.setMemFragmentationRatio(keyValueParser.getDoubleValue());
+				}else if("mem_fragmentation_bytes".equals(keyValueParser.getKey())){
+					memory.setMemFragmentationBytes(keyValueParser.getLongValue());
+				}else if("mem_not_counted_for_evict".equals(keyValueParser.getKey())){
+					memory.setMemNotCountedForEvict(keyValueParser.getLongValue());
+				}else if("mem_replication_backlog".equals(keyValueParser.getKey())){
+					memory.setMemReplicationBacklog(keyValueParser.getLongValue());
+				}else if("mem_clients_slaves".equals(keyValueParser.getKey())){
+					memory.setMemClientsSlaves(keyValueParser.getIntValue());
+				}else if("mem_clients_normal".equals(keyValueParser.getKey())){
+					memory.setMemClientsNormal(keyValueParser.getIntValue());
+				}else if("mem_aof_buffer".equals(keyValueParser.getKey())){
+					memory.setMemAofBuffer(keyValueParser.getLongValue());
+				}else if("mem_allocator".equals(keyValueParser.getKey())){
+					memory.setMemAllocator(keyValueParser.getValue());
+				}else if("active_defrag_running".equals(keyValueParser.getKey())){
+					memory.setActiveDefragRunning(keyValueParser.getBoolValue());
+				}else if("lazyfree_pending_objects".equals(keyValueParser.getKey())){
+					memory.setLazyfreePendingObjects(keyValueParser.getIntValue());
 				}
 			}
-
-			memory.setUsedMemory(usedMemory);
-			memory.setUsedMemoryRss(rssMemory);
-			memory.setUsedMemoryPeak(peakMemory);
-			memory.setTotalSystemMemory(totalSystemMemory);
-			memory.setUsedMemoryLua(luaUsedMemory);
-			memory.setMaxMemory(maxMemory);
 
 			return memory;
 		}
 	}
 
-	protected final static class PersistenceCompiler implements Compiler<Persistence> {
+	protected final static class PersistenceParser implements Parser<Persistence> {
 
 		@Override
-		public Persistence compile(final String str, final Persistence persistence){
-			String[] rows = str.split(ROW_SEPARATOR);
+		public Persistence parse(final String str, final Persistence persistence){
+			String[] rows = StringUtils.split(str, ROW_SEPARATOR);
+			KeyValueParser keyValueParser;
 
 			for(String row : rows){
-				String[] v = StringUtils.split(row, ':');
+				keyValueParser = new KeyValueParser(row, ':');
 
-				if("loading".equals(v[0])){
-					persistence.setLoading(Boolean.valueOf(v[1]));
-				}else if("rdb_changes_since_last_save".equals(v[0])){
-					persistence.setRdbChangesSinceLastSave(Integer.valueOf(v[1]));
-				}else if("rdb_bgsave_in_progress".equals(v[0])){
-					persistence.setRdbBgSaveInProgress(Boolean.valueOf(v[1]));
-				}else if("rdb_last_save_time".equals(v[0])){
+				if("loading".equals(keyValueParser.getKey())){
+					persistence.setLoading(keyValueParser.getBoolValue());
+				}else if("rdb_changes_since_last_save".equals(keyValueParser.getKey())){
+					persistence.setRdbChangesSinceLastSave(keyValueParser.getIntValue());
+				}else if("rdb_bgsave_in_progress".equals(keyValueParser.getKey())){
+					persistence.setRdbBgSaveInProgress(keyValueParser.getBoolValue());
+				}else if("rdb_last_save_time".equals(keyValueParser.getKey())){
 					Date date = new Date();
 
-					date.setTime(Integer.valueOf(v[1]) * 1000);
+					date.setTime(keyValueParser.getLongValue() * 1000L);
 					persistence.setRdbLastSaveTime(date);
-				}else if("rdb_last_bgsave_status".equals(v[0])){
-					persistence.setRdbLastBgSaveStatus(Status.valueOf("OK".equalsIgnoreCase(v[1])));
-				}else if("rdb_last_bgsave_time_sec".equals(v[0])){
-					persistence.setRdbLastBgSaveTimeSec(Integer.valueOf(v[1]));
-				}else if("rdb_current_bgsave_time_sec".equals(v[0])){
-					persistence.setRdbCurrentBgSaveTimeSec(Integer.valueOf(v[1]));
-				}else if("aof_enabled".equals(v[0])){
-					persistence.setAofEnabled(Boolean.valueOf(v[1]));
-				}else if("aof_rewrite_in_progress".equals(v[0])){
-					persistence.setAofRewriteInProgress(Boolean.valueOf(v[1]));
-				}else if("aof_rewrite_scheduled".equals(v[0])){
-					persistence.setAofRewriteScheduled(Boolean.valueOf(v[1]));
-				}else if("aof_last_rewrite_time_sec".equals(v[0])){
-					persistence.setAofLastRewriteTimeSec(Integer.valueOf(v[1]));
-				}else if("aof_current_rewrite_time_sec".equals(v[0])){
-					persistence.setAofCurrentRewriteTimeSec(Integer.valueOf(v[1]));
-				}else if("aof_last_bgrewrite_status".equals(v[0])){
-					persistence.setAofLastBgRewriteStatus(Status.valueOf("OK".equalsIgnoreCase(v[1])));
-				}else if("aof_last_write_status".equals(v[0])){
-					persistence.setAofLastWriteStatus(Status.valueOf("OK".equalsIgnoreCase(v[1])));
+				}else if("rdb_last_bgsave_status".equals(keyValueParser.getKey())){
+					persistence.setRdbLastBgSaveStatus(keyValueParser.getStatusValue());
+				}else if("rdb_last_bgsave_time_sec".equals(keyValueParser.getKey())){
+					persistence.setRdbLastBgSaveTimeSec(keyValueParser.getIntValue());
+				}else if("rdb_current_bgsave_time_sec".equals(keyValueParser.getKey())){
+					persistence.setRdbCurrentBgSaveTimeSec(keyValueParser.getIntValue());
+				}else if("rdb_last_cow_size".equals(keyValueParser.getKey())){
+					persistence.setRdbLastCowSize(keyValueParser.getLongValue());
+				}else if("aof_enabled".equals(keyValueParser.getKey())){
+					persistence.setAofEnabled(keyValueParser.getBoolValue());
+				}else if("aof_rewrite_in_progress".equals(keyValueParser.getKey())){
+					persistence.setAofRewriteInProgress(keyValueParser.getBoolValue());
+				}else if("aof_rewrite_scheduled".equals(keyValueParser.getKey())){
+					persistence.setAofRewriteScheduled(keyValueParser.getBoolValue());
+				}else if("aof_last_rewrite_time_sec".equals(keyValueParser.getKey())){
+					persistence.setAofLastRewriteTimeSec(keyValueParser.getIntValue());
+				}else if("aof_current_rewrite_time_sec".equals(keyValueParser.getKey())){
+					persistence.setAofCurrentRewriteTimeSec(keyValueParser.getIntValue());
+				}else if("aof_last_bgrewrite_status".equals(keyValueParser.getKey())){
+					persistence.setAofLastBgRewriteStatus(keyValueParser.getStatusValue());
+				}else if("aof_last_write_status".equals(keyValueParser.getKey())){
+					persistence.setAofLastWriteStatus(keyValueParser.getStatusValue());
+				}else if("aof_last_cow_size".equals(keyValueParser.getKey())){
+					persistence.setAofLastCowSize(keyValueParser.getLongValue());
+				}else if("aof_current_size".equals(keyValueParser.getKey())){
+					persistence.setAofCurrentSize(keyValueParser.getLongValue());
+				}else if("aof_base_size".equals(keyValueParser.getKey())){
+					persistence.setAofBaseSize(keyValueParser.getLongValue());
+				}else if("aof_pending_rewrite".equals(keyValueParser.getKey())){
+					persistence.setAofPendingRewrite(keyValueParser.getBoolValue());
+				}else if("aof_buffer_length".equals(keyValueParser.getKey())){
+					persistence.setAofBufferLength(keyValueParser.getIntValue());
+				}else if("aof_rewrite_buffer_length".equals(keyValueParser.getKey())){
+					persistence.setAofRewriteBufferLength(keyValueParser.getIntValue());
+				}else if("aof_pending_bio_fsync".equals(keyValueParser.getKey())){
+					persistence.setAofPendingBioFsync(keyValueParser.getIntValue());
+				}else if("aof_delayed_fsync".equals(keyValueParser.getKey())){
+					persistence.setAofDelayedFsync(keyValueParser.getIntValue());
 				}
 			}
 
@@ -399,53 +544,68 @@ public class InfoUtil {
 		}
 	}
 
-	protected final static class StatsCompiler implements Compiler<Stats> {
+	protected final static class StatsParser implements Parser<Stats> {
 
 		@Override
-		public Stats compile(final String str, final Stats stats){
-			String[] rows = str.split(ROW_SEPARATOR);
+		public Stats parse(final String str, final Stats stats){
+			String[] rows = StringUtils.split(str, ROW_SEPARATOR);
+			KeyValueParser keyValueParser;
 
 			for(String row : rows){
-				String[] v = StringUtils.split(row, ':');
+				keyValueParser = new KeyValueParser(row, ':');
 
-				if("total_connections_received".equals(v[0])){
-					stats.setTotalConnectionsReceived(Integer.valueOf(v[1]));
-				}else if("total_commands_processed".equals(v[0])){
-					stats.setTotalCommandsProcessed(Integer.valueOf(v[1]));
-				}else if("total_net_input_bytes".equals(v[0])){
-					stats.setTotalNetInputBytes(Integer.valueOf(v[1]));
-				}else if("total_net_output_bytes".equals(v[0])){
-					stats.setTotalNetOutputBytes(Integer.valueOf(v[1]));
-				}else if("instantaneous_input_kbps".equals(v[0])){
-					stats.setInstantaneousInputKbps(Double.valueOf(v[1]));
-				}else if("instantaneous_output_kbps".equals(v[0])){
-					stats.setInstantaneousOutputKbps(Double.valueOf(v[1]));
-				}else if("instantaneous_ops_per_sec".equals(v[0])){
-					stats.setInstantaneousOpsPerSec(Integer.valueOf(v[1]));
-				}else if("rejected_connections".equals(v[0])){
-					stats.setRejectedConnections(Integer.valueOf(v[1]));
-				}else if("sync_full".equals(v[0])){
-					stats.setSyncFull(Integer.valueOf(v[1]));
-				}else if("sync_partial_ok".equals(v[0])){
-					stats.setSyncPartialOk(Integer.valueOf(v[1]));
-				}else if("sync_partial_err".equals(v[0])){
-					stats.setSyncPartialErr(Integer.valueOf(v[1]));
-				}else if("expired_keys".equals(v[0])){
-					stats.setExpiredKeys(Integer.valueOf(v[1]));
-				}else if("evicted_keys".equals(v[0])){
-					stats.setEvictedKeys(Integer.valueOf(v[1]));
-				}else if("keyspace_hits".equals(v[0])){
-					stats.setKeyspaceHits(Integer.valueOf(v[1]));
-				}else if("keyspace_misses".equals(v[0])){
-					stats.setKeyspaceMisses(Integer.valueOf(v[1]));
-				}else if("pubsub_channels".equals(v[0])){
-					stats.setPubsubChannels(Integer.valueOf(v[1]));
-				}else if("pubsub_patterns".equals(v[0])){
-					stats.setPubsubPatterns(Integer.valueOf(v[1]));
-				}else if("latest_fork_usec".equals(v[0])){
-					stats.setLatestForkUsec(Integer.valueOf(v[1]));
-				}else if("migrate_cached_sockets".equals(v[0])){
-					stats.setMigrateCachedSockets(Integer.valueOf(v[1]));
+				if("total_connections_received".equals(keyValueParser.getKey())){
+					stats.setTotalConnectionsReceived(keyValueParser.getIntValue());
+				}else if("total_commands_processed".equals(keyValueParser.getKey())){
+					stats.setTotalCommandsProcessed(keyValueParser.getIntValue());
+				}else if("total_net_input_bytes".equals(keyValueParser.getKey())){
+					stats.setTotalNetInputBytes(keyValueParser.getIntValue());
+				}else if("total_net_output_bytes".equals(keyValueParser.getKey())){
+					stats.setTotalNetOutputBytes(keyValueParser.getIntValue());
+				}else if("instantaneous_input_kbps".equals(keyValueParser.getKey())){
+					stats.setInstantaneousInputKbps(keyValueParser.getDoubleValue());
+				}else if("instantaneous_output_kbps".equals(keyValueParser.getKey())){
+					stats.setInstantaneousOutputKbps(keyValueParser.getDoubleValue());
+				}else if("instantaneous_ops_per_sec".equals(keyValueParser.getKey())){
+					stats.setInstantaneousOpsPerSec(keyValueParser.getIntValue());
+				}else if("rejected_connections".equals(keyValueParser.getKey())){
+					stats.setRejectedConnections(keyValueParser.getIntValue());
+				}else if("sync_full".equals(keyValueParser.getKey())){
+					stats.setSyncFull(keyValueParser.getIntValue());
+				}else if("sync_partial_ok".equals(keyValueParser.getKey())){
+					stats.setSyncPartialOk(keyValueParser.getIntValue());
+				}else if("sync_partial_err".equals(keyValueParser.getKey())){
+					stats.setSyncPartialErr(keyValueParser.getIntValue());
+				}else if("expired_keys".equals(keyValueParser.getKey())){
+					stats.setExpiredKeys(keyValueParser.getIntValue());
+				}else if("expired_stale_perc".equals(keyValueParser.getKey())){
+					stats.setExpiredStalePerc(keyValueParser.getDoubleValue());
+				}else if("expired_time_cap_reached_count".equals(keyValueParser.getKey())){
+					stats.setExpiredTimeCapReachedCount(keyValueParser.getIntValue());
+				}else if("evicted_keys".equals(keyValueParser.getKey())){
+					stats.setEvictedKeys(keyValueParser.getIntValue());
+				}else if("keyspace_hits".equals(keyValueParser.getKey())){
+					stats.setKeyspaceHits(keyValueParser.getIntValue());
+				}else if("keyspace_misses".equals(keyValueParser.getKey())){
+					stats.setKeyspaceMisses(keyValueParser.getIntValue());
+				}else if("pubsub_channels".equals(keyValueParser.getKey())){
+					stats.setPubsubChannels(keyValueParser.getIntValue());
+				}else if("pubsub_patterns".equals(keyValueParser.getKey())){
+					stats.setPubsubPatterns(keyValueParser.getIntValue());
+				}else if("latest_fork_usec".equals(keyValueParser.getKey())){
+					stats.setLatestForkUsec(keyValueParser.getIntValue());
+				}else if("migrate_cached_sockets".equals(keyValueParser.getKey())){
+					stats.setMigrateCachedSockets(keyValueParser.getIntValue());
+				}else if("slave_expires_tracked_keys".equals(keyValueParser.getKey())){
+					stats.setSlaveExpiresTrackedKeys(keyValueParser.getIntValue());
+				}else if("active_defrag_hits".equals(keyValueParser.getKey())){
+					stats.setActiveDefragHits(keyValueParser.getIntValue());
+				}else if("active_defrag_misses".equals(keyValueParser.getKey())){
+					stats.setActiveDefragMisses(keyValueParser.getIntValue());
+				}else if("active_defrag_key_hits".equals(keyValueParser.getKey())){
+					stats.setActiveDefragKeyHits(keyValueParser.getIntValue());
+				}else if("active_defrag_key_misses".equals(keyValueParser.getKey())){
+					stats.setActiveDefragKeyMisses(keyValueParser.getIntValue());
 				}
 			}
 
@@ -453,11 +613,11 @@ public class InfoUtil {
 		}
 	}
 
-	protected final static class KeyspaceCompiler implements Compiler<List<Keyspace>> {
+	protected final static class KeyspaceParser implements Parser<List<Keyspace>> {
 
 		@Override
-		public List<Keyspace> compile(final String str, final List<Keyspace> keyspaces){
-			String[] rows = str.split(ROW_SEPARATOR);
+		public List<Keyspace> parse(final String str, final List<Keyspace> keyspaces){
+			String[] rows = StringUtils.split(str, ROW_SEPARATOR);
 
 			for(String row : rows){
 				String[] v = StringUtils.split(row, ':');
@@ -466,25 +626,26 @@ public class InfoUtil {
 				}
 
 				final Keyspace keyspace = new Keyspace();
-				String db = StringUtils.replace(StringUtils.replace(v[0], "\n", ""), "db", "");
+				String db = StringUtils.replace(v[0], "\n", "").substring(2);
 				String[] params = StringUtils.split(v[1], ',');
 
-				keyspace.setDb(Integer.valueOf(db));
+				keyspace.setDb(Integer.parseInt(db));
 
 				if(params == null){
+					keyspaces.add(keyspace);
 					continue;
 				}
 
+				KeyValueParser paramKeyValueParser;
 				for(String s : params){
-					if(s.startsWith("keys=")){
-						s = StringUtils.replace(s, "keys=", "");
-						keyspace.setKeys(Integer.valueOf(s));
-					}else if(s.startsWith("expires=")){
-						s = StringUtils.replace(s, "expires=", "");
-						keyspace.setExpires(Integer.valueOf(s));
-					}else if(s.startsWith("avg_ttl=")){
-						s = StringUtils.replace(s, "avg_ttl=", "");
-						keyspace.setAvgTtl(Integer.valueOf(s));
+					paramKeyValueParser = new KeyValueParser(s, '=');
+
+					if("keys".equals(paramKeyValueParser.getKey())){
+						keyspace.setKeys(paramKeyValueParser.getIntValue());
+					}else if("expires".equals(paramKeyValueParser.getKey())){
+						keyspace.setExpires(paramKeyValueParser.getIntValue());
+					}else if("avg_ttl".equals(paramKeyValueParser.getKey())){
+						keyspace.setAvgTtl(paramKeyValueParser.getLongValue());
 					}
 				}
 
@@ -492,6 +653,28 @@ public class InfoUtil {
 			}
 
 			return keyspaces;
+		}
+
+	}
+
+	protected static class KeyValueParser extends com.buession.core.utils.KeyValueParser {
+
+		private Double percentValue;
+
+		public KeyValueParser(final String str, final String delimiter){
+			super(str, delimiter);
+		}
+
+		public KeyValueParser(final String str, final char delimiter){
+			super(str, delimiter);
+		}
+
+		public Double getPercentValue(){
+			if(percentValue == null){
+				percentValue = Double.parseDouble(getValue().substring(0, getValue().length() - 1));
+			}
+
+			return percentValue;
 		}
 
 	}

@@ -26,56 +26,80 @@ package com.buession.redis;
 
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.RedisConnectionUtils;
+import com.buession.redis.core.Client;
 import org.junit.Test;
 import redis.clients.jedis.Jedis;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
 public class ClientTest extends AbstractRedisTest {
 
-    private RedisTemplate redisClientTemplate(){
-        RedisTemplate redisClientTemplate = null;
+	private RedisTemplate redisTemplate(){
+		RedisTemplate redisClientTemplate = null;
 
-        try{
-            redisClientTemplate = new RedisTemplate(connectionFactory().getObject());
-            redisClientTemplate.afterPropertiesSet();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
+		try{
+			redisClientTemplate = new RedisTemplate(connectionFactory().getObject());
+			redisClientTemplate.afterPropertiesSet();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 
-        return redisClientTemplate;
-    }
+		return redisClientTemplate;
+	}
 
-    @Test
-    public void set(){
-        RedisTemplate redisClientTemplate = redisClientTemplate();
-        redisClientTemplate.set("a", "A");
-    }
+	@Test
+	public void set(){
+		RedisTemplate redisClientTemplate = redisTemplate();
+		redisClientTemplate.set("a", "A");
+	}
 
-    @Test
-    public void setNx(){
-        RedisTemplate redisClientTemplate = redisClientTemplate();
-        redisClientTemplate.setNx("a", "A");
-    }
+	@Test
+	public void setNx(){
+		RedisTemplate redisClientTemplate = redisTemplate();
+		redisClientTemplate.setNx("a", "A");
+	}
 
-    @Test
-    public void info(){
-        RedisTemplate redisClientTemplate = redisClientTemplate();
-        RedisClient client = null;
+	@Test
+	public void get(){
+		RedisTemplate redisClientTemplate = redisTemplate();
 
-        try{
-            client = redisClientTemplate.getClient();
-            System.out.println(client.info());
-            RedisConnectionUtils.releaseConnection(redisClientTemplate.getConnectionFactory(), client.getConnection()
-                    , false);
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    }
+		String a = redisClientTemplate.get("a");
+		System.out.println(a);
 
-    @Test
-    public void clientList(){
+
+		String b = redisClientTemplate.get("a");
+		System.out.println(b);
+	}
+
+	@Test
+	public void info(){
+		RedisTemplate redisTemplate = redisTemplate();
+		RedisClient client = null;
+
+		try{
+			client = redisTemplate.getClient();
+			System.out.println(client.info());
+
+
+			List<Client> clients = redisTemplate.getClient().clientList();
+
+			System.out.println(clients);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void clientList(){
+		RedisTemplate redisTemplate = redisTemplate();
+
+		List<Client> clients = redisTemplate.getClient().clientList();
+
+		System.out.println(clients);
+
         /*JedisRedisClientTemplate redisClientTemplate = redisClientTemplate();
         RedisClient<Jedis> client = null;
 
@@ -101,6 +125,6 @@ public class ClientTest extends AbstractRedisTest {
         }catch(Exception e){
             e.printStackTrace();
         }*/
-    }
+	}
 
 }

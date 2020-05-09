@@ -33,93 +33,93 @@ import java.io.Serializable;
  */
 public class Keyspace implements Serializable {
 
-    private final static long serialVersionUID = -5023410132423250601L;
+	private final static long serialVersionUID = -5023410132423250601L;
 
-    /**
-     * 数据库
-     */
-    private int db;
+	/**
+	 * 数据库
+	 */
+	private int db;
 
-    /**
-     * Key 数量
-     */
-    private int keys;
+	/**
+	 * Key 数量
+	 */
+	private int keys;
 
-    /**
-     * 带有生存期的 Key 的数量
-     */
-    private int expires;
+	/**
+	 * 带有生存期的 Key 的数量
+	 */
+	private int expires;
 
-    private int avgTtl;
+	private long avgTtl;
 
-    /**
-     * 获取数据库
-     *
-     * @return 数据库
-     */
-    public int getDb(){
-        return db;
-    }
+	/**
+	 * 获取数据库
+	 *
+	 * @return 数据库
+	 */
+	public int getDb(){
+		return db;
+	}
 
-    /**
-     * 设置数据库
-     *
-     * @param db
-     *         数据库
-     */
-    public void setDb(int db){
-        this.db = db;
-    }
+	/**
+	 * 设置数据库
+	 *
+	 * @param db
+	 * 		数据库
+	 */
+	public void setDb(int db){
+		this.db = db;
+	}
 
-    /**
-     * 获取 Key 数量
-     *
-     * @return Key 数量
-     */
-    public int getKeys(){
-        return keys;
-    }
+	/**
+	 * 获取 Key 数量
+	 *
+	 * @return Key 数量
+	 */
+	public int getKeys(){
+		return keys;
+	}
 
-    /**
-     * 设置 Key 数量
-     *
-     * @param keys
-     *         Key 数量
-     */
-    public void setKeys(int keys){
-        this.keys = keys;
-    }
+	/**
+	 * 设置 Key 数量
+	 *
+	 * @param keys
+	 * 		Key 数量
+	 */
+	public void setKeys(int keys){
+		this.keys = keys;
+	}
 
-    /**
-     * 获取带有生存期的 Key 的数量
-     *
-     * @return 带有生存期的 Key 的数量
-     */
-    public int getExpires(){
-        return expires;
-    }
+	/**
+	 * 获取带有生存期的 Key 的数量
+	 *
+	 * @return 带有生存期的 Key 的数量
+	 */
+	public int getExpires(){
+		return expires;
+	}
 
-    /**
-     * 设置带有生存期的 Key 的数量
-     *
-     * @param expires
-     *         带有生存期的 Key 的数量
-     */
-    public void setExpires(int expires){
-        this.expires = expires;
-    }
+	/**
+	 * 设置带有生存期的 Key 的数量
+	 *
+	 * @param expires
+	 * 		带有生存期的 Key 的数量
+	 */
+	public void setExpires(int expires){
+		this.expires = expires;
+	}
 
-    public int getAvgTtl(){
-        return avgTtl;
-    }
+	public long getAvgTtl(){
+		return avgTtl;
+	}
 
-    public void setAvgTtl(int avgTtl){
-        this.avgTtl = avgTtl;
-    }
+	public void setAvgTtl(long avgTtl){
+		this.avgTtl = avgTtl;
+	}
 
-    @Override
-    public String toString(){
-        return "Keyspace{" + "db=" + db + ", keys=" + keys + ", expires=" + expires + ", avgTtl=" + avgTtl + '}';
-    }
+	@Override
+	public String toString(){
+		return "Keyspace{" + "db=" + db + ", keys=" + keys + ", expires=" + expires + ", avgTtl=" + avgTtl + '}';
+	}
 
 }

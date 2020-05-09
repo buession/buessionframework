@@ -28,17 +28,13 @@ import com.buession.core.Executor;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.operations.OperationsCommandArguments;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.utils.SafeEncoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -96,30 +92,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	protected final static <O extends Enum<O>> O returnEnum(final String str, final Class<O> enumType){
 		return Enum.valueOf(enumType, str.toUpperCase());
-	}
-
-	protected final static Status returnForOK(final String str){
-		return Status.valueOf("OK".equalsIgnoreCase(str));
-	}
-
-	protected final static Status returnForOK(final byte[] str){
-		return returnForOK(SafeEncoder.encode(str));
-	}
-
-	protected final static RedisServerTime returnRedisServerTime(final List<String> ret){
-		if(ret == null){
-			return null;
-		}
-
-		RedisServerTime time = new RedisServerTime();
-
-		Date date = new Date();
-		date.setTime(Long.valueOf(ret.get(0)) * 1000L);
-
-		time.setDate(date);
-		time.setUsec(Long.valueOf(ret.get(1)));
-
-		return time;
 	}
 
 	protected void close(){

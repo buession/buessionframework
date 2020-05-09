@@ -62,9 +62,13 @@ public abstract class AbstractRedisTest {
 
 		connectionFactory.setPoolConfig(jedisPoolConfig());
 		connectionFactory.setDatabase(10);
-		connectionFactory.setHost("10.101.0.36");
+		//connectionFactory.setHost("10.101.0.36");
+		connectionFactory.setHost("10.101.0.45");
 		connectionFactory.setPort(6379);
-		connectionFactory.setPassword("tQP!Vf7JxL-nrH-x");
+		//connectionFactory.setPort(16379);
+		//connectionFactory.setPassword("tQP!Vf7JxL-nrH-x");
+		//connectionFactory.setPassword("passwd");
+		connectionFactory.setUsePool(false);
 
 		try{
 			connectionFactory.afterPropertiesSet();

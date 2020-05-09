@@ -19,50 +19,87 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
+import com.buession.core.validator.Validate;
+import com.buession.lang.Status;
+import com.buession.redis.client.ClientConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Client;
 import redis.clients.jedis.Jedis;
+
+import java.io.IOException;
 
 /**
  * @author Yong.Teng
  */
 public class SimpleJedisDataSource extends AbstractJedisRedisDataSource<Jedis> implements JedisDataSource {
 
-    private Jedis jedis;
+	private Jedis jedis;
 
-    public Jedis getJedis(){
-        return jedis;
-    }
+	private final static Logger logger = LoggerFactory.getLogger(SimpleJedisDataSource.class);
 
-    public void setJedis(Jedis jedis){
-        this.jedis = jedis;
-    }
+	public SimpleJedisDataSource(){
+		super();
+	}
 
-    @Override
-    public Jedis getRedisClient(){
-        return getJedis();
-    }
+	public SimpleJedisDataSource(ClientConfiguration clientConfiguration){
+		super(clientConfiguration);
+	}
 
-    @Override
-    public void disconnect(){
-        if(jedis != null){
-            jedis.disconnect();
-        }
-    }
+	@Override
+	public Status connect(){
+		ClientConfiguration configuration = getClientConfiguration();
+		jedis = new Jedis(configuration.getHost(), configuration.getPort(), configuration.getConnectTimeout(),
+				configuration.getSoTimeout(), configuration.isUseSsl(), configuration.getSslSocketFactory(),
+				configuration.getSslParameters(), configuration.getHostnameVerifier());
 
-    @Override
-    public boolean isClosed(){
-        return jedis == null ? true : jedis.isConnected() == false;
-    }
+		Client client = jedis.getClient();
 
-    @Override
-    public void close(){
-        if(jedis != null){
-            jedis.close();
-        }
-    }
+		if(Validate.hasText(configuration.getPassword())){
+			client.setPassword(configuration.getPassword());
+		}
+		client.setDb(configuration.getDatabase());
+
+		jedis.connect();
+
+		if(Validate.hasText(configuration.getClientName())){
+			client.clientSetname(configuration.getClientName());
+		}
+
+		logger.info("Simple jedis datasource initialize with db {} success, name: {}.", configuration.getDatabase(),
+				configuration.getClientName());
+
+		return Status.SUCCESS;
+	}
+
+	@Override
+	public Jedis getRedisClient(){
+		return jedis;
+	}
+
+	@Override
+	public boolean isClosed(){
+		return jedis != null && jedis.isConnected() == false;
+	}
+
+	@Override
+	public void disconnect() throws IOException{
+		if(jedis != null){
+			jedis.disconnect();
+		}
+	}
+
+	@Override
+	public void close() throws IOException{
+		if(jedis != null){
+			jedis.quit();
+			disconnect();
+		}
+	}
 
 }

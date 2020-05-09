@@ -32,36 +32,36 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
  */
 public class TransactionUtils {
 
-    private TransactionUtils(){
+	private TransactionUtils(){
 
-    }
+	}
 
-    public final static boolean isActualNonReadonlyTransactionActive(){
-        return TransactionSynchronizationManager.isActualTransactionActive() && TransactionSynchronizationManager
-                .isCurrentTransactionReadOnly() == false;
-    }
+	public final static boolean isActualNonReadonlyTransactionActive(){
+		return TransactionSynchronizationManager.isActualTransactionActive() && TransactionSynchronizationManager
+				.isCurrentTransactionReadOnly() == false;
+	}
 
-    public final static void bindResource(final RedisConnectionFactory factory, final RedisConnectionHolder
-            connectionHolder){
-        TransactionSynchronizationManager.bindResource(factory, connectionHolder);
-    }
+	public final static void bindResource(final RedisConnectionFactory factory, final RedisConnectionHolder
+			connectionHolder){
+		TransactionSynchronizationManager.bindResource(factory, connectionHolder);
+	}
 
-    public final static RedisConnectionHolder getResource(final RedisConnectionFactory factory){
-        return (RedisConnectionHolder) TransactionSynchronizationManager.getResource(factory);
-    }
+	public final static RedisConnectionHolder getResource(final RedisConnectionFactory factory){
+		return (RedisConnectionHolder) TransactionSynchronizationManager.getResource(factory);
+	}
 
-    public final static RedisConnectionHolder unbindResourceIfPossible(final RedisConnectionFactory factory){
-        return (RedisConnectionHolder) TransactionSynchronizationManager.unbindResourceIfPossible(factory);
-    }
+	public final static RedisConnectionHolder unbindResourceIfPossible(final RedisConnectionFactory factory){
+		return (RedisConnectionHolder) TransactionSynchronizationManager.unbindResourceIfPossible(factory);
+	}
 
-    public final static void registerSynchronization(final RedisConnectionFactory factory, final
-    RedisConnectionHolder connectionHolder, final RedisConnection connection){
-        TransactionSynchronizationManager.registerSynchronization(new RedisTransactionSynchronizationAdapter(factory,
-                connectionHolder, connection));
-    }
+	public final static void registerSynchronization(final RedisConnectionFactory factory, final RedisConnectionHolder
+			connectionHolder, final RedisConnection connection){
+		TransactionSynchronizationManager.registerSynchronization(new RedisTransactionSynchronizationAdapter(factory,
+				connectionHolder, connection));
+	}
 
-    public final static boolean isCurrentTransactionReadOnly(){
-        return TransactionSynchronizationManager.isCurrentTransactionReadOnly();
-    }
+	public final static boolean isCurrentTransactionReadOnly(){
+		return TransactionSynchronizationManager.isCurrentTransactionReadOnly();
+	}
 
 }

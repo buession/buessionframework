@@ -19,18 +19,40 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource;
+
+import com.buession.redis.client.ClientConfiguration;
+
+import java.io.IOException;
 
 /**
  * @author Yong.Teng
  */
 public abstract class AbstractRedisDataSource implements RedisDataSource {
 
-    @Override
-    public void disconnect(){
-    }
+	private ClientConfiguration clientConfiguration;
+
+	public AbstractRedisDataSource(){
+		this(new ClientConfiguration());
+	}
+
+	public AbstractRedisDataSource(ClientConfiguration clientConfiguration){
+		this.clientConfiguration = clientConfiguration;
+	}
+
+	public ClientConfiguration getClientConfiguration(){
+		return clientConfiguration;
+	}
+
+	public void setClientConfiguration(ClientConfiguration clientConfiguration){
+		this.clientConfiguration = clientConfiguration;
+	}
+
+	@Override
+	public void disconnect() throws IOException{
+	}
 
 }

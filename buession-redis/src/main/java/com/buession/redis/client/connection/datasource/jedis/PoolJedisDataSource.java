@@ -24,9 +24,14 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
+import redis.clients.jedis.commands.JedisCommands;
+import redis.clients.jedis.util.Pool;
+
 /**
  * @author Yong.Teng
  */
-public interface PoolJedisDataSource {
+public interface PoolJedisDataSource<T extends JedisCommands> extends JedisRedisDataSource<T> {
+
+	Pool<T> getPool();
 
 }

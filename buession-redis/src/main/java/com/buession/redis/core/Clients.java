@@ -33,108 +33,164 @@ import java.io.Serializable;
  */
 public class Clients implements Serializable {
 
-    private final static long serialVersionUID = 2525187017390996219L;
+	private final static long serialVersionUID = 7746131798680346372L;
 
-    /**
-     * 已连接客户端的数量
-     */
-    private int connecteds;
+	/**
+	 * 已连接客户端的数量
+	 */
+	private int connecteds;
 
-    /**
-     * 当前连接的客户端当中，最长的输出列表
-     */
-    private int longestOutputList;
+	/**
+	 * 当前连接的客户端当中，最长的输出列表
+	 */
+	@Deprecated
+	private int longestOutputList;
 
-    /**
-     * 当前连接的客户端当中，最大输入缓存
-     */
-    private int biggestInputBuffer;
+	/**
+	 * 当前连接的客户端当中，最大输入缓存
+	 */
+	@Deprecated
+	private int biggestInputBuffer;
 
-    /**
-     * 正在等待阻塞命令的客户端的数量
-     */
-    private int blockeds;
+	/**
+	 * 当前连接的客户端中最大输入
+	 */
+	private int clientRecentMaxInputBuffer;
 
-    /**
-     * 获取已连接客户端的数量
-     *
-     * @return 已连接客户端的数量
-     */
-    public int getConnecteds(){
-        return connecteds;
-    }
+	/**
+	 * 当前连接的客户端中最大输出
+	 */
+	private int clientRecentMaxOutputBuffer;
 
-    /**
-     * 设置已连接客户端的数量
-     *
-     * @param connecteds
-     *         已连接客户端的数量
-     */
-    public void setConnecteds(int connecteds){
-        this.connecteds = connecteds;
-    }
+	/**
+	 * 正在等待阻塞命令的客户端的数量
+	 */
+	private int blockeds;
 
-    /**
-     * 获取当前连接的客户端当中，最长的输出列表
-     *
-     * @return 当前连接的客户端当中，最长的输出列表
-     */
-    public int getLongestOutputList(){
-        return longestOutputList;
-    }
+	/**
+	 * 获取已连接客户端的数量
+	 *
+	 * @return 已连接客户端的数量
+	 */
+	public int getConnecteds(){
+		return connecteds;
+	}
 
-    /**
-     * 设置当前连接的客户端当中，最长的输出列表
-     *
-     * @param longestOutputList
-     *         当前连接的客户端当中，最长的输出列表
-     */
-    public void setLongestOutputList(int longestOutputList){
-        this.longestOutputList = longestOutputList;
-    }
+	/**
+	 * 设置已连接客户端的数量
+	 *
+	 * @param connecteds
+	 * 		已连接客户端的数量
+	 */
+	public void setConnecteds(int connecteds){
+		this.connecteds = connecteds;
+	}
 
-    /**
-     * 获取当前连接的客户端当中，最大输入缓存
-     *
-     * @return 当前连接的客户端当中，最大输入缓存
-     */
-    public int getBiggestInputBuffer(){
-        return biggestInputBuffer;
-    }
+	/**
+	 * 获取当前连接的客户端当中，最长的输出列表
+	 *
+	 * @return 当前连接的客户端当中，最长的输出列表
+	 */
+	@Deprecated
+	public int getLongestOutputList(){
+		return longestOutputList;
+	}
 
-    /**
-     * 设置当前连接的客户端当中，最大输入缓存
-     *
-     * @param biggestInputBuffer
-     *         当前连接的客户端当中，最大输入缓存
-     */
-    public void setBiggestInputBuffer(int biggestInputBuffer){
-        this.biggestInputBuffer = biggestInputBuffer;
-    }
+	/**
+	 * 设置当前连接的客户端当中，最长的输出列表
+	 *
+	 * @param longestOutputList
+	 * 		当前连接的客户端当中，最长的输出列表
+	 */
+	@Deprecated
+	public void setLongestOutputList(int longestOutputList){
+		this.longestOutputList = longestOutputList;
+	}
 
-    /**
-     * 获取正在等待阻塞命令的客户端的数量
-     *
-     * @return 正在等待阻塞命令的客户端的数量
-     */
-    public int getBlockeds(){
-        return blockeds;
-    }
+	/**
+	 * 获取当前连接的客户端当中，最大输入缓存
+	 *
+	 * @return 当前连接的客户端当中，最大输入缓存
+	 */
+	@Deprecated
+	public int getBiggestInputBuffer(){
+		return biggestInputBuffer;
+	}
 
-    /**
-     * 设置正在等待阻塞命令的客户端的数量
-     *
-     * @param blockeds
-     *         正在等待阻塞命令的客户端的数量
-     */
-    public void setBlockeds(int blockeds){
-        this.blockeds = blockeds;
-    }
+	/**
+	 * 设置当前连接的客户端当中，最大输入缓存
+	 *
+	 * @param biggestInputBuffer
+	 * 		当前连接的客户端当中，最大输入缓存
+	 */
+	@Deprecated
+	public void setBiggestInputBuffer(int biggestInputBuffer){
+		this.biggestInputBuffer = biggestInputBuffer;
+	}
 
-    @Override
-    public String toString(){
-        return "Clients{" + "connecteds=" + connecteds + ", longestOutputList=" + longestOutputList + ", " +
-                "biggestInputBuffer=" + biggestInputBuffer + ", blockeds=" + blockeds + '}';
-    }
+	/**
+	 * 获取当前连接的客户端中最大输入
+	 *
+	 * @return 当前连接的客户端中最大输入
+	 */
+	public int getClientRecentMaxInputBuffer(){
+		return clientRecentMaxInputBuffer;
+	}
+
+	/**
+	 * 设置当前连接的客户端中最大输入
+	 *
+	 * @param clientRecentMaxInputBuffer
+	 * 		当前连接的客户端中最大输入
+	 */
+	public void setClientRecentMaxInputBuffer(int clientRecentMaxInputBuffer){
+		this.clientRecentMaxInputBuffer = clientRecentMaxInputBuffer;
+	}
+
+	/**
+	 * 获取当前连接的客户端中最大输出
+	 *
+	 * @return 当前连接的客户端中最大输出
+	 */
+	public int getClientRecentMaxOutputBuffer(){
+		return clientRecentMaxOutputBuffer;
+	}
+
+	/**
+	 * 设置当前连接的客户端中最大输出
+	 *
+	 * @param clientRecentMaxOutputBuffer
+	 * 		当前连接的客户端中最大输出
+	 */
+	public void setClientRecentMaxOutputBuffer(int clientRecentMaxOutputBuffer){
+		this.clientRecentMaxOutputBuffer = clientRecentMaxOutputBuffer;
+	}
+
+	/**
+	 * 获取正在等待阻塞命令的客户端的数量
+	 *
+	 * @return 正在等待阻塞命令的客户端的数量
+	 */
+	public int getBlockeds(){
+		return blockeds;
+	}
+
+	/**
+	 * 设置正在等待阻塞命令的客户端的数量
+	 *
+	 * @param blockeds
+	 * 		正在等待阻塞命令的客户端的数量
+	 */
+	public void setBlockeds(int blockeds){
+		this.blockeds = blockeds;
+	}
+
+	@Override
+	public String toString(){
+		return "Clients{" + "connecteds=" + connecteds + ", longestOutputList=" + longestOutputList + ", " +
+				"biggestInputBuffer=" + biggestInputBuffer + ", clientRecentMaxInputBuffer=" +
+				clientRecentMaxInputBuffer + ", clientRecentMaxOutputBuffer=" + clientRecentMaxOutputBuffer + ", " +
+				"blockeds=" + blockeds + '}';
+	}
 
 }

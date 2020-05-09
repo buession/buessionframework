@@ -19,56 +19,114 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
+import com.buession.core.utils.ReflectUtils;
+import com.buession.core.validator.Validate;
+import com.buession.lang.Status;
+import com.buession.redis.client.ClientConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
 public class ShardedJedisPoolDataSource extends AbstractJedisRedisDataSource<ShardedJedis> implements
-        ShardedJedisDataSource {
+		ShardedJedisDataSource, PoolJedisDataSource<ShardedJedis> {
 
-    private ShardedJedisPool pool;
+	private JedisPoolConfig poolConfig;
 
-    private ShardedJedis shardedJedis;
+	private ShardedJedisPool pool;
 
-    public ShardedJedisPool getPool(){
-        return pool;
-    }
+	private ShardedJedis shardedJedis;
 
-    public void setPool(ShardedJedisPool pool){
-        this.pool = pool;
-    }
+	private final static Logger logger = LoggerFactory.getLogger(ShardedJedisPoolDataSource.class);
 
-    @Override
-    public ShardedJedis getRedisClient(){
-        if(pool == null){
-            return null;
-        }
+	public ShardedJedisPoolDataSource(){
+		super();
+	}
 
-        shardedJedis = pool.getResource();
-        return shardedJedis;
-    }
+	public ShardedJedisPoolDataSource(ClientConfiguration clientConfiguration){
+		super(clientConfiguration);
+	}
 
-    @Override
-    public boolean isClosed(){
-        return pool == null ? true : pool.isClosed();
-    }
+	public ShardedJedisPoolDataSource(ClientConfiguration clientConfiguration, JedisPoolConfig poolConfig){
+		super(clientConfiguration);
+		this.poolConfig = poolConfig;
+	}
 
-    @Override
-    public void close(){
-        if(shardedJedis != null){
-            shardedJedis.close();
-        }
+	public JedisPoolConfig getPoolConfig(){
+		return poolConfig;
+	}
 
-        if(pool != null){
-            // pool.close();
-        }
-    }
+	public void setPoolConfig(JedisPoolConfig poolConfig){
+		this.poolConfig = poolConfig;
+	}
+
+	@Override
+	public ShardedJedisPool getPool(){
+		return pool;
+	}
+
+	@Override
+	public Status connect(){
+		ClientConfiguration configuration = getClientConfiguration();
+		List<JedisShardInfo> shardInfos = new ArrayList<>(1);
+		JedisShardInfo jedisShardInfo = new JedisShardInfo(configuration.getHost(), configuration.getClientName(),
+				configuration.getPort(), 0, configuration.getWeight(), configuration.isUseSsl(), configuration
+				.getSslSocketFactory(), configuration.getSslParameters(), configuration.getHostnameVerifier());
+
+		jedisShardInfo.setConnectionTimeout(configuration.getConnectTimeout());
+		jedisShardInfo.setSoTimeout(configuration.getSoTimeout());
+
+		shardInfos.add(jedisShardInfo);
+
+		ReflectUtils.setField(jedisShardInfo, "db", configuration.getDatabase());
+
+		pool = new ShardedJedisPool(getPoolConfig(), shardInfos);
+
+		logger.info("Sharded jedis pool datasource initialize with for {} shard info.", shardInfos.size());
+
+		return Status.SUCCESS;
+	}
+
+	@Override
+	public ShardedJedis getRedisClient(){
+		if(pool == null){
+			return null;
+		}
+
+		shardedJedis = pool.getResource();
+		return shardedJedis;
+	}
+
+	@Override
+	public boolean isClosed(){
+		return pool == null ? true : pool.isClosed();
+	}
+
+	@Override
+	public void disconnect() throws IOException{
+		if(shardedJedis != null){
+			shardedJedis.disconnect();
+		}
+	}
+
+	@Override
+	public void close() throws IOException{
+		shardedJedis.close();
+	}
 
 }

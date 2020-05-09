@@ -32,40 +32,39 @@ import java.util.Date;
  */
 public class RedisServerTime implements Serializable {
 
-    private final static long serialVersionUID = 7818271427941747714L;
+	private final static long serialVersionUID = 7818271427941747714L;
 
-    private Date date;
+	private Date date;
 
-    private long usec;
+	private long usec;
 
-    public RedisServerTime(){
+	public RedisServerTime(){
+	}
 
-    }
+	public RedisServerTime(Date date, long usec){
+		this.date = date;
+		this.usec = usec;
+	}
 
-    public RedisServerTime(Date date, long usec){
-        this.date = date;
-        this.usec = usec;
-    }
+	public Date getDate(){
+		return date;
+	}
 
-    public Date getDate(){
-        return date;
-    }
+	public void setDate(Date date){
+		this.date = date;
+	}
 
-    public void setDate(Date date){
-        this.date = date;
-    }
+	public long getUsec(){
+		return usec;
+	}
 
-    public long getUsec(){
-        return usec;
-    }
+	public void setUsec(long usec){
+		this.usec = usec;
+	}
 
-    public void setUsec(long usec){
-        this.usec = usec;
-    }
-
-    @Override
-    public String toString(){
-        return "RedisServerTime{" + "date=" + date + ", usec=" + usec + '}';
-    }
+	@Override
+	public String toString(){
+		return "RedisServerTime{" + "date=" + date + ", usec=" + usec + '}';
+	}
 
 }
