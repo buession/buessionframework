@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
@@ -29,47 +29,48 @@ package com.buession.lang;
  */
 public class Geo {
 
-    private double longitude;
+	private double longitude;
 
-    private double latitude;
+	private double latitude;
 
-    public Geo(){
+	public Geo(){
 
-    }
+	}
 
-    public Geo(double longitude, double latitude){
-        this.longitude = longitude;
-        this.latitude = latitude;
-    }
+	public Geo(double longitude, double latitude){
+		this.longitude = longitude;
+		this.latitude = latitude;
+	}
 
-    public double getLongitude(){
-        return longitude;
-    }
+	public double getLongitude(){
+		return longitude;
+	}
 
-    public void setLongitude(double longitude){
-        this.longitude = longitude;
-    }
+	public void setLongitude(double longitude){
+		this.longitude = longitude;
+	}
 
-    public double getLatitude(){
-        return latitude;
-    }
+	public double getLatitude(){
+		return latitude;
+	}
 
-    public void setLatitude(double latitude){
-        this.latitude = latitude;
-    }
+	public void setLatitude(double latitude){
+		this.latitude = latitude;
+	}
 
-    @Override
-    public boolean equals(Object object){
-        if(object == null || object instanceof Geo){
-            return false;
-        }
+	@Override
+	public boolean equals(Object object){
+		if(object == null || (object instanceof Geo) == false){
+			return false;
+		}
 
-        Geo that = (Geo) object;
-        return that.getLongitude() == longitude && that.getLatitude() == latitude;
-    }
+		Geo that = (Geo) object;
+		return that.getLongitude() == longitude && that.getLatitude() == latitude;
+	}
 
-    @Override
-    public String toString(){
-        return "Geo{" + "longitude=" + longitude + ", latitude=" + latitude + '}';
-    }
+	@Override
+	public String toString(){
+		return "Geo{" + "longitude=" + longitude + ", latitude=" + latitude + '}';
+	}
+
 }

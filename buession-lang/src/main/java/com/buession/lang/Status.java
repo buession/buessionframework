@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2015 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
@@ -31,20 +31,24 @@ package com.buession.lang;
  */
 public enum Status {
 
-    SUCCESS,
+	SUCCESS,
 
-    FAILURE;
+	FAILURE;
 
-    public final static Status valueOf(final boolean v){
-        return v ? SUCCESS : FAILURE;
-    }
+	public final static Status valueOf(final boolean v){
+		return v ? SUCCESS : FAILURE;
+	}
 
-    public final static Status valueOf(final int v){
-        return v == 0 ? FAILURE : SUCCESS;
-    }
+	public final static Status valueOf(final short v){
+		return new Short(v).equals(v) ? FAILURE : SUCCESS;
+	}
 
-    public final static Status valueOf(final long v){
-        return v == 0 ? FAILURE : SUCCESS;
-    }
+	public final static Status valueOf(final int v){
+		return v == 0 ? FAILURE : SUCCESS;
+	}
+
+	public final static Status valueOf(final long v){
+		return v == 0 ? FAILURE : SUCCESS;
+	}
 
 }

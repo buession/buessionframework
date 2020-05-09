@@ -28,4 +28,24 @@ package com.buession.lang;
  * @author Yong.Teng
  */
 public enum Arch {
+
+	ARCH_32(32),
+
+	ARCH_64(64);
+
+	int version;
+
+	Arch(int version){
+		this.version = version;
+	}
+
+	public int getVersion(){
+		return version;
+	}
+
+	@Override
+	public String toString(){
+		return Integer.toString(version);
+	}
+	
 }

@@ -28,4 +28,26 @@ package com.buession.lang;
  * @author Yong.Teng
  */
 public enum Multiplexing {
+
+	SELECT("select"),
+
+	EPOLL("epoll"),
+
+	KQUEUE("kqueue");
+
+	private String value;
+
+	Multiplexing(String value){
+		this.value = value;
+	}
+
+	public String getValue(){
+		return value;
+	}
+
+	@Override
+	public String toString(){
+		return value;
+	}
+
 }
