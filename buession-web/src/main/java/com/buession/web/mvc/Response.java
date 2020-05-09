@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.mvc;
@@ -33,100 +33,101 @@ import com.buession.core.Pagination;
  */
 public class Response<E> {
 
-    private boolean state;
+	private boolean state;
 
-    private int code;
+	private int code;
 
-    private String message;
+	private String message;
 
-    private E data;
+	private E data;
 
-    private Pagination<E> pagination;
+	private Pagination<E> pagination;
 
-    public Response(){
+	public Response(){
 
-    }
+	}
 
-    public Response(boolean state){
-        setState(state);
-    }
+	public Response(boolean state){
+		setState(state);
+	}
 
-    public Response(boolean state, int code){
-        setState(state);
-        setCode(code);
-    }
+	public Response(boolean state, int code){
+		setState(state);
+		setCode(code);
+	}
 
-    public Response(boolean state, int code, String message){
-        this(state, code);
-        setMessage(message);
-    }
+	public Response(boolean state, int code, String message){
+		this(state, code);
+		setMessage(message);
+	}
 
-    public Response(boolean state, String message){
-        setState(state);
-        this.message = message;
-    }
+	public Response(boolean state, String message){
+		setState(state);
+		this.message = message;
+	}
 
-    public Response(boolean state, int code, String message, E data){
-        this(state, code, message);
-        setData(data);
-    }
+	public Response(boolean state, int code, String message, E data){
+		this(state, code, message);
+		setData(data);
+	}
 
-    public Response(boolean state, String message, E data){
-        this(state, message);
-        setData(data);
-    }
+	public Response(boolean state, String message, E data){
+		this(state, message);
+		setData(data);
+	}
 
-    public Response(boolean state, int code, String message, E data, Pagination<E> pagination){
-        this(state, code, message, data);
-        setPagination(pagination);
-    }
+	public Response(boolean state, int code, String message, E data, Pagination<E> pagination){
+		this(state, code, message, data);
+		setPagination(pagination);
+	}
 
-    public Response(boolean state, String message, E data, Pagination<E> pagination){
-        this(state, message, data);
-        setPagination(pagination);
-    }
+	public Response(boolean state, String message, E data, Pagination<E> pagination){
+		this(state, message, data);
+		setPagination(pagination);
+	}
 
-    public boolean isState(){
-        return getState();
-    }
+	public boolean isState(){
+		return getState();
+	}
 
-    public boolean getState(){
-        return state;
-    }
+	public boolean getState(){
+		return state;
+	}
 
-    public void setState(boolean state){
-        this.state = state;
-    }
+	public void setState(boolean state){
+		this.state = state;
+	}
 
-    public int getCode(){
-        return code;
-    }
+	public int getCode(){
+		return code;
+	}
 
-    public void setCode(int code){
-        this.code = code;
-    }
+	public void setCode(int code){
+		this.code = code;
+	}
 
-    public String getMessage(){
-        return message;
-    }
+	public String getMessage(){
+		return message;
+	}
 
-    public void setMessage(String message){
-        this.message = message;
-    }
+	public void setMessage(String message){
+		this.message = message;
+	}
 
-    public E getData(){
-        return data;
-    }
+	public E getData(){
+		return data;
+	}
 
-    public void setData(E data){
-        this.data = data;
-    }
+	public void setData(E data){
+		this.data = data;
+	}
 
-    public Pagination<E> getPagination(){
-        return pagination;
-    }
+	public Pagination<E> getPagination(){
+		return pagination;
+	}
 
-    public void setPagination(Pagination<E> pagination){
-        this.pagination = pagination;
-    }
+	public void setPagination(Pagination<E> pagination){
+		this.pagination = pagination;
+	}
+
 }

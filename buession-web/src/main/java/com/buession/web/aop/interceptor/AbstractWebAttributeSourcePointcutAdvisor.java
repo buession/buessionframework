@@ -24,7 +24,6 @@
  */
 package com.buession.web.aop.interceptor;
 
-import com.buession.web.http.response.EnableHttpCache;
 import com.buession.web.http.response.annotation.ContentType;
 import com.buession.web.http.response.annotation.DisableHttpCache;
 import com.buession.web.http.response.annotation.HttpCache;
@@ -44,8 +43,8 @@ import java.lang.reflect.Method;
 public abstract class AbstractWebAttributeSourcePointcutAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
 	private final static Class<? extends Annotation>[] WEB_ANNOTATION_CLASSES = new Class[]{ResponseHeader.class,
-			ResponseHeaders.class, ContentType.class, PrimitiveCrossOrigin.class, EnableHttpCache.class,
-			HttpCache.class, DisableHttpCache.class, DocumentMetaData.class};
+			ResponseHeaders.class, ContentType.class, PrimitiveCrossOrigin.class, HttpCache.class,
+			DisableHttpCache.class, DocumentMetaData.class};
 
 	@Override
 	public boolean matches(Method method, Class<?> targetClass){

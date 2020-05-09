@@ -24,9 +24,32 @@
  */
 package com.buession.web.reactive.filter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
+import reactor.core.publisher.Mono;
+
 /**
  * @author Yong.Teng
  */
-public class PrintUrlFilter {
+public class PrintUrlFilter implements WebFilter {
+
+	private final static Logger logger = LoggerFactory.getLogger(PrintUrlFilter.class);
+
+	@Override
+	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
+		if(exchange == null){
+			return chain.filter(exchange);
+		}
+
+		ServerHttpRequest request = exchange.getRequest();
+
+		logger.info("Request URL: {}", request.getURI().toString());
+
+		return chain.filter(exchange);
+	}
 
 }

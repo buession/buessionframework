@@ -24,9 +24,23 @@
  */
 package com.buession.web.reactive.filter;
 
+import com.buession.core.Framework;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * @author Yong.Teng
  */
-public class PoweredByHeaderFilter {
+public class PoweredByHeaderFilter extends ResponseHeadersFilter {
+
+	@Override
+	public Map<String, String> getHeaders(){
+		Map<String, String> headers = new LinkedHashMap<>(1, 0.8F);
+
+		headers.put("X-Powered-By", Framework.NAME + "/" + Framework.VERSION);
+
+		return headers;
+	}
 
 }
