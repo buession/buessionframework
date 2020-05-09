@@ -19,44 +19,53 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.oss.core;
 
+import java.io.Serializable;
+
 /**
  * @author Yong.Teng
  */
-public class Result {
+public class Result implements Serializable {
 
-    private String url;
+	private final static long serialVersionUID = 9118410836243186340L;
 
-    private String path;
+	private String url;
 
-    private long size;
+	private String path;
 
-    public String getUrl(){
-        return url;
-    }
+	private long size;
 
-    public void setUrl(String url){
-        this.url = url;
-    }
+	public String getUrl(){
+		return url;
+	}
 
-    public String getPath(){
-        return path;
-    }
+	public void setUrl(String url){
+		this.url = url;
+	}
 
-    public void setPath(String path){
-        this.path = path;
-    }
+	public String getPath(){
+		return path;
+	}
 
-    public long getSize(){
-        return size;
-    }
+	public void setPath(String path){
+		this.path = path;
+	}
 
-    public void setSize(long size){
-        this.size = size;
-    }
+	public long getSize(){
+		return size;
+	}
+
+	public void setSize(long size){
+		this.size = size;
+	}
+
+	@Override
+	public String toString(){
+		return "{" + "url: " + url + ", path: " + path + ", size: " + size + '}';
+	}
 
 }

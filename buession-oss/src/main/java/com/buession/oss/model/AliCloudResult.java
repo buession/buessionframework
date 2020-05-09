@@ -19,53 +19,64 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.oss.model;
 
+import java.io.Serializable;
+
 /**
  * @author Yong.Teng
  */
-public class AliCloudResult {
+public class AliCloudResult implements Serializable {
 
-    private String status;
+	private final static long serialVersionUID = -4765030004007334244L;
 
-    private String bucket;
+	private String status;
 
-    private String object;
+	private String bucket;
 
-    private Integer fileSize;
+	private String object;
 
-    public String getStatus(){
-        return status;
-    }
+	private Integer fileSize;
 
-    public void setStatus(final String status){
-        this.status = status;
-    }
+	public String getStatus(){
+		return status;
+	}
 
-    public String getBucket(){
-        return bucket;
-    }
+	public void setStatus(final String status){
+		this.status = status;
+	}
 
-    public void setBucket(final String bucket){
-        this.bucket = bucket;
-    }
+	public String getBucket(){
+		return bucket;
+	}
 
-    public String getObject(){
-        return object;
-    }
+	public void setBucket(final String bucket){
+		this.bucket = bucket;
+	}
 
-    public void setObject(final String object){
-        this.object = object;
-    }
+	public String getObject(){
+		return object;
+	}
 
-    public Integer getFileSize(){
-        return fileSize;
-    }
+	public void setObject(final String object){
+		this.object = object;
+	}
 
-    public void setFileSize(final Integer fileSize){
-        this.fileSize = fileSize;
-    }
+	public Integer getFileSize(){
+		return fileSize;
+	}
+
+	public void setFileSize(final Integer fileSize){
+		this.fileSize = fileSize;
+	}
+
+	@Override
+	public String toString(){
+		return "{" + "status: " + status + ", bucket: " + bucket + ", object: " + object + ", fileSize: " + fileSize +
+				'}';
+	}
+
 }
