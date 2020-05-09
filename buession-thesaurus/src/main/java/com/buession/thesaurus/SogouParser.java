@@ -83,8 +83,9 @@ public class SogouParser extends AbstractParser {
 			}
 
 			final String pinyin = StringUtils.replace(key, "'", "");
-			final char[] initials = parseInitials(key, "'");
+			final char[] initials = parseInitials(key, '\'');
 
+			Object[] a = null;
 			value.forEach((val)->{
 				Word word = new Word();
 
@@ -92,7 +93,7 @@ public class SogouParser extends AbstractParser {
 				word.setValue(val);
 				word.setInitials(initials);
 
-				if(Validate.isEmpty(initials) == false){
+				if(Validate.isEmpty(a) == false){
 					word.setInitial(initials[0]);
 				}
 
