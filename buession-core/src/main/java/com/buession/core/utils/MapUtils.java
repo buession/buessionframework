@@ -40,10 +40,6 @@ import java.util.Set;
  */
 public class MapUtils {
 
-	private MapUtils(){
-
-	}
-
 	/**
 	 * 将 Map 转换为 List
 	 *

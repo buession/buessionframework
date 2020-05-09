@@ -22,55 +22,11 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.math;
-
-import java.util.stream.LongStream;
+package com.buession.json.annotation;
 
 /**
  * @author Yong.Teng
  */
-public class Math {
-
-	/**
-	 * 计算两个数之间连续相加之和
-	 *
-	 * @param start
-	 * 		起始数
-	 * @param end
-	 * 		结束数
-	 *
-	 * @return 两个数之间连续相加结果
-	 */
-	public final static long continuousAddition(final short start, final short end){
-		return LongStream.rangeClosed(start, end).sum();
-	}
-
-	/**
-	 * 计算两个数之间连续相加之和
-	 *
-	 * @param start
-	 * 		起始数
-	 * @param end
-	 * 		结束数
-	 *
-	 * @return 两个数之间连续相加结果
-	 */
-	public final static long continuousAddition(final int start, final int end){
-		return LongStream.rangeClosed(start, end).sum();
-	}
-
-	/**
-	 * 计算两个数之间连续相加之和
-	 *
-	 * @param start
-	 * 		起始数
-	 * @param end
-	 * 		结束数
-	 *
-	 * @return 两个数之间连续相加结果
-	 */
-	public final static long continuousAddition(final long start, final long end){
-		return LongStream.rangeClosed(start, end).sum();
-	}
+public @interface DateUnixTimestamp {
 
 }

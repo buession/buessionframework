@@ -73,7 +73,7 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException{
 		Class clazz = bean.getClass();
-		List<Field> fields = ClassUtils.getAllFields(clazz);
+		Field[] fields = ClassUtils.getAllFields(clazz);
 
 		for(Field field : fields){
 			final Message message = AnnotationUtils.getAnnotation(field, Message.class);

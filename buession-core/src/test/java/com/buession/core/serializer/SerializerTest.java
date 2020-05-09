@@ -28,6 +28,10 @@ import com.buession.core.serializer.type.TypeReference;
 import org.junit.Test;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author Yong.Teng
@@ -143,13 +147,15 @@ public class SerializerTest {
 		System.out.println(u31.toString());
 	}
 
-	private final static class User implements Serializable {
+	private final static class User {
 
 		private final static long serialVersionUID = 3932608636651582245L;
 
 		private int id;
 
-		private String username;
+		protected String username;
+
+		public String password;
 
 		public int getId(){
 			return id;
@@ -165,6 +171,14 @@ public class SerializerTest {
 
 		public void setUsername(String username){
 			this.username = username;
+		}
+
+		public String getPassword(){
+			return password;
+		}
+
+		public void setPassword(String password){
+			this.password = password;
 		}
 
 		@Override

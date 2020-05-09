@@ -51,10 +51,6 @@ public class ReflectUtils extends ReflectionUtils {
 
 	private final static Logger logger = LoggerFactory.getLogger(ReflectUtils.class);
 
-	protected ReflectUtils(){
-
-	}
-
 	/**
 	 * 设置属性权限
 	 *

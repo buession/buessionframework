@@ -50,8 +50,8 @@ public class FastJsonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> String serialize(final V object, final String charsetName) throws SerializerException{
-		return serialize(object, Charset.forName(charsetName));
+	public <V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException{
+		return serializeAsBytes(object, Charset.forName(charsetName));
 	}
 
 	@Override
@@ -70,6 +70,18 @@ public class FastJsonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
+	public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException{
+		Assert.isNull(str, "String cloud not be null.");
+		return JSON.parseObject(str, clazz);
+	}
+
+	@Override
+	public <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException{
+		Assert.isNull(str, "String cloud not be null.");
+		return JSON.parseObject(str, type.getType());
+	}
+
+	@Override
 	public <V> V deserialize(final byte[] bytes) throws SerializerException{
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 		return JSON.parseObject(new String(bytes), new com.alibaba.fastjson.TypeReference<V>() {
@@ -78,21 +90,9 @@ public class FastJsonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final Class<V> clazz) throws SerializerException{
-		Assert.isNull(str, "String cloud not be null.");
-		return JSON.parseObject(str, clazz);
-	}
-
-	@Override
 	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws SerializerException{
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 		return JSON.parseObject(bytes, clazz);
-	}
-
-	@Override
-	public <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException{
-		Assert.isNull(str, "String cloud not be null.");
-		return JSON.parseObject(str, type.getType());
 	}
 
 	@Override

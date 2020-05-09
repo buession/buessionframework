@@ -45,10 +45,6 @@ public class ArrayUtils {
 
 	public final static int INDEX_NOT_FOUND = -1;
 
-	private ArrayUtils(){
-
-	}
-
 	/**
 	 * 检查数组中是否存在某个值
 	 *

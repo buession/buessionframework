@@ -22,29 +22,11 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.http.response;
-
-import org.springframework.core.annotation.AliasFor;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package com.buession.json.annotation;
 
 /**
  * @author Yong.Teng
  */
-@Target({ElementType.TYPE, ElementType.METHOD})
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@com.buession.web.http.response.annotation.ResponseHeader(name = "Expires")
-@Deprecated
-public @interface EnableHttpCache {
-
-	/**
-	 * Alias for {@link com.buession.web.http.response.annotation.ResponseHeader#value()}.
-	 */
-	@AliasFor(annotation = com.buession.web.http.response.annotation.ResponseHeader.class) String value() default "1";
+public @interface TimestampUnixTimestamp {
 
 }

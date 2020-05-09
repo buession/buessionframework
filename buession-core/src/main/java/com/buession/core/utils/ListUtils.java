@@ -26,8 +26,10 @@
  */
 package com.buession.core.utils;
 
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -37,10 +39,6 @@ import java.util.Set;
  * @author Yong.Teng
  */
 public class ListUtils {
-
-	private ListUtils(){
-
-	}
 
 	/**
 	 * 将 List 转换为 Set
@@ -54,6 +52,31 @@ public class ListUtils {
 	 */
 	public static <V> Set<V> toSet(final List<V> list){
 		return list == null ? null : new LinkedHashSet<>(list.size());
+	}
+
+	/**
+	 * 将 List 转换为 Map
+	 *
+	 * @param list
+	 * 		需要转换的 List
+	 * @param <V>
+	 * 		元素
+	 *
+	 * @return 转换结果
+	 */
+	public static <V> Map<Integer, V> toMap(final List<V> list){
+		if(list == null){
+			return null;
+		}
+
+		int size = list.size();
+		Map<Integer, V> result = new LinkedHashMap<>(size);
+
+		for(int i = 0; i < size; i++){
+			result.put(i, list.get(i));
+		}
+
+		return result;
 	}
 
 }

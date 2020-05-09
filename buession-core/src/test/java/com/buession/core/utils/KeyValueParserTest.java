@@ -22,55 +22,19 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.math;
+package com.buession.core.utils;
 
-import java.util.stream.LongStream;
+import org.junit.Test;
 
 /**
  * @author Yong.Teng
  */
-public class Math {
+public class KeyValueParserTest {
 
-	/**
-	 * 计算两个数之间连续相加之和
-	 *
-	 * @param start
-	 * 		起始数
-	 * @param end
-	 * 		结束数
-	 *
-	 * @return 两个数之间连续相加结果
-	 */
-	public final static long continuousAddition(final short start, final short end){
-		return LongStream.rangeClosed(start, end).sum();
-	}
-
-	/**
-	 * 计算两个数之间连续相加之和
-	 *
-	 * @param start
-	 * 		起始数
-	 * @param end
-	 * 		结束数
-	 *
-	 * @return 两个数之间连续相加结果
-	 */
-	public final static long continuousAddition(final int start, final int end){
-		return LongStream.rangeClosed(start, end).sum();
-	}
-
-	/**
-	 * 计算两个数之间连续相加之和
-	 *
-	 * @param start
-	 * 		起始数
-	 * @param end
-	 * 		结束数
-	 *
-	 * @return 两个数之间连续相加结果
-	 */
-	public final static long continuousAddition(final long start, final long end){
-		return LongStream.rangeClosed(start, end).sum();
+	@Test
+	public void test(){
+		KeyValueParser keyValueParser1 = new KeyValueParser("redis_version:1.1", ':');
+		System.out.println("Key: " + keyValueParser1.getKey() + ", Value: " + keyValueParser1.getValue());
 	}
 
 }

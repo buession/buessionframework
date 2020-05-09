@@ -82,6 +82,102 @@ public class Validate {
 	 *
 	 * @param array
 	 * 		待验证数组
+	 *
+	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isEmpty(final float[] array){
+		return array == null || array.length == 0;
+	}
+
+	/**
+	 * 验证数组是否为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isEmpty(final double[] array){
+		return array == null || array.length == 0;
+	}
+
+	/**
+	 * 验证数组是否为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isEmpty(final short[] array){
+		return array == null || array.length == 0;
+	}
+
+	/**
+	 * 验证数组是否为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isEmpty(final int[] array){
+		return array == null || array.length == 0;
+	}
+
+	/**
+	 * 验证数组是否为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isEmpty(final long[] array){
+		return array == null || array.length == 0;
+	}
+
+	/**
+	 * 验证数组是否为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isEmpty(final byte[] array){
+		return array == null || array.length == 0;
+	}
+
+	/**
+	 * 验证数组是否为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isEmpty(final char[] array){
+		return array == null || array.length == 0;
+	}
+
+	/**
+	 * 验证数组是否为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 为 NULL 或长度为 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isEmpty(final boolean[] array){
+		return array == null || array.length == 0;
+	}
+
+	/**
+	 * 验证数组是否为空
+	 *
+	 * @param array
+	 * 		待验证数组
 	 * @param <O>
 	 * 		类
 	 *
@@ -536,6 +632,18 @@ public class Validate {
 	 *
 	 * @param charSequence
 	 * 		待验证的字符串
+	 *
+	 * @return Boolean
+	 */
+	public final static boolean isIDCard(final CharSequence charSequence){
+		return IDCardValidator.isValid(charSequence, false, null);
+	}
+
+	/**
+	 * 验证是否为身份证号码（仅支持 18 位身份证号码）
+	 *
+	 * @param charSequence
+	 * 		待验证的字符串
 	 * @param strict
 	 * 		是否和生日严格匹配
 	 * @param birthday
@@ -576,7 +684,7 @@ public class Validate {
 	}
 
 	/**
-	 * 验证字符串是否为 ISBNValidator
+	 * 验证字符串是否为 ISBN
 	 *
 	 * @param charSequence
 	 * 		待验证的字符串

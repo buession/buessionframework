@@ -37,7 +37,6 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -50,8 +49,13 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 	private final static Logger logger = LoggerFactory.getLogger(DefaultByteArraySerializer.class);
 
 	@Override
-	public <V> String serialize(final V object) throws SerializerException{
-		return serialize(object, DEFAULT_CHARSET_NAME);
+	public <V> String serialize(final V object, final String charsetName) throws SerializerException{
+		try{
+			return URLEncoder.encode(baosWrite(object), charsetName);
+		}catch(IOException e){
+			throw new SerializerException("serializer the instance of " + object.getClass().getName() + " " +
+					"failure", e);
+		}
 	}
 
 	@Override
@@ -94,40 +98,8 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 	}
 
 	@Override
-	public <V> String serialize(final V object, final String charsetName) throws SerializerException{
-		try{
-			return URLEncoder.encode(baosWrite(object), charsetName);
-		}catch(IOException e){
-			throw new SerializerException("serializer the instance of " + object.getClass().getName() + " " +
-					"failure", e);
-		}
-	}
-
-	@Override
 	public <V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException{
-		return serializeAsBytes(object, Charset.forName(charsetName));
-	}
-
-	@Override
-	public <V> String serialize(final V object, final Charset charset) throws SerializerException{
-		return serialize(object, charset.name());
-	}
-
-	@Override
-	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException{
-		return serialize(object, charset).getBytes(charset);
-	}
-
-	@Override
-	public <V> V deserialize(final String str) throws SerializerException{
-		return deserialize(str, DEFAULT_CHARSET_NAME);
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public <V> V deserialize(final byte[] bytes) throws SerializerException{
-		Assert.isNull(bytes, "Bytes cloud not be null.");
-		return doDeserialize(bytes, "bytes");
+		return serializeAsBytes(object);
 	}
 
 	@Override
@@ -144,8 +116,10 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 	}
 
 	@Override
-	public <V> V deserialize(final String str, final Charset charset) throws SerializerException{
-		return deserialize(str, charset.name());
+	@SuppressWarnings("unchecked")
+	public <V> V deserialize(final byte[] bytes, final String charsetName) throws SerializerException{
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+		return doDeserialize(bytes, "bytes");
 	}
 
 	protected static <V> String baosWrite(final V value) throws IOException{
@@ -185,6 +159,7 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 	protected final static <V> V doDeserialize(final byte[] bytes, final String sourceType) throws SerializerException{
 		ByteArrayInputStream byteArrayInputStream = null;
 		ObjectInputStream objectInputStream = null;
+
 		try{
 			byteArrayInputStream = new ByteArrayInputStream(bytes);
 			objectInputStream = new ObjectInputStream(byteArrayInputStream);

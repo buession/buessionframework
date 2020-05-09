@@ -22,55 +22,36 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.math;
+package com.buession.core.utils;
 
-import java.util.stream.LongStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
+ * Byte 工具
+ *
  * @author Yong.Teng
  */
-public class Math {
+public class ByteUtils {
 
-	/**
-	 * 计算两个数之间连续相加之和
-	 *
-	 * @param start
-	 * 		起始数
-	 * @param end
-	 * 		结束数
-	 *
-	 * @return 两个数之间连续相加结果
-	 */
-	public final static long continuousAddition(final short start, final short end){
-		return LongStream.rangeClosed(start, end).sum();
+	public final static byte[] getBytes(final Object object){
+		return getBytes(object, StandardCharsets.US_ASCII);
 	}
 
-	/**
-	 * 计算两个数之间连续相加之和
-	 *
-	 * @param start
-	 * 		起始数
-	 * @param end
-	 * 		结束数
-	 *
-	 * @return 两个数之间连续相加结果
-	 */
-	public final static long continuousAddition(final int start, final int end){
-		return LongStream.rangeClosed(start, end).sum();
+	public final static byte[] getBytes(final Object object, final String charset){
+		try{
+			return object.toString().getBytes(charset);
+		}catch(Exception e){
+			return object.toString().getBytes();
+		}
 	}
 
-	/**
-	 * 计算两个数之间连续相加之和
-	 *
-	 * @param start
-	 * 		起始数
-	 * @param end
-	 * 		结束数
-	 *
-	 * @return 两个数之间连续相加结果
-	 */
-	public final static long continuousAddition(final long start, final long end){
-		return LongStream.rangeClosed(start, end).sum();
+	public final static byte[] getBytes(final Object object, final Charset charset){
+		try{
+			return object.toString().getBytes(charset);
+		}catch(Exception e){
+			return object.toString().getBytes();
+		}
 	}
 
 }

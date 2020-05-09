@@ -28,6 +28,7 @@ import com.buession.core.serializer.type.TypeReference;
 import com.buession.core.utils.Assert;
 import com.google.gson.Gson;
 
+import java.nio.charset.Charset;
 import java.util.LinkedHashMap;
 
 /**
@@ -44,11 +45,6 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
-		return serializeAsBytes(object, DEFAULT_CHARSET);
-	}
-
-	@Override
 	public <V> String serialize(final V object, final String charsetName) throws SerializerException{
 		Assert.isNull(object, "Object cloud not be null.");
 
@@ -57,15 +53,19 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> V deserialize(final String str) throws SerializerException{
-		Gson gson = new Gson();
-		return (V) gson.fromJson(str, LinkedHashMap.class);
+	public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
+		return serializeAsBytes(object, DEFAULT_CHARSET);
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes) throws SerializerException{
-		Assert.isNull(bytes, "Bytes cloud not be null.");
-		return deserialize(new String(bytes));
+	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException{
+		return serialize(object).getBytes(charset);
+	}
+
+	@Override
+	public <V> V deserialize(final String str) throws SerializerException{
+		Gson gson = new Gson();
+		return (V) gson.fromJson(str, LinkedHashMap.class);
 	}
 
 	@Override
@@ -77,13 +77,7 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes, final Class<V> clazz) throws SerializerException{
-		Assert.isNull(bytes, "Bytes cloud not be null.");
-		return deserialize(new String(bytes), clazz);
-	}
-
-	@Override
-	public <V> V deserialize(final String str, final TypeReference<V> type) throws SerializerException{
+	public <V> V deserialize(String str, TypeReference<V> type) throws SerializerException{
 		Assert.isNull(str, "String cloud not be null.");
 
 		Gson gson = new Gson();
@@ -91,10 +85,21 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type) throws SerializerException{
+	public <V> V deserialize(final byte[] bytes) throws SerializerException{
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+		return deserialize(new String(bytes));
+	}
+
+	@Override
+	public <V> V deserialize(byte[] bytes, Class<V> clazz) throws SerializerException{
+		Assert.isNull(bytes, "Bytes cloud not be null.");
+		return deserialize(new String(bytes), clazz);
+	}
+
+	@Override
+	public <V> V deserialize(byte[] bytes, TypeReference<V> type) throws SerializerException{
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 		return deserialize(new String(bytes), type);
 	}
-
 
 }

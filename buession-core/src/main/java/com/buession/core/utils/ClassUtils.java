@@ -25,8 +25,9 @@
 package com.buession.core.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -38,10 +39,6 @@ import java.util.List;
  */
 public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 
-	private ClassUtils(){
-
-	}
-
 	/**
 	 * 获取类的所有声明的字段，即包括 public、protected、private 和 default，但是不包括父类申明的字段
 	 *
@@ -50,9 +47,9 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 *
 	 * @return 类的所有声明的字段
 	 */
-	public final static List<Field> getFields(final Class<?> clazz){
+	public final static Field[] getFields(final Class<?> clazz){
 		Assert.isNull(clazz, "Class cloud not be null.");
-		return Collections.unmodifiableList(Arrays.asList(clazz.getDeclaredFields()));
+		return clazz.getDeclaredFields();
 	}
 
 	/**
@@ -63,7 +60,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 *
 	 * @return 类的所有声明的字段
 	 */
-	public final static List<Field> getAllFields(final Class<?> clazz){
+	public final static Field[] getAllFields(final Class<?> clazz){
 		Assert.isNull(clazz, "Class cloud not be null.");
 		final List<Field> allFields = new ArrayList<>(16);
 		Class<?> currentClass = clazz;
@@ -73,7 +70,53 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 			currentClass = currentClass.getSuperclass();
 		}
 
-		return Collections.unmodifiableList(allFields);
+		return allFields.toArray(new Field[]{});
+	}
+
+	/**
+	 * 调用类方法
+	 *
+	 * @param object
+	 * 		类实例
+	 * @param method
+	 * 		类方法
+	 *
+	 * @return 返回方法执行结果
+	 *
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 */
+	public final static Object invoke(final Object object, final Method method) throws InvocationTargetException,
+			IllegalAccessException{
+		Assert.isNull(object, "Object cloud not be null.");
+		Assert.isNull(method, "Object method cloud not be null.");
+
+		method.setAccessible(true);
+		return method.invoke(object);
+	}
+
+	/**
+	 * 调用类方法
+	 *
+	 * @param object
+	 * 		类实例
+	 * @param method
+	 * 		类方法
+	 * @param arguments
+	 * 		方法参数
+	 *
+	 * @return 返回方法执行结果
+	 *
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 */
+	public final static Object invoke(final Object object, final Method method, final Object... arguments) throws
+			InvocationTargetException, IllegalAccessException{
+		Assert.isNull(object, "Object cloud not be null.");
+		Assert.isNull(method, "Object method cloud not be null.");
+
+		method.setAccessible(true);
+		return method.invoke(object, arguments);
 	}
 
 }

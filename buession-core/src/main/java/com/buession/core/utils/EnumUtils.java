@@ -22,55 +22,56 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.math;
+package com.buession.core.utils;
 
-import java.util.stream.LongStream;
+import java.lang.reflect.Field;
 
 /**
+ * 枚举工具类
+ * More {@link org.apache.commons.lang3.EnumUtils}
+ *
  * @author Yong.Teng
  */
-public class Math {
+public class EnumUtils extends org.apache.commons.lang3.EnumUtils {
 
 	/**
-	 * 计算两个数之间连续相加之和
+	 * 判断枚举字段的值是否为 $VALUES
 	 *
-	 * @param start
-	 * 		起始数
-	 * @param end
-	 * 		结束数
+	 * @param field
+	 * 		枚举字段
 	 *
-	 * @return 两个数之间连续相加结果
+	 * @return 枚举字段的值为 $VALUES 返回 true；否则，返回 false
 	 */
-	public final static long continuousAddition(final short start, final short end){
-		return LongStream.rangeClosed(start, end).sum();
+	public final static boolean isEnumValuesField(final Field field){
+		return field != null && (field.isEnumConstant() == false && "$VALUES".equals(field.getName()));
 	}
 
 	/**
-	 * 计算两个数之间连续相加之和
+	 * 判断枚举字段的值是否不为 $VALUES
 	 *
-	 * @param start
-	 * 		起始数
-	 * @param end
-	 * 		结束数
+	 * @param field
+	 * 		枚举字段
 	 *
-	 * @return 两个数之间连续相加结果
+	 * @return 枚举字段的值不为 $VALUES 返回 true；否则，返回 false
 	 */
-	public final static long continuousAddition(final int start, final int end){
-		return LongStream.rangeClosed(start, end).sum();
+	public final static boolean notEnumValuesField(final Field field){
+		return field != null && (field.isEnumConstant() == false && "$VALUES".equals(field.getName()) == false);
 	}
 
 	/**
-	 * 计算两个数之间连续相加之和
+	 * 返回带指定名称的指定枚举类型的枚举常量
 	 *
-	 * @param start
-	 * 		起始数
-	 * @param end
-	 * 		结束数
+	 * @param enumClass
+	 * 		要查询的枚举的类
+	 * @param name
+	 * 		要返回的枚举常量名称
+	 * @param <E>
+	 * 		要返回其常数的枚举类型
 	 *
-	 * @return 两个数之间连续相加结果
+	 * @return 指定枚举类型的枚举常量
 	 */
-	public final static long continuousAddition(final long start, final long end){
-		return LongStream.rangeClosed(start, end).sum();
+	public final static <E extends Enum<E>> E valueOf(final Class<E> enumClass, final String name){
+		return getEnum(enumClass, name);
 	}
 
 }
