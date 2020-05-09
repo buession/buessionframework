@@ -50,8 +50,8 @@ public abstract class AbstractConverter<M, S extends AbstractRecord, R extends A
 	}
 
 	@Override
-	public M converter(S s, R response, Locale locale){
-		return converter(s, locale);
+	public M converter(S s, Locale locale){
+		return converter(s, null, locale);
 	}
 
 	protected static String getName(final Map<String, String> names, Locale locale){

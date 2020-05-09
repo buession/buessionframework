@@ -132,57 +132,18 @@ public class DatabaseResolver extends AbstractResolver {
 		this.reader = databaseReaderBuilder(source).fileMode(fileMode).withCache(cache).build();
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		the IP address as InetAddress or Inet6Address.
-	 * @param locale
-	 * 		The locale for which to retrieve the display country name.
-	 *
-	 * @return A Country model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public Country country(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception{
 		CountryResponse response = reader.country(ipAddress);
 		return countryConverter.converter(response.getCountry(), response, locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		the IP address as Inet4Address or Inet6Address.
-	 * @param locale
-	 * 		The locale for which to retrieve the display city name.
-	 *
-	 * @return A District model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public District district(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception{
 		CityResponse response = reader.city(ipAddress);
 		return cityConverter.converter(response.getCity(), response, locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		the IP address as Inet4Address or Inet6Address.
-	 * @param locale
-	 * 		The locale for which to retrieve the display name.
-	 *
-	 * @return A Location model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public Location location(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception{
 		CityResponse response = reader.city(ipAddress);

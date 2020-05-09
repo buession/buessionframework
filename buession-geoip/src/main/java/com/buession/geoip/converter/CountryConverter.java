@@ -40,7 +40,7 @@ public class CountryConverter extends AbstractConverter<Country, com.maxmind.geo
 	private final static CountryResource countryResource = new CountryResource();
 
 	@Override
-	public Country converter(com.maxmind.geoip2.record.Country country, Locale locale){
+	public Country converter(com.maxmind.geoip2.record.Country country, CountryResponse response, Locale locale){
 		if(country == null){
 			return null;
 		}

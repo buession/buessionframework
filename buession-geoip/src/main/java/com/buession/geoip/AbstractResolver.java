@@ -56,35 +56,11 @@ public abstract class AbstractResolver implements Resolver {
 
 	protected final static TraitsConverter traitsConverter = new TraitsConverter();
 
-	/**
-	 * @param ipAddress
-	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
-	 *
-	 * @return A Country model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public Country country(String ipAddress) throws IOException, GeoIp2Exception{
 		return country(ipAddress, locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
-	 * @param locale
-	 * 		The locale for which to retrieve the display country name.
-	 *
-	 * @return A Country model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public Country country(String ipAddress, Locale locale) throws IOException, GeoIp2Exception{
 		InetAddress addr;
@@ -98,85 +74,26 @@ public abstract class AbstractResolver implements Resolver {
 		return country(addr, locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		the IP address in long format.
-	 *
-	 * @return A Country model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public Country country(long ipAddress) throws IOException, GeoIp2Exception{
 		return country(ipAddress, locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		the IP address in long format.
-	 * @param locale
-	 * 		The locale for which to retrieve the display country name.
-	 *
-	 * @return A Country model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public Country country(long ipAddress, Locale locale) throws IOException, GeoIp2Exception{
 		return country(InetAddressUtils.long2InetAddress(ipAddress), locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		the IP address as InetAddress or Inet6Address.
-	 *
-	 * @return A Country model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public Country country(InetAddress ipAddress) throws IOException, GeoIp2Exception{
 		return country(ipAddress, locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
-	 *
-	 * @return A District model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public District district(String ipAddress) throws IOException, GeoIp2Exception{
 		return district(ipAddress, locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
-	 * @param locale
-	 * 		The locale for which to retrieve the display city name.
-	 *
-	 * @return A District model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public District district(String ipAddress, Locale locale) throws IOException, GeoIp2Exception{
 		InetAddress addr;
@@ -190,85 +107,26 @@ public abstract class AbstractResolver implements Resolver {
 		return district(addr, locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		the IP address in long format.
-	 *
-	 * @return A District model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public District district(long ipAddress) throws IOException, GeoIp2Exception{
 		return district(ipAddress, locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		the IP address in long format.
-	 * @param locale
-	 * 		The locale for which to retrieve the display city name.
-	 *
-	 * @return A District model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public District district(long ipAddress, Locale locale) throws IOException, GeoIp2Exception{
 		return district(InetAddressUtils.long2InetAddress(ipAddress), locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		the IP address as Inet4Address or Inet6Address.
-	 *
-	 * @return A District model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public District district(InetAddress ipAddress) throws IOException, GeoIp2Exception{
 		return district(ipAddress, locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
-	 *
-	 * @return A Location model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public Location location(String ipAddress) throws IOException, GeoIp2Exception{
 		return location(ipAddress, locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
-	 * @param locale
-	 * 		The locale for which to retrieve the display name.
-	 *
-	 * @return A Location model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public Location location(String ipAddress, Locale locale) throws IOException, GeoIp2Exception{
 		InetAddress addr;
@@ -282,51 +140,16 @@ public abstract class AbstractResolver implements Resolver {
 		return location(addr, locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		the IP address in long format.
-	 *
-	 * @return A Location model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public Location location(long ipAddress) throws IOException, GeoIp2Exception{
 		return location(ipAddress, locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		the IP address in long format.
-	 * @param locale
-	 * 		The locale for which to retrieve the display name.
-	 *
-	 * @return A Location model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public Location location(long ipAddress, Locale locale) throws IOException, GeoIp2Exception{
 		return location(InetAddressUtils.long2InetAddress(ipAddress), locale);
 	}
 
-	/**
-	 * @param ipAddress
-	 * 		the IP address as Inet4Address or Inet6Address.
-	 *
-	 * @return A Location model for the requested IP address.
-	 *
-	 * @throws IOException
-	 * 		if there is an IO error
-	 * @throws GeoIp2Exception
-	 * 		if there is an error looking up the IP
-	 */
 	@Override
 	public Location location(InetAddress ipAddress) throws IOException, GeoIp2Exception{
 		return location(ipAddress, locale);

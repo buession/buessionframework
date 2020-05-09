@@ -38,7 +38,8 @@ public class ContinentConverter extends AbstractConverter<Continent, com.maxmind
 		AbstractResponse> {
 
 	@Override
-	public Continent converter(com.maxmind.geoip2.record.Continent continent, Locale locale){
+	public Continent converter(com.maxmind.geoip2.record.Continent continent, AbstractResponse response, Locale
+			locale){
 		if(continent == null){
 			return null;
 		}

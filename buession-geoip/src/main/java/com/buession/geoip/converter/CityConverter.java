@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -37,27 +37,22 @@ import java.util.Locale;
  */
 public class CityConverter extends AbstractConverter<District, com.maxmind.geoip2.record.City, CityResponse> {
 
-    private final static SubdivisionConverter subdivisionConverter = new SubdivisionConverter();
+	private final static SubdivisionConverter subdivisionConverter = new SubdivisionConverter();
 
-    private final static PostalConverter postalConverter = new PostalConverter();
+	private final static PostalConverter postalConverter = new PostalConverter();
 
-    @Override
-    public District converter(com.maxmind.geoip2.record.City city, Locale locale){
-        return converter(city, null, locale);
-    }
+	@Override
+	public District converter(com.maxmind.geoip2.record.City city, CityResponse response, Locale locale){
+		if(city == null){
+			return null;
+		}
 
-    @Override
-    public District converter(com.maxmind.geoip2.record.City city, CityResponse response, Locale locale){
-        if(city == null){
-            return null;
-        }
+		final String name = getName(city.getNames(), locale);
+		final Postal postal = postalConverter.converter(response.getPostal(), response, locale);
+		final District parent = response == null ? null : subdivisionConverter.converter(response
+				.getLeastSpecificSubdivision(), response, locale);
 
-        final String name = getName(city.getNames(), locale);
-        final Postal postal = postalConverter.converter(response.getPostal(), response, locale);
-        final District parent = response == null ? null : subdivisionConverter.converter(response
-                .getLeastSpecificSubdivision(), response, locale);
-
-        return new District(city.getGeoNameId(), city.getConfidence(), city.getName(), name, postal, parent);
-    }
+		return new District(city.getGeoNameId(), city.getConfidence(), city.getName(), name, postal, parent);
+	}
 
 }

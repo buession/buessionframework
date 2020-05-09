@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -36,42 +36,38 @@ import java.util.Locale;
  * @author Yong.Teng
  */
 public class SubdivisionConverter extends AbstractConverter<District, com.maxmind.geoip2.record.Subdivision,
-        CityResponse> {
+		CityResponse> {
 
-    @Override
-    public District converter(Subdivision subdivision, Locale locale){
-        return converter(subdivision, null, locale);
-    }
+	@Override
+	public District converter(Subdivision subdivision, CityResponse response, Locale locale){
+		if(subdivision == null){
+			return null;
+		}
 
-    @Override
-    public District converter(Subdivision subdivision, CityResponse response, Locale locale){
-        if(subdivision == null){
-            return null;
-        }
+		final String name = getName(subdivision.getNames(), locale);
+		District parent = null;
 
-        final String name = getName(subdivision.getNames(), locale);
-        District parent = null;
+		if(response.getSubdivisions() != null){
+			for(Subdivision sub : response.getSubdivisions()){
+				parent = converter(sub, response, locale, true);
+			}
+		}
 
-        if(response.getSubdivisions() != null){
-            for(Subdivision sub : response.getSubdivisions()){
-                parent = converter(sub, response, locale, true);
-            }
-        }
+		return new District(subdivision.getGeoNameId(), subdivision.getConfidence(), subdivision.getName(), name,
+				null, parent);
+	}
 
-        return new District(subdivision.getGeoNameId(), subdivision.getConfidence(), subdivision.getName(), name,
-                null, parent);
-    }
+	private static District converter(Subdivision subdivision, CityResponse response, Locale locale, boolean
+			isPrivate){
+		if(subdivision == null){
+			return null;
+		}
 
-    private static District converter(Subdivision subdivision, CityResponse response, Locale locale, boolean isPrivate){
-        if(subdivision == null){
-            return null;
-        }
+		final String name = getName(subdivision.getNames(), locale);
+		District parent = null;
 
-        final String name = getName(subdivision.getNames(), locale);
-        District parent = null;
-
-        return new District(subdivision.getGeoNameId(), subdivision.getConfidence(), subdivision.getName(), name,
-                null, parent);
-    }
+		return new District(subdivision.getGeoNameId(), subdivision.getConfidence(), subdivision.getName(), name,
+				null, parent);
+	}
 
 }

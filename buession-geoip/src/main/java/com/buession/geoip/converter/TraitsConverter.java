@@ -39,7 +39,7 @@ import java.util.Locale;
 public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip2.record.Traits, AbstractResponse> {
 
 	@Override
-	public Traits converter(com.maxmind.geoip2.record.Traits traits, Locale locale){
+	public Traits converter(com.maxmind.geoip2.record.Traits traits, AbstractResponse response, Locale locale){
 		if(traits == null){
 			return null;
 		}

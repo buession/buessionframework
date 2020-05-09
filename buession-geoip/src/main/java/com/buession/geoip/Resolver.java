@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -41,260 +41,296 @@ import java.util.Locale;
  */
 public interface Resolver {
 
-    /**
-     * @param ipAddress
-     *         String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
-     *
-     * @return A Country model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    Country country(String ipAddress) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a Country model for ip
+	 *
+	 * @param ipAddress
+	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
+	 *
+	 * @return A Country model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	Country country(String ipAddress) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
-     * @param locale
-     *         The locale for which to retrieve the display country name.
-     *
-     * @return A Country model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    Country country(String ipAddress, Locale locale) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a Country model for ip
+	 *
+	 * @param ipAddress
+	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
+	 * @param locale
+	 * 		The locale for which to retrieve the display country name.
+	 *
+	 * @return A Country model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	Country country(String ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         the IP address in long format.
-     *
-     * @return A Country model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    Country country(long ipAddress) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a Country model for ip
+	 *
+	 * @param ipAddress
+	 * 		the IP address in long format.
+	 *
+	 * @return A Country model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	Country country(long ipAddress) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         the IP address in long format.
-     * @param locale
-     *         The locale for which to retrieve the display country name.
-     *
-     * @return A Country model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    Country country(long ipAddress, Locale locale) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a Country model for ip
+	 *
+	 * @param ipAddress
+	 * 		the IP address in long format.
+	 * @param locale
+	 * 		The locale for which to retrieve the display country name.
+	 *
+	 * @return A Country model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	Country country(long ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         the IP address as InetAddress or Inet6Address.
-     *
-     * @return A Country model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    Country country(InetAddress ipAddress) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a Country model for ip
+	 *
+	 * @param ipAddress
+	 * 		the IP address as InetAddress or Inet6Address.
+	 *
+	 * @return A Country model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	Country country(InetAddress ipAddress) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         the IP address as InetAddress or Inet6Address.
-     * @param locale
-     *         The locale for which to retrieve the display country name.
-     *
-     * @return A Country model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    Country country(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a Country model for ip
+	 *
+	 * @param ipAddress
+	 * 		the IP address as InetAddress or Inet6Address.
+	 * @param locale
+	 * 		The locale for which to retrieve the display country name.
+	 *
+	 * @return A Country model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	Country country(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
-     *
-     * @return A District model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    District district(String ipAddress) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a District model for ip
+	 *
+	 * @param ipAddress
+	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
+	 *
+	 * @return A District model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	District district(String ipAddress) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
-     * @param locale
-     *         The locale for which to retrieve the display city name.
-     *
-     * @return A District model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    District district(String ipAddress, Locale locale) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a District model for ip
+	 *
+	 * @param ipAddress
+	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
+	 * @param locale
+	 * 		The locale for which to retrieve the display city name.
+	 *
+	 * @return A District model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	District district(String ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         the IP address in long format.
-     *
-     * @return A District model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    District district(long ipAddress) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a District model for ip
+	 *
+	 * @param ipAddress
+	 * 		the IP address in long format.
+	 *
+	 * @return A District model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	District district(long ipAddress) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         the IP address in long format.
-     * @param locale
-     *         The locale for which to retrieve the display city name.
-     *
-     * @return A District model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    District district(long ipAddress, Locale locale) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a District model for ip
+	 *
+	 * @param ipAddress
+	 * 		the IP address in long format.
+	 * @param locale
+	 * 		The locale for which to retrieve the display city name.
+	 *
+	 * @return A District model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	District district(long ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         the IP address as Inet4Address or Inet6Address.
-     *
-     * @return A District model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    District district(InetAddress ipAddress) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a District model for ip
+	 *
+	 * @param ipAddress
+	 * 		the IP address as Inet4Address or Inet6Address.
+	 *
+	 * @return A District model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	District district(InetAddress ipAddress) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         the IP address as Inet4Address or Inet6Address.
-     * @param locale
-     *         The locale for which to retrieve the display city name.
-     *
-     * @return A District model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    District district(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a District model for ip
+	 *
+	 * @param ipAddress
+	 * 		the IP address as Inet4Address or Inet6Address.
+	 * @param locale
+	 * 		The locale for which to retrieve the display city name.
+	 *
+	 * @return A District model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	District district(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
-     *
-     * @return A Location model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    Location location(String ipAddress) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a Location model for ip
+	 *
+	 * @param ipAddress
+	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
+	 *
+	 * @return A Location model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	Location location(String ipAddress) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
-     * @param locale
-     *         The locale for which to retrieve the display name.
-     *
-     * @return A Location model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    Location location(String ipAddress, Locale locale) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a Location model for ip
+	 *
+	 * @param ipAddress
+	 * 		String version of an IP address, i.e. "127.0.0.1" or IPv6 address, i.e. "::127.0.0.1".
+	 * @param locale
+	 * 		The locale for which to retrieve the display name.
+	 *
+	 * @return A Location model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	Location location(String ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         the IP address in long format.
-     *
-     * @return A Location model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    Location location(long ipAddress) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a Location model for ip
+	 *
+	 * @param ipAddress
+	 * 		the IP address in long format.
+	 *
+	 * @return A Location model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	Location location(long ipAddress) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         the IP address in long format.
-     * @param locale
-     *         The locale for which to retrieve the display name.
-     *
-     * @return A Location model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    Location location(long ipAddress, Locale locale) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a Location model for ip
+	 *
+	 * @param ipAddress
+	 * 		the IP address in long format.
+	 * @param locale
+	 * 		The locale for which to retrieve the display name.
+	 *
+	 * @return A Location model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	Location location(long ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         the IP address as Inet4Address or Inet6Address.
-     *
-     * @return A Location model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    Location location(InetAddress ipAddress) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a Location model for ip
+	 *
+	 * @param ipAddress
+	 * 		the IP address as Inet4Address or Inet6Address.
+	 *
+	 * @return A Location model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	Location location(InetAddress ipAddress) throws IOException, GeoIp2Exception;
 
-    /**
-     * @param ipAddress
-     *         the IP address as Inet4Address or Inet6Address.
-     * @param locale
-     *         The locale for which to retrieve the display name.
-     *
-     * @return A Location model for the requested IP address.
-     *
-     * @throws IOException
-     *         if there is an IO error
-     * @throws GeoIp2Exception
-     *         if there is an error looking up the IP
-     */
-    Location location(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception;
+	/**
+	 * Return a Location model for ip
+	 *
+	 * @param ipAddress
+	 * 		the IP address as Inet4Address or Inet6Address.
+	 * @param locale
+	 * 		The locale for which to retrieve the display name.
+	 *
+	 * @return A Location model for the requested IP address.
+	 *
+	 * @throws IOException
+	 * 		if there is an IO error
+	 * @throws GeoIp2Exception
+	 * 		if there is an error looking up the IP
+	 */
+	Location location(InetAddress ipAddress, Locale locale) throws IOException, GeoIp2Exception;
 
-    Metadata getMetadata();
+	Metadata getMetadata();
 
-    void close() throws IOException;
+	void close() throws IOException;
 
 }
