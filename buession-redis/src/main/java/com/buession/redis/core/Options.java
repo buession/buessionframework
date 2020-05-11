@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -31,23 +31,24 @@ import com.buession.redis.serializer.Serializer;
  */
 public class Options {
 
-    private String prefix;
+	private String prefix;
 
-    private Serializer serializer;
+	private Serializer serializer;
 
-    public String getPrefix(){
-        return prefix;
-    }
+	public String getPrefix(){
+		return prefix;
+	}
 
-    public void setPrefix(String prefix){
-        this.prefix = prefix;
-    }
+	public void setPrefix(String prefix){
+		this.prefix = prefix;
+	}
 
-    public Serializer getSerializer(){
-        return serializer;
-    }
+	public Serializer getSerializer(){
+		return serializer;
+	}
 
-    public void setSerializer(Serializer serializer){
-        this.serializer = serializer;
-    }
+	public void setSerializer(Serializer serializer){
+		this.serializer = serializer;
+	}
+
 }

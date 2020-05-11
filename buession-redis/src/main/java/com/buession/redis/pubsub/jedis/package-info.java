@@ -22,56 +22,7 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
-
-import com.buession.core.utils.ArrayUtils;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 /**
  * @author Yong.Teng
  */
-public class OperationsCommandArguments {
-
-	private Map<String, Object> parameters = new LinkedHashMap<>();
-
-	private OperationsCommandArguments(){
-
-	}
-
-	public final static OperationsCommandArguments getInstance(){
-		return new OperationsCommandArguments();
-	}
-
-	public OperationsCommandArguments put(final String key, final Object value){
-		parameters.put(key, value);
-		return this;
-	}
-
-	public OperationsCommandArguments put(final String key, final Object... value){
-		parameters.put(key, ArrayUtils.toString(value));
-		return this;
-	}
-
-	public OperationsCommandArguments putAll(final OperationsCommandArguments parameters){
-		return parameters == null ? this : putAll(parameters.getParameters());
-	}
-
-	public OperationsCommandArguments putAll(final Map<String, Object> parameters){
-		if(parameters != null){
-			this.parameters.putAll(parameters);
-		}
-
-		return this;
-	}
-
-	public Map<String, Object> getParameters(){
-		return parameters;
-	}
-
-	public Map<String, Object> build(){
-		return getParameters();
-	}
-
-}
+package com.buession.redis.pubsub.jedis;

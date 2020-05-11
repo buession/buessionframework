@@ -22,56 +22,57 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
+package com.buession.redis.pubsub.jedis;
 
-import com.buession.core.utils.ArrayUtils;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
+import com.buession.core.utils.Assert;
+import com.buession.redis.core.PubSubListener;
+import redis.clients.jedis.JedisPubSub;
 
 /**
  * @author Yong.Teng
  */
-public class OperationsCommandArguments {
+public class DefaultJedisPubSub extends JedisPubSub {
 
-	private Map<String, Object> parameters = new LinkedHashMap<>();
+	private PubSubListener<String> pubSubListener;
 
-	private OperationsCommandArguments(){
-
+	public DefaultJedisPubSub(PubSubListener<String> pubSubListener){
+		Assert.isNull(pubSubListener, "Pubsub listener cloud not be null.");
+		this.pubSubListener = pubSubListener;
 	}
 
-	public final static OperationsCommandArguments getInstance(){
-		return new OperationsCommandArguments();
+	@Override
+	public void onMessage(String channel, String message){
+		pubSubListener.onMessage(channel, message);
 	}
 
-	public OperationsCommandArguments put(final String key, final Object value){
-		parameters.put(key, value);
-		return this;
+	@Override
+	public void onPMessage(String pattern, String channel, String message){
+		pubSubListener.onPMessage(pattern, channel, message);
 	}
 
-	public OperationsCommandArguments put(final String key, final Object... value){
-		parameters.put(key, ArrayUtils.toString(value));
-		return this;
+	@Override
+	public void onSubscribe(String channel, int subscribedChannels){
+		pubSubListener.onSubscribe(channel, subscribedChannels);
 	}
 
-	public OperationsCommandArguments putAll(final OperationsCommandArguments parameters){
-		return parameters == null ? this : putAll(parameters.getParameters());
+	@Override
+	public void onUnsubscribe(String channel, int subscribedChannels){
+		pubSubListener.onUnsubscribe(channel, subscribedChannels);
 	}
 
-	public OperationsCommandArguments putAll(final Map<String, Object> parameters){
-		if(parameters != null){
-			this.parameters.putAll(parameters);
-		}
-
-		return this;
+	@Override
+	public void onPUnsubscribe(String pattern, int subscribedChannels){
+		pubSubListener.onPUnsubscribe(pattern, subscribedChannels);
 	}
 
-	public Map<String, Object> getParameters(){
-		return parameters;
+	@Override
+	public void onPSubscribe(String pattern, int subscribedChannels){
+		pubSubListener.onPSubscribe(pattern, subscribedChannels);
 	}
 
-	public Map<String, Object> build(){
-		return getParameters();
+	@Override
+	public void onPong(String pattern){
+		pubSubListener.onPong(pattern);
 	}
 
 }

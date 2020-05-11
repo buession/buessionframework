@@ -24,82 +24,101 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
-import com.buession.core.validator.Validate;
-import com.buession.lang.Status;
-import com.buession.redis.client.ClientConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Client;
 import redis.clients.jedis.Jedis;
 
-import java.io.IOException;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * @author Yong.Teng
  */
 public class SimpleJedisDataSource extends AbstractJedisRedisDataSource<Jedis> implements JedisDataSource {
 
-	private Jedis jedis;
-
-	private final static Logger logger = LoggerFactory.getLogger(SimpleJedisDataSource.class);
-
 	public SimpleJedisDataSource(){
 		super();
 	}
 
-	public SimpleJedisDataSource(ClientConfiguration clientConfiguration){
-		super(clientConfiguration);
+	public SimpleJedisDataSource(String host){
+		super(host);
 	}
 
-	@Override
-	public Status connect(){
-		ClientConfiguration configuration = getClientConfiguration();
-		jedis = new Jedis(configuration.getHost(), configuration.getPort(), configuration.getConnectTimeout(),
-				configuration.getSoTimeout(), configuration.isUseSsl(), configuration.getSslSocketFactory(),
-				configuration.getSslParameters(), configuration.getHostnameVerifier());
-
-		Client client = jedis.getClient();
-
-		if(Validate.hasText(configuration.getPassword())){
-			client.setPassword(configuration.getPassword());
-		}
-		client.setDb(configuration.getDatabase());
-
-		jedis.connect();
-
-		if(Validate.hasText(configuration.getClientName())){
-			client.clientSetname(configuration.getClientName());
-		}
-
-		logger.info("Simple jedis datasource initialize with db {} success, name: {}.", configuration.getDatabase(),
-				configuration.getClientName());
-
-		return Status.SUCCESS;
+	public SimpleJedisDataSource(String host, String password){
+		super(host, password);
 	}
 
-	@Override
-	public Jedis getRedisClient(){
-		return jedis;
+	public SimpleJedisDataSource(String host, int database){
+		super(host, database);
 	}
 
-	@Override
-	public boolean isClosed(){
-		return jedis != null && jedis.isConnected() == false;
+	public SimpleJedisDataSource(String host, String password, int database){
+		super(host, password, database);
 	}
 
-	@Override
-	public void disconnect() throws IOException{
-		if(jedis != null){
-			jedis.disconnect();
-		}
+	public SimpleJedisDataSource(String host, int port, String password){
+		super(host, port, password);
 	}
 
-	@Override
-	public void close() throws IOException{
-		if(jedis != null){
-			jedis.quit();
-			disconnect();
-		}
+	public SimpleJedisDataSource(String host, int port, int database){
+		super(host, port, database);
+	}
+
+	public SimpleJedisDataSource(String host, int port, String password, int database){
+		super(host, port, password, database);
+	}
+
+	public SimpleJedisDataSource(String host, int port, String password, int database, int connectTimeout,
+								 int soTimeout){
+		super(host, port, password, database, connectTimeout, soTimeout);
+	}
+
+	public SimpleJedisDataSource(String host, int port, String password, int database, int connectTimeout,
+								 int soTimeout, boolean useSsl){
+		super(host, port, password, database, connectTimeout, soTimeout, useSsl);
+	}
+
+	public SimpleJedisDataSource(String host, int port, String password, int database, int connectTimeout,
+								 int soTimeout, SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
+								 HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, connectTimeout, soTimeout, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+	}
+
+	public SimpleJedisDataSource(String host, int port, String password, int database, int connectTimeout,
+								 int soTimeout, boolean useSsl, SSLSocketFactory sslSocketFactory,
+								 SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, connectTimeout, soTimeout, useSsl, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+	}
+
+	public SimpleJedisDataSource(String host, int port, String password, int database, String clientName,
+								 boolean useSsl){
+		super(host, port, password, database, clientName, useSsl);
+	}
+
+	public SimpleJedisDataSource(String host, int port, String password, int database, String clientName,
+								 SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
+								 HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, clientName, sslSocketFactory, sslParameters, hostnameVerifier);
+	}
+
+	public SimpleJedisDataSource(String host, int port, String password, int database, String clientName,
+								 int connectTimeout, int soTimeout, boolean useSsl){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, useSsl);
+	}
+
+	public SimpleJedisDataSource(String host, int port, String password, int database, String clientName,
+								 int connectTimeout, int soTimeout, SSLSocketFactory sslSocketFactory,
+								 SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+	}
+
+	public SimpleJedisDataSource(String host, int port, String password, int database, String clientName,
+								 int connectTimeout, int soTimeout, boolean useSsl, SSLSocketFactory sslSocketFactory,
+								 SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, useSsl, sslSocketFactory,
+				sslParameters, hostnameVerifier);
 	}
 
 }

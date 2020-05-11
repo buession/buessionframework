@@ -24,8 +24,6 @@
  */
 package com.buession.redis.spring;
 
-import com.buession.core.validator.Validate;
-import com.buession.redis.client.ClientConfiguration;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.datasource.jedis.JedisPoolDataSource;
 import com.buession.redis.client.connection.datasource.jedis.ShardedJedisPoolDataSource;
@@ -91,35 +89,21 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 
 	@Override
 	public void afterPropertiesSet() throws Exception{
-		ClientConfiguration configuration = new ClientConfiguration();
-
-		configuration.setHost(getHost());
-		configuration.setPort(getPort());
-		configuration.setPassword(getPassword());
-		configuration.setDatabase(getDatabase());
-		configuration.setClientName(getClientName());
-		configuration.setConnectTimeout(getConnectTimeout());
-		configuration.setSoTimeout(getSoTimeout());
-		configuration.setUseSsl(isUseSsl());
-		configuration.setSslSocketFactory(getSslSocketFactory());
-		configuration.setSslParameters(getSslParameters());
-		configuration.setHostnameVerifier(getHostnameVerifier());
-		configuration.setWeight(getWeight());
-
 		if(isUsePool()){
 			if(isUseShardInfo()){
-				final ShardedJedisPoolDataSource dataSource = new ShardedJedisPoolDataSource(configuration,
-						poolConfig);
+				final ShardedJedisPoolDataSource dataSource = new ShardedJedisPoolDataSource(getHost(), getPort(),
+						getPassword(), getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl()
+						, getSslSocketFactory(), getSslParameters(), getHostnameVerifier(), poolConfig);
 
-				dataSource.connect();
+				dataSource.setWeight(getWeight());
 
 				setPool(dataSource.getPool());
 				setConnection(new ShardedJedisPoolConnection(dataSource));
 				logger.debug("Initialize connection for pool and shard info.");
 			}else{
-				final JedisPoolDataSource dataSource = new JedisPoolDataSource(configuration, poolConfig);
-
-				dataSource.connect();
+				final JedisPoolDataSource dataSource = new JedisPoolDataSource(getHost(), getPort(), getPassword(),
+						getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl(),
+						getSslSocketFactory(), getSslParameters(), getHostnameVerifier(), poolConfig);
 
 				setPool(dataSource.getPool());
 				setConnection(new JedisPoolConnection(dataSource));
@@ -127,16 +111,17 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 			}
 		}else{
 			if(isUseShardInfo()){
-				final SimpleShardedJedisDataSource dataSource = new SimpleShardedJedisDataSource(configuration);
+				final SimpleShardedJedisDataSource dataSource = new SimpleShardedJedisDataSource(getHost(), getPort(),
+						getPassword(), getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl()
+						, getSslSocketFactory(), getSslParameters(), getHostnameVerifier());
 
-				dataSource.connect();
-
+				dataSource.setWeight(getWeight());
 				setConnection(new SimpleShardedJedisConnection(dataSource));
 				logger.debug("Initialize connection for shard info.");
 			}else{
-				final SimpleJedisDataSource dataSource = new SimpleJedisDataSource(configuration);
-
-				dataSource.connect();
+				final SimpleJedisDataSource dataSource = new SimpleJedisDataSource(getHost(), getPort(), getPassword()
+						, getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl(),
+						getSslSocketFactory(), getSslParameters(), getHostnameVerifier());
 
 				setConnection(new SimpleJedisConnection(dataSource));
 				logger.debug("Initialize connection simple.");

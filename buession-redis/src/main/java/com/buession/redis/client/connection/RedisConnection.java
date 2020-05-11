@@ -44,7 +44,7 @@ public interface RedisConnection extends Closeable {
 
 	void setDataSource(RedisDataSource dataSource);
 
-	Status connect();
+	Status connect() throws IOException;
 
 	<C, R> R execute(final ProtocolCommand command, final Executor<C, R> executor) throws RedisException;
 
@@ -55,7 +55,14 @@ public interface RedisConnection extends Closeable {
 	void discard();
 
 	/**
-	 * 获取连接是否关闭
+	 * 检测是否处于连接状态
+	 *
+	 * @return 是否处于连接状态
+	 */
+	boolean isConnect();
+
+	/**
+	 * 检测连接是否关闭
 	 *
 	 * @return 连接是否关闭
 	 */

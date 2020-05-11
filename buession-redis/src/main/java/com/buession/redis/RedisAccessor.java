@@ -27,15 +27,15 @@ package com.buession.redis;
 import com.buession.core.utils.Assert;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.RedisConnectionFactory;
-import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.jedis.JedisPoolConnection;
 import com.buession.redis.client.connection.jedis.ShardedJedisConnection;
 import com.buession.redis.client.connection.jedis.SimpleJedisConnection;
 import com.buession.redis.client.connection.jedis.SimpleShardedJedisConnection;
 import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.client.jedis.ShardedJedisClient;
+import com.buession.redis.core.Executor;
 import com.buession.redis.core.Options;
+import com.buession.redis.exception.RedisException;
 import com.buession.redis.serializer.JacksonJsonSerializer;
 import com.buession.redis.serializer.Serializer;
 import com.buession.redis.utils.KeyUtil;
@@ -54,8 +54,6 @@ public abstract class RedisAccessor {
 	protected Options options = DEFAULT_OPTIONS;
 
 	protected Serializer serializer;
-
-	protected RedisConnectionFactory connectionFactory;
 
 	protected RedisConnection connection;
 
@@ -108,7 +106,7 @@ public abstract class RedisAccessor {
 		return client;
 	}
 
-	public void afterPropertiesSet(){
+	public void afterPropertiesSet() throws RedisException{
 		Assert.isNull(connection, "RedisConnection is required");
 
 		Options options = getOptions();
@@ -119,45 +117,26 @@ public abstract class RedisAccessor {
 			serializer = DEFAULT_SERIALIZER;
 		}
 
-		connectionFactory = new RedisConnectionFactory(connection);
 		client = doGetRedisClient(connection);
-	}
-
-	protected RedisConnectionFactory getConnectionFactory(){
-		return connectionFactory;
+		client.setConnection(connection);
 	}
 
 	protected <R> R execute(final Executor<R> executor){
-		RedisConnectionFactory connectionFactory = getConnectionFactory();
-		boolean enableTransactionSupport = false;
-		RedisConnection connection;
-
-		if(enableTransactionSupport){
-			// only bind resources in case of potential transaction synchronization
-			connection = RedisConnectionUtils.bindConnection(connectionFactory, enableTransactionSupport);
-		}else{
-			connection = RedisConnectionUtils.getConnection(connectionFactory);
-		}
-
 		try{
-			client.setConnection(connection);
 			return executor.execute(client);
 		}catch(Exception e){
 			logger.error("Execute executor failure: {}", e.getMessage(), e);
 			throw e;
-		}finally{
-			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
 	}
 
-	protected static RedisClient doGetRedisClient(RedisConnection connection){
+	protected static RedisClient doGetRedisClient(RedisConnection connection) throws RedisException{
 		if((connection instanceof SimpleJedisConnection) || (connection instanceof JedisPoolConnection)){
 			return new JedisClient(connection);
-		}else if((connection instanceof SimpleShardedJedisConnection) || (connection instanceof
-				ShardedJedisConnection)){
+		}else if((connection instanceof SimpleShardedJedisConnection) || (connection instanceof ShardedJedisConnection)){
 			return new ShardedJedisClient(connection);
 		}else{
-			return null;
+			throw new RedisException("Cloud not initialize RedisClient for: " + connection);
 		}
 	}
 
@@ -203,10 +182,6 @@ public abstract class RedisAccessor {
 
 			return temp;
 		}
-	}
-
-	protected interface Executor<R> extends com.buession.core.Executor<RedisClient, R> {
-
 	}
 
 }

@@ -25,6 +25,7 @@
 package com.buession.redis.utils;
 
 import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.utils.EnumUtils;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.core.RedisServerTime;
@@ -48,8 +49,8 @@ public class ReturnUtils {
 
 	}
 
-	public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer, final List<String>
-			data){
+	public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer,
+																	final List<String> data){
 		if(data == null){
 			return null;
 		}
@@ -63,8 +64,8 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]>
-			data){
+	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer,
+																  final List<byte[]> data){
 		if(data == null){
 			return null;
 		}
@@ -78,8 +79,8 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer, final List<String>
-			data, final Class<V> clazz){
+	public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer,
+																	final List<String> data, final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -87,8 +88,8 @@ public class ReturnUtils {
 		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toList());
 	}
 
-	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]>
-			data, final Class<V> clazz){
+	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]> data
+			, final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -96,8 +97,9 @@ public class ReturnUtils {
 		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toList());
 	}
 
-	public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer, final List<String>
-			data, final TypeReference<V> type){
+	public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer,
+																	final List<String> data,
+																	final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -105,8 +107,8 @@ public class ReturnUtils {
 		return data.stream().map((value)->serializer.deserialize(value, type)).collect(Collectors.toList());
 	}
 
-	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]>
-			data, final TypeReference<V> type){
+	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]> data
+			, final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -148,8 +150,7 @@ public class ReturnUtils {
 			return null;
 		}
 
-		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toCollection
-				(LinkedHashSet::new));
+		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	public final static <V> Set<V> returnObjectValueFromSetByte(final Serializer serializer, final Set<byte[]> data,
@@ -158,8 +159,7 @@ public class ReturnUtils {
 			return null;
 		}
 
-		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toCollection
-				(LinkedHashSet::new));
+		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	public final static <V> Set<V> returnObjectValueFromSetString(final Serializer serializer, final Set<String> data,
@@ -168,8 +168,7 @@ public class ReturnUtils {
 			return null;
 		}
 
-		return data.stream().map((value)->serializer.deserialize(value, type)).collect(Collectors.toCollection
-				(LinkedHashSet::new));
+		return data.stream().map((value)->serializer.deserialize(value, type)).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
 	public final static <V> Set<V> returnObjectValueFromSetByte(final Serializer serializer, final Set<byte[]> data,
@@ -178,12 +177,11 @@ public class ReturnUtils {
 			return null;
 		}
 
-		return data.stream().map((value)->serializer.deserialize(value, type)).collect(Collectors.toCollection
-				(LinkedHashSet::new));
+		return data.stream().map((value)->serializer.deserialize(value, type)).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
-	public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer, final
-	Map<String, String> data){
+	public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer,
+																		  final Map<String, String> data){
 		if(data == null){
 			return null;
 		}
@@ -208,8 +206,9 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer, final
-	Map<String, String> data, final Class<V> clazz){
+	public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer,
+																		  final Map<String, String> data,
+																		  final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -234,8 +233,9 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer, final
-	Map<String, String> data, final TypeReference<V> type){
+	public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer,
+																		  final Map<String, String> data,
+																		  final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -266,6 +266,14 @@ public class ReturnUtils {
 
 	public final static Status returnForOK(final byte[] str){
 		return returnForOK(SafeEncoder.encode(str));
+	}
+
+	public final static Status returnStatus(final boolean value){
+		return Status.valueOf(value);
+	}
+
+	public final static <O extends Enum<O>> O returnEnum(final String str, final Class<O> enumType){
+		return EnumUtils.valueOf(enumType, str.toUpperCase());
 	}
 
 	public final static RedisServerTime returnRedisServerTime(final List<String> ret){

@@ -25,20 +25,71 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.datasource.RedisDataSource;
+import com.buession.redis.client.connection.datasource.jedis.ShardedJedisPoolDataSource;
 import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
+
+import java.io.IOException;
 
 /**
  * @author Yong.Teng
  */
-public class ShardedJedisPoolConnection extends AbstractJedisRedisConnection<ShardedJedis> implements
-        ShardedJedisConnection {
+public class ShardedJedisPoolConnection extends AbstractJedisRedisConnection<ShardedJedis> implements ShardedJedisConnection {
 
-    public ShardedJedisPoolConnection(){
-        super();
-    }
+	public ShardedJedisPoolConnection(){
+		super();
+	}
 
-    public ShardedJedisPoolConnection(RedisDataSource dataSource){
-        super(dataSource);
-    }
+	public ShardedJedisPoolConnection(ShardedJedisPoolDataSource dataSource){
+		super(dataSource);
+	}
+
+	@Override
+	protected ShardedJedis getDelegate(RedisDataSource dataSource){
+		if(dataSource != null && dataSource instanceof ShardedJedisPoolDataSource){
+			ShardedJedisPool pool = ((ShardedJedisPoolDataSource) dataSource).getPool();
+
+			if(pool != null){
+				return pool.getResource();
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	protected void doConnect() throws IOException{
+		if(getDataSource() != null && getDataSource() instanceof ShardedJedisPoolDataSource){
+			((ShardedJedisPoolDataSource) getDataSource()).getPool();
+		}
+	}
+
+	@Override
+	protected boolean checkConnect(){
+		return checkClosed() == false;
+	}
+
+	@Override
+	protected boolean checkClosed(){
+		if(getDataSource() != null && getDataSource() instanceof ShardedJedisPoolDataSource){
+			return ((ShardedJedisPoolDataSource) getDataSource()).getPool().isClosed();
+		}else{
+			return true;
+		}
+	}
+
+	@Override
+	protected void doDisconnect() throws IOException{
+		if(getDelegate() != null){
+			getDelegate().disconnect();
+		}
+	}
+
+	@Override
+	protected void doClose() throws IOException{
+		if(getDelegate() != null){
+			getDelegate().close();
+		}
+	}
 
 }

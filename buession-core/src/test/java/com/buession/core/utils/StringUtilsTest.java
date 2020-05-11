@@ -22,57 +22,19 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.pubsub;
+package com.buession.core.utils;
 
-import com.buession.core.utils.Assert;
-import com.buession.redis.core.PubSubListener;
-import redis.clients.jedis.JedisPubSub;
+import org.junit.Test;
 
 /**
  * @author Yong.Teng
  */
-public class DefaultJedisPubSub extends JedisPubSub {
+public class StringUtilsTest {
 
-	private PubSubListener<String> pubSubListener;
-
-	public DefaultJedisPubSub(PubSubListener<String> pubSubListener){
-		Assert.isNull(pubSubListener, "Pubsub listener cloud not be null.");
-		this.pubSubListener = pubSubListener;
-	}
-
-	@Override
-	public void onMessage(String channel, String message){
-		pubSubListener.onMessage(channel, message);
-	}
-
-	@Override
-	public void onPMessage(String pattern, String channel, String message){
-		pubSubListener.onPMessage(pattern, channel, message);
-	}
-
-	@Override
-	public void onSubscribe(String channel, int subscribedChannels){
-		pubSubListener.onSubscribe(channel, subscribedChannels);
-	}
-
-	@Override
-	public void onUnsubscribe(String channel, int subscribedChannels){
-		pubSubListener.onUnsubscribe(channel, subscribedChannels);
-	}
-
-	@Override
-	public void onPUnsubscribe(String pattern, int subscribedChannels){
-		pubSubListener.onPUnsubscribe(pattern, subscribedChannels);
-	}
-
-	@Override
-	public void onPSubscribe(String pattern, int subscribedChannels){
-		pubSubListener.onPSubscribe(pattern, subscribedChannels);
-	}
-
-	@Override
-	public void onPong(String pattern){
-		pubSubListener.onPong(pattern);
+	@Test
+	public void reverse(){
+		String str = "5ih0LxX12ubG3Cff82W1NqaXwlDkt79b";
+		System.out.println(StringUtils.reverse(str));
 	}
 
 }

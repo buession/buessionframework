@@ -59,31 +59,46 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	}
 
 	@Override
-	public Status connect(){
+	public Status connect() throws IOException{
 		if(isClosed()){
-			dataSource.connect();
+			doConnect();
 		}
 
 		return Status.SUCCESS;
 	}
 
 	@Override
-	public void disconnect() throws IOException{
-		if(getDataSource() != null){
-			getDataSource().disconnect();
-		}
+	public boolean isConnect(){
+		return getDataSource() == null ? true : checkConnect();
 	}
 
 	@Override
 	public boolean isClosed(){
-		return getDataSource() == null ? true : getDataSource().isClosed();
+		return getDataSource() == null ? true : checkClosed();
+	}
+
+	@Override
+	public void disconnect() throws IOException{
+		if(getDataSource() != null){
+			doDisconnect();
+		}
 	}
 
 	@Override
 	public void close() throws IOException{
 		if(getDataSource() != null){
-			getDataSource().close();
+			doClose();
 		}
 	}
+
+	protected abstract void doConnect() throws IOException;
+
+	protected abstract boolean checkConnect();
+
+	protected abstract boolean checkClosed();
+
+	protected abstract void doDisconnect() throws IOException;
+
+	protected abstract void doClose() throws IOException;
 
 }

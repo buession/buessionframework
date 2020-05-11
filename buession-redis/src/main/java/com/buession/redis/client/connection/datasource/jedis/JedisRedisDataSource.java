@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
@@ -27,11 +27,9 @@ package com.buession.redis.client.connection.datasource.jedis;
 import com.buession.redis.client.connection.datasource.RedisDataSource;
 import redis.clients.jedis.commands.JedisCommands;
 
-import java.io.Closeable;
-
 /**
  * @author Yong.Teng
  */
-public interface JedisRedisDataSource<T extends JedisCommands> extends RedisDataSource, Closeable {
+public interface JedisRedisDataSource<T extends JedisCommands> extends RedisDataSource {
 
 }

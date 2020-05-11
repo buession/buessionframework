@@ -267,8 +267,7 @@ public class Replication implements Serializable {
 		return "Replication{" + "role=" + role + ", master=" + master + ", slaves=" + slaves + ", " +
 				"masterLinkDownSinceSeconds=" + masterLinkDownSinceSeconds + ", connectedSlaves=" + connectedSlaves +
 				", masterReplid='" + masterReplid + '\'' + ", masterReplid2='" + masterReplid2 + '\'' + ", " +
-				"masterReplOffset=" + masterReplOffset + ", secondReplOffset=" + secondReplOffset + ", replBacklog=" +
-				replBacklog + '}';
+				"masterReplOffset=" + masterReplOffset + ", secondReplOffset=" + secondReplOffset + ", replBacklog=" + replBacklog + '}';
 
 	}
 
@@ -322,8 +321,8 @@ public class Replication implements Serializable {
 		 * @param syncInProgress
 		 * 		主服务器是否正在与这个从服务器进行同步
 		 */
-		public Master(String host, int port, MasterLinkStatus masterLinkStatus, int lastIoSecondsAgo, boolean
-				syncInProgress){
+		public Master(String host, int port, MasterLinkStatus masterLinkStatus, int lastIoSecondsAgo,
+					  boolean syncInProgress){
 			this.host = host;
 			this.port = port;
 			this.masterLinkStatus = masterLinkStatus;
@@ -597,8 +596,7 @@ public class Replication implements Serializable {
 
 		@Override
 		public String toString(){
-			return "Slave{" + "ip='" + ip + '\'' + ", port=" + port + ", state=" + state + ", offset=" + offset + ", "
-					+ "lag=" + lag + '}';
+			return "Slave{" + "ip='" + ip + '\'' + ", port=" + port + ", state=" + state + ", offset=" + offset + ", " + "lag=" + lag + '}';
 		}
 
 	}
@@ -700,6 +698,7 @@ public class Replication implements Serializable {
 		public void setValue(String value){
 			this.value = value;
 		}
+
 	}
 
 }

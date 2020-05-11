@@ -53,8 +53,8 @@ import com.buession.redis.core.convert.jedis.SortArgumentConvert;
 import com.buession.redis.core.convert.jedis.TupleConvert;
 import com.buession.redis.core.operations.OperationsCommandArguments;
 import com.buession.redis.core.RedisMonitor;
-import com.buession.redis.pubsub.DefaultBinaryJedisPubSub;
-import com.buession.redis.pubsub.DefaultJedisPubSub;
+import com.buession.redis.pubsub.jedis.DefaultBinaryJedisPubSub;
+import com.buession.redis.pubsub.jedis.DefaultJedisPubSub;
 import com.buession.redis.utils.ClientUtil;
 import com.buession.redis.utils.InfoUtil;
 import com.buession.redis.utils.ReturnUtils;
@@ -87,13 +87,13 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public boolean exists(final byte[] key){
-		return execute(ProtocolCommand.EXISTS, (Jedis client)->client.exists(key), OperationsCommandArguments
-				.getInstance().put("key", key));
+		return execute(ProtocolCommand.EXISTS, (Jedis client)->client.exists(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public Type type(final byte[] key){
-		return execute(ProtocolCommand.TYPE, (Jedis client)->returnEnum(client.type(key), Type.class),
+		return execute(ProtocolCommand.TYPE, (Jedis client)->ReturnUtils.returnEnum(client.type(key), Type.class),
 				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
@@ -111,13 +111,15 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Status renameNx(final String key, final String newKey){
-		return execute(ProtocolCommand.RENAMENX, (Jedis client)->returnStatus(client.renamenx(key, newKey) > 0),
+		return execute(ProtocolCommand.RENAMENX,
+				(Jedis client)->ReturnUtils.returnStatus(client.renamenx(key, newKey) > 0),
 				OperationsCommandArguments.getInstance().put("key", key).put("newKey", newKey));
 	}
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey){
-		return execute(ProtocolCommand.RENAMENX, (Jedis client)->returnStatus(client.renamenx(key, newKey) > 0),
+		return execute(ProtocolCommand.RENAMENX,
+				(Jedis client)->ReturnUtils.returnStatus(client.renamenx(key, newKey) > 0),
 				OperationsCommandArguments.getInstance().put("key", key).put("newKey", newKey));
 	}
 
@@ -128,157 +130,171 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Set<String> keys(final String pattern){
-		return execute(ProtocolCommand.KEYS, (Jedis client)->client.keys(pattern), OperationsCommandArguments
-				.getInstance().put("pattern", pattern));
+		return execute(ProtocolCommand.KEYS, (Jedis client)->client.keys(pattern),
+				OperationsCommandArguments.getInstance().put("pattern", pattern));
 	}
 
 	@Override
 	public Set<byte[]> keys(final byte[] pattern){
-		return execute(ProtocolCommand.KEYS, (Jedis client)->client.keys(pattern), OperationsCommandArguments
-				.getInstance().put("pattern", pattern));
+		return execute(ProtocolCommand.KEYS, (Jedis client)->client.keys(pattern),
+				OperationsCommandArguments.getInstance().put("pattern", pattern));
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime){
-		return execute(ProtocolCommand.EXPIRE, (Jedis client)->returnStatus(client.expire(key, lifetime) == 1),
+		return execute(ProtocolCommand.EXPIRE,
+				(Jedis client)->ReturnUtils.returnStatus(client.expire(key, lifetime) == 1),
 				OperationsCommandArguments.getInstance().put("key", key).put("lifetime", lifetime));
 	}
 
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp){
-		return execute(ProtocolCommand.EXPIREAT, (Jedis client)->returnStatus(client.expireAt(key, unixTimestamp) ==
-				1), OperationsCommandArguments.getInstance().put("key", key).put("unixTimestamp", unixTimestamp));
+		return execute(ProtocolCommand.EXPIREAT, (Jedis client)->ReturnUtils.returnStatus(client.expireAt(key,
+				unixTimestamp) == 1), OperationsCommandArguments.getInstance().put("key", key).put("unixTimestamp",
+				unixTimestamp));
 	}
 
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime){
-		return execute(ProtocolCommand.PEXPIRE, (Jedis client)->returnStatus(client.pexpire(key, lifetime) == 1),
+		return execute(ProtocolCommand.PEXPIRE,
+				(Jedis client)->ReturnUtils.returnStatus(client.pexpire(key, lifetime) == 1),
 				OperationsCommandArguments.getInstance().put("key", key).put("lifetime", lifetime));
 	}
 
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp){
-		return execute(ProtocolCommand.PEXPIREAT, (Jedis client)->returnStatus(client.pexpireAt(key, unixTimestamp) ==
-				1), OperationsCommandArguments.getInstance().put("key", key).put("unixTimestamp", unixTimestamp));
+		return execute(ProtocolCommand.PEXPIREAT, (Jedis client)->ReturnUtils.returnStatus(client.pexpireAt(key,
+				unixTimestamp) == 1), OperationsCommandArguments.getInstance().put("key", key).put("unixTimestamp",
+				unixTimestamp));
 	}
 
 	@Override
 	public Long ttl(final byte[] key){
-		return execute(ProtocolCommand.TTL, (Jedis client)->client.ttl(key), OperationsCommandArguments.getInstance()
-				.put("key", key));
+		return execute(ProtocolCommand.TTL, (Jedis client)->client.ttl(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public Long pTtl(final byte[] key){
-		return execute(ProtocolCommand.PTTL, (Jedis client)->client.pttl(key), OperationsCommandArguments.getInstance
-				().put("key", key));
+		return execute(ProtocolCommand.PTTL, (Jedis client)->client.pttl(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public Status persist(final byte[] key){
-		return execute(ProtocolCommand.PERSIST, (Jedis client)->returnStatus(client.persist(key) > 0),
+		return execute(ProtocolCommand.PERSIST, (Jedis client)->ReturnUtils.returnStatus(client.persist(key) > 0),
 				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor){
-		return execute(ProtocolCommand.SCAN, (Jedis client)->(new ScanResultConvert.ListScanResultConvert<String>())
-				.deconvert(client.scan(cursor)), OperationsCommandArguments.getInstance().put("cursor", cursor));
+		return execute(ProtocolCommand.SCAN,
+				(Jedis client)->(new ScanResultConvert.ListScanResultConvert<String>()).deconvert(client.scan(cursor))
+				, OperationsCommandArguments.getInstance().put("cursor", cursor));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor){
-		return execute(ProtocolCommand.SCAN, (Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>())
-				.deconvert(client.scan(cursor)), OperationsCommandArguments.getInstance().put("cursor", cursor));
+		return execute(ProtocolCommand.SCAN,
+				(Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>()).deconvert(client.scan(cursor))
+				, OperationsCommandArguments.getInstance().put("cursor", cursor));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern){
-		return execute(ProtocolCommand.SCAN, (Jedis client)->(new ScanResultConvert.ListScanResultConvert<String>())
-				.deconvert(client.scan(cursor, (new ScanParams()).match(pattern))), OperationsCommandArguments
-				.getInstance().put("cursor", cursor).put("pattern", pattern));
+		return execute(ProtocolCommand.SCAN,
+				(Jedis client)->(new ScanResultConvert.ListScanResultConvert<String>()).deconvert(client.scan(cursor,
+						(new ScanParams()).match(pattern))), OperationsCommandArguments.getInstance().put("cursor",
+						cursor).put("pattern", pattern));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
-		return execute(ProtocolCommand.SCAN, (Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>())
-				.deconvert(client.scan(cursor, (new ScanParams()).match(pattern))), OperationsCommandArguments
-				.getInstance().put("cursor", cursor).put("pattern", pattern));
+		return execute(ProtocolCommand.SCAN,
+				(Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>()).deconvert(client.scan(cursor,
+						(new ScanParams()).match(pattern))), OperationsCommandArguments.getInstance().put("cursor",
+						cursor).put("pattern", pattern));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final int count){
-		return execute(ProtocolCommand.SCAN, (Jedis client)->(new ScanResultConvert.ListScanResultConvert<String>())
-				.deconvert(client.scan(cursor, (new ScanParams()).count(count))), OperationsCommandArguments
-				.getInstance().put("cursor", cursor).put("count", count));
+		return execute(ProtocolCommand.SCAN,
+				(Jedis client)->(new ScanResultConvert.ListScanResultConvert<String>()).deconvert(client.scan(cursor,
+						(new ScanParams()).count(count))), OperationsCommandArguments.getInstance().put("cursor",
+						cursor).put("count", count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count){
-		return execute(ProtocolCommand.SCAN, (Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>())
-				.deconvert(client.scan(cursor, (new ScanParams()).count(count))), OperationsCommandArguments
-				.getInstance().put("cursor", cursor).put("count", count));
+		return execute(ProtocolCommand.SCAN,
+				(Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>()).deconvert(client.scan(cursor,
+						(new ScanParams()).count(count))), OperationsCommandArguments.getInstance().put("cursor",
+						cursor).put("count", count));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count){
-		return execute(ProtocolCommand.SCAN, (Jedis client)->(new ScanResultConvert.ListScanResultConvert<String>())
-				.deconvert(client.scan(cursor, (new ScanParams()).match(pattern).count(count))),
+		return execute(ProtocolCommand.SCAN,
+				(Jedis client)->(new ScanResultConvert.ListScanResultConvert<String>()).deconvert(client.scan(cursor,
+						(new ScanParams()).match(pattern).count(count))),
 				OperationsCommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern).put("count",
 						count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count){
-		return execute(ProtocolCommand.SCAN, (Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>())
-				.deconvert(client.scan(cursor, (new ScanParams()).match(pattern).count(count))),
+		return execute(ProtocolCommand.SCAN,
+				(Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>()).deconvert(client.scan(cursor,
+						(new ScanParams()).match(pattern).count(count))),
 				OperationsCommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern).put("count",
 						count));
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key){
-		return execute(ProtocolCommand.SORT, (Jedis client)->client.sort(key), OperationsCommandArguments.getInstance
-				().put("key", key));
+		return execute(ProtocolCommand.SORT, (Jedis client)->client.sort(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument){
-		return execute(ProtocolCommand.SORT, (Jedis client)->client.sort(key, (new SortArgumentConvert()).convert
-				(sortArgument)), OperationsCommandArguments.getInstance().put("key", key).put("sortArgument",
-				sortArgument));
+		return execute(ProtocolCommand.SORT, (Jedis client)->client.sort(key,
+				(new SortArgumentConvert()).convert(sortArgument)), OperationsCommandArguments.getInstance().put("key"
+				, key).put("sortArgument", sortArgument));
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey){
-		return execute(ProtocolCommand.SORT, (Jedis client)->client.sort(key, destKey), OperationsCommandArguments
-				.getInstance().put("key", key).put("destKey", destKey));
+		return execute(ProtocolCommand.SORT, (Jedis client)->client.sort(key, destKey),
+				OperationsCommandArguments.getInstance().put("key", key).put("destKey", destKey));
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey){
-		return execute(ProtocolCommand.SORT, (Jedis client)->client.sort(key, destKey), OperationsCommandArguments
-				.getInstance().put("key", key).put("destKey", destKey));
+		return execute(ProtocolCommand.SORT, (Jedis client)->client.sort(key, destKey),
+				OperationsCommandArguments.getInstance().put("key", key).put("destKey", destKey));
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey, final SortArgument sortArgument){
-		return execute(ProtocolCommand.SORT, (Jedis client)->client.sort(key, (new SortArgumentConvert()).convert
-				(sortArgument), destKey), OperationsCommandArguments.getInstance().put("key", key).put("sortArgument",
-				sortArgument).put("destKey", destKey));
+		return execute(ProtocolCommand.SORT, (Jedis client)->client.sort(key,
+				(new SortArgumentConvert()).convert(sortArgument), destKey),
+				OperationsCommandArguments.getInstance().put("key", key).put("sortArgument", sortArgument).put(
+						"destKey", destKey));
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
-		return execute(ProtocolCommand.SORT, (Jedis client)->client.sort(key, (new SortArgumentConvert()).convert
-				(sortArgument), destKey), OperationsCommandArguments.getInstance().put("key", key).put("sortArgument",
-				sortArgument).put("destKey", destKey));
+		return execute(ProtocolCommand.SORT, (Jedis client)->client.sort(key,
+				(new SortArgumentConvert()).convert(sortArgument), destKey),
+				OperationsCommandArguments.getInstance().put("key", key).put("sortArgument", sortArgument).put(
+						"destKey", destKey));
 	}
 
 	@Override
 	public byte[] dump(final byte[] key){
-		return execute(ProtocolCommand.DUMP, (Jedis client)->client.dump(key), OperationsCommandArguments.getInstance
-				().put("key", key));
+		return execute(ProtocolCommand.DUMP, (Jedis client)->client.dump(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
@@ -290,50 +306,50 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
-		return execute(ProtocolCommand.MIGRATE, (Jedis client)->ReturnUtils.returnForOK(client.migrate(host, port,
-				key, db, timeout)), OperationsCommandArguments.getInstance().put("key", key).put("host", host).put
-				("port", port).put("key", key).put("db", db).put("timeout", timeout));
+		return execute(ProtocolCommand.MIGRATE, (Jedis client)->ReturnUtils.returnForOK(client.migrate(host, port, key
+				, db, timeout)), OperationsCommandArguments.getInstance().put("key", key).put("host", host).put("port"
+				, port).put("key", key).put("db", db).put("timeout", timeout));
 	}
 
 	@Override
 	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
-		return execute(ProtocolCommand.MIGRATE, (Jedis client)->ReturnUtils.returnForOK(client.migrate(host, port,
-				key, db, timeout)), OperationsCommandArguments.getInstance().put("key", key).put("host", host).put
-				("port", port).put("key", key).put("db", db).put("timeout", timeout));
+		return execute(ProtocolCommand.MIGRATE, (Jedis client)->ReturnUtils.returnForOK(client.migrate(host, port, key
+				, db, timeout)), OperationsCommandArguments.getInstance().put("key", key).put("host", host).put("port"
+				, port).put("key", key).put("db", db).put("timeout", timeout));
 	}
 
 	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout, final
-	MigrateOperation migrateOperation){
+	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
+						  final MigrateOperation migrateOperation){
 		return execute(ProtocolCommand.MIGRATE, (Jedis client)->ReturnUtils.returnForOK(client.migrate(host, port, db,
-				timeout, (new MigrateOperationConvert()).convert(migrateOperation), key)), OperationsCommandArguments
-				.getInstance().put("key", key).put("host", host).put("port", port).put("db", db).put("timeout",
-						timeout).put("migrate", migrateOperation));
+				timeout, (new MigrateOperationConvert()).convert(migrateOperation), key)),
+				OperationsCommandArguments.getInstance().put("key", key).put("host", host).put("port", port).put("db",
+						db).put("timeout", timeout).put("migrate", migrateOperation));
 	}
 
 	@Override
 	public Status migrate(byte[] key, String host, int port, int db, int timeout, MigrateOperation migrateOperation){
 		return execute(ProtocolCommand.MIGRATE, (Jedis client)->ReturnUtils.returnForOK(client.migrate(host, port, db,
-				timeout, (new MigrateOperationConvert()).convert(migrateOperation), key)), OperationsCommandArguments
-				.getInstance().put("key", key).put("host", host).put("port", port).put("db", db).put("timeout",
-						timeout).put("migrate", migrateOperation));
+				timeout, (new MigrateOperationConvert()).convert(migrateOperation), key)),
+				OperationsCommandArguments.getInstance().put("key", key).put("host", host).put("port", port).put("db",
+						db).put("timeout", timeout).put("migrate", migrateOperation));
 	}
 
 	@Override
 	public Long del(final String... keys){
-		return execute(ProtocolCommand.DEL, (Jedis client)->client.del(keys), OperationsCommandArguments.getInstance()
-				.put("keys", keys));
+		return execute(ProtocolCommand.DEL, (Jedis client)->client.del(keys),
+				OperationsCommandArguments.getInstance().put("keys", keys));
 	}
 
 	@Override
 	public Long del(byte[]... keys){
-		return execute(ProtocolCommand.DEL, (Jedis client)->client.del(keys), OperationsCommandArguments.getInstance()
-				.put("keys", keys));
+		return execute(ProtocolCommand.DEL, (Jedis client)->client.del(keys),
+				OperationsCommandArguments.getInstance().put("keys", keys));
 	}
 
 	@Override
 	public Status move(final byte[] key, final int db){
-		return execute(ProtocolCommand.MOVE, (Jedis client)->returnStatus(client.move(key, db) > 0),
+		return execute(ProtocolCommand.MOVE, (Jedis client)->ReturnUtils.returnStatus(client.move(key, db) > 0),
 				OperationsCommandArguments.getInstance().put("key", key).put("db", db));
 	}
 
@@ -345,9 +361,9 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
-		return execute(ProtocolCommand.SET, (Jedis client)->ReturnUtils.returnForOK(client.set(key, value, (new
-				SetArgumentConvert()).convert(setArgument))), OperationsCommandArguments.getInstance().put("key", key)
-				.put("value", value).put("setArgument", setArgument));
+		return execute(ProtocolCommand.SET, (Jedis client)->ReturnUtils.returnForOK(client.set(key, value,
+				(new SetArgumentConvert()).convert(setArgument))), OperationsCommandArguments.getInstance().put("key",
+				key).put("value", value).put("setArgument", setArgument));
 	}
 
 	@Override
@@ -366,26 +382,26 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value){
-		return execute(ProtocolCommand.SETNX, (Jedis client)->returnStatus(client.setnx(key, value) > 0),
+		return execute(ProtocolCommand.SETNX, (Jedis client)->ReturnUtils.returnStatus(client.setnx(key, value) > 0),
 				OperationsCommandArguments.getInstance().put("key", key).put("value", value));
 	}
 
 	@Override
 	public Long append(final byte[] key, final byte[] value){
-		return execute(ProtocolCommand.SETNX, (Jedis client)->client.append(key, value), OperationsCommandArguments
-				.getInstance().put("key", key).put("value", value));
+		return execute(ProtocolCommand.SETNX, (Jedis client)->client.append(key, value),
+				OperationsCommandArguments.getInstance().put("key", key).put("value", value));
 	}
 
 	@Override
 	public byte[] get(final byte[] key){
-		return execute(ProtocolCommand.GET, (Jedis client)->client.get(key), OperationsCommandArguments.getInstance()
-				.put("key", key));
+		return execute(ProtocolCommand.GET, (Jedis client)->client.get(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public byte[] getSet(final byte[] key, final byte[] value){
-		return execute(ProtocolCommand.GETSET, (Jedis client)->client.getSet(key, value), OperationsCommandArguments
-				.getInstance().put("key", key).put("value", value));
+		return execute(ProtocolCommand.GETSET, (Jedis client)->client.getSet(key, value),
+				OperationsCommandArguments.getInstance().put("key", key).put("value", value));
 	}
 
 	@Override
@@ -420,7 +436,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 					temp.add(value);
 				});
 
-				return returnStatus(client.msetnx(temp.toArray(new String[]{})) > 0);
+				return ReturnUtils.returnStatus(client.msetnx(temp.toArray(new String[]{})) > 0);
 			}
 
 		}, OperationsCommandArguments.getInstance().put("values", values));
@@ -428,32 +444,32 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public List<String> mGet(final String... keys){
-		return execute(ProtocolCommand.MGET, (Jedis client)->client.mget(keys), OperationsCommandArguments.getInstance
-				().put("keys", keys));
+		return execute(ProtocolCommand.MGET, (Jedis client)->client.mget(keys),
+				OperationsCommandArguments.getInstance().put("keys", keys));
 	}
 
 	@Override
 	public List<byte[]> mGet(final byte[]... keys){
-		return execute(ProtocolCommand.MGET, (Jedis client)->client.mget(keys), OperationsCommandArguments.getInstance
-				().put("keys", keys));
+		return execute(ProtocolCommand.MGET, (Jedis client)->client.mget(keys),
+				OperationsCommandArguments.getInstance().put("keys", keys));
 	}
 
 	@Override
 	public Long incr(final byte[] key){
-		return execute(ProtocolCommand.INCR, (Jedis client)->client.incr(key), OperationsCommandArguments.getInstance
-				().put("key", key));
+		return execute(ProtocolCommand.INCR, (Jedis client)->client.incr(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public Long incrBy(final byte[] key, final int value){
-		return execute(ProtocolCommand.INCRBY, (Jedis client)->client.incrBy(key, value), OperationsCommandArguments
-				.getInstance().put("key", key).put("value", value));
+		return execute(ProtocolCommand.INCRBY, (Jedis client)->client.incrBy(key, value),
+				OperationsCommandArguments.getInstance().put("key", key).put("value", value));
 	}
 
 	@Override
 	public Long incrBy(final byte[] key, final long value){
-		return execute(ProtocolCommand.INCRBY, (Jedis client)->client.incrBy(key, value), OperationsCommandArguments
-				.getInstance().put("key", key).put("value", value));
+		return execute(ProtocolCommand.INCRBY, (Jedis client)->client.incrBy(key, value),
+				OperationsCommandArguments.getInstance().put("key", key).put("value", value));
 	}
 
 	@Override
@@ -470,20 +486,20 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Long decr(final byte[] key){
-		return execute(ProtocolCommand.DECR, (Jedis client)->client.decr(key), OperationsCommandArguments.getInstance
-				().put("key", key));
+		return execute(ProtocolCommand.DECR, (Jedis client)->client.decr(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public Long decrBy(final byte[] key, final int value){
-		return execute(ProtocolCommand.DECRBY, (Jedis client)->client.decrBy(key, value), OperationsCommandArguments
-				.getInstance().put("key", key).put("value", value));
+		return execute(ProtocolCommand.DECRBY, (Jedis client)->client.decrBy(key, value),
+				OperationsCommandArguments.getInstance().put("key", key).put("value", value));
 	}
 
 	@Override
 	public Long decrBy(final byte[] key, final long value){
-		return execute(ProtocolCommand.DECRBY, (Jedis client)->client.decrBy(key, value), OperationsCommandArguments
-				.getInstance().put("key", key).put("value", value));
+		return execute(ProtocolCommand.DECRBY, (Jedis client)->client.decrBy(key, value),
+				OperationsCommandArguments.getInstance().put("key", key).put("value", value));
 	}
 
 	@Override
@@ -506,44 +522,46 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Long strlen(final byte[] key){
-		return execute(ProtocolCommand.STRLEN, (Jedis client)->client.strlen(key), OperationsCommandArguments
-				.getInstance().put("key", key));
+		return execute(ProtocolCommand.STRLEN, (Jedis client)->client.strlen(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public boolean hExists(final byte[] key, final byte[] field){
-		return execute(ProtocolCommand.HEXISTS, (Jedis client)->client.hexists(key, field), OperationsCommandArguments
-				.getInstance().put("key", key).put("field", field));
+		return execute(ProtocolCommand.HEXISTS, (Jedis client)->client.hexists(key, field),
+				OperationsCommandArguments.getInstance().put("key", key).put("field", field));
 	}
 
 	@Override
 	public Set<byte[]> hKeys(final byte[] key){
-		return execute(ProtocolCommand.HKEYS, (Jedis client)->client.hkeys(key), OperationsCommandArguments
-				.getInstance().put("key", key));
+		return execute(ProtocolCommand.HKEYS, (Jedis client)->client.hkeys(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public List<byte[]> hVals(final byte[] key){
-		return execute(ProtocolCommand.HVALS, (Jedis client)->client.hvals(key), OperationsCommandArguments
-				.getInstance().put("key", key));
+		return execute(ProtocolCommand.HVALS, (Jedis client)->client.hvals(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
-		return execute(ProtocolCommand.HMSET, (Jedis client)->returnStatus(client.hset(key, field, value) > 0),
+		return execute(ProtocolCommand.HMSET,
+				(Jedis client)->ReturnUtils.returnStatus(client.hset(key, field, value) > 0),
 				OperationsCommandArguments.getInstance().put("key", key).put("field", field).put("value", value));
 	}
 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
-		return execute(ProtocolCommand.HSETNX, (Jedis client)->returnStatus(client.hsetnx(key, field, value) > 0),
-				OperationsCommandArguments.getInstance().put("key", key).put("field", field).put("value", value));
+		return execute(ProtocolCommand.HSETNX, (Jedis client)->ReturnUtils.returnStatus(client.hsetnx(key, field,
+				value) > 0), OperationsCommandArguments.getInstance().put("key", key).put("field", field).put("value",
+				value));
 	}
 
 	@Override
 	public byte[] hGet(final byte[] key, final byte[] field){
-		return execute(ProtocolCommand.HSETNX, (Jedis client)->client.hget(key, field), OperationsCommandArguments
-				.getInstance().put("key", key).put("field", field));
+		return execute(ProtocolCommand.HSETNX, (Jedis client)->client.hget(key, field),
+				OperationsCommandArguments.getInstance().put("key", key).put("field", field));
 	}
 
 	@Override
@@ -554,32 +572,32 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public List<byte[]> hMGet(final byte[] key, final byte[]... fields){
-		return execute(ProtocolCommand.HMGET, (Jedis client)->client.hmget(key, fields), OperationsCommandArguments
-				.getInstance().put("key", key).put("fields", fields));
+		return execute(ProtocolCommand.HMGET, (Jedis client)->client.hmget(key, fields),
+				OperationsCommandArguments.getInstance().put("key", key).put("fields", fields));
 	}
 
 	@Override
 	public Map<byte[], byte[]> hGetAll(final byte[] key){
-		return execute(ProtocolCommand.HGETALL, (Jedis client)->client.hgetAll(key), OperationsCommandArguments
-				.getInstance().put("key", key));
+		return execute(ProtocolCommand.HGETALL, (Jedis client)->client.hgetAll(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public Long hDel(final byte[] key, final byte[]... fields){
-		return execute(ProtocolCommand.HDEL, (Jedis client)->client.hdel(key, fields), OperationsCommandArguments
-				.getInstance().put("key", key).put("fields", fields));
+		return execute(ProtocolCommand.HDEL, (Jedis client)->client.hdel(key, fields),
+				OperationsCommandArguments.getInstance().put("key", key).put("fields", fields));
 	}
 
 	@Override
 	public Long hStrLen(final byte[] key, final byte[] field){
-		return execute(ProtocolCommand.HSTRLEN, (Jedis client)->client.hstrlen(key, field), OperationsCommandArguments
-				.getInstance().put("key", key).put("field", field));
+		return execute(ProtocolCommand.HSTRLEN, (Jedis client)->client.hstrlen(key, field),
+				OperationsCommandArguments.getInstance().put("key", key).put("field", field));
 	}
 
 	@Override
 	public Long hLen(final byte[] key){
-		return execute(ProtocolCommand.HLEN, (Jedis client)->client.hlen(key), OperationsCommandArguments.getInstance
-				().put("key", key));
+		return execute(ProtocolCommand.HLEN, (Jedis client)->client.hlen(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
@@ -617,31 +635,30 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern, final
-	int count){
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+												 final int count){
 		return execute(ProtocolCommand.HSCAN, (Jedis client)->(new ScanResultConvert.MapScanResultConvert<byte[],
 				byte[]>()).deconvert(client.hscan(key, cursor, (new ScanParams()).match(pattern).count(count))),
-				OperationsCommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern)
-						.put("count", count));
+				OperationsCommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern).put("count", count));
 	}
 
 	@Override
 	public Long lPush(final byte[] key, final byte[]... values){
-		return execute(ProtocolCommand.LPUSH, (Jedis client)->client.lpush(key, values), OperationsCommandArguments
-				.getInstance().put("key", key).put("values", values));
+		return execute(ProtocolCommand.LPUSH, (Jedis client)->client.lpush(key, values),
+				OperationsCommandArguments.getInstance().put("key", key).put("values", values));
 	}
 
 	@Override
 	public Long lPushX(final byte[] key, final byte[]... values){
-		return execute(ProtocolCommand.LPUSHX, (Jedis client)->client.lpushx(key, values), OperationsCommandArguments
-				.getInstance().put("key", key).put("values", values));
+		return execute(ProtocolCommand.LPUSHX, (Jedis client)->client.lpushx(key, values),
+				OperationsCommandArguments.getInstance().put("key", key).put("values", values));
 	}
 
 	@Override
 	public Long lInsert(final byte[] key, final byte[] value, final ListPosition position, final byte[] pivot){
-		return execute(ProtocolCommand.LPUSHX, (Jedis client)->client.linsert(key, (new ListPositionConvert()).convert
-				(position), pivot, value), OperationsCommandArguments.getInstance().put("key", key).put("position",
-				position).put("pivot", pivot).put("value", value));
+		return execute(ProtocolCommand.LPUSHX, (Jedis client)->client.linsert(key,
+				(new ListPositionConvert()).convert(position), pivot, value),
+				OperationsCommandArguments.getInstance().put("key", key).put("position", position).put("pivot", pivot).put("value", value));
 	}
 
 	@Override
@@ -652,32 +669,32 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public byte[] lIndex(final byte[] key, final long index){
-		return execute(ProtocolCommand.LINDEX, (Jedis client)->client.lindex(key, index), OperationsCommandArguments
-				.getInstance().put("key", key).put("index", index));
+		return execute(ProtocolCommand.LINDEX, (Jedis client)->client.lindex(key, index),
+				OperationsCommandArguments.getInstance().put("key", key).put("index", index));
 	}
 
 	@Override
 	public byte[] lPop(final byte[] key){
-		return execute(ProtocolCommand.LPOP, (Jedis client)->client.lpop(key), OperationsCommandArguments.getInstance
-				().put("key", key));
+		return execute(ProtocolCommand.LPOP, (Jedis client)->client.lpop(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public List<String> blPop(final String[] keys, final int timeout){
-		return execute(ProtocolCommand.BLPOP, (Jedis client)->client.blpop(timeout, keys), OperationsCommandArguments
-				.getInstance().put("keys", keys).put("timeout", timeout));
+		return execute(ProtocolCommand.BLPOP, (Jedis client)->client.blpop(timeout, keys),
+				OperationsCommandArguments.getInstance().put("keys", keys).put("timeout", timeout));
 	}
 
 	@Override
 	public List<byte[]> blPop(final byte[][] keys, final int timeout){
-		return execute(ProtocolCommand.BLPOP, (Jedis client)->client.blpop(timeout, keys), OperationsCommandArguments
-				.getInstance().put("keys", keys).put("timeout", timeout));
+		return execute(ProtocolCommand.BLPOP, (Jedis client)->client.blpop(timeout, keys),
+				OperationsCommandArguments.getInstance().put("keys", keys).put("timeout", timeout));
 	}
 
 	@Override
 	public byte[] rPop(final byte[] key){
-		return execute(ProtocolCommand.RPOP, (Jedis client)->client.rpop(key), OperationsCommandArguments.getInstance
-				().put("key", key));
+		return execute(ProtocolCommand.RPOP, (Jedis client)->client.rpop(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
@@ -694,14 +711,14 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public List<String> brPop(final String[] keys, final int timeout){
-		return execute(ProtocolCommand.BRPOP, (Jedis client)->client.brpop(timeout, keys), OperationsCommandArguments
-				.getInstance().put("keys", keys).put("timeout", timeout));
+		return execute(ProtocolCommand.BRPOP, (Jedis client)->client.brpop(timeout, keys),
+				OperationsCommandArguments.getInstance().put("keys", keys).put("timeout", timeout));
 	}
 
 	@Override
 	public List<byte[]> brPop(final byte[][] keys, final int timeout){
-		return execute(ProtocolCommand.BRPOP, (Jedis client)->client.brpop(timeout, keys), OperationsCommandArguments
-				.getInstance().put("keys", keys).put("timeout", timeout));
+		return execute(ProtocolCommand.BRPOP, (Jedis client)->client.brpop(timeout, keys),
+				OperationsCommandArguments.getInstance().put("keys", keys).put("timeout", timeout));
 	}
 
 	@Override
@@ -720,14 +737,14 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Long rPush(final byte[] key, final byte[]... values){
-		return execute(ProtocolCommand.RPUSH, (Jedis client)->client.rpush(key, values), OperationsCommandArguments
-				.getInstance().put("key", key).put("values", values));
+		return execute(ProtocolCommand.RPUSH, (Jedis client)->client.rpush(key, values),
+				OperationsCommandArguments.getInstance().put("key", key).put("values", values));
 	}
 
 	@Override
 	public Long rPushX(final byte[] key, final byte[]... values){
-		return execute(ProtocolCommand.RPUSHX, (Jedis client)->client.rpushx(key, values), OperationsCommandArguments
-				.getInstance().put("key", key).put("values", values));
+		return execute(ProtocolCommand.RPUSHX, (Jedis client)->client.rpushx(key, values),
+				OperationsCommandArguments.getInstance().put("key", key).put("values", values));
 	}
 
 	@Override
@@ -750,20 +767,20 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Long lLen(final byte[] key){
-		return execute(ProtocolCommand.LLEN, (Jedis client)->client.llen(key), OperationsCommandArguments.getInstance
-				().put("key", key));
+		return execute(ProtocolCommand.LLEN, (Jedis client)->client.llen(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public Long sAdd(final byte[] key, final byte[]... members){
-		return execute(ProtocolCommand.SADD, (Jedis client)->client.sadd(key, members), OperationsCommandArguments
-				.getInstance().put("key", key).put("members", members));
+		return execute(ProtocolCommand.SADD, (Jedis client)->client.sadd(key, members),
+				OperationsCommandArguments.getInstance().put("key", key).put("members", members));
 	}
 
 	@Override
 	public Long sCard(final byte[] key){
-		return execute(ProtocolCommand.SCARD, (Jedis client)->client.scard(key), OperationsCommandArguments
-				.getInstance().put("key", key));
+		return execute(ProtocolCommand.SCARD, (Jedis client)->client.scard(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
@@ -774,14 +791,14 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Set<byte[]> sMembers(final byte[] key){
-		return execute(ProtocolCommand.SMEMBERS, (Jedis client)->client.smembers(key), OperationsCommandArguments
-				.getInstance().put("key", key));
+		return execute(ProtocolCommand.SMEMBERS, (Jedis client)->client.smembers(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
 	public byte[] sPop(final byte[] key){
-		return execute(ProtocolCommand.SPOP, (Jedis client)->client.spop(key), OperationsCommandArguments.getInstance
-				().put("key", key));
+		return execute(ProtocolCommand.SPOP, (Jedis client)->client.spop(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
@@ -798,20 +815,20 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Long sRem(final byte[] key, final byte[]... members){
-		return execute(ProtocolCommand.SREM, (Jedis client)->client.srem(key, members), OperationsCommandArguments
-				.getInstance().put("key", key).put("members", members));
+		return execute(ProtocolCommand.SREM, (Jedis client)->client.srem(key, members),
+				OperationsCommandArguments.getInstance().put("key", key).put("members", members));
 	}
 
 	@Override
 	public Set<String> sDiff(final String... keys){
-		return execute(ProtocolCommand.SDIFF, (Jedis client)->client.sdiff(keys), OperationsCommandArguments
-				.getInstance().put("keys", keys));
+		return execute(ProtocolCommand.SDIFF, (Jedis client)->client.sdiff(keys),
+				OperationsCommandArguments.getInstance().put("keys", keys));
 	}
 
 	@Override
 	public Set<byte[]> sDiff(byte[]... keys){
-		return execute(ProtocolCommand.SDIFF, (Jedis client)->client.sdiff(keys), OperationsCommandArguments
-				.getInstance().put("keys", keys));
+		return execute(ProtocolCommand.SDIFF, (Jedis client)->client.sdiff(keys),
+				OperationsCommandArguments.getInstance().put("keys", keys));
 	}
 
 	@Override
@@ -828,14 +845,14 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Set<String> sInter(final String... keys){
-		return execute(ProtocolCommand.SINTER, (Jedis client)->client.sinter(keys), OperationsCommandArguments
-				.getInstance().put("keys", keys));
+		return execute(ProtocolCommand.SINTER, (Jedis client)->client.sinter(keys),
+				OperationsCommandArguments.getInstance().put("keys", keys));
 	}
 
 	@Override
 	public Set<byte[]> sInter(final byte[]... keys){
-		return execute(ProtocolCommand.SINTER, (Jedis client)->client.sinter(keys), OperationsCommandArguments
-				.getInstance().put("keys", keys));
+		return execute(ProtocolCommand.SINTER, (Jedis client)->client.sinter(keys),
+				OperationsCommandArguments.getInstance().put("keys", keys));
 	}
 
 	@Override
@@ -852,14 +869,14 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Set<String> sUnion(final String... keys){
-		return execute(ProtocolCommand.SUNION, (Jedis client)->client.sunion(keys), OperationsCommandArguments
-				.getInstance().put("keys", keys));
+		return execute(ProtocolCommand.SUNION, (Jedis client)->client.sunion(keys),
+				OperationsCommandArguments.getInstance().put("keys", keys));
 	}
 
 	@Override
 	public Set<byte[]> sUnion(final byte[]... keys){
-		return execute(ProtocolCommand.SUNION, (Jedis client)->client.sunion(keys), OperationsCommandArguments
-				.getInstance().put("keys", keys));
+		return execute(ProtocolCommand.SUNION, (Jedis client)->client.sunion(keys),
+				OperationsCommandArguments.getInstance().put("keys", keys));
 	}
 
 	@Override
@@ -876,65 +893,69 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Status sMove(final String source, final String destKey, final String member){
-		return execute(ProtocolCommand.SMOVE, (Jedis client)->returnStatus(client.smove(source, destKey, member) > 0),
+		return execute(ProtocolCommand.SMOVE, (Jedis client)->ReturnUtils.returnStatus(client.smove(source, destKey,
+				member) > 0),
 				OperationsCommandArguments.getInstance().put("source", source).put("destKey", destKey).put("member",
 						member));
 	}
 
 	@Override
 	public Status sMove(final byte[] source, final byte[] destKey, final byte[] member){
-		return execute(ProtocolCommand.SMOVE, (Jedis client)->returnStatus(client.smove(source, destKey, member) > 0),
+		return execute(ProtocolCommand.SMOVE, (Jedis client)->ReturnUtils.returnStatus(client.smove(source, destKey,
+				member) > 0),
 				OperationsCommandArguments.getInstance().put("source", source).put("destKey", destKey).put("member",
 						member));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
-		return execute(ProtocolCommand.SSCAN, (Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>())
-				.deconvert(client.sscan(key, cursor)), OperationsCommandArguments.getInstance().put("key", key).put
-				("cursor", cursor));
+		return execute(ProtocolCommand.SSCAN,
+				(Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>()).deconvert(client.sscan(key,
+						cursor)), OperationsCommandArguments.getInstance().put("key", key).put("cursor", cursor));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		return execute(ProtocolCommand.SSCAN, (Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>())
-				.deconvert(client.sscan(key, cursor, (new ScanParams()).match(pattern))), OperationsCommandArguments
-				.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern));
+		return execute(ProtocolCommand.SSCAN,
+				(Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>()).deconvert(client.sscan(key,
+						cursor, (new ScanParams()).match(pattern))), OperationsCommandArguments.getInstance().put("key"
+						, key).put("cursor", cursor).put("pattern", pattern));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
-		return execute(ProtocolCommand.SSCAN, (Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>())
-				.deconvert(client.sscan(key, cursor, (new ScanParams()).count(count))), OperationsCommandArguments
-				.getInstance().put("key", key).put("cursor", cursor).put("count", count));
+		return execute(ProtocolCommand.SSCAN,
+				(Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>()).deconvert(client.sscan(key,
+						cursor, (new ScanParams()).count(count))), OperationsCommandArguments.getInstance().put("key",
+						key).put("cursor", cursor).put("count", count));
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int
-			count){
-		return execute(ProtocolCommand.SSCAN, (Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>())
-				.deconvert(client.sscan(key, cursor, (new ScanParams()).match(pattern).count(count))),
-				OperationsCommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern)
-						.put("count", count));
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+										  final int count){
+		return execute(ProtocolCommand.SSCAN,
+				(Jedis client)->(new ScanResultConvert.ListScanResultConvert<byte[]>()).deconvert(client.sscan(key,
+						cursor, (new ScanParams()).match(pattern).count(count))),
+				OperationsCommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern).put("count", count));
 	}
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Number> members){
-		return execute(ProtocolCommand.ZADD, (Jedis client)->client.zadd(key, (new MapNumberConvert
-				.MapNumberDoubleConvert<byte[]>()).convert(members)), OperationsCommandArguments.getInstance().put
-				("key", key).put("members", members));
+		return execute(ProtocolCommand.ZADD, (Jedis client)->client.zadd(key,
+				(new MapNumberConvert.MapNumberDoubleConvert<byte[]>()).convert(members)),
+				OperationsCommandArguments.getInstance().put("key", key).put("members", members));
 	}
 
 	@Override
 	public Double zScore(final byte[] key, final byte[] member){
-		return execute(ProtocolCommand.ZSCORE, (Jedis client)->client.zscore(key, member), OperationsCommandArguments
-				.getInstance().put("key", key).put("member", member));
+		return execute(ProtocolCommand.ZSCORE, (Jedis client)->client.zscore(key, member),
+				OperationsCommandArguments.getInstance().put("key", key).put("member", member));
 	}
 
 	@Override
 	public Long zCard(final byte[] key){
-		return execute(ProtocolCommand.ZCARD, (Jedis client)->client.zcard(key), OperationsCommandArguments
-				.getInstance().put("key", key));
+		return execute(ProtocolCommand.ZCARD, (Jedis client)->client.zcard(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
@@ -958,9 +979,10 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Set<Tuple> zRangeWithScores(final byte[] key, final long start, final long end){
-		return execute(ProtocolCommand.ZRANGE, (Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert(client
-				.zrangeWithScores(key, start, end)), OperationsCommandArguments.getInstance().put("key", key).put
-				("start", start).put("end", end));
+		return execute(ProtocolCommand.ZRANGE,
+				(Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert(client.zrangeWithScores(key, start,
+						end)), OperationsCommandArguments.getInstance().put("key", key).put("start", start).put("end",
+						end));
 	}
 
 	@Override
@@ -976,49 +998,53 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 	}
 
 	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final int offset, final int
-			count){
+	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final int offset,
+									 final int count){
 		return execute(ProtocolCommand.ZRANGEBYSCORE, (Jedis client)->client.zrangeByScore(key, min, max, offset,
-				count), OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put
-				("offset", offset).put("count", count));
+				count), OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put(
+						"offset", offset).put("count", count));
 	}
 
 	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset, final int
-			count){
+	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
+									 final int count){
 		return execute(ProtocolCommand.ZRANGEBYSCORE, (Jedis client)->client.zrangeByScore(key, min, max, offset,
-				count), OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put
-				("offset", offset).put("count", count));
+				count), OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put(
+						"offset", offset).put("count", count));
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max){
-		return execute(ProtocolCommand.ZRANGEBYSCORE, (Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert
-				(client.zrangeByScoreWithScores(key, min, max)), OperationsCommandArguments.getInstance().put("key",
-				key).put("min", min).put("max", max));
+		return execute(ProtocolCommand.ZRANGEBYSCORE,
+				(Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert(client.zrangeByScoreWithScores(key, min
+						, max)), OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max",
+						max));
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
-		return execute(ProtocolCommand.ZRANGEBYSCORE, (Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert
-				(client.zrangeByScoreWithScores(key, min, max)), OperationsCommandArguments.getInstance().put("key",
-				key).put("min", min).put("max", max));
+		return execute(ProtocolCommand.ZRANGEBYSCORE,
+				(Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert(client.zrangeByScoreWithScores(key, min
+						, max)), OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max",
+						max));
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
 											  final int count){
-		return execute(ProtocolCommand.ZRANGEBYSCORE, (Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert
-				(client.zrangeByScoreWithScores(key, min, max, offset, count)), OperationsCommandArguments.getInstance
-				().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count));
+		return execute(ProtocolCommand.ZRANGEBYSCORE,
+				(Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert(client.zrangeByScoreWithScores(key, min
+						, max, offset, count)), OperationsCommandArguments.getInstance().put("key", key).put("min",
+						min).put("max", max).put("offset", offset).put("count", count));
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int offset,
 											  final int count){
-		return execute(ProtocolCommand.ZRANGEBYSCORE, (Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert
-				(client.zrangeByScoreWithScores(key, min, max, offset, count)), OperationsCommandArguments.getInstance
-				().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count));
+		return execute(ProtocolCommand.ZRANGEBYSCORE,
+				(Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert(client.zrangeByScoreWithScores(key, min
+						, max, offset, count)), OperationsCommandArguments.getInstance().put("key", key).put("min",
+						min).put("max", max).put("offset", offset).put("count", count));
 	}
 
 	@Override
@@ -1028,8 +1054,8 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 	}
 
 	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset, final int
-			count){
+	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
+								   final int count){
 		return execute(ProtocolCommand.ZRANGEBYLEX, (Jedis client)->client.zrangeByLex(key, min, max, offset, count),
 				OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset",
 						offset).put("count", count));
@@ -1037,8 +1063,8 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Long zRank(final byte[] key, final byte[] member){
-		return execute(ProtocolCommand.ZRANK, (Jedis client)->client.zrank(key, member), OperationsCommandArguments
-				.getInstance().put("key", key).put("member", member));
+		return execute(ProtocolCommand.ZRANK, (Jedis client)->client.zrank(key, member),
+				OperationsCommandArguments.getInstance().put("key", key).put("member", member));
 	}
 
 	@Override
@@ -1049,8 +1075,8 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Long zRem(final byte[] key, final byte[]... members){
-		return execute(ProtocolCommand.ZREM, (Jedis client)->client.zrem(key, members), OperationsCommandArguments
-				.getInstance().put("key", key).put("members", members));
+		return execute(ProtocolCommand.ZREM, (Jedis client)->client.zrem(key, members),
+				OperationsCommandArguments.getInstance().put("key", key).put("members", members));
 	}
 
 	@Override
@@ -1085,9 +1111,10 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Set<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end){
-		return execute(ProtocolCommand.ZREVRANGE, (Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert
-				(client.zrevrangeWithScores(key, start, end)), OperationsCommandArguments.getInstance().put("key",
-				key).put("start", start).put("end", end));
+		return execute(ProtocolCommand.ZREVRANGE,
+				(Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert(client.zrevrangeWithScores(key, start,
+						end)), OperationsCommandArguments.getInstance().put("key", key).put("start", start).put("end",
+						end));
 	}
 
 	@Override
@@ -1103,51 +1130,55 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 	}
 
 	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset, final
-	int count){
-		return execute(ProtocolCommand.ZREVRANGEBYSCORE, (Jedis client)->client.zrevrangeByScore(key, max, min,
-				offset, count), OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max",
-				max).put("offset", offset).put("count", count));
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset,
+										final int count){
+		return execute(ProtocolCommand.ZREVRANGEBYSCORE, (Jedis client)->client.zrevrangeByScore(key, max, min, offset
+				, count),
+				OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset",
+						offset).put("count", count));
 	}
 
 	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset, final
-	int count){
-		return execute(ProtocolCommand.ZREVRANGEBYSCORE, (Jedis client)->client.zrevrangeByScore(key, max, min,
-				offset, count), OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max",
-				max).put("offset", offset).put("count", count));
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
+										final int count){
+		return execute(ProtocolCommand.ZREVRANGEBYSCORE, (Jedis client)->client.zrevrangeByScore(key, max, min, offset
+				, count),
+				OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset",
+						offset).put("count", count));
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max){
-		return execute(ProtocolCommand.ZREVRANGEBYSCORE, (Jedis client)->(new TupleConvert.SetTupleConvert())
-				.deconvert(client.zrevrangeByScoreWithScores(key, max, min)), OperationsCommandArguments.getInstance()
-				.put("key", key).put("min", min).put("max", max));
+		return execute(ProtocolCommand.ZREVRANGEBYSCORE,
+				(Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert(client.zrevrangeByScoreWithScores(key,
+						max, min)), OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max"
+						, max));
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
-		return execute(ProtocolCommand.ZREVRANGEBYSCORE, (Jedis client)->(new TupleConvert.SetTupleConvert())
-				.deconvert(client.zrevrangeByScoreWithScores(key, max, min)), OperationsCommandArguments.getInstance()
-				.put("key", key).put("min", min).put("max", max));
+		return execute(ProtocolCommand.ZREVRANGEBYSCORE,
+				(Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert(client.zrevrangeByScoreWithScores(key,
+						max, min)), OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max"
+						, max));
 	}
 
 	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max, final int
-			offset, final int count){
-		return execute(ProtocolCommand.ZREVRANGEBYSCORE, (Jedis client)->(new TupleConvert.SetTupleConvert())
-				.deconvert(client.zrevrangeByScoreWithScores(key, max, min, offset, count)),
-				OperationsCommandArguments.getInstance().put("key", key).put("max", max).put("min", min).put("offset",
-						offset).put("count", count));
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
+												 final int offset, final int count){
+		return execute(ProtocolCommand.ZREVRANGEBYSCORE,
+				(Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert(client.zrevrangeByScoreWithScores(key,
+						max, min, offset, count)), OperationsCommandArguments.getInstance().put("key", key).put("max",
+						max).put("min", min).put("offset", offset).put("count", count));
 	}
 
 	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int
-			offset, final int count){
-		return execute(ProtocolCommand.ZREVRANGEBYSCORE, (Jedis client)->(new TupleConvert.SetTupleConvert())
-				.deconvert(client.zrevrangeByScoreWithScores(key, max, min, offset, count)),
-				OperationsCommandArguments.getInstance().put("key", key).put("max", max).put("min", min).put("offset",
-						offset).put("count", count));
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
+												 final int offset, final int count){
+		return execute(ProtocolCommand.ZREVRANGEBYSCORE,
+				(Jedis client)->(new TupleConvert.SetTupleConvert()).deconvert(client.zrevrangeByScoreWithScores(key,
+						max, min, offset, count)), OperationsCommandArguments.getInstance().put("key", key).put("max",
+						max).put("min", min).put("offset", offset).put("count", count));
 	}
 
 	@Override
@@ -1157,11 +1188,11 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 	}
 
 	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset, final
-	int count){
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
+									  final int count){
 		return execute(ProtocolCommand.ZREVRANGEBYLEX, (Jedis client)->client.zrevrangeByLex(key, max, min, offset,
-				count), OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put
-				("offset", offset).put("count", count));
+				count), OperationsCommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put(
+						"offset", offset).put("count", count));
 	}
 
 	@Override
@@ -1184,46 +1215,48 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Long zInterStore(final String destKey, final Aggregate aggregate, final String... keys){
-		return execute(ProtocolCommand.ZINTERSTORE, (Jedis client)->client.zinterstore(destKey, (new ZParams())
-				.aggregate((new AggregateConvert()).convert(aggregate)), keys), OperationsCommandArguments.getInstance
-				().put("destKey", destKey).put("aggregate", aggregate).put("keys", keys));
+		return execute(ProtocolCommand.ZINTERSTORE, (Jedis client)->client.zinterstore(destKey,
+				(new ZParams()).aggregate((new AggregateConvert()).convert(aggregate)), keys),
+				OperationsCommandArguments.getInstance().put("destKey", destKey).put("aggregate", aggregate).put("keys"
+						, keys));
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
-		return execute(ProtocolCommand.ZINTERSTORE, (Jedis client)->client.zinterstore(destKey, (new ZParams())
-				.aggregate((new AggregateConvert()).convert(aggregate)), keys), OperationsCommandArguments.getInstance
-				().put("destKey", destKey).put("aggregate", aggregate).put("keys", keys));
+		return execute(ProtocolCommand.ZINTERSTORE, (Jedis client)->client.zinterstore(destKey,
+				(new ZParams()).aggregate((new AggregateConvert()).convert(aggregate)), keys),
+				OperationsCommandArguments.getInstance().put("destKey", destKey).put("aggregate", aggregate).put("keys"
+						, keys));
 	}
 
 	@Override
 	public Long zInterStore(final String destKey, final double[] weights, final String... keys){
-		return execute(ProtocolCommand.ZINTERSTORE, (Jedis client)->client.zinterstore(destKey, (new ZParams())
-				.weights(weights), keys), OperationsCommandArguments.getInstance().put("destKey", destKey).put
-				("weights", weights).put("keys", keys));
+		return execute(ProtocolCommand.ZINTERSTORE, (Jedis client)->client.zinterstore(destKey,
+				(new ZParams()).weights(weights), keys), OperationsCommandArguments.getInstance().put("destKey",
+				destKey).put("weights", weights).put("keys", keys));
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final double[] weights, final byte[]... keys){
-		return execute(ProtocolCommand.ZINTERSTORE, (Jedis client)->client.zinterstore(destKey, (new ZParams())
-				.weights(weights), keys), OperationsCommandArguments.getInstance().put("destKey", destKey).put
-				("weights", weights).put("keys", keys));
+		return execute(ProtocolCommand.ZINTERSTORE, (Jedis client)->client.zinterstore(destKey,
+				(new ZParams()).weights(weights), keys), OperationsCommandArguments.getInstance().put("destKey",
+				destKey).put("weights", weights).put("keys", keys));
 	}
 
 	@Override
-	public Long zInterStore(final String destKey, final Aggregate aggregate, final double[] weights, final String...
-			keys){
-		return execute(ProtocolCommand.ZINTERSTORE, (Jedis client)->client.zinterstore(destKey, (new ZParams())
-				.aggregate((new AggregateConvert()).convert(aggregate)).weights(weights), keys),
+	public Long zInterStore(final String destKey, final Aggregate aggregate, final double[] weights,
+							final String... keys){
+		return execute(ProtocolCommand.ZINTERSTORE, (Jedis client)->client.zinterstore(destKey,
+				(new ZParams()).aggregate((new AggregateConvert()).convert(aggregate)).weights(weights), keys),
 				OperationsCommandArguments.getInstance().put("destKey", destKey).put("weights", weights).put("keys",
 						keys));
 	}
 
 	@Override
-	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double[] weights, final byte[]...
-			keys){
-		return execute(ProtocolCommand.ZINTERSTORE, (Jedis client)->client.zinterstore(destKey, (new ZParams())
-				.aggregate((new AggregateConvert()).convert(aggregate)).weights(weights), keys),
+	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double[] weights,
+							final byte[]... keys){
+		return execute(ProtocolCommand.ZINTERSTORE, (Jedis client)->client.zinterstore(destKey,
+				(new ZParams()).aggregate((new AggregateConvert()).convert(aggregate)).weights(weights), keys),
 				OperationsCommandArguments.getInstance().put("destKey", destKey).put("weights", weights).put("keys",
 						keys));
 	}
@@ -1242,82 +1275,87 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Long zUnionStore(final String destKey, final Aggregate aggregate, final String... keys){
-		return execute(ProtocolCommand.ZUNIONSTORE, (Jedis client)->client.zunionstore(destKey, (new ZParams())
-				.aggregate((new AggregateConvert()).convert(aggregate)), keys), OperationsCommandArguments.getInstance
-				().put("destKey", destKey).put("aggregate", aggregate).put("keys", keys));
+		return execute(ProtocolCommand.ZUNIONSTORE, (Jedis client)->client.zunionstore(destKey,
+				(new ZParams()).aggregate((new AggregateConvert()).convert(aggregate)), keys),
+				OperationsCommandArguments.getInstance().put("destKey", destKey).put("aggregate", aggregate).put("keys"
+						, keys));
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
-		return execute(ProtocolCommand.ZUNIONSTORE, (Jedis client)->client.zunionstore(destKey, (new ZParams())
-				.aggregate((new AggregateConvert()).convert(aggregate)), keys), OperationsCommandArguments.getInstance
-				().put("destKey", destKey).put("aggregate", aggregate).put("keys", keys));
+		return execute(ProtocolCommand.ZUNIONSTORE, (Jedis client)->client.zunionstore(destKey,
+				(new ZParams()).aggregate((new AggregateConvert()).convert(aggregate)), keys),
+				OperationsCommandArguments.getInstance().put("destKey", destKey).put("aggregate", aggregate).put("keys"
+						, keys));
 	}
 
 	@Override
 	public Long zUnionStore(final String destKey, final double[] weights, final String... keys){
-		return execute(ProtocolCommand.ZUNIONSTORE, (Jedis client)->client.zunionstore(destKey, (new ZParams())
-				.weights(weights), keys), OperationsCommandArguments.getInstance().put("destKey", destKey).put
-				("weights", weights).put("keys", keys));
+		return execute(ProtocolCommand.ZUNIONSTORE, (Jedis client)->client.zunionstore(destKey,
+				(new ZParams()).weights(weights), keys), OperationsCommandArguments.getInstance().put("destKey",
+				destKey).put("weights", weights).put("keys", keys));
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final double[] weights, final byte[]... keys){
-		return execute(ProtocolCommand.ZUNIONSTORE, (Jedis client)->client.zunionstore(destKey, (new ZParams())
-				.weights(weights), keys), OperationsCommandArguments.getInstance().put("destKey", destKey).put
-				("weights", weights).put("keys", keys));
+		return execute(ProtocolCommand.ZUNIONSTORE, (Jedis client)->client.zunionstore(destKey,
+				(new ZParams()).weights(weights), keys), OperationsCommandArguments.getInstance().put("destKey",
+				destKey).put("weights", weights).put("keys", keys));
 	}
 
 	@Override
-	public Long zUnionStore(final String destKey, final Aggregate aggregate, final double[] weights, final String...
-			keys){
-		return execute(ProtocolCommand.ZUNIONSTORE, (Jedis client)->client.zunionstore(destKey, (new ZParams())
-				.aggregate((new AggregateConvert()).convert(aggregate)).weights(weights), keys),
+	public Long zUnionStore(final String destKey, final Aggregate aggregate, final double[] weights,
+							final String... keys){
+		return execute(ProtocolCommand.ZUNIONSTORE, (Jedis client)->client.zunionstore(destKey,
+				(new ZParams()).aggregate((new AggregateConvert()).convert(aggregate)).weights(weights), keys),
 				OperationsCommandArguments.getInstance().put("destKey", destKey).put("weights", weights).put("keys",
 						keys));
 	}
 
 	@Override
-	public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double[] weights, final byte[]...
-			keys){
-		return execute(ProtocolCommand.ZUNIONSTORE, (Jedis client)->client.zunionstore(destKey, (new ZParams())
-				.aggregate((new AggregateConvert()).convert(aggregate)).weights(weights), keys),
+	public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double[] weights,
+							final byte[]... keys){
+		return execute(ProtocolCommand.ZUNIONSTORE, (Jedis client)->client.zunionstore(destKey,
+				(new ZParams()).aggregate((new AggregateConvert()).convert(aggregate)).weights(weights), keys),
 				OperationsCommandArguments.getInstance().put("destKey", destKey).put("weights", weights).put("keys",
 						keys));
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor){
-		return execute(ProtocolCommand.ZSCAN, (Jedis client)->(new ScanResultConvert.ListTupleScanResultConvert())
-				.deconvert(client.zscan(key, cursor)), OperationsCommandArguments.getInstance().put("key", key).put
-				("cursor", cursor));
+		return execute(ProtocolCommand.ZSCAN,
+				(Jedis client)->(new ScanResultConvert.ListTupleScanResultConvert()).deconvert(client.zscan(key,
+						cursor)), OperationsCommandArguments.getInstance().put("key", key).put("cursor", cursor));
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		return execute(ProtocolCommand.ZSCAN, (Jedis client)->(new ScanResultConvert.ListTupleScanResultConvert())
-				.deconvert(client.zscan(key, cursor, (new ScanParams()).match(pattern))), OperationsCommandArguments
-				.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern));
+		return execute(ProtocolCommand.ZSCAN,
+				(Jedis client)->(new ScanResultConvert.ListTupleScanResultConvert()).deconvert(client.zscan(key,
+						cursor, (new ScanParams()).match(pattern))), OperationsCommandArguments.getInstance().put("key"
+						, key).put("cursor", cursor).put("pattern", pattern));
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count){
-		return execute(ProtocolCommand.ZSCAN, (Jedis client)->(new ScanResultConvert.ListTupleScanResultConvert())
-				.deconvert(client.zscan(key, cursor, (new ScanParams()).count(count))), OperationsCommandArguments
-				.getInstance().put("key", key).put("cursor", cursor).put("count", count));
+		return execute(ProtocolCommand.ZSCAN,
+				(Jedis client)->(new ScanResultConvert.ListTupleScanResultConvert()).deconvert(client.zscan(key,
+						cursor, (new ScanParams()).count(count))), OperationsCommandArguments.getInstance().put("key",
+						key).put("cursor", cursor).put("count", count));
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
-		return execute(ProtocolCommand.ZSCAN, (Jedis client)->(new ScanResultConvert.ListTupleScanResultConvert())
-				.deconvert(client.zscan(key, cursor, (new ScanParams()).match(pattern).count(count))),
-				OperationsCommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern)
-						.put("count", count));
+		return execute(ProtocolCommand.ZSCAN,
+				(Jedis client)->(new ScanResultConvert.ListTupleScanResultConvert()).deconvert(client.zscan(key,
+						cursor, (new ScanParams()).match(pattern).count(count))),
+				OperationsCommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern).put("count", count));
 	}
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements){
-		return execute(ProtocolCommand.PFADD, (Jedis client)->returnStatus(client.pfadd(key, elements) > 0),
+		return execute(ProtocolCommand.PFADD,
+				(Jedis client)->ReturnUtils.returnStatus(client.pfadd(key, elements) > 0),
 				OperationsCommandArguments.getInstance().put("key", key).put("elements", elements));
 	}
 
@@ -1335,14 +1373,14 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Long pfCount(final String... keys){
-		return execute(ProtocolCommand.PFCOUNT, (Jedis client)->client.pfcount(keys), OperationsCommandArguments
-				.getInstance().put("keys", keys));
+		return execute(ProtocolCommand.PFCOUNT, (Jedis client)->client.pfcount(keys),
+				OperationsCommandArguments.getInstance().put("keys", keys));
 	}
 
 	@Override
 	public Long pfCount(final byte[]... keys){
-		return execute(ProtocolCommand.PFCOUNT, (Jedis client)->client.pfcount(keys), OperationsCommandArguments
-				.getInstance().put("keys", keys));
+		return execute(ProtocolCommand.PFCOUNT, (Jedis client)->client.pfcount(keys),
+				OperationsCommandArguments.getInstance().put("keys", keys));
 	}
 
 	@Override
@@ -1354,16 +1392,16 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
-		return execute(ProtocolCommand.GEOADD, (Jedis client)->client.geoadd(key, (new GeoConvert
-				.GeoMapConvert<byte[]>()).convert(memberCoordinates)), OperationsCommandArguments.getInstance().put
-				("key", key).put("memberCoordinates", memberCoordinates));
+		return execute(ProtocolCommand.GEOADD, (Jedis client)->client.geoadd(key,
+				(new GeoConvert.GeoMapConvert<byte[]>()).convert(memberCoordinates)),
+				OperationsCommandArguments.getInstance().put("key", key).put("memberCoordinates", memberCoordinates));
 	}
 
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members){
-		return execute(ProtocolCommand.GEOPOS, (Jedis client)->(new GeoConvert.ListMapConvert()).deconvert(client
-				.geopos(key, members)), OperationsCommandArguments.getInstance().put("key", key).put("members",
-				members));
+		return execute(ProtocolCommand.GEOPOS,
+				(Jedis client)->(new GeoConvert.ListMapConvert()).deconvert(client.geopos(key, members)),
+				OperationsCommandArguments.getInstance().put("key", key).put("members", members));
 	}
 
 	@Override
@@ -1375,47 +1413,37 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
-		return execute(ProtocolCommand.GEODIST, (Jedis client)->client.geodist(key, member1, member2, (new GeoConvert
-				.GeoUnitConvert()).convert(unit)), OperationsCommandArguments.getInstance().put("key", key).put
-				("member1", member1).put("member2", member2).put("unit", unit));
+		return execute(ProtocolCommand.GEODIST, (Jedis client)->client.geodist(key, member1, member2,
+				(new GeoConvert.GeoUnitConvert()).convert(unit)), OperationsCommandArguments.getInstance().put("key",
+				key).put("member1", member1).put("member2", member2).put("unit", unit));
 	}
 
 	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double
-			radius, final GeoUnit unit){
-		return execute(ProtocolCommand.GEORADIUS, (Jedis client)->(new GeoConvert.GeoRadiusConvert
-				.ListGeoRadiusConvert()).deconvert(client.georadius(key, longitude, latitude, radius, (new GeoConvert
-				.GeoUnitConvert()).convert(unit))), OperationsCommandArguments.getInstance().put("key", key).put
-				("longitude", longitude).put("latitude", latitude).put("radius", radius).put("unit", unit));
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit){
+		return execute(ProtocolCommand.GEORADIUS,
+				(Jedis client)->(new GeoConvert.GeoRadiusConvert.ListGeoRadiusConvert()).deconvert(client.georadius(key, longitude, latitude, radius, (new GeoConvert.GeoUnitConvert()).convert(unit))), OperationsCommandArguments.getInstance().put("key", key).put("longitude", longitude).put("latitude", latitude).put("radius", radius).put("unit", unit));
 	}
 
 	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double
-			radius, final GeoUnit unit, final GeoArgument geoArgument){
-		return execute(ProtocolCommand.GEORADIUS, (Jedis client)->(new GeoConvert.GeoRadiusConvert
-				.ListGeoRadiusConvert()).deconvert(client.georadius(key, longitude, latitude, radius, (new GeoConvert
-				.GeoUnitConvert()).convert(unit), (new GeoArgumentConvert()).convert(geoArgument))),
-				OperationsCommandArguments.getInstance().put("key", key).put("longitude", longitude).put("latitude",
-						latitude).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument));
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit, final GeoArgument geoArgument){
+		return execute(ProtocolCommand.GEORADIUS,
+				(Jedis client)->(new GeoConvert.GeoRadiusConvert.ListGeoRadiusConvert()).deconvert(client.georadius(key, longitude, latitude, radius, (new GeoConvert.GeoUnitConvert()).convert(unit), (new GeoArgumentConvert()).convert(geoArgument))), OperationsCommandArguments.getInstance().put("key", key).put("longitude", longitude).put("latitude", latitude).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument));
 	}
 
 	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final GeoUnit
-			unit){
-		return execute(ProtocolCommand.GEORADIUSBYMEMBER, (Jedis client)->(new GeoConvert.GeoRadiusConvert
-				.ListGeoRadiusConvert()).deconvert(client.georadiusByMember(key, member, radius, (new GeoConvert
-				.GeoUnitConvert()).convert(unit))), OperationsCommandArguments.getInstance().put("key", key).put
-				("member", member).put("radius", radius).put("unit", unit));
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+											 final GeoUnit unit){
+		return execute(ProtocolCommand.GEORADIUSBYMEMBER,
+				(Jedis client)->(new GeoConvert.GeoRadiusConvert.ListGeoRadiusConvert()).deconvert(client.georadiusByMember(key, member, radius, (new GeoConvert.GeoUnitConvert()).convert(unit))), OperationsCommandArguments.getInstance().put("key", key).put("member", member).put("radius", radius).put("unit", unit));
 	}
 
 	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final GeoUnit
-			unit, final GeoArgument geoArgument){
-		return execute(ProtocolCommand.PFMERGE, (Jedis client)->(new GeoConvert.GeoRadiusConvert.ListGeoRadiusConvert
-				()).deconvert(client.georadiusByMember(key, member, radius, (new GeoConvert.GeoUnitConvert()).convert
-				(unit), (new GeoArgumentConvert()).convert(geoArgument))), OperationsCommandArguments.getInstance()
-				.put("key", key).put("member", member).put("radius", radius).put("unit", unit).put("geoArgument",
-						geoArgument));
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+											 final GeoUnit unit, final GeoArgument geoArgument){
+		return execute(ProtocolCommand.PFMERGE,
+				(Jedis client)->(new GeoConvert.GeoRadiusConvert.ListGeoRadiusConvert()).deconvert(client.georadiusByMember(key, member, radius, (new GeoConvert.GeoUnitConvert()).convert(unit), (new GeoArgumentConvert()).convert(geoArgument))), OperationsCommandArguments.getInstance().put("key", key).put("member", member).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument));
 	}
 
 	@Override
@@ -1426,47 +1454,52 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Status setBit(final byte[] key, final long offset, final byte[] value){
-		return execute(ProtocolCommand.SETBIT, (Jedis client)->returnStatus(client.setbit(key, offset, value)),
-				OperationsCommandArguments.getInstance().put("key", key).put("offset", offset).put("value", value));
+		return execute(ProtocolCommand.SETBIT, (Jedis client)->ReturnUtils.returnStatus(client.setbit(key, offset,
+				value)), OperationsCommandArguments.getInstance().put("key", key).put("offset", offset).put("value",
+				value));
 	}
 
 	@Override
 	public Status setBit(final byte[] key, final long offset, final boolean value){
-		return execute(ProtocolCommand.SETBIT, (Jedis client)->returnStatus(client.setbit(key, offset, value)),
-				OperationsCommandArguments.getInstance().put("key", key).put("offset", offset).put("value", value));
+		return execute(ProtocolCommand.SETBIT, (Jedis client)->ReturnUtils.returnStatus(client.setbit(key, offset,
+				value)), OperationsCommandArguments.getInstance().put("key", key).put("offset", offset).put("value",
+				value));
 	}
 
 	@Override
 	public Status getBit(final byte[] key, final long offset){
-		return execute(ProtocolCommand.GETBIT, (Jedis client)->returnStatus(client.getbit(key, offset)),
+		return execute(ProtocolCommand.GETBIT, (Jedis client)->ReturnUtils.returnStatus(client.getbit(key, offset)),
 				OperationsCommandArguments.getInstance().put("key", key).put("offset", offset));
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value){
-		return execute(ProtocolCommand.BITPOS, (Jedis client)->client.bitpos(key, value), OperationsCommandArguments
-				.getInstance().put("key", key).put("value", value));
+		return execute(ProtocolCommand.BITPOS, (Jedis client)->client.bitpos(key, value),
+				OperationsCommandArguments.getInstance().put("key", key).put("value", value));
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final int start, final int end){
 		return execute(ProtocolCommand.BITPOS, (Jedis client)->client.bitpos(key, value, new BitPosParams(start, end))
-				, OperationsCommandArguments.getInstance().put("key", key).put("value", value).put("start", start).put
-						("end", end));
+				,
+				OperationsCommandArguments.getInstance().put("key", key).put("value", value).put("start", start).put(
+						"end", end));
 	}
 
 	@Override
 	public Long bitOp(final Operation operation, final String destKey, final String... keys){
-		return execute(ProtocolCommand.BITOP, (Jedis client)->client.bitop((new BitOperationConvert()).convert
-				(operation), destKey, keys), OperationsCommandArguments.getInstance().put("operation", operation).put
-				("destKey", destKey).put("keys", keys));
+		return execute(ProtocolCommand.BITOP,
+				(Jedis client)->client.bitop((new BitOperationConvert()).convert(operation), destKey, keys),
+				OperationsCommandArguments.getInstance().put("operation", operation).put("destKey", destKey).put("keys"
+						, keys));
 	}
 
 	@Override
 	public Long bitOp(final Operation operation, final byte[] destKey, final byte[]... keys){
-		return execute(ProtocolCommand.BITOP, (Jedis client)->client.bitop((new BitOperationConvert()).convert
-				(operation), destKey, keys), OperationsCommandArguments.getInstance().put("operation", operation).put
-				("destKey", destKey).put("keys", keys));
+		return execute(ProtocolCommand.BITOP,
+				(Jedis client)->client.bitop((new BitOperationConvert()).convert(operation), destKey, keys),
+				OperationsCommandArguments.getInstance().put("operation", operation).put("destKey", destKey).put("keys"
+						, keys));
 	}
 
 	@Override
@@ -1477,8 +1510,8 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Long bitCount(final byte[] key){
-		return execute(ProtocolCommand.BITCOUNT, (Jedis client)->client.bitcount(key), OperationsCommandArguments
-				.getInstance().put("key", key));
+		return execute(ProtocolCommand.BITCOUNT, (Jedis client)->client.bitcount(key),
+				OperationsCommandArguments.getInstance().put("key", key));
 	}
 
 	@Override
@@ -1630,14 +1663,14 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Object eval(final String script){
-		return execute(ProtocolCommand.EVAL, (Jedis client)->client.eval(script), OperationsCommandArguments
-				.getInstance().put("script", script));
+		return execute(ProtocolCommand.EVAL, (Jedis client)->client.eval(script),
+				OperationsCommandArguments.getInstance().put("script", script));
 	}
 
 	@Override
 	public Object eval(final byte[] script){
-		return execute(ProtocolCommand.EVAL, (Jedis client)->client.eval(script), OperationsCommandArguments
-				.getInstance().put("script", script));
+		return execute(ProtocolCommand.EVAL, (Jedis client)->client.eval(script),
+				OperationsCommandArguments.getInstance().put("script", script));
 	}
 
 	@Override
@@ -1654,56 +1687,56 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] args){
-		return execute(ProtocolCommand.EVAL, (Jedis client)->client.eval(script, Arrays.asList(keys), Arrays.asList
-				(args)), OperationsCommandArguments.getInstance().put("script", script).put("keys", keys).put("args",
-				args));
+		return execute(ProtocolCommand.EVAL, (Jedis client)->client.eval(script, Arrays.asList(keys),
+				Arrays.asList(args)),
+				OperationsCommandArguments.getInstance().put("script", script).put("keys", keys).put("args", args));
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] args){
-		return execute(ProtocolCommand.EVAL, (Jedis client)->client.eval(script, Arrays.asList(keys), Arrays.asList
-				(args)), OperationsCommandArguments.getInstance().put("script", script).put("keys", keys).put("args",
-				args));
+		return execute(ProtocolCommand.EVAL, (Jedis client)->client.eval(script, Arrays.asList(keys),
+				Arrays.asList(args)),
+				OperationsCommandArguments.getInstance().put("script", script).put("keys", keys).put("args", args));
 	}
 
 	@Override
 	public Object evalSha(final String digest){
-		return execute(ProtocolCommand.EVALSHA, (Jedis client)->client.evalsha(digest), OperationsCommandArguments
-				.getInstance().put("digest", digest));
+		return execute(ProtocolCommand.EVALSHA, (Jedis client)->client.evalsha(digest),
+				OperationsCommandArguments.getInstance().put("digest", digest));
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest){
-		return execute(ProtocolCommand.EVALSHA, (Jedis client)->client.evalsha(digest), OperationsCommandArguments
-				.getInstance().put("digest", digest));
+		return execute(ProtocolCommand.EVALSHA, (Jedis client)->client.evalsha(digest),
+				OperationsCommandArguments.getInstance().put("digest", digest));
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String... params){
-		return execute(ProtocolCommand.EVALSHA, (Jedis client)->client.evalsha(digest, params == null ? 0 : params
-				.length, params), OperationsCommandArguments.getInstance().put("digest", digest).put("params",
+		return execute(ProtocolCommand.EVALSHA, (Jedis client)->client.evalsha(digest, params == null ? 0 :
+				params.length, params), OperationsCommandArguments.getInstance().put("digest", digest).put("params",
 				params));
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... params){
-		return execute(ProtocolCommand.EVALSHA, (Jedis client)->client.evalsha(digest, params == null ? 0 : params
-				.length, params), OperationsCommandArguments.getInstance().put("digest", digest).put("params",
+		return execute(ProtocolCommand.EVALSHA, (Jedis client)->client.evalsha(digest, params == null ? 0 :
+				params.length, params), OperationsCommandArguments.getInstance().put("digest", digest).put("params",
 				params));
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] args){
-		return execute(ProtocolCommand.EVALSHA, (Jedis client)->client.evalsha(digest, Arrays.asList(keys), Arrays
-				.asList(args)), OperationsCommandArguments.getInstance().put("digest", digest).put("keys", keys).put
-				("args", args));
+		return execute(ProtocolCommand.EVALSHA, (Jedis client)->client.evalsha(digest, Arrays.asList(keys),
+				Arrays.asList(args)),
+				OperationsCommandArguments.getInstance().put("digest", digest).put("keys", keys).put("args", args));
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] args){
-		return execute(ProtocolCommand.EVALSHA, (Jedis client)->client.evalsha(digest, Arrays.asList(keys), Arrays
-				.asList(args)), OperationsCommandArguments.getInstance().put("digest", digest).put("keys", keys).put
-				("args", args));
+		return execute(ProtocolCommand.EVALSHA, (Jedis client)->client.evalsha(digest, Arrays.asList(keys),
+				Arrays.asList(args)),
+				OperationsCommandArguments.getInstance().put("digest", digest).put("keys", keys).put("args", args));
 	}
 
 	@Override
@@ -1797,8 +1830,9 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Info info(final InfoSection section){
-		return execute(ProtocolCommand.INFO, (Jedis client)->InfoUtil.convert(client.info(section.name().toLowerCase()
-		)), OperationsCommandArguments.getInstance().put("section", section));
+		return execute(ProtocolCommand.INFO,
+				(Jedis client)->InfoUtil.convert(client.info(section.name().toLowerCase())),
+				OperationsCommandArguments.getInstance().put("section", section));
 	}
 
 	@Override
@@ -1813,14 +1847,16 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Status clientSetName(final String name){
-		return execute(ProtocolCommand.CLIENT_SETNAME, (Jedis client)->ReturnUtils.returnForOK(client.clientSetname
-				(name)), OperationsCommandArguments.getInstance().put("name", name));
+		return execute(ProtocolCommand.CLIENT_SETNAME,
+				(Jedis client)->ReturnUtils.returnForOK(client.clientSetname(name)),
+				OperationsCommandArguments.getInstance().put("name", name));
 	}
 
 	@Override
 	public Status clientSetName(final byte[] name){
-		return execute(ProtocolCommand.CLIENT_SETNAME, (Jedis client)->ReturnUtils.returnForOK(client.clientSetname
-				(name)), OperationsCommandArguments.getInstance().put("name", name));
+		return execute(ProtocolCommand.CLIENT_SETNAME,
+				(Jedis client)->ReturnUtils.returnForOK(client.clientSetname(name)),
+				OperationsCommandArguments.getInstance().put("name", name));
 	}
 
 	@Override
@@ -1928,14 +1964,14 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public Status configResetStat(){
-		return execute(ProtocolCommand.CONFIG_RESETSTAT, (Jedis client)->ReturnUtils.returnForOK(client
-				.configResetStat()));
+		return execute(ProtocolCommand.CONFIG_RESETSTAT,
+				(Jedis client)->ReturnUtils.returnForOK(client.configResetStat()));
 	}
 
 	@Override
 	public Status configRewrite(){
-		return execute(ProtocolCommand.CONFIG_REWRITE, (Jedis client)->ReturnUtils.returnForOK(client.configRewrite
-				()));
+		return execute(ProtocolCommand.CONFIG_REWRITE,
+				(Jedis client)->ReturnUtils.returnForOK(client.configRewrite()));
 	}
 
 	@Override
@@ -1953,13 +1989,14 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Simp
 
 	@Override
 	public byte[] echo(byte[] str){
-		return execute(ProtocolCommand.ECHO, (Jedis client)->client.echo(str), OperationsCommandArguments.getInstance
-				().put("str", str));
+		return execute(ProtocolCommand.ECHO, (Jedis client)->client.echo(str),
+				OperationsCommandArguments.getInstance().put("str", str));
 	}
 
 	@Override
 	public Status ping(){
-		return execute(ProtocolCommand.PING, (Jedis client)->returnStatus("PONG".equalsIgnoreCase(client.ping())));
+		return execute(ProtocolCommand.PING,
+				(Jedis client)->ReturnUtils.returnStatus("PONG".equalsIgnoreCase(client.ping())));
 	}
 
 	@Override

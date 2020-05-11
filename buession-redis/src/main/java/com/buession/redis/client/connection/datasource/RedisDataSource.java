@@ -24,35 +24,11 @@
  */
 package com.buession.redis.client.connection.datasource;
 
-import com.buession.lang.Status;
-
-import java.io.Closeable;
-import java.io.IOException;
-
 /**
  * Redis 数据源
  *
  * @author Yong.Teng
  */
-public interface RedisDataSource extends Closeable {
-
-	Status connect();
-
-	<C> C getRedisClient();
-
-	/**
-	 * 获取数据源是否关闭
-	 *
-	 * @return 数据源是否关闭
-	 */
-	boolean isClosed();
-
-	/**
-	 * 切断链接
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 */
-	void disconnect() throws IOException;
+public interface RedisDataSource {
 
 }

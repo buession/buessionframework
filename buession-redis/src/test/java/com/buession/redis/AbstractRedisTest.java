@@ -68,7 +68,7 @@ public abstract class AbstractRedisTest {
 		//connectionFactory.setPort(16379);
 		//connectionFactory.setPassword("tQP!Vf7JxL-nrH-x");
 		//connectionFactory.setPassword("passwd");
-		connectionFactory.setUsePool(false);
+		connectionFactory.setUsePool(true);
 
 		try{
 			connectionFactory.afterPropertiesSet();

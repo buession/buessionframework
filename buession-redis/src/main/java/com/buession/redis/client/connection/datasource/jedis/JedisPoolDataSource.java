@@ -24,15 +24,15 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
-import com.buession.lang.Status;
-import com.buession.redis.client.ClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-import java.io.IOException;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * @author Yong.Teng
@@ -44,20 +44,109 @@ public class JedisPoolDataSource extends AbstractJedisRedisDataSource<Jedis> imp
 
 	private JedisPool pool;
 
-	private Jedis jedis;
-
 	private final static Logger logger = LoggerFactory.getLogger(JedisPoolDataSource.class);
 
 	public JedisPoolDataSource(){
 		super();
 	}
 
-	public JedisPoolDataSource(ClientConfiguration clientConfiguration){
-		super(clientConfiguration);
+	public JedisPoolDataSource(String host, JedisPoolConfig poolConfig){
+		super(host);
+		this.poolConfig = poolConfig;
 	}
 
-	public JedisPoolDataSource(ClientConfiguration clientConfiguration, JedisPoolConfig poolConfig){
-		super(clientConfiguration);
+	public JedisPoolDataSource(String host, String password, JedisPoolConfig poolConfig){
+		super(host, password);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, int database, JedisPoolConfig poolConfig){
+		super(host, database);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, String password, int database, JedisPoolConfig poolConfig){
+		super(host, password, database);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, int port, String password, JedisPoolConfig poolConfig){
+		super(host, port, password);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, int port, int database, JedisPoolConfig poolConfig){
+		super(host, port, database);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, int port, String password, int database, JedisPoolConfig poolConfig){
+		super(host, port, password, database);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, int port, String password, int database, int connectTimeout, int soTimeout
+			, JedisPoolConfig poolConfig){
+		super(host, port, password, database, connectTimeout, soTimeout);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, int port, String password, int database, int connectTimeout, int soTimeout
+			, boolean useSsl, JedisPoolConfig poolConfig){
+		super(host, port, password, database, connectTimeout, soTimeout, useSsl);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, int port, String password, int database, int connectTimeout, int soTimeout
+			, SSLSocketFactory sslSocketFactory, SSLParameters sslParameters, HostnameVerifier hostnameVerifier,
+							   JedisPoolConfig poolConfig){
+		super(host, port, password, database, connectTimeout, soTimeout, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, int port, String password, int database, int connectTimeout, int soTimeout
+			, boolean useSsl, SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
+							   HostnameVerifier hostnameVerifier, JedisPoolConfig poolConfig){
+		super(host, port, password, database, connectTimeout, soTimeout, useSsl, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, int port, String password, int database, String clientName, boolean useSsl
+			, JedisPoolConfig poolConfig){
+		super(host, port, password, database, clientName, useSsl);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, int port, String password, int database, String clientName,
+							   SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
+							   HostnameVerifier hostnameVerifier, JedisPoolConfig poolConfig){
+		super(host, port, password, database, clientName, sslSocketFactory, sslParameters, hostnameVerifier);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, int port, String password, int database, String clientName,
+							   int connectTimeout, int soTimeout, boolean useSsl, JedisPoolConfig poolConfig){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, useSsl);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, int port, String password, int database, String clientName,
+							   int connectTimeout, int soTimeout, SSLSocketFactory sslSocketFactory,
+							   SSLParameters sslParameters, HostnameVerifier hostnameVerifier,
+							   JedisPoolConfig poolConfig){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+		this.poolConfig = poolConfig;
+	}
+
+	public JedisPoolDataSource(String host, int port, String password, int database, String clientName,
+							   int connectTimeout, int soTimeout, boolean useSsl, SSLSocketFactory sslSocketFactory,
+							   SSLParameters sslParameters, HostnameVerifier hostnameVerifier,
+							   JedisPoolConfig poolConfig){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, useSsl, sslSocketFactory,
+				sslParameters, hostnameVerifier);
 		this.poolConfig = poolConfig;
 	}
 
@@ -71,49 +160,15 @@ public class JedisPoolDataSource extends AbstractJedisRedisDataSource<Jedis> imp
 
 	@Override
 	public JedisPool getPool(){
-		return pool;
-	}
-
-	@Override
-	public Status connect(){
-		ClientConfiguration configuration = getClientConfiguration();
-		pool = new JedisPool(getPoolConfig(), configuration.getHost(), configuration.getPort(), configuration
-				.getConnectTimeout(), configuration.getSoTimeout(), configuration.getPassword(), configuration
-				.getDatabase(), configuration.getClientName(), configuration.isUseSsl());
-
-		logger.info("Jedis pool datasource initialize with db {} success, name: {}.", configuration.getDatabase(),
-				configuration.getClientName());
-
-		return Status.SUCCESS;
-	}
-
-	@Override
-	public Jedis getRedisClient(){
 		if(pool == null){
-			return null;
-		}else{
-			jedis = pool.getResource();
-			return jedis;
-		}
-	}
+			pool = new JedisPool(getPoolConfig(), getHost(), getPort(), getConnectTimeout(), getSoTimeout(),
+					getPassword(), getDatabase(), getClientName(), isUseSsl(), getSslSocketFactory(),
+					getSslParameters(), getHostnameVerifier());
 
-	@Override
-	public boolean isClosed(){
-		return jedis != null && jedis.isConnected() == false;
-	}
-
-	@Override
-	public void disconnect() throws IOException{
-		if(jedis != null){
-			jedis.disconnect();
+			logger.info("JedisPool initialize with db {} success, name: {}.", getDatabase(), getClientName());
 		}
-	}
 
-	@Override
-	public void close() throws IOException{
-		if(jedis != null){
-			jedis.close();
-		}
+		return pool;
 	}
 
 }

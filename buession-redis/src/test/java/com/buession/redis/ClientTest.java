@@ -54,6 +54,7 @@ public class ClientTest extends AbstractRedisTest {
 	public void set(){
 		RedisTemplate redisClientTemplate = redisTemplate();
 		redisClientTemplate.set("a", "A");
+		redisClientTemplate.set("b", "B");
 	}
 
 	@Test
@@ -63,14 +64,15 @@ public class ClientTest extends AbstractRedisTest {
 	}
 
 	@Test
-	public void get(){
+	public void get() throws InterruptedException{
 		RedisTemplate redisClientTemplate = redisTemplate();
 
 		String a = redisClientTemplate.get("a");
 		System.out.println(a);
 
+		Thread.sleep(5 * 1000);
 
-		String b = redisClientTemplate.get("a");
+		String b = redisClientTemplate.get("b");
 		System.out.println(b);
 	}
 

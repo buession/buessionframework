@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -29,8 +29,9 @@ import com.buession.redis.core.command.PersistenceCommand;
 /**
  * 持久化运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/persistence/index.html" target="_blank">http://redisdoc.com/persistence/index
- * .html</a></p>
+ * <p>详情说明
+ * <a href="http://redisdoc.com/persistence/index.html" target="_blank">http://redisdoc.com/persistence/index.html</a>
+ * </p>
  *
  * @author Yong.Teng
  */

@@ -24,22 +24,96 @@
  */
 package com.buession.redis.client.connection.jedis;
 
+import com.buession.core.utils.ReflectUtils;
 import com.buession.redis.client.connection.datasource.RedisDataSource;
+import com.buession.redis.client.connection.datasource.jedis.SimpleShardedJedisDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public class SimpleShardedJedisConnection extends AbstractJedisRedisConnection<ShardedJedis> implements
-        ShardedJedisConnection {
+public class SimpleShardedJedisConnection extends AbstractJedisRedisConnection<ShardedJedis> implements ShardedJedisConnection {
 
-    public SimpleShardedJedisConnection(){
-        super();
-    }
+	private ShardedJedis shardedJedis;
 
-    public SimpleShardedJedisConnection(RedisDataSource dataSource){
-        super(dataSource);
-    }
+	private final static Logger logger = LoggerFactory.getLogger(SimpleShardedJedisConnection.class);
+
+	public SimpleShardedJedisConnection(){
+		super();
+	}
+
+	public SimpleShardedJedisConnection(SimpleShardedJedisDataSource dataSource){
+		super(dataSource);
+	}
+
+	@Override
+	protected ShardedJedis getDelegate(RedisDataSource dataSource){
+		return shardedJedis;
+	}
+
+	@Override
+	protected void doConnect() throws IOException{
+		if(getDataSource() == null || (getDataSource() instanceof SimpleShardedJedisDataSource) == false){
+			return;
+		}
+
+		SimpleShardedJedisDataSource dataSource = (SimpleShardedJedisDataSource) getDataSource();
+
+		List<JedisShardInfo> shardInfos = new ArrayList<>();
+
+		JedisShardInfo shardInfo = new JedisShardInfo(dataSource.getHost(), dataSource.getClientName(),
+				dataSource.getPort(), 0, dataSource.getWeight(), dataSource.isUseSsl(),
+				dataSource.getSslSocketFactory(), dataSource.getSslParameters(), dataSource.getHostnameVerifier());
+
+		shardInfo.setConnectionTimeout(dataSource.getConnectTimeout());
+		shardInfo.setSoTimeout(dataSource.getSoTimeout());
+
+		ReflectUtils.setField(shardInfo, "db", dataSource.getDatabase());
+
+		shardedJedis = new ShardedJedis(shardInfos);
+
+		logger.info("ShardedJedis initialize with db {} success, name: {}.", dataSource.getDatabase(),
+				dataSource.getClientName());
+	}
+
+	@Override
+	protected boolean checkConnect(){
+		if(shardedJedis != null){
+			for(Jedis jedis : shardedJedis.getAllShards()){
+				if(jedis.isConnected()){
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	protected boolean checkClosed(){
+		return shardedJedis == null ? true : checkConnect() == false;
+	}
+
+	@Override
+	protected void doDisconnect() throws IOException{
+		if(getDelegate() != null){
+			getDelegate().disconnect();
+		}
+	}
+
+	@Override
+	protected void doClose() throws IOException{
+		if(getDelegate() != null){
+			getDelegate().close();
+		}
+	}
 
 }

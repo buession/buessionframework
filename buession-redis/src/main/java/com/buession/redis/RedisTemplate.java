@@ -146,25 +146,25 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	}
 
 	@Override
-	public Status migrate(final String key, final String host, final int db, final int timeout, final MigrateOperation
-			migrateOperation){
+	public Status migrate(final String key, final String host, final int db, final int timeout,
+						  final MigrateOperation migrateOperation){
 		return migrate(key, host, Server.DEFAULT_PORT, db, timeout, migrateOperation);
 	}
 
 	@Override
-	public Status migrate(final byte[] key, final String host, final int db, final int timeout, final MigrateOperation
-			migrateOperation){
+	public Status migrate(final byte[] key, final String host, final int db, final int timeout,
+						  final MigrateOperation migrateOperation){
 		return migrate(key, host, Server.DEFAULT_PORT, db, timeout, migrateOperation);
 	}
 
 	@Override
 	public Status del(final String key){
-		return Status.valueOf(del(new String[]{key}) > 0);
+		return ReturnUtils.returnStatus(del(new String[]{key}) > 0);
 	}
 
 	@Override
 	public Status del(final byte[] key){
-		return Status.valueOf(del(new byte[][]{key}) > 0);
+		return ReturnUtils.returnStatus(del(new byte[][]{key}) > 0);
 	}
 
 	@Override
@@ -537,12 +537,12 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 
 	@Override
 	public Status hDel(final String key, final String field){
-		return Status.valueOf(hDel(key, new String[]{field}) > 0);
+		return ReturnUtils.returnStatus(hDel(key, new String[]{field}) > 0);
 	}
 
 	@Override
 	public Status hDel(final byte[] key, final byte[] field){
-		return Status.valueOf(hDel(key, new byte[][]{field}) > 0);
+		return ReturnUtils.returnStatus(hDel(key, new byte[][]{field}) > 0);
 	}
 
 	@Override
@@ -906,14 +906,14 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	}
 
 	@Override
-	public <V> V brPoplPushObject(final String source, final String destKey, final int timeout, final TypeReference<V>
-			type){
+	public <V> V brPoplPushObject(final String source, final String destKey, final int timeout,
+								  final TypeReference<V> type){
 		return serializer.deserialize(brPoplPush(source, destKey, timeout), type);
 	}
 
 	@Override
-	public <V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout, final TypeReference<V>
-			type){
+	public <V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout,
+								  final TypeReference<V> type){
 		return serializer.deserialize(brPoplPush(source, destKey, timeout), type);
 	}
 

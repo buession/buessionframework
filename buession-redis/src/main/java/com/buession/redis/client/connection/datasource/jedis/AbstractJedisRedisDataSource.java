@@ -24,9 +24,12 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
-import com.buession.redis.client.ClientConfiguration;
 import com.buession.redis.client.connection.datasource.AbstractRedisDataSource;
 import redis.clients.jedis.commands.JedisCommands;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * @author Yong.Teng
@@ -37,8 +40,87 @@ public abstract class AbstractJedisRedisDataSource<T extends JedisCommands> exte
 		super();
 	}
 
-	public AbstractJedisRedisDataSource(ClientConfiguration clientConfiguration){
-		super(clientConfiguration);
+	public AbstractJedisRedisDataSource(String host){
+		super(host);
+	}
+
+	public AbstractJedisRedisDataSource(String host, String password){
+		super(host, password);
+	}
+
+	public AbstractJedisRedisDataSource(String host, int database){
+		super(host, database);
+	}
+
+	public AbstractJedisRedisDataSource(String host, String password, int database){
+		super(host, password, database);
+	}
+
+	public AbstractJedisRedisDataSource(String host, int port, String password){
+		super(host, port, password);
+	}
+
+	public AbstractJedisRedisDataSource(String host, int port, int database){
+		super(host, port, database);
+	}
+
+	public AbstractJedisRedisDataSource(String host, int port, String password, int database){
+		super(host, port, password, database);
+	}
+
+	public AbstractJedisRedisDataSource(String host, int port, String password, int database, int connectTimeout,
+										int soTimeout){
+		super(host, port, password, database, connectTimeout, soTimeout);
+	}
+
+	public AbstractJedisRedisDataSource(String host, int port, String password, int database, int connectTimeout,
+										int soTimeout, boolean useSsl){
+		super(host, port, password, database, connectTimeout, soTimeout, useSsl);
+	}
+
+	public AbstractJedisRedisDataSource(String host, int port, String password, int database, int connectTimeout,
+										int soTimeout, SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
+										HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, connectTimeout, soTimeout, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+	}
+
+	public AbstractJedisRedisDataSource(String host, int port, String password, int database, int connectTimeout,
+										int soTimeout, boolean useSsl, SSLSocketFactory sslSocketFactory,
+										SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, connectTimeout, soTimeout, useSsl, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+	}
+
+	public AbstractJedisRedisDataSource(String host, int port, String password, int database, String clientName,
+										boolean useSsl){
+		super(host, port, password, database, clientName, useSsl);
+	}
+
+	public AbstractJedisRedisDataSource(String host, int port, String password, int database, String clientName,
+										SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
+										HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, clientName, sslSocketFactory, sslParameters, hostnameVerifier);
+	}
+
+	public AbstractJedisRedisDataSource(String host, int port, String password, int database, String clientName,
+										int connectTimeout, int soTimeout, boolean useSsl){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, useSsl);
+	}
+
+	public AbstractJedisRedisDataSource(String host, int port, String password, int database, String clientName,
+										int connectTimeout, int soTimeout, SSLSocketFactory sslSocketFactory,
+										SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+	}
+
+	public AbstractJedisRedisDataSource(String host, int port, String password, int database, String clientName,
+										int connectTimeout, int soTimeout, boolean useSsl,
+										SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
+										HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, useSsl, sslSocketFactory,
+				sslParameters, hostnameVerifier);
 	}
 
 }

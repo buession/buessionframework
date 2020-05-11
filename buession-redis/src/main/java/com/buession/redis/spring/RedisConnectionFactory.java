@@ -25,7 +25,8 @@
 package com.buession.redis.spring;
 
 import com.buession.core.utils.Assert;
-import com.buession.redis.client.ClientConfiguration;
+import com.buession.redis.Constants;
+import com.buession.redis.core.Server;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
@@ -36,19 +37,19 @@ import javax.net.ssl.SSLSocketFactory;
  */
 public class RedisConnectionFactory {
 
-	private String host = ClientConfiguration.DEFAULT_HOST;
+	private String host = Server.DEFAULT_HOST;
 
-	private int port = ClientConfiguration.DEFAULT_PORT;
+	private int port = Server.DEFAULT_PORT;
 
 	private String password;
 
-	private int database = ClientConfiguration.DEFAULT_DATABASE;
+	private int database = Server.DEFAULT_DATABASE;
 
 	private String clientName;
 
-	private int connectTimeout = ClientConfiguration.DEFAULT_TIMEOUT;
+	private int connectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
 
-	private int soTimeout = ClientConfiguration.DEFAULT_TIMEOUT;
+	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
 
 	private boolean useSsl;
 

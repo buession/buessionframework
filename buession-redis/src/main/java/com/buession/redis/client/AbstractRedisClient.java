@@ -25,9 +25,12 @@
 package com.buession.redis.client;
 
 import com.buession.core.Executor;
+import com.buession.core.utils.EnumUtils;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.RedisConnectionFactory;
+import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.operations.OperationsCommandArguments;
 import com.buession.redis.exception.RedisException;
@@ -35,12 +38,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author Yong.Teng
  */
 public abstract class AbstractRedisClient implements RedisClient {
+
+	private RedisConnectionFactory connectionFactory;
 
 	private RedisConnection connection;
 
@@ -51,7 +55,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	public AbstractRedisClient(RedisConnection connection){
-		this.connection = connection;
+		setConnection(connection);
 	}
 
 	@Override
@@ -62,36 +66,48 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public void setConnection(RedisConnection connection){
 		this.connection = connection;
+		connectionFactory = new RedisConnectionFactory(connection);
 	}
 
 	protected <C, R> R doExecute(final ProtocolCommand command, final Executor<C, R> executor) throws RedisException{
+		boolean enableTransactionSupport = false;
+		RedisConnection connection = processConnection(enableTransactionSupport);
+
 		try{
 			logger.debug("Execute command '{}'", command);
 			return connection.execute(command, executor);
 		}catch(RedisException e){
 			logger.error("Execute command '{}', failure: {}", command, e.getMessage());
 			throw e;
+		}finally{
+			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
 	}
 
-	protected <C, R> R doExecute(final ProtocolCommand command, final Executor<C, R> executor, final
-	OperationsCommandArguments arguments){
+	protected <C, R> R doExecute(final ProtocolCommand command, final Executor<C, R> executor,
+								 final OperationsCommandArguments arguments){
+		boolean enableTransactionSupport = false;
+		RedisConnection connection = processConnection(enableTransactionSupport);
+
 		try{
 			logger.debug("Execute command '{}'<{}>", command, commandParametersToSting(arguments));
 			return connection.execute(command, executor);
 		}catch(RedisException e){
-			logger.error("Execute command '{}'<{}>, failure: {}", command, commandParametersToSting(arguments), e
-					.getMessage());
+			logger.error("Execute command '{}'<{}>, failure: {}", command, commandParametersToSting(arguments),
+					e.getMessage());
 			throw e;
+		}finally{
+			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
 	}
 
-	protected final static Status returnStatus(final boolean value){
-		return Status.valueOf(value);
-	}
-
-	protected final static <O extends Enum<O>> O returnEnum(final String str, final Class<O> enumType){
-		return Enum.valueOf(enumType, str.toUpperCase());
+	protected RedisConnection processConnection(boolean enableTransactionSupport){
+		if(enableTransactionSupport){
+			// only bind resources in case of potential transaction synchronization
+			return RedisConnectionUtils.bindConnection(connectionFactory, enableTransactionSupport);
+		}else{
+			return RedisConnectionUtils.getConnection(connectionFactory);
+		}
 	}
 
 	protected void close(){
@@ -107,19 +123,15 @@ public abstract class AbstractRedisClient implements RedisClient {
 		StringBuilder sb = isEmpty ? new StringBuilder() : new StringBuilder(arguments.getParameters().size() * 16);
 
 		if(isEmpty == false){
-			int i = 0;
-
-			for(Map.Entry<String, Object> e : arguments.getParameters().entrySet()){
-				if(i > 0){
+			arguments.getParameters().forEach((name, value)->{
+				if(sb.length() > 0){
 					sb.append(", ");
 				}
 
-				sb.append(e.getKey());
+				sb.append(name);
 				sb.append(" => ");
-				sb.append(e.getValue());
-
-				i++;
-			}
+				sb.append(value);
+			});
 		}
 
 		return sb.toString();

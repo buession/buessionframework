@@ -29,8 +29,8 @@ import com.buession.redis.core.command.ClientAndServerCommands;
 /**
  * 客户端与服务器运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/client_and_server/index.html" target="_blank">http://redisdoc
- * .com/client_and_server/index.html</a></p>
+ * <p>详情说明
+ * <a href="http://redisdoc.com/client_and_server/index.html" target="_blank">http://redisdoc.com/client_and_server/index.html</a></p>
  *
  * @author Yong.Teng
  */

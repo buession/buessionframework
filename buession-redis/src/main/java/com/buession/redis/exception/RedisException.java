@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.exception;
@@ -29,23 +29,23 @@ package com.buession.redis.exception;
  */
 public class RedisException extends RuntimeException {
 
-    public RedisException(){
-        super();
-    }
+	public RedisException(){
+		super();
+	}
 
-    public RedisException(String message){
-        super(message);
-    }
+	public RedisException(String message){
+		super(message);
+	}
 
-    public RedisException(String message, Throwable cause){
-        super(message, cause);
-    }
+	public RedisException(String message, Throwable cause){
+		super(message, cause);
+	}
 
-    public RedisException(Throwable cause){
-        super(cause);
-    }
+	public RedisException(Throwable cause){
+		super(cause);
+	}
 
-    public RedisException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+	public RedisException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
 }

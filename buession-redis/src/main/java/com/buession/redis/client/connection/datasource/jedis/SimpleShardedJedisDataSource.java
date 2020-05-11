@@ -24,25 +24,23 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
-import com.buession.core.utils.ReflectUtils;
-import com.buession.lang.Status;
-import com.buession.redis.client.ClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
 
-import java.io.IOException;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public class SimpleShardedJedisDataSource extends AbstractJedisRedisDataSource<ShardedJedis> implements
-		ShardedJedisDataSource {
+public class SimpleShardedJedisDataSource extends AbstractJedisRedisDataSource<ShardedJedis> implements ShardedJedisDataSource {
 
-	private ShardedJedis shardedJedis;
+	private int weight;
 
 	private final static Logger logger = LoggerFactory.getLogger(SimpleShardedJedisDataSource.class);
 
@@ -50,54 +48,95 @@ public class SimpleShardedJedisDataSource extends AbstractJedisRedisDataSource<S
 		super();
 	}
 
-	public SimpleShardedJedisDataSource(ClientConfiguration clientConfiguration){
-		super(clientConfiguration);
+	public SimpleShardedJedisDataSource(String host){
+		super(host);
 	}
 
-	@Override
-	public Status connect(){
-		ClientConfiguration configuration = getClientConfiguration();
-		List<JedisShardInfo> jedisShardInfos = new ArrayList<>();
-
-		JedisShardInfo jedisShardInfo = new JedisShardInfo(configuration.getHost(), configuration.getClientName(),
-				configuration.getPort(), 0, configuration.getWeight(), configuration.isUseSsl(), configuration
-				.getSslSocketFactory(), configuration.getSslParameters(), configuration.getHostnameVerifier());
-
-		jedisShardInfo.setConnectionTimeout(configuration.getConnectTimeout());
-		jedisShardInfo.setSoTimeout(configuration.getSoTimeout());
-
-		ReflectUtils.setField(jedisShardInfo, "db", configuration.getDatabase());
-
-		shardedJedis = new ShardedJedis(jedisShardInfos);
-
-		logger.info("Simple sharded jedis datasource initialize with db {} success, name: {}.", configuration
-				.getDatabase(), configuration.getClientName());
-
-		return null;
+	public SimpleShardedJedisDataSource(String host, String password){
+		super(host, password);
 	}
 
-	@Override
-	public ShardedJedis getRedisClient(){
-		return shardedJedis;
+	public SimpleShardedJedisDataSource(String host, int database){
+		super(host, database);
 	}
 
-	@Override
-	public boolean isClosed(){
-		return shardedJedis == null ? true : false;
+	public SimpleShardedJedisDataSource(String host, String password, int database){
+		super(host, password, database);
 	}
 
-	@Override
-	public void disconnect() throws IOException{
-		if(shardedJedis != null){
-			shardedJedis.disconnect();
-		}
+	public SimpleShardedJedisDataSource(String host, int port, String password){
+		super(host, port, password);
 	}
 
-	@Override
-	public void close() throws IOException{
-		if(shardedJedis != null){
-			shardedJedis.close();
-		}
+	public SimpleShardedJedisDataSource(String host, int port, int database){
+		super(host, port, database);
+	}
+
+	public SimpleShardedJedisDataSource(String host, int port, String password, int database){
+		super(host, port, password, database);
+	}
+
+	public SimpleShardedJedisDataSource(String host, int port, String password, int database, int connectTimeout,
+										int soTimeout){
+		super(host, port, password, database, connectTimeout, soTimeout);
+	}
+
+	public SimpleShardedJedisDataSource(String host, int port, String password, int database, int connectTimeout,
+										int soTimeout, boolean useSsl){
+		super(host, port, password, database, connectTimeout, soTimeout, useSsl);
+	}
+
+	public SimpleShardedJedisDataSource(String host, int port, String password, int database, int connectTimeout,
+										int soTimeout, SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
+										HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, connectTimeout, soTimeout, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+	}
+
+	public SimpleShardedJedisDataSource(String host, int port, String password, int database, int connectTimeout,
+										int soTimeout, boolean useSsl, SSLSocketFactory sslSocketFactory,
+										SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, connectTimeout, soTimeout, useSsl, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+	}
+
+	public SimpleShardedJedisDataSource(String host, int port, String password, int database, String clientName,
+										boolean useSsl){
+		super(host, port, password, database, clientName, useSsl);
+	}
+
+	public SimpleShardedJedisDataSource(String host, int port, String password, int database, String clientName,
+										SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
+										HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, clientName, sslSocketFactory, sslParameters, hostnameVerifier);
+	}
+
+	public SimpleShardedJedisDataSource(String host, int port, String password, int database, String clientName,
+										int connectTimeout, int soTimeout, boolean useSsl){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, useSsl);
+	}
+
+	public SimpleShardedJedisDataSource(String host, int port, String password, int database, String clientName,
+										int connectTimeout, int soTimeout, SSLSocketFactory sslSocketFactory,
+										SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+	}
+
+	public SimpleShardedJedisDataSource(String host, int port, String password, int database, String clientName,
+										int connectTimeout, int soTimeout, boolean useSsl,
+										SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
+										HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, useSsl, sslSocketFactory,
+				sslParameters, hostnameVerifier);
+	}
+
+	public int getWeight(){
+		return weight;
+	}
+
+	public void setWeight(int weight){
+		this.weight = weight;
 	}
 
 }

@@ -36,8 +36,7 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisConnection<T extends JedisCommands> extends AbstractRedisConnection
-		implements JedisRedisConnection<T> {
+public abstract class AbstractJedisRedisConnection<T extends JedisCommands> extends AbstractRedisConnection implements JedisRedisConnection<T> {
 
 	private T delegate;
 
@@ -45,30 +44,28 @@ public abstract class AbstractJedisRedisConnection<T extends JedisCommands> exte
 		super();
 	}
 
-	public AbstractJedisRedisConnection(RedisDataSource dataSource){
+	public <D extends RedisDataSource> AbstractJedisRedisConnection(D dataSource){
 		super(dataSource);
 	}
 
 	@Override
 	public <C, R> R execute(final ProtocolCommand command, final Executor<C, R> executor) throws RedisException{
 		try{
-			C delegate = (C) getDelegate();
+			C delegate = (C) getDelegate(getDataSource());
 			return executor.execute(delegate);
 		}catch(JedisConnectionException e){
 			throw new RedisConnectionFailureException(e.getMessage(), e);
 		}
 	}
 
-	public <D extends RedisDataSource> T getDelegate(D dataSource){
-		return dataSource == null ? null : dataSource.getRedisClient();
-	}
-
 	protected T getDelegate(){
-		if(delegate == null){
+		if(delegate == null && getDataSource() != null){
 			delegate = getDelegate(getDataSource());
 		}
 
 		return delegate;
 	}
+
+	protected abstract T getDelegate(RedisDataSource dataSource);
 
 }

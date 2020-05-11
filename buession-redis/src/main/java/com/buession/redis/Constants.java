@@ -34,14 +34,18 @@ import java.nio.charset.StandardCharsets;
  */
 public class Constants {
 
-    public final static Charset CHARSET = StandardCharsets.UTF_8;
+	public final static Charset CHARSET = StandardCharsets.UTF_8;
 
-    public final static String SCAN_POINTER_START = String.valueOf(0);
+	public final static String SCAN_POINTER_START = String.valueOf(0);
 
-    public final static byte[] SCAN_POINTER_START_BINARY = SafeEncoder.encode(SCAN_POINTER_START);
+	public final static byte[] SCAN_POINTER_START_BINARY = SafeEncoder.encode(SCAN_POINTER_START);
 
-    private Constants(){
+	public final static int DEFAULT_CONNECT_TIMEOUT = 2000;
 
-    }
+	public final static int DEFAULT_SO_TIMEOUT = 5000;
+
+	private Constants(){
+
+	}
 
 }

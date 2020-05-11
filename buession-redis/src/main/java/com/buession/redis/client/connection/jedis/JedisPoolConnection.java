@@ -25,8 +25,12 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.datasource.RedisDataSource;
+import com.buession.redis.client.connection.datasource.jedis.JedisPoolDataSource;
 import com.buession.redis.client.jedis.JedisTransaction;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+
+import java.io.IOException;
 
 /**
  * @author Yong.Teng
@@ -37,7 +41,7 @@ public class JedisPoolConnection extends AbstractJedisRedisConnection<Jedis> imp
 		super();
 	}
 
-	public JedisPoolConnection(RedisDataSource dataSource){
+	public JedisPoolConnection(JedisPoolDataSource dataSource){
 		super(dataSource);
 	}
 
@@ -58,6 +62,50 @@ public class JedisPoolConnection extends AbstractJedisRedisConnection<Jedis> imp
 	public void discard(){
 		if(transaction != null){
 			transaction.discard();
+		}
+	}
+
+	@Override
+	protected Jedis getDelegate(RedisDataSource dataSource){
+		if(dataSource != null && dataSource instanceof JedisPoolDataSource){
+			JedisPool pool = ((JedisPoolDataSource) dataSource).getPool();
+
+			if(pool != null){
+				return pool.getResource();
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	protected void doConnect() throws IOException{
+		if(getDataSource() != null && getDataSource() instanceof JedisPoolDataSource){
+			((JedisPoolDataSource) getDataSource()).getPool();
+		}
+	}
+
+	@Override
+	protected boolean checkConnect(){
+		return getDelegate() != null && getDelegate().isConnected();
+	}
+
+	@Override
+	protected boolean checkClosed(){
+		return getDelegate() == null || getDelegate().isConnected() == false;
+	}
+
+	@Override
+	protected void doDisconnect() throws IOException{
+		if(getDelegate() != null){
+			getDelegate().disconnect();
+		}
+	}
+
+	@Override
+	protected void doClose() throws IOException{
+		if(getDelegate() != null){
+			getDelegate().close();
 		}
 	}
 

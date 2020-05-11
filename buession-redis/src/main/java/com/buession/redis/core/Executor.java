@@ -22,52 +22,13 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.pubsub;
+package com.buession.redis.core;
 
-import com.buession.core.utils.Assert;
-import com.buession.redis.core.PubSubListener;
-import redis.clients.jedis.BinaryJedisPubSub;
+import com.buession.redis.client.RedisClient;
 
 /**
  * @author Yong.Teng
  */
-public class DefaultBinaryJedisPubSub extends BinaryJedisPubSub {
-
-	private PubSubListener<byte[]> pubSubListener;
-
-	public DefaultBinaryJedisPubSub(PubSubListener<byte[]> pubSubListener){
-		Assert.isNull(pubSubListener, "Pubsub listener cloud not be null.");
-		this.pubSubListener = pubSubListener;
-	}
-
-	@Override
-	public void onMessage(byte[] channel, byte[] message){
-		pubSubListener.onMessage(channel, message);
-	}
-
-	@Override
-	public void onPMessage(byte[] pattern, byte[] channel, byte[] message){
-		pubSubListener.onPMessage(pattern, channel, message);
-	}
-
-	@Override
-	public void onSubscribe(byte[] channel, int subscribedChannels){
-		pubSubListener.onSubscribe(channel, subscribedChannels);
-	}
-
-	@Override
-	public void onUnsubscribe(byte[] channel, int subscribedChannels){
-		pubSubListener.onUnsubscribe(channel, subscribedChannels);
-	}
-
-	@Override
-	public void onPUnsubscribe(byte[] pattern, int subscribedChannels){
-		pubSubListener.onPUnsubscribe(pattern, subscribedChannels);
-	}
-
-	@Override
-	public void onPSubscribe(byte[] pattern, int subscribedChannels){
-		pubSubListener.onPSubscribe(pattern, subscribedChannels);
-	}
+public interface Executor<R> extends com.buession.core.Executor<RedisClient, R> {
 
 }

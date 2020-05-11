@@ -24,20 +24,31 @@
  */
 package com.buession.redis.client.connection.jedis;
 
+import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.datasource.RedisDataSource;
+import com.buession.redis.client.connection.datasource.jedis.SimpleJedisDataSource;
 import com.buession.redis.client.jedis.JedisTransaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Client;
 import redis.clients.jedis.Jedis;
+
+import java.io.IOException;
 
 /**
  * @author Yong.Teng
  */
 public class SimpleJedisConnection extends AbstractJedisRedisConnection<Jedis> implements JedisConnection {
 
+	private Jedis jedis;
+
+	private final static Logger logger = LoggerFactory.getLogger(SimpleJedisConnection.class);
+
 	public SimpleJedisConnection(){
 		super();
 	}
 
-	public SimpleJedisConnection(RedisDataSource dataSource){
+	public SimpleJedisConnection(SimpleJedisDataSource dataSource){
 		super(dataSource);
 	}
 
@@ -58,6 +69,64 @@ public class SimpleJedisConnection extends AbstractJedisRedisConnection<Jedis> i
 	public void discard(){
 		if(transaction != null){
 			transaction.discard();
+		}
+	}
+
+	@Override
+	protected Jedis getDelegate(RedisDataSource dataSource){
+		return jedis;
+	}
+
+	@Override
+	protected void doConnect() throws IOException{
+		if(getDataSource() == null || (getDataSource() instanceof SimpleJedisDataSource) == false){
+			return;
+		}
+
+		SimpleJedisDataSource dataSource = (SimpleJedisDataSource) getDataSource();
+		jedis = new Jedis(dataSource.getHost(), dataSource.getPort(), dataSource.getConnectTimeout(),
+				dataSource.getSoTimeout(), dataSource.isUseSsl(), dataSource.getSslSocketFactory(),
+				dataSource.getSslParameters(), dataSource.getHostnameVerifier());
+
+		Client client = jedis.getClient();
+
+		if(Validate.hasText(dataSource.getPassword())){
+			client.setPassword(dataSource.getPassword());
+		}
+		client.setDb(dataSource.getDatabase());
+
+		jedis.connect();
+
+		if(Validate.hasText(dataSource.getClientName())){
+			client.clientSetname(dataSource.getClientName());
+		}
+
+		logger.info("Jedis initialize with db {} success, name: {}.", dataSource.getDatabase(),
+				dataSource.getClientName());
+	}
+
+	@Override
+	protected boolean checkConnect(){
+		return getDelegate() != null && getDelegate().isConnected();
+	}
+
+	@Override
+	protected boolean checkClosed(){
+		return getDelegate() == null || getDelegate().isConnected() == false;
+	}
+
+	@Override
+	protected void doDisconnect() throws IOException{
+		if(getDelegate() != null){
+			getDelegate().disconnect();
+		}
+	}
+
+	@Override
+	protected void doClose() throws IOException{
+		if(getDelegate() != null){
+			getDelegate().quit();
+			disconnect();
 		}
 	}
 

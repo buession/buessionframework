@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -30,79 +30,80 @@ import com.buession.redis.core.command.HyperLogLogCommands;
 /**
  * HyperLogLog 运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index
- * .html</a></p>
+ * <p>详情说明
+ * <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a>
+ * </p>
  *
  * @author Yong.Teng
  */
 public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperations {
 
-    /**
-     * 将元素添加到指定的 HyperLogLog 里面
-     *
-     * @param key
-     *         Key
-     * @param element
-     *         元素
-     *
-     * @return 操作结果，如果 HyperLogLog 的内部储存被修改了，返回 Status.SUCCESS；否则返回 Status.FAILURE
-     */
-    Status pfAdd(final String key, final String element);
+	/**
+	 * 将元素添加到指定的 HyperLogLog 里面
+	 *
+	 * @param key
+	 * 		Key
+	 * @param element
+	 * 		元素
+	 *
+	 * @return 操作结果，如果 HyperLogLog 的内部储存被修改了，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	Status pfAdd(final String key, final String element);
 
-    /**
-     * 将元素添加到指定的 HyperLogLog 里面
-     *
-     * @param key
-     *         Key
-     * @param element
-     *         元素
-     *
-     * @return 操作结果，如果 HyperLogLog 的内部储存被修改了，返回 Status.SUCCESS；否则返回 Status.FAILURE
-     */
-    Status pfAdd(final byte[] key, final byte[] element);
+	/**
+	 * 将元素添加到指定的 HyperLogLog 里面
+	 *
+	 * @param key
+	 * 		Key
+	 * @param element
+	 * 		元素
+	 *
+	 * @return 操作结果，如果 HyperLogLog 的内部储存被修改了，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	Status pfAdd(final byte[] key, final byte[] element);
 
-    /**
-     * 将多个 HyperLogLog 合并（merge）为一个 HyperLogLog，并保存到 destKey 中
-     *
-     * @param destKey
-     *         目标 Key
-     * @param key
-     *         待合并的 Key
-     *
-     * @return 操作结果
-     */
-    Status pfMerge(final String destKey, final String key);
+	/**
+	 * 将多个 HyperLogLog 合并（merge）为一个 HyperLogLog，并保存到 destKey 中
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		待合并的 Key
+	 *
+	 * @return 操作结果
+	 */
+	Status pfMerge(final String destKey, final String key);
 
-    /**
-     * 将多个 HyperLogLog 合并（merge）为一个 HyperLogLog，并保存到 destKey 中
-     *
-     * @param destKey
-     *         目标 Key
-     * @param keys
-     *         一待合并的 Key
-     *
-     * @return 操作结果
-     */
-    Status pfMerge(final byte[] destKey, final byte[] keys);
+	/**
+	 * 将多个 HyperLogLog 合并（merge）为一个 HyperLogLog，并保存到 destKey 中
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一待合并的 Key
+	 *
+	 * @return 操作结果
+	 */
+	Status pfMerge(final byte[] destKey, final byte[] keys);
 
-    /**
-     * 获取储存在给定键的 HyperLogLog 的近似基数
-     *
-     * @param key
-     *         Key
-     *
-     * @return 储存在给定键的 HyperLogLog 的近似基数，如果键不存在，那么返回 0；
-     */
-    Long pfCount(final String key);
+	/**
+	 * 获取储存在给定键的 HyperLogLog 的近似基数
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 储存在给定键的 HyperLogLog 的近似基数，如果键不存在，那么返回 0；
+	 */
+	Long pfCount(final String key);
 
-    /**
-     * 获取储存在给定键的 HyperLogLog 的近似基数
-     *
-     * @param key
-     *         Key
-     *
-     * @return 储存在给定键的 HyperLogLog 的近似基数，如果键不存在，那么返回 0；
-     */
-    Long pfCount(final byte[] key);
+	/**
+	 * 获取储存在给定键的 HyperLogLog 的近似基数
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 储存在给定键的 HyperLogLog 的近似基数，如果键不存在，那么返回 0；
+	 */
+	Long pfCount(final byte[] key);
 
 }
