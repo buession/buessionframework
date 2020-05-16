@@ -19,22 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp.convert;
 
-import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
-import com.buession.httpclient.core.RequestBodyConvert;
-
 /**
  * @author Yong.Teng
  */
-public class ChunkedInputStreamRequestBodyConvert implements RequestBodyConvert<ChunkedInputStreamRequestBody,
-        okhttp3.RequestBody> {
+public interface OkHttpRequestBodyConvert {
 
-    @Override
-    public okhttp3.RequestBody convert(ChunkedInputStreamRequestBody source){
-        return null;
-    }
 }

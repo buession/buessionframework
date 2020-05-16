@@ -22,26 +22,11 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.httpcomponents;
-
-import com.buession.httpclient.helper.AbstractRequestBuilder;
-import org.apache.http.client.methods.HttpRequestBase;
+package com.buession.core.serializer;
 
 /**
  * @author Yong.Teng
  */
-public class HttpComponentsRequestBuilder extends AbstractRequestBuilder {
-
-	public final static HttpComponentsRequestBuilder create(){
-		return new HttpComponentsRequestBuilder();
-	}
-
-	public final static HttpComponentsRequestBuilder create(final HttpRequestBase httpRequest){
-		HttpComponentsRequestBuilder requestBuilder = new HttpComponentsRequestBuilder();
-
-		requestBuilder.setUrl(httpRequest.getURI().toString());
-
-		return requestBuilder;
-	}
+public class ByteArraySerializerTest {
 
 }

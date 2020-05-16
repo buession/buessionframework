@@ -22,41 +22,31 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.httpcomponents.convert;
-
-import com.buession.httpclient.core.ObjectFormRequestBody;
-import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.RequestBodyConvert;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.entity.StringEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package com.buession.httpclient.core;
 
 /**
  * @author Yong.Teng
  */
-public class ObjectRequestBodyConvert implements RequestBodyConvert<ObjectFormRequestBody, StringEntity> {
+public class TestRawRequestBody extends AbstractRawRequestBody<ContentType, String> {
 
-	private final static Logger logger = LoggerFactory.getLogger(ObjectRequestBodyConvert.class);
+	public TestRawRequestBody(){
+		super();
+	}
 
-	@Override
-	public StringEntity convert(ObjectFormRequestBody source){
-		if(source.getContent() == null){
-			return null;
-		}
+	public TestRawRequestBody(String content){
+		super(ContentType.TEXT_PLAIN, content);
+	}
 
-		ObjectMapper objectMapper = new ObjectMapper();
+	public TestRawRequestBody(String content, long contentLength){
+		super(ContentType.TEXT_PLAIN, content, contentLength);
+	}
 
-		try{
-			String str = objectMapper.writeValueAsString(source.getContent());
-			return new StringEntity(str, org.apache.http.entity.ContentType.create(source.getContentType().getMimeType
-					(), source.getContentType().getCharset()));
-		}catch(JsonProcessingException e){
-			logger.error("{} convert to JSON String error.", RequestBody.class.getName(), e);
-		}
+	public TestRawRequestBody(Header contentEncoding, String content){
+		super(ContentType.TEXT_PLAIN, contentEncoding, content);
+	}
 
-		return null;
+	public TestRawRequestBody(Header contentEncoding, String content, long contentLength){
+		super(ContentType.TEXT_PLAIN, contentEncoding, content, contentLength);
 	}
 
 }

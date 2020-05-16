@@ -26,6 +26,9 @@
  */
 package com.buession.io.file;
 
+import com.buession.io.MimeType;
+import org.apache.tika.Tika;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -59,6 +62,14 @@ public class File extends java.io.File {
 	}
 
 	/**
+	 * @param file
+	 * 		java.io.File
+	 */
+	public File(java.io.File file){
+		super(file.getPath());
+	}
+
+	/**
 	 * @param parent
 	 * 		父目录
 	 * @param child
@@ -74,6 +85,17 @@ public class File extends java.io.File {
 	 */
 	public File(URI uri){
 		super(uri);
+	}
+
+	public MimeType getMimeType(){
+		Tika tika = new Tika();
+
+		try{
+			return MimeType.parse(tika.detect(this));
+		}catch(IOException e){
+		}
+
+		return null;
 	}
 
 	/**

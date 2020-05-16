@@ -22,38 +22,11 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.httpcomponents.convert;
-
-import com.buession.httpclient.core.EncodedFormRequestBody;
-import com.buession.httpclient.core.RequestBodyConvert;
-import com.buession.httpclient.core.RequestBodyElement;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.util.ArrayList;
-import java.util.List;
+package com.buession.httpclient.core;
 
 /**
  * @author Yong.Teng
  */
-public class EncodedFormRequestBodyConvert implements RequestBodyConvert<EncodedFormRequestBody, UrlEncodedFormEntity> {
-
-    @Override
-    public UrlEncodedFormEntity convert(EncodedFormRequestBody source){
-        if(source.getContent() == null){
-            return null;
-        }
-
-        List<NameValuePair> data = new ArrayList<>(source.getContent().size());
-
-        for(RequestBodyElement requestBodyElement : source.getContent()){
-            String value = requestBodyElement.getValue() == null ? "" : requestBodyElement.getValue().toString();
-
-            data.add(new BasicNameValuePair(requestBodyElement.getName(), value));
-        }
-
-        return new UrlEncodedFormEntity(data, source.getContentType().getCharset());
-    }
+public interface RawRequestBody {
 
 }

@@ -22,22 +22,11 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.httpcomponents.convert;
-
-import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
-import com.buession.httpclient.core.RequestBodyConvert;
-import com.buession.httpclient.httpcomponents.ChunkedInputStreamEntity;
+package com.buession.httpclient.core;
 
 /**
  * @author Yong.Teng
  */
-public class ChunkedInputStreamRequestBodyConvert implements RequestBodyConvert<ChunkedInputStreamRequestBody,
-        ChunkedInputStreamEntity> {
-
-    @Override
-    public ChunkedInputStreamEntity convert(ChunkedInputStreamRequestBody source){
-        return source.getContent() == null ? null : new ChunkedInputStreamEntity(source.getContent(), source
-                .getContentLength(), source.getContentType());
-    }
+public class MultipartFormRequestBody {
 
 }

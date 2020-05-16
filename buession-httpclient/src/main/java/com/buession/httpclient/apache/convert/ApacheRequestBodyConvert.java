@@ -19,23 +19,20 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.okhttp.convert;
+package com.buession.httpclient.apache.convert;
 
-import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 import com.buession.httpclient.core.RequestBodyConvert;
-import okhttp3.RequestBody;
+import org.apache.http.HttpEntity;
 
 /**
  * @author Yong.Teng
  */
-public class RepeatableInputStreamRequestBodyConvert implements RequestBodyConvert<RepeatableInputStreamRequestBody,
-        okhttp3.RequestBody> {
+public interface HttpComponentsRequestBodyConvert<S> extends RequestBodyConvert<S, HttpEntity> {
 
-    @Override
-    public RequestBody convert(RepeatableInputStreamRequestBody source){
-        return null;
-    }
+	@Override
+	HttpEntity convert(S source);
+
 }

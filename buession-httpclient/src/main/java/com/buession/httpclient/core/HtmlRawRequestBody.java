@@ -22,78 +22,35 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.okhttp;
+package com.buession.httpclient;
 
+import com.buession.httpclient.core.AbstractRawRequestBody;
 import com.buession.httpclient.core.ContentType;
-import okio.BufferedSink;
-
-import java.io.IOException;
-import java.io.InputStream;
+import com.buession.httpclient.core.Header;
 
 /**
  * @author Yong.Teng
  */
-public class RepeatableInputStreamRequestBody extends InputStreamRequestBody {
+public class HtmlRawRequestBody extends AbstractRawRequestBody<ContentType, String> {
 
-	public RepeatableInputStreamRequestBody(InputStream content, long contentLength, ContentType contentType){
-		super(content, contentLength, contentType);
+	public HtmlRawRequestBody(){
+		super();
 	}
 
-	@Override
-	public boolean isChunked(){
-		return false;
+	public HtmlRawRequestBody(String content){
+		super(ContentType.TEXT_HTML, content);
 	}
 
-	@Override
-	public void writeTo(BufferedSink sink) throws IOException{
-		if(isFirstAttempt() == false && isRepeatable()){
-			getContent().reset();
-		}
-
-		setFirstAttempt(false);
-		super.writeTo(sink);
+	public HtmlRawRequestBody(String content, long contentLength){
+		super(ContentType.TEXT_HTML, content, contentLength);
 	}
 
-	public static final class Builder {
+	public HtmlRawRequestBody(Header contentEncoding, String content){
+		super(ContentType.TEXT_HTML, contentEncoding, content);
+	}
 
-		private InputStream content;
-
-		private ContentType contentType;
-
-		private long contentLength;
-
-		public Builder(){
-			this.contentType = ContentType.APPLICATION_OBJECT_STREAM;
-			this.contentLength = -1;
-		}
-
-		public Builder(InputStream content, ContentType contentType){
-			this.content = content;
-			this.contentType = contentType;
-
-			try{
-				this.contentLength = content == null ? -1 : content.available();
-			}catch(IOException e){
-				this.contentLength = -1;
-			}
-		}
-
-		public Builder(InputStream content, long contentLength){
-			this.content = content;
-			this.contentType = ContentType.APPLICATION_OBJECT_STREAM;
-			this.contentLength = contentLength;
-		}
-
-		public Builder(InputStream content, long contentLength, ContentType contentType){
-			this.content = content;
-			this.contentType = contentType;
-			this.contentLength = contentLength;
-		}
-
-		public RepeatableInputStreamRequestBody build(){
-			return new RepeatableInputStreamRequestBody(content, contentLength, contentType);
-		}
-
+	public HtmlRawRequestBody(Header contentEncoding, String content, long contentLength){
+		super(ContentType.TEXT_HTML, contentEncoding, content, contentLength);
 	}
 
 }

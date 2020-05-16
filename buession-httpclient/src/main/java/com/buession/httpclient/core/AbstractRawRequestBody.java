@@ -22,22 +22,11 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.httpcomponents.convert;
-
-import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
-import com.buession.httpclient.core.RequestBodyConvert;
-import com.buession.httpclient.httpcomponents.RepeatableInputStreamEntity;
+package com.buession.httpclient.core;
 
 /**
  * @author Yong.Teng
  */
-public class RepeatableInputStreamRequestBodyConvert implements RequestBodyConvert<RepeatableInputStreamRequestBody,
-        RepeatableInputStreamEntity> {
-
-    @Override
-    public RepeatableInputStreamEntity convert(RepeatableInputStreamRequestBody source){
-        return source.getContent() == null ? null : new RepeatableInputStreamEntity(source.getContent(), source
-                .getContentLength(), source.getContentType());
-    }
+public class AbstractRawRequestBody {
 
 }
