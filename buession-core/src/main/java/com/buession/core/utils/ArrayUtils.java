@@ -204,8 +204,8 @@ public class ArrayUtils {
 			return null;
 		}
 
-		return a.length == 0 ? Constants.EMPTY_STRING : Arrays.asList(a).stream().map(v->v.toString()).collect
-				(Collectors.joining(glue));
+		return a.length == 0 ? Constants.EMPTY_STRING :
+				Arrays.asList(a).stream().map(v->v.toString()).collect(Collectors.joining(glue));
 	}
 
 	/**
@@ -239,8 +239,8 @@ public class ArrayUtils {
 			return null;
 		}
 
-		return data.size() == 0 ? Constants.EMPTY_STRING : data.stream().map(v->v.toString()).collect(Collectors
-				.joining(glue));
+		return data.size() == 0 ? Constants.EMPTY_STRING :
+				data.stream().map(v->v.toString()).collect(Collectors.joining(glue));
 	}
 
 	/**
@@ -274,8 +274,8 @@ public class ArrayUtils {
 			return null;
 		}
 
-		return data.size() == 0 ? Constants.EMPTY_STRING : data.stream().map(v->v.toString()).collect(Collectors
-				.joining(glue));
+		return data.size() == 0 ? Constants.EMPTY_STRING :
+				data.stream().map(v->v.toString()).collect(Collectors.joining(glue));
 	}
 
 	/**
@@ -304,6 +304,162 @@ public class ArrayUtils {
 	 */
 	public final static <O> Set<O> toSet(final O[] a){
 		return a == null ? null : Arrays.asList(a).stream().collect(Collectors.toCollection(LinkedHashSet::new));
+	}
+
+	/**
+	 * 将 short 类型的数组转换成 String 类型的数组
+	 *
+	 * @param data
+	 * 		short 类型的数组
+	 *
+	 * @return String 类型的数组
+	 */
+	public final static String[] toStringArray(short[] data){
+		if(data == null){
+			return null;
+		}
+
+		String[] result = new String[data.length];
+
+		for(int i = 0; i < data.length; i++){
+			result[i] = Short.toString(data[i]);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 将 int 类型的数组转换成 String 类型的数组
+	 *
+	 * @param data
+	 * 		int 类型的数组
+	 *
+	 * @return String 类型的数组
+	 */
+	public final static String[] toStringArray(int[] data){
+		if(data == null){
+			return null;
+		}
+
+		String[] result = new String[data.length];
+
+		for(int i = 0; i < data.length; i++){
+			result[i] = Integer.toString(data[i]);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 将 long 类型的数组转换成 String 类型的数组
+	 *
+	 * @param data
+	 * 		long 类型的数组
+	 *
+	 * @return String 类型的数组
+	 */
+	public final static String[] toStringArray(long[] data){
+		if(data == null){
+			return null;
+		}
+
+		String[] result = new String[data.length];
+
+		for(int i = 0; i < data.length; i++){
+			result[i] = Long.toString(data[i]);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 将 float 类型的数组转换成 String 类型的数组
+	 *
+	 * @param data
+	 * 		float 类型的数组
+	 *
+	 * @return String 类型的数组
+	 */
+	public final static String[] toStringArray(float[] data){
+		if(data == null){
+			return null;
+		}
+
+		String[] result = new String[data.length];
+
+		for(int i = 0; i < data.length; i++){
+			result[i] = Float.toString(data[i]);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 将 double 类型的数组转换成 String 类型的数组
+	 *
+	 * @param data
+	 * 		float 类型的数组
+	 *
+	 * @return String 类型的数组
+	 */
+	public final static String[] toStringArray(double[] data){
+		if(data == null){
+			return null;
+		}
+
+		String[] result = new String[data.length];
+
+		for(int i = 0; i < data.length; i++){
+			result[i] = Double.toString(data[i]);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 将 double 类型的数组转换成 String 类型的数组
+	 *
+	 * @param data
+	 * 		float 类型的数组
+	 *
+	 * @return String 类型的数组
+	 */
+	public final static String[] toStringArray(boolean[] data){
+		if(data == null){
+			return null;
+		}
+
+		String[] result = new String[data.length];
+
+		for(int i = 0; i < data.length; i++){
+			result[i] = Boolean.toString(data[i]);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 将 O 类型的数组转换成 String 类型的数组
+	 *
+	 * @param data
+	 * 		O 类型的数组
+	 * @param <O>
+	 * 		类型
+	 *
+	 * @return String 类型的数组
+	 */
+	public final static <O> String[] toStringArray(O[] data){
+		if(data == null){
+			return null;
+		}
+
+		String[] result = new String[data.length];
+
+		for(int i = 0; i < data.length; i++){
+			result[i] = data[i] == null ? null : data[i].toString();
+		}
+
+		return result;
 	}
 
 }

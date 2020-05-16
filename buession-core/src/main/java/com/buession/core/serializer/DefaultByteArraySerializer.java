@@ -37,6 +37,7 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -53,18 +54,22 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 		try{
 			return URLEncoder.encode(baosWrite(object), charsetName);
 		}catch(IOException e){
-			throw new SerializerException("serializer the instance of " + object.getClass().getName() + " " +
-					"failure", e);
+			throw new SerializerException("serializer the instance of " + object.getClass().getName() + " " + "failure"
+					, e);
 		}
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
+	public <V> String serialize(final V object, final Charset charset) throws SerializerException{
+		return serialize(object, charset.name());
+	}
+
+	@Override
+	public <V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException{
 		Assert.isNull(object, "Object cloud not be null.");
 
 		if((object instanceof Serializable) == false){
-			throw new SerializerException("requires a Serializable payload but received an object of type [" + object
-					.getClass().getName() + "]");
+			throw new SerializerException("Required a Serializable payload but received an object of type [" + object.getClass().getName() + "]");
 		}
 
 		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(BYTE_ARRAY_OUTPUT_STREAM_SIZE);
@@ -77,8 +82,8 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 			objectOutputStream.flush();
 			return byteArrayOutputStream.toByteArray();
 		}catch(IOException e){
-			throw new SerializerException("serializer the instance of " + object.getClass().getName() + " " +
-					"failure", e);
+			throw new SerializerException("serializer the instance of " + object.getClass().getName() + " " + "failure"
+					, e);
 		}finally{
 			if(byteArrayOutputStream != null){
 				try{
@@ -98,8 +103,8 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 	}
 
 	@Override
-	public <V> byte[] serializeAsBytes(final V object, final String charsetName) throws SerializerException{
-		return serializeAsBytes(object);
+	public <V> byte[] serializeAsBytes(final V object, final Charset charset) throws SerializerException{
+		return serializeAsBytes(object, charset.name());
 	}
 
 	@Override
@@ -116,10 +121,20 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 	}
 
 	@Override
+	public <V> V deserialize(final String str, final Charset charset) throws SerializerException{
+		return deserialize(str, charset.name());
+	}
+
+	@Override
 	@SuppressWarnings("unchecked")
 	public <V> V deserialize(final byte[] bytes, final String charsetName) throws SerializerException{
 		Assert.isNull(bytes, "Bytes cloud not be null.");
 		return doDeserialize(bytes, "bytes");
+	}
+
+	@Override
+	public <V> V deserialize(final byte[] bytes, final Charset charset) throws SerializerException{
+		return deserialize(bytes, charset.name());
 	}
 
 	protected static <V> String baosWrite(final V value) throws IOException{

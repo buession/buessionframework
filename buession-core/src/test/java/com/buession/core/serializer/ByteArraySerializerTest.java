@@ -24,9 +24,34 @@
  */
 package com.buession.core.serializer;
 
+import org.apache.commons.lang3.SerializationUtils;
+import org.junit.Test;
+
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author Yong.Teng
  */
 public class ByteArraySerializerTest {
+
+	@Test
+	public void serialize1() throws SerializerException{
+		ByteArraySerializer serializer = new DefaultByteArraySerializer();
+		System.out.println(serializer.serialize("A"));
+	}
+
+	@Test
+	public void serialize2() throws SerializerException{
+		ByteArraySerializer serializer = new DefaultByteArraySerializer();
+		byte[] bytes = serializer.serializeAsBytes("AB");
+		System.out.println(bytes);
+		System.out.println("size: " + bytes.length);
+		System.out.println("toString: " + new String(bytes));
+
+		byte[] abytes = SerializationUtils.serialize("AB");
+		System.out.println(abytes);
+		System.out.println("size: " + abytes.length);
+		System.out.println("toString: " + new String(abytes, StandardCharsets.UTF_8));
+	}
 
 }
