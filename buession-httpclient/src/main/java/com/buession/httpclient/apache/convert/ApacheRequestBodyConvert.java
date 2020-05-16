@@ -30,7 +30,7 @@ import org.apache.http.HttpEntity;
 /**
  * @author Yong.Teng
  */
-public interface HttpComponentsRequestBodyConvert<S> extends RequestBodyConvert<S, HttpEntity> {
+public interface ApacheRequestBodyConvert<S> extends RequestBodyConvert<S, HttpEntity> {
 
 	@Override
 	HttpEntity convert(S source);

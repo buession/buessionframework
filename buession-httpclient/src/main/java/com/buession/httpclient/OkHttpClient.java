@@ -30,18 +30,16 @@ import com.buession.httpclient.conn.OkHttpClientConnectionManager;
 import com.buession.httpclient.core.Configuration;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.Request;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.exception.ConnectTimeoutException;
 import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
 import com.buession.httpclient.exception.ReadTimeoutException;
 import com.buession.httpclient.exception.RequestAbortedException;
 import com.buession.httpclient.exception.RequestException;
+import com.buession.httpclient.exception.UnknownHostException;
 import com.buession.httpclient.okhttp.HttpClientBuilder;
 import com.buession.httpclient.okhttp.OkHttpRequestBuilder;
 import com.buession.httpclient.okhttp.OkHttpResponseBuilder;
-import com.buession.httpclient.okhttp.RequestBuilder;
-import okhttp3.Headers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -91,10 +89,8 @@ public class OkHttpClient extends AbstractHttpClient {
 		if(httpClient == null){
 			final Configuration configuration = getConnectionManager().getConfiguration();
 
-			httpClient = HttpClientBuilder.create().setConnectionManager(((OkHttpClientConnectionManager)
-					getConnectionManager()).getClientConnectionManager()).setConnectTimeout(configuration
-					.getConnectTimeout()).setReadTimeout(configuration.getReadTimeout()).setFollowRedirects
-					(configuration.isAllowRedirects()).build();
+			httpClient =
+					HttpClientBuilder.create().setConnectionManager(((OkHttpClientConnectionManager) getConnectionManager()).getClientConnectionManager()).setConnectTimeout(configuration.getConnectTimeout()).setReadTimeout(configuration.getReadTimeout()).setFollowRedirects(configuration.isAllowRedirects()).build();
 		}
 
 		return httpClient;
@@ -105,166 +101,115 @@ public class OkHttpClient extends AbstractHttpClient {
 	}
 
 	@Override
-	public Response get(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).get(), headers, parameters);
+	public Response get(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).get());
 	}
 
 	@Override
-	public Response post(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).post(data), headers, parameters);
+	public Response post(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).post(data));
 	}
 
 	@Override
-	public Response patch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).patch(data), headers, parameters);
+	public Response patch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).patch(data));
 	}
 
 	@Override
-	public Response put(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).put(data), headers, parameters);
+	public Response put(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).put(data));
 	}
 
 	@Override
-	public Response delete(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).delete(), headers, parameters);
+	public Response delete(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).delete());
 	}
 
 	@Override
-	public Response connect(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).connect(), headers, parameters);
+	public Response connect(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).connect());
 	}
 
 	@Override
-	public Response trace(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).trace(), headers, parameters);
+	public Response trace(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).trace());
 	}
 
 	@Override
-	public Response copy(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).copy(), headers, parameters);
+	public Response copy(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).copy());
 	}
 
 	@Override
-	public Response move(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).move(), headers, parameters);
+	public Response move(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).move());
 	}
 
 	@Override
-	public Response head(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).head(), headers, parameters);
+	public Response head(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).head());
 	}
 
 	@Override
-	public Response options(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).options(), headers, parameters);
+	public Response options(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).options());
 	}
 
 	@Override
-	public Response link(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).link(), headers, parameters);
+	public Response link(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).link());
 	}
 
 	@Override
-	public Response unlink(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).unlink(), headers, parameters);
+	public Response unlink(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).unlink());
 	}
 
 	@Override
-	public Response purge(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).purge(), headers, parameters);
+	public Response purge(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).purge());
 	}
 
 	@Override
-	public Response lock(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).lock(), headers, parameters);
+	public Response lock(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).lock());
 	}
 
 	@Override
-	public Response unlock(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).unlock(), headers, parameters);
+	public Response unlock(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).unlock());
 	}
 
 	@Override
-	public Response propfind(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).propfind(), headers, parameters);
+	public Response propfind(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).propfind());
 	}
 
 	@Override
-	public Response proppatch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers)
-			throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
-			RequestAbortedException, RequestException{
-		return doRequest(new RequestBuilder(url).proppatch(data), headers, parameters);
+	public Response proppatch(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).proppatch(data));
 	}
 
 	@Override
-	public Response report(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).report(data), headers, parameters);
+	public Response report(String url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).report(data));
 	}
 
 	@Override
-	public Response view(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).view(), headers, parameters);
+	public Response view(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).view());
 	}
 
 	@Override
-	public Response wrapped(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
-		return doRequest(new RequestBuilder(url).wrapped(), headers, parameters);
+	public Response wrapped(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		return doRequest(OkHttpRequestBuilder.create(url, parameters, headers).wrapped());
 	}
 
-	protected Response doRequest(final okhttp3.Request.Builder requestBuilder, final List<Header> headers, final
-	Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
-		final Headers.Builder headersBuilder = new Headers.Builder();
+	protected Response doRequest(final OkHttpRequestBuilder builder) throws ConnectTimeoutException,
+			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+		final OkHttpRequestBuilder.OkHttpRequest request = builder.setProtocolVersion(getHttpVersion()).build();
 
-		if(headers != null){
-			for(Header header : headers){
-				headersBuilder.add(header.getName(), header.getValue());
-			}
-		}
-
-		okhttp3.Request okHttpRequest = requestBuilder.headers(headersBuilder.build()).build();
-		final Request request = OkHttpRequestBuilder.create(okHttpRequest).setHeaders(headers).setParameters
-				(parameters).build();
+		okhttp3.Request okHttpRequest = request.getRequestBuilder().build();
 		okhttp3.Response httpResponse = null;
 
 		try{
@@ -272,7 +217,7 @@ public class OkHttpClient extends AbstractHttpClient {
 
 			return OkHttpResponseBuilder.create(httpResponse).build();
 		}catch(IOException e){
-			logger.error("Request({}) url: {} error.", okHttpRequest.method(), request.getUrl(), e);
+			logger.error("Request({}) url: {} error.", request.getMethod(), request.getUrl(), e);
 
 			if(e instanceof SocketTimeoutException){
 				String message = e.getMessage();
@@ -288,6 +233,8 @@ public class OkHttpClient extends AbstractHttpClient {
 				}else{
 					throw new RequestException(e.getMessage(), e);
 				}
+			}else if(e instanceof java.net.UnknownHostException){
+				throw new UnknownHostException(e.getMessage());
 			}else{
 				throw new RequestException(e.getMessage(), e);
 			}

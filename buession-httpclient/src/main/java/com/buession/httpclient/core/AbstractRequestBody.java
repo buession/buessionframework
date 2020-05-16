@@ -29,55 +29,53 @@ import java.nio.charset.Charset;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRequestBody<T> implements RequestBody<T> {
+public abstract class AbstractRequestBody<V> implements RequestBody<V> {
 
 	private ContentType contentType;
 
 	private Header contentEncoding;
 
-	private T content;
+	private V content;
 
 	private long contentLength;
-
-	protected boolean chunked;
 
 	public AbstractRequestBody(){
 		this.contentLength = -1;
 	}
 
-	public AbstractRequestBody(ContentType contentType, T content){
+	public AbstractRequestBody(ContentType contentType, V content){
 		this.contentType = contentType;
 		this.content = content;
 	}
 
-	public AbstractRequestBody(ContentType contentType, T content, long contentLength){
+	public AbstractRequestBody(ContentType contentType, V content, long contentLength){
 		this(contentType, content);
 		this.contentLength = contentLength;
 	}
 
-	public AbstractRequestBody(ContentType contentType, Header contentEncoding, T content){
+	public AbstractRequestBody(ContentType contentType, Header contentEncoding, V content){
 		this(contentType, content);
 		this.contentEncoding = contentEncoding;
 	}
 
-	public AbstractRequestBody(ContentType contentType, Header contentEncoding, T content, long contentLength){
+	public AbstractRequestBody(ContentType contentType, Header contentEncoding, V content, long contentLength){
 		this(contentType, content, contentLength);
 		this.contentEncoding = contentEncoding;
 	}
 
-	public AbstractRequestBody(T content, Charset charset){
+	public AbstractRequestBody(V content, Charset charset){
 		this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), content);
 	}
 
-	public AbstractRequestBody(T content, long contentLength, Charset charset){
+	public AbstractRequestBody(V content, long contentLength, Charset charset){
 		this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), content, contentLength);
 	}
 
-	public AbstractRequestBody(Header contentEncoding, T content, Charset charset){
+	public AbstractRequestBody(Header contentEncoding, V content, Charset charset){
 		this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), contentEncoding, content);
 	}
 
-	public AbstractRequestBody(Header contentEncoding, T content, long contentLength, Charset charset){
+	public AbstractRequestBody(Header contentEncoding, V content, long contentLength, Charset charset){
 		this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), contentEncoding, content, contentLength);
 	}
 
@@ -106,11 +104,11 @@ public abstract class AbstractRequestBody<T> implements RequestBody<T> {
 	}
 
 	@Override
-	public T getContent(){
+	public V getContent(){
 		return content;
 	}
 
-	public void setContent(final T content){
+	public void setContent(final V content){
 		this.content = content;
 	}
 
@@ -121,25 +119,6 @@ public abstract class AbstractRequestBody<T> implements RequestBody<T> {
 
 	public void setContentLength(final long contentLength){
 		this.contentLength = contentLength;
-	}
-
-	@Override
-	public boolean isRepeatable(){
-		return false;
-	}
-
-	public void setChunked(boolean chunked){
-		this.chunked = chunked;
-	}
-
-	@Override
-	public boolean isChunked(){
-		return chunked;
-	}
-
-	@Override
-	public boolean isStreaming(){
-		return false;
 	}
 
 }

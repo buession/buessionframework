@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.httpcomponents.convert;
+package com.buession.httpclient.apache.convert;
 
 import com.buession.httpclient.core.JsonRawRequestBody;
 import com.buession.httpclient.core.RequestBody;
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Yong.Teng
  */
-public class JsonRawRequestBodyConvert implements HttpComponentsRequestBodyConvert<JsonRawRequestBody> {
+public class JsonRawRequestBodyConvert implements ApacheRequestBodyConvert<JsonRawRequestBody> {
 
 	protected final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

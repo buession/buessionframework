@@ -22,29 +22,21 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.httpcomponents.convert;
+package com.buession.httpclient.apache.convert;
 
-import com.buession.core.validator.Validate;
 import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.MultipartRequestBodyElement;
-import com.buession.httpclient.core.RequestBodyElement;
+import com.buession.io.MimeType;
+import com.buession.io.file.File;
 import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.message.BasicNameValuePair;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public class MultipartFormRequestBodyConvert implements HttpComponentsRequestBodyConvert<MultipartFormRequestBody> {
+public class MultipartFormRequestBodyConvert implements ApacheRequestBodyConvert<MultipartFormRequestBody> {
 
 	@Override
 	public HttpEntity convert(MultipartFormRequestBody source){
@@ -54,28 +46,24 @@ public class MultipartFormRequestBodyConvert implements HttpComponentsRequestBod
 
 		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
+		builder.setContentType(ContentType.MULTIPART_FORM_DATA);
 		builder.setCharset(source.getContentType().getCharset());
 		builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
 		for(MultipartRequestBodyElement element : source.getContent()){
-			builder.addBinaryBody(element.getName(), element.getValue(), ContentType.MULTIPART_FORM_DATA,
-					element.getName());
+			if(element.getFile() != null){
+				File file = new File(element.getFile());
+				MimeType mimeType = file.getMimeType();
+				ContentType contentType = mimeType == null ? ContentType.APPLICATION_OCTET_STREAM :
+						ContentType.create(mimeType.toString(), source.getContentType().getCharset());
+
+				builder.addBinaryBody(element.getName(), file, contentType, file.getName());
+			}else{
+				builder.addTextBody(element.getName(), element.getOptionalValue());
+			}
 		}
 
-
-
-
-
-
-
-		/*for(RequestBodyElement requestBodyElement : source.getContent()){
-			String value = requestBodyElement.getValue() == null ? "" : requestBodyElement.getValue().toString();
-
-			data.add(new BasicNameValuePair(requestBodyElement.getName(), value));
-		}
-
-		return new FileEntity(data, source.getContentType().getCharset());*/
-		return null;
+		return builder.build();
 	}
 
 }

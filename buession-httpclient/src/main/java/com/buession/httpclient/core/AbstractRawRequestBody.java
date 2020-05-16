@@ -27,6 +27,26 @@ package com.buession.httpclient.core;
 /**
  * @author Yong.Teng
  */
-public class AbstractRawRequestBody {
+public abstract class AbstractRawRequestBody<C extends ContentType, V> extends AbstractRequestBody<V> implements RawRequestBody<C, V> {
+
+	public AbstractRawRequestBody(){
+		super();
+	}
+
+	public AbstractRawRequestBody(ContentType contentType, V content){
+		super(contentType, content);
+	}
+
+	public AbstractRawRequestBody(ContentType contentType, V content, long contentLength){
+		super(contentType, content, contentLength);
+	}
+
+	public AbstractRawRequestBody(ContentType contentType, Header contentEncoding, V content){
+		super(contentType, contentEncoding, content);
+	}
+
+	public AbstractRawRequestBody(ContentType contentType, Header contentEncoding, V content, long contentLength){
+		super(contentType, contentEncoding, content, contentLength);
+	}
 
 }

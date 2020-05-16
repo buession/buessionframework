@@ -24,9 +24,88 @@
  */
 package com.buession.httpclient.core;
 
+import java.io.File;
+import java.util.Objects;
+
 /**
  * @author Yong.Teng
  */
-public class MultipartRequestBodyElement {
+public class MultipartRequestBodyElement extends RequestBodyElement {
+
+	private final File file;
+
+	public MultipartRequestBodyElement(final String name, final File file){
+		super(name, (Object) null);
+		this.file = file;
+	}
+
+	public MultipartRequestBodyElement(final String name, final short value){
+		super(name, value);
+		this.file = null;
+	}
+
+	public MultipartRequestBodyElement(final String name, final int value){
+		super(name, value);
+		this.file = null;
+	}
+
+	public MultipartRequestBodyElement(final String name, final long value){
+		super(name, value);
+		this.file = null;
+	}
+
+	public MultipartRequestBodyElement(final String name, final float value){
+		super(name, value);
+		this.file = null;
+	}
+
+	public MultipartRequestBodyElement(final String name, final double value){
+		super(name, value);
+		this.file = null;
+	}
+
+	public MultipartRequestBodyElement(final String name, final boolean value){
+		super(name, value);
+		this.file = null;
+	}
+
+	public MultipartRequestBodyElement(final String name, final String value){
+		super(name, value);
+		this.file = null;
+	}
+
+	public MultipartRequestBodyElement(final String name, final Object value){
+		super(name, value);
+		this.file = null;
+	}
+
+	public File getFile(){
+		return file;
+	}
+
+	@Override
+	public boolean equals(final Object object){
+		if(this == object){
+			return true;
+		}
+
+		if(object instanceof MultipartRequestBodyElement){
+			if(super.equals(object)){
+				final MultipartRequestBodyElement that = (MultipartRequestBodyElement) object;
+				return Objects.equals(file, that.file);
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public int hashCode(){
+		int hash = super.hashCode();
+
+		hash = hashCode(hash, file);
+
+		return hash;
+	}
 
 }

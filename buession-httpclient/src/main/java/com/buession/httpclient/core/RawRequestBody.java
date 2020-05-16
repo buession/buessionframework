@@ -25,8 +25,15 @@
 package com.buession.httpclient.core;
 
 /**
+ * 请求体
+ *
+ * @param <C>
+ * 		Content-Type {@link ContentType}
+ * @param <V>
+ * 		请求体类型
+ *
  * @author Yong.Teng
  */
-public interface RawRequestBody {
+public interface RawRequestBody<C extends ContentType, V> extends RequestBody<V> {
 
 }

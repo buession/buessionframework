@@ -27,25 +27,25 @@ package com.buession.httpclient.core;
 /**
  * @author Yong.Teng
  */
-public class TestRawRequestBody extends AbstractRawRequestBody<ContentType, String> {
+public class TextRawRequestBody extends AbstractRawRequestBody<ContentType, String> {
 
-	public TestRawRequestBody(){
+	public TextRawRequestBody(){
 		super();
 	}
 
-	public TestRawRequestBody(String content){
+	public TextRawRequestBody(String content){
 		super(ContentType.TEXT_PLAIN, content);
 	}
 
-	public TestRawRequestBody(String content, long contentLength){
+	public TextRawRequestBody(String content, long contentLength){
 		super(ContentType.TEXT_PLAIN, content, contentLength);
 	}
 
-	public TestRawRequestBody(Header contentEncoding, String content){
+	public TextRawRequestBody(Header contentEncoding, String content){
 		super(ContentType.TEXT_PLAIN, contentEncoding, content);
 	}
 
-	public TestRawRequestBody(Header contentEncoding, String content, long contentLength){
+	public TextRawRequestBody(Header contentEncoding, String content, long contentLength){
 		super(ContentType.TEXT_PLAIN, contentEncoding, content, contentLength);
 	}
 

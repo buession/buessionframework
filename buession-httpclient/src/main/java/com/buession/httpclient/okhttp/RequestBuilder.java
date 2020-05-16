@@ -24,17 +24,7 @@
  */
 package com.buession.httpclient.okhttp;
 
-import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
-import com.buession.httpclient.core.EncodedFormRequestBody;
-import com.buession.httpclient.core.ObjectFormRequestBody;
-import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
-import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
-import com.buession.httpclient.okhttp.convert.ChunkedInputStreamRequestBodyConvert;
-import com.buession.httpclient.okhttp.convert.EncodedFormRequestBodyConvert;
-import com.buession.httpclient.okhttp.convert.ObjectRequestBodyConvert;
-import com.buession.httpclient.okhttp.convert.RepeatableInputStreamRequestBodyConvert;
-import okhttp3.FormBody;
 import okhttp3.Request;
 
 /**
@@ -59,24 +49,12 @@ public class RequestBuilder extends okhttp3.Request.Builder {
 		return this.method(RequestMethod.POST);
 	}
 
-	public Request.Builder post(RequestBody body){
-		return super.post(buildRequestBody(body));
-	}
-
 	public Request.Builder patch(){
 		return this.method(RequestMethod.PATCH);
 	}
 
-	public Request.Builder patch(RequestBody body){
-		return super.patch(buildRequestBody(body));
-	}
-
 	public Request.Builder put(){
 		return this.method(RequestMethod.PUT);
-	}
-
-	public Request.Builder put(RequestBody body){
-		return super.put(buildRequestBody(body));
 	}
 
 	public Request.Builder connect(){
@@ -127,7 +105,7 @@ public class RequestBuilder extends okhttp3.Request.Builder {
 		return this.method(RequestMethod.PROPPATCH);
 	}
 
-	public Request.Builder proppatch(RequestBody body){
+	public Request.Builder proppatch(okhttp3.RequestBody body){
 		return this.method(RequestMethod.PROPPATCH, body);
 	}
 
@@ -135,7 +113,7 @@ public class RequestBuilder extends okhttp3.Request.Builder {
 		return this.method(RequestMethod.REPORT);
 	}
 
-	public Request.Builder report(RequestBody body){
+	public Request.Builder report(okhttp3.RequestBody body){
 		return this.method(RequestMethod.REPORT, body);
 	}
 
@@ -151,30 +129,8 @@ public class RequestBuilder extends okhttp3.Request.Builder {
 		return this.method(method.name(), null);
 	}
 
-	private Request.Builder method(final RequestMethod method, final RequestBody body){
-		return this.method(method.name(), buildRequestBody(body));
-	}
-
-	private okhttp3.RequestBody buildRequestBody(RequestBody data){
-		if(data == null){
-			return null;
-		}
-
-		if(data instanceof EncodedFormRequestBody){
-			EncodedFormRequestBodyConvert convert = new EncodedFormRequestBodyConvert();
-			return convert.convert((EncodedFormRequestBody) data);
-		}else if(data instanceof com.buession.httpclient.core.ChunkedInputStreamRequestBody){
-			ChunkedInputStreamRequestBodyConvert convert = new ChunkedInputStreamRequestBodyConvert();
-			return convert.convert((ChunkedInputStreamRequestBody) data);
-		}else if(data instanceof com.buession.httpclient.core.RepeatableInputStreamRequestBody){
-			RepeatableInputStreamRequestBodyConvert convert = new RepeatableInputStreamRequestBodyConvert();
-			return convert.convert((RepeatableInputStreamRequestBody) data);
-		}else if(data instanceof ObjectFormRequestBody){
-			ObjectRequestBodyConvert convert = new ObjectRequestBodyConvert();
-			return convert.convert((ObjectFormRequestBody) data);
-		}else{
-			return new FormBody.Builder().build();
-		}
+	private Request.Builder method(final RequestMethod method, final okhttp3.RequestBody body){
+		return this.method(method.name(), body);
 	}
 
 }

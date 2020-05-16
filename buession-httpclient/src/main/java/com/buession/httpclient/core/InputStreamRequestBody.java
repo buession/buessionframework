@@ -24,6 +24,7 @@
  */
 package com.buession.httpclient.core;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
@@ -38,6 +39,7 @@ public class InputStreamRequestBody extends AbstractRequestBody<InputStream> {
 
 	public InputStreamRequestBody(ContentType contentType, InputStream content){
 		super(contentType, content);
+		setContentLength(content);
 	}
 
 	public InputStreamRequestBody(ContentType contentType, InputStream content, long contentLength){
@@ -46,15 +48,17 @@ public class InputStreamRequestBody extends AbstractRequestBody<InputStream> {
 
 	public InputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content){
 		super(contentType, contentEncoding, content);
+		setContentLength(content);
 	}
 
-	public InputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content, long
-			contentLength){
+	public InputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content,
+								  long contentLength){
 		super(contentType, contentEncoding, content, contentLength);
 	}
 
 	public InputStreamRequestBody(InputStream content, Charset charset){
 		super(content, charset);
+		setContentLength(content);
 	}
 
 	public InputStreamRequestBody(InputStream content, long contentLength, Charset charset){
@@ -63,10 +67,18 @@ public class InputStreamRequestBody extends AbstractRequestBody<InputStream> {
 
 	public InputStreamRequestBody(Header contentEncoding, InputStream content, Charset charset){
 		super(contentEncoding, content, charset);
+		setContentLength(content);
 	}
 
 	public InputStreamRequestBody(Header contentEncoding, InputStream content, long contentLength, Charset charset){
 		super(contentEncoding, content, contentLength, charset);
+	}
+
+	protected void setContentLength(InputStream content){
+		try{
+			setContentLength(content.available());
+		}catch(IOException e){
+		}
 	}
 
 }

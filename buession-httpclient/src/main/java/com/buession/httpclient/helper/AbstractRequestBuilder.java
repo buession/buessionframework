@@ -24,6 +24,8 @@
  */
 package com.buession.httpclient.helper;
 
+import com.buession.core.utils.URLUtils;
+import com.buession.core.validator.Validate;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RequestBody;
@@ -35,53 +37,71 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRequestBuilder implements RequestBuilder {
+public abstract class AbstractRequestBuilder<T extends AbstractRequestBuilder, R extends Request> implements RequestBuilder<T, R> {
 
-	protected Request request = new Request();
+	protected R request;
 
-	private ProtocolVersion protocolVersion;
+	protected ProtocolVersion protocolVersion;
 
-	private String url;
+	protected String url;
 
-	private Map<String, Object> parameters;
+	protected List<Header> headers;
+
+	protected Map<String, Object> parameters;
 
 	@Override
-	public RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion){
-		this.protocolVersion = protocolVersion;
-		return this;
+	public T setProtocolVersion(ProtocolVersion protocolVersion){
+		return null;
 	}
 
 	@Override
-	public RequestBuilder setUrl(String url){
-		this.url = url;
-		return this;
+	public T setUrl(String url){
+		return null;
 	}
 
 	@Override
-	public RequestBuilder setHeaders(List<Header> headers){
+	public T setHeaders(List<Header> headers){
+		return null;
+	}
+
+	@Override
+	public T setParameters(Map<String, Object> parameters){
+		return null;
+	}
+
+	@Override
+	public R build(){
+		if(Validate.isEmpty(parameters) == false){
+			request.setUrl(determineRequestUrl(url, parameters));
+		}else{
+			request.setUrl(url);
+		}
+
 		request.setHeaders(headers);
-		return this;
-	}
-
-	@Override
-	public RequestBuilder setParameters(Map<String, Object> parameters){
-		this.parameters = parameters;
-		return this;
-	}
-
-	@Override
-	public RequestBuilder setBody(RequestBody requestBody){
-		request.setRequestBody(requestBody);
-		return this;
-	}
-
-	@Override
-	public Request build(){
-		final String requestUrl = URLHelper.determineRequestUrl(url, parameters);
-
-		request.setUrl(requestUrl);
 
 		return request;
+	}
+
+	protected final static String determineRequestUrl(final String url, final Map<String, Object> parameters){
+		final StringBuilder sb = new StringBuilder(url.length());
+
+		sb.append(url);
+
+		if(Validate.isEmpty(parameters) == false){
+			final String queryString = URLUtils.toQueryString(parameters, false);
+
+			if(url.contains("?")){
+				if(url.endsWith("&") == false){
+					sb.append('&');
+				}
+			}else{
+				sb.append('?');
+			}
+
+			sb.append(queryString);
+		}
+
+		return sb.toString();
 	}
 
 }

@@ -35,18 +35,68 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public interface RequestBuilder {
+public interface RequestBuilder<T extends RequestBuilder, R extends Request> {
 
-	RequestBuilder setProtocolVersion(ProtocolVersion protocolVersion);
+	T setProtocolVersion(ProtocolVersion protocolVersion);
 
-	RequestBuilder setUrl(String url);
+	T setUrl(String url);
 
-	RequestBuilder setHeaders(List<Header> headers);
+	T setHeaders(List<Header> headers);
 
-	RequestBuilder setParameters(Map<String, Object> parameters);
+	T setParameters(Map<String, Object> parameters);
 
-	RequestBuilder setBody(RequestBody requestBody);
+	T get();
 
-	Request build();
+	T post();
+
+	T post(RequestBody body);
+
+	T patch();
+
+	T patch(RequestBody body);
+
+	T put();
+
+	T put(RequestBody body);
+
+	T delete();
+
+	T connect();
+
+	T trace();
+
+	T copy();
+
+	T move();
+
+	T head();
+
+	T options();
+
+	T link();
+
+	T unlink();
+
+	T purge();
+
+	T lock();
+
+	T unlock();
+
+	T propfind();
+
+	T proppatch();
+
+	T proppatch(RequestBody body);
+
+	T report();
+
+	T report(RequestBody body);
+
+	T view();
+
+	T wrapped();
+
+	R build();
 
 }

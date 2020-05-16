@@ -42,7 +42,6 @@ public class HttpClientBuilder {
 	private Boolean followRedirects;
 
 	private HttpClientBuilder(){
-
 	}
 
 	public final static HttpClientBuilder create(){

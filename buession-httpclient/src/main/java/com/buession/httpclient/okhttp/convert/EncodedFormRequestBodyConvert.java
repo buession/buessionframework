@@ -19,35 +19,32 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp.convert;
 
 import com.buession.httpclient.core.EncodedFormRequestBody;
-import com.buession.httpclient.core.RequestBodyConvert;
 import com.buession.httpclient.core.RequestBodyElement;
-import okhttp3.FormBody;
 
 /**
  * @author Yong.Teng
  */
-public class EncodedFormRequestBodyConvert implements RequestBodyConvert<EncodedFormRequestBody, FormBody> {
+public class EncodedFormRequestBodyConvert implements OkHttpRequestBodyConvert<EncodedFormRequestBody> {
 
-    @Override
-    public FormBody convert(EncodedFormRequestBody source){
-        if(source.getContent() == null){
-            return null;
-        }
+	@Override
+	public okhttp3.FormBody convert(EncodedFormRequestBody source){
+		if(source == null || source.getContent() == null){
+			return null;
+		}
 
-        final FormBody.Builder formBodyBuilder = new FormBody.Builder();
+		final okhttp3.FormBody.Builder builder = new okhttp3.FormBody.Builder();
 
-        for(RequestBodyElement requestBodyElement : source.getContent()){
-            String value = requestBodyElement.getValue() == null ? "" : requestBodyElement.getValue().toString();
+		for(RequestBodyElement element : source.getContent()){
+			builder.add(element.getName(), element.getOptionalValue());
+		}
 
-            formBodyBuilder.add(requestBodyElement.getName(), value);
-        }
+		return builder.build();
+	}
 
-        return formBodyBuilder.build();
-    }
 }

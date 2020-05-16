@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.httpcomponents.convert;
+package com.buession.httpclient.apache.convert;
 
 import com.buession.httpclient.core.TextRawRequestBody;
 import org.apache.http.entity.StringEntity;
@@ -30,7 +30,7 @@ import org.apache.http.entity.StringEntity;
 /**
  * @author Yong.Teng
  */
-public class TextRawRequestBodyConvert implements HttpComponentsRequestBodyConvert<TextRawRequestBody> {
+public class TextRawRequestBodyConvert implements ApacheRequestBodyConvert<TextRawRequestBody> {
 
 	@Override
 	public StringEntity convert(TextRawRequestBody source){

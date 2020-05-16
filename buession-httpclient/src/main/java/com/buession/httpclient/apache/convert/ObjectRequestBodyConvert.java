@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.httpcomponents.convert;
+package com.buession.httpclient.apache.convert;
 
 import com.buession.httpclient.core.ObjectFormRequestBody;
 import com.buession.httpclient.core.RequestBody;
@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * @author Yong.Teng
  */
 @Deprecated
-public class ObjectRequestBodyConvert implements HttpComponentsRequestBodyConvert<ObjectFormRequestBody> {
+public class ObjectRequestBodyConvert implements ApacheRequestBodyConvert<ObjectFormRequestBody> {
 
 	private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

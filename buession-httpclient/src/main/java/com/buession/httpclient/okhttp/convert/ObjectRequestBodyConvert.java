@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp.convert;
@@ -27,7 +27,6 @@ package com.buession.httpclient.okhttp.convert;
 import com.buession.httpclient.core.ContentType;
 import com.buession.httpclient.core.ObjectFormRequestBody;
 import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.RequestBodyConvert;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.MediaType;
@@ -37,27 +36,27 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Yong.Teng
  */
-public class ObjectRequestBodyConvert implements RequestBodyConvert<ObjectFormRequestBody, okhttp3.RequestBody> {
+@Deprecated
+public class ObjectRequestBodyConvert implements OkHttpRequestBodyConvert<ObjectFormRequestBody> {
 
-    private final static Logger logger = LoggerFactory.getLogger(ObjectRequestBodyConvert.class);
+	private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    @Override
-    public okhttp3.RequestBody convert(ObjectFormRequestBody source){
-        if(source == null){
-            return null;
-        }
+	private final static Logger logger = LoggerFactory.getLogger(ObjectRequestBodyConvert.class);
 
-        ObjectMapper objectMapper = new ObjectMapper();
+	@Override
+	public okhttp3.RequestBody convert(ObjectFormRequestBody source){
+		if(source == null || source.getContent() == null){
+			return null;
+		}
 
-        try{
-            String str = objectMapper.writeValueAsString(source.getContent());
-            return okhttp3.RequestBody.create(str, MediaType.parse(ContentType.APPLICATION_JSON.valueOf()));
-        }catch(JsonProcessingException e){
-            logger.error("{} convert to JSON String error.", RequestBody.class.getName(), e);
-        }
+		try{
+			String str = OBJECT_MAPPER.writeValueAsString(source.getContent());
+			return okhttp3.RequestBody.create(str, MediaType.parse(ContentType.APPLICATION_JSON.valueOf()));
+		}catch(JsonProcessingException e){
+			logger.error("{} convert to JSON String error.", RequestBody.class.getName(), e);
+		}
 
-        return null;
+		return null;
+	}
 
-
-    }
 }

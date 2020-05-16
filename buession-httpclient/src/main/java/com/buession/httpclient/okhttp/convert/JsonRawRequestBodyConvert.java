@@ -24,23 +24,37 @@
  */
 package com.buession.httpclient.okhttp.convert;
 
-import com.buession.httpclient.core.RequestBodyConvert;
-import com.buession.httpclient.core.TextRawRequestBody;
+import com.buession.httpclient.core.JsonRawRequestBody;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.MediaType;
-import okhttp3.RequestBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
-public class TextRawRequestBodyConvert implements RequestBodyConvert<TextRawRequestBody, RequestBody> {
+public class JsonRawRequestBodyConvert implements OkHttpRequestBodyConvert<JsonRawRequestBody> {
+
+	private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+	private final static Logger logger = LoggerFactory.getLogger(JsonRawRequestBodyConvert.class);
 
 	@Override
-	public RequestBody convert(TextRawRequestBody source){
+	public okhttp3.RequestBody convert(JsonRawRequestBody source){
 		if(source == null || source.getContent() == null){
 			return null;
 		}
 
-		return RequestBody.create(source.getContent(), MediaType.parse(source.getContentType().valueOf()));
+		try{
+			String str = OBJECT_MAPPER.writeValueAsString(source.getContent());
+			return okhttp3.RequestBody.create(str, MediaType.parse(source.getContentType().valueOf()));
+		}catch(JsonProcessingException e){
+			logger.error("{} convert to JSON String error.", com.buession.httpclient.core.RequestBody.class.getName(),
+					e);
+		}
+
+		return null;
 	}
 
 }

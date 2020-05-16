@@ -24,9 +24,43 @@
  */
 package com.buession.httpclient.okhttp.convert;
 
+import com.buession.httpclient.core.MultipartFormRequestBody;
+import com.buession.httpclient.core.MultipartRequestBodyElement;
+import com.buession.io.MimeType;
+import com.buession.io.file.File;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+
 /**
  * @author Yong.Teng
  */
-public class MultipartFormRequestBodyConvert {
+public class MultipartFormRequestBodyConvert implements OkHttpRequestBodyConvert<MultipartFormRequestBody> {
+
+	@Override
+	public RequestBody convert(MultipartFormRequestBody source){
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		final MultipartBody.Builder builder = new okhttp3.MultipartBody.Builder();
+
+		builder.setType(MultipartBody.FORM);
+
+		for(MultipartRequestBodyElement element : source.getContent()){
+			if(element.getFile() != null){
+				File file = new File(element.getFile());
+				MimeType mimeType = file.getMimeType();
+				MediaType mediaType = mimeType == null ? MediaType.parse("application/octet-stream") :
+						MediaType.parse(mimeType.toString());
+
+				builder.addFormDataPart(element.getName(), file.getName(), RequestBody.create(file, mediaType));
+			}else{
+				builder.addFormDataPart(element.getName(), element.getOptionalValue());
+			}
+		}
+
+		return builder.build();
+	}
 
 }

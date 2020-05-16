@@ -24,23 +24,22 @@
  */
 package com.buession.httpclient.okhttp.convert;
 
-import com.buession.httpclient.core.RequestBodyConvert;
-import com.buession.httpclient.core.TextRawRequestBody;
+import com.buession.httpclient.core.XmlRawRequestBody;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 
 /**
  * @author Yong.Teng
  */
-public class TextRawRequestBodyConvert implements RequestBodyConvert<TextRawRequestBody, RequestBody> {
+public class XmlRawRequestBodyConvert implements OkHttpRequestBodyConvert<XmlRawRequestBody> {
 
 	@Override
-	public RequestBody convert(TextRawRequestBody source){
+	public RequestBody convert(XmlRawRequestBody source){
 		if(source == null || source.getContent() == null){
 			return null;
 		}
 
-		return RequestBody.create(source.getContent(), MediaType.parse(source.getContentType().valueOf()));
+		return RequestBody.create(source.getContent().asXML(), MediaType.parse(source.getContentType().valueOf()));
 	}
 
 }

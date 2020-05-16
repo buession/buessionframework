@@ -27,6 +27,26 @@ package com.buession.httpclient.core;
 /**
  * @author Yong.Teng
  */
-public class JavaScriptRawRequestBody {
+public class JavaScriptRawRequestBody extends AbstractRawRequestBody<ContentType, String> {
+
+	public JavaScriptRawRequestBody(){
+		super();
+	}
+
+	public JavaScriptRawRequestBody(String content){
+		super(ContentType.APPLICATION_JAVASCRIPT, content);
+	}
+
+	public JavaScriptRawRequestBody(String content, long contentLength){
+		super(ContentType.APPLICATION_JAVASCRIPT, content, contentLength);
+	}
+
+	public JavaScriptRawRequestBody(Header contentEncoding, String content){
+		super(ContentType.APPLICATION_JAVASCRIPT, contentEncoding, content);
+	}
+
+	public JavaScriptRawRequestBody(Header contentEncoding, String content, long contentLength){
+		super(ContentType.APPLICATION_JAVASCRIPT, contentEncoding, content, contentLength);
+	}
 
 }

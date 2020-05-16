@@ -24,9 +24,15 @@
  */
 package com.buession.httpclient.okhttp.convert;
 
+import com.buession.httpclient.core.RequestBodyConvert;
+import okhttp3.RequestBody;
+
 /**
  * @author Yong.Teng
  */
-public interface OkHttpRequestBodyConvert {
+public interface OkHttpRequestBodyConvert<S> extends RequestBodyConvert<S, okhttp3.RequestBody> {
+
+	@Override
+	RequestBody convert(S source);
 
 }

@@ -24,9 +24,62 @@
  */
 package com.buession.httpclient.core;
 
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Yong.Teng
  */
-public class MultipartFormRequestBody {
+public class MultipartFormRequestBody extends AbstractRequestBody<List<MultipartRequestBodyElement>> {
+
+	public final static ContentType CONTENT_TYPE = ContentType.MULTIPART_FORM_DATA;
+
+	public MultipartFormRequestBody(){
+		super(CONTENT_TYPE, null);
+	}
+
+	public MultipartFormRequestBody(List<MultipartRequestBodyElement> content){
+		super(CONTENT_TYPE, content);
+	}
+
+	public MultipartFormRequestBody(List<MultipartRequestBodyElement> content, long contentLength){
+		super(CONTENT_TYPE, content, contentLength);
+	}
+
+	public MultipartFormRequestBody(Header contentEncoding, List<MultipartRequestBodyElement> content){
+		super(CONTENT_TYPE, contentEncoding, content);
+	}
+
+	public MultipartFormRequestBody(Header contentEncoding, List<MultipartRequestBodyElement> content,
+									long contentLength){
+		super(CONTENT_TYPE, contentEncoding, content, contentLength);
+	}
+
+	public MultipartFormRequestBody(List<MultipartRequestBodyElement> content, Charset charset){
+		this(content, -1, charset);
+	}
+
+	public MultipartFormRequestBody(List<MultipartRequestBodyElement> content, long contentLength, Charset charset){
+		super(new ContentType(CONTENT_TYPE.getMimeType(), charset), content, contentLength);
+	}
+
+	public MultipartFormRequestBody(Header contentEncoding, List<MultipartRequestBodyElement> content,
+									Charset charset){
+		this(contentEncoding, content, -1, charset);
+	}
+
+	public MultipartFormRequestBody(Header contentEncoding, List<MultipartRequestBodyElement> content,
+									long contentLength, Charset charset){
+		super(new ContentType(CONTENT_TYPE.getMimeType(), charset), contentEncoding, content, contentLength);
+	}
+
+	public void addRequestBodyElement(MultipartRequestBodyElement requestBodyElement){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		getContent().add(requestBodyElement);
+	}
 
 }

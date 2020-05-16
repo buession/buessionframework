@@ -74,7 +74,7 @@ public class EncodedFormRequestBody extends AbstractRequestBody<List<RequestBody
 
 	public void addRequestBodyElement(RequestBodyElement requestBodyElement){
 		if(getContent() == null){
-			setContent(new ArrayList<>(1));
+			setContent(new ArrayList<>());
 		}
 
 		getContent().add(requestBodyElement);
@@ -82,20 +82,10 @@ public class EncodedFormRequestBody extends AbstractRequestBody<List<RequestBody
 
 	public void addRequestBodyElement(String name, String value){
 		if(getContent() == null){
-			setContent(new ArrayList<>(1));
+			setContent(new ArrayList<>());
 		}
 
 		getContent().add(new RequestBodyElement(name, value));
-	}
-
-	@Override
-	public boolean isRepeatable(){
-		return true;
-	}
-
-	@Override
-	public boolean isStreaming(){
-		return false;
 	}
 
 }

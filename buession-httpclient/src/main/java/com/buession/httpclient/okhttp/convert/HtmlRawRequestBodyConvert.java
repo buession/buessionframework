@@ -24,9 +24,21 @@
  */
 package com.buession.httpclient.okhttp.convert;
 
+import com.buession.httpclient.core.HtmlRawRequestBody;
+import okhttp3.MediaType;
+
 /**
  * @author Yong.Teng
  */
-public class HtmlRawRequestBodyConvert {
+public class HtmlRawRequestBodyConvert implements OkHttpRequestBodyConvert<HtmlRawRequestBody> {
+
+	@Override
+	public okhttp3.RequestBody convert(HtmlRawRequestBody source){
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		return okhttp3.RequestBody.create(source.getContent(), MediaType.parse(source.getContentType().valueOf()));
+	}
 
 }

@@ -24,9 +24,31 @@
  */
 package com.buession.httpclient.core;
 
+import org.dom4j.Node;
+
 /**
  * @author Yong.Teng
  */
-public class XmlRawRequestBody {
+public class XmlRawRequestBody extends AbstractRawRequestBody<ContentType, Node> {
+
+	public XmlRawRequestBody(){
+		super();
+	}
+
+	public XmlRawRequestBody(Node content){
+		super(ContentType.TEXT_XML, content);
+	}
+
+	public XmlRawRequestBody(Node content, long contentLength){
+		super(ContentType.TEXT_XML, content, contentLength);
+	}
+
+	public XmlRawRequestBody(Header contentEncoding, Node content){
+		super(ContentType.TEXT_XML, contentEncoding, content);
+	}
+
+	public XmlRawRequestBody(Header contentEncoding, Node content, long contentLength){
+		super(ContentType.TEXT_XML, contentEncoding, content, contentLength);
+	}
 
 }

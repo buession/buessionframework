@@ -22,34 +22,32 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.httpcomponents;
+package com.buession.httpclient.apache;
 
 import com.buession.core.utils.EnumUtils;
-import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
+import com.buession.httpclient.apache.convert.MultipartFormRequestBodyConvert;
 import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.HtmlRawRequestBody;
 import com.buession.httpclient.core.JavaScriptRawRequestBody;
 import com.buession.httpclient.core.JsonRawRequestBody;
+import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.ObjectFormRequestBody;
 import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 import com.buession.httpclient.core.Request;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.TextRawRequestBody;
 import com.buession.httpclient.core.XmlRawRequestBody;
 import com.buession.httpclient.helper.AbstractRequestBuilder;
-import com.buession.httpclient.httpcomponents.convert.ChunkedInputStreamRequestBodyConvert;
-import com.buession.httpclient.httpcomponents.convert.EncodedFormRequestBodyConvert;
-import com.buession.httpclient.httpcomponents.convert.HtmlRawRequestBodyConvert;
-import com.buession.httpclient.httpcomponents.convert.HttpComponentsRequestBodyConvert;
-import com.buession.httpclient.httpcomponents.convert.JavaScriptRawRequestBodyConvert;
-import com.buession.httpclient.httpcomponents.convert.JsonRawRequestBodyConvert;
-import com.buession.httpclient.httpcomponents.convert.ObjectRequestBodyConvert;
-import com.buession.httpclient.httpcomponents.convert.RepeatableInputStreamRequestBodyConvert;
-import com.buession.httpclient.httpcomponents.convert.TextRawRequestBodyConvert;
-import com.buession.httpclient.httpcomponents.convert.XmlRawRequestBodyConvert;
+import com.buession.httpclient.apache.convert.EncodedFormRequestBodyConvert;
+import com.buession.httpclient.apache.convert.HtmlRawRequestBodyConvert;
+import com.buession.httpclient.apache.convert.ApacheRequestBodyConvert;
+import com.buession.httpclient.apache.convert.JavaScriptRawRequestBodyConvert;
+import com.buession.httpclient.apache.convert.JsonRawRequestBodyConvert;
+import com.buession.httpclient.apache.convert.ObjectRequestBodyConvert;
+import com.buession.httpclient.apache.convert.TextRawRequestBodyConvert;
+import com.buession.httpclient.apache.convert.XmlRawRequestBodyConvert;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -64,20 +62,18 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class HttpComponentsRequestBuilder extends AbstractRequestBuilder<HttpComponentsRequestBuilder,
-		HttpComponentsRequestBuilder.HttpComponentsRequest> {
+public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBuilder,
+		ApacheRequestBuilder.HttpComponentsRequest> {
 
 	private final static HttpEntity DEFAULT_HTTP_ENTITY = new UrlEncodedFormEntity(new ArrayList<>(),
 			EncodedFormRequestBody.CONTENT_TYPE.getCharset());
 
-	private final static Map<Class<? extends RequestBody>, HttpComponentsRequestBodyConvert> REQUEST_BODY_CONVERTS =
+	private final static Map<Class<? extends RequestBody>, ApacheRequestBodyConvert> REQUEST_BODY_CONVERTS =
 			new HashMap<>(16, 0.8F);
 
 	static{
 		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new EncodedFormRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new ChunkedInputStreamRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(RepeatableInputStreamRequestBody.class,
-				new RepeatableInputStreamRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConvert());
 		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConvert());
 		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new HtmlRawRequestBodyConvert());
 		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new JavaScriptRawRequestBodyConvert());
@@ -86,45 +82,43 @@ public class HttpComponentsRequestBuilder extends AbstractRequestBuilder<HttpCom
 		REQUEST_BODY_CONVERTS.put(ObjectFormRequestBody.class, new ObjectRequestBodyConvert());
 	}
 
-	private HttpComponentsRequestBuilder(){
-
+	private ApacheRequestBuilder(){
 	}
 
-	public final static HttpComponentsRequestBuilder create(){
-		final HttpComponentsRequestBuilder builder = new HttpComponentsRequestBuilder();
+	public final static ApacheRequestBuilder create(){
+		final ApacheRequestBuilder builder = new ApacheRequestBuilder();
 
 		builder.request = new HttpComponentsRequest();
 
 		return builder;
 	}
 
-	public final static HttpComponentsRequestBuilder create(String url){
-		final HttpComponentsRequestBuilder builder = create();
+	public final static ApacheRequestBuilder create(String url){
+		final ApacheRequestBuilder builder = create();
 
 		builder.setUrl(url);
 
 		return builder;
 	}
 
-	public final static HttpComponentsRequestBuilder create(String url, Map<String, Object> parameters){
-		final HttpComponentsRequestBuilder builder = create(url);
+	public final static ApacheRequestBuilder create(String url, Map<String, Object> parameters){
+		final ApacheRequestBuilder builder = create(url);
 
 		builder.setParameters(parameters);
 
 		return builder;
 	}
 
-	public final static HttpComponentsRequestBuilder create(String url, List<Header> headers){
-		final HttpComponentsRequestBuilder builder = create(url);
+	public final static ApacheRequestBuilder create(String url, List<Header> headers){
+		final ApacheRequestBuilder builder = create(url);
 
 		builder.setHeaders(headers);
 
 		return builder;
 	}
 
-	public final static HttpComponentsRequestBuilder create(String url, Map<String, Object> parameters,
-															List<Header> headers){
-		final HttpComponentsRequestBuilder builder = create(url, parameters);
+	public final static ApacheRequestBuilder create(String url, Map<String, Object> parameters, List<Header> headers){
+		final ApacheRequestBuilder builder = create(url, parameters);
 
 		builder.setHeaders(headers);
 
@@ -132,54 +126,48 @@ public class HttpComponentsRequestBuilder extends AbstractRequestBuilder<HttpCom
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder setProtocolVersion(ProtocolVersion protocolVersion){
+	public ApacheRequestBuilder setProtocolVersion(ProtocolVersion protocolVersion){
 		this.protocolVersion = protocolVersion;
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder setUrl(String url){
+	public ApacheRequestBuilder setUrl(String url){
 		this.url = url;
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder setHeaders(List<Header> headers){
+	public ApacheRequestBuilder setHeaders(List<Header> headers){
 		this.headers = headers;
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder setParameters(Map<String, Object> parameters){
+	public ApacheRequestBuilder setParameters(Map<String, Object> parameters){
 		this.parameters = parameters;
 		return this;
 	}
 
-	@Override
-	public HttpComponentsRequestBuilder setBody(RequestBody body){
-		this.body = body;
-		return this;
-	}
-
-	public HttpComponentsRequestBuilder setRequestConfig(RequestConfig config){
+	public ApacheRequestBuilder setRequestConfig(RequestConfig config){
 		this.request.getHttpRequest().setConfig(config);
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder get(){
+	public ApacheRequestBuilder get(){
 		request.setHttpRequest(url == null ? new HttpGet() : new HttpGet(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder post(){
+	public ApacheRequestBuilder post(){
 		request.setHttpRequest(url == null ? new HttpPost() : new HttpPost(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder post(RequestBody body){
+	public ApacheRequestBuilder post(RequestBody body){
 		HttpPost httpPost = url == null ? new HttpPost() : new HttpPost(url);
 
 		httpPost.setEntity(parseEntity(body));
@@ -189,13 +177,13 @@ public class HttpComponentsRequestBuilder extends AbstractRequestBuilder<HttpCom
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder patch(){
+	public ApacheRequestBuilder patch(){
 		request.setHttpRequest(url == null ? new HttpPatch() : new HttpPatch(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder patch(RequestBody body){
+	public ApacheRequestBuilder patch(RequestBody body){
 		HttpPatch httpPatch = url == null ? new HttpPatch() : new HttpPatch(url);
 
 		httpPatch.setEntity(parseEntity(body));
@@ -205,13 +193,13 @@ public class HttpComponentsRequestBuilder extends AbstractRequestBuilder<HttpCom
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder put(){
+	public ApacheRequestBuilder put(){
 		request.setHttpRequest(url == null ? new HttpPut() : new HttpPut(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder put(RequestBody body){
+	public ApacheRequestBuilder put(RequestBody body){
 		HttpPut httpPut = url == null ? new HttpPut() : new HttpPut(url);
 
 		httpPut.setEntity(parseEntity(body));
@@ -221,91 +209,91 @@ public class HttpComponentsRequestBuilder extends AbstractRequestBuilder<HttpCom
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder delete(){
+	public ApacheRequestBuilder delete(){
 		request.setHttpRequest(url == null ? new HttpDelete() : new HttpDelete(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder connect(){
+	public ApacheRequestBuilder connect(){
 		request.setHttpRequest(url == null ? new HttpConnect() : new HttpConnect(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder trace(){
+	public ApacheRequestBuilder trace(){
 		request.setHttpRequest(url == null ? new HttpTrace() : new HttpTrace(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder copy(){
+	public ApacheRequestBuilder copy(){
 		request.setHttpRequest(url == null ? new HttpCopy() : new HttpCopy(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder move(){
+	public ApacheRequestBuilder move(){
 		request.setHttpRequest(url == null ? new HttpMove() : new HttpMove(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder head(){
+	public ApacheRequestBuilder head(){
 		request.setHttpRequest(url == null ? new HttpHead() : new HttpHead(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder options(){
+	public ApacheRequestBuilder options(){
 		request.setHttpRequest(url == null ? new HttpOptions() : new HttpOptions(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder link(){
+	public ApacheRequestBuilder link(){
 		request.setHttpRequest(url == null ? new HttpLink() : new HttpLink(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder unlink(){
+	public ApacheRequestBuilder unlink(){
 		request.setHttpRequest(url == null ? new HttpUnlink() : new HttpUnlink(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder purge(){
+	public ApacheRequestBuilder purge(){
 		request.setHttpRequest(url == null ? new HttpPurge() : new HttpPurge(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder lock(){
+	public ApacheRequestBuilder lock(){
 		request.setHttpRequest(url == null ? new HttpLock() : new HttpLock(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder unlock(){
+	public ApacheRequestBuilder unlock(){
 		request.setHttpRequest(url == null ? new HttpUnlock() : new HttpUnlock(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder propfind(){
+	public ApacheRequestBuilder propfind(){
 		request.setHttpRequest(url == null ? new HttpPropfind() : new HttpPropfind(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder proppatch(){
+	public ApacheRequestBuilder proppatch(){
 		request.setHttpRequest(url == null ? new HttpPropPatch() : new HttpPropPatch(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder proppatch(RequestBody body){
+	public ApacheRequestBuilder proppatch(RequestBody body){
 		HttpPropPatch httpPropPatch = url == null ? new HttpPropPatch() : new HttpPropPatch(url);
 
 		httpPropPatch.setEntity(parseEntity(body));
@@ -315,13 +303,13 @@ public class HttpComponentsRequestBuilder extends AbstractRequestBuilder<HttpCom
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder report(){
+	public ApacheRequestBuilder report(){
 		request.setHttpRequest(url == null ? new HttpReport() : new HttpReport(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder report(RequestBody body){
+	public ApacheRequestBuilder report(RequestBody body){
 		HttpReport httpReport = url == null ? new HttpReport() : new HttpReport(url);
 
 		httpReport.setEntity(parseEntity(body));
@@ -331,13 +319,13 @@ public class HttpComponentsRequestBuilder extends AbstractRequestBuilder<HttpCom
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder view(){
+	public ApacheRequestBuilder view(){
 		request.setHttpRequest(url == null ? new HttpView() : new HttpView(url));
 		return this;
 	}
 
 	@Override
-	public HttpComponentsRequestBuilder wrapped(){
+	public ApacheRequestBuilder wrapped(){
 		request.setHttpRequest(url == null ? new HttpWrapped() : new HttpWrapped(url));
 		return this;
 	}
@@ -367,7 +355,7 @@ public class HttpComponentsRequestBuilder extends AbstractRequestBuilder<HttpCom
 			return null;
 		}
 
-		HttpComponentsRequestBodyConvert convert = REQUEST_BODY_CONVERTS.get(data.getClass());
+		ApacheRequestBodyConvert convert = REQUEST_BODY_CONVERTS.get(data.getClass());
 		return convert == null ? DEFAULT_HTTP_ENTITY : convert.convert(data);
 	}
 

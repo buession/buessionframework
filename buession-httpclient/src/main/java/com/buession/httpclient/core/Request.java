@@ -31,11 +31,21 @@ import java.util.List;
  */
 public class Request {
 
+	private RequestMethod method;
+
 	private String url;
 
 	private List<Header> headers;
 
 	private RequestBody requestBody;
+
+	public RequestMethod getMethod(){
+		return method;
+	}
+
+	public void setMethod(RequestMethod method){
+		this.method = method;
+	}
 
 	public String getUrl(){
 		return url;
@@ -63,7 +73,7 @@ public class Request {
 
 	@Override
 	public String toString(){
-		return "Request{" + "url='" + url + '\'' + ", headers=" + headers + ", requestBody=" + requestBody + '}';
+		return "Request{" + "method=" + method + ", url='" + url + '\'' + ", headers=" + headers + ", requestBody=" + requestBody + '}';
 	}
 
 }

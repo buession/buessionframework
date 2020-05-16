@@ -24,9 +24,18 @@
  */
 package com.buession.httpclient;
 
+import org.junit.Test;
+
+import java.util.Optional;
+
 /**
  * @author Yong.Teng
  */
-public class Optional {
+public class OptionalTest {
+
+	@Test
+	public void ofNullable(){
+		System.out.println(Optional.ofNullable(null).orElse("A"));
+	}
 
 }

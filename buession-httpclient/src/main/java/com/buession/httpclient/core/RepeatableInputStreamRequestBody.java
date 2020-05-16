@@ -48,8 +48,8 @@ public class RepeatableInputStreamRequestBody extends InputStreamRequestBody {
 		super(contentType, contentEncoding, content);
 	}
 
-	public RepeatableInputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content, long
-			contentLength){
+	public RepeatableInputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content,
+											long contentLength){
 		super(contentType, contentEncoding, content, contentLength);
 	}
 
@@ -65,14 +65,9 @@ public class RepeatableInputStreamRequestBody extends InputStreamRequestBody {
 		super(contentEncoding, content, charset);
 	}
 
-	public RepeatableInputStreamRequestBody(Header contentEncoding, InputStream content, long contentLength, Charset
-			charset){
+	public RepeatableInputStreamRequestBody(Header contentEncoding, InputStream content, long contentLength,
+											Charset charset){
 		super(contentEncoding, content, contentLength, charset);
-	}
-
-	@Override
-	public boolean isChunked(){
-		return false;
 	}
 
 }

@@ -24,6 +24,7 @@
  */
 package com.buession.httpclient.okhttp;
 
+import com.buession.core.utils.KeyValueParser;
 import com.buession.core.utils.StringUtils;
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.helper.AbstractResponseBuilder;
@@ -50,26 +51,20 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder {
 	}
 
 	public final static ResponseBuilder create(okhttp3.Response httpResponse){
-		final ResponseBuilder responseBuilder = new OkHttpResponseBuilder().setStatusCode(httpResponse.code())
-				.setStatusText(httpResponse.message());
+		final ResponseBuilder responseBuilder =
+				new OkHttpResponseBuilder().setStatusCode(httpResponse.code()).setStatusText(httpResponse.message());
 
-		String[] temp = StringUtils.split(httpResponse.protocol().toString(), '/');
-		String protocolName = temp[0];
-		int majorVersion = 0;
-		int minorVersion = 0;
-
-		if(temp.length >= 2){
-			String[] versionTemp = StringUtils.split(temp[1], '.');
-
-			majorVersion = Integer.parseInt(versionTemp[0]);
-			minorVersion = Integer.parseInt(versionTemp[1]);
-		}
+		KeyValueParser keyValueParser = new KeyValueParser(httpResponse.protocol().toString(), '/');
+		String protocolName = keyValueParser.getKey();
+		String[] versionTemp = StringUtils.split(keyValueParser.getValue(), '.');
+		int majorVersion = Integer.parseInt(versionTemp[0]);
+		int minorVersion = versionTemp.length > 1 ? Integer.parseInt(versionTemp[1]) : 0;
 
 		responseBuilder.setProtocolVersion(ProtocolVersion.createInstance(protocolName, majorVersion, minorVersion));
 
 		Headers responseHeaders = httpResponse.headers();
 		if(responseHeaders != null){
-			final Map<String, String> headersMap = new LinkedHashMap<>();
+			final Map<String, String> headersMap = new LinkedHashMap<>(responseHeaders.size());
 
 			for(String name : responseHeaders.names()){
 				String value = headersMap.get(name);
@@ -84,11 +79,11 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder {
 			responseBuilder.setHeaders(headersMap2List(headersMap));
 		}
 
-
 		final ResponseBody responseBody = httpResponse.body();
 
 		responseBuilder.setContentLength(responseBody.contentLength());
 		responseBuilder.setInputStream(responseBody.byteStream());
+
 		try{
 			responseBuilder.setBody(responseBody.string());
 		}catch(IOException e){

@@ -48,8 +48,8 @@ public class ChunkedInputStreamRequestBody extends InputStreamRequestBody {
 		super(contentType, contentEncoding, content);
 	}
 
-	public ChunkedInputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content, long
-			contentLength){
+	public ChunkedInputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content,
+										 long contentLength){
 		super(contentType, contentEncoding, content, contentLength);
 	}
 
@@ -65,14 +65,9 @@ public class ChunkedInputStreamRequestBody extends InputStreamRequestBody {
 		super(contentEncoding, content, charset);
 	}
 
-	public ChunkedInputStreamRequestBody(Header contentEncoding, InputStream content, long contentLength, Charset
-			charset){
+	public ChunkedInputStreamRequestBody(Header contentEncoding, InputStream content, long contentLength,
+										 Charset charset){
 		super(contentEncoding, content, contentLength, charset);
-	}
-
-	@Override
-	public boolean isChunked(){
-		return true;
 	}
 
 }

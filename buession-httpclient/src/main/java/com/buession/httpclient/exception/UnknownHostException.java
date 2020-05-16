@@ -27,6 +27,27 @@ package com.buession.httpclient.exception;
 /**
  * @author Yong.Teng
  */
-public class UnknownHostException {
+public class UnknownHostException extends RequestException {
+
+	public UnknownHostException(){
+		super();
+	}
+
+	public UnknownHostException(String message){
+		super(message);
+	}
+
+	public UnknownHostException(String message, Throwable cause){
+		super(message, cause);
+	}
+
+	public UnknownHostException(Throwable cause){
+		super(cause);
+	}
+
+	public UnknownHostException(String message, Throwable cause, boolean enableSuppression,
+								boolean writableStackTrace){
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
 
 }

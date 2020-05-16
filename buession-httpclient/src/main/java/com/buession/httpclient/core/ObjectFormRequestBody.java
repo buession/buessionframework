@@ -29,6 +29,7 @@ import java.nio.charset.Charset;
 /**
  * @author Yong.Teng
  */
+@Deprecated
 public class ObjectFormRequestBody<E> extends AbstractRequestBody<E> {
 
 	public final static ContentType CONTENT_TYPE = ContentType.APPLICATION_JSON;

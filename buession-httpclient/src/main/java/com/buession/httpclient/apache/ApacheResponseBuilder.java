@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.httpcomponents;
+package com.buession.httpclient.apache;
 
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.helper.AbstractResponseBuilder;
@@ -39,16 +39,16 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class HttpComponentsResponseBuilder extends AbstractResponseBuilder {
+public class ApacheResponseBuilder extends AbstractResponseBuilder {
 
-	private final static Logger logger = LoggerFactory.getLogger(HttpComponentsResponseBuilder.class);
+	private final static Logger logger = LoggerFactory.getLogger(ApacheResponseBuilder.class);
 
 	public final static ResponseBuilder create(){
-		return new HttpComponentsResponseBuilder();
+		return new ApacheResponseBuilder();
 	}
 
 	public final static ResponseBuilder create(org.apache.http.HttpResponse httpResponse){
-		final ResponseBuilder responseBuilder = new HttpComponentsResponseBuilder();
+		final ResponseBuilder responseBuilder = new ApacheResponseBuilder();
 		final org.apache.http.StatusLine responseStatusLine = httpResponse.getStatusLine();
 		final org.apache.http.ProtocolVersion responseProtocolVersion = responseStatusLine.getProtocolVersion();
 

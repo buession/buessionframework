@@ -22,11 +22,7 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient;
-
-import com.buession.httpclient.core.AbstractRawRequestBody;
-import com.buession.httpclient.core.ContentType;
-import com.buession.httpclient.core.Header;
+package com.buession.httpclient.core;
 
 /**
  * @author Yong.Teng

@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.httpcomponents;
+package com.buession.httpclient.apache;
 
 import com.buession.httpclient.core.ContentType;
 import org.apache.http.entity.BasicHttpEntity;
@@ -34,20 +34,20 @@ import java.io.InputStream;
  */
 public class InputStreamEntity extends BasicHttpEntity {
 
-    private boolean firstAttempt = true;
+	private boolean firstAttempt = true;
 
-    public InputStreamEntity(InputStream content, long contentLength, ContentType contentType){
-        setContent(content);
-        setContentType(contentType.toString());
-        setContentLength(contentLength);
-    }
+	public InputStreamEntity(InputStream content, long contentLength, ContentType contentType){
+		setContent(content);
+		setContentType(contentType.toString());
+		setContentLength(contentLength);
+	}
 
-    public boolean isFirstAttempt(){
-        return firstAttempt;
-    }
+	public boolean isFirstAttempt(){
+		return firstAttempt;
+	}
 
-    public void setFirstAttempt(boolean firstAttempt){
-        this.firstAttempt = firstAttempt;
-    }
+	public void setFirstAttempt(boolean firstAttempt){
+		this.firstAttempt = firstAttempt;
+	}
 
 }

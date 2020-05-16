@@ -22,11 +22,31 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient;
+package com.buession.httpclient.core;
 
 /**
  * @author Yong.Teng
  */
-public class JsonRawRequestBody {
+public class JsonRawRequestBody<V> extends AbstractRawRequestBody<ContentType, V> {
+
+	public JsonRawRequestBody(){
+		super();
+	}
+
+	public JsonRawRequestBody(V content){
+		super(ContentType.APPLICATION_JSON, content);
+	}
+
+	public JsonRawRequestBody(V content, long contentLength){
+		super(ContentType.APPLICATION_JSON, content, contentLength);
+	}
+
+	public JsonRawRequestBody(Header contentEncoding, V content){
+		super(ContentType.APPLICATION_JSON, contentEncoding, content);
+	}
+
+	public JsonRawRequestBody(Header contentEncoding, V content, long contentLength){
+		super(ContentType.APPLICATION_JSON, contentEncoding, content, contentLength);
+	}
 
 }

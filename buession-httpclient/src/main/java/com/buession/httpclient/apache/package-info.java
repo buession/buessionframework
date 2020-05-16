@@ -25,4 +25,4 @@
 /**
  * @author Yong.Teng
  */
-package com.buession.httpclient.httpcomponents;
+package com.buession.httpclient.apache;
