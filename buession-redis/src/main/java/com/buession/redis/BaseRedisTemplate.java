@@ -58,7 +58,7 @@ import java.util.Set;
  * @author Yong.Teng
  */
 public class BaseRedisTemplate extends RedisAccessor implements KeyCommands, StringCommands, HashCommands,
- ListCommands, SetCommands, SortedSetCommands, GeoCommands, BitMapCommands, TransactionCommands, PubSubCommands	aCommands {
+ ListCommands, SetCommands, SortedSetCommands, GeoCommands, BitMapCommands, TransactionCommands, PubSubCommands, LuaCommands {
 
 	/**
 	 * 构造函数
@@ -376,12 +376,12 @@ public class BaseRedisTemplate extends RedisAccessor implements KeyCommands, Str
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
 	 final MigrateOperation migrateOperation){
 		return execute((RedisClient client)->client.migrate(makeRawKey(key), host, port, db, timeout,
-		 m grateOperation));
+				migrateOperation));
 	}
 
 	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int ti eout,
-	 nal MigrateOperation migrateOperation){
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
+						  final MigrateOperation migrateOperation){
 		return execute((RedisClient client)->client.migrate(makeByteKey(key), host, port, db, timeout,
 		 migrateOperation));
 	}
@@ -946,7 +946,7 @@ public class BaseRedisTemplate extends RedisAccessor implements KeyCommands, Str
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-	 fnal int count){
+	 final int count){
 		return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor, pattern, count));
 	}
 
@@ -957,7 +957,7 @@ public class BaseRedisTemplate extends RedisAccessor implements KeyCommands, Str
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] patte n,
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 	 final int count){
 		return execute((RedisClient client)->client.hScan(makeByteKey(key), cursor, pattern, count));
 	}
@@ -1459,7 +1459,7 @@ public class BaseRedisTemplate extends RedisAccessor implements KeyCommands, Str
 	}
 
 	@Override
-	public ScanResult<List<byte[]> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
 		return execute((RedisClient client)->client.sScan(makeByteKey(key), cursor, pattern, count));
 	}
 
@@ -1947,7 +1947,7 @@ public class BaseRedisTemplate extends RedisAccessor implements KeyCommands, Str
 	@Override
 	public Set<String> zRangeByLex(final String key, final String min, final String max, final int offset,
 	 final int count){
-		eturn execute ((RedisClient client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count));
+		return execute ((RedisClient client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count));
 	}
 
 	@Override
@@ -2221,7 +2221,7 @@ public class BaseRedisTemplate extends RedisAccessor implements KeyCommands, Str
 	}
 
 	@Override
-	public Set<String> zRevRangeByScore(final String key, final int min, final int m x, f nal int offset,
+	public Set<String> zRevRangeByScore(final String key, final int min, final int max, final int offset,
 	 final int count){
 		return execute((RedisClient client)->client.zRevRangeByScore(makeRawKey(key), max, min, offset, count));
 	}
@@ -2321,16 +2321,16 @@ public class BaseRedisTemplate extends RedisAccessor implements KeyCommands, Str
 	}
 
 	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double m, final double max, final int offset,
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
 	 final int count){
 		return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeRawKey(key), max, min, offset,
-		 cont));
+		 count));
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
 	 final int offset, final int count){
-		return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeBy eKey(key), max, min, offset,
+		return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeByteKey(key), max, min, offset,
 		 count));
 	}
 
@@ -2352,7 +2352,7 @@ public class BaseRedisTemplate extends RedisAccessor implements KeyCommands, Str
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
 	 final int count){
 		return execute((RedisClient client)->client.zRevRangeByScoreWithScores(makeRawKey(key), max, min, offset,
-		 count))
+		 count));
 	}
 
 	@Override
@@ -2614,8 +2614,7 @@ public class BaseRedisTemplate extends RedisAccessor implements KeyCommands, Str
 	public Long zUnionStore(final String destKey, final Aggregate aggregate, final double[] weights,
 	 final String... keys){
 		return execute((RedisClient client)->client.zUnionStore(makeRawKey(destKey), aggregate, weights,
-		 makeRawKeyskeys)))
-		;
+		 makeRawKeys(keys)));
 	}
 
 	@Override
@@ -2930,7 +2929,7 @@ public class BaseRedisTemplate extends RedisAccessor implements KeyCommands, Str
 	}
 
 	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, fi al double radius,
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 	 final GeoArgument geoArgument){
 		return execute((RedisClient client)->client.geoRadiusByMember(makeByteKey(key), member, radius, geoArgument));
 	}
@@ -2944,9 +2943,9 @@ public class BaseRedisTemplate extends RedisAccessor implements KeyCommands, Str
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-	 final GeoUnit u eoArgument geoArgument){
-		return execute((RedisClient client)->client.geoRadiusByMember(makeByteKey(key), member, radius, un t,
-		 geoArgu ent));
+	 final GeoUnit unit, final GeoArgument geoArgument){
+		return execute((RedisClient client)->client.geoRadiusByMember(makeByteKey(key), member, radius, unit,
+				geoArgument));
 	}
 
 	@Override
