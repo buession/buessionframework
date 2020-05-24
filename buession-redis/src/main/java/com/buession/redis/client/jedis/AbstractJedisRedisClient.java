@@ -1045,7 +1045,7 @@ public abstract class AbstractJedisRedisClient<T extends JedisCommands> extends 
 	}
 
 	protected <R> R execute(final ProtocolCommand command, final Executor<T, R> executor) throws RedisException{
-		return super.doExecute(command, executor);
+		return super.doExecute(command, executor, null);
 	}
 
 	protected <R> R execute(final ProtocolCommand command, final Executor<T, R> executor,

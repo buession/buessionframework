@@ -25,6 +25,7 @@
 package com.buession.redis.client.connection;
 
 import com.buession.core.utils.Assert;
+import com.buession.lang.Status;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.ProxyFactory;
@@ -136,18 +137,18 @@ public final class RedisConnectionUtils {
 			return connectionHolder.getConnection();
 		}
 
-		if(allowCreate == false){
-			throw new IllegalArgumentException("No redisConnection found and allowCreate = false");
-		}
+		Assert.isFalse(allowCreate, "No redisConnection found and allowCreate = false");
 
 		logger.debug("Opening Redis RedisConnection.");
 
 		RedisConnection connection = factory.getConnection();
 
 		try{
-			connection.connect();
+			if(connection.connect() == Status.FAILURE){
+				logger.error("Redis connection failure.");
+			}
 		}catch(IOException e){
-
+			logger.error("Redis connection failure: {}", e.getMessage());
 		}
 
 		if(bind){

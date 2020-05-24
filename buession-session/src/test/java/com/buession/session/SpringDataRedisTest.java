@@ -17,24 +17,27 @@
  * <http://www.apache.org/>.
  *
  * +-------------------------------------------------------------------------------------------------------+
- * | License: http://buession.buession.com.cn/LICENSE 												       |
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.session;
 
-import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
-import com.buession.redis.spring.RedisConnectionFactoryBean;
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
+import org.junit.Test;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRedisTest {
+public class SpringDataRedisTest {
 
-	protected JedisPoolConfig jedisPoolConfig(){
+	private JedisPoolConfig createJedisPoolConfig(){
 		JedisPoolConfig config = new JedisPoolConfig();
 
 		config.setLifo(BaseObjectPoolConfig.DEFAULT_LIFO);
@@ -57,26 +60,35 @@ public abstract class AbstractRedisTest {
 		return config;
 	}
 
-	protected RedisConnectionFactoryBean connectionFactory(){
-		JedisRedisConnectionFactoryBean connectionFactory = new JedisRedisConnectionFactoryBean();
+	private JedisConnectionFactory createJedisConnectionFactory(){
+		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration("10.101.0.45", 6379);
+		configuration.setDatabase(10);
 
-		connectionFactory.setPoolConfig(jedisPoolConfig());
-		connectionFactory.setDatabase(10);
-		connectionFactory.setHost("10.101.0.36");
-		//connectionFactory.setHost("10.101.0.45");
-		connectionFactory.setPort(6379);
-		//connectionFactory.setPort(16379);
-		connectionFactory.setPassword("tQP!Vf7JxL-nrH-x");
-		//connectionFactory.setPassword("passwd");
-		connectionFactory.setUsePool(true);
+		JedisClientConfiguration jedisClientConfiguration =
+				JedisClientConfiguration.builder().usePooling().poolConfig(createJedisPoolConfig()).build();
 
-		try{
-			connectionFactory.afterPropertiesSet();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+		JedisConnectionFactory factory = new JedisConnectionFactory(configuration, jedisClientConfiguration);
 
-		return connectionFactory;
+		factory.afterPropertiesSet();
+
+		return factory;
+	}
+
+	private RedisTemplate redisTemplate(){
+		RedisTemplate redisTemplate = new RedisTemplate();
+
+		redisTemplate.setConnectionFactory(createJedisConnectionFactory());
+
+		redisTemplate.afterPropertiesSet();
+
+		return redisTemplate;
+	}
+
+	@Test
+	public void get(){
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.hasKey("user"));
+		System.out.println(redisTemplate.hasKey("user"));
 	}
 
 }

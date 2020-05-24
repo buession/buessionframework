@@ -61,7 +61,7 @@ public class KeyUtil {
 		return rawKeys;
 	}
 
-	public final static byte[] makeByteKey(final String prefix, byte[] key){
+	public final static byte[] makeByteKey(final String prefix, final byte[] key){
 		if(prefix != null){
 			byte[] prefixByte = SafeEncoder.encode(prefix);
 			byte[] result = new byte[prefixByte.length + key.length];
@@ -75,7 +75,7 @@ public class KeyUtil {
 		return key;
 	}
 
-	public final static byte[] makeByteKey(final byte[] prefix, byte[] key){
+	public final static byte[] makeByteKey(final byte[] prefix, final byte[] key){
 		if(prefix != null){
 			byte[] result = new byte[prefix.length + key.length];
 

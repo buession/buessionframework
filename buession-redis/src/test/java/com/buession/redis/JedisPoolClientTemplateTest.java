@@ -84,10 +84,21 @@ public class JedisPoolClientTemplateTest extends AbstractRedisTest {
 		System.out.println("user 1: " + userRet1);
 		System.out.println("user 2: " + userRet2);
 
-		redisTemplate.lPush("user", user1, user2);
+		redisTemplate.lPush("userl", user1, user2);
 
-		List<User> result = redisTemplate.lRangeObject("user", 0, 1);
+		List<User> result = redisTemplate.lRangeObject("userl", 0, 1, User.class);
 		System.out.println(result.get(0).getId());
+
+		redisTemplate.lIndex("userl", 1);
+		redisTemplate.lIndex("userl", 1);
+		redisTemplate.lIndex("userl", 1);
+		redisTemplate.lIndex("userl", 1);
+		redisTemplate.lIndex("userl", 1);
+		redisTemplate.lIndex("userl", 1);
+		redisTemplate.lIndex("userl", 1);
+		redisTemplate.lIndex("userl", 1);
+		redisTemplate.lIndex("userl", 1);
+		redisTemplate.lIndex("userl", 1);
 	}
 
 	@Test

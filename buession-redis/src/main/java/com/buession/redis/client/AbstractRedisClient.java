@@ -25,9 +25,7 @@
 package com.buession.redis.client;
 
 import com.buession.core.Executor;
-import com.buession.core.utils.EnumUtils;
 import com.buession.core.validator.Validate;
-import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
 import com.buession.redis.client.connection.RedisConnectionUtils;
@@ -47,6 +45,8 @@ public abstract class AbstractRedisClient implements RedisClient {
 	private RedisConnectionFactory connectionFactory;
 
 	private RedisConnection connection;
+
+	private boolean enableTransactionSupport = false;
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractRedisClient.class);
 
@@ -69,44 +69,57 @@ public abstract class AbstractRedisClient implements RedisClient {
 		connectionFactory = new RedisConnectionFactory(connection);
 	}
 
-	protected <C, R> R doExecute(final ProtocolCommand command, final Executor<C, R> executor) throws RedisException{
-		boolean enableTransactionSupport = false;
-		RedisConnection connection = processConnection(enableTransactionSupport);
+	public boolean isEnableTransactionSupport(){
+		return getEnableTransactionSupport();
+	}
 
-		try{
-			logger.debug("Execute command '{}'", command);
-			return connection.execute(command, executor);
-		}catch(RedisException e){
-			logger.error("Execute command '{}', failure: {}", command, e.getMessage());
-			throw e;
-		}finally{
-			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
-		}
+	public boolean getEnableTransactionSupport(){
+		return enableTransactionSupport;
+	}
+
+	public void setEnableTransactionSupport(boolean enableTransactionSupport){
+		this.enableTransactionSupport = enableTransactionSupport;
 	}
 
 	protected <C, R> R doExecute(final ProtocolCommand command, final Executor<C, R> executor,
 								 final OperationsCommandArguments arguments){
-		boolean enableTransactionSupport = false;
-		RedisConnection connection = processConnection(enableTransactionSupport);
+		RedisConnection connection;
+		String argumentsString = null;
+
+		if(enableTransactionSupport){
+			// only bind resources in case of potential transaction synchronization
+			connection = RedisConnectionUtils.bindConnection(connectionFactory, true);
+		}else{
+			connection = RedisConnectionUtils.getConnection(connectionFactory);
+		}
+
+		if(logger.isDebugEnabled() && arguments != null){
+			argumentsString = commandParametersToSting(arguments);
+		}
 
 		try{
-			logger.debug("Execute command '{}'<{}>", command, commandParametersToSting(arguments));
+			if(logger.isDebugEnabled()){
+				if(arguments != null){
+					logger.debug("Execute command '{}' width arguments: {}", command, argumentsString);
+				}else{
+					logger.debug("Execute command '{}'", command);
+				}
+			}
+
 			return connection.execute(command, executor);
 		}catch(RedisException e){
-			logger.error("Execute command '{}'<{}>, failure: {}", command, commandParametersToSting(arguments),
-					e.getMessage());
+			if(logger.isDebugEnabled()){
+				if(arguments != null){
+					logger.error("Execute command '{}' width arguments: {}, failure: {}", command, argumentsString,
+							e.getMessage());
+				}else{
+					logger.error("Execute command '{}', failure: {}", command, e.getMessage());
+				}
+			}
+
 			throw e;
 		}finally{
 			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
-		}
-	}
-
-	protected RedisConnection processConnection(boolean enableTransactionSupport){
-		if(enableTransactionSupport){
-			// only bind resources in case of potential transaction synchronization
-			return RedisConnectionUtils.bindConnection(connectionFactory, enableTransactionSupport);
-		}else{
-			return RedisConnectionUtils.getConnection(connectionFactory);
 		}
 	}
 

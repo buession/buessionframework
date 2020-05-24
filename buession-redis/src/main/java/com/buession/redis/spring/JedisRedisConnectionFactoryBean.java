@@ -91,19 +91,13 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 	public void afterPropertiesSet() throws Exception{
 		if(isUsePool()){
 			if(isUseShardInfo()){
-				final ShardedJedisPoolDataSource dataSource = new ShardedJedisPoolDataSource(getHost(), getPort(),
-						getPassword(), getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl()
-						, getSslSocketFactory(), getSslParameters(), getHostnameVerifier(), poolConfig);
-
-				dataSource.setWeight(getWeight());
+				final ShardedJedisPoolDataSource dataSource = createShardedJedisPoolDataSource();
 
 				setPool(dataSource.getPool());
 				setConnection(new ShardedJedisPoolConnection(dataSource));
 				logger.debug("Initialize connection for pool and shard info.");
 			}else{
-				final JedisPoolDataSource dataSource = new JedisPoolDataSource(getHost(), getPort(), getPassword(),
-						getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl(),
-						getSslSocketFactory(), getSslParameters(), getHostnameVerifier(), poolConfig);
+				final JedisPoolDataSource dataSource = createJedisPoolDataSource();
 
 				setPool(dataSource.getPool());
 				setConnection(new JedisPoolConnection(dataSource));
@@ -111,17 +105,12 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 			}
 		}else{
 			if(isUseShardInfo()){
-				final SimpleShardedJedisDataSource dataSource = new SimpleShardedJedisDataSource(getHost(), getPort(),
-						getPassword(), getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl()
-						, getSslSocketFactory(), getSslParameters(), getHostnameVerifier());
+				final SimpleShardedJedisDataSource dataSource = createSimpleShardedJedisDataSource();
 
-				dataSource.setWeight(getWeight());
 				setConnection(new SimpleShardedJedisConnection(dataSource));
 				logger.debug("Initialize connection for shard info.");
 			}else{
-				final SimpleJedisDataSource dataSource = new SimpleJedisDataSource(getHost(), getPort(), getPassword()
-						, getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl(),
-						getSslSocketFactory(), getSslParameters(), getHostnameVerifier());
+				final SimpleJedisDataSource dataSource = createSimpleJedisDataSource();
 
 				setConnection(new SimpleJedisConnection(dataSource));
 				logger.debug("Initialize connection simple.");
@@ -140,6 +129,45 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 			}
 			setPool(null);
 		}
+	}
+
+	protected SimpleJedisDataSource createSimpleJedisDataSource(){
+		final SimpleJedisDataSource dataSource = new SimpleJedisDataSource(getHost(), getPort(), getPassword(),
+				getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl(), getSslSocketFactory()
+				, getSslParameters(), getHostnameVerifier());
+
+		return dataSource;
+	}
+
+	protected JedisPoolDataSource createJedisPoolDataSource(){
+		final JedisPoolDataSource dataSource = new JedisPoolDataSource(getHost(), getPort(), getPassword(),
+				getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl(), getSslSocketFactory()
+				, getSslParameters(), getHostnameVerifier(), poolConfig);
+
+		dataSource.setPoolConfig(getPoolConfig());
+
+		return dataSource;
+	}
+
+	protected SimpleShardedJedisDataSource createSimpleShardedJedisDataSource(){
+		final SimpleShardedJedisDataSource dataSource = new SimpleShardedJedisDataSource(getHost(), getPort(),
+				getPassword(), getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl(),
+				getSslSocketFactory(), getSslParameters(), getHostnameVerifier());
+
+		dataSource.setWeight(getWeight());
+
+		return dataSource;
+	}
+
+	protected ShardedJedisPoolDataSource createShardedJedisPoolDataSource(){
+		final ShardedJedisPoolDataSource dataSource = new ShardedJedisPoolDataSource(getHost(), getPort(),
+				getPassword(), getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl(),
+				getSslSocketFactory(), getSslParameters(), getHostnameVerifier(), poolConfig);
+
+		dataSource.setPoolConfig(getPoolConfig());
+		dataSource.setWeight(getWeight());
+
+		return dataSource;
 	}
 
 }

@@ -437,8 +437,8 @@ public class InfoUtil {
 				}else if("maxmemory_human".equals(keyValueParser.getKey())){
 					memory.setMaxMemoryHuman(keyValueParser.getValue());
 				}else if("maxmemory_policy".equals(keyValueParser.getKey())){
-					memory.setMaxMemoryPolicy(EnumUtils.valueOf(MaxMemoryPolicy.class, StringUtils.replace
-							(keyValueParser.getValue().toUpperCase(), "-", "_")));
+					memory.setMaxMemoryPolicy(EnumUtils.valueOf(MaxMemoryPolicy.class,
+							StringUtils.replace(keyValueParser.getValue().toUpperCase(), "-", "_")));
 				}else if("allocator_frag_ratio".equals(keyValueParser.getKey())){
 					memory.setAllocatorFragRatio(keyValueParser.getDoubleValue());
 				}else if("allocator_frag_bytes".equals(keyValueParser.getKey())){
@@ -669,7 +669,7 @@ public class InfoUtil {
 			super(str, delimiter);
 		}
 
-		public Double getPercentValue(){
+		public double getPercentValue(){
 			if(percentValue == null){
 				percentValue = Double.parseDouble(getValue().substring(0, getValue().length() - 1));
 			}

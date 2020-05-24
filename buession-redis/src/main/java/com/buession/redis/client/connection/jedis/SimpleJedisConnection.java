@@ -120,6 +120,7 @@ public class SimpleJedisConnection extends AbstractJedisRedisConnection<Jedis> i
 		if(getDelegate() != null){
 			getDelegate().disconnect();
 		}
+		super.doDisconnect();
 	}
 
 	@Override
@@ -128,6 +129,7 @@ public class SimpleJedisConnection extends AbstractJedisRedisConnection<Jedis> i
 			getDelegate().quit();
 			disconnect();
 		}
+		super.doClose();
 	}
 
 }

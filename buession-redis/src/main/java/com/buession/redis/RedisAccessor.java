@@ -59,6 +59,8 @@ public abstract class RedisAccessor {
 
 	protected RedisClient client;
 
+	protected boolean enableTransactionSupport = false;
+
 	private final static Logger logger = LoggerFactory.getLogger(RedisAccessor.class);
 
 	{
@@ -88,10 +90,6 @@ public abstract class RedisAccessor {
 	@Deprecated
 	public void setSerializer(Serializer serializer){
 		this.serializer = serializer;
-
-		if(logger.isWarnEnabled()){
-			logger.warn("Use serializer by options.");
-		}
 	}
 
 	public RedisConnection getConnection(){
@@ -117,8 +115,9 @@ public abstract class RedisAccessor {
 			serializer = DEFAULT_SERIALIZER;
 		}
 
+		enableTransactionSupport = options.isEnableTransactionSupport();
+
 		client = doGetRedisClient(connection);
-		client.setConnection(connection);
 	}
 
 	protected <R> R execute(final Executor<R> executor){
@@ -130,11 +129,21 @@ public abstract class RedisAccessor {
 		}
 	}
 
-	protected static RedisClient doGetRedisClient(RedisConnection connection) throws RedisException{
+	protected RedisClient doGetRedisClient(RedisConnection connection) throws RedisException{
 		if((connection instanceof SimpleJedisConnection) || (connection instanceof JedisPoolConnection)){
-			return new JedisClient(connection);
+			JedisClient jedisClient = new JedisClient(connection);
+
+			jedisClient.setEnableTransactionSupport(enableTransactionSupport);
+			jedisClient.setConnection(connection);
+
+			return jedisClient;
 		}else if((connection instanceof SimpleShardedJedisConnection) || (connection instanceof ShardedJedisConnection)){
-			return new ShardedJedisClient(connection);
+			ShardedJedisClient shardedJedisClient = new ShardedJedisClient(connection);
+
+			shardedJedisClient.setEnableTransactionSupport(enableTransactionSupport);
+			shardedJedisClient.setConnection(connection);
+
+			return shardedJedisClient;
 		}else{
 			throw new RedisException("Cloud not initialize RedisClient for: " + connection);
 		}

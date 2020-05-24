@@ -59,8 +59,9 @@ public class ShardedJedisPoolConnection extends AbstractJedisRedisConnection<Sha
 
 	@Override
 	protected void doConnect() throws IOException{
-		if(getDataSource() != null && getDataSource() instanceof ShardedJedisPoolDataSource){
-			((ShardedJedisPoolDataSource) getDataSource()).getPool();
+		RedisDataSource dataSource = getDataSource();
+		if(dataSource != null && dataSource instanceof ShardedJedisPoolDataSource){
+			((ShardedJedisPoolDataSource) dataSource).getPool();
 		}
 	}
 
@@ -71,8 +72,9 @@ public class ShardedJedisPoolConnection extends AbstractJedisRedisConnection<Sha
 
 	@Override
 	protected boolean checkClosed(){
-		if(getDataSource() != null && getDataSource() instanceof ShardedJedisPoolDataSource){
-			return ((ShardedJedisPoolDataSource) getDataSource()).getPool().isClosed();
+		RedisDataSource dataSource = getDataSource();
+		if(dataSource != null && dataSource instanceof ShardedJedisPoolDataSource){
+			return ((ShardedJedisPoolDataSource) dataSource).getPool().isClosed();
 		}else{
 			return true;
 		}
@@ -83,6 +85,7 @@ public class ShardedJedisPoolConnection extends AbstractJedisRedisConnection<Sha
 		if(getDelegate() != null){
 			getDelegate().disconnect();
 		}
+		super.doDisconnect();
 	}
 
 	@Override
@@ -90,6 +93,7 @@ public class ShardedJedisPoolConnection extends AbstractJedisRedisConnection<Sha
 		if(getDelegate() != null){
 			getDelegate().close();
 		}
+		super.doClose();
 	}
 
 }

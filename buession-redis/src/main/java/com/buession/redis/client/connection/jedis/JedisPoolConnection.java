@@ -80,8 +80,9 @@ public class JedisPoolConnection extends AbstractJedisRedisConnection<Jedis> imp
 
 	@Override
 	protected void doConnect() throws IOException{
-		if(getDataSource() != null && getDataSource() instanceof JedisPoolDataSource){
-			((JedisPoolDataSource) getDataSource()).getPool();
+		RedisDataSource dataSource = getDataSource();
+		if(dataSource != null && dataSource instanceof JedisPoolDataSource){
+			((JedisPoolDataSource) dataSource).getPool();
 		}
 	}
 
@@ -100,6 +101,7 @@ public class JedisPoolConnection extends AbstractJedisRedisConnection<Jedis> imp
 		if(getDelegate() != null){
 			getDelegate().disconnect();
 		}
+		super.doDisconnect();
 	}
 
 	@Override
@@ -107,6 +109,7 @@ public class JedisPoolConnection extends AbstractJedisRedisConnection<Jedis> imp
 		if(getDelegate() != null){
 			getDelegate().close();
 		}
+		super.doClose();
 	}
 
 }

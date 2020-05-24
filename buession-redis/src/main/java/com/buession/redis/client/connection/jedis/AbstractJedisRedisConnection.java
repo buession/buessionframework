@@ -33,6 +33,8 @@ import com.buession.redis.exception.RedisException;
 import redis.clients.jedis.commands.JedisCommands;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
+import java.io.IOException;
+
 /**
  * @author Yong.Teng
  */
@@ -51,11 +53,21 @@ public abstract class AbstractJedisRedisConnection<T extends JedisCommands> exte
 	@Override
 	public <C, R> R execute(final ProtocolCommand command, final Executor<C, R> executor) throws RedisException{
 		try{
-			C delegate = (C) getDelegate(getDataSource());
+			C delegate = (C) getDelegate();
 			return executor.execute(delegate);
 		}catch(JedisConnectionException e){
 			throw new RedisConnectionFailureException(e.getMessage(), e);
 		}
+	}
+
+	@Override
+	protected void doDisconnect() throws IOException{
+		delegate = null;
+	}
+
+	@Override
+	protected void doClose() throws IOException{
+		delegate = null;
 	}
 
 	protected T getDelegate(){
