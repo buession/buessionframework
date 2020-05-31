@@ -1,0 +1,429 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.
+ * See the NOTICE file distributed with this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ * =========================================================================================================
+ *
+ * This software consists of voluntary contributions made by many individuals on behalf of the
+ * Apache Software Foundation. For more information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ *
+ * +-------------------------------------------------------------------------------------------------------+
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
+ * | Author: Yong.Teng <webmaster@buession.com> 													       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * +-------------------------------------------------------------------------------------------------------+
+ */
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.lang.Status;
+import com.buession.redis.client.HashRedisOperations;
+import com.buession.redis.client.jedis.JedisClientUtils;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.JedisScanParams;
+import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.utils.ReturnUtils;
+import redis.clients.jedis.commands.JedisCommands;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * @author Yong.Teng
+ */
+public class DefaultHashRedisOperations<C extends JedisCommands> extends AbstractJedisRedisOperations implements HashRedisOperations {
+
+	public DefaultHashRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public boolean hExists(final String key, final String field){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"field", field);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hExists(key, field), ProtocolCommand.HEXISTS, arguments);
+		}else{
+			return execute((C jc)->jc.hexists(key, field), ProtocolCommand.HEXISTS, arguments);
+		}
+	}
+
+	@Override
+	public Set<String> hKeys(final String key){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hKeys(key), ProtocolCommand.HKEYS, arguments);
+		}else{
+			return execute((C jc)->jc.hkeys(key), ProtocolCommand.HKEYS, arguments);
+		}
+	}
+
+	@Override
+	public List<String> hVals(final String key){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hVals(key), ProtocolCommand.HVALS, arguments);
+		}else{
+			return execute((C jc)->jc.hvals(key), ProtocolCommand.HVALS, arguments);
+		}
+	}
+
+	@Override
+	public Status hSet(final String key, final String field, final String value){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"field", field).put("value", value);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hSet(key, field, value), ProtocolCommand.HSET, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForBool(jc.hset(key, field, value) > 0), ProtocolCommand.HSET,
+					arguments);
+		}
+	}
+
+	@Override
+	public Status hSetNx(final String key, final String field, final String value){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"field", field).put("value", value);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hSetNx(key, field, value), ProtocolCommand.HSETNX, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForBool(jc.hsetnx(key, field, value) > 0), ProtocolCommand.HSETNX
+					, arguments);
+		}
+	}
+
+	@Override
+	public String hGet(final String key, final String field){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"field", field);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hGet(key, field), ProtocolCommand.HGET, arguments);
+		}else{
+			return execute((C jc)->jc.hget(key, field), ProtocolCommand.HGET, arguments);
+		}
+	}
+
+	@Override
+	public Status hMSet(final String key, final Map<String, String> data){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"data", data);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hMSet(key, data), ProtocolCommand.HMSET, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForOK(jc.hmset(key, data)), ProtocolCommand.HMSET, arguments);
+		}
+	}
+
+	@Override
+	public List<String> hMGet(final String key, final String... fields){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"fields", fields);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hMGet(key, fields), ProtocolCommand.HMGET, arguments);
+		}else{
+			return execute((C jc)->jc.hmget(key, fields), ProtocolCommand.HMGET, arguments);
+		}
+	}
+
+	@Override
+	public Map<String, String> hGetAll(final String key){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hGetAll(key), ProtocolCommand.HGETALL, arguments);
+		}else{
+			return execute((C jc)->jc.hgetAll(key), ProtocolCommand.HGETALL, arguments);
+		}
+	}
+
+	@Override
+	public Long hStrLen(final String key, final String field){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"field", field);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hStrLen(key, field), ProtocolCommand.HSTRLEN, arguments);
+		}else{
+			return execute((C jc)->jc.hstrlen(key, field), ProtocolCommand.HSTRLEN, arguments);
+		}
+	}
+
+	@Override
+	public Long hLen(final String key){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hLen(key), ProtocolCommand.HLEN, arguments);
+		}else{
+			return execute((C jc)->jc.hlen(key), ProtocolCommand.HLEN, arguments);
+		}
+	}
+
+	@Override
+	public Long hIncrBy(final String key, final String field, final int value){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"field", field).put("value", value);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hIncrBy(key, field, value), ProtocolCommand.HINCRBY, arguments);
+		}else{
+			return execute((C jc)->jc.hincrBy(key, field, value), ProtocolCommand.HINCRBY, arguments);
+		}
+	}
+
+	@Override
+	public Long hIncrBy(final String key, final String field, final long value){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"field", field).put("value", value);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hIncrBy(key, field, value), ProtocolCommand.HINCRBY, arguments);
+		}else{
+			return execute((C jc)->jc.hincrBy(key, field, value), ProtocolCommand.HINCRBY, arguments);
+		}
+	}
+
+	@Override
+	public Double hIncrByFloat(final String key, final String field, final float value){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"field", field).put("value", value);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hIncrByFloat(key, field, value), ProtocolCommand.HINCRBYFLOAT,
+					arguments);
+		}else{
+			return execute((C jc)->jc.hincrByFloat(key, field, value), ProtocolCommand.HINCRBYFLOAT, arguments);
+		}
+	}
+
+	@Override
+	public Double hIncrByFloat(final String key, final String field, final double value){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"field", field).put("value", value);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hIncrByFloat(key, field, value), ProtocolCommand.HINCRBYFLOAT,
+					arguments);
+		}else{
+			return execute((C jc)->jc.hincrByFloat(key, field, value), ProtocolCommand.HINCRBYFLOAT, arguments);
+		}
+	}
+
+	@Override
+	public Long hDecrBy(final String key, final String field, final int value){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"field", field).put("value", value);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hDecrBy(key, field, value), ProtocolCommand.HINCRBY, arguments);
+		}else{
+			return execute((C jc)->jc.hincrBy(key, field, value > 0 ? value * -1 : value), ProtocolCommand.HINCRBY,
+					arguments);
+		}
+	}
+
+	@Override
+	public Long hDecrBy(final String key, final String field, final long value){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"field", field).put("value", value);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hDecrBy(key, field, value), ProtocolCommand.HINCRBY, arguments);
+		}else{
+			return execute((C jc)->jc.hincrBy(key, field, value > 0 ? value * -1 : value), ProtocolCommand.HINCRBY,
+					arguments);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final int cursor){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hScan(key, cursor), ProtocolCommand.HSCAN, arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Integer.toString(cursor))),
+					ProtocolCommand.HSCAN, arguments);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hScan(key, cursor), ProtocolCommand.HSCAN, arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Long.toString(cursor))),
+					ProtocolCommand.HSCAN, arguments);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hScan(key, cursor), ProtocolCommand.HSCAN, arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, cursor)), ProtocolCommand.HSCAN
+					, arguments);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor).put("pattern", pattern);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hScan(key, cursor, pattern), ProtocolCommand.HSCAN, arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Integer.toString(cursor),
+					new JedisScanParams(pattern))), ProtocolCommand.HSCAN, arguments);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor).put("pattern", pattern);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hScan(key, cursor, pattern), ProtocolCommand.HSCAN, arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Long.toString(cursor),
+					new JedisScanParams(pattern))), ProtocolCommand.HSCAN, arguments);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor).put("pattern", pattern);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hScan(key, cursor, pattern), ProtocolCommand.HSCAN, arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, cursor,
+					new JedisScanParams(pattern))), ProtocolCommand.HSCAN, arguments);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final int count){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor).put("count", count);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hScan(key, cursor, count), ProtocolCommand.HSCAN, arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Integer.toString(cursor),
+					new JedisScanParams(count))), ProtocolCommand.HSCAN, arguments);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor).put("count", count);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hScan(key, cursor, count), ProtocolCommand.HSCAN, arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Long.toString(cursor),
+					new JedisScanParams(count))), ProtocolCommand.HSCAN, arguments);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor).put("count", count);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hScan(key, cursor, count), ProtocolCommand.HSCAN, arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, cursor,
+					new JedisScanParams(count))), ProtocolCommand.HSCAN, arguments);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern,
+			final int count){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor).put("pattern", pattern).put("count", count);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hScan(key, cursor, count), ProtocolCommand.HSCAN, arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Integer.toString(cursor),
+					new JedisScanParams(count))), ProtocolCommand.HSCAN, arguments);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
+			final int count){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor).put("pattern", pattern).put("count", count);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hScan(key, cursor, pattern, count), ProtocolCommand.HSCAN,
+					arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Long.toString(cursor),
+					new JedisScanParams(pattern, count))), ProtocolCommand.HSCAN, arguments);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
+			final int count){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor).put("pattern", pattern).put("count", count);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hScan(key, cursor, pattern, count), ProtocolCommand.HSCAN,
+					arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, cursor,
+					new JedisScanParams(pattern, count))), ProtocolCommand.HSCAN, arguments);
+		}
+	}
+
+	@Override
+	public Long hDel(final String key, final String... fields){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().hDel(key, fields), ProtocolCommand.HDEL, arguments);
+		}else{
+			return execute((C jc)->jc.hdel(key, fields), ProtocolCommand.HDEL, arguments);
+		}
+	}
+
+}

@@ -25,6 +25,7 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.command.BinaryKeyCommands;
 import com.buession.redis.core.command.KeyCommands;
 
 import java.util.Date;
@@ -37,7 +38,7 @@ import java.util.Date;
  *
  * @author Yong.Teng
  */
-public interface KeyOperations extends KeyCommands, RedisOperations {
+public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOperations {
 
 	/**
 	 * 为给定 key 设置过期时间
@@ -257,7 +258,9 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 当有 key 被删除时返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status delete(final String key);
+	default Status delete(final String key){
+		return del(key);
+	}
 
 	/**
 	 * 删除给定的 key
@@ -267,7 +270,9 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 当有 key 被删除时返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status delete(final byte[] key);
+	default Status delete(final byte[] key){
+		return del(key);
+	}
 
 	/**
 	 * 删除给定的一个或多个 key
@@ -277,7 +282,9 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	Long delete(final String... keys);
+	default Long delete(final String... keys){
+		return del(keys);
+	}
 
 	/**
 	 * 删除给定的一个或多个 key
@@ -287,6 +294,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	Long delete(final byte[]... keys);
+	default Long delete(final byte[]... keys){
+		return del(keys);
+	}
 
 }

@@ -26,6 +26,7 @@ package com.buession.redis.client.connection;
 
 import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
+import com.buession.redis.transaction.TransactionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.ProxyFactory;
@@ -41,7 +42,6 @@ public final class RedisConnectionUtils {
 	private final static Logger logger = LoggerFactory.getLogger(RedisConnectionUtils.class);
 
 	private RedisConnectionUtils(){
-
 	}
 
 	public final static RedisConnection bindConnection(final RedisConnectionFactory factory){
@@ -67,7 +67,6 @@ public final class RedisConnectionUtils {
 		Assert.isNull(factory, "No RedisConnectionFactory specified");
 
 		RedisConnectionHolder connHolder = TransactionUtils.getResource(factory);
-
 		return (connHolder != null && connection == connHolder.getConnection());
 	}
 
@@ -105,7 +104,6 @@ public final class RedisConnectionUtils {
 
 	public final static void unbindConnection(final RedisConnectionFactory factory){
 		RedisConnectionHolder connectionHolder = TransactionUtils.unbindResourceIfPossible(factory);
-
 		if(connectionHolder == null){
 			return;
 		}

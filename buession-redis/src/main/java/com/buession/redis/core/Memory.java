@@ -939,27 +939,7 @@ public class Memory implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Memory{" + "usedMemory=" + usedMemory + ", usedMemoryHuman='" + usedMemoryHuman + '\'' + ", " +
-				"usedMemoryRss=" + usedMemoryRss + ", usedMemoryRssHuman='" + usedMemoryRssHuman + '\'' + ", " +
-				"usedMemoryPeak=" + usedMemoryPeak + ", usedMemoryPeakHuman='" + usedMemoryPeakHuman + '\'' + ", " +
-				"usedMemoryPeakPerc=" + usedMemoryPeakPerc + ", usedMemoryOverhead=" + usedMemoryOverhead + ", " +
-				"usedMemoryStartup=" + usedMemoryStartup + ", usedMemoryDataset=" + usedMemoryDataset + ", " +
-				"usedMemoryDatasetPerc=" + usedMemoryDatasetPerc + ", allocatorAllocated=" + allocatorAllocated + ", "
-				+ "allocatorActive=" + allocatorActive + ", allocatorResident=" + allocatorResident + ", " +
-				"totalSystemMemory=" + totalSystemMemory + ", totalSystemMemoryHuman='" + totalSystemMemoryHuman +
-				'\'' + ", usedMemoryLua=" + usedMemoryLua + ", usedMemoryLuaHuman='" + usedMemoryLuaHuman + '\'' + ","
-				+ " " + "usedMemoryScripts=" + usedMemoryScripts + ", usedMemoryScriptsHuman='" +
-				usedMemoryScriptsHuman + '\'' + ", numberOfCachedScripts=" + numberOfCachedScripts + ", maxMemory=" +
-				maxMemory + ", " + "maxMemoryHuman='" + maxMemoryHuman + '\'' + ", maxMemoryPolicy=" + maxMemoryPolicy
-				+ ", " + "allocatorFragRatio=" + allocatorFragRatio + ", allocatorFragBytes=" + allocatorFragBytes +
-				", " + "allocatorRssRatio=" + allocatorRssRatio + ", allocatorRssBytes=" + allocatorRssBytes + ", " +
-				"rssOverheadRatio=" + rssOverheadRatio + ", rssOverheadBytes=" + rssOverheadBytes + ", " +
-				"memFragmentationRatio=" + memFragmentationRatio + ", memFragmentationBytes=" + memFragmentationBytes
-				+ ", memNotCountedForEvict=" + memNotCountedForEvict + ", memReplicationBacklog=" +
-				memReplicationBacklog + ", memClientsSlaves=" + memClientsSlaves + ", memClientsNormal=" +
-				memClientsNormal + ", memAofBuffer=" + memAofBuffer + ", memAllocator='" + memAllocator + '\'' + ", "
-				+ "activeDefragRunning=" + activeDefragRunning + ", lazyfreePendingObjects=" + lazyfreePendingObjects
-				+ '}';
+		return "usedMemory=" + usedMemory + ", usedMemoryHuman='" + usedMemoryHuman + '\'' + ", " + "usedMemoryRss=" + usedMemoryRss + ", usedMemoryRssHuman='" + usedMemoryRssHuman + '\'' + ", " + "usedMemoryPeak=" + usedMemoryPeak + ", usedMemoryPeakHuman='" + usedMemoryPeakHuman + '\'' + ", " + "usedMemoryPeakPerc=" + usedMemoryPeakPerc + ", usedMemoryOverhead=" + usedMemoryOverhead + ", " + "usedMemoryStartup=" + usedMemoryStartup + ", usedMemoryDataset=" + usedMemoryDataset + ", " + "usedMemoryDatasetPerc=" + usedMemoryDatasetPerc + ", allocatorAllocated=" + allocatorAllocated + ", " + "allocatorActive=" + allocatorActive + ", allocatorResident=" + allocatorResident + ", " + "totalSystemMemory=" + totalSystemMemory + ", totalSystemMemoryHuman='" + totalSystemMemoryHuman + '\'' + ", usedMemoryLua=" + usedMemoryLua + ", usedMemoryLuaHuman='" + usedMemoryLuaHuman + '\'' + "," + " " + "usedMemoryScripts=" + usedMemoryScripts + ", usedMemoryScriptsHuman='" + usedMemoryScriptsHuman + '\'' + ", numberOfCachedScripts=" + numberOfCachedScripts + ", maxMemory=" + maxMemory + ", " + "maxMemoryHuman='" + maxMemoryHuman + '\'' + ", maxMemoryPolicy=" + maxMemoryPolicy + ", " + "allocatorFragRatio=" + allocatorFragRatio + ", allocatorFragBytes=" + allocatorFragBytes + ", " + "allocatorRssRatio=" + allocatorRssRatio + ", allocatorRssBytes=" + allocatorRssBytes + ", " + "rssOverheadRatio=" + rssOverheadRatio + ", rssOverheadBytes=" + rssOverheadBytes + ", " + "memFragmentationRatio=" + memFragmentationRatio + ", memFragmentationBytes=" + memFragmentationBytes + ", memNotCountedForEvict=" + memNotCountedForEvict + ", memReplicationBacklog=" + memReplicationBacklog + ", memClientsSlaves=" + memClientsSlaves + ", memClientsNormal=" + memClientsNormal + ", memAofBuffer=" + memAofBuffer + ", memAllocator='" + memAllocator + '\'' + ", " + "activeDefragRunning=" + activeDefragRunning + ", lazyfreePendingObjects=" + lazyfreePendingObjects;
 	}
 
 }

@@ -24,26 +24,132 @@
  */
 package com.buession.redis.client.connection.jedis;
 
+import com.buession.core.Executor;
+import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.client.connection.datasource.jedis.ShardedJedisDataSource;
+import com.buession.redis.client.connection.datasource.jedis.ShardedJedisPoolDataSource;
+import com.buession.redis.client.jedis.JedisClientUtils;
+import com.buession.redis.core.ShardedRedisNode;
+import com.buession.redis.exception.NotSupportedTransactionCommandException;
+import com.buession.redis.exception.RedisException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPool;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author Yong.Teng
  */
-public interface ShardedJedisConnection extends JedisRedisConnection<ShardedJedis> {
+public class ShardedJedisConnection extends AbstractJedisRedisConnection<ShardedJedis> implements JedisRedisConnection<ShardedJedis> {
 
-    @Override
-    default void multi(){
+	private ShardedJedisPool pool;
 
-    }
+	private ShardedJedis shardedJedis;
 
-    @Override
-    default void exec(){
+	private final static Logger logger = LoggerFactory.getLogger(ShardedJedisConnection.class);
 
-    }
+	public ShardedJedisConnection(){
+		super();
+	}
 
-    @Override
-    default void discard(){
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource){
+		super(dataSource);
+	}
 
-    }
+	@Override
+	public boolean isTransaction(){
+		return JedisClientUtils.isInMulti(shardedJedis);
+	}
+
+	@Override
+	public void multi(){
+		throw new NotSupportedTransactionCommandException("ShardedJedis cloud not suppported transaction.");
+	}
+
+	@Override
+	public void exec(){
+		throw new NotSupportedTransactionCommandException("ShardedJedis cloud not suppported transaction.");
+	}
+
+	@Override
+	public void discard(){
+		throw new NotSupportedTransactionCommandException("ShardedJedis cloud not suppported transaction.");
+	}
+
+	@Override
+	protected void doConnect() throws IOException{
+		DataSource dataSource = getDataSource();
+		if(dataSource == null){
+			return;
+		}
+
+		if(dataSource instanceof ShardedJedisPoolDataSource){
+			ShardedJedisPoolDataSource shardedJedisPoolDataSource = (ShardedJedisPoolDataSource) dataSource;
+			pool = shardedJedisPoolDataSource.getPool();
+			shardedJedis = pool.getResource();
+
+			if(logger.isInfoEnabled()){
+				logger.info("ShardedJedis initialize with pool, db {} success, size: {}.", dataSource.getDatabase(),
+						shardedJedis.getAllShardInfo().size());
+			}
+		}else{
+			ShardedJedisDataSource shardedJedisDataSource = (ShardedJedisDataSource) dataSource;
+			Set<ShardedRedisNode> shardedRedisNodes = shardedJedisDataSource.getRedisNodes();
+			List<JedisShardInfo> shardInfos = JedisClientUtils.createJedisShardInfo(shardedRedisNodes,
+					dataSource.getDatabase(), dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
+					dataSource.isUseSsl(), dataSource.getSslSocketFactory(), dataSource.getSslParameters(),
+					dataSource.getHostnameVerifier());
+
+			shardedJedis = new ShardedJedis(shardInfos);
+
+			logger.info("ShardedJedis initialize with db {} success, size: {}.", dataSource.getDatabase(),
+					shardInfos.size());
+		}
+	}
+
+	@Override
+	protected <C, R> R doExecute(Executor<C, R> executor) throws RedisException{
+		return executor.execute((C) shardedJedis);
+	}
+
+	@Override
+	protected boolean checkConnect(){
+		if(shardedJedis != null){
+			for(Jedis jedis : shardedJedis.getAllShards()){
+				if(jedis.isConnected()){
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	protected boolean checkClosed(){
+		return shardedJedis == null || checkConnect() == false;
+	}
+
+	@Override
+	protected void doDisconnect() throws IOException{
+		super.doDisconnect();
+		if(shardedJedis != null){
+			shardedJedis.disconnect();
+		}
+	}
+
+	@Override
+	protected void doClose() throws IOException{
+		super.doClose();
+		if(shardedJedis != null){
+			shardedJedis.close();
+		}
+	}
 
 }

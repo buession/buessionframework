@@ -25,12 +25,9 @@
 package com.buession.redis.client;
 
 import com.buession.core.Executor;
-import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
 import com.buession.redis.client.connection.RedisConnectionUtils;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
 import com.buession.redis.exception.RedisException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,10 +78,8 @@ public abstract class AbstractRedisClient implements RedisClient {
 		this.enableTransactionSupport = enableTransactionSupport;
 	}
 
-	protected <C, R> R doExecute(final ProtocolCommand command, final Executor<C, R> executor,
-								 final OperationsCommandArguments arguments){
+	protected <O extends RedisOperations, R> R execute(final O operations, final Executor<O, R> executor){
 		RedisConnection connection;
-		String argumentsString = null;
 
 		if(enableTransactionSupport){
 			// only bind resources in case of potential transaction synchronization
@@ -93,30 +88,9 @@ public abstract class AbstractRedisClient implements RedisClient {
 			connection = RedisConnectionUtils.getConnection(connectionFactory);
 		}
 
-		if(logger.isDebugEnabled() && arguments != null){
-			argumentsString = commandParametersToSting(arguments);
-		}
-
 		try{
-			if(logger.isDebugEnabled()){
-				if(arguments != null){
-					logger.debug("Execute command '{}' width arguments: {}", command, argumentsString);
-				}else{
-					logger.debug("Execute command '{}'", command);
-				}
-			}
-
-			return connection.execute(command, executor);
+			return executor.execute(operations);
 		}catch(RedisException e){
-			if(logger.isDebugEnabled()){
-				if(arguments != null){
-					logger.error("Execute command '{}' width arguments: {}, failure: {}", command, argumentsString,
-							e.getMessage());
-				}else{
-					logger.error("Execute command '{}', failure: {}", command, e.getMessage());
-				}
-			}
-
 			throw e;
 		}finally{
 			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
@@ -129,25 +103,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 		}catch(IOException e){
 			logger.error("RedisConnection close error: {}", e.getMessage());
 		}
-	}
-
-	private final static String commandParametersToSting(final OperationsCommandArguments arguments){
-		boolean isEmpty = Validate.isEmpty(arguments.getParameters());
-		StringBuilder sb = isEmpty ? new StringBuilder() : new StringBuilder(arguments.getParameters().size() * 16);
-
-		if(isEmpty == false){
-			arguments.getParameters().forEach((name, value)->{
-				if(sb.length() > 0){
-					sb.append(", ");
-				}
-
-				sb.append(name);
-				sb.append(" => ");
-				sb.append(value);
-			});
-		}
-
-		return sb.toString();
 	}
 
 }

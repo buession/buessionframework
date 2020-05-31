@@ -43,13 +43,11 @@ public class Clients implements Serializable {
 	/**
 	 * 当前连接的客户端当中，最长的输出列表
 	 */
-	@Deprecated
 	private int longestOutputList;
 
 	/**
 	 * 当前连接的客户端当中，最大输入缓存
 	 */
-	@Deprecated
 	private int biggestInputBuffer;
 
 	/**
@@ -91,7 +89,6 @@ public class Clients implements Serializable {
 	 *
 	 * @return 当前连接的客户端当中，最长的输出列表
 	 */
-	@Deprecated
 	public int getLongestOutputList(){
 		return longestOutputList;
 	}
@@ -102,7 +99,6 @@ public class Clients implements Serializable {
 	 * @param longestOutputList
 	 * 		当前连接的客户端当中，最长的输出列表
 	 */
-	@Deprecated
 	public void setLongestOutputList(int longestOutputList){
 		this.longestOutputList = longestOutputList;
 	}
@@ -112,7 +108,6 @@ public class Clients implements Serializable {
 	 *
 	 * @return 当前连接的客户端当中，最大输入缓存
 	 */
-	@Deprecated
 	public int getBiggestInputBuffer(){
 		return biggestInputBuffer;
 	}
@@ -123,7 +118,6 @@ public class Clients implements Serializable {
 	 * @param biggestInputBuffer
 	 * 		当前连接的客户端当中，最大输入缓存
 	 */
-	@Deprecated
 	public void setBiggestInputBuffer(int biggestInputBuffer){
 		this.biggestInputBuffer = biggestInputBuffer;
 	}
@@ -187,10 +181,7 @@ public class Clients implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Clients{" + "connecteds=" + connecteds + ", longestOutputList=" + longestOutputList + ", " +
-				"biggestInputBuffer=" + biggestInputBuffer + ", clientRecentMaxInputBuffer=" +
-				clientRecentMaxInputBuffer + ", clientRecentMaxOutputBuffer=" + clientRecentMaxOutputBuffer + ", " +
-				"blockeds=" + blockeds + '}';
+		return "connecteds=" + connecteds + ", longestOutputList=" + longestOutputList + ", " + "biggestInputBuffer=" + biggestInputBuffer + ", clientRecentMaxInputBuffer=" + clientRecentMaxInputBuffer + ", clientRecentMaxOutputBuffer=" + clientRecentMaxOutputBuffer + ", " + "blockeds=" + blockeds;
 	}
 
 }

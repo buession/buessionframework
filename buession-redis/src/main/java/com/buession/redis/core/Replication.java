@@ -264,26 +264,13 @@ public class Replication implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Replication{" + "role=" + role + ", master=" + master + ", slaves=" + slaves + ", " +
-				"masterLinkDownSinceSeconds=" + masterLinkDownSinceSeconds + ", connectedSlaves=" + connectedSlaves +
-				", masterReplid='" + masterReplid + '\'' + ", masterReplid2='" + masterReplid2 + '\'' + ", " +
-				"masterReplOffset=" + masterReplOffset + ", secondReplOffset=" + secondReplOffset + ", replBacklog=" + replBacklog + '}';
+		return "role=" + role + ", master=" + master + ", slaves=" + slaves + ", " + "masterLinkDownSinceSeconds=" + masterLinkDownSinceSeconds + ", connectedSlaves=" + connectedSlaves + ", masterReplid='" + masterReplid + '\'' + ", masterReplid2='" + masterReplid2 + '\'' + ", " + "masterReplOffset=" + masterReplOffset + ", secondReplOffset=" + secondReplOffset + ", replBacklog=" + replBacklog;
 
 	}
 
-	public final static class Master implements Serializable {
+	public final static class Master extends GenericRedisNode implements Serializable {
 
 		private final static long serialVersionUID = 5832337926085731717L;
-
-		/**
-		 * 主服务器的主机地址
-		 */
-		private String host;
-
-		/**
-		 * 主服务器端口
-		 */
-		private int port;
 
 		/**
 		 * 复制连接当前的状态，up 表示连接正常，down 表示连接断开
@@ -304,7 +291,6 @@ public class Replication implements Serializable {
 		 * 默认构造函数
 		 */
 		public Master(){
-
 		}
 
 		/**
@@ -323,49 +309,11 @@ public class Replication implements Serializable {
 		 */
 		public Master(String host, int port, MasterLinkStatus masterLinkStatus, int lastIoSecondsAgo,
 					  boolean syncInProgress){
-			this.host = host;
-			this.port = port;
+			setHost(host);
+			setPort(port);
 			this.masterLinkStatus = masterLinkStatus;
 			this.lastIoSecondsAgo = lastIoSecondsAgo;
 			this.syncInProgress = syncInProgress;
-		}
-
-		/**
-		 * 获取主服务器的主机地址
-		 *
-		 * @return 主服务器的主机地址
-		 */
-		public String getHost(){
-			return host;
-		}
-
-		/**
-		 * 设置主服务器的主机地址
-		 *
-		 * @param host
-		 * 		主服务器的主机地址
-		 */
-		public void setHost(String host){
-			this.host = host;
-		}
-
-		/**
-		 * 获取主服务器端口
-		 *
-		 * @return 主服务器端口
-		 */
-		public int getPort(){
-			return port;
-		}
-
-		/**
-		 * 设置主服务器端口
-		 *
-		 * @param port
-		 * 		主服务器端口
-		 */
-		public void setPort(int port){
-			this.port = port;
 		}
 
 		/**
@@ -436,13 +384,11 @@ public class Replication implements Serializable {
 
 		@Override
 		public String toString(){
-			return "Master{" + "host='" + host + '\'' + ", port=" + port + ", masterLinkStatus=" + masterLinkStatus +
-					", " + "lastIoSecondsAgo=" + lastIoSecondsAgo + ", syncInProgress=" + syncInProgress + '}';
+			return super.toString() + ", masterLinkStatus=" + masterLinkStatus + ", lastIoSecondsAgo=" + lastIoSecondsAgo + ", " + "syncInProgress=" + syncInProgress;
 		}
-
 	}
 
-	public final static class Slave implements Serializable {
+	public final static class Slave extends GenericRedisNode implements Serializable {
 
 		private final static long serialVersionUID = 2989042827385297339L;
 
@@ -450,11 +396,6 @@ public class Replication implements Serializable {
 		 * 从服务器的主机地址
 		 */
 		private String ip;
-
-		/**
-		 * 从服务器端口
-		 */
-		private int port;
 
 		/**
 		 * 从服务器状态
@@ -492,8 +433,8 @@ public class Replication implements Serializable {
 		 * 		复制延迟
 		 */
 		public Slave(String ip, int port, SlaveState state, int offset, int lag){
-			this.ip = ip;
-			this.port = port;
+			setIp(ip);
+			setPort(port);
 			this.state = state;
 			this.offset = offset;
 			this.lag = lag;
@@ -516,25 +457,7 @@ public class Replication implements Serializable {
 		 */
 		public void setIp(String ip){
 			this.ip = ip;
-		}
-
-		/**
-		 * 获取从服务器端口
-		 *
-		 * @return 从服务器端口
-		 */
-		public int getPort(){
-			return port;
-		}
-
-		/**
-		 * 设置从服务器端口
-		 *
-		 * @param port
-		 * 		从服务器端口
-		 */
-		public void setPort(int port){
-			this.port = port;
+			setHost(ip);
 		}
 
 		/**
@@ -596,9 +519,8 @@ public class Replication implements Serializable {
 
 		@Override
 		public String toString(){
-			return "Slave{" + "ip='" + ip + '\'' + ", port=" + port + ", state=" + state + ", offset=" + offset + ", " + "lag=" + lag + '}';
+			return super.toString() + ", ip='" + ip + '\'' + ", state=" + state + ", offset=" + offset + ", lag=" + lag;
 		}
-
 	}
 
 	public final static class ReplBacklog implements Serializable {
@@ -614,7 +536,6 @@ public class Replication implements Serializable {
 		private int histlen;
 
 		public ReplBacklog(){
-
 		}
 
 		public ReplBacklog(int active, int size, int firstByteOffset, int histlen){
@@ -658,8 +579,7 @@ public class Replication implements Serializable {
 
 		@Override
 		public String toString(){
-			return "ReplBacklog{" + "active=" + active + ", size=" + size + ", firstByteOffset=" + firstByteOffset +
-					", histlen=" + histlen + '}';
+			return "active=" + active + ", size=" + size + ", firstByteOffset=" + firstByteOffset + ", histlen=" + histlen;
 		}
 	}
 

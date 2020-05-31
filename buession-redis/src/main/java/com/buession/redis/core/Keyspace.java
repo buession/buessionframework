@@ -119,7 +119,7 @@ public class Keyspace implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Keyspace{" + "db=" + db + ", keys=" + keys + ", expires=" + expires + ", avgTtl=" + avgTtl + '}';
+		return "db=" + db + ", keys=" + keys + ", expires=" + expires + ", avgTtl=" + avgTtl;
 	}
 
 }

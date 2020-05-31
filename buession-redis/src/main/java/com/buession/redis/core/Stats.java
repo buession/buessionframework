@@ -650,19 +650,7 @@ public class Stats implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Stats{" + "totalConnectionsReceived=" + totalConnectionsReceived + ", totalCommandsProcessed=" +
-				totalCommandsProcessed + ", instantaneousOpsPerSec=" + instantaneousOpsPerSec + ", " +
-				"totalNetInputBytes=" + totalNetInputBytes + ", totalNetOutputBytes=" + totalNetOutputBytes + ", " +
-				"instantaneousInputKbps=" + instantaneousInputKbps + ", instantaneousOutputKbps=" +
-				instantaneousOutputKbps + ", rejectedConnections=" + rejectedConnections + ", syncFull=" + syncFull +
-				", syncPartialOk=" + syncPartialOk + ", syncPartialErr=" + syncPartialErr + ", expiredKeys=" +
-				expiredKeys + ", expiredStalePerc=" + expiredStalePerc + ", expiredTimeCapReachedCount=" +
-				expiredTimeCapReachedCount + ", evictedKeys=" + evictedKeys + ", keyspaceHits=" + keyspaceHits + ", "
-				+ "keyspaceMisses=" + keyspaceMisses + ", pubsubChannels=" + pubsubChannels + ", pubsubPatterns=" +
-				pubsubPatterns + ", latestForkUsec=" + latestForkUsec + ", migrateCachedSockets=" +
-				migrateCachedSockets + ", slaveExpiresTrackedKeys=" + slaveExpiresTrackedKeys + ", activeDefragHits="
-				+ activeDefragHits + ", activeDefragMisses=" + activeDefragMisses + ", activeDefragKeyHits=" +
-				activeDefragKeyHits + ", activeDefragKeyMisses=" + activeDefragKeyMisses + '}';
+		return "totalConnectionsReceived=" + totalConnectionsReceived + ", totalCommandsProcessed=" + totalCommandsProcessed + ", instantaneousOpsPerSec=" + instantaneousOpsPerSec + ", " + "totalNetInputBytes=" + totalNetInputBytes + ", totalNetOutputBytes=" + totalNetOutputBytes + ", " + "instantaneousInputKbps=" + instantaneousInputKbps + ", instantaneousOutputKbps=" + instantaneousOutputKbps + ", rejectedConnections=" + rejectedConnections + ", syncFull=" + syncFull + ", syncPartialOk=" + syncPartialOk + ", syncPartialErr=" + syncPartialErr + ", expiredKeys=" + expiredKeys + ", expiredStalePerc=" + expiredStalePerc + ", expiredTimeCapReachedCount=" + expiredTimeCapReachedCount + ", evictedKeys=" + evictedKeys + ", keyspaceHits=" + keyspaceHits + ", " + "keyspaceMisses=" + keyspaceMisses + ", pubsubChannels=" + pubsubChannels + ", pubsubPatterns=" + pubsubPatterns + ", latestForkUsec=" + latestForkUsec + ", migrateCachedSockets=" + migrateCachedSockets + ", slaveExpiresTrackedKeys=" + slaveExpiresTrackedKeys + ", activeDefragHits=" + activeDefragHits + ", activeDefragMisses=" + activeDefragMisses + ", activeDefragKeyHits=" + activeDefragKeyHits + ", activeDefragKeyMisses=" + activeDefragKeyMisses;
 	}
 
 }

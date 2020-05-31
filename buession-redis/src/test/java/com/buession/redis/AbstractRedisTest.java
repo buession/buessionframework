@@ -24,8 +24,6 @@
  */
 package com.buession.redis;
 
-import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
-import com.buession.redis.spring.RedisConnectionFactoryBean;
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -57,26 +55,32 @@ public abstract class AbstractRedisTest {
 		return config;
 	}
 
-	protected RedisConnectionFactoryBean connectionFactory(){
-		JedisRedisConnectionFactoryBean connectionFactory = new JedisRedisConnectionFactoryBean();
+	protected final static class User {
 
-		connectionFactory.setPoolConfig(jedisPoolConfig());
-		connectionFactory.setDatabase(10);
-		connectionFactory.setHost("10.101.0.36");
-		//connectionFactory.setHost("10.101.0.45");
-		connectionFactory.setPort(6379);
-		//connectionFactory.setPort(16379);
-		connectionFactory.setPassword("tQP!Vf7JxL-nrH-x");
-		//connectionFactory.setPassword("passwd");
-		connectionFactory.setUsePool(true);
+		private int id;
 
-		try{
-			connectionFactory.afterPropertiesSet();
-		}catch(Exception e){
-			e.printStackTrace();
+		private String username;
+
+		public int getId(){
+			return id;
 		}
 
-		return connectionFactory;
+		public void setId(int id){
+			this.id = id;
+		}
+
+		public String getUsername(){
+			return username;
+		}
+
+		public void setUsername(String username){
+			this.username = username;
+		}
+
+		@Override
+		public String toString(){
+			return "User{" + "id=" + id + ", username='" + username + '\'' + '}';
+		}
 	}
 
 }

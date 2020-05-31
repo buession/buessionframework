@@ -24,35 +24,86 @@
  */
 package com.buession.redis.spring;
 
-import com.buession.redis.client.connection.RedisConnection;
+import com.buession.core.utils.Assert;
+import com.buession.redis.client.connection.datasource.jedis.GenericJedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisPoolDataSource;
-import com.buession.redis.client.connection.datasource.jedis.ShardedJedisPoolDataSource;
-import com.buession.redis.client.connection.datasource.jedis.SimpleJedisDataSource;
-import com.buession.redis.client.connection.datasource.jedis.SimpleShardedJedisDataSource;
-import com.buession.redis.client.connection.jedis.JedisPoolConnection;
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
-import com.buession.redis.client.connection.jedis.ShardedJedisPoolConnection;
-import com.buession.redis.client.connection.jedis.SimpleJedisConnection;
-import com.buession.redis.client.connection.jedis.SimpleShardedJedisConnection;
+import com.buession.redis.client.connection.jedis.JedisConnection;
+import com.buession.redis.core.RedisNode;
 import com.buession.redis.exception.PoolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.commands.JedisCommands;
-import redis.clients.jedis.util.Pool;
 
 /**
  * @author Yong.Teng
  */
-public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<JedisRedisConnection> {
+public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<JedisConnection> {
+
+	private String host = RedisNode.DEFAULT_HOST;
+
+	private int port = RedisNode.DEFAULT_PORT;
+
+	private String password;
+
+	private int database = RedisNode.DEFAULT_DATABASE;
+
+	private String clientName;
 
 	private JedisPoolConfig poolConfig = new JedisPoolConfig();
 
-	private Pool<? extends JedisCommands> pool;
-
-	private boolean useShardInfo;
+	private JedisPool pool;
 
 	private final static Logger logger = LoggerFactory.getLogger(JedisRedisConnectionFactoryBean.class);
+
+	public String getHost(){
+		return host;
+	}
+
+	public void setHost(String host){
+		this.host = host;
+	}
+
+	public int getPort(){
+		return port;
+	}
+
+	public void setPort(int port){
+		this.port = port;
+	}
+
+	public String getPassword(){
+		return password;
+	}
+
+	public void setPassword(String password){
+		this.password = password;
+	}
+
+	public int getDatabase(){
+		return database;
+	}
+
+	public void setDatabase(int database){
+		Assert.isNegative(database, "invalid DB index (a positive index required)");
+		this.database = database;
+	}
+
+	public int getDb(){
+		return getDatabase();
+	}
+
+	public void setDb(int database){
+		setDatabase(database);
+	}
+
+	public String getClientName(){
+		return clientName;
+	}
+
+	public void setClientName(String clientName){
+		this.clientName = clientName;
+	}
 
 	public JedisPoolConfig getPoolConfig(){
 		return poolConfig;
@@ -62,64 +113,49 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 		this.poolConfig = poolConfig;
 	}
 
-	public Pool<? extends JedisCommands> getPool(){
+	public JedisPool getPool(){
 		return pool;
 	}
 
-	public void setPool(Pool<? extends JedisCommands> pool){
+	public void setPool(JedisPool pool){
 		this.pool = pool;
 	}
 
-	public boolean isUseShardInfo(){
-		return getUseShardInfo();
-	}
-
-	public boolean getUseShardInfo(){
-		return useShardInfo;
-	}
-
-	public void setUseShardInfo(boolean useShardInfo){
-		this.useShardInfo = useShardInfo;
-	}
-
 	@Override
-	public Class<? extends RedisConnection> getObjectType(){
-		return JedisRedisConnection.class;
+	public Class<? extends JedisConnection> getObjectType(){
+		return JedisConnection.class;
 	}
 
 	@Override
 	public void afterPropertiesSet() throws Exception{
 		if(isUsePool()){
-			if(isUseShardInfo()){
-				final ShardedJedisPoolDataSource dataSource = createShardedJedisPoolDataSource();
+			final JedisPoolDataSource dataSource = createJedisPoolDataSource();
 
-				setPool(dataSource.getPool());
-				setConnection(new ShardedJedisPoolConnection(dataSource));
-				logger.debug("Initialize connection for pool and shard info.");
-			}else{
-				final JedisPoolDataSource dataSource = createJedisPoolDataSource();
-
-				setPool(dataSource.getPool());
-				setConnection(new JedisPoolConnection(dataSource));
-				logger.debug("Initialize connection for pool.");
-			}
+			setPool(dataSource.getPool());
+			setConnection(new JedisConnection(dataSource));
+			logger.debug("Initialize connection for pool.");
 		}else{
-			if(isUseShardInfo()){
-				final SimpleShardedJedisDataSource dataSource = createSimpleShardedJedisDataSource();
+			final GenericJedisDataSource dataSource = createGenericJedisDataSource();
 
-				setConnection(new SimpleShardedJedisConnection(dataSource));
-				logger.debug("Initialize connection for shard info.");
-			}else{
-				final SimpleJedisDataSource dataSource = createSimpleJedisDataSource();
-
-				setConnection(new SimpleJedisConnection(dataSource));
-				logger.debug("Initialize connection simple.");
-			}
+			setConnection(new JedisConnection(dataSource));
+			logger.debug("Initialize connection for generic.");
 		}
 	}
 
+	protected GenericJedisDataSource createGenericJedisDataSource(){
+		return new GenericJedisDataSource(getHost(), getPort(), getPassword(), getDatabase(), getClientName(),
+				getConnectTimeout(), getSoTimeout(), isUseSsl(), getSslSocketFactory(), getSslParameters(),
+				getHostnameVerifier());
+	}
+
+	protected JedisPoolDataSource createJedisPoolDataSource(){
+		return new JedisPoolDataSource(getHost(), getPort(), getPassword(), getDatabase(), getClientName(),
+				getConnectTimeout(), getSoTimeout(), isUseSsl(), getSslSocketFactory(), getSslParameters(),
+				getHostnameVerifier(), getPoolConfig());
+	}
+
 	@Override
-	protected void afterDestroy(JedisRedisConnection connection){
+	protected void afterDestroy(JedisConnection connection){
 		if(isUsePool() && getPool() != null){
 			try{
 				getPool().destroy();
@@ -129,45 +165,6 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 			}
 			setPool(null);
 		}
-	}
-
-	protected SimpleJedisDataSource createSimpleJedisDataSource(){
-		final SimpleJedisDataSource dataSource = new SimpleJedisDataSource(getHost(), getPort(), getPassword(),
-				getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl(), getSslSocketFactory()
-				, getSslParameters(), getHostnameVerifier());
-
-		return dataSource;
-	}
-
-	protected JedisPoolDataSource createJedisPoolDataSource(){
-		final JedisPoolDataSource dataSource = new JedisPoolDataSource(getHost(), getPort(), getPassword(),
-				getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl(), getSslSocketFactory()
-				, getSslParameters(), getHostnameVerifier(), poolConfig);
-
-		dataSource.setPoolConfig(getPoolConfig());
-
-		return dataSource;
-	}
-
-	protected SimpleShardedJedisDataSource createSimpleShardedJedisDataSource(){
-		final SimpleShardedJedisDataSource dataSource = new SimpleShardedJedisDataSource(getHost(), getPort(),
-				getPassword(), getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl(),
-				getSslSocketFactory(), getSslParameters(), getHostnameVerifier());
-
-		dataSource.setWeight(getWeight());
-
-		return dataSource;
-	}
-
-	protected ShardedJedisPoolDataSource createShardedJedisPoolDataSource(){
-		final ShardedJedisPoolDataSource dataSource = new ShardedJedisPoolDataSource(getHost(), getPort(),
-				getPassword(), getDatabase(), getClientName(), getConnectTimeout(), getSoTimeout(), isUseSsl(),
-				getSslSocketFactory(), getSslParameters(), getHostnameVerifier(), poolConfig);
-
-		dataSource.setPoolConfig(getPoolConfig());
-		dataSource.setWeight(getWeight());
-
-		return dataSource;
 	}
 
 }

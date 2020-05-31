@@ -518,11 +518,7 @@ public class Client implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Client{" + "id=" + id + ", name='" + name + '\'' + ", addr='" + addr + '\'' + ", host='" + host + '\''
-				+ ", port=" + port + ", fd=" + fd + ", age=" + age + ", idle=" + idle + ", flags=" + flags + ", " +
-				"db=" + db + ", sub=" + sub + ", psub=" + psub + ", multi=" + multi + ", qBuf=" + qBuf + ", " +
-				"qBufFree=" + qBufFree + ", obl=" + obl + ", oll=" + oll + ", omem=" + omem + ", events=" + events +
-				", cmd=" + cmd + '}';
+		return "id=" + id + ", name='" + name + '\'' + ", addr='" + addr + '\'' + ", host='" + host + '\'' + ", port=" + port + ", fd=" + fd + ", age=" + age + ", idle=" + idle + ", flags=" + flags + ", " + "db=" + db + ", sub=" + sub + ", psub=" + psub + ", multi=" + multi + ", qBuf=" + qBuf + ", " + "qBufFree=" + qBufFree + ", obl=" + obl + ", oll=" + oll + ", omem=" + omem + ", events=" + events + ", cmd=" + cmd;
 	}
 
 	public enum Flag {

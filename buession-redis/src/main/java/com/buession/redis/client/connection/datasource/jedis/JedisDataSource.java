@@ -31,4 +31,20 @@ import redis.clients.jedis.Jedis;
  */
 public interface JedisDataSource extends JedisRedisDataSource<Jedis> {
 
+	String getHost();
+
+	void setHost(String host);
+
+	int getPort();
+
+	void setPort(int port);
+
+	String getPassword();
+
+	void setPassword(String password);
+
+	String getClientName();
+
+	void setClientName(String clientName);
+
 }

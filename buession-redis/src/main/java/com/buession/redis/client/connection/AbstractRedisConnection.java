@@ -24,9 +24,13 @@
  */
 package com.buession.redis.client.connection;
 
+import com.buession.core.Executor;
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.datasource.RedisDataSource;
-import com.buession.redis.core.Transaction;
+import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.exception.RedisConnectionFailureException;
+import com.buession.redis.exception.RedisException;
+import com.buession.redis.transaction.Transaction;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.io.IOException;
 
@@ -39,22 +43,22 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 
 	protected Transaction transaction;
 
-	private RedisDataSource dataSource;
+	private DataSource dataSource;
 
 	public AbstractRedisConnection(){
 	}
 
-	public AbstractRedisConnection(RedisDataSource dataSource){
+	public AbstractRedisConnection(DataSource dataSource){
 		this.dataSource = dataSource;
 	}
 
 	@Override
-	public RedisDataSource getDataSource(){
+	public DataSource getDataSource(){
 		return dataSource;
 	}
 
 	@Override
-	public void setDataSource(RedisDataSource dataSource){
+	public void setDataSource(DataSource dataSource){
 		this.dataSource = dataSource;
 	}
 
@@ -68,13 +72,27 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	}
 
 	@Override
+	public <C, R> R execute(final Executor<C, R> executor) throws RedisException{
+		try{
+			return doExecute(executor);
+		}catch(JedisConnectionException e){
+			throw new RedisConnectionFailureException(e.getMessage(), e);
+		}
+	}
+
+	@Override
 	public boolean isConnect(){
-		return getDataSource() == null ? true : checkConnect();
+		return getDataSource() != null && checkConnect();
 	}
 
 	@Override
 	public boolean isClosed(){
-		return getDataSource() == null ? true : checkClosed();
+		return getDataSource() == null || checkClosed();
+	}
+
+	@Override
+	public Transaction getTransaction(){
+		return transaction;
 	}
 
 	@Override
@@ -92,6 +110,8 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	}
 
 	protected abstract void doConnect() throws IOException;
+
+	protected abstract <C, R> R doExecute(final Executor<C, R> executor) throws RedisException;
 
 	protected abstract boolean checkConnect();
 

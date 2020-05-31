@@ -49,8 +49,7 @@ public class ReturnUtils {
 
 	}
 
-	public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer,
-																	final List<String> data){
+	public final static <V> List<V> objectFromListString(final Serializer serializer, final List<String> data){
 		if(data == null){
 			return null;
 		}
@@ -64,8 +63,7 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer,
-																  final List<byte[]> data){
+	public final static <V> List<V> objectFromListByte(final Serializer serializer, final List<byte[]> data){
 		if(data == null){
 			return null;
 		}
@@ -79,8 +77,8 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer,
-																	final List<String> data, final Class<V> clazz){
+	public final static <V> List<V> objectFromListString(final Serializer serializer, final List<String> data,
+														 final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -88,8 +86,8 @@ public class ReturnUtils {
 		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toList());
 	}
 
-	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]> data
-			, final Class<V> clazz){
+	public final static <V> List<V> objectFromListByte(final Serializer serializer, final List<byte[]> data,
+													   final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -97,9 +95,8 @@ public class ReturnUtils {
 		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toList());
 	}
 
-	public final static <V> List<V> returnObjectValueFromListString(final Serializer serializer,
-																	final List<String> data,
-																	final TypeReference<V> type){
+	public final static <V> List<V> objectFromListString(final Serializer serializer, final List<String> data,
+														 final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -107,8 +104,8 @@ public class ReturnUtils {
 		return data.stream().map((value)->serializer.deserialize(value, type)).collect(Collectors.toList());
 	}
 
-	public final static <V> List<V> returnObjectValueFromListByte(final Serializer serializer, final List<byte[]> data
-			, final TypeReference<V> type){
+	public final static <V> List<V> objectFromListByte(final Serializer serializer, final List<byte[]> data,
+													   final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -116,7 +113,7 @@ public class ReturnUtils {
 		return data.stream().map((value)->serializer.deserialize(value, type)).collect(Collectors.toList());
 	}
 
-	public final static <V> Set<V> returnObjectValueFromSetString(final Serializer serializer, final Set<String> data){
+	public final static <V> Set<V> objectFromSetString(final Serializer serializer, final Set<String> data){
 		if(data == null){
 			return null;
 		}
@@ -130,7 +127,7 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static <V> Set<V> returnObjectValueFromSetByte(final Serializer serializer, final Set<byte[]> data){
+	public final static <V> Set<V> objectFromSetByte(final Serializer serializer, final Set<byte[]> data){
 		if(data == null){
 			return null;
 		}
@@ -144,8 +141,8 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static <V> Set<V> returnObjectValueFromSetString(final Serializer serializer, final Set<String> data,
-																  final Class<V> clazz){
+	public final static <V> Set<V> objectFromSetString(final Serializer serializer, final Set<String> data,
+													   final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -153,8 +150,8 @@ public class ReturnUtils {
 		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
-	public final static <V> Set<V> returnObjectValueFromSetByte(final Serializer serializer, final Set<byte[]> data,
-																final Class<V> clazz){
+	public final static <V> Set<V> objectFromSetByte(final Serializer serializer, final Set<byte[]> data,
+													 final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -162,8 +159,8 @@ public class ReturnUtils {
 		return data.stream().map((value)->serializer.deserialize(value, clazz)).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
-	public final static <V> Set<V> returnObjectValueFromSetString(final Serializer serializer, final Set<String> data,
-																  final TypeReference<V> type){
+	public final static <V> Set<V> objectFromSetString(final Serializer serializer, final Set<String> data,
+													   final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -171,8 +168,8 @@ public class ReturnUtils {
 		return data.stream().map((value)->serializer.deserialize(value, type)).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
-	public final static <V> Set<V> returnObjectValueFromSetByte(final Serializer serializer, final Set<byte[]> data,
-																final TypeReference<V> type){
+	public final static <V> Set<V> objectFromSetByte(final Serializer serializer, final Set<byte[]> data,
+													 final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -180,8 +177,8 @@ public class ReturnUtils {
 		return data.stream().map((value)->serializer.deserialize(value, type)).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 
-	public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer,
-																		  final Map<String, String> data){
+	public final static <V> Map<String, V> objectFromMapString(final Serializer serializer,
+															   final Map<String, String> data){
 		if(data == null){
 			return null;
 		}
@@ -193,8 +190,8 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static <V> Map<byte[], V> returnObjectValueFromMapByte(final Serializer serializer, final Map<byte[],
-			byte[]> data){
+	public final static <V> Map<byte[], V> objectFromMapByte(final Serializer serializer,
+															 final Map<byte[], byte[]> data){
 		if(data == null){
 			return null;
 		}
@@ -206,9 +203,8 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer,
-																		  final Map<String, String> data,
-																		  final Class<V> clazz){
+	public final static <V> Map<String, V> objectFromMapString(final Serializer serializer,
+															   final Map<String, String> data, final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -220,8 +216,8 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static <V> Map<byte[], V> returnObjectValueFromMapByte(final Serializer serializer, final Map<byte[],
-			byte[]> data, final Class<V> clazz){
+	public final static <V> Map<byte[], V> objectFromMapByte(final Serializer serializer,
+															 final Map<byte[], byte[]> data, final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -233,9 +229,9 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static <V> Map<String, V> returnObjectValueFromMapString(final Serializer serializer,
-																		  final Map<String, String> data,
-																		  final TypeReference<V> type){
+	public final static <V> Map<String, V> objectFromMapString(final Serializer serializer,
+															   final Map<String, String> data,
+															   final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -247,8 +243,9 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static <V> Map<byte[], V> returnObjectValueFromMapByte(final Serializer serializer, final Map<byte[],
-			byte[]> data, final TypeReference<V> type){
+	public final static <V> Map<byte[], V> objectFromMapByte(final Serializer serializer,
+															 final Map<byte[], byte[]> data,
+															 final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -260,23 +257,23 @@ public class ReturnUtils {
 		return result;
 	}
 
-	public final static Status returnForOK(final String str){
+	public final static Status statusForOK(final String str){
 		return Status.valueOf("OK".equalsIgnoreCase(str));
 	}
 
-	public final static Status returnForOK(final byte[] str){
-		return returnForOK(SafeEncoder.encode(str));
+	public final static Status statusForOK(final byte[] str){
+		return statusForOK(SafeEncoder.encode(str));
 	}
 
-	public final static Status returnStatus(final boolean value){
+	public final static Status statusForBool(final boolean value){
 		return Status.valueOf(value);
 	}
 
-	public final static <O extends Enum<O>> O returnEnum(final String str, final Class<O> enumType){
+	public final static <O extends Enum<O>> O enumValueOf(final String str, final Class<O> enumType){
 		return EnumUtils.valueOf(enumType, str.toUpperCase());
 	}
 
-	public final static RedisServerTime returnRedisServerTime(final List<String> ret){
+	public final static RedisServerTime redisServerTime(final List<String> ret){
 		if(ret == null){
 			return null;
 		}
@@ -292,11 +289,11 @@ public class ReturnUtils {
 		return time;
 	}
 
-	public final static <V> V returnFirst(final List<V> data){
-		return returnFirst(data, null);
+	public final static <V> V listFirst(final List<V> data){
+		return listFirst(data, null);
 	}
 
-	public final static <V> V returnFirst(final List<V> data, final V defaultValue){
+	public final static <V> V listFirst(final List<V> data, final V defaultValue){
 		return Validate.isEmpty(data) ? defaultValue : data.get(0);
 	}
 

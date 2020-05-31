@@ -41,6 +41,24 @@ import java.util.Set;
 public class ListUtils {
 
 	/**
+	 * 将 List 转换为数组
+	 *
+	 * @param list
+	 * 		需要转换的 List
+	 * @param arr
+	 * 		the array into which the elements of this list are to
+	 * 		be stored, if it is big enough; otherwise, a new array of the
+	 * 		same runtime type is allocated for this purpose.
+	 * @param <V>
+	 * 		元素
+	 *
+	 * @return 转换结果
+	 */
+	public static <V> V[] toArray(final List<V> list, final V[] arr){
+		return list == null ? null : list.toArray(arr);
+	}
+
+	/**
 	 * 将 List 转换为 Set
 	 *
 	 * @param list

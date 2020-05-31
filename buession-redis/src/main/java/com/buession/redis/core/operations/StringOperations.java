@@ -27,6 +27,7 @@ package com.buession.redis.core.operations;
 import com.buession.core.serializer.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
+import com.buession.redis.core.command.BinaryStringCommands;
 import com.buession.redis.core.command.StringCommands;
 
 import java.util.List;
@@ -38,7 +39,7 @@ import java.util.List;
  *
  * @author Yong.Teng
  */
-public interface StringOperations extends StringCommands, RedisOperations {
+public interface StringOperations extends StringCommands, BinaryStringCommands, RedisOperations {
 
 	/**
 	 * 将对象 value 序列化后关联到 key；

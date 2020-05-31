@@ -35,45 +35,45 @@ import java.util.Arrays;
  */
 public class GeoRadius implements Serializable {
 
-    private final static long serialVersionUID = 8391863034011700419L;
+	private final static long serialVersionUID = 8391863034011700419L;
 
-    private byte[] member;
+	private byte[] member;
 
-    private double distance;
+	private double distance;
 
-    private Geo geo;
+	private Geo geo;
 
-    public byte[] getMember(){
-        return member;
-    }
+	public byte[] getMember(){
+		return member;
+	}
 
-    public void setMember(byte[] member){
-        this.member = member;
-    }
+	public void setMember(byte[] member){
+		this.member = member;
+	}
 
-    public String getMemberAsString(){
-        return new String(member, Constants.CHARSET);
-    }
+	public String getMemberAsString(){
+		return new String(member, Constants.CHARSET);
+	}
 
-    public double getDistance(){
-        return distance;
-    }
+	public double getDistance(){
+		return distance;
+	}
 
-    public void setDistance(double distance){
-        this.distance = distance;
-    }
+	public void setDistance(double distance){
+		this.distance = distance;
+	}
 
-    public Geo getGeo(){
-        return geo;
-    }
+	public Geo getGeo(){
+		return geo;
+	}
 
-    public void setGeo(Geo geo){
-        this.geo = geo;
-    }
+	public void setGeo(Geo geo){
+		this.geo = geo;
+	}
 
-    @Override
-    public String toString(){
-        return "GeoRadius{" + "member=" + Arrays.toString(member) + ", distance=" + distance + ", geo=" + geo + '}';
-    }
+	@Override
+	public String toString(){
+		return "member=" + Arrays.toString(member) + ", distance=" + distance + ", geo=" + geo;
+	}
 
 }

@@ -33,44 +33,44 @@ import java.io.Serializable;
  */
 public class Cluster implements Serializable {
 
-    private final static long serialVersionUID = 1616257693468570678L;
+	private final static long serialVersionUID = 1616257693468570678L;
 
-    /**
-     * 集群功能是否已经开启
-     */
-    private boolean enabled;
+	/**
+	 * 集群功能是否已经开启
+	 */
+	private boolean enabled;
 
-    /**
-     * 获取集群功能是否已经开启
-     *
-     * @return 获取集群功能是否已经开启
-     */
-    public boolean isEnabled(){
-        return getEnabled();
-    }
+	/**
+	 * 获取集群功能是否已经开启
+	 *
+	 * @return 获取集群功能是否已经开启
+	 */
+	public boolean isEnabled(){
+		return getEnabled();
+	}
 
-    /**
-     * 获取集群功能是否已经开启
-     *
-     * @return 获取集群功能是否已经开启
-     */
-    public boolean getEnabled(){
-        return enabled;
-    }
+	/**
+	 * 获取集群功能是否已经开启
+	 *
+	 * @return 获取集群功能是否已经开启
+	 */
+	public boolean getEnabled(){
+		return enabled;
+	}
 
-    /**
-     * 设置获取集群功能开启状态
-     *
-     * @param enabled
-     *         集群功能开启状态
-     */
-    public void setEnabled(boolean enabled){
-        this.enabled = enabled;
-    }
+	/**
+	 * 设置获取集群功能开启状态
+	 *
+	 * @param enabled
+	 * 		集群功能开启状态
+	 */
+	public void setEnabled(boolean enabled){
+		this.enabled = enabled;
+	}
 
-    @Override
-    public String toString(){
-        return "Cluster{" + "enabled=" + enabled + '}';
-    }
+	@Override
+	public String toString(){
+		return "enabled=" + enabled;
+	}
 
 }

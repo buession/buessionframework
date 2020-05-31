@@ -24,150 +24,45 @@
  */
 package com.buession.redis.core;
 
-import org.springframework.lang.Nullable;
-import org.springframework.util.ObjectUtils;
-
 /**
  * @author Yong.Teng
  */
-public class RedisNode implements NamedNode {
+public interface RedisNode {
 
-	@Nullable
-	private String id;
+	String DEFAULT_HOST = "localhost";
 
-	@Nullable
-	private String name;
+	int DEFAULT_PORT = 6379;
 
-	@Nullable
-	private String host;
+	int DEFAULT_DATABASE = 0;
 
-	private int port;
+	/**
+	 * 获取 Redis 服务器主机地址
+	 *
+	 * @return Redis 服务器主机地址
+	 */
+	String getHost();
 
-	@Nullable
-	private Role type;
+	/**
+	 * 设置 Redis 服务器主机地址
+	 *
+	 * @param host
+	 * 		Redis 服务器主机地址
+	 */
+	void setHost(String host);
 
-	@Nullable
-	private String masterId;
+	/**
+	 * 获取 Redis 服务器主机端口
+	 *
+	 * @return Redis 服务器主机端口
+	 */
+	int getPort();
 
-	public RedisNode(@Nullable String host, int port){
-		this.host = host;
-		this.port = port;
-	}
-
-	public RedisNode(@Nullable String id, @Nullable String name, @Nullable String host, int port, @Nullable Role type){
-		this(host, port);
-		this.id = id;
-		this.name = name;
-		this.type = type;
-	}
-
-	@Nullable
-	public String getId(){
-		return id;
-	}
-
-	public void setId(@Nullable String id){
-		this.id = id;
-	}
-
-	@Override
-	@Nullable
-	public String getName(){
-		return name;
-	}
-
-	public void setName(@Nullable String name){
-		this.name = name;
-	}
-
-	@Nullable
-	public String getHost(){
-		return host;
-	}
-
-	public void setHost(@Nullable String host){
-		this.host = host;
-	}
-
-	public int getPort(){
-		return port;
-	}
-
-	public void setPort(int port){
-		this.port = port;
-	}
-
-	@Nullable
-	public Role getType(){
-		return type;
-	}
-
-	public void setType(@Nullable Role type){
-		this.type = type;
-	}
-
-	@Nullable
-	public String getMasterId(){
-		return masterId;
-	}
-
-	public void setMasterId(@Nullable String masterId){
-		this.masterId = masterId;
-	}
-
-	public boolean isMaster(){
-		return ObjectUtils.nullSafeEquals(getType(), Role.MASTER);
-	}
-
-	public boolean isSlave(){
-		return ObjectUtils.nullSafeEquals(getType(), Role.SLAVE);
-	}
-
-	public boolean isReplica(){
-		return isSlave();
-	}
-
-	@Override
-	public String toString(){
-		return host + ":" + port;
-	}
-
-	@Override
-	public int hashCode(){
-		final int prime = 31;
-		int result = 1;
-
-		result = prime * result + ObjectUtils.nullSafeHashCode(host);
-		result = prime * result + ObjectUtils.nullSafeHashCode(port);
-
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj){
-		if(this == obj){
-			return true;
-		}
-
-		if(obj == null || (obj instanceof RedisNode) == false){
-			return false;
-		}
-
-		RedisNode that = (RedisNode) obj;
-
-		if(ObjectUtils.nullSafeEquals(this.host, that.host) == false){
-			return false;
-		}
-
-		if(ObjectUtils.nullSafeEquals(this.port, that.port) == false){
-			return false;
-		}
-
-		if(ObjectUtils.nullSafeEquals(this.name, that.name) == false){
-			return false;
-		}
-
-		return true;
-	}
+	/**
+	 * 设置 Redis 服务器主机端口
+	 *
+	 * @param port
+	 * 		Redis 服务器主机端口
+	 */
+	void setPort(int port);
 
 }

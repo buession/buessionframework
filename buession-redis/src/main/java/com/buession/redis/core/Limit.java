@@ -29,32 +29,50 @@ package com.buession.redis.core;
  */
 public class Limit {
 
-	private long offset;
+	private static final Limit UNLIMITED = new Limit(null, null);
 
-	private long count;
+	private Long offset;
 
-	public Limit(){
-	}
+	private Long count;
 
-	public Limit(long offset, long count){
+	public Limit(Long offset, Long count){
 		this.offset = offset;
 		this.count = count;
+	}
+
+	public final static Limit create(long offset, long count){
+		return new Limit(offset, count);
+	}
+
+	public static Limit unlimited(){
+		return UNLIMITED;
 	}
 
 	public long getOffset(){
-		return offset;
-	}
-
-	public void setOffset(long offset){
-		this.offset = offset;
+		return offset == null ? -1 : offset;
 	}
 
 	public long getCount(){
-		return count;
+		return count == null ? -1 : count;
 	}
 
-	public void setCount(long count){
-		this.count = count;
+	public boolean isLimited(){
+		return offset != null && count != null;
+	}
+
+	@Override
+	public String toString(){
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(getClass().getSimpleName()).append(" ");
+
+		if(isLimited()){
+			sb.append("[offset=").append(offset).append(", count=").append(count).append(']');
+		}else{
+			sb.append("[unlimited]");
+		}
+
+		return sb.toString();
 	}
 
 }

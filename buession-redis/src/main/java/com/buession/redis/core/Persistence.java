@@ -646,25 +646,8 @@ public class Persistence implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Persistence{" + "loading=" + loading + ", rdbChangesSinceLastSave=" + rdbChangesSinceLastSave + ", " +
+		return "loading=" + loading + ", rdbChangesSinceLastSave=" + rdbChangesSinceLastSave + ", " +
 				"rdbBgSaveInProgress=" + rdbBgSaveInProgress + ", rdbLastSaveTime=" + rdbLastSaveTime + ", " +
-				"rdbLastBgSaveStatus=" + rdbLastBgSaveStatus + ", rdbLastBgSaveTimeSec=" + rdbLastBgSaveTimeSec + ","
-				+ " " + "rdbCurrentBgSaveTimeSec=" + rdbCurrentBgSaveTimeSec + ", rdbLastCowSize=" + rdbLastCowSize +
-				", " + "aofEnabled=" + aofEnabled + ", aofRewriteInProgress=" + aofRewriteInProgress + ", " +
-				"aofRewriteScheduled=" + aofRewriteScheduled + ", aofLastRewriteTimeSec=" + aofLastRewriteTimeSec + "," +
-				"" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + ""
-				+ "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-				"" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + ""
-				+ "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-				"" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + " " + "" + "" +
-				"aofCurrentRewriteTimeSec=" + aofCurrentRewriteTimeSec + "," + "" + "" + " " +
-				"aofLastBgRewriteStatus=" + aofLastBgRewriteStatus + ", " + "aofLastWriteStatus=" + aofLastWriteStatus
-				+ "," + "" + "" + "" + " " + "" + "aofLastCowSize=" + aofLastCowSize + ", " + "aofCurrentSize=" +
-				aofCurrentSize + ", " + "aofBaseSize=" + aofBaseSize + ", " + "" + "" + "" + "" + "" + "" + "" + "" +
-				"" + "" + "" + "" + "aofPendingRewrite=" + aofPendingRewrite + ", " + "aofBufferLength=" +
-				aofBufferLength + ", " + "" + "" + "" + "" + "" + "" + "aofRewriteBufferLength=" +
-				aofRewriteBufferLength + ", " + "" + "aofPendingBioFsync=" + aofPendingBioFsync + "," + "" + "" + "" +
-				" aofDelayedFsync=" + aofDelayedFsync + '}';
+				"rdbLastBgSaveStatus=" + rdbLastBgSaveStatus + ", rdbLastBgSaveTimeSec=" + rdbLastBgSaveTimeSec + "," + " " + "rdbCurrentBgSaveTimeSec=" + rdbCurrentBgSaveTimeSec + ", rdbLastCowSize=" + rdbLastCowSize + ", " + "aofEnabled=" + aofEnabled + ", aofRewriteInProgress=" + aofRewriteInProgress + ", " + "aofRewriteScheduled" + "=" + aofRewriteScheduled + ", aofLastRewriteTimeSec=" + aofLastRewriteTimeSec + ", " + "aofCurrentRewriteTimeSec=" + aofCurrentRewriteTimeSec + ", aofLastBgRewriteStatus=" + aofLastBgRewriteStatus + ", aofLastWriteStatus=" + aofLastWriteStatus + ", aofLastCowSize=" + aofLastCowSize + ", aofCurrentSize=" + aofCurrentSize + ", aofBaseSize=" + aofBaseSize + ", aofPendingRewrite=" + aofPendingRewrite + ", aofBufferLength=" + aofBufferLength + ", aofRewriteBufferLength=" + aofRewriteBufferLength + ", aofPendingBioFsync=" + aofPendingBioFsync + ", aofDelayedFsync=" + aofDelayedFsync;
 	}
-
 }

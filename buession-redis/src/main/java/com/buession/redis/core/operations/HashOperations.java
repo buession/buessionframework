@@ -27,6 +27,7 @@ package com.buession.redis.core.operations;
 import com.buession.core.serializer.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
+import com.buession.redis.core.command.BinaryHashCommands;
 import com.buession.redis.core.command.HashCommands;
 
 import java.util.List;
@@ -39,7 +40,7 @@ import java.util.Map;
  *
  * @author Yong.Teng
  */
-public interface HashOperations extends HashCommands, RedisOperations {
+public interface HashOperations extends HashCommands, BinaryHashCommands, RedisOperations {
 
 	/**
 	 * 获取哈希表 key 中所有域的值，并将值反序列化为对象
@@ -551,7 +552,9 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 操作结果，成功删除的域的数量 为 0 时，返回 Status.FAILURE；否则返回 Status.SUCCESS
 	 */
-	Status hDelete(final String key, final String field);
+	default Status hDelete(final String key, final String field){
+		return hDel(key, field);
+	}
 
 	/**
 	 * 删除哈希表 key 中的指定域
@@ -563,7 +566,9 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 操作结果，成功删除的域的数量 为 0 时，返回 Status.FAILURE；否则返回 Status.SUCCESS
 	 */
-	Status hDelete(final byte[] key, final byte[] field);
+	default Status hDelete(final byte[] key, final byte[] field){
+		return hDel(key, field);
+	}
 
 	/**
 	 * 删除哈希表 key 中的一个或多个指定域
@@ -575,7 +580,9 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 被成功删除的域的数量
 	 */
-	Long hDelete(final String key, final String... fields);
+	default Long hDelete(final String key, final String... fields){
+		return hDel(key, fields);
+	}
 
 	/**
 	 * 删除哈希表 key 中的一个或多个指定域
@@ -587,6 +594,8 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 被成功删除的域的数量
 	 */
-	Long hDelete(final byte[] key, final byte[]... fields);
+	default Long hDelete(final byte[] key, final byte[]... fields){
+		return hDel(key, fields);
+	}
 
 }

@@ -64,7 +64,7 @@ public class RedisServerTime implements Serializable {
 
 	@Override
 	public String toString(){
-		return "RedisServerTime{" + "date=" + date + ", usec=" + usec + '}';
+		return "date=" + date + ", usec=" + usec;
 	}
 
 }

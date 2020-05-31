@@ -34,25 +34,9 @@ import java.io.Serializable;
  *
  * @author Yong.Teng
  */
-public class Server implements Serializable {
-
-	public final static String DEFAULT_HOST = "localhost";
-
-	public final static int DEFAULT_PORT = 6379;
-
-	public final static int DEFAULT_DATABASE = 0;
+public class Server extends GenericRedisNode implements Serializable {
 
 	private final static long serialVersionUID = 2729543496870054983L;
-
-	/**
-	 * Redis 服务器主机地址
-	 */
-	private String host;
-
-	/**
-	 * Redis 服务器主机端口
-	 */
-	private int port;
 
 	/**
 	 * Redis 服务器的宿主操作系统
@@ -143,44 +127,6 @@ public class Server implements Serializable {
 	 * 是否是主服务器
 	 */
 	private boolean isMaster;
-
-	/**
-	 * 获取 Redis 服务器主机地址
-	 *
-	 * @return Redis 服务器主机地址
-	 */
-	public String getHost(){
-		return host;
-	}
-
-	/**
-	 * 设置 Redis 服务器主机地址
-	 *
-	 * @param host
-	 * 		Redis 服务器主机地址
-	 */
-	public void setHost(String host){
-		this.host = host;
-	}
-
-	/**
-	 * 获取 Redis 服务器主机端口
-	 *
-	 * @return Redis 服务器主机端口
-	 */
-	public int getPort(){
-		return port;
-	}
-
-	/**
-	 * 设置 Redis 服务器主机端口
-	 *
-	 * @param port
-	 * 		Redis 服务器主机端口
-	 */
-	public void setPort(int port){
-		this.port = port;
-	}
 
 	/**
 	 * 获取 Redis 服务器的宿主操作系统
@@ -534,13 +480,8 @@ public class Server implements Serializable {
 
 	@Override
 	public String toString(){
-		return "Server{" + "host='" + host + '\'' + ", port=" + port + ", os='" + os + '\'' + ", arch=" + arch + ", "
-				+ "multiplexingApi=" + multiplexingApi + ", gitSha1='" + gitSha1 + '\'' + ", gitDirty='" + gitDirty +
-				'\'' + ", buildId='" + buildId + '\'' + ", mode=" + mode + ", configFile='" + configFile + '\'' + ","
-				+ " " + "executable='" + executable + '\'' + ", version='" + version + '\'' + ", gccVersion='" +
-				gccVersion + '\'' + ", processId=" + processId + ", runId='" + runId + '\'' + ", uptime=" + uptime +
-				", lruClock=" + lruClock + ", hz=" + hz + ", configuredHz=" + configuredHz + ", isMaster=" + isMaster
-				+ '}';
+		return super.toString() + ", os='" + os + '\'' + ", arch=" + arch + ", multiplexingApi=" + multiplexingApi +
+				", gitSha1" + "='" + gitSha1 + '\'' + ", gitDirty='" + gitDirty + '\'' + ", buildId='" + buildId + '\'' + ", " + "mode=" + mode + ", configFile='" + configFile + '\'' + ", executable='" + executable + '\'' + ", " + "version='" + version + '\'' + ", gccVersion='" + gccVersion + '\'' + ", processId=" + processId + "," + " " + "runId='" + runId + '\'' + ", uptime=" + uptime + ", lruClock=" + lruClock + ", hz=" + hz + ", " + "configuredHz=" + configuredHz + ", isMaster=" + isMaster;
 	}
 
 	public final static class Uptime {
@@ -559,7 +500,6 @@ public class Server implements Serializable {
 		 * 默认构造函数
 		 */
 		public Uptime(){
-
 		}
 
 		/**
@@ -615,7 +555,7 @@ public class Server implements Serializable {
 
 		@Override
 		public String toString(){
-			return "Uptime{" + "seconds=" + seconds + ", days=" + days + '}';
+			return "seconds=" + seconds + ", days=" + days;
 		}
 	}
 

@@ -24,14 +24,9 @@
  */
 package com.buession.redis.client.connection.jedis;
 
-import com.buession.core.Executor;
 import com.buession.redis.client.connection.AbstractRedisConnection;
-import com.buession.redis.client.connection.datasource.RedisDataSource;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.RedisConnectionFailureException;
-import com.buession.redis.exception.RedisException;
+import com.buession.redis.client.connection.datasource.DataSource;
 import redis.clients.jedis.commands.JedisCommands;
-import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.io.IOException;
 
@@ -40,44 +35,20 @@ import java.io.IOException;
  */
 public abstract class AbstractJedisRedisConnection<T extends JedisCommands> extends AbstractRedisConnection implements JedisRedisConnection<T> {
 
-	private T delegate;
-
 	public AbstractJedisRedisConnection(){
 		super();
 	}
 
-	public <D extends RedisDataSource> AbstractJedisRedisConnection(D dataSource){
+	public <D extends DataSource> AbstractJedisRedisConnection(D dataSource){
 		super(dataSource);
 	}
 
 	@Override
-	public <C, R> R execute(final ProtocolCommand command, final Executor<C, R> executor) throws RedisException{
-		try{
-			C delegate = (C) getDelegate();
-			return executor.execute(delegate);
-		}catch(JedisConnectionException e){
-			throw new RedisConnectionFailureException(e.getMessage(), e);
-		}
-	}
-
-	@Override
 	protected void doDisconnect() throws IOException{
-		delegate = null;
 	}
 
 	@Override
 	protected void doClose() throws IOException{
-		delegate = null;
 	}
-
-	protected T getDelegate(){
-		if(delegate == null && getDataSource() != null){
-			delegate = getDelegate(getDataSource());
-		}
-
-		return delegate;
-	}
-
-	protected abstract T getDelegate(RedisDataSource dataSource);
 
 }

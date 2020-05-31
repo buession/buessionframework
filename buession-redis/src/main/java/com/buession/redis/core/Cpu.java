@@ -33,108 +33,107 @@ import java.io.Serializable;
  */
 public class Cpu implements Serializable {
 
-    private final static long serialVersionUID = 7374909500664048450L;
+	private final static long serialVersionUID = 7374909500664048450L;
 
-    /**
-     * Redis 服务器耗费的系统 CPU
-     */
-    private double usedCpuSys;
+	/**
+	 * Redis 服务器耗费的系统 CPU
+	 */
+	private double usedCpuSys;
 
-    /**
-     * Redis 服务器耗费的用户 CPU
-     */
-    private double usedCpuUser;
+	/**
+	 * Redis 服务器耗费的用户 CPU
+	 */
+	private double usedCpuUser;
 
-    /**
-     * Redis 后台进程耗费的系统 CPU
-     */
-    private double usedCpuSysChildren;
+	/**
+	 * Redis 后台进程耗费的系统 CPU
+	 */
+	private double usedCpuSysChildren;
 
-    /**
-     * Redis 后台进程耗费的用户 CPU
-     */
-    private double usedCpuUserChildren;
+	/**
+	 * Redis 后台进程耗费的用户 CPU
+	 */
+	private double usedCpuUserChildren;
 
-    /**
-     * 获取 Redis 服务器耗费的系统 CPU
-     *
-     * @return Redis 服务器耗费的系统 CPU
-     */
-    public double getUsedCpuSys(){
-        return usedCpuSys;
-    }
+	/**
+	 * 获取 Redis 服务器耗费的系统 CPU
+	 *
+	 * @return Redis 服务器耗费的系统 CPU
+	 */
+	public double getUsedCpuSys(){
+		return usedCpuSys;
+	}
 
-    /**
-     * 设置 Redis 服务器耗费的系统 CPU
-     *
-     * @param usedCpuSys
-     *         Redis 服务器耗费的系统 CPU
-     */
-    public void setUsedCpuSys(double usedCpuSys){
-        this.usedCpuSys = usedCpuSys;
-    }
+	/**
+	 * 设置 Redis 服务器耗费的系统 CPU
+	 *
+	 * @param usedCpuSys
+	 * 		Redis 服务器耗费的系统 CPU
+	 */
+	public void setUsedCpuSys(double usedCpuSys){
+		this.usedCpuSys = usedCpuSys;
+	}
 
-    /**
-     * 获取 Redis 服务器耗费的用户 CPU
-     *
-     * @return Redis 服务器耗费的用户 CPU
-     */
-    public double getUsedCpuUser(){
-        return usedCpuUser;
-    }
+	/**
+	 * 获取 Redis 服务器耗费的用户 CPU
+	 *
+	 * @return Redis 服务器耗费的用户 CPU
+	 */
+	public double getUsedCpuUser(){
+		return usedCpuUser;
+	}
 
-    /**
-     * 设置 Redis 服务器耗费的用户 CPU
-     *
-     * @param usedCpuUser
-     *         Redis 服务器耗费的用户 CPU
-     */
-    public void setUsedCpuUser(double usedCpuUser){
-        this.usedCpuUser = usedCpuUser;
-    }
+	/**
+	 * 设置 Redis 服务器耗费的用户 CPU
+	 *
+	 * @param usedCpuUser
+	 * 		Redis 服务器耗费的用户 CPU
+	 */
+	public void setUsedCpuUser(double usedCpuUser){
+		this.usedCpuUser = usedCpuUser;
+	}
 
-    /**
-     * 获取 Redis 后台进程耗费的系统 CPU
-     *
-     * @return Redis 后台进程耗费的系统 CPU
-     */
-    public double getUsedCpuSysChildren(){
-        return usedCpuSysChildren;
-    }
+	/**
+	 * 获取 Redis 后台进程耗费的系统 CPU
+	 *
+	 * @return Redis 后台进程耗费的系统 CPU
+	 */
+	public double getUsedCpuSysChildren(){
+		return usedCpuSysChildren;
+	}
 
-    /**
-     * 设置 Redis 后台进程耗费的系统 CPU
-     *
-     * @param usedCpuSysChildren
-     *         Redis 后台进程耗费的系统 CPU
-     */
-    public void setUsedCpuSysChildren(double usedCpuSysChildren){
-        this.usedCpuSysChildren = usedCpuSysChildren;
-    }
+	/**
+	 * 设置 Redis 后台进程耗费的系统 CPU
+	 *
+	 * @param usedCpuSysChildren
+	 * 		Redis 后台进程耗费的系统 CPU
+	 */
+	public void setUsedCpuSysChildren(double usedCpuSysChildren){
+		this.usedCpuSysChildren = usedCpuSysChildren;
+	}
 
-    /**
-     * 获取 Redis 后台进程耗费的用户 CPU
-     *
-     * @return Redis 后台进程耗费的用户 CPU
-     */
-    public double getUsedCpuUserChildren(){
-        return usedCpuUserChildren;
-    }
+	/**
+	 * 获取 Redis 后台进程耗费的用户 CPU
+	 *
+	 * @return Redis 后台进程耗费的用户 CPU
+	 */
+	public double getUsedCpuUserChildren(){
+		return usedCpuUserChildren;
+	}
 
-    /**
-     * 设置 Redis 后台进程耗费的用户 CPU
-     *
-     * @param usedCpuUserChildren
-     *         Redis 后台进程耗费的用户 CPU
-     */
-    public void setUsedCpuUserChildren(double usedCpuUserChildren){
-        this.usedCpuUserChildren = usedCpuUserChildren;
-    }
+	/**
+	 * 设置 Redis 后台进程耗费的用户 CPU
+	 *
+	 * @param usedCpuUserChildren
+	 * 		Redis 后台进程耗费的用户 CPU
+	 */
+	public void setUsedCpuUserChildren(double usedCpuUserChildren){
+		this.usedCpuUserChildren = usedCpuUserChildren;
+	}
 
-    @Override
-    public String toString(){
-        return "Cpu{" + "usedCpuSys=" + usedCpuSys + ", usedCpuUser=" + usedCpuUser + ", usedCpuSysChildren=" +
-                usedCpuSysChildren + ", usedCpuUserChildren=" + usedCpuUserChildren + '}';
-    }
+	@Override
+	public String toString(){
+		return "usedCpuSys=" + usedCpuSys + ", usedCpuUser=" + usedCpuUser + ", usedCpuSysChildren=" + usedCpuSysChildren + ", usedCpuUserChildren=" + usedCpuUserChildren;
+	}
 
 }

@@ -24,12 +24,12 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
-import com.buession.redis.client.connection.datasource.RedisDataSource;
+import com.buession.redis.client.connection.datasource.DataSource;
 import redis.clients.jedis.commands.JedisCommands;
 
 /**
  * @author Yong.Teng
  */
-public interface JedisRedisDataSource<T extends JedisCommands> extends RedisDataSource {
+public interface JedisRedisDataSource<T extends JedisCommands> extends DataSource {
 
 }

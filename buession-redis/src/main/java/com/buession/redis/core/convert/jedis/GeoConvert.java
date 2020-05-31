@@ -26,11 +26,11 @@ package com.buession.redis.core.convert.jedis;
 
 import com.buession.lang.Geo;
 import com.buession.redis.core.GeoRadius;
+import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.convert.Convert;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;
-import redis.clients.jedis.GeoUnit;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -62,8 +62,8 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 
 			final Map<K, GeoCoordinate> result = new LinkedHashMap<>(source.size());
 
-			source.forEach((key, value)->result.put(key, new GeoCoordinate(value.getLongitude(), value.getLatitude()
-			)));
+			source.forEach((key, value)->result.put(key, new GeoCoordinate(value.getLongitude(),
+					value.getLatitude())));
 
 			return result;
 		}
@@ -115,11 +115,27 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 		}
 	}
 
-	public static class GeoUnitConvert implements Convert<GeoCommands.GeoUnit, GeoUnit> {
+	public static class GeoUnitConvert implements Convert<GeoUnit, redis.clients.jedis.GeoUnit> {
 
 		@Override
-		public GeoUnit convert(final GeoCommands.GeoUnit source){
+		public redis.clients.jedis.GeoUnit convert(final GeoUnit source){
 			switch(source){
+				case M:
+					return redis.clients.jedis.GeoUnit.M;
+				case KM:
+					return redis.clients.jedis.GeoUnit.KM;
+				case MI:
+					return redis.clients.jedis.GeoUnit.MI;
+				case FT:
+					return redis.clients.jedis.GeoUnit.FT;
+				default:
+					return null;
+			}
+		}
+
+		@Override
+		public GeoUnit deconvert(final redis.clients.jedis.GeoUnit target){
+			switch(target){
 				case M:
 					return GeoUnit.M;
 				case KM:
@@ -128,22 +144,6 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 					return GeoUnit.MI;
 				case FT:
 					return GeoUnit.FT;
-				default:
-					return null;
-			}
-		}
-
-		@Override
-		public GeoCommands.GeoUnit deconvert(final GeoUnit target){
-			switch(target){
-				case M:
-					return GeoCommands.GeoUnit.M;
-				case KM:
-					return GeoCommands.GeoUnit.KM;
-				case MI:
-					return GeoCommands.GeoUnit.MI;
-				case FT:
-					return GeoCommands.GeoUnit.FT;
 				default:
 					return null;
 			}

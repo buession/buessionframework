@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
+import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.commands.JedisCommands;
 import redis.clients.jedis.util.Pool;
 
@@ -31,6 +32,10 @@ import redis.clients.jedis.util.Pool;
  * @author Yong.Teng
  */
 public interface PoolJedisDataSource<T extends JedisCommands> extends JedisRedisDataSource<T> {
+
+	JedisPoolConfig getPoolConfig();
+
+	void setPoolConfig(JedisPoolConfig poolConfig);
 
 	Pool<T> getPool();
 

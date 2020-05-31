@@ -27,10 +27,8 @@ package com.buession.redis;
 import com.buession.core.utils.Assert;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.jedis.JedisPoolConnection;
+import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.connection.jedis.ShardedJedisConnection;
-import com.buession.redis.client.connection.jedis.SimpleJedisConnection;
-import com.buession.redis.client.connection.jedis.SimpleShardedJedisConnection;
 import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.client.jedis.ShardedJedisClient;
 import com.buession.redis.core.Executor;
@@ -130,14 +128,14 @@ public abstract class RedisAccessor {
 	}
 
 	protected RedisClient doGetRedisClient(RedisConnection connection) throws RedisException{
-		if((connection instanceof SimpleJedisConnection) || (connection instanceof JedisPoolConnection)){
+		if(connection instanceof JedisConnection){
 			JedisClient jedisClient = new JedisClient(connection);
 
 			jedisClient.setEnableTransactionSupport(enableTransactionSupport);
 			jedisClient.setConnection(connection);
 
 			return jedisClient;
-		}else if((connection instanceof SimpleShardedJedisConnection) || (connection instanceof ShardedJedisConnection)){
+		}else if(connection instanceof ShardedJedisConnection){
 			ShardedJedisClient shardedJedisClient = new ShardedJedisClient(connection);
 
 			shardedJedisClient.setEnableTransactionSupport(enableTransactionSupport);
@@ -153,7 +151,7 @@ public abstract class RedisAccessor {
 		return KeyUtil.makeRawKey(getOptions().getPrefix(), key);
 	}
 
-	protected final String[] makeRawKeys(final String... keys){
+	protected final String[] makeRawKeys(final String[] keys){
 		return KeyUtil.makeRawKeys(getOptions().getPrefix(), keys);
 	}
 
@@ -161,11 +159,11 @@ public abstract class RedisAccessor {
 		return KeyUtil.makeByteKey(getOptions().getPrefix(), key);
 	}
 
-	protected final byte[][] makeByteKeys(final byte[]... keys){
+	protected final byte[][] makeByteKeys(final byte[][] keys){
 		return KeyUtil.makeByteKeys(getOptions().getPrefix(), keys);
 	}
 
-	protected <V> String[] serializer(final V... values){
+	protected <V> String[] serializer(final V[] values){
 		if(values == null){
 			return null;
 		}else{
@@ -179,7 +177,7 @@ public abstract class RedisAccessor {
 		}
 	}
 
-	protected <V> byte[][] serializerAsByte(final V... values){
+	protected <V> byte[][] serializerAsByte(final V[] values){
 		if(values == null){
 			return null;
 		}else{

@@ -35,10 +35,11 @@ import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
 
 /**
+ * Jedis 单节点连接池数据源
+ *
  * @author Yong.Teng
  */
-public class JedisPoolDataSource extends AbstractJedisRedisDataSource<Jedis> implements JedisDataSource,
-		PoolJedisDataSource<Jedis> {
+public class JedisPoolDataSource extends AbstractGenericJedisDataSource implements PoolJedisDataSource<Jedis> {
 
 	private JedisPoolConfig poolConfig;
 
@@ -150,10 +151,12 @@ public class JedisPoolDataSource extends AbstractJedisRedisDataSource<Jedis> imp
 		this.poolConfig = poolConfig;
 	}
 
+	@Override
 	public JedisPoolConfig getPoolConfig(){
 		return poolConfig;
 	}
 
+	@Override
 	public void setPoolConfig(JedisPoolConfig poolConfig){
 		this.poolConfig = poolConfig;
 	}

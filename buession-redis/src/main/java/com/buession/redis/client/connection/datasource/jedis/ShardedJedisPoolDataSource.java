@@ -24,7 +24,8 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
-import com.buession.core.utils.ReflectUtils;
+import com.buession.redis.client.jedis.JedisClientUtils;
+import com.buession.redis.core.ShardedRedisNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.JedisPoolConfig;
@@ -35,21 +36,19 @@ import redis.clients.jedis.ShardedJedisPool;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
+ * Jedis 分片模式连接池数据源
+ *
  * @author Yong.Teng
  */
-public class ShardedJedisPoolDataSource extends AbstractJedisRedisDataSource<ShardedJedis> implements ShardedJedisDataSource, PoolJedisDataSource<ShardedJedis> {
-
-	private int weight;
+public class ShardedJedisPoolDataSource extends AbstractShardedJedisDataSource implements PoolJedisDataSource<ShardedJedis> {
 
 	private JedisPoolConfig poolConfig;
 
 	private ShardedJedisPool pool;
-
-	private ShardedJedis shardedJedis;
 
 	private final static Logger logger = LoggerFactory.getLogger(ShardedJedisPoolDataSource.class);
 
@@ -57,120 +56,67 @@ public class ShardedJedisPoolDataSource extends AbstractJedisRedisDataSource<Sha
 		super();
 	}
 
-	public ShardedJedisPoolDataSource(String host, JedisPoolConfig poolConfig){
-		super(host);
+	public ShardedJedisPoolDataSource(JedisPoolConfig poolConfig){
 		this.poolConfig = poolConfig;
 	}
 
-	public ShardedJedisPoolDataSource(String host, String password, JedisPoolConfig poolConfig){
-		super(host, password);
+	public ShardedJedisPoolDataSource(Set<ShardedRedisNode> redisNodes, JedisPoolConfig poolConfig){
+		super(redisNodes);
 		this.poolConfig = poolConfig;
 	}
 
-	public ShardedJedisPoolDataSource(String host, int database, JedisPoolConfig poolConfig){
-		super(host, database);
+	public ShardedJedisPoolDataSource(Set<ShardedRedisNode> redisNodes, int database, JedisPoolConfig poolConfig){
+		super(redisNodes, database);
 		this.poolConfig = poolConfig;
 	}
 
-	public ShardedJedisPoolDataSource(String host, String password, int database, JedisPoolConfig poolConfig){
-		super(host, password, database);
-		this.poolConfig = poolConfig;
-	}
-
-	public ShardedJedisPoolDataSource(String host, int port, String password, JedisPoolConfig poolConfig){
-		super(host, port, password);
-		this.poolConfig = poolConfig;
-	}
-
-	public ShardedJedisPoolDataSource(String host, int port, int database, JedisPoolConfig poolConfig){
-		super(host, port, database);
-		this.poolConfig = poolConfig;
-	}
-
-	public ShardedJedisPoolDataSource(String host, int port, String password, int database,
-									  JedisPoolConfig poolConfig){
-		super(host, port, password, database);
-		this.poolConfig = poolConfig;
-	}
-
-	public ShardedJedisPoolDataSource(String host, int port, String password, int database, int connectTimeout,
+	public ShardedJedisPoolDataSource(Set<ShardedRedisNode> redisNodes, int database, int connectTimeout,
 									  int soTimeout, JedisPoolConfig poolConfig){
-		super(host, port, password, database, connectTimeout, soTimeout);
+		super(redisNodes, database, connectTimeout, soTimeout);
 		this.poolConfig = poolConfig;
 	}
 
-	public ShardedJedisPoolDataSource(String host, int port, String password, int database, int connectTimeout,
+	public ShardedJedisPoolDataSource(Set<ShardedRedisNode> redisNodes, int database, boolean useSsl,
+									  JedisPoolConfig poolConfig){
+		super(redisNodes, database, useSsl);
+		this.poolConfig = poolConfig;
+	}
+
+	public ShardedJedisPoolDataSource(Set<ShardedRedisNode> redisNodes, int database,
+									  SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
+									  HostnameVerifier hostnameVerifier, JedisPoolConfig poolConfig){
+		super(redisNodes, database, sslSocketFactory, sslParameters, hostnameVerifier);
+		this.poolConfig = poolConfig;
+	}
+
+	public ShardedJedisPoolDataSource(Set<ShardedRedisNode> redisNodes, int database, int connectTimeout,
 									  int soTimeout, boolean useSsl, JedisPoolConfig poolConfig){
-		super(host, port, password, database, connectTimeout, soTimeout, useSsl);
+		super(redisNodes, database, connectTimeout, soTimeout, useSsl);
 		this.poolConfig = poolConfig;
 	}
 
-	public ShardedJedisPoolDataSource(String host, int port, String password, int database, int connectTimeout,
+	public ShardedJedisPoolDataSource(Set<ShardedRedisNode> redisNodes, int database, int connectTimeout,
 									  int soTimeout, SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
 									  HostnameVerifier hostnameVerifier, JedisPoolConfig poolConfig){
-		super(host, port, password, database, connectTimeout, soTimeout, sslSocketFactory, sslParameters,
-				hostnameVerifier);
+		super(redisNodes, database, connectTimeout, soTimeout, sslSocketFactory, sslParameters, hostnameVerifier);
 		this.poolConfig = poolConfig;
 	}
 
-	public ShardedJedisPoolDataSource(String host, int port, String password, int database, int connectTimeout,
+	public ShardedJedisPoolDataSource(Set<ShardedRedisNode> redisNodes, int database, int connectTimeout,
 									  int soTimeout, boolean useSsl, SSLSocketFactory sslSocketFactory,
 									  SSLParameters sslParameters, HostnameVerifier hostnameVerifier,
 									  JedisPoolConfig poolConfig){
-		super(host, port, password, database, connectTimeout, soTimeout, useSsl, sslSocketFactory, sslParameters,
+		super(redisNodes, database, connectTimeout, soTimeout, useSsl, sslSocketFactory, sslParameters,
 				hostnameVerifier);
 		this.poolConfig = poolConfig;
 	}
 
-	public ShardedJedisPoolDataSource(String host, int port, String password, int database, String clientName,
-									  boolean useSsl, JedisPoolConfig poolConfig){
-		super(host, port, password, database, clientName, useSsl);
-		this.poolConfig = poolConfig;
-	}
-
-	public ShardedJedisPoolDataSource(String host, int port, String password, int database, String clientName,
-									  SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
-									  HostnameVerifier hostnameVerifier, JedisPoolConfig poolConfig){
-		super(host, port, password, database, clientName, sslSocketFactory, sslParameters, hostnameVerifier);
-		this.poolConfig = poolConfig;
-	}
-
-	public ShardedJedisPoolDataSource(String host, int port, String password, int database, String clientName,
-									  int connectTimeout, int soTimeout, boolean useSsl, JedisPoolConfig poolConfig){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, useSsl);
-		this.poolConfig = poolConfig;
-	}
-
-	public ShardedJedisPoolDataSource(String host, int port, String password, int database, String clientName,
-									  int connectTimeout, int soTimeout, SSLSocketFactory sslSocketFactory,
-									  SSLParameters sslParameters, HostnameVerifier hostnameVerifier,
-									  JedisPoolConfig poolConfig){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, sslSocketFactory, sslParameters,
-				hostnameVerifier);
-		this.poolConfig = poolConfig;
-	}
-
-	public ShardedJedisPoolDataSource(String host, int port, String password, int database, String clientName,
-									  int connectTimeout, int soTimeout, boolean useSsl,
-									  SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
-									  HostnameVerifier hostnameVerifier, JedisPoolConfig poolConfig){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, useSsl, sslSocketFactory,
-				sslParameters, hostnameVerifier);
-		this.poolConfig = poolConfig;
-	}
-
-	public int getWeight(){
-		return weight;
-	}
-
-	public void setWeight(int weight){
-		this.weight = weight;
-	}
-
+	@Override
 	public JedisPoolConfig getPoolConfig(){
 		return poolConfig;
 	}
 
+	@Override
 	public void setPoolConfig(JedisPoolConfig poolConfig){
 		this.poolConfig = poolConfig;
 	}
@@ -178,16 +124,9 @@ public class ShardedJedisPoolDataSource extends AbstractJedisRedisDataSource<Sha
 	@Override
 	public ShardedJedisPool getPool(){
 		if(pool == null){
-			List<JedisShardInfo> shardInfos = new ArrayList<>(1);
-			JedisShardInfo shardInfo = new JedisShardInfo(getHost(), getClientName(), getPort(), 0, getWeight(),
-					isUseSsl(), getSslSocketFactory(), getSslParameters(), getHostnameVerifier());
-
-			shardInfo.setConnectionTimeout(getConnectTimeout());
-			shardInfo.setSoTimeout(getSoTimeout());
-
-			ReflectUtils.setField(shardInfo, "db", getDatabase());
-
-			shardInfos.add(shardInfo);
+			List<JedisShardInfo> shardInfos = JedisClientUtils.createJedisShardInfo(getRedisNodes(), getDatabase(),
+					getConnectTimeout(), getSoTimeout(), isUseSsl(), getSslSocketFactory(), getSslParameters(),
+					getHostnameVerifier());
 
 			pool = new ShardedJedisPool(getPoolConfig(), shardInfos);
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -27,81 +27,51 @@ package com.buession.redis.core.command;
 /**
  * 内部命令
  *
- * <p>详情说明 <a href="http://redisdoc.com/internal/index.html" target="_blank">http://redisdoc.com/internal/index
- * .html</a></p>
+ * <p>详情说明 <a href="http://redisdoc.com/internal/index.html" target="_blank">http://redisdoc.com/internal/index.html</a>
+ * </p>
  *
  * @author Yong.Teng
  */
 public interface InternalCommands extends RedisCommands {
 
-    /**
-     * 用于复制功能(replication)的内部命令
-     *
-     * <p>详情说明 <a href="http://redisdoc.com/internal/sync.html" target="_blank">http://redisdoc.com/internal/sync
-     * .html</a></p>
-     *
-     * @return 序列化数据
-     */
-    Object sync();
+	/**
+	 * 用于复制功能(replication)的内部命令
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/sync.html" target="_blank">http://redisdoc.com/internal/sync
+	 * .html</a></p>
+	 *
+	 * @return 序列化数据
+	 */
+	Object sync();
 
-    /**
-     * 用于复制功能(replication)的内部命令
-     *
-     * <p>详情说明 <a href="http://redisdoc.com/internal/psync.html" target="_blank">http://redisdoc.com/internal/psync
-     * .html</a></p>
-     *
-     * @param masterRunId
-     *         Master Run Id
-     * @param offset
-     *         偏移量
-     *
-     * @return 序列化数据
-     */
-    Object pSync(final String masterRunId, final int offset);
+	/**
+	 * 用于复制功能(replication)的内部命令
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/psync.html" target="_blank">http://redisdoc.com/internal/psync
+	 * .html</a></p>
+	 *
+	 * @param masterRunId
+	 * 		Master Run Id
+	 * @param offset
+	 * 		偏移量
+	 *
+	 * @return 序列化数据
+	 */
+	Object pSync(final String masterRunId, final int offset);
 
-    /**
-     * 用于复制功能(replication)的内部命令
-     *
-     * <p>详情说明 <a href="http://redisdoc.com/internal/psync.html" target="_blank">http://redisdoc.com/internal/psync
-     * .html</a></p>
-     *
-     * @param masterRunId
-     *         Master Run Id
-     * @param offset
-     *         偏移量
-     *
-     * @return 序列化数据
-     */
-    Object pSync(final byte[] masterRunId, final int offset);
-
-    /**
-     * 用于复制功能(replication)的内部命令
-     *
-     * <p>详情说明 <a href="http://redisdoc.com/internal/psync.html" target="_blank">http://redisdoc.com/internal/psync
-     * .html</a></p>
-     *
-     * @param masterRunId
-     *         Master Run Id
-     * @param offset
-     *         偏移量
-     *
-     * @return 序列化数据
-     */
-    Object pSync(final String masterRunId, final long offset);
-
-    /**
-     * 用于复制功能(replication)的内部命令
-     *
-     * <p>详情说明 <a href="http://redisdoc.com/internal/psync.html" target="_blank">http://redisdoc.com/internal/psync
-     * .html</a></p>
-     *
-     * @param masterRunId
-     *         Master Run Id
-     * @param offset
-     *         偏移量
-     *
-     * @return 序列化数据
-     */
-    Object pSync(final byte[] masterRunId, final long offset);
+	/**
+	 * 用于复制功能(replication)的内部命令
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/psync.html" target="_blank">http://redisdoc.com/internal/psync
+	 * .html</a></p>
+	 *
+	 * @param masterRunId
+	 * 		Master Run Id
+	 * @param offset
+	 * 		偏移量
+	 *
+	 * @return 序列化数据
+	 */
+	Object pSync(final String masterRunId, final long offset);
 
 }

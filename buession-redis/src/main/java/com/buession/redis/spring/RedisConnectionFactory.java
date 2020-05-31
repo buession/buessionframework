@@ -24,9 +24,7 @@
  */
 package com.buession.redis.spring;
 
-import com.buession.core.utils.Assert;
 import com.buession.redis.Constants;
-import com.buession.redis.core.Server;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
@@ -36,16 +34,6 @@ import javax.net.ssl.SSLSocketFactory;
  * @author Yong.Teng
  */
 public class RedisConnectionFactory {
-
-	private String host = Server.DEFAULT_HOST;
-
-	private int port = Server.DEFAULT_PORT;
-
-	private String password;
-
-	private int database = Server.DEFAULT_DATABASE;
-
-	private String clientName;
 
 	private int connectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
 
@@ -59,58 +47,7 @@ public class RedisConnectionFactory {
 
 	private HostnameVerifier hostnameVerifier;
 
-	private int weight;
-
 	private boolean usePool = true;
-
-	public String getHost(){
-		return host;
-	}
-
-	public void setHost(String host){
-		this.host = host;
-	}
-
-	public int getPort(){
-		return port;
-	}
-
-	public void setPort(int port){
-		this.port = port;
-	}
-
-	public String getPassword(){
-		return password;
-	}
-
-	public void setPassword(String password){
-		this.password = password;
-	}
-
-	public int getDatabase(){
-		return database;
-	}
-
-	public void setDatabase(int database){
-		Assert.isNegative(database, "invalid DB index (a positive index required)");
-		this.database = database;
-	}
-
-	public int getDb(){
-		return getDatabase();
-	}
-
-	public void setDb(int database){
-		setDatabase(database);
-	}
-
-	public String getClientName(){
-		return clientName;
-	}
-
-	public void setClientName(String clientName){
-		this.clientName = clientName;
-	}
 
 	public int getConnectTimeout(){
 		return connectTimeout;
@@ -158,14 +95,6 @@ public class RedisConnectionFactory {
 
 	public void setHostnameVerifier(HostnameVerifier hostnameVerifier){
 		this.hostnameVerifier = hostnameVerifier;
-	}
-
-	public int getWeight(){
-		return weight;
-	}
-
-	public void setWeight(int weight){
-		this.weight = weight;
 	}
 
 	public boolean isUsePool(){

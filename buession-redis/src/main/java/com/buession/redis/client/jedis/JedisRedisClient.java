@@ -30,6 +30,6 @@ import redis.clients.jedis.commands.JedisCommands;
 /**
  * @author Yong.Teng
  */
-public interface JedisRedisClient<T extends JedisCommands> extends RedisClient {
+public interface JedisRedisClient<C extends JedisCommands> extends RedisClient {
 
 }

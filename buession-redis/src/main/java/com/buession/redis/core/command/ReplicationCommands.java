@@ -25,7 +25,7 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
-import com.buession.redis.core.RoleInfo;
+import com.buession.redis.core.Role;
 
 /**
  * 复制命令
@@ -58,11 +58,11 @@ public interface ReplicationCommands extends RedisCommands {
 	 * 获取实例在复制中担任的角色信息
 	 *
 	 * <p>详情说明
-     * <a href="http://redisdoc.com/replication/role.html" target="_blank">http://redisdoc.com/replication/role.html</a>
-     * </p>
+	 * <a href="http://redisdoc.com/replication/role.html" target="_blank">http://redisdoc.com/replication/role.html</a>
+	 * </p>
 	 *
 	 * @return 实例在复制中担任的角色信息
 	 */
-	RoleInfo role();
+	Role role();
 
 }
