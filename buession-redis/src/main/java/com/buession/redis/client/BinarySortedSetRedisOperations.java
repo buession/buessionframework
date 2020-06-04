@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client;
 
+import com.buession.redis.core.command.BinarySortedSetCommands;
+
 /**
  * @author Yong.Teng
  */
-public interface BinarySortedSetRedisOperations {
+public interface BinarySortedSetRedisOperations extends BinaryRedisOperations, BinarySortedSetCommands {
 
 }

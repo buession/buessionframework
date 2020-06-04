@@ -25,7 +25,8 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.AbstractRedisConnection;
-import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.client.connection.SslConfiguration;
+import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
 import redis.clients.jedis.commands.JedisCommands;
 
 import java.io.IOException;
@@ -39,8 +40,39 @@ public abstract class AbstractJedisRedisConnection<T extends JedisCommands> exte
 		super();
 	}
 
-	public <D extends DataSource> AbstractJedisRedisConnection(D dataSource){
+	public AbstractJedisRedisConnection(JedisRedisDataSource<T> dataSource){
 		super(dataSource);
+	}
+
+	public AbstractJedisRedisConnection(JedisRedisDataSource<T> dataSource, SslConfiguration sslConfiguration){
+		super(dataSource, sslConfiguration);
+	}
+
+	public AbstractJedisRedisConnection(JedisRedisDataSource<T> dataSource, String clientName){
+		super(dataSource, clientName);
+	}
+
+	public AbstractJedisRedisConnection(JedisRedisDataSource<T> dataSource, String clientName,
+			SslConfiguration sslConfiguration){
+		super(dataSource, clientName, sslConfiguration);
+	}
+
+	public AbstractJedisRedisConnection(JedisRedisDataSource<T> dataSource, boolean useSsl){
+		super(dataSource, useSsl);
+	}
+
+	public AbstractJedisRedisConnection(JedisRedisDataSource<T> dataSource, boolean useSsl,
+			SslConfiguration sslConfiguration){
+		super(dataSource, useSsl, sslConfiguration);
+	}
+
+	public AbstractJedisRedisConnection(JedisRedisDataSource<T> dataSource, String clientName, boolean useSsl){
+		super(dataSource, clientName, useSsl);
+	}
+
+	public AbstractJedisRedisConnection(JedisRedisDataSource<T> dataSource, String clientName, boolean useSsl,
+			SslConfiguration sslConfiguration){
+		super(dataSource, clientName, useSsl, sslConfiguration);
 	}
 
 	@Override

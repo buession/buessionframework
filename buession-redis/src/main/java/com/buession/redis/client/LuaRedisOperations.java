@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client;
 
+import com.buession.redis.core.command.LuaCommands;
+
 /**
  * @author Yong.Teng
  */
-public interface LuaRedisOperations {
+public interface LuaRedisOperations extends RedisOperations, LuaCommands {
 
 }

@@ -24,9 +24,41 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.redis.client.BinaryStringRedisOperations;
+
 /**
  * @author Yong.Teng
  */
-public interface JedisBinaryStringRedisOperations {
+public interface JedisBinaryStringRedisOperations extends BinaryStringRedisOperations {
+
+	@Override
+	default Long incrBy(final byte[] key, final int value){
+		return incrBy(key, (long) value);
+	}
+
+	@Override
+	default Double incrByFloat(final byte[] key, final float value){
+		return incrByFloat(key, (double) value);
+	}
+
+	@Override
+	default Long decrBy(final byte[] key, final int value){
+		return decrBy(key, (long) value);
+	}
+
+	@Override
+	default Long setRange(final byte[] key, final int offset, final byte[] value){
+		return setRange(key, (long) offset, value);
+	}
+
+	@Override
+	default byte[] getRange(final byte[] key, final int start, final int end){
+		return getRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	default byte[] substr(final byte[] key, final long start, final long end){
+		return substr(key, (int) start, (int) end);
+	}
 
 }

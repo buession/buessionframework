@@ -24,9 +24,59 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.redis.client.SetRedisOperations;
+import com.buession.redis.core.ScanResult;
+
+import java.util.List;
+
 /**
  * @author Yong.Teng
  */
-public interface JedisSetRedisOperations {
+public interface JedisSetRedisOperations extends SetRedisOperations {
+
+	@Override
+	default List<String> sRandMember(final String key, final long count){
+		return sRandMember(key, (int) count);
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final int cursor){
+		return sScan(key, Integer.toString(cursor));
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final long cursor){
+		return sScan(key, Long.toString(cursor));
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern){
+		return sScan(key, Integer.toString(cursor), pattern);
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern){
+		return sScan(key, Long.toString(cursor), pattern);
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final int cursor, final int count){
+		return sScan(key, Integer.toString(cursor), count);
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final long cursor, final int count){
+		return sScan(key, Long.toString(cursor), count);
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern, final int count){
+		return sScan(key, Integer.toString(cursor), pattern, count);
+	}
+
+	@Override
+	default ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final int count){
+		return sScan(key, Long.toString(cursor), pattern, count);
+	}
 
 }

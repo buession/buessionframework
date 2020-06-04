@@ -24,9 +24,43 @@
  */
 package com.buession.redis.client.connection;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
+
 /**
  * @author Yong.Teng
  */
-public class SslConnfiguration {
+public class SslConfiguration {
+
+	private SSLSocketFactory sslSocketFactory;
+
+	private SSLParameters sslParameters;
+
+	private HostnameVerifier hostnameVerifier;
+
+	public SSLSocketFactory getSslSocketFactory(){
+		return sslSocketFactory;
+	}
+
+	public void setSslSocketFactory(final SSLSocketFactory sslSocketFactory){
+		this.sslSocketFactory = sslSocketFactory;
+	}
+
+	public SSLParameters getSslParameters(){
+		return sslParameters;
+	}
+
+	public void setSslParameters(final SSLParameters sslParameters){
+		this.sslParameters = sslParameters;
+	}
+
+	public HostnameVerifier getHostnameVerifier(){
+		return hostnameVerifier;
+	}
+
+	public void setHostnameVerifier(final HostnameVerifier hostnameVerifier){
+		this.hostnameVerifier = hostnameVerifier;
+	}
 
 }

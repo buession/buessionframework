@@ -25,21 +25,38 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.core.utils.ReflectUtils;
+import com.buession.lang.Geo;
+import com.buession.redis.core.GeoRadius;
+import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.ShardedRedisNode;
+import com.buession.redis.core.Tuple;
+import com.buession.redis.core.command.BitMapCommands;
+import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.ListCommands;
+import com.buession.redis.core.command.SortedSetCommands;
 import com.buession.redis.core.command.StringCommands;
+import com.buession.redis.core.convert.jedis.AggregateConvert;
+import com.buession.redis.core.convert.jedis.BitOperationConvert;
+import com.buession.redis.core.convert.jedis.GeoArgumentConvert;
+import com.buession.redis.core.convert.jedis.GeoConvert;
 import com.buession.redis.core.convert.jedis.ListPositionConvert;
 import com.buession.redis.core.convert.jedis.MigrateOperationConvert;
 import com.buession.redis.core.convert.jedis.ScanResultConvert;
 import com.buession.redis.core.convert.jedis.SetArgumentConvert;
 import com.buession.redis.core.convert.jedis.SortArgumentConvert;
+import com.buession.redis.core.convert.jedis.TupleConvert;
+import redis.clients.jedis.BitOP;
+import redis.clients.jedis.GeoCoordinate;
+import redis.clients.jedis.GeoRadiusResponse;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ListPosition;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.SortingParams;
+import redis.clients.jedis.ZParams;
+import redis.clients.jedis.params.GeoRadiusParam;
 import redis.clients.jedis.params.MigrateParams;
 import redis.clients.jedis.params.SetParams;
 
@@ -101,6 +118,12 @@ public class JedisClientUtils {
 		return scanResultConvert.deconvert(scanResult);
 	}
 
+	public final static ScanResult<List<Tuple>> listTupleScanResultDeconvert(final redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple> scanResult){
+		final ScanResultConvert.ListTupleScanResultConvert scanResultConvert =
+				new ScanResultConvert.ListTupleScanResultConvert();
+		return scanResultConvert.deconvert(scanResult);
+	}
+
 	public final static <V> ScanResult<Map<V, V>> mapScanResultConvert(final redis.clients.jedis.ScanResult<Map.Entry<V, V>> scanResult){
 		final ScanResultConvert.MapScanResultConvert<V, V> scanResultConvert =
 				new ScanResultConvert.MapScanResultConvert<>();
@@ -125,6 +148,47 @@ public class JedisClientUtils {
 	public final static ListPosition listPositionConvert(final ListCommands.ListPosition position){
 		final ListPositionConvert listPositionConvert = new ListPositionConvert();
 		return listPositionConvert.convert(position);
+	}
+
+	public final static Set<Tuple> setTupleDeconvert(final Set<redis.clients.jedis.Tuple> tuples){
+		final TupleConvert.SetTupleConvert setTupleConvert = new TupleConvert.SetTupleConvert();
+		return setTupleConvert.deconvert(tuples);
+	}
+
+	public final static ZParams.Aggregate aggregateConvert(final SortedSetCommands.Aggregate aggregate){
+		final AggregateConvert aggregateConvert = new AggregateConvert();
+		return aggregateConvert.convert(aggregate);
+	}
+
+	public final static <V> Map<V, GeoCoordinate> geoMapConvert(final Map<V, Geo> geoMap){
+		final GeoConvert.GeoMapConvert<V> geoMapConvert = new GeoConvert.GeoMapConvert<>();
+		return geoMapConvert.convert(geoMap);
+	}
+
+	public final static List<Geo> geoListDeconvert(final List<GeoCoordinate> geoCoordinates){
+		final GeoConvert.GeoListConvert geoMapConvert = new GeoConvert.GeoListConvert();
+		return geoMapConvert.deconvert(geoCoordinates);
+	}
+
+	public final static redis.clients.jedis.GeoUnit geoUnitConvert(final GeoUnit source){
+		final GeoConvert.GeoUnitConvert geoUnitConvert = new GeoConvert.GeoUnitConvert();
+		return geoUnitConvert.convert(source);
+	}
+
+	public final static List<GeoRadius> listGeoRadiusDeconvert(final List<GeoRadiusResponse> geoRadiusResponses){
+		final GeoConvert.GeoRadiusConvert.ListGeoRadiusConvert listGeoRadiusConvert =
+				new GeoConvert.GeoRadiusConvert.ListGeoRadiusConvert();
+		return listGeoRadiusConvert.deconvert(geoRadiusResponses);
+	}
+
+	public final static GeoRadiusParam geoArgumentConvert(final GeoCommands.GeoArgument geoArgument){
+		final GeoArgumentConvert geoArgumentConvert = new GeoArgumentConvert();
+		return geoArgumentConvert.convert(geoArgument);
+	}
+
+	public final static BitOP bitOperationConvert(final BitMapCommands.Operation bitMapOperation){
+		final BitOperationConvert bitOperationConvert = new BitOperationConvert();
+		return bitOperationConvert.convert(bitMapOperation);
 	}
 
 }

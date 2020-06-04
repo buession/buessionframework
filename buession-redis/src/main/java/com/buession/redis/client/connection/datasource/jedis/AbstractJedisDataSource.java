@@ -27,20 +27,11 @@ package com.buession.redis.client.connection.datasource.jedis;
 import com.buession.redis.client.connection.datasource.AbstractDataSource;
 import redis.clients.jedis.commands.JedisCommands;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSocketFactory;
-
 /**
  * Jedis 数据源抽象类
  *
  * @author Yong.Teng
  */
 public abstract class AbstractJedisDataSource<T extends JedisCommands> extends AbstractDataSource {
-
-	protected final static boolean checkUseSSL(SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
-											   HostnameVerifier hostnameVerifier){
-		return sslSocketFactory != null || sslParameters != null || hostnameVerifier != null;
-	}
 
 }

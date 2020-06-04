@@ -24,10 +24,6 @@
  */
 package com.buession.redis.client.connection.datasource;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSocketFactory;
-
 /**
  * Redis 数据源
  *
@@ -35,32 +31,49 @@ import javax.net.ssl.SSLSocketFactory;
  */
 public interface DataSource {
 
+	/**
+	 * 获取数据库
+	 *
+	 * @return 数据库
+	 */
 	int getDatabase();
 
+	/**
+	 * 设置数据库
+	 *
+	 * @param database
+	 * 		数据库
+	 */
 	void setDatabase(int database);
 
+	/**
+	 * 获取连接超时
+	 *
+	 * @return 连接超时（单位：秒）
+	 */
 	int getConnectTimeout();
 
+	/**
+	 * 设置连接超时
+	 *
+	 * @param connectTimeout
+	 * 		连接超时（单位：秒）
+	 */
 	void setConnectTimeout(int connectTimeout);
 
+	/**
+	 * 设置读取超时
+	 *
+	 * @return 读取超时（单位：秒）
+	 */
 	int getSoTimeout();
 
+	/**
+	 * 设置读取超时
+	 *
+	 * @param soTimeout
+	 * 		读取超时（单位：秒）
+	 */
 	void setSoTimeout(int soTimeout);
-
-	boolean isUseSsl();
-
-	void setUseSsl(boolean useSsl);
-
-	SSLSocketFactory getSslSocketFactory();
-
-	void setSslSocketFactory(SSLSocketFactory sslSocketFactory);
-
-	SSLParameters getSslParameters();
-
-	void setSslParameters(SSLParameters sslParameters);
-
-	HostnameVerifier getHostnameVerifier();
-
-	void setHostnameVerifier(HostnameVerifier hostnameVerifier);
 
 }

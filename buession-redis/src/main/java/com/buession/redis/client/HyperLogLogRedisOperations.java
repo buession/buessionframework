@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client;
 
+import com.buession.redis.core.command.HyperLogLogCommands;
+
 /**
  * @author Yong.Teng
  */
-public interface HyperLogLogRedisOperations {
+public interface HyperLogLogRedisOperations extends RedisOperations, HyperLogLogCommands {
 
 }

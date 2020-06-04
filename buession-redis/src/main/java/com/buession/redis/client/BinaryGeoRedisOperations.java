@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client;
 
+import com.buession.redis.core.command.BinaryGeoCommands;
+
 /**
  * @author Yong.Teng
  */
-public interface BinaryGeoRedisOperations {
+public interface BinaryGeoRedisOperations extends BinaryRedisOperations, BinaryGeoCommands {
 
 }

@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client;
 
+import com.buession.redis.core.command.BinaryPubSubCommands;
+
 /**
  * @author Yong.Teng
  */
-public interface BinaryPubSubRedisOperations {
+public interface BinaryPubSubRedisOperations extends BinaryRedisOperations, BinaryPubSubCommands {
 
 }

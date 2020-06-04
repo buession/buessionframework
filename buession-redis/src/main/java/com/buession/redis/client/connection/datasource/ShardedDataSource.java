@@ -24,9 +24,22 @@
  */
 package com.buession.redis.client.connection.datasource;
 
+import com.buession.redis.core.ShardedRedisNode;
+
+import java.util.Set;
+
 /**
+ * Redis 分片模式数据源
+ *
  * @author Yong.Teng
  */
-public interface ShardedDataSource {
+public interface ShardedDataSource extends DataSource {
+
+	/**
+	 * 获取 Redis 分片主机节点
+	 *
+	 * @return Redis 分片主机节点
+	 */
+	Set<ShardedRedisNode> getRedisNodes();
 
 }

@@ -33,13 +33,18 @@ import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.operations.HashOperations;
 import com.buession.redis.core.operations.KeyOperations;
 import com.buession.redis.core.operations.ListOperations;
+import com.buession.redis.core.operations.SetOperations;
+import com.buession.redis.core.operations.SortedSetOperations;
 import com.buession.redis.core.operations.StringOperations;
 import com.buession.redis.utils.ReturnUtils;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Redis 基本操作封装扩展，可序列化对象和反序列化为对象
@@ -47,7 +52,7 @@ import java.util.Map;
  * @author Yong.Teng
  */
 public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, StringOperations, HashOperations,
-		ListOperations {
+		ListOperations, SetOperations, SortedSetOperations {
 
 	/**
 	 * 构造函数
@@ -983,5 +988,464 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type){
 		return ReturnUtils.objectFromListByte(serializer, lRange(key, start, end), type);
 	}
+
+	@Override
+	public Long sAdd(final String key, final String member){
+		return sAdd(key, new String[]{member});
+	}
+
+	@Override
+	public Long sAdd(final byte[] key, final byte[] member){
+		return sAdd(key, new byte[][]{member});
+	}
+
+	@Override
+	public <V> Long sAdd(final String key, final V member){
+		return sAdd(key, serializer.serialize(member));
+	}
+
+	@Override
+	public <V> Long sAdd(final byte[] key, final V member){
+		return sAdd(key, serializer.serializeAsBytes(member));
+	}
+
+	@Override
+	public <V> Long sAdd(final String key, final V... members){
+		return sAdd(key, serializer(members));
+	}
+
+	@Override
+	public <V> Long sAdd(final byte[] key, final V... members){
+		return sAdd(key, serializerAsByte(members));
+	}
+
+	@Override
+	public <V> Set<V> sMembersObject(final String key){
+		return ReturnUtils.objectFromSetString(serializer, sMembers(key));
+	}
+
+	@Override
+	public <V> Set<V> sMembersObject(final byte[] key){
+		return ReturnUtils.objectFromSetByte(serializer, sMembers(key));
+	}
+
+	@Override
+	public <V> Set<V> sMembersObject(final String key, final Class<V> clazz){
+		return ReturnUtils.objectFromSetString(serializer, sMembers(key), clazz);
+	}
+
+	@Override
+	public <V> Set<V> sMembersObject(final byte[] key, final Class<V> clazz){
+		return ReturnUtils.objectFromSetByte(serializer, sMembers(key), clazz);
+	}
+
+	@Override
+	public <V> Set<V> sMembersObject(final String key, final TypeReference<V> type){
+		return ReturnUtils.objectFromSetString(serializer, sMembers(key), type);
+	}
+
+	@Override
+	public <V> Set<V> sMembersObject(final byte[] key, final TypeReference<V> type){
+		return ReturnUtils.objectFromSetByte(serializer, sMembers(key), type);
+	}
+
+	@Override
+	public <V> V sPopObject(final String key){
+		return serializer.deserialize(sPop(key));
+	}
+
+	@Override
+	public <V> V sPopObject(final byte[] key){
+		return serializer.deserialize(sPop(key));
+	}
+
+	@Override
+	public <V> V sPopObject(final String key, final Class<V> clazz){
+		return serializer.deserialize(sPop(key), clazz);
+	}
+
+	@Override
+	public <V> V sPopObject(final byte[] key, final Class<V> clazz){
+		return serializer.deserialize(sPop(key), clazz);
+	}
+
+	@Override
+	public <V> V sPopObject(final String key, final TypeReference<V> type){
+		return serializer.deserialize(sPop(key), type);
+	}
+
+	@Override
+	public <V> V sPopObject(final byte[] key, final TypeReference<V> type){
+		return serializer.deserialize(sPop(key), type);
+	}
+
+	@Override
+	public <V> V sRandMemberObject(final String key){
+		return serializer.deserialize(sRandMember(key));
+	}
+
+	@Override
+	public <V> V sRandMemberObject(final byte[] key){
+		return serializer.deserialize(sRandMember(key));
+	}
+
+	@Override
+	public <V> V sRandMemberObject(final String key, final Class<V> clazz){
+		return serializer.deserialize(sRandMember(key), clazz);
+	}
+
+	@Override
+	public <V> V sRandMemberObject(final byte[] key, final Class<V> clazz){
+		return serializer.deserialize(sRandMember(key), clazz);
+	}
+
+	@Override
+	public <V> V sRandMemberObject(final String key, final TypeReference<V> type){
+		return serializer.deserialize(sRandMember(key), type);
+	}
+
+	@Override
+	public <V> V sRandMemberObject(final byte[] key, final TypeReference<V> type){
+		return serializer.deserialize(sRandMember(key), type);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final String key, final int count){
+		return ReturnUtils.objectFromListString(serializer, sRandMember(key, count));
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final byte[] key, final int count){
+		return ReturnUtils.objectFromListByte(serializer, sRandMember(key, count));
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final String key, final long count){
+		return ReturnUtils.objectFromListString(serializer, sRandMember(key, count));
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final byte[] key, final long count){
+		return ReturnUtils.objectFromListByte(serializer, sRandMember(key, count));
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final String key, final int count, final Class<V> clazz){
+		return ReturnUtils.objectFromListString(serializer, sRandMember(key, count), clazz);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final byte[] key, final int count, final Class<V> clazz){
+		return ReturnUtils.objectFromListByte(serializer, sRandMember(key, count), clazz);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final String key, final long count, final Class<V> clazz){
+		return ReturnUtils.objectFromListString(serializer, sRandMember(key, count), clazz);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final byte[] key, final long count, final Class<V> clazz){
+		return ReturnUtils.objectFromListByte(serializer, sRandMember(key, count), clazz);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final String key, final int count, final TypeReference<V> type){
+		return ReturnUtils.objectFromListString(serializer, sRandMember(key, count), type);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final byte[] key, final int count, final TypeReference<V> type){
+		return ReturnUtils.objectFromListByte(serializer, sRandMember(key, count), type);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final String key, final long count, final TypeReference<V> type){
+		return ReturnUtils.objectFromListString(serializer, sRandMember(key, count), type);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type){
+		return ReturnUtils.objectFromListByte(serializer, sRandMember(key, count), type);
+	}
+
+	@Override
+	public Long sRem(final String key, final String member){
+		return sRem(key, new String[]{member});
+	}
+
+	@Override
+	public Long sRem(final byte[] key, final byte[] member){
+		return sRem(key, new byte[][]{member});
+	}
+
+	@Override
+	public <V> Long sRem(final String key, final V member){
+		return sRem(key, serializer.serialize(member));
+	}
+
+	@Override
+	public <V> Long sRem(final byte[] key, final V member){
+		return sRem(key, serializer.serializeAsBytes(member));
+	}
+
+	@Override
+	public <V> Long sRem(final String key, final V... members){
+		return sRem(key, serializer(members));
+	}
+
+	@Override
+	public <V> Long sRem(final byte[] key, final V... members){
+		return sRem(key, serializerAsByte(members));
+	}
+
+	@Override
+	public Set<String> sDiff(final String key){
+		return sDiff(new String[]{key});
+	}
+
+	@Override
+	public Set<byte[]> sDiff(final byte[] key){
+		return sDiff(new byte[][]{key});
+	}
+
+	@Override
+	public <V> Set<V> sDiffObject(final String key){
+		return ReturnUtils.objectFromSetString(serializer, sDiff(key));
+	}
+
+	@Override
+	public <V> Set<V> sDiffObject(final byte[] key){
+		return ReturnUtils.objectFromSetByte(serializer, sDiff(key));
+	}
+
+	@Override
+	public <V> Set<V> sDiffObject(final String key, final Class<V> clazz){
+		return ReturnUtils.objectFromSetString(serializer, sDiff(key), clazz);
+	}
+
+	@Override
+	public <V> Set<V> sDiffObject(final byte[] key, final Class<V> clazz){
+		return ReturnUtils.objectFromSetByte(serializer, sDiff(key), clazz);
+	}
+
+	@Override
+	public <V> Set<V> sDiffObject(final String key, final TypeReference<V> type){
+		return ReturnUtils.objectFromSetString(serializer, sDiff(key), type);
+	}
+
+	@Override
+	public <V> Set<V> sDiffObject(final byte[] key, final TypeReference<V> type){
+		return ReturnUtils.objectFromSetByte(serializer, sDiff(key), type);
+	}
+
+	@Override
+	public Long sDiffStore(final String destKey, final String key){
+		return sDiffStore(destKey, new String[]{key});
+	}
+
+	@Override
+	public Long sDiffStore(final byte[] destKey, final byte[] key){
+		return sDiffStore(destKey, new byte[][]{key});
+	}
+
+	@Override
+	public Set<String> sInter(final String key){
+		return sInter(new String[]{key});
+	}
+
+	@Override
+	public Set<byte[]> sInter(final byte[] key){
+		return sInter(new byte[][]{key});
+	}
+
+	@Override
+	public Long sInterStore(final String destKey, final String key){
+		return sInterStore(destKey, new String[]{key});
+	}
+
+	@Override
+	public Long sInterStore(final byte[] destKey, final byte[] key){
+		return sInterStore(destKey, new byte[][]{key});
+	}
+
+	@Override
+	public Set<String> sUnion(final String key){
+		return sUnion(new String[]{key});
+	}
+
+	@Override
+	public Set<byte[]> sUnion(final byte[] key){
+		return sUnion(new byte[][]{key});
+	}
+
+	@Override
+	public Long sUnionStore(final String destKey, final String key){
+		return sUnionStore(destKey, new String[]{key});
+	}
+
+	@Override
+	public Long sUnionStore(final byte[] destKey, final byte[] key){
+		return sUnionStore(destKey, new byte[][]{key});
+	}
+
+	@Override
+	public Long zAdd(final String key, final float score, final String member){
+		return zAdd(key, new Float(score), member);
+	}
+
+	@Override
+	public Long zAdd(final byte[] key, final float score, final byte[] member){
+		return zAdd(key, new Float(score), member);
+	}
+
+	@Override
+	public Long zAdd(final String key, final double score, final String member){
+		return zAdd(key, new Double(score), member);
+	}
+
+	@Override
+	public Long zAdd(final byte[] key, final double score, final byte[] member){
+		return zAdd(key, new Double(score), member);
+	}
+
+	@Override
+	public Long zAdd(final String key, final int score, final String member){
+		return zAdd(key, new Integer(score), member);
+	}
+
+	@Override
+	public Long zAdd(final byte[] key, final int score, final byte[] member){
+		return zAdd(key, new Integer(score), member);
+	}
+
+	@Override
+	public Long zAdd(final String key, final long score, final String member){
+		return zAdd(key, new Long(score), member);
+	}
+
+	@Override
+	public Long zAdd(final byte[] key, final long score, final byte[] member){
+		return zAdd(key, new Long(score), member);
+	}
+
+	@Override
+	public Long zAdd(final String key, final Number score, final String member){
+		final Map<String, Number> members = new HashMap<>(1);
+
+		members.put(member, score);
+
+		return zAdd(key, members);
+	}
+
+	@Override
+	public Long zAdd(final byte[] key, final Number score, final byte[] member){
+		final Map<byte[], Number> members = new HashMap<>(1);
+
+		members.put(member, score);
+
+		return zAdd(key, members);
+	}
+
+	@Override
+	public Long zAdd(final String key, final KeyValue<String, Number> member){
+		return zAdd(key, Arrays.asList(member));
+	}
+
+	@Override
+	public Long zAdd(final byte[] key, final KeyValue<byte[], Number> member){
+		return zAdd(key, Arrays.asList(member));
+	}
+
+	@Override
+	public Long zRem(final String key, final String member){
+		return zRem(key, new String[]{member});
+	}
+
+	@Override
+	public Long zRem(final byte[] key, final byte[] member){
+		return zRem(key, new byte[][]{member});
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final String key){
+		return zInterStore(destKey, new String[]{key});
+	}
+
+	@Override
+	public Long zInterStore(final byte[] destKey, final byte[] key){
+		return zInterStore(destKey, new byte[][]{key});
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final Aggregate aggregate, final String key){
+		return zInterStore(destKey, aggregate, new String[]{key});
+	}
+
+	@Override
+	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final byte[] key){
+		return zInterStore(destKey, aggregate, new byte[][]{key});
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final double weight, final String key){
+		return zInterStore(destKey, new double[]{weight}, new String[]{key});
+	}
+
+	@Override
+	public Long zInterStore(final byte[] destKey, final double weight, final byte[] key){
+		return zInterStore(destKey, new double[]{weight}, new byte[][]{key});
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final Aggregate aggregate, final double weight, final String key){
+		return zInterStore(destKey, aggregate, new double[]{weight}, new String[]{key});
+	}
+
+	@Override
+	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double weight, final byte[] key){
+		return zInterStore(destKey, aggregate, new double[]{weight}, new byte[][]{key});
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final String key){
+		return zUnionStore(destKey, new String[]{key});
+	}
+
+	@Override
+	public Long zUnionStore(final byte[] destKey, final byte[] key){
+		return zUnionStore(destKey, new byte[][]{key});
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final Aggregate aggregate, final String key){
+		return zUnionStore(destKey, aggregate, new String[]{key});
+	}
+
+	@Override
+	public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final byte[] key){
+		return zUnionStore(destKey, aggregate, new byte[][]{key});
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final double weight, final String key){
+		return zUnionStore(destKey, new double[]{weight}, new String[]{key});
+	}
+
+	@Override
+	public Long zUnionStore(final byte[] destKey, final double weight, final byte[] key){
+		return zUnionStore(destKey, new double[]{weight}, new byte[][]{key});
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final Aggregate aggregate, final double weight, final String key){
+		return zUnionStore(destKey, aggregate, new double[]{weight}, new String[]{key});
+	}
+
+	@Override
+	public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double weight, final byte[] key){
+		return zUnionStore(destKey, aggregate, new double[]{weight}, new byte[][]{key});
+	}
+
 
 }

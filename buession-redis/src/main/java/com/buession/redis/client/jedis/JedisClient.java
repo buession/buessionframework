@@ -25,18 +25,25 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.lang.Status;
+import com.buession.redis.client.BinaryHyperLogLogRedisOperations;
 import com.buession.redis.client.BinaryKeyRedisOperations;
 import com.buession.redis.client.BinaryListRedisOperations;
+import com.buession.redis.client.BinarySetRedisOperations;
+import com.buession.redis.client.BinarySortedSetRedisOperations;
 import com.buession.redis.client.BinaryStringRedisOperations;
 import com.buession.redis.client.GenericRedisClient;
+import com.buession.redis.client.HyperLogLogRedisOperations;
 import com.buession.redis.client.KeyRedisOperations;
 import com.buession.redis.client.ListRedisOperations;
+import com.buession.redis.client.SetRedisOperations;
+import com.buession.redis.client.SortedSetRedisOperations;
 import com.buession.redis.client.StringRedisOperations;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.ScanResult;
 import redis.clients.jedis.Jedis;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -148,6 +155,16 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
+	public Status mSet(final Map<String, String> values){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.mSet(values));
+	}
+
+	@Override
+	public Status mSetNx(final Map<String, String> values){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.mSetNx(values));
+	}
+
+	@Override
 	public List<String> mGet(final String... keys){
 		return execute(stringOperations, (StringRedisOperations ops)->ops.mGet(keys));
 	}
@@ -176,6 +193,191 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	public byte[] brPoplPush(final byte[] source, final byte[] destKey, final int timeout){
 		return execute(binaryListOperations, (BinaryListRedisOperations ops)->ops.brPoplPush(source, destKey,
 				timeout));
+	}
+
+	@Override
+	public Set<String> sDiff(final String... keys){
+		return execute(setOperations, (SetRedisOperations ops)->ops.sDiff(keys));
+	}
+
+	@Override
+	public Set<byte[]> sDiff(final byte[]... keys){
+		return execute(binarySetOperations, (BinarySetRedisOperations ops)->ops.sDiff(keys));
+	}
+
+	@Override
+	public Long sDiffStore(final String destKey, final String... keys){
+		return execute(setOperations, (SetRedisOperations ops)->ops.sDiffStore(destKey, keys));
+	}
+
+	@Override
+	public Long sDiffStore(final byte[] destKey, final byte[]... keys){
+		return execute(binarySetOperations, (BinarySetRedisOperations ops)->ops.sDiffStore(destKey, keys));
+	}
+
+	@Override
+	public Set<String> sInter(final String... keys){
+		return execute(setOperations, (SetRedisOperations ops)->ops.sInter(keys));
+	}
+
+	@Override
+	public Set<byte[]> sInter(final byte[]... keys){
+		return execute(binarySetOperations, (BinarySetRedisOperations ops)->ops.sInter(keys));
+	}
+
+	@Override
+	public Long sInterStore(final String destKey, final String... keys){
+		return execute(setOperations, (SetRedisOperations ops)->ops.sInterStore(destKey, keys));
+	}
+
+	@Override
+	public Long sInterStore(final byte[] destKey, final byte[]... keys){
+		return execute(binarySetOperations, (BinarySetRedisOperations ops)->ops.sInterStore(destKey, keys));
+	}
+
+	@Override
+	public Set<String> sUnion(final String... keys){
+		return execute(setOperations, (SetRedisOperations ops)->ops.sUnion(keys));
+	}
+
+	@Override
+	public Set<byte[]> sUnion(final byte[]... keys){
+		return execute(binarySetOperations, (BinarySetRedisOperations ops)->ops.sUnion(keys));
+	}
+
+	@Override
+	public Long sUnionStore(final String destKey, final String... keys){
+		return execute(setOperations, (SetRedisOperations ops)->ops.sUnionStore(destKey, keys));
+	}
+
+	@Override
+	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
+		return execute(binarySetOperations, (BinarySetRedisOperations ops)->ops.sUnionStore(destKey, keys));
+	}
+
+	@Override
+	public Status sMove(final String source, final String destKey, final String member){
+		return execute(setOperations, (SetRedisOperations ops)->ops.sMove(source, destKey, member));
+	}
+
+	@Override
+	public Status sMove(final byte[] source, final byte[] destKey, final byte[] member){
+		return execute(binarySetOperations, (BinarySetRedisOperations ops)->ops.sMove(source, destKey, member));
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final String... keys){
+		return execute(sortedSetOperations, (SortedSetRedisOperations ops)->ops.zInterStore(destKey, keys));
+	}
+
+	@Override
+	public Long zInterStore(final byte[] destKey, final byte[]... keys){
+		return execute(binarySortedSetOperations, (BinarySortedSetRedisOperations ops)->ops.zInterStore(destKey,
+				keys));
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final Aggregate aggregate, final String... keys){
+		return execute(sortedSetOperations, (SortedSetRedisOperations ops)->ops.zInterStore(destKey, aggregate, keys));
+	}
+
+	@Override
+	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
+		return execute(binarySortedSetOperations, (BinarySortedSetRedisOperations ops)->ops.zInterStore(destKey,
+				aggregate, keys));
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final double[] weights, final String... keys){
+		return execute(sortedSetOperations, (SortedSetRedisOperations ops)->ops.zInterStore(destKey, weights, keys));
+	}
+
+	@Override
+	public Long zInterStore(final byte[] destKey, final double[] weights, final byte[]... keys){
+		return execute(binarySortedSetOperations, (BinarySortedSetRedisOperations ops)->ops.zInterStore(destKey,
+				weights, keys));
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final Aggregate aggregate, final double[] weights,
+			final String... keys){
+		return execute(sortedSetOperations, (SortedSetRedisOperations ops)->ops.zInterStore(destKey, aggregate,
+				weights, keys));
+	}
+
+	@Override
+	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double[] weights,
+			final byte[]... keys){
+		return execute(binarySortedSetOperations, (BinarySortedSetRedisOperations ops)->ops.zInterStore(destKey,
+				aggregate, weights, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final String... keys){
+		return execute(sortedSetOperations, (SortedSetRedisOperations ops)->ops.zUnionStore(destKey, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final byte[] destKey, final byte[]... keys){
+		return execute(binarySortedSetOperations, (BinarySortedSetRedisOperations ops)->ops.zUnionStore(destKey,
+				keys));
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final Aggregate aggregate, final String... keys){
+		return execute(sortedSetOperations, (SortedSetRedisOperations ops)->ops.zUnionStore(destKey, aggregate, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
+		return execute(binarySortedSetOperations, (BinarySortedSetRedisOperations ops)->ops.zUnionStore(destKey,
+				aggregate, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final double[] weights, final String... keys){
+		return execute(sortedSetOperations, (SortedSetRedisOperations ops)->ops.zUnionStore(destKey, weights, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final byte[] destKey, final double[] weights, final byte[]... keys){
+		return execute(binarySortedSetOperations, (BinarySortedSetRedisOperations ops)->ops.zUnionStore(destKey,
+				weights, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final Aggregate aggregate, final double[] weights,
+			final String... keys){
+		return execute(sortedSetOperations, (SortedSetRedisOperations ops)->ops.zUnionStore(destKey, aggregate,
+				weights, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double[] weights,
+			final byte[]... keys){
+		return execute(binarySortedSetOperations, (BinarySortedSetRedisOperations ops)->ops.zUnionStore(destKey,
+				aggregate, weights, keys));
+	}
+
+	@Override
+	public Status pfMerge(final String destKey, final String... keys){
+		return execute(hyperLogLogOperations, (HyperLogLogRedisOperations ops)->ops.pfMerge(destKey, keys));
+	}
+
+	@Override
+	public Status pfMerge(final byte[] destKey, final byte[]... keys){
+		return execute(binaryHyperLogLogOperations, (BinaryHyperLogLogRedisOperations ops)->ops.pfMerge(destKey,
+				keys));
+	}
+
+	@Override
+	public Long pfCount(final String... keys){
+		return execute(hyperLogLogOperations, (HyperLogLogRedisOperations ops)->ops.pfCount(keys));
+	}
+
+	@Override
+	public Long pfCount(final byte[]... keys){
+		return execute(binaryHyperLogLogOperations, (BinaryHyperLogLogRedisOperations ops)->ops.pfCount(keys));
 	}
 
 }

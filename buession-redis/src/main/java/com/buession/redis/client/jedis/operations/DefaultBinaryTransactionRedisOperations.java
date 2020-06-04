@@ -24,9 +24,41 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.Executor;
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.utils.ReturnUtils;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.commands.BinaryJedisCommands;
+
 /**
  * @author Yong.Teng
  */
-public class DefaultBinaryTransactionRedisOperations {
+public class DefaultBinaryTransactionRedisOperations<C extends BinaryJedisCommands> extends AbstractJedisBinaryRedisOperations implements JedisBinaryTransactionRedisOperations {
+
+	public DefaultBinaryTransactionRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Status watch(final byte[]... keys){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("keys", keys);
+
+		return execute(new Executor<C, Status>() {
+
+			@Override
+			public Status execute(C jc){
+				if(jc instanceof Jedis){
+					return ReturnUtils.statusForOK(((Jedis) jc).watch(keys));
+				}else{
+					throw new NotSupportedCommandException(ProtocolCommand.WATCH);
+				}
+			}
+
+		}, ProtocolCommand.WATCH);
+	}
 
 }

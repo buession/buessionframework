@@ -24,27 +24,14 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
+import com.buession.redis.client.connection.datasource.StandaloneDataSource;
 import redis.clients.jedis.Jedis;
 
 /**
+ * Jedis 单机模式数据源
+ *
  * @author Yong.Teng
  */
-public interface JedisDataSource extends JedisRedisDataSource<Jedis> {
-
-	String getHost();
-
-	void setHost(String host);
-
-	int getPort();
-
-	void setPort(int port);
-
-	String getPassword();
-
-	void setPassword(String password);
-
-	String getClientName();
-
-	void setClientName(String clientName);
+public interface JedisDataSource extends JedisRedisDataSource<Jedis>, StandaloneDataSource {
 
 }

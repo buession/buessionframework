@@ -24,101 +24,169 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSocketFactory;
-
 /**
- * Jedis 单节点常规数据源
+ * Jedis 单机模式数据源
  *
  * @author Yong.Teng
  */
 public class GenericJedisDataSource extends AbstractGenericJedisDataSource {
 
+	/**
+	 * 构造函数
+	 */
 	public GenericJedisDataSource(){
 		super();
 	}
 
-	public GenericJedisDataSource(String host){
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 */
+	public GenericJedisDataSource(final String host){
 		super(host);
 	}
 
-	public GenericJedisDataSource(String host, String password){
-		super(host, password);
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 */
+	public GenericJedisDataSource(final String host, final int port){
+		super(host, port);
 	}
 
-	public GenericJedisDataSource(String host, int database){
-		super(host, database);
-	}
-
-	public GenericJedisDataSource(String host, String password, int database){
-		super(host, password, database);
-	}
-
-	public GenericJedisDataSource(String host, int port, String password){
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param password
+	 * 		密码
+	 */
+	public GenericJedisDataSource(final String host, final int port, final String password){
 		super(host, port, password);
 	}
 
-	public GenericJedisDataSource(String host, int port, int database){
-		super(host, port, database);
-	}
-
-	public GenericJedisDataSource(String host, int port, String password, int database){
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 */
+	public GenericJedisDataSource(final String host, final int port, final String password, final int database){
 		super(host, port, password, database);
 	}
 
-	public GenericJedisDataSource(String host, int port, String password, int database, int connectTimeout,
-								  int soTimeout){
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public GenericJedisDataSource(final String host, final int port, final String password, final int database,
+			final int connectTimeout, final int soTimeout){
 		super(host, port, password, database, connectTimeout, soTimeout);
 	}
 
-	public GenericJedisDataSource(String host, int port, String password, int database, int connectTimeout,
-								  int soTimeout, boolean useSsl){
-		super(host, port, password, database, connectTimeout, soTimeout, useSsl);
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param database
+	 * 		数据库
+	 */
+	public GenericJedisDataSource(final String host, final int port, final int database){
+		super(host, port, database);
 	}
 
-	public GenericJedisDataSource(String host, int port, String password, int database, int connectTimeout,
-								  int soTimeout, SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
-								  HostnameVerifier hostnameVerifier){
-		super(host, port, password, database, connectTimeout, soTimeout, sslSocketFactory, sslParameters,
-				hostnameVerifier);
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param database
+	 * 		数据库
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public GenericJedisDataSource(final String host, final int port, final int database, final int connectTimeout,
+			final int soTimeout){
+		super(host, port, database, connectTimeout, soTimeout);
 	}
 
-	public GenericJedisDataSource(String host, int port, String password, int database, int connectTimeout,
-								  int soTimeout, boolean useSsl, SSLSocketFactory sslSocketFactory,
-								  SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
-		super(host, port, password, database, connectTimeout, soTimeout, useSsl, sslSocketFactory, sslParameters,
-				hostnameVerifier);
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param password
+	 * 		密码
+	 */
+	public GenericJedisDataSource(final String host, final String password){
+		super(host, password);
 	}
 
-	public GenericJedisDataSource(String host, int port, String password, int database, String clientName,
-								  boolean useSsl){
-		super(host, port, password, database, clientName, useSsl);
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 */
+	public GenericJedisDataSource(final String host, final String password, final int database){
+		super(host, password, database);
 	}
 
-	public GenericJedisDataSource(String host, int port, String password, int database, String clientName,
-								  SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
-								  HostnameVerifier hostnameVerifier){
-		super(host, port, password, database, clientName, sslSocketFactory, sslParameters, hostnameVerifier);
-	}
-
-	public GenericJedisDataSource(String host, int port, String password, int database, String clientName,
-								  int connectTimeout, int soTimeout, boolean useSsl){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, useSsl);
-	}
-
-	public GenericJedisDataSource(String host, int port, String password, int database, String clientName,
-								  int connectTimeout, int soTimeout, SSLSocketFactory sslSocketFactory,
-								  SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, sslSocketFactory, sslParameters,
-				hostnameVerifier);
-	}
-
-	public GenericJedisDataSource(String host, int port, String password, int database, String clientName,
-								  int connectTimeout, int soTimeout, boolean useSsl, SSLSocketFactory sslSocketFactory
-			, SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, useSsl, sslSocketFactory,
-				sslParameters, hostnameVerifier);
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public GenericJedisDataSource(final String host, final String password, final int database,
+			final int connectTimeout, final int soTimeout){
+		super(host, password, database, connectTimeout, soTimeout);
 	}
 
 }

@@ -27,7 +27,6 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.Executor;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
-import com.buession.redis.client.ListRedisOperations;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -42,7 +41,7 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-public class DefaultListRedisOperations<C extends JedisCommands> extends AbstractJedisRedisOperations implements ListRedisOperations {
+public class DefaultListRedisOperations<C extends JedisCommands> extends AbstractJedisRedisOperations implements JedisListRedisOperations {
 
 	public DefaultListRedisOperations(final JedisRedisClient client){
 		super(client);
@@ -53,8 +52,11 @@ public class DefaultListRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"values", values);
 
-		return execute((C jc)->isTransaction() ? getTransaction().lpush(key, values).get() : jc.lpush(key, values),
-				ProtocolCommand.LPUSH, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().lpush(key, values).get(), ProtocolCommand.LPUSH, arguments);
+		}else{
+			return execute((C jc)->jc.lpush(key, values), ProtocolCommand.LPUSH, arguments);
+		}
 	}
 
 	@Override
@@ -62,8 +64,11 @@ public class DefaultListRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"values", values);
 
-		return execute((C jc)->isTransaction() ? getTransaction().lpushx(key, values).get() : jc.lpushx(key, values),
-				ProtocolCommand.LPUSHX, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().lpushx(key, values).get(), ProtocolCommand.LPUSHX, arguments);
+		}else{
+			return execute((C jc)->jc.lpushx(key, values), ProtocolCommand.LPUSHX, arguments);
+		}
 	}
 
 	@Override
@@ -71,9 +76,13 @@ public class DefaultListRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"position", position).put("pivot", pivot).put("value", value);
 
-		return execute((C jc)->isTransaction() ? getTransaction().linsert(key,
-				JedisClientUtils.listPositionConvert(position), pivot, value).get() : jc.linsert(key,
-				JedisClientUtils.listPositionConvert(position), pivot, value), ProtocolCommand.LINSERT, arguments);
+		if(isTransaction()){
+			return execute((C jc)->jc.linsert(key, JedisClientUtils.listPositionConvert(position), pivot, value),
+					ProtocolCommand.LINSERT, arguments);
+		}else{
+			return execute((C jc)->jc.linsert(key, JedisClientUtils.listPositionConvert(position), pivot, value),
+					ProtocolCommand.LINSERT, arguments);
+		}
 	}
 
 	@Override
@@ -81,9 +90,13 @@ public class DefaultListRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"index", index).put("value", value);
 
-		return execute((C jc)->ReturnUtils.statusForOK(isTransaction() ?
-				getTransaction().lset(key, index, value).get() : jc.lset(key, index, value)), ProtocolCommand.LSET,
-				arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForOK(getTransaction().lset(key, index, value).get()),
+					ProtocolCommand.LSET, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForOK(jc.lset(key, index, value)), ProtocolCommand.LSET,
+					arguments);
+		}
 	}
 
 	@Override
@@ -91,16 +104,22 @@ public class DefaultListRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"index", index);
 
-		return execute((C jc)->isTransaction() ? getTransaction().lindex(key, index).get() : jc.lindex(key, index),
-				ProtocolCommand.LINDEX, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().lindex(key, index).get(), ProtocolCommand.LINDEX, arguments);
+		}else{
+			return execute((C jc)->jc.lindex(key, index), ProtocolCommand.LINDEX, arguments);
+		}
 	}
 
 	@Override
 	public String lPop(final String key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->isTransaction() ? getTransaction().lpop(key).get() : jc.lpop(key), ProtocolCommand.LPOP
-				, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().lpop(key).get(), ProtocolCommand.LPOP, arguments);
+		}else{
+			return execute((C jc)->jc.lpop(key), ProtocolCommand.LPOP, arguments);
+		}
 	}
 
 	@Override
@@ -130,8 +149,11 @@ public class DefaultListRedisOperations<C extends JedisCommands> extends Abstrac
 	public String rPop(final String key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->isTransaction() ? getTransaction().rpop(key).get() : jc.rpop(key), ProtocolCommand.RPOP
-				, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().rpop(key).get(), ProtocolCommand.RPOP, arguments);
+		}else{
+			return execute((C jc)->jc.rpop(key), ProtocolCommand.RPOP, arguments);
+		}
 	}
 
 	@Override
@@ -209,8 +231,11 @@ public class DefaultListRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"values", values);
 
-		return execute((C jc)->isTransaction() ? getTransaction().rpush(key, values).get() : jc.rpush(key, values),
-				ProtocolCommand.RPUSH, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().rpush(key, values).get(), ProtocolCommand.RPUSH, arguments);
+		}else{
+			return execute((C jc)->jc.rpush(key, values), ProtocolCommand.RPUSH, arguments);
+		}
 	}
 
 	@Override
@@ -218,8 +243,11 @@ public class DefaultListRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"values", values);
 
-		return execute((C jc)->isTransaction() ? getTransaction().rpushx(key, values).get() : jc.rpushx(key, values),
-				ProtocolCommand.RPUSHX, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().rpushx(key, values).get(), ProtocolCommand.RPUSHX, arguments);
+		}else{
+			return execute((C jc)->jc.rpushx(key, values), ProtocolCommand.RPUSHX, arguments);
+		}
 	}
 
 	@Override
@@ -227,9 +255,13 @@ public class DefaultListRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"start", start).put("end", end);
 
-		return execute((C jc)->ReturnUtils.statusForOK(isTransaction() ?
-				getTransaction().ltrim(key, start, end).get() : jc.ltrim(key, start, end)), ProtocolCommand.LTRIM,
-				arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForOK(getTransaction().ltrim(key, start, end).get()),
+					ProtocolCommand.LTRIM, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForOK(jc.ltrim(key, start, end)), ProtocolCommand.LTRIM,
+					arguments);
+		}
 	}
 
 	@Override
@@ -237,8 +269,11 @@ public class DefaultListRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"value", value).put("count", count);
 
-		return execute((C jc)->isTransaction() ? getTransaction().lrem(key, count, value).get() : jc.lrem(key, count,
-				value), ProtocolCommand.LREM, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().lrem(key, count, value).get(), ProtocolCommand.LREM, arguments);
+		}else{
+			return execute((C jc)->jc.lrem(key, count, value), ProtocolCommand.LREM, arguments);
+		}
 	}
 
 	@Override
@@ -246,16 +281,22 @@ public class DefaultListRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"start", start).put("end", end);
 
-		return execute((C jc)->isTransaction() ? getTransaction().lrange(key, start, end).get() : jc.lrange(key, start
-				, end), ProtocolCommand.LRANGE, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().lrange(key, start, end).get(), ProtocolCommand.LRANGE, arguments);
+		}else{
+			return execute((C jc)->jc.lrange(key, start, end), ProtocolCommand.LRANGE, arguments);
+		}
 	}
 
 	@Override
 	public Long lLen(final String key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->isTransaction() ? getTransaction().llen(key).get() : jc.llen(key), ProtocolCommand.LLEN
-				, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().llen(key).get(), ProtocolCommand.LLEN, arguments);
+		}else{
+			return execute((C jc)->jc.llen(key), ProtocolCommand.LLEN, arguments);
+		}
 	}
 
 }

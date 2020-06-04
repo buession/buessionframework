@@ -24,39 +24,11 @@
  */
 package com.buession.redis.client;
 
-import com.buession.lang.Status;
 import com.buession.redis.core.command.ListCommands;
-
-import java.util.List;
 
 /**
  * @author Yong.Teng
  */
 public interface ListRedisOperations extends RedisOperations, ListCommands {
-
-	@Override
-	default Status lSet(final String key, final int index, final String value){
-		return lSet(key, (long) index, value);
-	}
-
-	@Override
-	default String lIndex(final String key, final int index){
-		return lIndex(key, (long) index);
-	}
-
-	@Override
-	default Status lTrim(final String key, final int start, final int end){
-		return lTrim(key, (long) start, (long) end);
-	}
-
-	@Override
-	default Long lRem(final String key, final String value, final int count){
-		return lRem(key, value, (long) count);
-	}
-
-	@Override
-	default List<String> lRange(final String key, final int start, final int end){
-		return lRange(key, (long) start, (long) end);
-	}
 
 }

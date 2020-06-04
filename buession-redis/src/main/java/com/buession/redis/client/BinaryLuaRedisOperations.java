@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client;
 
+import com.buession.redis.core.command.BinaryLuaCommands;
+
 /**
  * @author Yong.Teng
  */
-public interface BinaryLuaRedisOperations {
+public interface BinaryLuaRedisOperations extends BinaryRedisOperations, BinaryLuaCommands {
 
 }

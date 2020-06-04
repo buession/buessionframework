@@ -31,19 +31,4 @@ import com.buession.redis.core.command.StringCommands;
  */
 public interface StringRedisOperations extends RedisOperations, StringCommands {
 
-	@Override
-	default Long setRange(final String key, final int offset, final String value){
-		return setRange(key, (long) offset, value);
-	}
-
-	@Override
-	default String getRange(final String key, final int start, final int end){
-		return getRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	default String substr(final String key, final long start, final long end){
-		return substr(key, (int) start, (int) end);
-	}
-
 }

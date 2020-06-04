@@ -24,9 +24,115 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.Executor;
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.transaction.Transaction;
+import com.buession.redis.transaction.jedis.JedisTransaction;
+import com.buession.redis.utils.ReturnUtils;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.commands.JedisCommands;
+
 /**
  * @author Yong.Teng
  */
-public class DefaultTransactionRedisOperations {
+public class DefaultTransactionRedisOperations<C extends JedisCommands> extends AbstractJedisRedisOperations implements JedisTransactionRedisOperations {
+
+	public DefaultTransactionRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Transaction multi(){
+		return execute(new Executor<C, Transaction>() {
+
+			@Override
+			public Transaction execute(C jc){
+				if(jc instanceof Jedis){
+					return new JedisTransaction(((Jedis) jc).multi());
+				}else{
+					throw new NotSupportedCommandException(ProtocolCommand.MULTI);
+				}
+			}
+
+		}, ProtocolCommand.MULTI);
+	}
+
+	@Override
+	public void exec(final Transaction transaction){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("transaction",
+				transaction);
+
+		execute(new Executor<C, Void>() {
+
+			@Override
+			public Void execute(C jc){
+				if(jc instanceof Jedis){
+					transaction.exec();
+					return null;
+				}else{
+					throw new NotSupportedCommandException(ProtocolCommand.EXEC);
+				}
+			}
+
+		}, ProtocolCommand.EXEC);
+	}
+
+	@Override
+	public void discard(final Transaction transaction){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("transaction",
+				transaction);
+
+		execute(new Executor<C, Void>() {
+
+			@Override
+			public Void execute(C jc){
+				if(jc instanceof Jedis){
+					transaction.discard();
+					return null;
+				}else{
+					throw new NotSupportedCommandException(ProtocolCommand.DISCARD);
+				}
+			}
+
+		}, ProtocolCommand.DISCARD);
+	}
+
+	@Override
+	public Status watch(final String... keys){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("keys", keys);
+
+		return execute(new Executor<C, Status>() {
+
+			@Override
+			public Status execute(C jc){
+				if(jc instanceof Jedis){
+					return ReturnUtils.statusForOK(((Jedis) jc).watch(keys));
+				}else{
+					throw new NotSupportedCommandException(ProtocolCommand.WATCH);
+				}
+			}
+
+		}, ProtocolCommand.WATCH);
+	}
+
+	@Override
+	public Status unwatch(){
+		return execute(new Executor<C, Status>() {
+
+			@Override
+			public Status execute(C jc){
+				if(jc instanceof Jedis){
+					return ReturnUtils.statusForOK(((Jedis) jc).unwatch());
+				}else{
+					throw new NotSupportedCommandException(ProtocolCommand.UNWATCH);
+				}
+			}
+
+		}, ProtocolCommand.UNWATCH);
+	}
 
 }

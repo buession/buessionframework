@@ -24,9 +24,128 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.Executor;
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.utils.ReturnUtils;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.commands.JedisCommands;
+
 /**
  * @author Yong.Teng
  */
-public class DefaultDatabaseRedisOperations {
+public class DefaultDatabaseRedisOperations<C extends JedisCommands> extends AbstractJedisRedisOperations implements JedisDatabaseRedisOperations {
+
+	public DefaultDatabaseRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Status select(final int db){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("db", db);
+
+		return execute(new Executor<C, Status>() {
+
+			@Override
+			public Status execute(final C jc){
+				if(isTransaction()){
+					return ReturnUtils.statusForOK(getTransaction().select(db).get());
+				}else{
+					if(jc instanceof Jedis){
+						return ReturnUtils.statusForOK(((Jedis) jc).select(db));
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.SELECT);
+					}
+				}
+
+			}
+		}, ProtocolCommand.SELECT, arguments);
+	}
+
+	@Override
+	public Status swapdb(final int db1, final int db2){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("db1", db1).put("db2"
+				, db2);
+
+		return execute(new Executor<C, Status>() {
+
+			@Override
+			public Status execute(final C jc){
+				if(isTransaction()){
+					return ReturnUtils.statusForOK(getTransaction().swapDB(db1, db2).get());
+				}else{
+					if(jc instanceof Jedis){
+						return ReturnUtils.statusForOK(((Jedis) jc).swapDB(db1, db2));
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.SWAPDB);
+					}
+				}
+
+			}
+		}, ProtocolCommand.SWAPDB, arguments);
+	}
+
+	@Override
+	public Long dbSize(){
+		return execute(new Executor<C, Long>() {
+
+			@Override
+			public Long execute(final C jc){
+				if(isTransaction()){
+					return getTransaction().dbSize().get();
+				}else{
+					if(jc instanceof Jedis){
+						return ((Jedis) jc).dbSize();
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.DBSIZE);
+					}
+				}
+
+			}
+		}, ProtocolCommand.DBSIZE);
+	}
+
+	@Override
+	public Status flushDb(){
+		return execute(new Executor<C, Status>() {
+
+			@Override
+			public Status execute(final C jc){
+				if(isTransaction()){
+					return ReturnUtils.statusForOK(getTransaction().flushDB().get());
+				}else{
+					if(jc instanceof Jedis){
+						return ReturnUtils.statusForOK(((Jedis) jc).flushDB());
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.FLUSHDB);
+					}
+				}
+
+			}
+		}, ProtocolCommand.FLUSHDB);
+	}
+
+	@Override
+	public Status flushAll(){
+		return execute(new Executor<C, Status>() {
+
+			@Override
+			public Status execute(final C jc){
+				if(isTransaction()){
+					return ReturnUtils.statusForOK(getTransaction().flushAll().get());
+				}else{
+					if(jc instanceof Jedis){
+						return ReturnUtils.statusForOK(((Jedis) jc).flushAll());
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.FLUSHALL);
+					}
+				}
+
+			}
+		}, ProtocolCommand.FLUSHALL);
+	}
 
 }

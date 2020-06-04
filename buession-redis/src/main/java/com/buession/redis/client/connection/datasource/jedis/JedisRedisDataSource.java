@@ -28,6 +28,8 @@ import com.buession.redis.client.connection.datasource.DataSource;
 import redis.clients.jedis.commands.JedisCommands;
 
 /**
+ * Jedis 数据源
+ *
  * @author Yong.Teng
  */
 public interface JedisRedisDataSource<T extends JedisCommands> extends DataSource {

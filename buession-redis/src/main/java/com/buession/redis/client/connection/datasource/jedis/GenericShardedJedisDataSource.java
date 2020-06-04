@@ -26,60 +26,52 @@ package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.core.ShardedRedisNode;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSocketFactory;
 import java.util.Set;
 
 /**
- * Jedis 常规分片模式数据源
+ * Jedis 分片模式数据源
  *
  * @author Yong.Teng
  */
 public class GenericShardedJedisDataSource extends AbstractShardedJedisDataSource {
 
-	public GenericShardedJedisDataSource(){
-		super();
-	}
-
+	/**
+	 * 构造函数
+	 *
+	 * @param redisNodes
+	 * 		Redis 分片主机节点
+	 */
 	public GenericShardedJedisDataSource(Set<ShardedRedisNode> redisNodes){
 		super(redisNodes);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param redisNodes
+	 * 		Redis 分片主机节点
+	 * @param database
+	 * 		数据库
+	 */
 	public GenericShardedJedisDataSource(Set<ShardedRedisNode> redisNodes, int database){
 		super(redisNodes, database);
 	}
 
-	public GenericShardedJedisDataSource(Set<ShardedRedisNode> redisNodes, int database, int connectTimeout,
-										 int soTimeout){
+	/**
+	 * 构造函数
+	 *
+	 * @param redisNodes
+	 * 		Redis 分片主机节点
+	 * @param database
+	 * 		数据库
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public GenericShardedJedisDataSource(Set<ShardedRedisNode> redisNodes, int database, final int connectTimeout,
+			final int soTimeout){
 		super(redisNodes, database, connectTimeout, soTimeout);
 	}
 
-	public GenericShardedJedisDataSource(Set<ShardedRedisNode> redisNodes, int database, boolean useSsl){
-		super(redisNodes, database, useSsl);
-	}
-
-	public GenericShardedJedisDataSource(Set<ShardedRedisNode> redisNodes, int database,
-										 SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
-										 HostnameVerifier hostnameVerifier){
-		super(redisNodes, database, sslSocketFactory, sslParameters, hostnameVerifier);
-	}
-
-	public GenericShardedJedisDataSource(Set<ShardedRedisNode> redisNodes, int database, int connectTimeout,
-										 int soTimeout, boolean useSsl){
-		super(redisNodes, database, connectTimeout, soTimeout, useSsl);
-	}
-
-	public GenericShardedJedisDataSource(Set<ShardedRedisNode> redisNodes, int database, int connectTimeout,
-										 int soTimeout, SSLSocketFactory sslSocketFactory, SSLParameters sslParameters
-			, HostnameVerifier hostnameVerifier){
-		super(redisNodes, database, connectTimeout, soTimeout, sslSocketFactory, sslParameters, hostnameVerifier);
-	}
-
-	public GenericShardedJedisDataSource(Set<ShardedRedisNode> redisNodes, int database, int connectTimeout,
-										 int soTimeout, boolean useSsl, SSLSocketFactory sslSocketFactory,
-										 SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
-		super(redisNodes, database, connectTimeout, soTimeout, useSsl, sslSocketFactory, sslParameters,
-				hostnameVerifier);
-	}
 }

@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client;
 
+import com.buession.redis.core.command.BinaryDatabaseCommand;
+
 /**
  * @author Yong.Teng
  */
-public interface BinaryDatabaseRedisOperations {
+public interface BinaryDatabaseRedisOperations extends BinaryRedisOperations, BinaryDatabaseCommand {
 
 }

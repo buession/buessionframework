@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client;
 
+import com.buession.redis.core.command.SortedSetCommands;
+
 /**
  * @author Yong.Teng
  */
-public interface SortedSetRedisOperations {
+public interface SortedSetRedisOperations extends RedisOperations, SortedSetCommands {
 
 }

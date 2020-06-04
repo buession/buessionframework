@@ -25,55 +25,220 @@
 package com.buession.redis.spring;
 
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.ShardedRedisNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
+import java.util.Set;
 
 /**
  * @author Yong.Teng
  */
-public abstract class RedisConnectionFactoryBean<C extends RedisConnection> extends RedisConnectionFactory implements
-        FactoryBean<C>, InitializingBean, DisposableBean {
+public abstract class RedisConnectionFactoryBean<C extends RedisConnection> extends RedisConnectionFactory implements FactoryBean<C>, InitializingBean, DisposableBean {
 
-    private C connection;
+	private C connection;
 
-    private final static Logger logger = LoggerFactory.getLogger(RedisConnectionFactoryBean.class);
+	private final static Logger logger = LoggerFactory.getLogger(RedisConnectionFactoryBean.class);
 
-    @Override
-    public C getObject() throws Exception{
-        return connection;
-    }
+	public RedisConnectionFactoryBean(){
+		super();
+	}
 
-    @Override
-    public boolean isSingleton(){
-        return true;
-    }
+	public RedisConnectionFactoryBean(final String host){
+		super(host);
+	}
 
-    @Override
-    public void destroy() throws Exception{
-        beforeDestroy(connection);
-        try{
-            connection.close();
-        }catch(IOException e){
-            logger.error("Redis connection close error.", e);
-        }
-        afterDestroy(connection);
-    }
+	public RedisConnectionFactoryBean(final String host, final String password){
+		super(host, password);
+	}
 
-    protected void setConnection(C connection){
-        this.connection = connection;
-    }
+	public RedisConnectionFactoryBean(final String host, final String password, final int database){
+		super(host, password, database);
+	}
 
-    protected void beforeDestroy(C connection){
+	public RedisConnectionFactoryBean(final String host, final String password, final int database,
+			final boolean usePool){
+		super(host, password, database, usePool);
+	}
 
-    }
+	public RedisConnectionFactoryBean(final String host, final String password, final int database,
+			final int connectTimeout, final int soTimeout){
+		super(host, password, database, connectTimeout, soTimeout);
+	}
 
-    protected void afterDestroy(C connection){
+	public RedisConnectionFactoryBean(final String host, final String password, final boolean usePool){
+		super(host, password, usePool);
+	}
 
-    }
+	public RedisConnectionFactoryBean(final String host, final String password, final int connectTimeout,
+			final int soTimeout){
+		super(host, password, connectTimeout, soTimeout);
+	}
+
+	public RedisConnectionFactoryBean(final String host, final int port){
+		super(host, port);
+	}
+
+	public RedisConnectionFactoryBean(final String host, final int port, final int database){
+		super(host, port, database);
+	}
+
+	public RedisConnectionFactoryBean(final String host, final int port, final String password){
+		super(host, port, password);
+	}
+
+	public RedisConnectionFactoryBean(final String host, final int port, final String password, final int database){
+		super(host, port, password, database);
+	}
+
+	public RedisConnectionFactoryBean(final String host, final int port, final String password, final int database,
+			final boolean usePool){
+		super(host, port, password, database, usePool);
+	}
+
+	public RedisConnectionFactoryBean(final String host, final int port, final String password, final int database,
+			final int connectTimeout, final int soTimeout){
+		super(host, port, password, database, connectTimeout, soTimeout);
+	}
+
+	public RedisConnectionFactoryBean(final String host, final int port, final String password, final int database,
+			final int connectTimeout, final int soTimeout, final boolean usePool){
+		super(host, port, password, database, connectTimeout, soTimeout, usePool);
+	}
+
+	public RedisConnectionFactoryBean(final String host, final int port, final String password, final int database,
+			final String clientName, final int connectTimeout, final int soTimeout){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout);
+	}
+
+	public RedisConnectionFactoryBean(final String host, final int port, final String password, final int database,
+			final String clientName, final boolean usePool){
+		super(host, port, password, database, clientName, usePool);
+	}
+
+	public RedisConnectionFactoryBean(final String host, final int port, final String password, final int database,
+			final String clientName, final int connectTimeout, final int soTimeout, final boolean usePool){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, usePool);
+	}
+
+	public RedisConnectionFactoryBean(final String host, final int port, final String password, final int database,
+			final String clientName, final int connectTimeout, final int soTimeout, final boolean usePool,
+			final boolean useSsl){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, usePool, useSsl);
+	}
+
+	public RedisConnectionFactoryBean(final String host, final int port, final String password, final int database,
+			final String clientName, final int connectTimeout, final int soTimeout, final boolean usePool,
+			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+			final HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, usePool, sslSocketFactory,
+				sslParameters, hostnameVerifier);
+	}
+
+	public RedisConnectionFactoryBean(final String host, final int port, final String password, final int database,
+			final String clientName, final int connectTimeout, final int soTimeout, final boolean usePool,
+			final boolean useSsl, final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+			final HostnameVerifier hostnameVerifier){
+		super(host, port, password, database, clientName, connectTimeout, soTimeout, usePool, useSsl, sslSocketFactory
+				, sslParameters, hostnameVerifier);
+	}
+
+	public RedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes){
+		super(redisNodes);
+	}
+
+	public RedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database){
+		super(redisNodes, database);
+	}
+
+	public RedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
+			final boolean usePool){
+		super(redisNodes, database, usePool);
+	}
+
+	public RedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final boolean usePool){
+		super(redisNodes, usePool);
+	}
+
+	public RedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int connectTimeout,
+			final int soTimeout){
+		super(redisNodes, connectTimeout, soTimeout);
+	}
+
+	public RedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
+			final int connectTimeout, final int soTimeout){
+		super(redisNodes, database, connectTimeout, soTimeout);
+	}
+
+	public RedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int connectTimeout,
+			final int soTimeout, final boolean usePool){
+		super(redisNodes, connectTimeout, soTimeout, usePool);
+	}
+
+	public RedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
+			final int connectTimeout, final int soTimeout, final boolean usePool){
+		super(redisNodes, database, connectTimeout, soTimeout, usePool);
+	}
+
+	public RedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
+			final int connectTimeout, final int soTimeout, final boolean usePool,
+			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+			final HostnameVerifier hostnameVerifier){
+		super(redisNodes, database, connectTimeout, soTimeout, usePool, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+	}
+
+	public RedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
+			final int connectTimeout, final int soTimeout, final boolean usePool, final boolean useSsl,
+			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+			final HostnameVerifier hostnameVerifier){
+		super(redisNodes, database, connectTimeout, soTimeout, usePool, useSsl, sslSocketFactory, sslParameters,
+				hostnameVerifier);
+	}
+
+	@Override
+	public Class<? extends RedisConnection> getObjectType(){
+		return connection.getClass();
+	}
+
+	@Override
+	public C getObject() throws Exception{
+		return connection;
+	}
+
+	@Override
+	public boolean isSingleton(){
+		return true;
+	}
+
+	@Override
+	public void destroy() throws Exception{
+		beforeDestroy(connection);
+		try{
+			connection.close();
+		}catch(IOException e){
+			logger.error("Redis connection close error.", e);
+		}
+		afterDestroy(connection);
+	}
+
+	protected void setConnection(C connection){
+		this.connection = connection;
+	}
+
+	protected void beforeDestroy(C connection){
+
+	}
+
+	protected void afterDestroy(C connection){
+
+	}
 
 }

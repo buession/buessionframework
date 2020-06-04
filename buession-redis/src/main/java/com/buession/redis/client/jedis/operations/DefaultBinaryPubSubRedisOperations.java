@@ -24,9 +24,107 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.Executor;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.PubSubListener;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.exception.NotSupportedTransactionCommandException;
+import com.buession.redis.pubsub.jedis.DefaultBinaryJedisPubSub;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.commands.BinaryJedisCommands;
+
 /**
  * @author Yong.Teng
  */
-public class DefaultBinaryPubSubRedisOperations {
+public class DefaultBinaryPubSubRedisOperations<C extends BinaryJedisCommands> extends AbstractJedisBinaryRedisOperations implements JedisBinaryPubSubRedisOperations {
+
+	public DefaultBinaryPubSubRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Long publish(final byte[] channel, final byte[] message){
+		final OperationsCommandArguments arguments =
+				OperationsCommandArguments.getInstance().put("channel", channel).put("message", message);
+
+		return execute(new Executor<C, Long>() {
+
+			@Override
+			public Long execute(C jc){
+				if(isTransaction()){
+					return getTransaction().publish(channel, message).get();
+				}else{
+					if(jc instanceof Jedis){
+						return ((Jedis) jc).publish(channel, message);
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.PUBLISH);
+					}
+				}
+			}
+
+		}, ProtocolCommand.PUBLISH, arguments);
+	}
+
+	@Override
+	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("channels",
+				channels).put("pubSubListener", pubSubListener);
+
+		execute(new Executor<C, Void>() {
+
+			@Override
+			public Void execute(C jc){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SUBSCRIBE);
+				}else{
+					if(jc instanceof Jedis){
+						((Jedis) jc).subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
+
+						return null;
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.SUBSCRIBE);
+					}
+				}
+			}
+
+		}, ProtocolCommand.SUBSCRIBE, arguments);
+	}
+
+	@Override
+	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("patterns",
+				patterns).put("pubSubListener", pubSubListener);
+
+		execute(new Executor<C, Void>() {
+
+			@Override
+			public Void execute(C jc){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.PSUBSCRIBE);
+				}else{
+					if(jc instanceof Jedis){
+						((Jedis) jc).psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
+
+						return null;
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.PSUBSCRIBE);
+					}
+				}
+			}
+
+		}, ProtocolCommand.PSUBSCRIBE, arguments);
+	}
+
+	@Override
+	public Object unSubscribe(final byte[]... channels){
+		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+	}
+
+	@Override
+	public Object pUnSubscribe(final byte[]... patterns){
+		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+	}
 
 }

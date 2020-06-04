@@ -26,6 +26,8 @@ package com.buession.redis.client.connection.jedis;
 
 import com.buession.core.Executor;
 import com.buession.core.validator.Validate;
+import com.buession.redis.client.connection.GenericConnection;
+import com.buession.redis.client.connection.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisPoolDataSource;
@@ -43,13 +45,14 @@ import java.io.IOException;
 /**
  * @author Yong.Teng
  */
-public class JedisConnection extends AbstractJedisRedisConnection<Jedis> implements JedisRedisConnection<Jedis> {
+public class JedisConnection extends AbstractJedisRedisConnection<Jedis> implements JedisRedisConnection<Jedis>,
+		GenericConnection {
 
 	private JedisPool pool;
 
 	private Jedis jedis;
 
-	private final static Logger logger = LoggerFactory.getLogger(JedisConnection.class);
+	private static Logger logger = LoggerFactory.getLogger(JedisConnection.class);
 
 	public JedisConnection(){
 		super();
@@ -57,6 +60,35 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 
 	public JedisConnection(JedisDataSource dataSource){
 		super(dataSource);
+	}
+
+	public JedisConnection(JedisDataSource dataSource, SslConfiguration sslConfiguration){
+		super(dataSource, sslConfiguration);
+	}
+
+	public JedisConnection(JedisDataSource dataSource, String clientName){
+		super(dataSource, clientName);
+	}
+
+	public JedisConnection(JedisDataSource dataSource, String clientName, SslConfiguration sslConfiguration){
+		super(dataSource, clientName, sslConfiguration);
+	}
+
+	public JedisConnection(JedisDataSource dataSource, boolean useSsl){
+		super(dataSource, useSsl);
+	}
+
+	public JedisConnection(JedisDataSource dataSource, boolean useSsl, SslConfiguration sslConfiguration){
+		super(dataSource, useSsl, sslConfiguration);
+	}
+
+	public JedisConnection(JedisDataSource dataSource, String clientName, boolean useSsl){
+		super(dataSource, clientName, useSsl);
+	}
+
+	public JedisConnection(JedisDataSource dataSource, String clientName, boolean useSsl,
+			SslConfiguration sslConfiguration){
+		super(dataSource, clientName, useSsl, sslConfiguration);
 	}
 
 	@Override
@@ -83,6 +115,16 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 		}
 	}
 
+	protected JedisPool createPool(final JedisPoolDataSource dataSource){
+		final SslConfiguration sslConfiguration = getSslConfiguration();
+		final JedisPool pool = new JedisPool(dataSource.getPoolConfig(), dataSource.getHost(), dataSource.getPort(),
+				dataSource.getConnectTimeout(), dataSource.getSoTimeout(), dataSource.getPassword(),
+				dataSource.getDatabase(), getClientName(), isUseSsl(), sslConfiguration.getSslSocketFactory(),
+				sslConfiguration.getSslParameters(), sslConfiguration.getHostnameVerifier());
+
+		return pool;
+	}
+
 	@Override
 	protected void doConnect() throws IOException{
 		DataSource dataSource = getDataSource();
@@ -92,17 +134,18 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 
 		if(dataSource instanceof JedisPoolDataSource){
 			JedisPoolDataSource jedisPoolDataSource = ((JedisPoolDataSource) dataSource);
-			pool = jedisPoolDataSource.getPool();
+			pool = createPool(jedisPoolDataSource);
 			jedis = pool.getResource();
 
-			logger.info("Jedis initialize with pool, db {} success, name: {}.", jedisPoolDataSource.getDatabase(),
-					jedisPoolDataSource.getClientName());
+			logger.info("Jedis initialize with pool success.");
 		}else{
 			JedisDataSource jedisDataSource = (JedisDataSource) dataSource;
+			SslConfiguration sslConfiguration = getSslConfiguration();
+
 			jedis = new Jedis(jedisDataSource.getHost(), jedisDataSource.getPort(),
-					jedisDataSource.getConnectTimeout(), jedisDataSource.getSoTimeout(), jedisDataSource.isUseSsl(),
-					jedisDataSource.getSslSocketFactory(), jedisDataSource.getSslParameters(),
-					jedisDataSource.getHostnameVerifier());
+					jedisDataSource.getConnectTimeout(), jedisDataSource.getSoTimeout(), isUseSsl(),
+					sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
+					sslConfiguration.getHostnameVerifier());
 
 			Client client = jedis.getClient();
 
@@ -113,17 +156,16 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 
 			jedis.connect();
 
-			if(Validate.hasText(jedisDataSource.getClientName())){
-				client.clientSetname(jedisDataSource.getClientName());
+			if(Validate.hasText(getClientName())){
+				client.clientSetname(getClientName());
 			}
 
-			logger.info("Jedis initialize with db {} success, name: {}.", jedisDataSource.getDatabase(),
-					jedisDataSource.getClientName());
+			logger.info("Jedis initialize success.");
 		}
 	}
 
 	@Override
-	protected <C, R> R doExecute(final Executor<C, R> executor) throws RedisException{
+	protected <C, R> R doExecute(Executor<C, R> executor) throws RedisException{
 		return executor.execute((C) jedis);
 	}
 

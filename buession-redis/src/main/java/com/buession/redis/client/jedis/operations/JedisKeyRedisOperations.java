@@ -24,9 +24,54 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.redis.client.KeyRedisOperations;
+import com.buession.redis.core.ScanResult;
+
+import java.util.List;
+
 /**
  * @author Yong.Teng
  */
-public interface JedisKeyRedisOperations {
+public interface JedisKeyRedisOperations extends KeyRedisOperations {
+
+	@Override
+	default ScanResult<List<String>> scan(final int cursor){
+		return scan(Integer.toString(cursor));
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final long cursor){
+		return scan(Long.toString(cursor));
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final int cursor, final String pattern){
+		return scan(Integer.toString(cursor), pattern);
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final long cursor, final String pattern){
+		return scan(Long.toString(cursor), pattern);
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final int cursor, final int count){
+		return scan(Integer.toString(cursor), count);
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final long cursor, final int count){
+		return scan(Long.toString(cursor), count);
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final int cursor, final String pattern, final int count){
+		return scan(Integer.toString(cursor), pattern, count);
+	}
+
+	@Override
+	default ScanResult<List<String>> scan(final long cursor, final String pattern, final int count){
+		return scan(Long.toString(count), pattern, count);
+	}
 
 }

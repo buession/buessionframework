@@ -24,9 +24,60 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.utils.NumberUtils;
+import com.buession.redis.client.BinarySetRedisOperations;
+import com.buession.redis.core.ScanResult;
+
+import java.util.List;
+
 /**
  * @author Yong.Teng
  */
-public interface JedisBinarySetRedisOperations {
+public interface JedisBinarySetRedisOperations extends BinarySetRedisOperations {
+
+	@Override
+	default List<byte[]> sRandMember(final byte[] key, final long count){
+		return sRandMember(key, (int) count);
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor){
+		return sScan(key, NumberUtils.int2bytes(cursor));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor){
+		return sScan(key, NumberUtils.long2bytes(cursor));
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern){
+		return sScan(key, NumberUtils.int2bytes(cursor), pattern);
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern){
+		return sScan(key, NumberUtils.long2bytes(cursor), pattern);
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final int count){
+		return sScan(key, NumberUtils.int2bytes(cursor), count);
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final int count){
+		return sScan(key, NumberUtils.long2bytes(cursor), count);
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern, final int count){
+		return sScan(key, NumberUtils.int2bytes(cursor), pattern, count);
+	}
+
+	@Override
+	default ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count){
+		return sScan(key, NumberUtils.long2bytes(cursor), pattern, count);
+	}
 
 }

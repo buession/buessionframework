@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.redis.client.BinaryHyperLogLogRedisOperations;
+
 /**
  * @author Yong.Teng
  */
-public interface JedisBinaryHyperLogLogRedisOperations {
+public interface JedisBinaryHyperLogLogRedisOperations extends BinaryHyperLogLogRedisOperations {
 
 }

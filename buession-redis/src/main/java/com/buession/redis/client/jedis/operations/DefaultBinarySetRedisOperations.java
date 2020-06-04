@@ -25,11 +25,16 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.Executor;
-import com.buession.redis.client.BinarySetRedisOperations;
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.JedisScanParams;
+import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.operations.OperationsCommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.exception.NotSupportedTransactionCommandException;
+import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.commands.BinaryJedisCommands;
 
@@ -39,7 +44,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class DefaultBinarySetRedisOperations<C extends BinaryJedisCommands> extends AbstractJedisBinaryRedisOperations implements BinarySetRedisOperations {
+public class DefaultBinarySetRedisOperations<C extends BinaryJedisCommands> extends AbstractJedisBinaryRedisOperations implements JedisBinarySetRedisOperations {
 
 	public DefaultBinarySetRedisOperations(final JedisRedisClient client){
 		super(client);
@@ -51,7 +56,7 @@ public class DefaultBinarySetRedisOperations<C extends BinaryJedisCommands> exte
 				"members", members);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().sAdd(key, members), ProtocolCommand.SADD, arguments);
+			return execute((C jc)->getTransaction().sadd(key, members).get(), ProtocolCommand.SADD, arguments);
 		}else{
 			return execute((C jc)->jc.sadd(key, members), ProtocolCommand.SADD, arguments);
 		}
@@ -62,7 +67,7 @@ public class DefaultBinarySetRedisOperations<C extends BinaryJedisCommands> exte
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().sCard(key), ProtocolCommand.SCARD, arguments);
+			return execute((C jc)->getTransaction().scard(key).get(), ProtocolCommand.SCARD, arguments);
 		}else{
 			return execute((C jc)->jc.scard(key), ProtocolCommand.SCARD, arguments);
 		}
@@ -74,7 +79,8 @@ public class DefaultBinarySetRedisOperations<C extends BinaryJedisCommands> exte
 				"member", member);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().sisMember(key, member), ProtocolCommand.SISMEMBER, arguments);
+			return execute((C jc)->getTransaction().sismember(key, member).get(), ProtocolCommand.SISMEMBER,
+					arguments);
 		}else{
 			return execute((C jc)->jc.sismember(key, member), ProtocolCommand.SISMEMBER, arguments);
 		}
@@ -85,7 +91,7 @@ public class DefaultBinarySetRedisOperations<C extends BinaryJedisCommands> exte
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().sMembers(key), ProtocolCommand.SMEMBERS, arguments);
+			return execute((C jc)->getTransaction().smembers(key).get(), ProtocolCommand.SMEMBERS, arguments);
 		}else{
 			return execute((C jc)->jc.smembers(key), ProtocolCommand.SMEMBERS, arguments);
 		}
@@ -96,9 +102,20 @@ public class DefaultBinarySetRedisOperations<C extends BinaryJedisCommands> exte
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().sPop(key), ProtocolCommand.SPOP, arguments);
+			return execute((C jc)->getTransaction().spop(key).get(), ProtocolCommand.SPOP, arguments);
 		}else{
 			return execute((C jc)->jc.spop(key), ProtocolCommand.SPOP, arguments);
+		}
+	}
+
+	@Override
+	public byte[] sRandMember(final byte[] key){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().srandmember(key).get(), ProtocolCommand.SRANDMEMBER, arguments);
+		}else{
+			return execute((C jc)->jc.srandmember(key), ProtocolCommand.SRANDMEMBER, arguments);
 		}
 	}
 
@@ -108,21 +125,10 @@ public class DefaultBinarySetRedisOperations<C extends BinaryJedisCommands> exte
 				"count", count);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().sRandMember(key, count), ProtocolCommand.SRANDMEMBER, arguments);
+			return execute((C jc)->getTransaction().srandmember(key, count).get(), ProtocolCommand.SRANDMEMBER,
+					arguments);
 		}else{
 			return execute((C jc)->jc.srandmember(key, count), ProtocolCommand.SRANDMEMBER, arguments);
-		}
-	}
-
-	@Override
-	public List<byte[]> sRandMember(final byte[] key, final long count){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"count", count);
-
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().sRandMember(key, count), ProtocolCommand.SRANDMEMBER, arguments);
-		}else{
-			return execute((C jc)->jc.srandmember(key, (int) count), ProtocolCommand.SRANDMEMBER, arguments);
 		}
 	}
 
@@ -132,7 +138,7 @@ public class DefaultBinarySetRedisOperations<C extends BinaryJedisCommands> exte
 				"members", members);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().sRem(key, members), ProtocolCommand.SREM, arguments);
+			return execute((C jc)->getTransaction().srem(key, members).get(), ProtocolCommand.SREM, arguments);
 		}else{
 			return execute((C jc)->jc.srem(key, members), ProtocolCommand.SREM, arguments);
 		}
@@ -142,21 +148,22 @@ public class DefaultBinarySetRedisOperations<C extends BinaryJedisCommands> exte
 	public Set<byte[]> sDiff(final byte[]... keys){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("keys", keys);
 
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().sDiff(keys), ProtocolCommand.SDIFF, arguments);
-		}else{
-			return execute(new Executor<C, Set<byte[]>>() {
+		return execute(new Executor<C, Set<byte[]>>() {
 
-				@Override
-				public Set<byte[]> execute(C jc){
+			@Override
+			public Set<byte[]> execute(C jc){
+				if(isTransaction()){
+					return getTransaction().sdiff(keys).get();
+				}else{
 					if(jc instanceof Jedis){
 						return ((Jedis) jc).sdiff(keys);
 					}else{
 						throw new NotSupportedCommandException(ProtocolCommand.SDIFF);
 					}
 				}
-			}, ProtocolCommand.SDIFF, arguments);
-		}
+			}
+
+		}, ProtocolCommand.SDIFF, arguments);
 	}
 
 	@Override
@@ -164,42 +171,44 @@ public class DefaultBinarySetRedisOperations<C extends BinaryJedisCommands> exte
 		final OperationsCommandArguments arguments =
 				OperationsCommandArguments.getInstance().put("destKey", destKey).put("keys", keys);
 
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().sDiffStore(destKey, keys), ProtocolCommand.SDIFFSTORE, arguments);
-		}else{
-			return execute(new Executor<C, Long>() {
+		return execute(new Executor<C, Long>() {
 
-				@Override
-				public Long execute(C jc){
+			@Override
+			public Long execute(C jc){
+				if(isTransaction()){
+					return getTransaction().sdiffstore(destKey, keys).get();
+				}else{
 					if(jc instanceof Jedis){
 						return ((Jedis) jc).sdiffstore(destKey, keys);
 					}else{
 						throw new NotSupportedCommandException(ProtocolCommand.SDIFFSTORE);
 					}
 				}
-			}, ProtocolCommand.SDIFFSTORE, arguments);
-		}
+			}
+
+		}, ProtocolCommand.SDIFFSTORE, arguments);
 	}
 
 	@Override
 	public Set<byte[]> sInter(final byte[]... keys){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("keys", keys);
 
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().sInter(keys), ProtocolCommand.SINTER, arguments);
-		}else{
-			return execute(new Executor<C, Set<byte[]>>() {
+		return execute(new Executor<C, Set<byte[]>>() {
 
-				@Override
-				public Set<byte[]> execute(C jc){
+			@Override
+			public Set<byte[]> execute(C jc){
+				if(isTransaction()){
+					return getTransaction().sinter(keys).get();
+				}else{
 					if(jc instanceof Jedis){
 						return ((Jedis) jc).sinter(keys);
 					}else{
 						throw new NotSupportedCommandException(ProtocolCommand.SINTER);
 					}
 				}
-			}, ProtocolCommand.SINTER, arguments);
-		}
+			}
+
+		}, ProtocolCommand.SINTER, arguments);
 	}
 
 	@Override
@@ -207,22 +216,174 @@ public class DefaultBinarySetRedisOperations<C extends BinaryJedisCommands> exte
 		final OperationsCommandArguments arguments =
 				OperationsCommandArguments.getInstance().put("destKey", destKey).put("keys", keys);
 
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().sInterStore(destKey, keys), ProtocolCommand.SINTERSTORE,
-					arguments);
-		}else{
-			return execute(new Executor<C, Long>() {
+		return execute(new Executor<C, Long>() {
 
-				@Override
-				public Long execute(C jc){
+			@Override
+			public Long execute(C jc){
+				if(isTransaction()){
+					return getTransaction().sinterstore(destKey, keys).get();
+				}else{
 					if(jc instanceof Jedis){
 						return ((Jedis) jc).sinterstore(destKey, keys);
 					}else{
 						throw new NotSupportedCommandException(ProtocolCommand.SINTERSTORE);
 					}
 				}
-			}, ProtocolCommand.SINTERSTORE, arguments);
-		}
+			}
+
+		}, ProtocolCommand.SINTERSTORE, arguments);
+	}
+
+	@Override
+	public Set<byte[]> sUnion(final byte[]... keys){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("keys", keys);
+
+		return execute(new Executor<C, Set<byte[]>>() {
+
+			@Override
+			public Set<byte[]> execute(C jc){
+				if(isTransaction()){
+					return getTransaction().sunion(keys).get();
+				}else{
+					if(jc instanceof Jedis){
+						return ((Jedis) jc).sunion(keys);
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.SUNION);
+					}
+				}
+			}
+
+		}, ProtocolCommand.SUNION, arguments);
+	}
+
+	@Override
+	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
+		final OperationsCommandArguments arguments =
+				OperationsCommandArguments.getInstance().put("destKey", destKey).put("keys", keys);
+
+		return execute(new Executor<C, Long>() {
+
+			@Override
+			public Long execute(C jc){
+				if(isTransaction()){
+					return getTransaction().sunionstore(destKey, keys).get();
+				}else{
+					if(jc instanceof Jedis){
+						return ((Jedis) jc).sunionstore(destKey, keys);
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.SUNIONSTORE);
+					}
+				}
+			}
+
+		}, ProtocolCommand.SUNIONSTORE, arguments);
+	}
+
+	@Override
+	public Status sMove(final byte[] source, final byte[] destKey, final byte[] member){
+		final OperationsCommandArguments arguments =
+				OperationsCommandArguments.getInstance().put("source", source).put("destKey", destKey).put("member",
+						member);
+
+		return execute(new Executor<C, Status>() {
+
+			@Override
+			public Status execute(C jc){
+				Long ret;
+
+				if(isTransaction()){
+					ret = getTransaction().smove(source, destKey, member).get();
+				}else{
+					if(jc instanceof Jedis){
+						ret = ((Jedis) jc).smove(source, destKey, member);
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.SMOVE);
+					}
+				}
+
+				return ReturnUtils.statusForBool(ret > 0);
+			}
+
+		}, ProtocolCommand.SMOVE, arguments);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor);
+
+		return execute(new Executor<C, ScanResult<List<byte[]>>>() {
+
+			@Override
+			public ScanResult<List<byte[]>> execute(C jc){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+				}else{
+					return JedisClientUtils.listScanResultDeconvert(jc.sscan(key, cursor));
+				}
+			}
+
+		}, ProtocolCommand.SSCAN, arguments);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor).put("pattern", pattern);
+
+		return execute(new Executor<C, ScanResult<List<byte[]>>>() {
+
+			@Override
+			public ScanResult<List<byte[]>> execute(C jc){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+				}else{
+					return JedisClientUtils.listScanResultDeconvert(jc.sscan(key, cursor,
+							new JedisScanParams(pattern)));
+				}
+			}
+
+		}, ProtocolCommand.SSCAN, arguments);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor).put("count", count);
+
+		return execute(new Executor<C, ScanResult<List<byte[]>>>() {
+
+			@Override
+			public ScanResult<List<byte[]>> execute(C jc){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+				}else{
+					return JedisClientUtils.listScanResultDeconvert(jc.sscan(key, cursor, new JedisScanParams(count)));
+				}
+			}
+
+		}, ProtocolCommand.SSCAN, arguments);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+			final int count){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"cursor", cursor).put("pattern", pattern).put("count", count);
+
+		return execute(new Executor<C, ScanResult<List<byte[]>>>() {
+
+			@Override
+			public ScanResult<List<byte[]>> execute(C jc){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+				}else{
+					return JedisClientUtils.listScanResultDeconvert(jc.sscan(key, cursor, new JedisScanParams(pattern,
+							count)));
+				}
+			}
+
+		}, ProtocolCommand.SSCAN, arguments);
 	}
 
 }

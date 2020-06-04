@@ -41,15 +41,57 @@ import java.io.IOException;
  */
 public abstract class AbstractRedisConnection implements RedisConnection {
 
-	protected Transaction transaction;
-
 	private DataSource dataSource;
+
+	private String clientName;
+
+	private boolean useSsl;
+
+	private SslConfiguration sslConfiguration;
+
+	protected Transaction transaction;
 
 	public AbstractRedisConnection(){
 	}
 
 	public AbstractRedisConnection(DataSource dataSource){
 		this.dataSource = dataSource;
+	}
+
+	public AbstractRedisConnection(DataSource dataSource, SslConfiguration sslConfiguration){
+		this.dataSource = dataSource;
+		this.sslConfiguration = sslConfiguration;
+	}
+
+	public AbstractRedisConnection(DataSource dataSource, String clientName){
+		this.dataSource = dataSource;
+		this.clientName = clientName;
+	}
+
+	public AbstractRedisConnection(DataSource dataSource, String clientName, SslConfiguration sslConfiguration){
+		this(dataSource, clientName);
+		this.sslConfiguration = sslConfiguration;
+	}
+
+	public AbstractRedisConnection(DataSource dataSource, boolean useSsl){
+		this.dataSource = dataSource;
+		this.useSsl = useSsl;
+	}
+
+	public AbstractRedisConnection(DataSource dataSource, boolean useSsl, SslConfiguration sslConfiguration){
+		this(dataSource, useSsl);
+		this.sslConfiguration = sslConfiguration;
+	}
+
+	public AbstractRedisConnection(DataSource dataSource, String clientName, boolean useSsl){
+		this(dataSource, clientName);
+		this.useSsl = useSsl;
+	}
+
+	public AbstractRedisConnection(DataSource dataSource, String clientName, boolean useSsl,
+			SslConfiguration sslConfiguration){
+		this(dataSource, clientName, useSsl);
+		this.sslConfiguration = sslConfiguration;
 	}
 
 	@Override
@@ -60,6 +102,30 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	@Override
 	public void setDataSource(DataSource dataSource){
 		this.dataSource = dataSource;
+	}
+
+	public String getClientName(){
+		return clientName;
+	}
+
+	public void setClientName(String clientName){
+		this.clientName = clientName;
+	}
+
+	public boolean isUseSsl(){
+		return useSsl;
+	}
+
+	public void setUseSsl(final boolean useSsl){
+		this.useSsl = useSsl;
+	}
+
+	public SslConfiguration getSslConfiguration(){
+		return sslConfiguration;
+	}
+
+	public void setSslConfiguration(SslConfiguration sslConfiguration){
+		this.sslConfiguration = sslConfiguration;
 	}
 
 	@Override

@@ -27,10 +27,6 @@ package com.buession.redis.client.connection.datasource;
 import com.buession.redis.Constants;
 import com.buession.redis.core.Server;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSocketFactory;
-
 /**
  * Redis 数据源抽象类
  *
@@ -38,19 +34,20 @@ import javax.net.ssl.SSLSocketFactory;
  */
 public abstract class AbstractDataSource implements DataSource {
 
+	/**
+	 * 数据库
+	 */
 	private int database = Server.DEFAULT_DATABASE;
 
+	/**
+	 * 连接超时（单位：秒）
+	 */
 	private int connectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
 
+	/**
+	 * 读取超时（单位：秒）
+	 */
 	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
-
-	private boolean useSsl;
-
-	private SSLSocketFactory sslSocketFactory;
-
-	private SSLParameters sslParameters;
-
-	private HostnameVerifier hostnameVerifier;
 
 	@Override
 	public int getDatabase(){
@@ -80,46 +77,6 @@ public abstract class AbstractDataSource implements DataSource {
 	@Override
 	public void setSoTimeout(int soTimeout){
 		this.soTimeout = soTimeout;
-	}
-
-	@Override
-	public boolean isUseSsl(){
-		return useSsl;
-	}
-
-	@Override
-	public void setUseSsl(boolean useSsl){
-		this.useSsl = useSsl;
-	}
-
-	@Override
-	public SSLSocketFactory getSslSocketFactory(){
-		return sslSocketFactory;
-	}
-
-	@Override
-	public void setSslSocketFactory(SSLSocketFactory sslSocketFactory){
-		this.sslSocketFactory = sslSocketFactory;
-	}
-
-	@Override
-	public SSLParameters getSslParameters(){
-		return sslParameters;
-	}
-
-	@Override
-	public void setSslParameters(SSLParameters sslParameters){
-		this.sslParameters = sslParameters;
-	}
-
-	@Override
-	public HostnameVerifier getHostnameVerifier(){
-		return hostnameVerifier;
-	}
-
-	@Override
-	public void setHostnameVerifier(HostnameVerifier hostnameVerifier){
-		this.hostnameVerifier = hostnameVerifier;
 	}
 
 }

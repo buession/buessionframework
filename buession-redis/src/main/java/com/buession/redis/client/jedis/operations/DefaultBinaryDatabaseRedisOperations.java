@@ -24,9 +24,16 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.redis.client.jedis.JedisRedisClient;
+import redis.clients.jedis.commands.BinaryJedisCommands;
+
 /**
  * @author Yong.Teng
  */
-public class DefaultBinaryDatabaseRedisOperations {
+public class DefaultBinaryDatabaseRedisOperations<C extends BinaryJedisCommands> extends AbstractJedisBinaryRedisOperations implements JedisBinaryDatabaseRedisOperations {
+
+	public DefaultBinaryDatabaseRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
 
 }

@@ -25,6 +25,7 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.KeyValue;
+import com.buession.redis.core.command.BinarySortedSetCommands;
 import com.buession.redis.core.command.SortedSetCommands;
 
 /**
@@ -35,7 +36,7 @@ import com.buession.redis.core.command.SortedSetCommands;
  *
  * @author Yong.Teng
  */
-public interface SortedSetOperations extends SortedSetCommands, RedisOperations {
+public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetCommands, RedisOperations {
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -211,7 +212,9 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	Double zIncr(final String key, final String member);
+	default Double zIncr(final String key, final String member){
+		return zIncrBy(key, member, 1);
+	}
 
 	/**
 	 * 为有序集 key 的成员 member 的 score 值加上增量一
@@ -223,7 +226,9 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	Double zIncr(final byte[] key, final byte[] member);
+	default Double zIncr(final byte[] key, final byte[] member){
+		return zIncrBy(key, member, 1);
+	}
 
 	/**
 	 * 移除有序集 key 中的成员，不存在的成员将被忽略

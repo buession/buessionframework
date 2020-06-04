@@ -25,12 +25,13 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.core.Executor;
+import com.buession.redis.client.connection.ShardedConnection;
+import com.buession.redis.client.connection.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.ShardedJedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.ShardedJedisPoolDataSource;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.core.ShardedRedisNode;
-import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class ShardedJedisConnection extends AbstractJedisRedisConnection<ShardedJedis> implements JedisRedisConnection<ShardedJedis> {
+public class ShardedJedisConnection extends AbstractJedisRedisConnection<ShardedJedis> implements JedisRedisConnection<ShardedJedis>, ShardedConnection {
 
 	private ShardedJedisPool pool;
 
@@ -62,24 +63,51 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 		super(dataSource);
 	}
 
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, SslConfiguration sslConfiguration){
+		super(dataSource, sslConfiguration);
+	}
+
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, String clientName){
+		super(dataSource, clientName);
+	}
+
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, String clientName,
+			SslConfiguration sslConfiguration){
+		super(dataSource, clientName, sslConfiguration);
+	}
+
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, boolean useSsl){
+		super(dataSource, useSsl);
+	}
+
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, boolean useSsl,
+			SslConfiguration sslConfiguration){
+		super(dataSource, useSsl, sslConfiguration);
+	}
+
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, String clientName, boolean useSsl){
+		super(dataSource, clientName, useSsl);
+	}
+
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, String clientName, boolean useSsl,
+			SslConfiguration sslConfiguration){
+		super(dataSource, clientName, useSsl, sslConfiguration);
+	}
+
 	@Override
 	public boolean isTransaction(){
 		return JedisClientUtils.isInMulti(shardedJedis);
 	}
 
-	@Override
-	public void multi(){
-		throw new NotSupportedTransactionCommandException("ShardedJedis cloud not suppported transaction.");
-	}
+	protected ShardedJedisPool createPool(final ShardedJedisPoolDataSource dataSource){
+		final SslConfiguration sslConfiguration = getSslConfiguration();
+		final List<JedisShardInfo> shardInfos = JedisClientUtils.createJedisShardInfo(dataSource.getRedisNodes(),
+				dataSource.getDatabase(), dataSource.getConnectTimeout(), dataSource.getSoTimeout(), isUseSsl(),
+				sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
+				sslConfiguration.getHostnameVerifier());
+		final ShardedJedisPool pool = new ShardedJedisPool(dataSource.getPoolConfig(), shardInfos);
 
-	@Override
-	public void exec(){
-		throw new NotSupportedTransactionCommandException("ShardedJedis cloud not suppported transaction.");
-	}
-
-	@Override
-	public void discard(){
-		throw new NotSupportedTransactionCommandException("ShardedJedis cloud not suppported transaction.");
+		return pool;
 	}
 
 	@Override
@@ -91,25 +119,25 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 
 		if(dataSource instanceof ShardedJedisPoolDataSource){
 			ShardedJedisPoolDataSource shardedJedisPoolDataSource = (ShardedJedisPoolDataSource) dataSource;
-			pool = shardedJedisPoolDataSource.getPool();
+			pool = createPool(shardedJedisPoolDataSource);
 			shardedJedis = pool.getResource();
 
 			if(logger.isInfoEnabled()){
-				logger.info("ShardedJedis initialize with pool, db {} success, size: {}.", dataSource.getDatabase(),
+				logger.info("ShardedJedis initialize with pool success, size: {}.",
 						shardedJedis.getAllShardInfo().size());
 			}
 		}else{
 			ShardedJedisDataSource shardedJedisDataSource = (ShardedJedisDataSource) dataSource;
 			Set<ShardedRedisNode> shardedRedisNodes = shardedJedisDataSource.getRedisNodes();
+			SslConfiguration sslConfiguration = getSslConfiguration();
 			List<JedisShardInfo> shardInfos = JedisClientUtils.createJedisShardInfo(shardedRedisNodes,
-					dataSource.getDatabase(), dataSource.getConnectTimeout(), dataSource.getSoTimeout(),
-					dataSource.isUseSsl(), dataSource.getSslSocketFactory(), dataSource.getSslParameters(),
-					dataSource.getHostnameVerifier());
+					dataSource.getDatabase(), dataSource.getConnectTimeout(), dataSource.getSoTimeout(), isUseSsl(),
+					sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
+					sslConfiguration.getHostnameVerifier());
 
 			shardedJedis = new ShardedJedis(shardInfos);
 
-			logger.info("ShardedJedis initialize with db {} success, size: {}.", dataSource.getDatabase(),
-					shardInfos.size());
+			logger.info("ShardedJedis initialize success, size: {}.", shardInfos.size());
 		}
 	}
 

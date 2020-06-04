@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.redis.client.BinaryLuaRedisOperations;
+
 /**
  * @author Yong.Teng
  */
-public interface JedisBinaryLuaRedisOperations {
+public interface JedisBinaryLuaRedisOperations extends BinaryLuaRedisOperations {
 
 }

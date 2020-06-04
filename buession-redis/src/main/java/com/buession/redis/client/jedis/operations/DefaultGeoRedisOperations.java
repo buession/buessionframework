@@ -39,9 +39,9 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class DefaultJedisGeoRedisOperations<C extends JedisCommands> extends AbstractJedisRedisOperations implements JedisGeoRedisOperations {
+public class DefaultGeoRedisOperations<C extends JedisCommands> extends AbstractJedisRedisOperations implements JedisGeoRedisOperations {
 
-	public DefaultJedisGeoRedisOperations(final JedisRedisClient client){
+	public DefaultGeoRedisOperations(final JedisRedisClient client){
 		super(client);
 	}
 
@@ -159,26 +159,37 @@ public class DefaultJedisGeoRedisOperations<C extends JedisCommands> extends Abs
 	}
 
 	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius){
-		return null;
-	}
-
-	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 			final GeoUnit unit){
-		return null;
-	}
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"member", member).put("radius", radius).put("unit", unit);
 
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-			final GeoArgument geoArgument){
-		return null;
+		if(isTransaction()){
+			return execute((C jc)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
+					member, radius, JedisClientUtils.geoUnitConvert(unit)).get()), ProtocolCommand.GEORADIUSBYMEMBER,
+					arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.listGeoRadiusDeconvert(jc.georadiusByMember(key, member, radius,
+					JedisClientUtils.geoUnitConvert(unit))), ProtocolCommand.GEORADIUSBYMEMBER, arguments);
+		}
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 			final GeoUnit unit, final GeoArgument geoArgument){
-		return null;
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"member", member).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
+
+		if(isTransaction()){
+			return execute((C jc)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
+					member, radius, JedisClientUtils.geoUnitConvert(unit),
+					JedisClientUtils.geoArgumentConvert(geoArgument)).get()), ProtocolCommand.GEORADIUSBYMEMBER,
+					arguments);
+		}else{
+			return execute((C jc)->JedisClientUtils.listGeoRadiusDeconvert(jc.georadiusByMember(key, member, radius,
+					JedisClientUtils.geoUnitConvert(unit), JedisClientUtils.geoArgumentConvert(geoArgument))),
+					ProtocolCommand.GEORADIUSBYMEMBER, arguments);
+		}
 	}
 
 	@Override

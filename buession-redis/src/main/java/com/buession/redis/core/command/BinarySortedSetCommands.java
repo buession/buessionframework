@@ -237,6 +237,23 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	Long zCount(final byte[] key, final long min, final long max);
 
 	/**
+	 * 获取有序集 key 中，score 值在 min 和 max 之间（包括 score 值等于 min 或 max ）的成员的数量
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcount.html" target="_blank">http://redisdoc
+	 * .com/sorted_set/zcount.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 *
+	 * @return score 值在 min 和 max 之间的成员的数量
+	 */
+	Long zCount(final byte[] key, final byte[] min, final byte[] max);
+
+	/**
 	 * 获取有序集 key 中，指定区间内的成员；其中成员的位置按 score 值递增(从小到大)来排序；
 	 * 具有相同 score 值的成员按字典序来排列；
 	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
@@ -632,7 +649,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 指定区间内带有 score 的从 offset 开是的 count 个，有序集成员的列表
 	 */
 	Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset,
-									   final int count);
+			final int count);
 
 	/**
 	 * 获取有序集 key 中，带有 score 的所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
@@ -655,7 +672,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 指定区间内带有 score 的从 offset 开是的 count 个，有序集成员的列表
 	 */
 	Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
-									   final int count);
+			final int count);
 
 	/**
 	 * 获取有序集 key 中，带有 score 的所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
@@ -678,7 +695,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 指定区间内带有 score 的从 offset 开是的 count 个，有序集成员的列表
 	 */
 	Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset,
-									   final int count);
+			final int count);
 
 	/**
 	 * 获取有序集 key 中，带有 score 的所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
@@ -701,7 +718,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 指定区间内带有 score 的从 offset 开是的 count 个，有序集成员的列表
 	 */
 	Set<Tuple> zRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
-									   final int count);
+			final int count);
 
 	/**
 	 * 获取有序集 key 中，带有 score 的所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
@@ -724,7 +741,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 指定区间内带有 score 的从 offset 开是的 count 个，有序集成员的列表
 	 */
 	Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int offset,
-									   final int count);
+			final int count);
 
 	/**
 	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
@@ -1380,7 +1397,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 指定区间内，有序集成员的列表
 	 */
 	Set<byte[]> zRevRangeByScore(final byte[] key, final float min, final float max, final int offset,
-								 final int count);
+			final int count);
 
 	/**
 	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
@@ -1404,7 +1421,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 指定区间内，有序集成员的列表
 	 */
 	Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset,
-								 final int count);
+			final int count);
 
 	/**
 	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个成员；
@@ -1474,7 +1491,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 指定区间内，有序集成员的列表
 	 */
 	Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
-								 final int count);
+			final int count);
 
 	/**
 	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的带有 score 的所有的成员；
@@ -1593,7 +1610,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 指定区间内，有序集成员的列表
 	 */
 	Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset,
-										  final int count);
+			final int count);
 
 	/**
 	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个带有 score 的成员；
@@ -1617,7 +1634,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 指定区间内，有序集成员的列表
 	 */
 	Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
-										  final int count);
+			final int count);
 
 	/**
 	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个带有 score 的成员；
@@ -1641,7 +1658,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 指定区间内，有序集成员的列表
 	 */
 	Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset,
-										  final int count);
+			final int count);
 
 	/**
 	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个带有 score 的成员；
@@ -1665,7 +1682,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 指定区间内，有序集成员的列表
 	 */
 	Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
-										  final int count);
+			final int count);
 
 	/**
 	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）从 offset 开始的 count 个带有 score 的成员；
@@ -1689,7 +1706,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 指定区间内，有序集成员的列表
 	 */
 	Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int offset,
-										  final int count);
+			final int count);
 
 	/**
 	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
@@ -1824,7 +1841,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 包含了有序集合在指定范围内的成员列表
 	 */
 	Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset,
-							   final int count);
+			final int count);
 
 	/**
 	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
@@ -1891,7 +1908,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 包含了有序集合在指定范围内的成员列表
 	 */
 	Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
-							   final int count);
+			final int count);
 
 	/**
 	 * 获取集合 Key 中，成员介于 min 和 max 范围内的元素数量
@@ -2045,7 +2062,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 保存到 destKey 结果集的基数
 	 */
 	Long zInterStore(final byte[] destKey, final SortedSetCommands.Aggregate aggregate, final double[] weights,
-					 final byte[]... keys);
+			final byte[]... keys);
 
 	/**
 	 * 计算给定的一个或多个有序集的并集，并将该并集储存到 destKey
@@ -2114,7 +2131,7 @@ public interface BinarySortedSetCommands extends BinaryRedisCommands {
 	 * @return 保存到 destKey 的结果集的基数
 	 */
 	Long zUnionStore(final byte[] destKey, final SortedSetCommands.Aggregate aggregate, final double[] weights,
-					 final byte[]... keys);
+			final byte[]... keys);
 
 	/**
 	 * 迭代有序集 key 中的键值对

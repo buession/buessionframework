@@ -24,9 +24,86 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.Executor;
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.utils.ReturnUtils;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.commands.JedisCommands;
+
 /**
  * @author Yong.Teng
  */
-public class DefaultHyperLogLogRedisOperations {
+public class DefaultHyperLogLogRedisOperations<C extends JedisCommands> extends AbstractJedisRedisOperations implements JedisHyperLogLogRedisOperations {
+
+	public DefaultHyperLogLogRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Status pfAdd(final String key, final String... elements){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
+				"elements", elements);
+
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForBool(getTransaction().pfadd(key, elements).get() > 0),
+					ProtocolCommand.PFADD, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForBool(jc.pfadd(key, elements) > 0), ProtocolCommand.PFADD,
+					arguments);
+		}
+	}
+
+	@Override
+	public Status pfMerge(final String destKey, final String... keys){
+		final OperationsCommandArguments arguments =
+				OperationsCommandArguments.getInstance().put("destKey", destKey).put("keys", keys);
+
+		return execute(new Executor<C, Status>() {
+
+			@Override
+			public Status execute(C jc){
+				String ret;
+
+				if(isTransaction()){
+					ret = getTransaction().pfmerge(destKey, keys).get();
+				}else{
+					if(jc instanceof Jedis){
+						ret = ((Jedis) jc).pfmerge(destKey, keys);
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.PFMERGE);
+					}
+				}
+
+				return ReturnUtils.statusForOK(ret);
+			}
+
+		}, ProtocolCommand.PFMERGE, arguments);
+	}
+
+	@Override
+	public Long pfCount(final String... keys){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("keys", keys);
+
+		return execute(new Executor<C, Long>() {
+
+			@Override
+			public Long execute(C jc){
+				if(isTransaction()){
+					return getTransaction().pfcount(keys).get();
+				}else{
+					if(jc instanceof Jedis){
+						return ((Jedis) jc).pfcount(keys);
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.PFCOUNT);
+					}
+				}
+			}
+
+		}, ProtocolCommand.PFCOUNT, arguments);
+	}
 
 }

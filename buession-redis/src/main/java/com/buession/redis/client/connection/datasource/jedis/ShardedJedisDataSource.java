@@ -24,16 +24,14 @@
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
-import com.buession.redis.core.ShardedRedisNode;
+import com.buession.redis.client.connection.datasource.ShardedDataSource;
 import redis.clients.jedis.ShardedJedis;
 
-import java.util.Set;
-
 /**
+ * Jedis 分片模式数据源
+ *
  * @author Yong.Teng
  */
-public interface ShardedJedisDataSource extends JedisRedisDataSource<ShardedJedis> {
-
-	Set<ShardedRedisNode> getRedisNodes();
+public interface ShardedJedisDataSource extends JedisRedisDataSource<ShardedJedis>, ShardedDataSource {
 
 }

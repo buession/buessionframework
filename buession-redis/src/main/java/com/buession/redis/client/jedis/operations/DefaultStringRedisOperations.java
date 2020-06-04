@@ -27,7 +27,6 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.Executor;
 import com.buession.core.utils.ListUtils;
 import com.buession.lang.Status;
-import com.buession.redis.client.StringRedisOperations;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -44,7 +43,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class DefaultStringRedisOperations<C extends JedisCommands> extends AbstractJedisRedisOperations implements StringRedisOperations {
+public class DefaultStringRedisOperations<C extends JedisCommands> extends AbstractJedisRedisOperations implements JedisStringRedisOperations {
 
 	public DefaultStringRedisOperations(final JedisRedisClient client){
 		super(client);
@@ -55,8 +54,12 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"value", value);
 
-		return execute((C jc)->ReturnUtils.statusForOK(isTransaction() ? getTransaction().set(key, value).get() :
-				jc.set(key, value)), ProtocolCommand.SET, arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForOK(getTransaction().set(key, value).get()),
+					ProtocolCommand.SET, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForOK(jc.set(key, value)), ProtocolCommand.SET, arguments);
+		}
 	}
 
 	@Override
@@ -64,9 +67,13 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"value", value).put("setArgument", setArgument);
 
-		return execute((C jc)->ReturnUtils.statusForOK(isTransaction() ? getTransaction().set(key, value,
-				JedisClientUtils.setArgumentConvert(setArgument)).get() : jc.set(key, value,
-				JedisClientUtils.setArgumentConvert(setArgument))), ProtocolCommand.SET, arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForOK(getTransaction().set(key, value,
+					JedisClientUtils.setArgumentConvert(setArgument)).get()), ProtocolCommand.SET, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForOK(jc.set(key, value,
+					JedisClientUtils.setArgumentConvert(setArgument))), ProtocolCommand.SET, arguments);
+		}
 	}
 
 	@Override
@@ -74,9 +81,13 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"value", value).put("lifetime", lifetime);
 
-		return execute((C jc)->ReturnUtils.statusForOK(isTransaction() ?
-				getTransaction().setex(key, lifetime, value).get() : jc.setex(key, lifetime, value)),
-				ProtocolCommand.SETEX, arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForOK(getTransaction().setex(key, lifetime, value).get()),
+					ProtocolCommand.SETEX, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForOK(jc.setex(key, lifetime, value)), ProtocolCommand.SETEX,
+					arguments);
+		}
 	}
 
 	@Override
@@ -84,9 +95,13 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"value", value).put("lifetime", lifetime);
 
-		return execute((C jc)->ReturnUtils.statusForOK(isTransaction() ?
-				getTransaction().psetex(key, lifetime, value).get() : jc.psetex(key, lifetime, value)),
-				ProtocolCommand.PSETEX, arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForOK(getTransaction().psetex(key, lifetime, value).get()),
+					ProtocolCommand.PSETEX, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForOK(jc.psetex(key, lifetime, value)), ProtocolCommand.PSETEX,
+					arguments);
+		}
 	}
 
 	@Override
@@ -94,9 +109,14 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"value", value);
 
-		return execute((C jc)->ReturnUtils.statusForBool(isTransaction() ?
-				getTransaction().setnx(key, value).get() > 0 : jc.setnx(key, value) > 0), ProtocolCommand.SETNX,
-				arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForBool(getTransaction().setnx(key, value).get() > 0),
+					ProtocolCommand.SETNX, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForBool(isTransaction() ?
+					getTransaction().setnx(key, value).get() > 0 : jc.setnx(key, value) > 0), ProtocolCommand.SETNX,
+					arguments);
+		}
 	}
 
 	@Override
@@ -104,16 +124,22 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"value", value);
 
-		return execute((C jc)->isTransaction() ? getTransaction().append(key, value).get() : jc.append(key, value),
-				ProtocolCommand.APPEND, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().append(key, value).get(), ProtocolCommand.APPEND, arguments);
+		}else{
+			return execute((C jc)->jc.append(key, value), ProtocolCommand.APPEND, arguments);
+		}
 	}
 
 	@Override
 	public String get(final String key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->isTransaction() ? getTransaction().get(key).get() : jc.get(key), ProtocolCommand.GET,
-				arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().get(key).get(), ProtocolCommand.GET, arguments);
+		}else{
+			return execute((C jc)->jc.get(key), ProtocolCommand.GET, arguments);
+		}
 	}
 
 	@Override
@@ -121,8 +147,11 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"value", value);
 
-		return execute((C jc)->isTransaction() ? getTransaction().getSet(key, value).get() : jc.getSet(key, value),
-				ProtocolCommand.GETSET, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().getSet(key, value).get(), ProtocolCommand.GETSET, arguments);
+		}else{
+			return execute((C jc)->jc.getSet(key, value), ProtocolCommand.GETSET, arguments);
+		}
 	}
 
 	@Override
@@ -214,17 +243,11 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 	public Long incr(final String key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->isTransaction() ? getTransaction().incr(key).get() : jc.incr(key), ProtocolCommand.INCR
-				, arguments);
-	}
-
-	@Override
-	public Long incrBy(final String key, final int value){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"value", value);
-
-		return execute((C jc)->isTransaction() ? getTransaction().incrBy(key, value).get() : jc.incrBy(key, value),
-				ProtocolCommand.INCRBY, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().incr(key).get(), ProtocolCommand.INCR, arguments);
+		}else{
+			return execute((C jc)->jc.incr(key), ProtocolCommand.INCR, arguments);
+		}
 	}
 
 	@Override
@@ -232,17 +255,11 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"value", value);
 
-		return execute((C jc)->isTransaction() ? getTransaction().incrBy(key, value).get() : jc.incrBy(key, value),
-				ProtocolCommand.INCRBY, arguments);
-	}
-
-	@Override
-	public Double incrByFloat(final String key, final float value){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"value", value);
-
-		return execute((C jc)->isTransaction() ? getTransaction().incrByFloat(key, value).get() : jc.incrByFloat(key,
-				value), ProtocolCommand.INCRBYFLOAT, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().incrBy(key, value).get(), ProtocolCommand.INCRBY, arguments);
+		}else{
+			return execute((C jc)->jc.incrBy(key, value), ProtocolCommand.INCRBY, arguments);
+		}
 	}
 
 	@Override
@@ -250,25 +267,24 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"value", value);
 
-		return execute((C jc)->isTransaction() ? getTransaction().incrByFloat(key, value).get() : jc.incrByFloat(key,
-				value), ProtocolCommand.INCRBYFLOAT, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().incrByFloat(key, value).get(), ProtocolCommand.INCRBYFLOAT,
+					arguments);
+		}else{
+			return execute((C jc)->jc.incrByFloat(key, value), ProtocolCommand.INCRBYFLOAT, arguments);
+		}
 	}
 
 	@Override
 	public Long decr(final String key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->isTransaction() ? getTransaction().decr(key).get() : jc.decr(key), ProtocolCommand.DECR
-				, arguments);
-	}
-
-	@Override
-	public Long decrBy(final String key, final int value){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"value", value);
-
-		return execute((C jc)->isTransaction() ? getTransaction().decrBy(key, value).get() : jc.decrBy(key, value),
-				ProtocolCommand.DECRBY, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().decr(key).get(), ProtocolCommand.DECR, arguments);
+		}else{
+			return execute((C jc)->isTransaction() ? getTransaction().decr(key).get() : jc.decr(key),
+					ProtocolCommand.DECR, arguments);
+		}
 	}
 
 	@Override
@@ -276,8 +292,11 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"value", value);
 
-		return execute((C jc)->isTransaction() ? getTransaction().decrBy(key, value).get() : jc.decrBy(key, value),
-				ProtocolCommand.DECRBY, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().decrBy(key, value).get(), ProtocolCommand.DECRBY, arguments);
+		}else{
+			return execute((C jc)->jc.decrBy(key, value), ProtocolCommand.DECRBY, arguments);
+		}
 	}
 
 	@Override
@@ -285,8 +304,12 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"offset", offset).put("value", value);
 
-		return execute((C jc)->isTransaction() ? getTransaction().setrange(key, offset, value).get() : jc.setrange(key
-				, offset, value), ProtocolCommand.SETRANGE, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().setrange(key, offset, value).get(), ProtocolCommand.SETRANGE,
+					arguments);
+		}else{
+			return execute((C jc)->jc.setrange(key, offset, value), ProtocolCommand.SETRANGE, arguments);
+		}
 	}
 
 	@Override
@@ -294,8 +317,12 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"start", start).put("end", end);
 
-		return execute((C jc)->isTransaction() ? getTransaction().getrange(key, start, end).get() : jc.getrange(key,
-				start, end), ProtocolCommand.GETRANGE, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().getrange(key, start, end).get(), ProtocolCommand.GETRANGE,
+					arguments);
+		}else{
+			return execute((C jc)->jc.getrange(key, start, end), ProtocolCommand.GETRANGE, arguments);
+		}
 	}
 
 	@Override
@@ -303,16 +330,22 @@ public class DefaultStringRedisOperations<C extends JedisCommands> extends Abstr
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"start", start).put("end", end);
 
-		return execute((C jc)->isTransaction() ? getTransaction().substr(key, start, end).get() : jc.substr(key, start
-				, end), ProtocolCommand.SUBSTR, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().substr(key, start, end).get(), ProtocolCommand.SUBSTR, arguments);
+		}else{
+			return execute((C jc)->jc.substr(key, start, end), ProtocolCommand.SUBSTR, arguments);
+		}
 	}
 
 	@Override
 	public Long strlen(final String key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->isTransaction() ? getTransaction().strlen(key).get() : jc.strlen(key),
-				ProtocolCommand.STRLEN, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().strlen(key).get(), ProtocolCommand.STRLEN, arguments);
+		}else{
+			return execute((C jc)->jc.strlen(key), ProtocolCommand.STRLEN, arguments);
+		}
 	}
 
 }

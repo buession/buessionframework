@@ -24,35 +24,11 @@
  */
 package com.buession.redis.client;
 
-import com.buession.core.utils.NumberUtils;
-import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.BinaryKeyCommands;
-
-import java.util.List;
 
 /**
  * @author Yong.Teng
  */
 public interface BinaryKeyRedisOperations extends BinaryRedisOperations, BinaryKeyCommands {
-
-	@Override
-	default ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern){
-		return scan(NumberUtils.int2bytes(cursor), pattern);
-	}
-
-	@Override
-	default ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
-		return scan(NumberUtils.long2bytes(cursor), pattern);
-	}
-
-	@Override
-	default ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern, final int count){
-		return scan(NumberUtils.int2bytes(cursor), pattern, count);
-	}
-
-	@Override
-	default ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count){
-		return scan(NumberUtils.long2bytes(count), pattern, count);
-	}
 
 }

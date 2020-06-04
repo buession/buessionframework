@@ -24,9 +24,218 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.Executor;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.exception.NotSupportedTransactionCommandException;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.commands.BinaryJedisCommands;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @author Yong.Teng
  */
-public class DefaultBinaryLuaRedisOperations {
+public class DefaultBinaryLuaRedisOperations<C extends BinaryJedisCommands> extends AbstractJedisBinaryRedisOperations implements JedisBinaryLuaRedisOperations {
+
+	public DefaultBinaryLuaRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Object eval(final byte[] script){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("script", script);
+
+		return execute(new Executor<C, Object>() {
+
+			@Override
+			public Object execute(C jc){
+				if(isTransaction()){
+					return getTransaction().eval(script).get();
+				}else{
+					if(jc instanceof Jedis){
+						return ((Jedis) jc).eval(script);
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.EVAL);
+					}
+				}
+			}
+
+		}, ProtocolCommand.EVAL, arguments);
+	}
+
+	@Override
+	public Object eval(final byte[] script, final byte[]... params){
+		final OperationsCommandArguments arguments =
+				OperationsCommandArguments.getInstance().put("script", script).put("params", params);
+
+		return execute(new Executor<C, Object>() {
+
+			@Override
+			public Object execute(C jc){
+				if(isTransaction()){
+					return getTransaction().eval(script, params == null ? 0 : params.length, params).get();
+				}else{
+					if(jc instanceof Jedis){
+						return ((Jedis) jc).eval(script, params == null ? 0 : params.length, params);
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.EVAL);
+					}
+				}
+			}
+
+		}, ProtocolCommand.EVAL, arguments);
+	}
+
+	@Override
+	public Object eval(final byte[] script, final byte[][] keys, final byte[][] args){
+		final OperationsCommandArguments arguments =
+				OperationsCommandArguments.getInstance().put("script", script).put("keys", keys).put("args", args);
+
+		return execute(new Executor<C, Object>() {
+
+			@Override
+			public Object execute(C jc){
+				if(isTransaction()){
+					return getTransaction().eval(script, Arrays.asList(keys), Arrays.asList(args)).get();
+				}else{
+					if(jc instanceof Jedis){
+						return ((Jedis) jc).eval(script, Arrays.asList(keys), Arrays.asList(args));
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.EVAL);
+					}
+				}
+			}
+
+		}, ProtocolCommand.EVAL, arguments);
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("digest", digest);
+
+		return execute(new Executor<C, Object>() {
+
+			@Override
+			public Object execute(C jc){
+				if(isTransaction()){
+					return getTransaction().evalsha(digest).get();
+				}else{
+					if(jc instanceof Jedis){
+						return ((Jedis) jc).evalsha(digest);
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.EVALSHA);
+					}
+				}
+			}
+
+		}, ProtocolCommand.EVALSHA, arguments);
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest, final byte[]... params){
+		final OperationsCommandArguments arguments =
+				OperationsCommandArguments.getInstance().put("digest", digest).put("params", params);
+
+		return execute(new Executor<C, Object>() {
+
+			@Override
+			public Object execute(C jc){
+				if(isTransaction()){
+					return getTransaction().evalsha(digest, params == null ? 0 : params.length, params).get();
+				}else{
+					if(jc instanceof Jedis){
+						return ((Jedis) jc).evalsha(digest, params == null ? 0 : params.length, params);
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.EVALSHA);
+					}
+				}
+			}
+
+		}, ProtocolCommand.EVALSHA, arguments);
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] args){
+		final OperationsCommandArguments arguments =
+				OperationsCommandArguments.getInstance().put("digest", digest).put("keys", keys).put("args", args);
+
+		return execute(new Executor<C, Object>() {
+
+			@Override
+			public Object execute(C jc){
+				if(isTransaction()){
+					return getTransaction().evalsha(digest, Arrays.asList(keys), Arrays.asList(args)).get();
+				}else{
+					if(jc instanceof Jedis){
+						return ((Jedis) jc).evalsha(digest, Arrays.asList(keys), Arrays.asList(args));
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.EVALSHA);
+					}
+				}
+			}
+
+		}, ProtocolCommand.EVALSHA, arguments);
+	}
+
+	@Override
+	public List<Boolean> scriptExists(final byte[]... sha1){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("sha1", sha1);
+
+		return execute(new Executor<C, List<Boolean>>() {
+
+			@Override
+			public List<Boolean> execute(C jc){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_EXISTS);
+				}else{
+					if(jc instanceof Jedis){
+						List<Long> ret = ((Jedis) jc).scriptExists(sha1);
+
+						if(ret == null){
+							return null;
+						}else{
+							List<Boolean> result = new ArrayList<>();
+
+							for(Long v : ret){
+								result.add(v == 1);
+							}
+
+							return result;
+						}
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.SCRIPT_EXISTS);
+					}
+				}
+			}
+
+		}, ProtocolCommand.SCRIPT_EXISTS, arguments);
+	}
+
+	@Override
+	public byte[] scriptLoad(final byte[] script){
+		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("script", script);
+
+		return execute(new Executor<C, byte[]>() {
+
+			@Override
+			public byte[] execute(C jc){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_LOAD);
+				}else{
+					if(jc instanceof Jedis){
+						return ((Jedis) jc).scriptLoad(script);
+					}else{
+						throw new NotSupportedCommandException(ProtocolCommand.SCRIPT_LOAD);
+					}
+				}
+			}
+
+		}, ProtocolCommand.SCRIPT_LOAD, arguments);
+	}
 
 }

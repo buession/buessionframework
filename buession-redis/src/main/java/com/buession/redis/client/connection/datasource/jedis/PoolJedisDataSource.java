@@ -26,17 +26,27 @@ package com.buession.redis.client.connection.datasource.jedis;
 
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.commands.JedisCommands;
-import redis.clients.jedis.util.Pool;
 
 /**
+ * Redis 连接池数据源
+ *
  * @author Yong.Teng
  */
 public interface PoolJedisDataSource<T extends JedisCommands> extends JedisRedisDataSource<T> {
 
+	/**
+	 * 获取连接池配置
+	 *
+	 * @return 连接池配置
+	 */
 	JedisPoolConfig getPoolConfig();
 
+	/**
+	 * 设置连接池配置
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
 	void setPoolConfig(JedisPoolConfig poolConfig);
-
-	Pool<T> getPool();
 
 }

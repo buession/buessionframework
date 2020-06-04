@@ -24,9 +24,71 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.redis.client.HashRedisOperations;
+import com.buession.redis.core.ScanResult;
+
+import java.util.Map;
+
 /**
  * @author Yong.Teng
  */
-public interface JedisHashRedisOperations {
+public interface JedisHashRedisOperations extends HashRedisOperations {
+
+	@Override
+	default Long hIncrBy(final String key, final String field, final int value){
+		return hIncrBy(key, field, (long) value);
+	}
+
+	@Override
+	default Double hIncrByFloat(final String key, final String field, final float value){
+		return hIncrByFloat(key, field, (double) value);
+	}
+
+	@Override
+	default Long hDecrBy(final String key, final String field, final int value){
+		return hDecrBy(key, field, (long) value);
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final int cursor){
+		return hScan(key, Integer.toString(cursor));
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final long cursor){
+		return hScan(key, Long.toString(cursor));
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern){
+		return hScan(key, Integer.toString(cursor), pattern);
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
+		return hScan(key, Long.toString(cursor), pattern);
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final int cursor, final int count){
+		return hScan(key, Integer.toString(cursor), count);
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count){
+		return hScan(key, Long.toString(cursor), count);
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern,
+			final int count){
+		return hScan(key, Integer.toString(cursor), pattern, count);
+	}
+
+	@Override
+	default ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
+			final int count){
+		return hScan(key, Long.toString(cursor), pattern, count);
+	}
 
 }

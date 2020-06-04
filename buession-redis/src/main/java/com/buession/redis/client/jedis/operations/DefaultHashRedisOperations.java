@@ -24,14 +24,15 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.Executor;
 import com.buession.lang.Status;
-import com.buession.redis.client.HashRedisOperations;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.JedisScanParams;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.commands.JedisCommands;
 
@@ -42,7 +43,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class DefaultHashRedisOperations<C extends JedisCommands> extends AbstractJedisRedisOperations implements HashRedisOperations {
+public class DefaultHashRedisOperations<C extends JedisCommands> extends AbstractJedisRedisOperations implements JedisHashRedisOperations {
 
 	public DefaultHashRedisOperations(final JedisRedisClient client){
 		super(client);
@@ -54,7 +55,7 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 				"field", field);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hExists(key, field), ProtocolCommand.HEXISTS, arguments);
+			return execute((C jc)->getTransaction().hexists(key, field).get(), ProtocolCommand.HEXISTS, arguments);
 		}else{
 			return execute((C jc)->jc.hexists(key, field), ProtocolCommand.HEXISTS, arguments);
 		}
@@ -65,7 +66,7 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hKeys(key), ProtocolCommand.HKEYS, arguments);
+			return execute((C jc)->getTransaction().hkeys(key).get(), ProtocolCommand.HKEYS, arguments);
 		}else{
 			return execute((C jc)->jc.hkeys(key), ProtocolCommand.HKEYS, arguments);
 		}
@@ -76,7 +77,7 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hVals(key), ProtocolCommand.HVALS, arguments);
+			return execute((C jc)->getTransaction().hvals(key).get(), ProtocolCommand.HVALS, arguments);
 		}else{
 			return execute((C jc)->jc.hvals(key), ProtocolCommand.HVALS, arguments);
 		}
@@ -88,7 +89,8 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 				"field", field).put("value", value);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hSet(key, field, value), ProtocolCommand.HSET, arguments);
+			return execute((C jc)->ReturnUtils.statusForBool(getTransaction().hset(key, field, value).get() > 0),
+					ProtocolCommand.HSET, arguments);
 		}else{
 			return execute((C jc)->ReturnUtils.statusForBool(jc.hset(key, field, value) > 0), ProtocolCommand.HSET,
 					arguments);
@@ -101,7 +103,8 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 				"field", field).put("value", value);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hSetNx(key, field, value), ProtocolCommand.HSETNX, arguments);
+			return execute((C jc)->ReturnUtils.statusForBool(getTransaction().hsetnx(key, field, value).get() > 0),
+					ProtocolCommand.HSETNX, arguments);
 		}else{
 			return execute((C jc)->ReturnUtils.statusForBool(jc.hsetnx(key, field, value) > 0), ProtocolCommand.HSETNX
 					, arguments);
@@ -114,7 +117,7 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 				"field", field);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hGet(key, field), ProtocolCommand.HGET, arguments);
+			return execute((C jc)->getTransaction().hget(key, field).get(), ProtocolCommand.HGET, arguments);
 		}else{
 			return execute((C jc)->jc.hget(key, field), ProtocolCommand.HGET, arguments);
 		}
@@ -126,7 +129,8 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 				"data", data);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hMSet(key, data), ProtocolCommand.HMSET, arguments);
+			return execute((C jc)->ReturnUtils.statusForOK(getTransaction().hmset(key, data).get()),
+					ProtocolCommand.HMSET, arguments);
 		}else{
 			return execute((C jc)->ReturnUtils.statusForOK(jc.hmset(key, data)), ProtocolCommand.HMSET, arguments);
 		}
@@ -138,7 +142,7 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 				"fields", fields);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hMGet(key, fields), ProtocolCommand.HMGET, arguments);
+			return execute((C jc)->getTransaction().hmget(key, fields).get(), ProtocolCommand.HMGET, arguments);
 		}else{
 			return execute((C jc)->jc.hmget(key, fields), ProtocolCommand.HMGET, arguments);
 		}
@@ -149,7 +153,7 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hGetAll(key), ProtocolCommand.HGETALL, arguments);
+			return execute((C jc)->getTransaction().hgetAll(key).get(), ProtocolCommand.HGETALL, arguments);
 		}else{
 			return execute((C jc)->jc.hgetAll(key), ProtocolCommand.HGETALL, arguments);
 		}
@@ -161,7 +165,7 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 				"field", field);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hStrLen(key, field), ProtocolCommand.HSTRLEN, arguments);
+			return execute((C jc)->getTransaction().hstrlen(key, field).get(), ProtocolCommand.HSTRLEN, arguments);
 		}else{
 			return execute((C jc)->jc.hstrlen(key, field), ProtocolCommand.HSTRLEN, arguments);
 		}
@@ -172,21 +176,9 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hLen(key), ProtocolCommand.HLEN, arguments);
+			return execute((C jc)->getTransaction().hlen(key).get(), ProtocolCommand.HLEN, arguments);
 		}else{
 			return execute((C jc)->jc.hlen(key), ProtocolCommand.HLEN, arguments);
-		}
-	}
-
-	@Override
-	public Long hIncrBy(final String key, final String field, final int value){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"field", field).put("value", value);
-
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hIncrBy(key, field, value), ProtocolCommand.HINCRBY, arguments);
-		}else{
-			return execute((C jc)->jc.hincrBy(key, field, value), ProtocolCommand.HINCRBY, arguments);
 		}
 	}
 
@@ -196,22 +188,10 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 				"field", field).put("value", value);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hIncrBy(key, field, value), ProtocolCommand.HINCRBY, arguments);
-		}else{
-			return execute((C jc)->jc.hincrBy(key, field, value), ProtocolCommand.HINCRBY, arguments);
-		}
-	}
-
-	@Override
-	public Double hIncrByFloat(final String key, final String field, final float value){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"field", field).put("value", value);
-
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hIncrByFloat(key, field, value), ProtocolCommand.HINCRBYFLOAT,
+			return execute((C jc)->getTransaction().hincrBy(key, field, value).get(), ProtocolCommand.HINCRBY,
 					arguments);
 		}else{
-			return execute((C jc)->jc.hincrByFloat(key, field, value), ProtocolCommand.HINCRBYFLOAT, arguments);
+			return execute((C jc)->jc.hincrBy(key, field, value), ProtocolCommand.HINCRBY, arguments);
 		}
 	}
 
@@ -221,23 +201,10 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 				"field", field).put("value", value);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hIncrByFloat(key, field, value), ProtocolCommand.HINCRBYFLOAT,
-					arguments);
+			return execute((C jc)->getTransaction().hincrByFloat(key, field, value).get(),
+					ProtocolCommand.HINCRBYFLOAT, arguments);
 		}else{
 			return execute((C jc)->jc.hincrByFloat(key, field, value), ProtocolCommand.HINCRBYFLOAT, arguments);
-		}
-	}
-
-	@Override
-	public Long hDecrBy(final String key, final String field, final int value){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"field", field).put("value", value);
-
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hDecrBy(key, field, value), ProtocolCommand.HINCRBY, arguments);
-		}else{
-			return execute((C jc)->jc.hincrBy(key, field, value > 0 ? value * -1 : value), ProtocolCommand.HINCRBY,
-					arguments);
 		}
 	}
 
@@ -246,37 +213,12 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"field", field).put("value", value);
 
+		final long val = value > 0 ? value * -1 : value;
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hDecrBy(key, field, value), ProtocolCommand.HINCRBY, arguments);
-		}else{
-			return execute((C jc)->jc.hincrBy(key, field, value > 0 ? value * -1 : value), ProtocolCommand.HINCRBY,
+			return execute((C jc)->getTransaction().hincrBy(key, field, val).get(), ProtocolCommand.HINCRBY,
 					arguments);
-		}
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"cursor", cursor);
-
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hScan(key, cursor), ProtocolCommand.HSCAN, arguments);
 		}else{
-			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Integer.toString(cursor))),
-					ProtocolCommand.HSCAN, arguments);
-		}
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"cursor", cursor);
-
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hScan(key, cursor), ProtocolCommand.HSCAN, arguments);
-		}else{
-			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Long.toString(cursor))),
-					ProtocolCommand.HSCAN, arguments);
+			return execute((C jc)->jc.hincrBy(key, field, val), ProtocolCommand.HINCRBY, arguments);
 		}
 	}
 
@@ -285,38 +227,18 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"cursor", cursor);
 
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hScan(key, cursor), ProtocolCommand.HSCAN, arguments);
-		}else{
-			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, cursor)), ProtocolCommand.HSCAN
-					, arguments);
-		}
-	}
+		return execute(new Executor<C, ScanResult<Map<String, String>>>() {
 
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"cursor", cursor).put("pattern", pattern);
+			@Override
+			public ScanResult<Map<String, String>> execute(C jc){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+				}else{
+					return JedisClientUtils.mapScanResultConvert(jc.hscan(key, cursor));
+				}
+			}
 
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hScan(key, cursor, pattern), ProtocolCommand.HSCAN, arguments);
-		}else{
-			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Integer.toString(cursor),
-					new JedisScanParams(pattern))), ProtocolCommand.HSCAN, arguments);
-		}
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"cursor", cursor).put("pattern", pattern);
-
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hScan(key, cursor, pattern), ProtocolCommand.HSCAN, arguments);
-		}else{
-			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Long.toString(cursor),
-					new JedisScanParams(pattern))), ProtocolCommand.HSCAN, arguments);
-		}
+		}, ProtocolCommand.HSCAN, arguments);
 	}
 
 	@Override
@@ -324,38 +246,18 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"cursor", cursor).put("pattern", pattern);
 
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hScan(key, cursor, pattern), ProtocolCommand.HSCAN, arguments);
-		}else{
-			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, cursor,
-					new JedisScanParams(pattern))), ProtocolCommand.HSCAN, arguments);
-		}
-	}
+		return execute(new Executor<C, ScanResult<Map<String, String>>>() {
 
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final int count){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"cursor", cursor).put("count", count);
+			@Override
+			public ScanResult<Map<String, String>> execute(C jc){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+				}else{
+					return JedisClientUtils.mapScanResultConvert(jc.hscan(key, cursor, new JedisScanParams(pattern)));
+				}
+			}
 
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hScan(key, cursor, count), ProtocolCommand.HSCAN, arguments);
-		}else{
-			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Integer.toString(cursor),
-					new JedisScanParams(count))), ProtocolCommand.HSCAN, arguments);
-		}
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"cursor", cursor).put("count", count);
-
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hScan(key, cursor, count), ProtocolCommand.HSCAN, arguments);
-		}else{
-			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Long.toString(cursor),
-					new JedisScanParams(count))), ProtocolCommand.HSCAN, arguments);
-		}
+		}, ProtocolCommand.HSCAN, arguments);
 	}
 
 	@Override
@@ -363,41 +265,18 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"cursor", cursor).put("count", count);
 
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hScan(key, cursor, count), ProtocolCommand.HSCAN, arguments);
-		}else{
-			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, cursor,
-					new JedisScanParams(count))), ProtocolCommand.HSCAN, arguments);
-		}
-	}
+		return execute(new Executor<C, ScanResult<Map<String, String>>>() {
 
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern,
-			final int count){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"cursor", cursor).put("pattern", pattern).put("count", count);
+			@Override
+			public ScanResult<Map<String, String>> execute(C jc){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+				}else{
+					return JedisClientUtils.mapScanResultConvert(jc.hscan(key, cursor, new JedisScanParams(count)));
+				}
+			}
 
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hScan(key, cursor, count), ProtocolCommand.HSCAN, arguments);
-		}else{
-			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Integer.toString(cursor),
-					new JedisScanParams(count))), ProtocolCommand.HSCAN, arguments);
-		}
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-			final int count){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
-				"cursor", cursor).put("pattern", pattern).put("count", count);
-
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hScan(key, cursor, pattern, count), ProtocolCommand.HSCAN,
-					arguments);
-		}else{
-			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, Long.toString(cursor),
-					new JedisScanParams(pattern, count))), ProtocolCommand.HSCAN, arguments);
-		}
+		}, ProtocolCommand.HSCAN, arguments);
 	}
 
 	@Override
@@ -406,13 +285,19 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"cursor", cursor).put("pattern", pattern).put("count", count);
 
-		if(isTransaction()){
-			return execute((C jc)->getTransaction().hScan(key, cursor, pattern, count), ProtocolCommand.HSCAN,
-					arguments);
-		}else{
-			return execute((C jc)->JedisClientUtils.mapScanResultConvert(jc.hscan(key, cursor,
-					new JedisScanParams(pattern, count))), ProtocolCommand.HSCAN, arguments);
-		}
+		return execute(new Executor<C, ScanResult<Map<String, String>>>() {
+
+			@Override
+			public ScanResult<Map<String, String>> execute(C jc){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+				}else{
+					return JedisClientUtils.mapScanResultConvert(jc.hscan(key, cursor, new JedisScanParams(pattern,
+							count)));
+				}
+			}
+
+		}, ProtocolCommand.HSCAN, arguments);
 	}
 
 	@Override
@@ -420,7 +305,7 @@ public class DefaultHashRedisOperations<C extends JedisCommands> extends Abstrac
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
-			return execute((C jc)->getTransaction().hDel(key, fields), ProtocolCommand.HDEL, arguments);
+			return execute((C jc)->getTransaction().hdel(key, fields).get(), ProtocolCommand.HDEL, arguments);
 		}else{
 			return execute((C jc)->jc.hdel(key, fields), ProtocolCommand.HDEL, arguments);
 		}

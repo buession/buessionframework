@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client;
 
+import com.buession.redis.core.command.BitMapCommands;
+
 /**
  * @author Yong.Teng
  */
-public interface BitMapRedisOperations {
+public interface BitMapRedisOperations extends RedisOperations, BitMapCommands {
 
 }

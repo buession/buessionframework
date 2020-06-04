@@ -26,7 +26,6 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.Executor;
 import com.buession.lang.Status;
-import com.buession.redis.client.BinaryKeyRedisOperations;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.JedisScanParams;
@@ -39,9 +38,7 @@ import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
-import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.commands.BinaryJedisCommands;
-import redis.clients.jedis.params.MigrateParams;
 
 import java.util.List;
 import java.util.Set;
@@ -49,7 +46,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class DefaultBinaryKeyRedisOperations<C extends BinaryJedisCommands> extends AbstractJedisBinaryRedisOperations implements BinaryKeyRedisOperations {
+public class DefaultBinaryKeyRedisOperations<C extends BinaryJedisCommands> extends AbstractJedisBinaryRedisOperations implements JedisBinaryKeyRedisOperations {
 
 	public DefaultBinaryKeyRedisOperations(final JedisRedisClient client){
 		super(client);
@@ -59,16 +56,23 @@ public class DefaultBinaryKeyRedisOperations<C extends BinaryJedisCommands> exte
 	public boolean exists(final byte[] key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->isTransaction() ? getTransaction().exists(key).get() : jc.exists(key),
-				ProtocolCommand.EXISTS, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().exists(key).get(), ProtocolCommand.EXISTS, arguments);
+		}else{
+			return execute((C jc)->jc.exists(key), ProtocolCommand.EXISTS, arguments);
+		}
 	}
 
 	@Override
 	public Type type(final byte[] key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->ReturnUtils.enumValueOf(isTransaction() ? getTransaction().type(key).get() :
-				jc.type(key), Type.class), ProtocolCommand.TYPE, arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.enumValueOf(getTransaction().type(key).get(), Type.class),
+					ProtocolCommand.TYPE, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.enumValueOf(jc.type(key), Type.class), ProtocolCommand.TYPE, arguments);
+		}
 	}
 
 	@Override
@@ -152,9 +156,13 @@ public class DefaultBinaryKeyRedisOperations<C extends BinaryJedisCommands> exte
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"lifetime", lifetime);
 
-		return execute((C jc)->ReturnUtils.statusForBool(isTransaction() ?
-				getTransaction().expire(key, lifetime).get() == 1 : jc.expire(key, lifetime) == 1),
-				ProtocolCommand.EXPIRE, arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForBool(getTransaction().expire(key, lifetime).get() == 1),
+					ProtocolCommand.EXPIRE, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForBool(jc.expire(key, lifetime) == 1), ProtocolCommand.EXPIRE,
+					arguments);
+		}
 	}
 
 	@Override
@@ -162,9 +170,13 @@ public class DefaultBinaryKeyRedisOperations<C extends BinaryJedisCommands> exte
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"unixTimestamp", unixTimestamp);
 
-		return execute((C jc)->ReturnUtils.statusForBool(isTransaction() ? getTransaction().expireAt(key,
-				unixTimestamp).get() == 1 : jc.expireAt(key, unixTimestamp) == 1), ProtocolCommand.EXPIREAT,
-				arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForBool(getTransaction().expireAt(key, unixTimestamp).get() == 1)
+					, ProtocolCommand.EXPIREAT, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForBool(jc.expireAt(key, unixTimestamp) == 1),
+					ProtocolCommand.EXPIREAT, arguments);
+		}
 	}
 
 	@Override
@@ -172,9 +184,13 @@ public class DefaultBinaryKeyRedisOperations<C extends BinaryJedisCommands> exte
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"lifetime", lifetime);
 
-		return execute((C jc)->ReturnUtils.statusForBool(isTransaction() ?
-				getTransaction().pexpire(key, lifetime).get() == 1 : jc.pexpire(key, lifetime) == 1),
-				ProtocolCommand.PEXPIRE, arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForBool(getTransaction().pexpire(key, lifetime).get() == 1),
+					ProtocolCommand.PEXPIRE, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForBool(jc.pexpire(key, lifetime) == 1), ProtocolCommand.PEXPIRE,
+					arguments);
+		}
 	}
 
 	@Override
@@ -182,33 +198,46 @@ public class DefaultBinaryKeyRedisOperations<C extends BinaryJedisCommands> exte
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"unixTimestamp", unixTimestamp);
 
-		return execute((C jc)->ReturnUtils.statusForBool(isTransaction() ? getTransaction().pexpireAt(key,
-				unixTimestamp).get() == 1 : jc.pexpireAt(key, unixTimestamp) == 1), ProtocolCommand.PEXPIREAT,
-				arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() == 1), ProtocolCommand.PEXPIREAT, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForBool(jc.pexpireAt(key, unixTimestamp) == 1),
+					ProtocolCommand.PEXPIREAT, arguments);
+		}
 	}
 
 	@Override
 	public Long ttl(final byte[] key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->isTransaction() ? getTransaction().ttl(key).get() : jc.ttl(key), ProtocolCommand.TTL,
-				arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().ttl(key).get(), ProtocolCommand.TTL, arguments);
+		}else{
+			return execute((C jc)->jc.ttl(key), ProtocolCommand.TTL, arguments);
+		}
 	}
 
 	@Override
 	public Long pTtl(final byte[] key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->isTransaction() ? getTransaction().pttl(key).get() : jc.pttl(key), ProtocolCommand.PTTL
-				, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().pttl(key).get(), ProtocolCommand.PTTL, arguments);
+		}else{
+			return execute((C jc)->jc.pttl(key), ProtocolCommand.PTTL, arguments);
+		}
 	}
 
 	@Override
 	public Status persist(final byte[] key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->ReturnUtils.statusForBool(isTransaction() ? getTransaction().persist(key).get() > 0 :
-				jc.persist(key) > 0), ProtocolCommand.PERSIST, arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForBool(getTransaction().persist(key).get() > 0),
+					ProtocolCommand.PERSIST, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForBool(jc.persist(key) > 0), ProtocolCommand.PERSIST, arguments);
+		}
 	}
 
 	@Override
@@ -307,17 +336,23 @@ public class DefaultBinaryKeyRedisOperations<C extends BinaryJedisCommands> exte
 	public List<byte[]> sort(final byte[] key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->isTransaction() ? getTransaction().sort(key).get() : jc.sort(key), ProtocolCommand.SORT
-				, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().sort(key).get(), ProtocolCommand.SORT, arguments);
+		}else{
+			return execute((C jc)->jc.sort(key), ProtocolCommand.SORT, arguments);
+		}
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final KeyCommands.SortArgument sortArgument){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->isTransaction() ? getTransaction().sort(key,
-				JedisClientUtils.sortArgumentConvert(sortArgument)).get() : jc.sort(key,
-				JedisClientUtils.sortArgumentConvert(sortArgument)), ProtocolCommand.SORT, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().sort(key, JedisClientUtils.sortArgumentConvert(sortArgument)).get(), ProtocolCommand.SORT, arguments);
+		}else{
+			return execute((C jc)->jc.sort(key, JedisClientUtils.sortArgumentConvert(sortArgument)),
+					ProtocolCommand.SORT, arguments);
+		}
 	}
 
 	@Override
@@ -370,8 +405,11 @@ public class DefaultBinaryKeyRedisOperations<C extends BinaryJedisCommands> exte
 	public byte[] dump(final byte[] key){
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key);
 
-		return execute((C jc)->isTransaction() ? getTransaction().dump(key).get() : jc.dump(key), ProtocolCommand.DUMP
-				, arguments);
+		if(isTransaction()){
+			return execute((C jc)->getTransaction().dump(key).get(), ProtocolCommand.DUMP, arguments);
+		}else{
+			return execute((C jc)->jc.dump(key), ProtocolCommand.DUMP, arguments);
+		}
 	}
 
 	@Override
@@ -379,8 +417,13 @@ public class DefaultBinaryKeyRedisOperations<C extends BinaryJedisCommands> exte
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put(
 				"serializedValue", serializedValue).put("ttl", ttl);
 
-		return execute((C jc)->ReturnUtils.statusForOK(isTransaction() ? getTransaction().restore(key, ttl,
-				serializedValue).get() : jc.restore(key, ttl, serializedValue)), ProtocolCommand.RESTORE, arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForOK(getTransaction().restore(key, ttl, serializedValue).get()),
+					ProtocolCommand.RESTORE, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForOK(jc.restore(key, ttl, serializedValue)),
+					ProtocolCommand.RESTORE, arguments);
+		}
 	}
 
 	@Override
@@ -485,8 +528,12 @@ public class DefaultBinaryKeyRedisOperations<C extends BinaryJedisCommands> exte
 		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("key", key).put("db"
 				, db);
 
-		return execute((C jc)->ReturnUtils.statusForBool(isTransaction() ? getTransaction().move(key, db).get() > 0 :
-				jc.move(key, db) > 0), ProtocolCommand.MOVE, arguments);
+		if(isTransaction()){
+			return execute((C jc)->ReturnUtils.statusForBool(getTransaction().move(key, db).get() > 0),
+					ProtocolCommand.MOVE, arguments);
+		}else{
+			return execute((C jc)->ReturnUtils.statusForBool(jc.move(key, db) > 0), ProtocolCommand.MOVE, arguments);
+		}
 	}
 
 }

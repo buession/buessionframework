@@ -61,23 +61,6 @@ public interface GeoCommands extends RedisCommands {
 	Long geoAdd(final String key, final String member, final double longitude, final double latitude);
 
 	/**
-	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a>
-	 * </p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		名字
-	 * @param geo
-	 * 		经纬度对象
-	 *
-	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
-	 */
-	Long geoAdd(final String key, final String member, final Geo geo);
-
-	/**
 	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a>
@@ -171,23 +154,6 @@ public interface GeoCommands extends RedisCommands {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param geo
-	 * 		经纬度对象
-	 * @param radius
-	 * 		范围（单位：米）
-	 *
-	 * @return 位置元素
-	 */
-	List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius);
-
-	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
 	 * @param longitude
 	 * 		经度
 	 * @param latitude
@@ -200,27 +166,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
-							  final GeoUnit unit);
-
-	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param geo
-	 * 		经纬度对象
-	 * 		纬度
-	 * @param radius
-	 * 		范围
-	 * @param unit
-	 * 		距离单位
-	 *
-	 * @return 位置元素
-	 */
-	List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit);
+			final GeoUnit unit);
 
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
@@ -242,26 +188,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
-							  final GeoArgument geoArgument);
-
-	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param geo
-	 * 		经纬度对象
-	 * @param radius
-	 * 		范围（单位：米）
-	 * @param geoArgument
-	 * 		GEO 参数
-	 *
-	 * @return 位置元素
-	 */
-	List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoArgument geoArgument);
+			final GeoArgument geoArgument);
 
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
@@ -285,29 +212,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
-							  final GeoUnit unit, final GeoArgument geoArgument);
-
-	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param geo
-	 * 		经纬度对象
-	 * @param radius
-	 * 		范围
-	 * @param unit
-	 * 		距离单位
-	 * @param geoArgument
-	 * 		GEO 参数
-	 *
-	 * @return 位置元素
-	 */
-	List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit,
-							  final GeoArgument geoArgument);
+			final GeoUnit unit, final GeoArgument geoArgument);
 
 	/**
 	 * 找出位于指定范围内的元素，
@@ -368,7 +273,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-									  final GeoArgument geoArgument);
+			final GeoArgument geoArgument);
 
 	/**
 	 * 找出位于指定范围内的元素，
@@ -392,7 +297,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius, final GeoUnit unit,
-									  final GeoArgument geoArgument);
+			final GeoArgument geoArgument);
 
 	/**
 	 * 获取一个或多个位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
@@ -543,6 +448,7 @@ public interface GeoCommands extends RedisCommands {
 			public GeoArgument build(){
 				return geoArgument;
 			}
+
 		}
 
 	}

@@ -24,9 +24,39 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.redis.client.BinaryGeoRedisOperations;
+import com.buession.redis.core.GeoRadius;
+import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.command.GeoCommands;
+
+import java.util.List;
+
 /**
  * @author Yong.Teng
  */
-public interface JedisBinaryGeoRedisOperations {
+public interface JedisBinaryGeoRedisOperations extends BinaryGeoRedisOperations {
+
+	@Override
+	default List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+			final double radius){
+		return geoRadius(key, longitude, longitude, radius, GeoUnit.M);
+	}
+
+	@Override
+	default List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+			final double radius, final GeoCommands.GeoArgument geoArgument){
+		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoArgument);
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius){
+		return geoRadiusByMember(key, member, radius, GeoUnit.M);
+	}
+
+	@Override
+	default List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+			final GeoCommands.GeoArgument geoArgument){
+		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoArgument);
+	}
 
 }

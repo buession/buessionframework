@@ -68,10 +68,10 @@ import com.buession.redis.core.command.TransactionCommands;
  * @author Yong.Teng
  */
 public interface RedisClient extends KeyCommands, BinaryKeyCommands, StringCommands, BinaryStringCommands,
-		HashCommands, BinaryHashCommands, ListCommands, BinaryListCommands, SetCommands, BinarySetCommands/*,
+		HashCommands, BinaryHashCommands, ListCommands, BinaryListCommands, SetCommands, BinarySetCommands,
 		SortedSetCommands, BinarySortedSetCommands, HyperLogLogCommands, BinaryHyperLogLogCommands, GeoCommands,
 		BinaryGeoCommands, BitMapCommands, BinaryBitMapCommands, TransactionCommands, BinaryTransactionCommands,
-		PubSubCommands, BinaryPubSubCommands, DatabaseCommand, BinaryDatabaseCommand, LuaCommands, BinaryLuaCommands,
+		PubSubCommands, BinaryPubSubCommands, DatabaseCommand, BinaryDatabaseCommand, LuaCommands, BinaryLuaCommands/*,
 		PersistenceCommand, BinaryPersistenceCommand, ReplicationCommands, BinaryReplicationCommands,
 		ClientAndServerCommands, BinaryClientAndServerCommands, ConfigureCommands, BinaryConfigureCommands,
 		InternalCommands, BinaryInternalCommands, DebugCommands, BinaryDebugCommands*/ {

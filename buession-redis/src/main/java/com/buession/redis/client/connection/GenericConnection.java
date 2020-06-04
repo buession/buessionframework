@@ -27,6 +27,6 @@ package com.buession.redis.client.connection;
 /**
  * @author Yong.Teng
  */
-public interface GenericConnection {
+public interface GenericConnection extends RedisConnection {
 
 }

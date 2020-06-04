@@ -31,19 +31,4 @@ import com.buession.redis.core.command.BinaryStringCommands;
  */
 public interface BinaryStringRedisOperations extends BinaryRedisOperations, BinaryStringCommands {
 
-	@Override
-	default Long setRange(final byte[] key, final int offset, final byte[] value){
-		return setRange(key, (long) offset, value);
-	}
-
-	@Override
-	default byte[] getRange(final byte[] key, final int start, final int end){
-		return getRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	default byte[] substr(final byte[] key, final long start, final long end){
-		return substr(key, (int) start, (int) end);
-	}
-
 }

@@ -24,9 +24,11 @@
  */
 package com.buession.redis.client;
 
+import com.buession.redis.core.command.PubSubCommands;
+
 /**
  * @author Yong.Teng
  */
-public interface JedisPubSubRedisOperations {
+public interface PubSubRedisOperations extends RedisOperations, PubSubCommands {
 
 }

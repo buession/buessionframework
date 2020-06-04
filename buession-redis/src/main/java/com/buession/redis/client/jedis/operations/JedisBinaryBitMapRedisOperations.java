@@ -24,9 +24,37 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.lang.Status;
+import com.buession.redis.client.BinaryBitMapRedisOperations;
+
 /**
  * @author Yong.Teng
  */
-public interface JedisBinaryBitMapRedisOperations {
+public interface JedisBinaryBitMapRedisOperations extends BinaryBitMapRedisOperations {
+
+	@Override
+	default Status setBit(final byte[] key, final int offset, final byte[] value){
+		return setBit(key, (long) offset, value);
+	}
+
+	@Override
+	default Status setBit(final byte[] key, final int offset, final boolean value){
+		return setBit(key, (long) offset, value);
+	}
+
+	@Override
+	default Status getBit(final byte[] key, final int offset){
+		return getBit(key, (long) offset);
+	}
+
+	@Override
+	default Long bitPos(final byte[] key, final boolean value, final long start, final long end){
+		return bitPos(key, value, (int) start, (int) end);
+	}
+
+	@Override
+	default Long bitCount(final byte[] key, final int start, final int end){
+		return bitCount(key, (long) start, (long) end);
+	}
 
 }

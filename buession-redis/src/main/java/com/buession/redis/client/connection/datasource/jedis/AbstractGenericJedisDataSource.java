@@ -27,133 +27,195 @@ package com.buession.redis.client.connection.datasource.jedis;
 import com.buession.redis.core.Server;
 import redis.clients.jedis.Jedis;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSocketFactory;
-
 /**
- * Jedis 单节点数据源抽象类
+ * Jedis 单机数据源抽象类
  *
  * @author Yong.Teng
  */
 public abstract class AbstractGenericJedisDataSource extends AbstractJedisDataSource<Jedis> implements JedisDataSource {
 
+	/**
+	 * Redis 主机地址
+	 */
 	private String host = Server.DEFAULT_HOST;
 
+	/**
+	 * Redis 端口
+	 */
 	private int port = Server.DEFAULT_PORT;
 
+	/**
+	 * 密码
+	 */
 	private String password;
 
-	private String clientName;
-
+	/**
+	 * 构造函数
+	 */
 	public AbstractGenericJedisDataSource(){
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 */
 	public AbstractGenericJedisDataSource(String host){
 		this.host = host;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 */
+	public AbstractGenericJedisDataSource(String host, int port){
+		this.host = host;
+		this.port = port;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param password
+	 * 		密码
+	 */
+	public AbstractGenericJedisDataSource(String host, int port, String password){
+		this(host, port);
+		this.password = password;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 */
+	public AbstractGenericJedisDataSource(String host, int port, String password, int database){
+		this(host, port, password);
+		setDatabase(database);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public AbstractGenericJedisDataSource(String host, int port, String password, int database, int connectTimeout,
+			int soTimeout){
+		this(host, port, password, database);
+		setConnectTimeout(connectTimeout);
+		setSoTimeout(soTimeout);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param database
+	 * 		数据库
+	 */
+	public AbstractGenericJedisDataSource(String host, int port, int database){
+		this(host, port);
+		setDatabase(database);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param database
+	 * 		数据库
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public AbstractGenericJedisDataSource(String host, int port, int database, int connectTimeout, int soTimeout){
+		this(host, port, database);
+		setConnectTimeout(connectTimeout);
+		setSoTimeout(soTimeout);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param password
+	 * 		密码
+	 */
 	public AbstractGenericJedisDataSource(String host, String password){
 		this.host = host;
 		this.password = password;
 	}
 
-	public AbstractGenericJedisDataSource(String host, int database){
-		this.host = host;
-		setDatabase(database);
-	}
-
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 */
 	public AbstractGenericJedisDataSource(String host, String password, int database){
 		this(host, password);
 		setDatabase(database);
 	}
 
-	public AbstractGenericJedisDataSource(String host, int port, String password){
-		this(host, password);
-		this.port = port;
-	}
-
-	public AbstractGenericJedisDataSource(String host, int port, int database){
-		this(host, database);
-		this.port = port;
-	}
-
-	public AbstractGenericJedisDataSource(String host, int port, String password, int database){
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public AbstractGenericJedisDataSource(String host, String password, int database, int connectTimeout,
+			int soTimeout){
 		this(host, password, database);
-		this.port = port;
-	}
-
-	public AbstractGenericJedisDataSource(String host, int port, String password, int database, int connectTimeout,
-										  int soTimeout){
-		this(host, port, password, database);
 		setConnectTimeout(connectTimeout);
 		setSoTimeout(soTimeout);
-	}
-
-	public AbstractGenericJedisDataSource(String host, int port, String password, int database, int connectTimeout,
-										  int soTimeout, boolean useSsl){
-		this(host, port, password, database);
-		setConnectTimeout(connectTimeout);
-		setSoTimeout(soTimeout);
-		setUseSsl(useSsl);
-	}
-
-	public AbstractGenericJedisDataSource(String host, int port, String password, int database, int connectTimeout,
-										  int soTimeout, SSLSocketFactory sslSocketFactory,
-										  SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
-		this(host, port, password, database, connectTimeout, soTimeout, checkUseSSL(sslSocketFactory, sslParameters,
-				hostnameVerifier), sslSocketFactory, sslParameters, hostnameVerifier);
-	}
-
-	public AbstractGenericJedisDataSource(String host, int port, String password, int database, int connectTimeout,
-										  int soTimeout, boolean useSsl, SSLSocketFactory sslSocketFactory,
-										  SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
-		this(host, port, password, database, connectTimeout, soTimeout, useSsl);
-		setSslSocketFactory(sslSocketFactory);
-		setSslParameters(sslParameters);
-		setHostnameVerifier(hostnameVerifier);
-	}
-
-	public AbstractGenericJedisDataSource(String host, int port, String password, int database, String clientName,
-										  boolean useSsl){
-		this(host, port, password, database);
-		this.clientName = clientName;
-		setUseSsl(useSsl);
-	}
-
-	public AbstractGenericJedisDataSource(String host, int port, String password, int database, String clientName,
-										  SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
-										  HostnameVerifier hostnameVerifier){
-		this(host, port, password, database, clientName, checkUseSSL(sslSocketFactory, sslParameters,
-				hostnameVerifier));
-		setSslSocketFactory(sslSocketFactory);
-		setSslParameters(sslParameters);
-		setHostnameVerifier(hostnameVerifier);
-	}
-
-	public AbstractGenericJedisDataSource(String host, int port, String password, int database, String clientName,
-										  int connectTimeout, int soTimeout, boolean useSsl){
-		this(host, port, password, database, clientName, useSsl);
-		setConnectTimeout(connectTimeout);
-		setSoTimeout(soTimeout);
-	}
-
-	public AbstractGenericJedisDataSource(String host, int port, String password, int database, String clientName,
-										  int connectTimeout, int soTimeout, SSLSocketFactory sslSocketFactory,
-										  SSLParameters sslParameters, HostnameVerifier hostnameVerifier){
-		this(host, port, password, database, clientName, connectTimeout, soTimeout, checkUseSSL(sslSocketFactory,
-				sslParameters, hostnameVerifier), sslSocketFactory, sslParameters, hostnameVerifier);
-	}
-
-	public AbstractGenericJedisDataSource(String host, int port, String password, int database, String clientName,
-										  int connectTimeout, int soTimeout, boolean useSsl,
-										  SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
-										  HostnameVerifier hostnameVerifier){
-		this(host, port, password, database, clientName, connectTimeout, soTimeout, useSsl);
-		setSslSocketFactory(sslSocketFactory);
-		setSslParameters(sslParameters);
-		setHostnameVerifier(hostnameVerifier);
 	}
 
 	@Override
@@ -184,16 +246,6 @@ public abstract class AbstractGenericJedisDataSource extends AbstractJedisDataSo
 	@Override
 	public void setPassword(String password){
 		this.password = password;
-	}
-
-	@Override
-	public String getClientName(){
-		return clientName;
-	}
-
-	@Override
-	public void setClientName(String clientName){
-		this.clientName = clientName;
 	}
 
 }

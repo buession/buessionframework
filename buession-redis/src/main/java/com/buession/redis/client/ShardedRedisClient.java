@@ -30,6 +30,7 @@ import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.NotSupportedCommandException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -193,6 +194,16 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
+	default Status mSet(final Map<String, String> values){
+		throw new NotSupportedCommandException(ProtocolCommand.MGET);
+	}
+
+	@Override
+	default Status mSetNx(final Map<String, String> values){
+		throw new NotSupportedCommandException(ProtocolCommand.MGET);
+	}
+
+	@Override
 	default List<String> mGet(final String... keys){
 		throw new NotSupportedCommandException(ProtocolCommand.MGET);
 	}
@@ -240,6 +251,160 @@ public interface ShardedRedisClient extends RedisClient {
 	@Override
 	default Long sDiffStore(final byte[] destKey, final byte[]... keys){
 		throw new NotSupportedCommandException(ProtocolCommand.SDIFFSTORE);
+	}
+
+	@Override
+	default Set<String> sInter(final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.SINTER);
+	}
+
+	@Override
+	default Set<byte[]> sInter(final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.SINTER);
+	}
+
+	@Override
+	default Long sInterStore(final String destKey, final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.SINTERSTORE);
+	}
+
+	@Override
+	default Long sInterStore(final byte[] destKey, final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.SINTERSTORE);
+	}
+
+	@Override
+	default Set<String> sUnion(final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.SUNION);
+	}
+
+	@Override
+	default Set<byte[]> sUnion(final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.SUNION);
+	}
+
+	@Override
+	default Long sUnionStore(final String destKey, final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.SUNIONSTORE);
+	}
+
+	@Override
+	default Long sUnionStore(final byte[] destKey, final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.SUNIONSTORE);
+	}
+
+	@Override
+	default Status sMove(final String source, final String destKey, final String member){
+		throw new NotSupportedCommandException(ProtocolCommand.SMOVE);
+	}
+
+	@Override
+	default Status sMove(final byte[] source, final byte[] destKey, final byte[] member){
+		throw new NotSupportedCommandException(ProtocolCommand.SMOVE);
+	}
+
+	@Override
+	default Long zInterStore(final String destKey, final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZINTERSTORE);
+	}
+
+	@Override
+	default Long zInterStore(final byte[] destKey, final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZINTERSTORE);
+	}
+
+	@Override
+	default Long zInterStore(final String destKey, final Aggregate aggregate, final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZINTERSTORE);
+	}
+
+	@Override
+	default Long zInterStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZINTERSTORE);
+	}
+
+	@Override
+	default Long zInterStore(final String destKey, final double[] weights, final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZINTERSTORE);
+	}
+
+	@Override
+	default Long zInterStore(final byte[] destKey, final double[] weights, final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZINTERSTORE);
+	}
+
+	@Override
+	default Long zInterStore(final String destKey, final Aggregate aggregate, final double[] weights,
+			final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZINTERSTORE);
+	}
+
+	@Override
+	default Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double[] weights,
+			final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZINTERSTORE);
+	}
+
+	@Override
+	default Long zUnionStore(final String destKey, final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZUNIONSTORE);
+	}
+
+	@Override
+	default Long zUnionStore(final byte[] destKey, final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZUNIONSTORE);
+	}
+
+	@Override
+	default Long zUnionStore(final String destKey, final Aggregate aggregate, final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZUNIONSTORE);
+	}
+
+	@Override
+	default Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZUNIONSTORE);
+	}
+
+	@Override
+	default Long zUnionStore(final String destKey, final double[] weights, final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZUNIONSTORE);
+	}
+
+	@Override
+	default Long zUnionStore(final byte[] destKey, final double[] weights, final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZUNIONSTORE);
+	}
+
+	@Override
+	default Long zUnionStore(final String destKey, final Aggregate aggregate, final double[] weights,
+			final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZUNIONSTORE);
+	}
+
+	@Override
+	default Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double[] weights,
+			final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.ZUNIONSTORE);
+	}
+
+	@Override
+	default Status pfMerge(final String destKey, final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.PFMERGE);
+	}
+
+	@Override
+	default Status pfMerge(final byte[] destKey, final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.PFMERGE);
+	}
+
+	@Override
+	default Long pfCount(final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.PFCOUNT);
+	}
+
+	@Override
+	default Long pfCount(final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.PFCOUNT);
 	}
 
 }

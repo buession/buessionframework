@@ -80,9 +80,10 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 
 			return result;
 		}
+
 	}
 
-	public static class ListMapConvert implements Convert<List<Geo>, List<GeoCoordinate>> {
+	public static class GeoListConvert implements Convert<List<Geo>, List<GeoCoordinate>> {
 
 		@Override
 		public List<GeoCoordinate> convert(final List<Geo> source){
@@ -113,6 +114,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 
 			return result;
 		}
+
 	}
 
 	public static class GeoUnitConvert implements Convert<GeoUnit, redis.clients.jedis.GeoUnit> {
@@ -226,6 +228,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 
 				return result;
 			}
+
 		}
 
 	}

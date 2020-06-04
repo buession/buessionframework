@@ -24,9 +24,39 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.lang.Status;
+import com.buession.redis.client.BinaryListRedisOperations;
+
+import java.util.List;
+
 /**
  * @author Yong.Teng
  */
-public interface JedisBinaryListRedisOperations {
+public interface JedisBinaryListRedisOperations extends BinaryListRedisOperations {
+
+	@Override
+	default Status lSet(final byte[] key, final int index, final byte[] value){
+		return lSet(key, (long) index, value);
+	}
+
+	@Override
+	default byte[] lIndex(final byte[] key, final int index){
+		return lIndex(key, (long) index);
+	}
+
+	@Override
+	default Status lTrim(final byte[] key, final int start, final int end){
+		return lTrim(key, (long) start, (long) end);
+	}
+
+	@Override
+	default Long lRem(final byte[] key, final byte[] value, final int count){
+		return lRem(key, value, (long) count);
+	}
+
+	@Override
+	default List<byte[]> lRange(final byte[] key, final int start, final int end){
+		return lRange(key, (long) start, (long) end);
+	}
 
 }

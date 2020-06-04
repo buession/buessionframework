@@ -24,30 +24,267 @@
  */
 package com.buession.redis.spring;
 
+import com.buession.core.utils.Assert;
 import com.buession.redis.Constants;
+import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.ShardedRedisNode;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
+import java.util.Set;
 
 /**
  * @author Yong.Teng
  */
 public class RedisConnectionFactory {
 
-	private int connectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
+	private String host = RedisNode.DEFAULT_HOST;
 
-	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
+	private int port = RedisNode.DEFAULT_PORT;
 
-	private boolean useSsl;
+	private String password;
 
-	private SSLSocketFactory sslSocketFactory;
+	private int database = RedisNode.DEFAULT_DATABASE;
 
-	private SSLParameters sslParameters;
+	private String clientName;
 
-	private HostnameVerifier hostnameVerifier;
+	private Set<ShardedRedisNode> redisNodes;
 
-	private boolean usePool = true;
+	protected int connectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
+
+	protected int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
+
+	protected boolean usePool = true;
+
+	protected boolean useSsl = false;
+
+	protected SSLSocketFactory sslSocketFactory;
+
+	protected SSLParameters sslParameters;
+
+	protected HostnameVerifier hostnameVerifier;
+
+	private boolean isGenericConnection = true;
+
+	private boolean isShardedConnection = false;
+
+	public RedisConnectionFactory(){
+	}
+
+	public RedisConnectionFactory(final String host){
+		this.host = host;
+	}
+
+	public RedisConnectionFactory(final String host, final String password){
+		this.host = host;
+		this.password = password;
+	}
+
+	public RedisConnectionFactory(final String host, final String password, final int database){
+		this(host, password);
+		setDatabase(database);
+	}
+
+	public RedisConnectionFactory(final String host, final String password, final int database, final boolean usePool){
+		this(host, password, database);
+		this.usePool = usePool;
+	}
+
+	public RedisConnectionFactory(final String host, final String password, final int database,
+			final int connectTimeout, final int soTimeout){
+		this(host, password, database);
+		this.connectTimeout = connectTimeout;
+		this.soTimeout = soTimeout;
+	}
+
+	public RedisConnectionFactory(final String host, final String password, final boolean usePool){
+		this(host, password);
+		this.usePool = usePool;
+	}
+
+	public RedisConnectionFactory(final String host, final String password, final int connectTimeout,
+			final int soTimeout){
+		this(host, password);
+		this.connectTimeout = connectTimeout;
+		this.soTimeout = soTimeout;
+	}
+
+	public RedisConnectionFactory(final String host, final int port){
+		this.host = host;
+		this.port = port;
+	}
+
+	public RedisConnectionFactory(final String host, final int port, final int database){
+		this(host, port);
+		setDatabase(database);
+	}
+
+	public RedisConnectionFactory(final String host, final int port, final String password){
+		this(host, port);
+		this.password = password;
+	}
+
+	public RedisConnectionFactory(final String host, final int port, final String password, final int database){
+		this(host, port, password);
+		setDatabase(database);
+	}
+
+	public RedisConnectionFactory(final String host, final int port, final String password, final int database,
+			final boolean usePool){
+		this(host, port, password, database);
+		this.usePool = usePool;
+	}
+
+	public RedisConnectionFactory(final String host, final int port, final String password, final int database,
+			final int connectTimeout, final int soTimeout){
+		this(host, port, password, database);
+		this.connectTimeout = connectTimeout;
+		this.soTimeout = soTimeout;
+	}
+
+	public RedisConnectionFactory(final String host, final int port, final String password, final int database,
+			final int connectTimeout, final int soTimeout, final boolean usePool){
+		this(host, port, password, database, connectTimeout, soTimeout);
+		this.usePool = usePool;
+	}
+
+	public RedisConnectionFactory(final String host, final int port, final String password, final int database,
+			final String clientName, final int connectTimeout, final int soTimeout){
+		this(host, port, password, database, connectTimeout, soTimeout);
+		this.clientName = clientName;
+	}
+
+	public RedisConnectionFactory(final String host, final int port, final String password, final int database,
+			final String clientName, final boolean usePool){
+		this(host, port, password, database, usePool);
+		this.clientName = clientName;
+	}
+
+	public RedisConnectionFactory(final String host, final int port, final String password, final int database,
+			final String clientName, final int connectTimeout, final int soTimeout, final boolean usePool){
+		this(host, port, password, database, connectTimeout, soTimeout, usePool);
+		this.clientName = clientName;
+	}
+
+	public RedisConnectionFactory(final String host, final int port, final String password, final int database,
+			final String clientName, final int connectTimeout, final int soTimeout, final boolean usePool,
+			final boolean useSsl){
+		this(host, port, password, database, clientName, connectTimeout, soTimeout, usePool);
+		this.useSsl = useSsl;
+	}
+
+	public RedisConnectionFactory(final String host, final int port, final String password, final int database,
+			final String clientName, final int connectTimeout, final int soTimeout, final boolean usePool,
+			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+			final HostnameVerifier hostnameVerifier){
+		this(host, port, password, database, clientName, connectTimeout, soTimeout, usePool,
+				checkUseSsl(sslSocketFactory, sslParameters, hostnameVerifier), sslSocketFactory, sslParameters,
+				hostnameVerifier);
+	}
+
+	public RedisConnectionFactory(final String host, final int port, final String password, final int database,
+			final String clientName, final int connectTimeout, final int soTimeout, final boolean usePool,
+			final boolean useSsl, final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+			final HostnameVerifier hostnameVerifier){
+		this(host, port, password, database, clientName, connectTimeout, soTimeout, usePool, useSsl);
+		this.sslSocketFactory = sslSocketFactory;
+		this.sslParameters = sslParameters;
+		this.hostnameVerifier = hostnameVerifier;
+	}
+
+	public RedisConnectionFactory(final Set<ShardedRedisNode> redisNodes){
+		this.redisNodes = redisNodes;
+		this.isShardedConnection = true;
+	}
+
+	public RedisConnectionFactory(final Set<ShardedRedisNode> redisNodes, final int database){
+		this(redisNodes);
+		setDatabase(database);
+	}
+
+	public RedisConnectionFactory(final Set<ShardedRedisNode> redisNodes, final int database, final boolean usePool){
+		this(redisNodes, database);
+		this.usePool = usePool;
+	}
+
+	public RedisConnectionFactory(final Set<ShardedRedisNode> redisNodes, final boolean usePool){
+		this(redisNodes);
+		this.usePool = usePool;
+	}
+
+	public RedisConnectionFactory(final Set<ShardedRedisNode> redisNodes, final int connectTimeout,
+			final int soTimeout){
+		this(redisNodes);
+		this.connectTimeout = connectTimeout;
+		this.soTimeout = soTimeout;
+	}
+
+	public RedisConnectionFactory(final Set<ShardedRedisNode> redisNodes, final int database, final int connectTimeout
+			, final int soTimeout){
+		this(redisNodes, connectTimeout, soTimeout);
+		setDatabase(database);
+	}
+
+	public RedisConnectionFactory(final Set<ShardedRedisNode> redisNodes, final int connectTimeout,
+			final int soTimeout, final boolean usePool){
+		this(redisNodes, connectTimeout, soTimeout);
+		this.usePool = usePool;
+	}
+
+	public RedisConnectionFactory(final Set<ShardedRedisNode> redisNodes, final int database, final int connectTimeout
+			, final int soTimeout, final boolean usePool){
+		this(redisNodes, connectTimeout, soTimeout, usePool);
+		setDatabase(database);
+	}
+
+	public RedisConnectionFactory(final Set<ShardedRedisNode> redisNodes, final int database, final int connectTimeout
+			, final int soTimeout, final boolean usePool, final SSLSocketFactory sslSocketFactory,
+			final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
+		this(redisNodes, database, connectTimeout, soTimeout, usePool, checkUseSsl(sslSocketFactory, sslParameters,
+				hostnameVerifier), sslSocketFactory, sslParameters, hostnameVerifier);
+	}
+
+	public RedisConnectionFactory(final Set<ShardedRedisNode> redisNodes, final int database, final int connectTimeout
+			, final int soTimeout, final boolean usePool, final boolean useSsl,
+			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+			final HostnameVerifier hostnameVerifier){
+		this(redisNodes, connectTimeout, soTimeout, usePool);
+		this.useSsl = useSsl;
+		this.sslSocketFactory = sslSocketFactory;
+		this.sslParameters = sslParameters;
+		this.hostnameVerifier = hostnameVerifier;
+		setDatabase(database);
+	}
+
+	public String getHost(){
+		return host;
+	}
+
+	public int getPort(){
+		return port;
+	}
+
+	public String getPassword(){
+		return password;
+	}
+
+	public int getDatabase(){
+		return database;
+	}
+
+	public void setDatabase(int database){
+		Assert.isNegative(database, "invalid DB index (a positive index required)");
+		this.database = database;
+	}
+
+	public String getClientName(){
+		return clientName;
+	}
+
+	public Set<ShardedRedisNode> getRedisNodes(){
+		return redisNodes;
+	}
 
 	public int getConnectTimeout(){
 		return connectTimeout;
@@ -65,6 +302,14 @@ public class RedisConnectionFactory {
 		this.soTimeout = soTimeout;
 	}
 
+	public boolean isUsePool(){
+		return usePool;
+	}
+
+	public void setUsePool(boolean usePool){
+		this.usePool = usePool;
+	}
+
 	public boolean isUseSsl(){
 		return useSsl;
 	}
@@ -77,7 +322,7 @@ public class RedisConnectionFactory {
 		return sslSocketFactory;
 	}
 
-	public void setSslSocketFactory(SSLSocketFactory sslSocketFactory){
+	public void setSslSocketFactory(final SSLSocketFactory sslSocketFactory){
 		this.sslSocketFactory = sslSocketFactory;
 	}
 
@@ -85,7 +330,7 @@ public class RedisConnectionFactory {
 		return sslParameters;
 	}
 
-	public void setSslParameters(SSLParameters sslParameters){
+	public void setSslParameters(final SSLParameters sslParameters){
 		this.sslParameters = sslParameters;
 	}
 
@@ -93,20 +338,21 @@ public class RedisConnectionFactory {
 		return hostnameVerifier;
 	}
 
-	public void setHostnameVerifier(HostnameVerifier hostnameVerifier){
+	public void setHostnameVerifier(final HostnameVerifier hostnameVerifier){
 		this.hostnameVerifier = hostnameVerifier;
 	}
 
-	public boolean isUsePool(){
-		return getUsePool();
+	protected boolean isGenericConnection(){
+		return isGenericConnection;
 	}
 
-	public boolean getUsePool(){
-		return usePool;
+	protected boolean isShardedConnection(){
+		return isShardedConnection;
 	}
 
-	public void setUsePool(boolean usePool){
-		this.usePool = usePool;
+	protected final static boolean checkUseSsl(final SSLSocketFactory sslSocketFactory,
+			final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
+		return sslSocketFactory != null || sslParameters != null || hostnameVerifier != null;
 	}
 
 }

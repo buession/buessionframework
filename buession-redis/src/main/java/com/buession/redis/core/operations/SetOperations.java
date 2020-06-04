@@ -25,6 +25,7 @@
 package com.buession.redis.core.operations;
 
 import com.buession.core.serializer.type.TypeReference;
+import com.buession.redis.core.command.BinarySetCommands;
 import com.buession.redis.core.command.SetCommands;
 
 import java.util.List;
@@ -37,7 +38,7 @@ import java.util.Set;
  *
  * @author Yong.Teng
  */
-public interface SetOperations extends SetCommands, RedisOperations {
+public interface SetOperations extends SetCommands, BinarySetCommands, RedisOperations {
 
 	/**
 	 * 将 member 元素加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
