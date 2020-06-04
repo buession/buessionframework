@@ -22,23 +22,11 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package io.lettuce.core;
-
-import org.apache.commons.pool2.PooledObjectFactory;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
-import redis.clients.jedis.util.Pool;
+package com.buession.redis.client.jedis.operations;
 
 /**
  * @author Yong.Teng
  */
-public class AbstractLettucePool extends Pool {
-
-	public AbstractLettucePool(){
-		super();
-	}
-
-	public AbstractLettucePool(GenericObjectPoolConfig poolConfig, PooledObjectFactory factory){
-		super(poolConfig, factory);
-	}
+public interface JedisTransactionRedisOperations {
 
 }

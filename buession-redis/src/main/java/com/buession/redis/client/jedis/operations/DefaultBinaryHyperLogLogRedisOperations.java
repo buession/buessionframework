@@ -22,4 +22,11 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package io.lettuce.core;
+package com.buession.redis.client.jedis.operations;
+
+/**
+ * @author Yong.Teng
+ */
+public class DefaultBinaryHyperLogLogRedisOperations {
+
+}

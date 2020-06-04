@@ -22,20 +22,11 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package io.lettuce.core;
-
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+package com.buession.redis.client.jedis.operations;
 
 /**
  * @author Yong.Teng
  */
-public class LettucePoolConfig extends GenericObjectPoolConfig {
-
-	public LettucePoolConfig(){
-		setTestWhileIdle(true);
-		setMinEvictableIdleTimeMillis(60000);
-		setTimeBetweenEvictionRunsMillis(30000);
-		setNumTestsPerEvictionRun(-1);
-	}
+public class DefaultHyperLogLogRedisOperations {
 
 }
