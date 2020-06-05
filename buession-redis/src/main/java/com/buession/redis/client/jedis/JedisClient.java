@@ -154,4 +154,24 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.sort(key, destKey, sortArgument));
 	}
 
+	@Override
+	public Status mSet(final Map<String, String> values){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.mSet(values));
+	}
+
+	@Override
+	public Status mSetNx(final Map<String, String> values){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.mSetNx(values));
+	}
+
+	@Override
+	public List<String> mGet(final String... keys){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.mGet());
+	}
+
+	@Override
+	public List<byte[]> mGet(final byte[]... keys){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.mGet());
+	}
+
 }

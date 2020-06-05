@@ -375,6 +375,237 @@ public abstract class AbstractRedisClient implements RedisClient {
 		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.move(key, db));
 	}
 
+	@Override
+	public Status set(final String key, final String value){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.set(key, value));
+	}
+
+	@Override
+	public Status set(final byte[] key, final byte[] value){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.set(key, value));
+	}
+
+	@Override
+	public Status set(final String key, final String value, final SetArgument setArgument){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.set(key, value, setArgument));
+	}
+
+	@Override
+	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.set(key, value, setArgument));
+	}
+
+	@Override
+	public Status setEx(final String key, final String value, final int lifetime){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.setEx(key, value, lifetime));
+	}
+
+	@Override
+	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.setEx(key, value, lifetime));
+	}
+
+	@Override
+	public Status pSetEx(final String key, final String value, final int lifetime){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.pSetEx(key, value, lifetime));
+	}
+
+	@Override
+	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.pSetEx(key, value, lifetime));
+	}
+
+	@Override
+	public Status setNx(final String key, final String value){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.setNx(key, value));
+	}
+
+	@Override
+	public Status setNx(final byte[] key, final byte[] value){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.setNx(key, value));
+	}
+
+	@Override
+	public Long append(final String key, final String value){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.append(key, value));
+	}
+
+	@Override
+	public Long append(final byte[] key, final byte[] value){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.append(key, value));
+	}
+
+	@Override
+	public String get(final String key){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.get(key));
+	}
+
+	@Override
+	public byte[] get(final byte[] key){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.get(key));
+	}
+
+	@Override
+	public String getSet(final String key, final String value){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.getSet(key, value));
+	}
+
+	@Override
+	public byte[] getSet(final byte[] key, final byte[] value){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.getSet(key, value));
+	}
+
+
+	@Override
+	public Long incr(final String key){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.incr(key));
+	}
+
+	@Override
+	public Long incr(final byte[] key){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.incr(key));
+	}
+
+	@Override
+	public Long incrBy(final String key, final int value){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.incrBy(key, value));
+	}
+
+	@Override
+	public Long incrBy(final byte[] key, final int value){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.incrBy(key, value));
+	}
+
+	@Override
+	public Long incrBy(final String key, final long value){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.incrBy(key, value));
+	}
+
+	@Override
+	public Long incrBy(final byte[] key, final long value){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.incrBy(key, value));
+	}
+
+	@Override
+	public Double incrByFloat(final String key, final float value){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.incrByFloat(key, value));
+	}
+
+	@Override
+	public Double incrByFloat(final byte[] key, final float value){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.incrByFloat(key, value));
+	}
+
+	@Override
+	public Double incrByFloat(final String key, final double value){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.incrByFloat(key, value));
+	}
+
+	@Override
+	public Double incrByFloat(final byte[] key, final double value){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.incrByFloat(key, value));
+	}
+
+	@Override
+	public Long decr(final String key){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.decr(key));
+	}
+
+	@Override
+	public Long decr(final byte[] key){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.decr(key));
+	}
+
+	@Override
+	public Long decrBy(final String key, final int value){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.decrBy(key, value));
+	}
+
+	@Override
+	public Long decrBy(final byte[] key, final int value){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.decrBy(key, value));
+	}
+
+	@Override
+	public Long decrBy(final String key, final long value){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.decrBy(key, value));
+	}
+
+	@Override
+	public Long decrBy(final byte[] key, final long value){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.decrBy(key, value));
+	}
+
+	@Override
+	public Long setRange(final String key, final int offset, final String value){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.setRange(key, offset, value));
+	}
+
+	@Override
+	public Long setRange(final byte[] key, final int offset, final byte[] value){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.setRange(key, offset, value));
+	}
+
+	@Override
+	public Long setRange(final String key, final long offset, final String value){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.setRange(key, offset, value));
+	}
+
+	@Override
+	public Long setRange(final byte[] key, final long offset, final byte[] value){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.setRange(key, offset, value));
+	}
+
+	@Override
+	public String getRange(final String key, final int start, final int end){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.getRange(key, start, end));
+	}
+
+	@Override
+	public byte[] getRange(final byte[] key, final int start, final int end){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.getRange(key, start, end));
+	}
+
+	@Override
+	public String getRange(final String key, final long start, final long end){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.getRange(key, start, end));
+	}
+
+	@Override
+	public byte[] getRange(final byte[] key, final long start, final long end){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.getRange(key, start, end));
+	}
+
+	@Override
+	public String substr(final String key, final int start, final int end){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.substr(key, start, end));
+	}
+
+	@Override
+	public byte[] substr(final byte[] key, final int start, final int end){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.substr(key, start, end));
+	}
+
+	@Override
+	public String substr(final String key, final long start, final long end){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.substr(key, start, end));
+	}
+
+	@Override
+	public byte[] substr(final byte[] key, final long start, final long end){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.substr(key, start, end));
+	}
+
+	@Override
+	public Long strlen(final String key){
+		return execute(stringOperations, (StringRedisOperations ops)->ops.strlen(key));
+	}
+
+	@Override
+	public Long strlen(final byte[] key){
+		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.strlen(key));
+	}
+
 	protected <O extends RedisOperations, R> R execute(final O operations, final Executor<O, R> executor){
 		RedisConnection connection;
 

@@ -297,8 +297,8 @@ public interface StringCommands extends RedisCommands {
 	/**
 	 * 将键 key 储存的整数值减去减量 decrement
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/decrby.html" target="_blank">http://redisdoc.com/string/decrby
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/string/decrby.html" target="_blank">http://redisdoc.com/string/decrby.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -312,8 +312,8 @@ public interface StringCommands extends RedisCommands {
 	/**
 	 * 将键 key 储存的整数值减去减量 decrement
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/decrby.html" target="_blank">http://redisdoc.com/string/decrby
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/string/decrby.html" target="_blank">http://redisdoc.com/string/decrby.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -327,8 +327,9 @@ public interface StringCommands extends RedisCommands {
 	/**
 	 * 从偏移量 offset 开始，用 value 参数覆写键 key 储存的字符串值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/setrange.html" target="_blank">http://redisdoc.com/string/setrange
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/string/setrange.html" target="_blank">http://redisdoc.com/string/setrange.html</a>
+	 * </p>
 	 *
 	 * @param key
 	 * 		Key
@@ -344,8 +345,9 @@ public interface StringCommands extends RedisCommands {
 	/**
 	 * 从偏移量 offset 开始，用 value 参数覆写键 key 储存的字符串值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/setrange.html" target="_blank">http://redisdoc.com/string/setrange
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/string/setrange.html" target="_blank">http://redisdoc.com/string/setrange.html</a>
+	 * </p>
 	 *
 	 * @param key
 	 * 		Key
@@ -362,8 +364,9 @@ public interface StringCommands extends RedisCommands {
 	 * 获取键 key 储存的字符串值的指定部分，字符串的截取范围由 start 和 end 两个偏移量决定 (包括 start 和 end 在内)；
 	 * 负数偏移量表示从字符串的末尾开始计数 -1 表示最后一个字符，-2 表示倒数第二个字符，以此类推
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/getrange.html" target="_blank">http://redisdoc.com/string/getrange
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/string/getrange.html" target="_blank">http://redisdoc.com/string/getrange.html</a>
+	 * </p>
 	 *
 	 * @param key
 	 * 		Key
@@ -380,8 +383,9 @@ public interface StringCommands extends RedisCommands {
 	 * 获取键 key 储存的字符串值的指定部分，字符串的截取范围由 start 和 end 两个偏移量决定 (包括 start 和 end 在内)；
 	 * 负数偏移量表示从字符串的末尾开始计数 -1 表示最后一个字符，-2 表示倒数第二个字符，以此类推
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/getrange.html" target="_blank">http://redisdoc.com/string/getrange
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/string/getrange.html" target="_blank">http://redisdoc.com/string/getrange.html</a>
+	 * </p>
 	 *
 	 * @param key
 	 * 		Key
@@ -398,8 +402,8 @@ public interface StringCommands extends RedisCommands {
 	 * 获取键 key 储存的字符串值的指定部分，字符串的截取范围由 start 和 end 两个偏移量决定 (包括 start 和 end 在内)；
 	 * 负数偏移量表示从字符串的末尾开始计数 -1 表示最后一个字符，-2 表示倒数第二个字符，以此类推
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/substr.html" target="_blank">http://redisdoc.com/string/substr
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/string/substr.html" target="_blank">http://redisdoc.com/string/substr.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -416,8 +420,8 @@ public interface StringCommands extends RedisCommands {
 	 * 获取键 key 储存的字符串值的指定部分，字符串的截取范围由 start 和 end 两个偏移量决定 (包括 start 和 end 在内)；
 	 * 负数偏移量表示从字符串的末尾开始计数 -1 表示最后一个字符，-2 表示倒数第二个字符，以此类推
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/substr.html" target="_blank">http://redisdoc.com/string/substr
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/string/substr.html" target="_blank">http://redisdoc.com/string/substr.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -433,8 +437,8 @@ public interface StringCommands extends RedisCommands {
 	/**
 	 * 获取键 key 储存的字符串值的长度
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/strlen.html" target="_blank">http://redisdoc.com/string/strlen
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/string/strlen.html" target="_blank">http://redisdoc.com/string/strlen.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -534,6 +538,7 @@ public interface StringCommands extends RedisCommands {
 			}
 
 		}
+
 	}
 
 	enum NxXx {
