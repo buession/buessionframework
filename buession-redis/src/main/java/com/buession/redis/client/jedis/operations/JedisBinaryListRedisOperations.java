@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.BinaryListRedisOperations;
+import com.buession.redis.client.operations.BinaryListRedisOperations;
 
 import java.util.List;
 

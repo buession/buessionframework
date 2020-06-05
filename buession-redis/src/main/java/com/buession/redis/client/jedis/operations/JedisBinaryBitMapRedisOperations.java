@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.BinaryBitMapRedisOperations;
+import com.buession.redis.client.operations.BinaryBitMapRedisOperations;
 
 /**
  * @author Yong.Teng

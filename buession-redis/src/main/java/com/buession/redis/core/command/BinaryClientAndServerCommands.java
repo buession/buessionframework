@@ -49,4 +49,17 @@ public interface BinaryClientAndServerCommands extends BinaryRedisCommands {
 	 */
 	Status auth(final byte[] password);
 
+	/**
+	 * 为当前连接分配一个名字
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_setname.html" target="_blank">http://redisdoc
+	 * .com/client_and_server/client_setname.html</a></p>
+	 *
+	 * @param name
+	 * 		名字
+	 *
+	 * @return 设置成功时返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status clientSetName(final byte[] name);
+
 }

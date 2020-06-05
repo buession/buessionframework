@@ -4,11 +4,6 @@
 public interface SimpleRedisClient extends RedisClient {
 
 	@Override
-	default RoleInfo role(){
-		throw new NotSupportedCommandException(ProtocolCommand.ROLE);
-	}
-
-	@Override
 	default Object pSync(final String masterRunId, final int offset){
 		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
 	}

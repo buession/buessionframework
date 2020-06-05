@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.AbstractBinaryRedisOperations;
+import com.buession.redis.client.operations.AbstractBinaryRedisOperations;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.transaction.jedis.JedisTransaction;
 import redis.clients.jedis.Jedis;
@@ -42,10 +42,6 @@ public abstract class AbstractJedisBinaryRedisOperations extends AbstractBinaryR
 	protected redis.clients.jedis.Transaction getTransaction(){
 		JedisTransaction jedisTransaction = (JedisTransaction) client.getConnection().getTransaction();
 		return jedisTransaction.primitive();
-	}
-
-	protected Jedis getShard(final ShardedJedis shardedJedis, final String key){
-		return shardedJedis.getShard(key);
 	}
 
 	protected Jedis getShard(final ShardedJedis shardedJedis, final byte[] key){

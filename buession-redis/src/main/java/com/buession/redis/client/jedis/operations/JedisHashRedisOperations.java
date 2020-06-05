@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.HashRedisOperations;
+import com.buession.redis.client.operations.HashRedisOperations;
 import com.buession.redis.core.ScanResult;
 
 import java.util.Map;

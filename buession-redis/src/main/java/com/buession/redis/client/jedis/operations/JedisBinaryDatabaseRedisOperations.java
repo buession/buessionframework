@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.BinaryDatabaseRedisOperations;
+import com.buession.redis.client.operations.BinaryDatabaseRedisOperations;
 
 /**
  * @author Yong.Teng

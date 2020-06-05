@@ -78,7 +78,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> List<V> objectFromListString(final Serializer serializer, final List<String> data,
-														 final Class<V> clazz){
+			final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -87,7 +87,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> List<V> objectFromListByte(final Serializer serializer, final List<byte[]> data,
-													   final Class<V> clazz){
+			final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -96,7 +96,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> List<V> objectFromListString(final Serializer serializer, final List<String> data,
-														 final TypeReference<V> type){
+			final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -105,7 +105,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> List<V> objectFromListByte(final Serializer serializer, final List<byte[]> data,
-													   final TypeReference<V> type){
+			final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -142,7 +142,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> Set<V> objectFromSetString(final Serializer serializer, final Set<String> data,
-													   final Class<V> clazz){
+			final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -151,7 +151,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> Set<V> objectFromSetByte(final Serializer serializer, final Set<byte[]> data,
-													 final Class<V> clazz){
+			final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -160,7 +160,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> Set<V> objectFromSetString(final Serializer serializer, final Set<String> data,
-													   final TypeReference<V> type){
+			final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -169,7 +169,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> Set<V> objectFromSetByte(final Serializer serializer, final Set<byte[]> data,
-													 final TypeReference<V> type){
+			final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -178,7 +178,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> Map<String, V> objectFromMapString(final Serializer serializer,
-															   final Map<String, String> data){
+			final Map<String, String> data){
 		if(data == null){
 			return null;
 		}
@@ -191,7 +191,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> Map<byte[], V> objectFromMapByte(final Serializer serializer,
-															 final Map<byte[], byte[]> data){
+			final Map<byte[], byte[]> data){
 		if(data == null){
 			return null;
 		}
@@ -204,7 +204,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> Map<String, V> objectFromMapString(final Serializer serializer,
-															   final Map<String, String> data, final Class<V> clazz){
+			final Map<String, String> data, final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -217,7 +217,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> Map<byte[], V> objectFromMapByte(final Serializer serializer,
-															 final Map<byte[], byte[]> data, final Class<V> clazz){
+			final Map<byte[], byte[]> data, final Class<V> clazz){
 		if(data == null){
 			return null;
 		}
@@ -230,8 +230,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> Map<String, V> objectFromMapString(final Serializer serializer,
-															   final Map<String, String> data,
-															   final TypeReference<V> type){
+			final Map<String, String> data, final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -244,8 +243,7 @@ public class ReturnUtils {
 	}
 
 	public final static <V> Map<byte[], V> objectFromMapByte(final Serializer serializer,
-															 final Map<byte[], byte[]> data,
-															 final TypeReference<V> type){
+			final Map<byte[], byte[]> data, final TypeReference<V> type){
 		if(data == null){
 			return null;
 		}
@@ -269,7 +267,7 @@ public class ReturnUtils {
 		return Status.valueOf(value);
 	}
 
-	public final static <O extends Enum<O>> O enumValueOf(final String str, final Class<O> enumType){
+	public final static <V extends Enum<V>> V enumValueOf(final String str, final Class<V> enumType){
 		return EnumUtils.valueOf(enumType, str.toUpperCase());
 	}
 

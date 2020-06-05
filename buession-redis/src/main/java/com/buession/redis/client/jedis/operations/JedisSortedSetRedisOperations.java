@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.KeyValue;
-import com.buession.redis.client.SortedSetRedisOperations;
+import com.buession.redis.client.operations.SortedSetRedisOperations;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 
@@ -33,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
@@ -41,12 +42,8 @@ public interface JedisSortedSetRedisOperations extends SortedSetRedisOperations 
 
 	@Override
 	default Long zAdd(final String key, final List<KeyValue<String, Number>> members){
-		final Map<String, Number> data = new LinkedHashMap<>(members.size());
-
-		for(KeyValue<String, Number> member : members){
-			data.put(member.getKey(), member.getValue());
-		}
-
+		final Map<String, Number> data = members.stream().collect(Collectors.toMap(KeyValue::getKey,
+				KeyValue::getValue, (oldVal, currVal)->currVal, LinkedHashMap::new));
 		return zAdd(key, data);
 	}
 

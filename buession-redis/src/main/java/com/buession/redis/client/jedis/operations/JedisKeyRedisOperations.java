@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.KeyRedisOperations;
+import com.buession.redis.client.operations.KeyRedisOperations;
 import com.buession.redis.core.ScanResult;
 
 import java.util.List;

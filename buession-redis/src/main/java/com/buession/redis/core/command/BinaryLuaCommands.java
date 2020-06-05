@@ -73,12 +73,12 @@ public interface BinaryLuaCommands extends BinaryRedisCommands {
 	 * 		脚本程序
 	 * @param keys
 	 * 		一个或多个键名参数
-	 * @param args
+	 * @param arguments
 	 * 		一个或多个键参数
 	 *
 	 * @return 求值结果
 	 */
-	Object eval(final byte[] script, final byte[][] keys, final byte[][] args);
+	Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments);
 
 	/**
 	 * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
@@ -118,12 +118,12 @@ public interface BinaryLuaCommands extends BinaryRedisCommands {
 	 * 		SHA1 校验码
 	 * @param keys
 	 * 		一个或多个键名参数
-	 * @param args
+	 * @param arguments
 	 * 		一个或多个键参数
 	 *
 	 * @return 根据 SHA1 校验码，对脚本的求值结果
 	 */
-	Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] args);
+	Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments);
 
 	/**
 	 * 根据一个或多个脚本的 SHA1 校验和，检测校验和所指定的脚本是否已经被保存在缓存当中

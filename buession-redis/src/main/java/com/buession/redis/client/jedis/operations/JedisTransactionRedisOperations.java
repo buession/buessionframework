@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.TransactionRedisOperations;
+import com.buession.redis.client.operations.TransactionRedisOperations;
 
 /**
  * @author Yong.Teng

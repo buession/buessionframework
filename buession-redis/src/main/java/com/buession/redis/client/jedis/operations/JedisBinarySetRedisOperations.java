@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.utils.NumberUtils;
-import com.buession.redis.client.BinarySetRedisOperations;
+import com.buession.redis.client.operations.BinarySetRedisOperations;
 import com.buession.redis.core.ScanResult;
 
 import java.util.List;

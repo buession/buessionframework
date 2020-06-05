@@ -88,12 +88,12 @@ public interface DebugCommands extends RedisCommands {
 	 *
 	 * @param command
 	 * 		子命令
-	 * @param args
+	 * @param arguments
 	 * 		命令参数
 	 *
 	 * @return 取决于不同命令，返回不同的值
 	 */
-	Object slowLog(final SlowLogCommand command, final String... args);
+	Object slowLog(final SlowLogCommand command, final String... arguments);
 
 	/**
 	 * 实时打印出 Redis 服务器接收到的命令

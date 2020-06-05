@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.HyperLogLogRedisOperations;
+import com.buession.redis.client.operations.HyperLogLogRedisOperations;
 
 /**
  * @author Yong.Teng

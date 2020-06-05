@@ -101,19 +101,6 @@ public interface ClientAndServerCommands extends RedisCommands {
 	Status clientSetName(final String name);
 
 	/**
-	 * 为当前连接分配一个名字
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_setname.html" target="_blank">http://redisdoc
-	 * .com/client_and_server/client_setname.html</a></p>
-	 *
-	 * @param name
-	 * 		名字
-	 *
-	 * @return 设置成功时返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status clientSetName(final byte[] name);
-
-	/**
 	 * 获取连接时设置的名字
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_getname.html" target="_blank">http://redisdoc
@@ -166,7 +153,8 @@ public interface ClientAndServerCommands extends RedisCommands {
 	 * 4）关闭 redis 服务器
 	 *
 	 * <p>详情说明
-	 * <a href="http://redisdoc.com/client_and_server/shutdown.html" target="_blank">http://redisdoc.com/client_and_server/shutdown.html</a></p>
+	 * <a href="http://redisdoc.com/client_and_server/shutdown.html" target="_blank">http://redisdoc.com
+	 * /client_and_server/shutdown.html</a></p>
 	 */
 	void shutdown();
 

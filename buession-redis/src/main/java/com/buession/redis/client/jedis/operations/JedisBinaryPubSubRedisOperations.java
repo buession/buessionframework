@@ -24,11 +24,23 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.BinaryPubSubRedisOperations;
+import com.buession.redis.client.operations.BinaryPubSubRedisOperations;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.NotSupportedCommandException;
 
 /**
  * @author Yong.Teng
  */
 public interface JedisBinaryPubSubRedisOperations extends BinaryPubSubRedisOperations {
+
+	@Override
+	default Object unSubscribe(final byte[]... channels){
+		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+	}
+
+	@Override
+	default Object pUnSubscribe(final byte[]... patterns){
+		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+	}
 
 }

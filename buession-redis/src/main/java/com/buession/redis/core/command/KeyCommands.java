@@ -127,8 +127,8 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/expire.html" target="_blank">http://redisdoc.com/expire/expire
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/expire/expire.html" target="_blank">http://redisdoc.com/expire/expire.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -234,8 +234,8 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 迭代当前数据库中的数据库键
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
 	 *
 	 * @param cursor
 	 * 		游标
@@ -551,7 +551,7 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 操作结果
 	 */
 	Status migrate(final String key, final String host, final int port, final int db, final int timeout,
-				   final MigrateOperation migrateOperation);
+			final MigrateOperation migrateOperation);
 
 	/**
 	 * 删除给定的一个或多个 key

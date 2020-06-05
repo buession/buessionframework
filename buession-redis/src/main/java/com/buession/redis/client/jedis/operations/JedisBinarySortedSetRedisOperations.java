@@ -26,7 +26,7 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.KeyValue;
-import com.buession.redis.client.BinarySortedSetRedisOperations;
+import com.buession.redis.client.operations.BinarySortedSetRedisOperations;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 
@@ -34,6 +34,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
@@ -42,12 +43,8 @@ public interface JedisBinarySortedSetRedisOperations extends BinarySortedSetRedi
 
 	@Override
 	default Long zAdd(final byte[] key, final List<KeyValue<byte[], Number>> members){
-		final Map<byte[], Number> data = new LinkedHashMap<>(members.size());
-
-		for(KeyValue<byte[], Number> member : members){
-			data.put(member.getKey(), member.getValue());
-		}
-
+		final Map<byte[], Number> data = members.stream().collect(Collectors.toMap(KeyValue::getKey,
+				KeyValue::getValue, (oldVal, currVal)->currVal, LinkedHashMap::new));
 		return zAdd(key, data);
 	}
 
