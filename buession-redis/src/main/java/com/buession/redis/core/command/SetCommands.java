@@ -108,8 +108,9 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 返回集合 key 中的一个随机元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember.html</a>
+	 * </p>
 	 *
 	 * @param key
 	 * 		Key
@@ -121,8 +122,9 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 返回集合 key 中的 count 个随机元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember.html</a>
+	 * </p>
 	 *
 	 * @param key
 	 * 		Key
@@ -136,8 +138,9 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 返回集合 key 中的 count 个随机元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember.html</a>
+	 * </p>
 	 *
 	 * @param key
 	 * 		Key
@@ -177,8 +180,9 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiffstore.html" target="_blank">http://redisdoc.com/set/sdiffstore
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/set/sdiffstore.html" target="_blank">http://redisdoc.com/set/sdiffstore.html</a>
+	 * </p>
 	 *
 	 * @param destKey
 	 * 		目标 Key

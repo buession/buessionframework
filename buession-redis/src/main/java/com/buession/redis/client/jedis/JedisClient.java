@@ -194,4 +194,74 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		return execute(binaryListOperations, (ops)->ops.brPoplPush(source, destKey, timeout));
 	}
 
+	@Override
+	public Set<String> sDiff(final String... keys){
+		return execute(setOperations, (ops)->ops.sDiff(keys));
+	}
+
+	@Override
+	public Set<byte[]> sDiff(final byte[]... keys){
+		return execute(binarySetOperations, (ops)->ops.sDiff(keys));
+	}
+
+	@Override
+	public Long sDiffStore(final String destKey, final String... keys){
+		return execute(setOperations, (ops)->ops.sDiffStore(destKey, keys));
+	}
+
+	@Override
+	public Long sDiffStore(final byte[] destKey, final byte[]... keys){
+		return execute(binarySetOperations, (ops)->ops.sDiffStore(destKey, keys));
+	}
+
+	@Override
+	public Set<String> sInter(final String... keys){
+		return execute(setOperations, (ops)->ops.sInter(keys));
+	}
+
+	@Override
+	public Set<byte[]> sInter(final byte[]... keys){
+		return execute(binarySetOperations, (ops)->ops.sInter(keys));
+	}
+
+	@Override
+	public Long sInterStore(final String destKey, final String... keys){
+		return execute(setOperations, (ops)->ops.sInterStore(destKey, keys));
+	}
+
+	@Override
+	public Long sInterStore(final byte[] destKey, final byte[]... keys){
+		return execute(binarySetOperations, (ops)->ops.sInterStore(destKey, keys));
+	}
+
+	@Override
+	public Set<String> sUnion(final String... keys){
+		return execute(setOperations, (ops)->ops.sUnion(keys));
+	}
+
+	@Override
+	public Set<byte[]> sUnion(final byte[]... keys){
+		return execute(binarySetOperations, (ops)->ops.sUnion(keys));
+	}
+
+	@Override
+	public Long sUnionStore(final String destKey, final String... keys){
+		return execute(setOperations, (ops)->ops.sUnionStore(destKey, keys));
+	}
+
+	@Override
+	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
+		return execute(binarySetOperations, (ops)->ops.sUnionStore(destKey, keys));
+	}
+
+	@Override
+	public Status sMove(final String source, final String destKey, final String member){
+		return execute(setOperations, (ops)->ops.sMove(source, destKey, member));
+	}
+
+	@Override
+	public Status sMove(final byte[] source, final byte[] destKey, final byte[] member){
+		return execute(binarySetOperations, (ops)->ops.sMove(source, destKey, member));
+	}
+
 }

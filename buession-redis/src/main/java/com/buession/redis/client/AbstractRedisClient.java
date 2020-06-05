@@ -1113,6 +1113,218 @@ public abstract class AbstractRedisClient implements RedisClient {
 		return execute(binaryListOperations, (ops)->ops.lLen(key));
 	}
 
+	@Override
+	public Long sAdd(final String key, final String... members){
+		return execute(setOperations, (ops)->ops.sAdd(key, members));
+	}
+
+	@Override
+	public Long sAdd(final byte[] key, final byte[]... members){
+		return execute(binarySetOperations, (ops)->ops.sAdd(key, members));
+	}
+
+	@Override
+	public Long sCard(final String key){
+		return execute(setOperations, (ops)->ops.sCard(key));
+	}
+
+	@Override
+	public Long sCard(final byte[] key){
+		return execute(binarySetOperations, (ops)->ops.sCard(key));
+	}
+
+	@Override
+	public boolean sisMember(final String key, final String member){
+		return execute(setOperations, (ops)->ops.sisMember(key, member));
+	}
+
+	@Override
+	public boolean sisMember(final byte[] key, final byte[] member){
+		return execute(binarySetOperations, (ops)->ops.sisMember(key, member));
+	}
+
+	@Override
+	public Set<String> sMembers(final String key){
+		return execute(setOperations, (ops)->ops.sMembers(key));
+	}
+
+	@Override
+	public Set<byte[]> sMembers(final byte[] key){
+		return execute(binarySetOperations, (ops)->ops.sMembers(key));
+	}
+
+	@Override
+	public String sPop(final String key){
+		return execute(setOperations, (ops)->ops.sPop(key));
+	}
+
+	@Override
+	public byte[] sPop(final byte[] key){
+		return execute(binarySetOperations, (ops)->ops.sPop(key));
+	}
+
+	@Override
+	public String sRandMember(final String key){
+		return execute(setOperations, (ops)->ops.sRandMember(key));
+	}
+
+	@Override
+	public byte[] sRandMember(final byte[] key){
+		return execute(binarySetOperations, (ops)->ops.sRandMember(key));
+	}
+
+	@Override
+	public List<String> sRandMember(final String key, final int count){
+		return execute(setOperations, (ops)->ops.sRandMember(key, count));
+	}
+
+	@Override
+	public List<byte[]> sRandMember(final byte[] key, final int count){
+		return execute(binarySetOperations, (ops)->ops.sRandMember(key, count));
+	}
+
+	@Override
+	public List<String> sRandMember(final String key, final long count){
+		return execute(setOperations, (ops)->ops.sRandMember(key, count));
+	}
+
+	@Override
+	public List<byte[]> sRandMember(final byte[] key, final long count){
+		return execute(binarySetOperations, (ops)->ops.sRandMember(key, count));
+	}
+
+	@Override
+	public Long sRem(final String key, final String... members){
+		return execute(setOperations, (ops)->ops.sRem(key, members));
+	}
+
+	@Override
+	public Long sRem(final byte[] key, final byte[]... members){
+		return execute(binarySetOperations, (ops)->ops.sRem(key, members));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final int cursor){
+		return execute(setOperations, (ops)->ops.sScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor){
+		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final long cursor){
+		return execute(setOperations, (ops)->ops.sScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor){
+		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final String cursor){
+		return execute(setOperations, (ops)->ops.sScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
+		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern){
+		return execute(setOperations, (ops)->ops.sScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern){
+		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern){
+		return execute(setOperations, (ops)->ops.sScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern){
+		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
+		return execute(setOperations, (ops)->ops.sScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final int cursor, final int count){
+		return execute(setOperations, (ops)->ops.sScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final int count){
+		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final int count){
+		return execute(setOperations, (ops)->ops.sScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final int count){
+		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final int count){
+		return execute(setOperations, (ops)->ops.sScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
+		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern, final int count){
+		return execute(setOperations, (ops)->ops.sScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern, final int count){
+		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final int count){
+		return execute(setOperations, (ops)->ops.sScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count){
+		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
+			final int count){
+		return execute(setOperations, (ops)->ops.sScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+			final int count){
+		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor, pattern, count));
+	}
+
 	protected <O extends RedisOperations, R> R execute(final O operations, final Executor<O, R> executor){
 		RedisConnection connection;
 
