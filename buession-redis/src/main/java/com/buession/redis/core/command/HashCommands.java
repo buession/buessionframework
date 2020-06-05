@@ -419,8 +419,8 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan
+	 * .html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -436,8 +436,8 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan
+	 * .html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -453,8 +453,8 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a
+	 * ></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -472,8 +472,8 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan
+	 * .html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -491,8 +491,8 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan
+	 * .html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -506,7 +506,7 @@ public interface HashCommands extends RedisCommands {
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
 	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-										  final int count);
+			final int count);
 
 	/**
 	 * 删除哈希表 key 中的一个或多个指定域

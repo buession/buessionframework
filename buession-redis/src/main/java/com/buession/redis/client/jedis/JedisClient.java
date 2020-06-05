@@ -61,117 +61,117 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 
 	@Override
 	public Status rename(final String key, final String newKey){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.rename(key, newKey));
+		return execute(keyOperations, (ops)->ops.rename(key, newKey));
 	}
 
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.rename(key, newKey));
+		return execute(binaryKeyOperations, (ops)->ops.rename(key, newKey));
 	}
 
 	@Override
 	public Status renameNx(final String key, final String newKey){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.renameNx(key, newKey));
+		return execute(keyOperations, (ops)->ops.renameNx(key, newKey));
 	}
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.renameNx(key, newKey));
+		return execute(binaryKeyOperations, (ops)->ops.renameNx(key, newKey));
 	}
 
 	@Override
 	public String randomKey(){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.randomKey());
+		return execute(keyOperations, (ops)->ops.randomKey());
 	}
 
 	@Override
 	public Set<String> keys(final String pattern){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.keys(pattern));
+		return execute(keyOperations, (ops)->ops.keys(pattern));
 	}
 
 	@Override
 	public Set<byte[]> keys(final byte[] pattern){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.keys(pattern));
+		return execute(binaryKeyOperations, (ops)->ops.keys(pattern));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.scan(cursor));
+		return execute(keyOperations, (ops)->ops.scan(cursor));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.scan(cursor));
+		return execute(binaryKeyOperations, (ops)->ops.scan(cursor));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.scan(cursor, pattern));
+		return execute(keyOperations, (ops)->ops.scan(cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.scan(cursor, pattern));
+		return execute(binaryKeyOperations, (ops)->ops.scan(cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final int count){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.scan(cursor, count));
+		return execute(keyOperations, (ops)->ops.scan(cursor, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.scan(cursor, count));
+		return execute(binaryKeyOperations, (ops)->ops.scan(cursor, count));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.scan(cursor, pattern, count));
+		return execute(keyOperations, (ops)->ops.scan(cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.scan(cursor, pattern, count));
+		return execute(binaryKeyOperations, (ops)->ops.scan(cursor, pattern, count));
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.sort(key, destKey));
+		return execute(keyOperations, (ops)->ops.sort(key, destKey));
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.sort(key, destKey));
+		return execute(binaryKeyOperations, (ops)->ops.sort(key, destKey));
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey, final SortArgument sortArgument){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.sort(key, destKey, sortArgument));
+		return execute(keyOperations, (ops)->ops.sort(key, destKey, sortArgument));
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.sort(key, destKey, sortArgument));
+		return execute(binaryKeyOperations, (ops)->ops.sort(key, destKey, sortArgument));
 	}
 
 	@Override
 	public Status mSet(final Map<String, String> values){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.mSet(values));
+		return execute(stringOperations, (ops)->ops.mSet(values));
 	}
 
 	@Override
 	public Status mSetNx(final Map<String, String> values){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.mSetNx(values));
+		return execute(stringOperations, (ops)->ops.mSetNx(values));
 	}
 
 	@Override
 	public List<String> mGet(final String... keys){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.mGet());
+		return execute(stringOperations, (ops)->ops.mGet());
 	}
 
 	@Override
 	public List<byte[]> mGet(final byte[]... keys){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.mGet());
+		return execute(binaryStringOperations, (ops)->ops.mGet());
 	}
 
 }

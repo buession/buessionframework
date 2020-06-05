@@ -68,6 +68,7 @@ import com.buession.redis.client.operations.SetRedisOperations;
 import com.buession.redis.client.operations.SortedSetRedisOperations;
 import com.buession.redis.client.operations.StringRedisOperations;
 import com.buession.redis.client.operations.TransactionRedisOperations;
+import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
 import com.buession.redis.exception.RedisException;
 import org.slf4j.Logger;
@@ -75,6 +76,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Yong.Teng
@@ -203,407 +206,711 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public boolean exists(final String key){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.exists(key));
+		return execute(keyOperations, (ops)->ops.exists(key));
 	}
 
 	@Override
 	public boolean exists(final byte[] key){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.exists(key));
+		return execute(binaryKeyOperations, (ops)->ops.exists(key));
 	}
 
 	@Override
 	public Type type(final String key){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.type(key));
+		return execute(keyOperations, (ops)->ops.type(key));
 	}
 
 	@Override
 	public Type type(final byte[] key){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.type(key));
+		return execute(binaryKeyOperations, (ops)->ops.type(key));
 	}
 
 	@Override
 	public Status expire(final String key, final int lifetime){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.expire(key, lifetime));
+		return execute(keyOperations, (ops)->ops.expire(key, lifetime));
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.expire(key, lifetime));
+		return execute(binaryKeyOperations, (ops)->ops.expire(key, lifetime));
 	}
 
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.expireAt(key, unixTimestamp));
+		return execute(keyOperations, (ops)->ops.expireAt(key, unixTimestamp));
 	}
 
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.expireAt(key, unixTimestamp));
+		return execute(binaryKeyOperations, (ops)->ops.expireAt(key, unixTimestamp));
 	}
 
 	@Override
 	public Status pExpire(final String key, final int lifetime){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.pExpire(key, lifetime));
+		return execute(keyOperations, (ops)->ops.pExpire(key, lifetime));
 	}
 
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.pExpire(key, lifetime));
+		return execute(binaryKeyOperations, (ops)->ops.pExpire(key, lifetime));
 	}
 
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.pExpireAt(key, unixTimestamp));
+		return execute(keyOperations, (ops)->ops.pExpireAt(key, unixTimestamp));
 	}
 
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.pExpireAt(key, unixTimestamp));
+		return execute(binaryKeyOperations, (ops)->ops.pExpireAt(key, unixTimestamp));
 	}
 
 	@Override
 	public Long ttl(final String key){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.ttl(key));
+		return execute(keyOperations, (ops)->ops.ttl(key));
 	}
 
 	@Override
 	public Long ttl(final byte[] key){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.ttl(key));
+		return execute(binaryKeyOperations, (ops)->ops.ttl(key));
 	}
 
 	@Override
 	public Long pTtl(final String key){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.pTtl(key));
+		return execute(keyOperations, (ops)->ops.pTtl(key));
 	}
 
 	@Override
 	public Long pTtl(final byte[] key){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.pTtl(key));
+		return execute(binaryKeyOperations, (ops)->ops.pTtl(key));
 	}
 
 	@Override
 	public Status persist(final String key){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.persist(key));
+		return execute(keyOperations, (ops)->ops.persist(key));
 	}
 
 	@Override
 	public Status persist(final byte[] key){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.persist(key));
+		return execute(binaryKeyOperations, (ops)->ops.persist(key));
 	}
 
 	@Override
 	public List<String> sort(final String key){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.sort(key));
+		return execute(keyOperations, (ops)->ops.sort(key));
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.sort(key));
+		return execute(binaryKeyOperations, (ops)->ops.sort(key));
 	}
 
 	@Override
 	public List<String> sort(final String key, final SortArgument sortArgument){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.sort(key, sortArgument));
+		return execute(keyOperations, (ops)->ops.sort(key, sortArgument));
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.sort(key, sortArgument));
+		return execute(binaryKeyOperations, (ops)->ops.sort(key, sortArgument));
 	}
 
 	@Override
 	public byte[] dump(final String key){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.dump(key));
+		return execute(keyOperations, (ops)->ops.dump(key));
 	}
 
 	@Override
 	public byte[] dump(final byte[] key){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.dump(key));
+		return execute(binaryKeyOperations, (ops)->ops.dump(key));
 	}
 
 	@Override
 	public Status restore(final String key, final String serializedValue, final int ttl){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.restore(key, serializedValue, ttl));
+		return execute(keyOperations, (ops)->ops.restore(key, serializedValue, ttl));
 	}
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.restore(key, serializedValue, ttl));
+		return execute(binaryKeyOperations, (ops)->ops.restore(key, serializedValue, ttl));
 	}
 
 	@Override
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.migrate(key, host, port, db, timeout));
+		return execute(keyOperations, (ops)->ops.migrate(key, host, port, db, timeout));
 	}
 
 	@Override
 	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.migrate(key, host, port, db, timeout));
+		return execute(binaryKeyOperations, (ops)->ops.migrate(key, host, port, db, timeout));
 	}
 
 	@Override
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
 			final MigrateOperation migrateOperation){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.migrate(key, host, port, db, timeout,
-				migrateOperation));
+		return execute(keyOperations, (ops)->ops.migrate(key, host, port, db, timeout, migrateOperation));
 	}
 
 	@Override
 	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
 			final MigrateOperation migrateOperation){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.migrate(key, host, port, db, timeout,
-				migrateOperation));
+		return execute(binaryKeyOperations, (ops)->ops.migrate(key, host, port, db, timeout, migrateOperation));
 	}
 
 	@Override
 	public Long del(final String... keys){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.del(keys));
+		return execute(keyOperations, (ops)->ops.del(keys));
 	}
 
 	@Override
 	public Long del(final byte[]... keys){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.del(keys));
+		return execute(binaryKeyOperations, (ops)->ops.del(keys));
 	}
 
 	@Override
 	public Status move(final String key, final int db){
-		return execute(keyOperations, (KeyRedisOperations ops)->ops.move(key, db));
+		return execute(keyOperations, (ops)->ops.move(key, db));
 	}
 
 	@Override
 	public Status move(final byte[] key, final int db){
-		return execute(binaryKeyOperations, (BinaryKeyRedisOperations ops)->ops.move(key, db));
+		return execute(binaryKeyOperations, (ops)->ops.move(key, db));
 	}
 
 	@Override
 	public Status set(final String key, final String value){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.set(key, value));
+		return execute(stringOperations, (ops)->ops.set(key, value));
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.set(key, value));
+		return execute(binaryStringOperations, (ops)->ops.set(key, value));
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetArgument setArgument){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.set(key, value, setArgument));
+		return execute(stringOperations, (ops)->ops.set(key, value, setArgument));
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.set(key, value, setArgument));
+		return execute(binaryStringOperations, (ops)->ops.set(key, value, setArgument));
 	}
 
 	@Override
 	public Status setEx(final String key, final String value, final int lifetime){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.setEx(key, value, lifetime));
+		return execute(stringOperations, (ops)->ops.setEx(key, value, lifetime));
 	}
 
 	@Override
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.setEx(key, value, lifetime));
+		return execute(binaryStringOperations, (ops)->ops.setEx(key, value, lifetime));
 	}
 
 	@Override
 	public Status pSetEx(final String key, final String value, final int lifetime){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.pSetEx(key, value, lifetime));
+		return execute(stringOperations, (ops)->ops.pSetEx(key, value, lifetime));
 	}
 
 	@Override
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.pSetEx(key, value, lifetime));
+		return execute(binaryStringOperations, (ops)->ops.pSetEx(key, value, lifetime));
 	}
 
 	@Override
 	public Status setNx(final String key, final String value){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.setNx(key, value));
+		return execute(stringOperations, (ops)->ops.setNx(key, value));
 	}
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.setNx(key, value));
+		return execute(binaryStringOperations, (ops)->ops.setNx(key, value));
 	}
 
 	@Override
 	public Long append(final String key, final String value){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.append(key, value));
+		return execute(stringOperations, (ops)->ops.append(key, value));
 	}
 
 	@Override
 	public Long append(final byte[] key, final byte[] value){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.append(key, value));
+		return execute(binaryStringOperations, (ops)->ops.append(key, value));
 	}
 
 	@Override
 	public String get(final String key){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.get(key));
+		return execute(stringOperations, (ops)->ops.get(key));
 	}
 
 	@Override
 	public byte[] get(final byte[] key){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.get(key));
+		return execute(binaryStringOperations, (ops)->ops.get(key));
 	}
 
 	@Override
 	public String getSet(final String key, final String value){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.getSet(key, value));
+		return execute(stringOperations, (ops)->ops.getSet(key, value));
 	}
 
 	@Override
 	public byte[] getSet(final byte[] key, final byte[] value){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.getSet(key, value));
+		return execute(binaryStringOperations, (ops)->ops.getSet(key, value));
 	}
 
 
 	@Override
 	public Long incr(final String key){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.incr(key));
+		return execute(stringOperations, (ops)->ops.incr(key));
 	}
 
 	@Override
 	public Long incr(final byte[] key){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.incr(key));
+		return execute(binaryStringOperations, (ops)->ops.incr(key));
 	}
 
 	@Override
 	public Long incrBy(final String key, final int value){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.incrBy(key, value));
+		return execute(stringOperations, (ops)->ops.incrBy(key, value));
 	}
 
 	@Override
 	public Long incrBy(final byte[] key, final int value){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.incrBy(key, value));
+		return execute(binaryStringOperations, (ops)->ops.incrBy(key, value));
 	}
 
 	@Override
 	public Long incrBy(final String key, final long value){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.incrBy(key, value));
+		return execute(stringOperations, (ops)->ops.incrBy(key, value));
 	}
 
 	@Override
 	public Long incrBy(final byte[] key, final long value){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.incrBy(key, value));
+		return execute(binaryStringOperations, (ops)->ops.incrBy(key, value));
 	}
 
 	@Override
 	public Double incrByFloat(final String key, final float value){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.incrByFloat(key, value));
+		return execute(stringOperations, (ops)->ops.incrByFloat(key, value));
 	}
 
 	@Override
 	public Double incrByFloat(final byte[] key, final float value){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.incrByFloat(key, value));
+		return execute(binaryStringOperations, (ops)->ops.incrByFloat(key, value));
 	}
 
 	@Override
 	public Double incrByFloat(final String key, final double value){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.incrByFloat(key, value));
+		return execute(stringOperations, (ops)->ops.incrByFloat(key, value));
 	}
 
 	@Override
 	public Double incrByFloat(final byte[] key, final double value){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.incrByFloat(key, value));
+		return execute(binaryStringOperations, (ops)->ops.incrByFloat(key, value));
 	}
 
 	@Override
 	public Long decr(final String key){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.decr(key));
+		return execute(stringOperations, (ops)->ops.decr(key));
 	}
 
 	@Override
 	public Long decr(final byte[] key){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.decr(key));
+		return execute(binaryStringOperations, (ops)->ops.decr(key));
 	}
 
 	@Override
 	public Long decrBy(final String key, final int value){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.decrBy(key, value));
+		return execute(stringOperations, (ops)->ops.decrBy(key, value));
 	}
 
 	@Override
 	public Long decrBy(final byte[] key, final int value){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.decrBy(key, value));
+		return execute(binaryStringOperations, (ops)->ops.decrBy(key, value));
 	}
 
 	@Override
 	public Long decrBy(final String key, final long value){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.decrBy(key, value));
+		return execute(stringOperations, (ops)->ops.decrBy(key, value));
 	}
 
 	@Override
 	public Long decrBy(final byte[] key, final long value){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.decrBy(key, value));
+		return execute(binaryStringOperations, (ops)->ops.decrBy(key, value));
 	}
 
 	@Override
 	public Long setRange(final String key, final int offset, final String value){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.setRange(key, offset, value));
+		return execute(stringOperations, (ops)->ops.setRange(key, offset, value));
 	}
 
 	@Override
 	public Long setRange(final byte[] key, final int offset, final byte[] value){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.setRange(key, offset, value));
+		return execute(binaryStringOperations, (ops)->ops.setRange(key, offset, value));
 	}
 
 	@Override
 	public Long setRange(final String key, final long offset, final String value){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.setRange(key, offset, value));
+		return execute(stringOperations, (ops)->ops.setRange(key, offset, value));
 	}
 
 	@Override
 	public Long setRange(final byte[] key, final long offset, final byte[] value){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.setRange(key, offset, value));
+		return execute(binaryStringOperations, (ops)->ops.setRange(key, offset, value));
 	}
 
 	@Override
 	public String getRange(final String key, final int start, final int end){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.getRange(key, start, end));
+		return execute(stringOperations, (ops)->ops.getRange(key, start, end));
 	}
 
 	@Override
 	public byte[] getRange(final byte[] key, final int start, final int end){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.getRange(key, start, end));
+		return execute(binaryStringOperations, (ops)->ops.getRange(key, start, end));
 	}
 
 	@Override
 	public String getRange(final String key, final long start, final long end){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.getRange(key, start, end));
+		return execute(stringOperations, (ops)->ops.getRange(key, start, end));
 	}
 
 	@Override
 	public byte[] getRange(final byte[] key, final long start, final long end){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.getRange(key, start, end));
+		return execute(binaryStringOperations, (ops)->ops.getRange(key, start, end));
 	}
 
 	@Override
 	public String substr(final String key, final int start, final int end){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.substr(key, start, end));
+		return execute(stringOperations, (ops)->ops.substr(key, start, end));
 	}
 
 	@Override
 	public byte[] substr(final byte[] key, final int start, final int end){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.substr(key, start, end));
+		return execute(binaryStringOperations, (ops)->ops.substr(key, start, end));
 	}
 
 	@Override
 	public String substr(final String key, final long start, final long end){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.substr(key, start, end));
+		return execute(stringOperations, (ops)->ops.substr(key, start, end));
 	}
 
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.substr(key, start, end));
+		return execute(binaryStringOperations, (ops)->ops.substr(key, start, end));
 	}
 
 	@Override
 	public Long strlen(final String key){
-		return execute(stringOperations, (StringRedisOperations ops)->ops.strlen(key));
+		return execute(stringOperations, (ops)->ops.strlen(key));
 	}
 
 	@Override
 	public Long strlen(final byte[] key){
-		return execute(binaryStringOperations, (BinaryStringRedisOperations ops)->ops.strlen(key));
+		return execute(binaryStringOperations, (ops)->ops.strlen(key));
+	}
+
+	@Override
+	public boolean hExists(final String key, final String field){
+		return execute(hashOperations, (ops)->ops.hExists(key, field));
+	}
+
+	@Override
+	public boolean hExists(final byte[] key, final byte[] field){
+		return execute(binaryHashOperations, (ops)->ops.hExists(key, field));
+	}
+
+	@Override
+	public Set<String> hKeys(final String key){
+		return execute(hashOperations, (ops)->ops.hKeys(key));
+	}
+
+	@Override
+	public Set<byte[]> hKeys(final byte[] key){
+		return execute(binaryHashOperations, (ops)->ops.hKeys(key));
+	}
+
+	@Override
+	public List<String> hVals(final String key){
+		return execute(hashOperations, (ops)->ops.hVals(key));
+	}
+
+	@Override
+	public List<byte[]> hVals(final byte[] key){
+		return execute(binaryHashOperations, (ops)->ops.hVals(key));
+	}
+
+	@Override
+	public Status hSet(final String key, final String field, final String value){
+		return execute(hashOperations, (ops)->ops.hSet(key, field, value));
+	}
+
+	@Override
+	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
+		return execute(binaryHashOperations, (ops)->ops.hSet(key, field, value));
+	}
+
+	@Override
+	public Status hSetNx(final String key, final String field, final String value){
+		return execute(hashOperations, (ops)->ops.hSetNx(key, field, value));
+	}
+
+	@Override
+	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
+		return execute(binaryHashOperations, (ops)->ops.hSet(key, field, value));
+	}
+
+	@Override
+	public String hGet(final String key, final String field){
+		return execute(hashOperations, (ops)->ops.hGet(key, field));
+	}
+
+	@Override
+	public byte[] hGet(final byte[] key, final byte[] field){
+		return execute(binaryHashOperations, (ops)->ops.hGet(key, field));
+	}
+
+	@Override
+	public Status hMSet(final String key, final Map<String, String> data){
+		return execute(hashOperations, (ops)->ops.hMSet(key, data));
+	}
+
+	@Override
+	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
+		return execute(binaryHashOperations, (ops)->ops.hMSet(key, data));
+	}
+
+	@Override
+	public List<String> hMGet(final String key, final String... fields){
+		return execute(hashOperations, (ops)->ops.hMGet(key, fields));
+	}
+
+	@Override
+	public List<byte[]> hMGet(final byte[] key, final byte[]... fields){
+		return execute(binaryHashOperations, (ops)->ops.hMGet(key, fields));
+	}
+
+	@Override
+	public Map<String, String> hGetAll(final String key){
+		return execute(hashOperations, (ops)->ops.hGetAll(key));
+	}
+
+	@Override
+	public Map<byte[], byte[]> hGetAll(final byte[] key){
+		return execute(binaryHashOperations, (ops)->ops.hGetAll(key));
+	}
+
+	@Override
+	public Long hStrLen(final String key, final String field){
+		return execute(hashOperations, (ops)->ops.hStrLen(key, field));
+	}
+
+	@Override
+	public Long hStrLen(final byte[] key, final byte[] field){
+		return execute(binaryHashOperations, (ops)->ops.hStrLen(key, field));
+	}
+
+	@Override
+	public Long hLen(final String key){
+		return execute(hashOperations, (ops)->ops.hLen(key));
+	}
+
+	@Override
+	public Long hLen(final byte[] key){
+		return execute(binaryHashOperations, (ops)->ops.hLen(key));
+	}
+
+	@Override
+	public Long hIncrBy(final String key, final String field, final int value){
+		return execute(hashOperations, (ops)->ops.hIncrBy(key, field, value));
+	}
+
+	@Override
+	public Long hIncrBy(final byte[] key, final byte[] field, final int value){
+		return execute(binaryHashOperations, (ops)->ops.hIncrBy(key, field, value));
+	}
+
+	@Override
+	public Long hIncrBy(final String key, final String field, final long value){
+		return execute(hashOperations, (ops)->ops.hIncrBy(key, field, value));
+	}
+
+	@Override
+	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
+		return execute(binaryHashOperations, (ops)->ops.hIncrBy(key, field, value));
+	}
+
+	@Override
+	public Double hIncrByFloat(final String key, final String field, final float value){
+		return execute(hashOperations, (ops)->ops.hIncrByFloat(key, field, value));
+	}
+
+	@Override
+	public Double hIncrByFloat(final byte[] key, final byte[] field, final float value){
+		return execute(binaryHashOperations, (ops)->ops.hIncrByFloat(key, field, value));
+	}
+
+	@Override
+	public Double hIncrByFloat(final String key, final String field, final double value){
+		return execute(hashOperations, (ops)->ops.hIncrByFloat(key, field, value));
+	}
+
+	@Override
+	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
+		return execute(binaryHashOperations, (ops)->ops.hIncrByFloat(key, field, value));
+	}
+
+	@Override
+	public Long hDecrBy(final String key, final String field, final int value){
+		return execute(hashOperations, (ops)->ops.hDecrBy(key, field, value));
+	}
+
+	@Override
+	public Long hDecrBy(final byte[] key, final byte[] field, final int value){
+		return execute(binaryHashOperations, (ops)->ops.hDecrBy(key, field, value));
+	}
+
+	@Override
+	public Long hDecrBy(final String key, final String field, final long value){
+		return execute(hashOperations, (ops)->ops.hDecrBy(key, field, value));
+	}
+
+	@Override
+	public Long hDecrBy(final byte[] key, final byte[] field, final long value){
+		return execute(binaryHashOperations, (ops)->ops.hDecrBy(key, field, value));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final int cursor){
+		return execute(hashOperations, (ops)->ops.hScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor){
+		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor){
+		return execute(hashOperations, (ops)->ops.hScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor){
+		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
+		return execute(hashOperations, (ops)->ops.hScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
+		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern){
+		return execute(hashOperations, (ops)->ops.hScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern){
+		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
+		return execute(hashOperations, (ops)->ops.hScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern){
+		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
+		return execute(hashOperations, (ops)->ops.hScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final int count){
+		return execute(hashOperations, (ops)->ops.hScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final int count){
+		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count){
+		return execute(hashOperations, (ops)->ops.hScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count){
+		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count){
+		return execute(hashOperations, (ops)->ops.hScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
+		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern,
+			final int count){
+		return execute(hashOperations, (ops)->ops.hScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
+			final int count){
+		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
+			final int count){
+		return execute(hashOperations, (ops)->ops.hScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern,
+			final int count){
+		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
+			final int count){
+		return execute(hashOperations, (ops)->ops.hScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+			final int count){
+		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public Long hDel(final String key, final String... fields){
+		return execute(hashOperations, (ops)->ops.hDel(key, fields));
+	}
+
+	@Override
+	public Long hDel(final byte[] key, final byte[]... fields){
+		return execute(binaryHashOperations, (ops)->ops.hDel(key, fields));
 	}
 
 	protected <O extends RedisOperations, R> R execute(final O operations, final Executor<O, R> executor){
