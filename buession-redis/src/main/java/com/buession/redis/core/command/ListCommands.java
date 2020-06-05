@@ -55,8 +55,8 @@ public interface ListCommands extends RedisCommands {
 	/**
 	 * 将一个或多个值 value 插入到列表 key 的表头，当且仅当 key 存在并且是一个列表
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/lpushx.html" target="_blank">http://redisdoc.com/list/lpushx
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/list/lpushx.html" target="_blank">http://redisdoc.com/list/lpushx.html</a>
+	 * </p>
 	 *
 	 * @param key
 	 * 		Key
@@ -194,8 +194,9 @@ public interface ListCommands extends RedisCommands {
 	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
 	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush.html</a>
+	 * </p>
 	 *
 	 * @param source
 	 * 		Key
@@ -228,8 +229,9 @@ public interface ListCommands extends RedisCommands {
 	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush.html</a>
+	 * </p>
 	 *
 	 * @param source
 	 * 		Key
@@ -277,8 +279,8 @@ public interface ListCommands extends RedisCommands {
 	 * 如果 start 下标比列表的最大下标 end ( LLEN list 减去 1 )还要大，或者 start &gt; stop ，则移除整个列表；
 	 * 如果 stop 下标比 end 下标还要大，Redis将 stop 的值设置为 end
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/ltrim.html" target="_blank">http://redisdoc.com/list/ltrim.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/list/ltrim.html" target="_blank">http://redisdoc.com/list/ltrim
+	 * .html</a></p>
 	 *
 	 * @param key
 	 * 		Key

@@ -136,7 +136,18 @@ public class DefaultJedisListRedisOperations<C extends JedisCommands> extends Ab
 					if(cmd instanceof Jedis){
 						return ((Jedis) cmd).blpop(timeout, keys);
 					}else{
-						return cmd.blpop(timeout, keys[0]);
+						List<String> result = new ArrayList<>(keys.length);
+						List<String> ret;
+						
+						for(String key : keys){
+							ret = cmd.blpop(timeout, key);
+
+							if(ret != null){
+								result.addAll(ret);
+							}
+						}
+
+						return result;
 					}
 				}
 			}

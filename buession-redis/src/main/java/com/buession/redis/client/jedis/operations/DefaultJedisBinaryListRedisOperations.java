@@ -37,6 +37,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.commands.BinaryJedisCommands;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -141,8 +142,18 @@ public class DefaultJedisBinaryListRedisOperations<C extends BinaryJedisCommands
 					if(cmd instanceof Jedis){
 						return ((Jedis) cmd).blpop(timeout, keys);
 					}else{
+						ShardedJedis shardedJedis = (ShardedJedis) cmd;
 						String[] strKeys = SafeEncoder.encode(keys);
-						ret = ((ShardedJedis) cmd).blpop(timeout, strKeys[0]);
+						List<String> retVal;
+						ret = new ArrayList<>(keys.length);
+
+						for(String key : strKeys){
+							retVal = shardedJedis.blpop(timeout, key);
+
+							if(ret != null){
+								ret.addAll(retVal);
+							}
+						}
 					}
 				}
 

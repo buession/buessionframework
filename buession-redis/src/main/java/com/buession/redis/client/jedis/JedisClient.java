@@ -174,4 +174,24 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		return execute(binaryStringOperations, (ops)->ops.mGet());
 	}
 
+	@Override
+	public String rPoplPush(final String source, final String destKey){
+		return execute(listOperations, (ops)->ops.rPoplPush(source, destKey));
+	}
+
+	@Override
+	public byte[] rPoplPush(final byte[] source, final byte[] destKey){
+		return execute(binaryListOperations, (ops)->ops.rPoplPush(source, destKey));
+	}
+
+	@Override
+	public String brPoplPush(final String source, final String destKey, final int timeout){
+		return execute(listOperations, (ops)->ops.brPoplPush(source, destKey, timeout));
+	}
+
+	@Override
+	public byte[] brPoplPush(final byte[] source, final byte[] destKey, final int timeout){
+		return execute(binaryListOperations, (ops)->ops.brPoplPush(source, destKey, timeout));
+	}
+
 }
