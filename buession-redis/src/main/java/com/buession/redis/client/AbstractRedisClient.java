@@ -2396,6 +2396,126 @@ public abstract class AbstractRedisClient implements RedisClient {
 		return execute(binarySortedSetOperations, (ops)->ops.zLexCount(key, min, max));
 	}
 
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final int cursor){
+		return execute(sortedSetOperations, (ops)->ops.zScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor){
+		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor){
+		return execute(sortedSetOperations, (ops)->ops.zScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor){
+		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor){
+		return execute(sortedSetOperations, (ops)->ops.zScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor){
+		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern){
+		return execute(sortedSetOperations, (ops)->ops.zScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final byte[] pattern){
+		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor, patten));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern){
+		return execute(sortedSetOperations, (ops)->ops.zScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern){
+		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern){
+		return execute(sortedSetOperations, (ops)->ops.zScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor, pattern));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final int count){
+		return execute(sortedSetOperations, (ops)->ops.zScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final int count){
+		return execute(sortedSetOperations, (ops)->ops.zScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final int count){
+		return execute(sortedSetOperations, (ops)->ops.zScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor, count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern, final int count){
+		return execute(sortedSetOperations, (ops)->ops.zScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final byte[] pattern, final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final int count){
+		return execute(sortedSetOperations, (ops)->ops.zScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern, final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final int count){
+		return execute(sortedSetOperations, (ops)->ops.zScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor, pattern, count));
+	}
+
 	protected <O extends RedisOperations, R> R execute(final O operations, final Executor<O, R> executor){
 		RedisConnection connection;
 
