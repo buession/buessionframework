@@ -348,4 +348,24 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		return execute(binarySortedSetOperations, (ops)->ops.zUnionStore(destKey, aggregate, weights, keys));
 	}
 
+	@Override
+	public Status pfMerge(final String destKey, final String... keys){
+		return execute(hyperLogLogOperations, (ops)->ops.pfMerge(destKey, keys));
+	}
+
+	@Override
+	public Status pfMerge(final byte[] destKey, final byte[]... keys){
+		return execute(binaryHyperLogLogOperations, (ops)->ops.pfMerge(destKey, keys));
+	}
+
+	@Override
+	public Long pfCount(final String... keys){
+		return execute(hyperLogLogOperations, (ops)->ops.pfCount(keys));
+	}
+
+	@Override
+	public Long pfCount(final byte[]... keys){
+		return execute(binaryHyperLogLogOperations, (ops)->ops.pfCount(keys));
+	}
+
 }

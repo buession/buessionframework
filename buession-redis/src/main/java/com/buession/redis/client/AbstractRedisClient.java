@@ -2319,7 +2319,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max, final int offset,
 			final int count){
-		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count))
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
@@ -2433,7 +2433,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final byte[] pattern){
-		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor, patten));
+		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor, pattern));
 	}
 
 	@Override
@@ -2514,6 +2514,16 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zScan(key, cursor, pattern, count));
+	}
+	
+	@Override
+	public Status pfAdd(final String key, final String... elements){
+		return execute(hyperLogLogOperations, (HyperLogLogRedisOperations ops)->ops.pfAdd(key, elements));
+	}
+
+	@Override
+	public Status pfAdd(final byte[] key, final byte[]... elements){
+		return execute(binaryHyperLogLogOperations, (BinaryHyperLogLogRedisOperations ops)->ops.pfAdd(key, elements));
 	}
 
 	protected <O extends RedisOperations, R> R execute(final O operations, final Executor<O, R> executor){
