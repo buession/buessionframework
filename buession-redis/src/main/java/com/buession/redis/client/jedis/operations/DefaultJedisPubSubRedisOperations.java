@@ -82,7 +82,6 @@ public class DefaultJedisPubSubRedisOperations<C extends JedisCommands> extends 
 				}else{
 					if(cmd instanceof Jedis){
 						((Jedis) cmd).subscribe(new DefaultJedisPubSub(pubSubListener), channels);
-
 						return null;
 					}else{
 						throw new NotSupportedCommandException(ProtocolCommand.SUBSCRIBE);
@@ -108,7 +107,6 @@ public class DefaultJedisPubSubRedisOperations<C extends JedisCommands> extends 
 				}else{
 					if(cmd instanceof Jedis){
 						((Jedis) cmd).psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
-
 						return null;
 					}else{
 						throw new NotSupportedCommandException(ProtocolCommand.PSUBSCRIBE);

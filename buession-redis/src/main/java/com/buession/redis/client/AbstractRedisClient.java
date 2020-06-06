@@ -351,7 +351,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
-	 fnal MigrateOperation migrateOperation){
+	 final MigrateOperation migrateOperation){
 		return execute(keyOperations, (ops)->ops.migrate(key, host, port, db, timeout, migrateOperation));
 	}
 
@@ -2675,12 +2675,162 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public List<String> geoHash(final String key, final String... members){
-		return execute(geoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, unit, geoArgument));
+		return execute(geoOperations, (ops)->ops.geoHash(key, members));
 	}
 
 	@Override
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members){
-		return execute(binaryGeoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, unit, geoArgument));
+		return execute(binaryGeoOperations, (ops)->ops.geoHash(key, members));
+	}
+
+	@Override
+	public Status setBit(final String key, final int offset, final String value){
+		return execute(bitMapOperations, (ops)->ops.setBit(key, offset, value));
+	}
+
+	@Override
+	public Status setBit(final byte[] key, final int offset, final byte[] value){
+		return execute(binaryBitMapOperations, (ops)->ops.setBit(key, offset, value));
+	}
+
+	@Override
+	public Status setBit(final String key, final long offset, final String value){
+		return execute(bitMapOperations, (ops)->ops.setBit(key, offset, value));
+	}
+
+	@Override
+	public Status setBit(final byte[] key, final long offset, final byte[] value){
+		return execute(binaryBitMapOperations, (ops)->ops.setBit(key, offset, value));
+	}
+
+	@Override
+	public Status setBit(final String key, final int offset, final boolean value){
+		return execute(bitMapOperations, (ops)->ops.setBit(key, offset, value));
+	}
+
+	@Override
+	public Status setBit(final byte[] key, final int offset, final boolean value){
+		return execute(binaryBitMapOperations, (ops)->ops.setBit(key, offset, value));
+	}
+
+	@Override
+	public Status setBit(final String key, final long offset, final boolean value){
+		return execute(bitMapOperations, (ops)->ops.setBit(key, offset, value));
+	}
+
+	@Override
+	public Status setBit(final byte[] key, final long offset, final boolean value){
+		return execute(binaryBitMapOperations, (ops)->ops.setBit(key, offset, value));
+	}
+
+	@Override
+	public Status getBit(final String key, final int offset){
+		return execute(bitMapOperations, (ops)->ops.getBit(key, offset));
+	}
+
+	@Override
+	public Status getBit(final byte[] key, final int offset){
+		return execute(binaryBitMapOperations, (ops)->ops.getBit(key, offset));
+	}
+
+	@Override
+	public Status getBit(final String key, final long offset){
+		return execute(bitMapOperations, (ops)->ops.getBit(key, offset));
+	}
+
+	@Override
+	public Status getBit(final byte[] key, final long offset){
+		return execute(binaryBitMapOperations, (ops)->ops.getBit(key, offset));
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value){
+		return execute(bitMapOperations, (ops)->ops.bitPos(key, value));
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value){
+		return execute(binaryBitMapOperations, (ops)->ops.bitPos(key, value));
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final int start, final int end){
+		return execute(bitMapOperations, (ops)->ops.bitPos(key, value, start, end));
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final int start, final int end){
+		return execute(binaryBitMapOperations, (ops)->ops.bitPos(key, value, start, end));
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final long start, final long end){
+		return execute(bitMapOperations, (ops)->ops.bitPos(key, value, start, end));
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final long start, final long end){
+		return execute(binaryBitMapOperations, (ops)->ops.bitPos(key, value, start, end));
+	}
+
+	@Override
+	public List<Long> bitField(final String key, final String... arguments){
+		return execute(bitMapOperations, (ops)->ops.bitField(key, arguments));
+	}
+
+	@Override
+	public List<Long> bitField(final byte[] key, final byte[]... arguments){
+		return execute(binaryBitMapOperations, (ops)->ops.bitField(key, arguments));
+	}
+
+	@Override
+	public Long bitCount(final String key){
+		return execute(bitMapOperations, (ops)->ops.bitCount(key));
+	}
+
+	@Override
+	public Long bitCount(final byte[] key){
+		return execute(binaryBitMapOperations, (ops)->ops.bitCount(key));
+	}
+
+	@Override
+	public Long bitCount(final String key, final int start, final int end){
+		return execute(bitMapOperations, (ops)->ops.bitCount(key, start, end));
+	}
+
+	@Override
+	public Long bitCount(final byte[] key, final int start, final int end){
+		return execute(binaryBitMapOperations, (ops)->ops.bitCount(key, start, end));
+	}
+
+	@Override
+	public Long bitCount(final String key, final long start, final long end){
+		return execute(bitMapOperations, (ops)->ops.bitCount(key, start, end));
+	}
+
+	@Override
+	public Long bitCount(final byte[] key, final long start, final long end){
+		return execute(binaryBitMapOperations, (ops)->ops.bitCount(key, start, end));
+	}
+
+	@Override
+	public String echo(final String str){
+		return execute(debugOperations, (ops)->ops.echo(str));
+	}
+
+	@Override
+	public byte[] echo(final byte[] str){
+		return execute(binaryDebugOperations, (ops)->ops.echo(str));
+	}
+
+	@Override
+	public Object object(final ObjectCommand command, final String key){
+		return execute(debugOperations, (ops)->ops.object(command, key));
+	}
+
+	@Override
+	public Object object(final ObjectCommand command, final byte[] key){
+		return execute(binaryDebugOperations, (ops)->ops.object(command, key));
 	}
 
 	protected <O extends RedisOperations, R> R execute(final O operations, final Executor<O, R> executor){

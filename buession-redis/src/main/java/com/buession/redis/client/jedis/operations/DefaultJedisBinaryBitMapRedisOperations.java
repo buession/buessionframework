@@ -153,8 +153,6 @@ public class DefaultJedisBinaryBitMapRedisOperations<C extends BinaryJedisComman
 				}else{
 					if(cmd instanceof Jedis){
 						return ((Jedis) cmd).bitop(JedisClientUtils.bitOperationConvert(operation), destKey, keys);
-					}else if(cmd instanceof ShardedJedis){
-						return getShard((ShardedJedis) cmd, destKey).bitop(JedisClientUtils.bitOperationConvert(operation), destKey, keys);
 					}else{
 						throw new NotSupportedCommandException(ProtocolCommand.BITOP);
 					}

@@ -24,22 +24,23 @@
  */
 package com.buession.redis.client.jedis;
 
+import com.buession.core.Executor;
 import com.buession.lang.Status;
-import com.buession.redis.client.operations.BinaryHyperLogLogRedisOperations;
-import com.buession.redis.client.operations.BinaryKeyRedisOperations;
-import com.buession.redis.client.operations.BinaryListRedisOperations;
-import com.buession.redis.client.operations.BinarySetRedisOperations;
-import com.buession.redis.client.operations.BinarySortedSetRedisOperations;
-import com.buession.redis.client.operations.BinaryStringRedisOperations;
+import com.buession.redis.client.operations.BinaryPubSubRedisOperations;
 import com.buession.redis.client.GenericRedisClient;
-import com.buession.redis.client.operations.HyperLogLogRedisOperations;
-import com.buession.redis.client.operations.KeyRedisOperations;
-import com.buession.redis.client.operations.ListRedisOperations;
-import com.buession.redis.client.operations.SetRedisOperations;
-import com.buession.redis.client.operations.SortedSetRedisOperations;
-import com.buession.redis.client.operations.StringRedisOperations;
+import com.buession.redis.client.operations.ClientAndServerRedisOperations;
+import com.buession.redis.client.operations.DebugRedisOperations;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.operations.PubSubRedisOperations;
+import com.buession.redis.client.operations.TransactionRedisOperations;
+import com.buession.redis.core.Client;
+import com.buession.redis.core.Info;
+import com.buession.redis.core.PubSubListener;
+import com.buession.redis.core.RedisMonitor;
+import com.buession.redis.core.RedisServerTime;
+import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.transaction.Transaction;
 import redis.clients.jedis.Jedis;
 
 import java.util.List;
@@ -366,6 +367,518 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	@Override
 	public Long pfCount(final byte[]... keys){
 		return execute(binaryHyperLogLogOperations, (ops)->ops.pfCount(keys));
+	}
+
+	@Override
+	public Long bitOp(final Operation operation, final String destKey, final String... keys){
+		return execute(bitMapOperations, (ops)->ops.bitOp(operation, destKey, keys));
+	}
+
+	@Override
+	public Long bitOp(final Operation operation, final byte[] destKey, final byte[]... keys){
+		return execute(binaryBitMapOperations, (ops)->ops.bitOp(operation, destKey, keys));
+	}
+
+	@Override
+	public Transaction multi(){
+		return execute(transactionOperations, (ops)->ops.multi());
+	}
+
+	@Override
+	public void exec(final Transaction transaction){
+		execute(transactionOperations, new Executor<TransactionRedisOperations, Void>() {
+
+			@Override
+			public Void execute(TransactionRedisOperations ops){
+				ops.exec(transaction);
+				return null;
+			}
+
+		});
+	}
+
+	@Override
+	public void discard(final Transaction transaction){
+		execute(transactionOperations, new Executor<TransactionRedisOperations, Void>() {
+
+			@Override
+			public Void execute(TransactionRedisOperations ops){
+				ops.discard(transaction);
+				return null;
+			}
+
+		});
+	}
+
+	@Override
+	public Status watch(final String... keys){
+		return execute(transactionOperations, (ops)->ops.watch(keys));
+	}
+
+	@Override
+	public Status watch(final byte[]... keys){
+		return execute(binaryTransactionOperations, (ops)->ops.watch(keys));
+	}
+
+	@Override
+	public Status unwatch(){
+		return execute(transactionOperations, (ops)->ops.unwatch());
+	}
+
+	@Override
+	public Long publish(final String channel, final String message){
+		return execute(pubSubOperations, (ops)->ops.publish(channel, message));
+	}
+
+	@Override
+	public Long publish(final byte[] channel, final byte[] message){
+		return execute(binaryPubSubOperations, (ops)->ops.publish(channel, message));
+	}
+
+	@Override
+	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
+		execute(pubSubOperations, new Executor<PubSubRedisOperations, Void>() {
+
+			@Override
+			public Void execute(PubSubRedisOperations ops){
+				ops.subscribe(channels, pubSubListener);
+				return null;
+			}
+
+		});
+	}
+
+	@Override
+	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
+		execute(binaryPubSubOperations, new Executor<BinaryPubSubRedisOperations, Void>() {
+
+			@Override
+			public Void execute(BinaryPubSubRedisOperations ops){
+				ops.subscribe(channels, pubSubListener);
+				return null;
+			}
+
+		});
+	}
+
+	@Override
+	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
+		execute(pubSubOperations, new Executor<PubSubRedisOperations, Void>() {
+
+			@Override
+			public Void execute(PubSubRedisOperations ops){
+				ops.pSubscribe(patterns, pubSubListener);
+				return null;
+			}
+
+		});
+	}
+
+	@Override
+	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
+		execute(binaryPubSubOperations, new Executor<BinaryPubSubRedisOperations, Void>() {
+
+			@Override
+			public Void execute(BinaryPubSubRedisOperations ops){
+				ops.pSubscribe(patterns, pubSubListener);
+				return null;
+			}
+
+		});
+	}
+
+	@Override
+	public Object unSubscribe(){
+		return execute(pubSubOperations, (ops)->ops.unSubscribe());
+	}
+
+	@Override
+	public Object unSubscribe(final String... channels){
+		return execute(pubSubOperations, (ops)->ops.unSubscribe(channels));
+	}
+
+	@Override
+	public Object unSubscribe(final byte[]... channels){
+		return execute(binaryPubSubOperations, (ops)->ops.unSubscribe(channels));
+	}
+
+	@Override
+	public Object pUnSubscribe(){
+		return execute(pubSubOperations, (ops)->ops.pUnSubscribe());
+	}
+
+	@Override
+	public Object pUnSubscribe(final String... patterns){
+		return execute(pubSubOperations, (ops)->ops.pUnSubscribe(patterns));
+	}
+
+	@Override
+	public Object pUnSubscribe(final byte[]... patterns){
+		return execute(binaryPubSubOperations, (ops)->ops.pUnSubscribe(patterns));
+	}
+
+	@Override
+	public Status select(final int db){
+		return execute(databaseOperations, (ops)->ops.select(db));
+	}
+
+	@Override
+	public Status swapdb(final int db1, final int db2){
+		return execute(databaseOperations, (ops)->ops.swapdb(db1, db2));
+	}
+
+	@Override
+	public Long dbSize(){
+		return execute(databaseOperations, (ops)->ops.dbSize());
+	}
+
+	@Override
+	public Status flushDb(){
+		return execute(databaseOperations, (ops)->ops.flushDb());
+	}
+
+	@Override
+	public Status flushAll(){
+		return execute(databaseOperations, (ops)->ops.flushAll());
+	}
+
+	@Override
+	public Object eval(final String script){
+		return execute(luaOperations, (ops)->ops.eval(script));
+	}
+
+	@Override
+	public Object eval(final byte[] script){
+		return execute(binaryLuaOperations, (ops)->ops.eval(script));
+	}
+
+	@Override
+	public Object eval(final String script, final String... params){
+		return execute(luaOperations, (ops)->ops.eval(script, params));
+	}
+
+	@Override
+	public Object eval(final byte[] script, final byte[]... params){
+		return execute(binaryLuaOperations, (ops)->ops.eval(script, params));
+	}
+
+	@Override
+	public Object eval(final String script, final String[] keys, final String[] arguments){
+		return execute(luaOperations, (ops)->ops.eval(script, keys, arguments));
+	}
+
+	@Override
+	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments){
+		return execute(binaryLuaOperations, (ops)->ops.eval(script, keys, arguments));
+	}
+
+	@Override
+	public Object evalSha(final String digest){
+		return execute(luaOperations, (ops)->ops.evalSha(digest));
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest){
+		return execute(binaryLuaOperations, (ops)->ops.evalSha(digest));
+	}
+
+	@Override
+	public Object evalSha(final String digest, final String... params){
+		return execute(luaOperations, (ops)->ops.evalSha(digest, params));
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest, final byte[]... params){
+		return execute(binaryLuaOperations, (ops)->ops.evalSha(digest, params));
+	}
+
+	@Override
+	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
+		return execute(luaOperations, (ops)->ops.evalSha(digest, keys, arguments));
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments){
+		return execute(binaryLuaOperations, (ops)->ops.evalSha(digest, keys, arguments));
+	}
+
+	@Override
+	public List<Boolean> scriptExists(final String... sha1){
+		return execute(luaOperations, (ops)->ops.scriptExists(sha1));
+	}
+
+	@Override
+	public List<Boolean> scriptExists(final byte[]... sha1){
+		return execute(binaryLuaOperations, (ops)->ops.scriptExists(sha1));
+	}
+
+	@Override
+	public String scriptLoad(final String script){
+		return execute(luaOperations, (ops)->ops.scriptLoad(script));
+	}
+
+	@Override
+	public byte[] scriptLoad(final byte[] script){
+		return execute(binaryLuaOperations, (ops)->ops.scriptLoad(script));
+	}
+
+	@Override
+	public Status scriptKill(){
+		return execute(luaOperations, (ops)->ops.scriptKill());
+	}
+
+	@Override
+	public Status scriptFlush(){
+		return execute(luaOperations, (ops)->ops.scriptFlush());
+	}
+
+	@Override
+	public Status save(){
+		return execute(persistenceOperations, (ops)->ops.save());
+	}
+
+	@Override
+	public String bgSave(){
+		return execute(persistenceOperations, (ops)->ops.bgSave());
+	}
+
+	@Override
+	public String bgRewriteAof(){
+		return execute(persistenceOperations, (ops)->ops.bgRewriteAof());
+	}
+
+	@Override
+	public Long lastSave(){
+		return execute(persistenceOperations, (ops)->ops.lastSave());
+	}
+
+	@Override
+	public Status slaveOf(final String host, final int port){
+		return execute(replicationOperations, (ops)->ops.slaveOf(host, port));
+	}
+
+	@Override
+	public Status slaveOf(final byte[] host, final int port){
+		return execute(binaryReplicationOperations, (ops)->ops.slaveOf(host, port));
+	}
+
+	@Override
+	public Role role(){
+		return execute(replicationOperations, (ops)->ops.role());
+	}
+
+	@Override
+	public Status auth(final String password){
+		return execute(clientAndServerOperations, (ops)->ops.auth(password));
+	}
+
+	@Override
+	public Status auth(final byte[] password){
+		return execute(binaryClientAndServerOperations, (ops)->ops.auth(password));
+	}
+
+	@Override
+	public Info info(final InfoSection section){
+		return execute(clientAndServerOperations, (ops)->ops.info(section));
+	}
+
+	@Override
+	public Info info(){
+		return execute(clientAndServerOperations, (ops)->ops.info());
+	}
+
+	@Override
+	public RedisServerTime time(){
+		return execute(clientAndServerOperations, (ops)->ops.time());
+	}
+
+	@Override
+	public Status clientSetName(final String name){
+		return execute(clientAndServerOperations, (ops)->ops.clientSetName(name));
+	}
+
+	@Override
+	public Status clientSetName(final byte[] name){
+		return execute(binaryClientAndServerOperations, (ops)->ops.clientSetName(name));
+	}
+
+	@Override
+	public String clientGetName(){
+		return execute(clientAndServerOperations, (ops)->ops.clientGetName());
+	}
+
+	@Override
+	public List<Client> clientList(){
+		return execute(clientAndServerOperations, (ops)->ops.clientList());
+	}
+
+	@Override
+	public Status clientKill(final String host, final int port){
+		return execute(clientAndServerOperations, (ops)->ops.clientKill(host, port));
+	}
+
+	@Override
+	public Status quit(){
+		return execute(clientAndServerOperations, (ops)->ops.quit());
+	}
+
+	@Override
+	public void shutdown(){
+		execute(clientAndServerOperations, new Executor<ClientAndServerRedisOperations, Void>() {
+
+			@Override
+			public Void execute(ClientAndServerRedisOperations ops){
+				ops.shutdown();
+				return null;
+			}
+
+		});
+	}
+
+	@Override
+	public void shutdown(final boolean save){
+		execute(clientAndServerOperations, new Executor<ClientAndServerRedisOperations, Void>() {
+
+			@Override
+			public Void execute(ClientAndServerRedisOperations ops){
+				ops.shutdown(save);
+				return null;
+			}
+
+		});
+	}
+
+	@Override
+	public Status configSet(final String parameter, final float value){
+		return execute(configureOperations, (ops)->ops.configSet(parameter, value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final float value){
+		return execute(binaryConfigureOperations, (ops)->ops.configSet(parameter, value));
+	}
+
+	@Override
+	public Status configSet(final String parameter, final double value){
+		return execute(configureOperations, (ops)->ops.configSet(parameter, value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final double value){
+		return execute(binaryConfigureOperations, (ops)->ops.configSet(parameter, value));
+	}
+
+	@Override
+	public Status configSet(final String parameter, final int value){
+		return execute(configureOperations, (ops)->ops.configSet(parameter, value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final int value){
+		return execute(binaryConfigureOperations, (ops)->ops.configSet(parameter, value));
+	}
+
+	@Override
+	public Status configSet(final String parameter, final long value){
+		return execute(configureOperations, (ops)->ops.configSet(parameter, value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final long value){
+		return execute(binaryConfigureOperations, (ops)->ops.configSet(parameter, value));
+	}
+
+	@Override
+	public Status configSet(final String parameter, final String value){
+		return execute(configureOperations, (ops)->ops.configSet(parameter, value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final byte[] value){
+		return execute(binaryConfigureOperations, (ops)->ops.configSet(parameter, value));
+	}
+
+	@Override
+	public List<String> configGet(final String parameter){
+		return execute(configureOperations, (ops)->ops.configGet(parameter));
+	}
+
+	@Override
+	public List<byte[]> configGet(final byte[] parameter){
+		return execute(binaryConfigureOperations, (ops)->ops.configGet(parameter));
+	}
+
+	@Override
+	public Status configResetStat(){
+		return execute(configureOperations, (ops)->ops.configResetStat());
+	}
+
+	@Override
+	public Status configRewrite(){
+		return execute(configureOperations, (ops)->ops.configRewrite());
+	}
+
+	@Override
+	public Object sync(){
+		return execute(internalOperations, (ops)->ops.sync());
+	}
+
+	@Override
+	public Object pSync(final String masterRunId, final int offset){
+		return execute(internalOperations, (ops)->ops.pSync(masterRunId, offset));
+	}
+
+	@Override
+	public Object pSync(final byte[] masterRunId, final int offset){
+		return execute(binaryInternalOperations, (ops)->ops.pSync(masterRunId, offset));
+	}
+
+	@Override
+	public Object pSync(final String masterRunId, final long offset){
+		return execute(internalOperations, (ops)->ops.pSync(masterRunId, offset));
+	}
+
+	@Override
+	public Object pSync(final byte[] masterRunId, final long offset){
+		return execute(binaryInternalOperations, (ops)->ops.pSync(masterRunId, offset));
+	}
+
+	@Override
+	public Status ping(){
+		return execute(debugOperations, (ops)->ops.ping());
+	}
+
+	@Override
+	public Object slowLog(final SlowLogCommand command, final String... arguments){
+		return execute(debugOperations, (ops)->ops.slowLog(command, arguments));
+	}
+
+	@Override
+	public Object slowLog(final SlowLogCommand command, final byte[]... arguments){
+		return execute(binaryDebugOperations, (ops)->ops.slowLog(command, arguments));
+	}
+
+	@Override
+	public void monitor(final RedisMonitor redisMonitor){
+		execute(debugOperations, new Executor<DebugRedisOperations, Void>() {
+
+			@Override
+			public Void execute(DebugRedisOperations ops){
+				ops.monitor(redisMonitor);
+				return null;
+			}
+
+		});
+	}
+
+	@Override
+	public String debugObject(final String key){
+		return execute(debugOperations, (ops)->ops.debugObject(key));
+	}
+
+	@Override
+	public String debugSegfault(){
+		return execute(debugOperations, (ops)->ops.debugSegfault());
 	}
 
 }
