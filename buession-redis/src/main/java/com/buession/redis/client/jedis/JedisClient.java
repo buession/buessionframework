@@ -264,4 +264,88 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		return execute(binarySetOperations, (ops)->ops.sMove(source, destKey, member));
 	}
 
+	@Override
+	public Long zInterStore(final String destKey, final String... keys){
+		return execute(sortedSetOperations, (ops)->ops.zInterStore(destKey, keys));
+	}
+
+	@Override
+	public Long zInterStore(final byte[] destKey, final byte[]... keys){
+		return execute(binarySortedSetOperations, (ops)->ops.zInterStore(destKey, keys));
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final Aggregate aggregate, final String... keys){
+		return execute(sortedSetOperations, (ops)->ops.zInterStore(destKey, aggregate, keys));
+	}
+
+	@Override
+	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
+		return execute(binarySortedSetOperations, (ops)->ops.zInterStore(destKey, aggregate, keys));
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final double[] weights, final String... keys){
+		return execute(sortedSetOperations, (ops)->ops.zInterStore(destKey, weights, keys));
+	}
+
+	@Override
+	public Long zInterStore(final byte[] destKey, final double[] weights, final byte[]... keys){
+		return execute(binarySortedSetOperations, (ops)->ops.zInterStore(destKey, weights, keys));
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final Aggregate aggregate, final double[] weights,
+			final String... keys){
+		return execute(sortedSetOperations, (ops)->ops.zInterStore(destKey, aggregate, weights, keys));
+	}
+
+	@Override
+	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double[] weights,
+			final byte[]... keys){
+		return execute(binarySortedSetOperations, (ops)->ops.zInterStore(destKey, aggregate, weights, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final String... keys){
+		return execute(sortedSetOperations, (ops)->ops.zUnionStore(destKey, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final byte[] destKey, final byte[]... keys){
+		return execute(binarySortedSetOperations, (ops)->ops.zUnionStore(destKey, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final Aggregate aggregate, final String... keys){
+		return execute(sortedSetOperations, (ops)->ops.zUnionStore(destKey, aggregate, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
+		return execute(binarySortedSetOperations, (ops)->ops.zUnionStore(destKey, aggregate, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final double[] weights, final String... keys){
+		return execute(sortedSetOperations, (ops)->ops.zUnionStore(destKey, weights, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final byte[] destKey, final double[] weights, final byte[]... keys){
+		return execute(binarySortedSetOperations, (ops)->ops.zUnionStore(destKey, weights, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final Aggregate aggregate, final double[] weights,
+			final String... keys){
+		return execute(sortedSetOperations, (ops)->ops.zUnionStore(destKey, aggregate, weights, keys));
+	}
+
+	@Override
+	public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double[] weights,
+			final byte[]... keys){
+		return execute(binarySortedSetOperations, (ops)->ops.zUnionStore(destKey, aggregate, weights, keys));
+	}
+
 }

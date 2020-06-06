@@ -25,6 +25,7 @@
 package com.buession.redis.client;
 
 import com.buession.core.Executor;
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
@@ -69,6 +70,7 @@ import com.buession.redis.client.operations.SortedSetRedisOperations;
 import com.buession.redis.client.operations.StringRedisOperations;
 import com.buession.redis.client.operations.TransactionRedisOperations;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.exception.RedisException;
 import org.slf4j.Logger;
@@ -1323,6 +1325,1075 @@ public abstract class AbstractRedisClient implements RedisClient {
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 			final int count){
 		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor, pattern, count));
+	}
+
+	@Override
+	public Long zAdd(final String key, final Map<String, Number> members){
+		return execute(sortedSetOperations, (ops)->ops.zAdd(key, members));
+	}
+
+	@Override
+	public Long zAdd(final byte[] key, final Map<byte[], Number> members){
+		return execute(binarySortedSetOperations, (ops)->ops.zAdd(key, members));
+	}
+
+	@Override
+	public Long zAdd(final String key, final List<KeyValue<String, Number>> members){
+		return execute(sortedSetOperations, (ops)->ops.zAdd(key, members));
+	}
+
+	@Override
+	public Long zAdd(final byte[] key, final List<KeyValue<byte[], Number>> members){
+		return execute(binarySortedSetOperations, (ops)->ops.zAdd(key, members));
+	}
+
+	@Override
+	public Double zScore(final String key, final String member){
+		return execute(sortedSetOperations, (ops)->ops.zScore(key, member));
+	}
+
+	@Override
+	public Double zScore(final byte[] key, final byte[] member){
+		return execute(binarySortedSetOperations, (ops)->ops.zScore(key, member));
+	}
+
+	@Override
+	public Long zCard(final String key){
+		return execute(sortedSetOperations, (ops)->ops.zCard(key));
+	}
+
+	@Override
+	public Long zCard(final byte[] key){
+		return execute(binarySortedSetOperations, (ops)->ops.zCard(key));
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final float increment){
+		return execute(sortedSetOperations, (ops)->ops.zIncrBy(key, member, increment));
+	}
+
+	@Override
+	public Double zIncrBy(final byte[] key, final byte[] member, final float increment){
+		return execute(binarySortedSetOperations, (ops)->ops.zIncrBy(key, member, increment));
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final double increment){
+		return execute(sortedSetOperations, (ops)->ops.zIncrBy(key, member, increment));
+	}
+
+	@Override
+	public Double zIncrBy(final byte[] key, final byte[] member, final double increment){
+		return execute(binarySortedSetOperations, (ops)->ops.zIncrBy(key, member, increment));
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final int increment){
+		return execute(sortedSetOperations, (ops)->ops.zIncrBy(key, member, increment));
+	}
+
+	@Override
+	public Double zIncrBy(final byte[] key, final byte[] member, final int increment){
+		return execute(binarySortedSetOperations, (ops)->ops.zIncrBy(key, member, increment));
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final long increment){
+		return execute(sortedSetOperations, (ops)->ops.zIncrBy(key, member, increment));
+	}
+
+	@Override
+	public Double zIncrBy(final byte[] key, final byte[] member, final long increment){
+		return execute(binarySortedSetOperations, (ops)->ops.zIncrBy(key, member, increment));
+	}
+
+	@Override
+	public Long zCount(final String key, final float min, final float max){
+		return execute(sortedSetOperations, (ops)->ops.zCount(key, min, max));
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final float min, final float max){
+		return execute(binarySortedSetOperations, (ops)->ops.zCount(key, min, max));
+	}
+
+	@Override
+	public Long zCount(final String key, final double min, final double max){
+		return execute(sortedSetOperations, (ops)->ops.zCount(key, min, max));
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final double min, final double max){
+		return execute(binarySortedSetOperations, (ops)->ops.zCount(key, min, max));
+	}
+
+	@Override
+	public Long zCount(final String key, final int min, final int max){
+		return execute(sortedSetOperations, (ops)->ops.zCount(key, min, max));
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final int min, final int max){
+		return execute(binarySortedSetOperations, (ops)->ops.zCount(key, min, max));
+	}
+
+	@Override
+	public Long zCount(final String key, final long min, final long max){
+		return execute(sortedSetOperations, (ops)->ops.zCount(key, min, max));
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final long min, final long max){
+		return execute(binarySortedSetOperations, (ops)->ops.zCount(key, min, max));
+	}
+
+	@Override
+	public Long zCount(final String key, final String min, final String max){
+		return execute(sortedSetOperations, (ops)->ops.zCount(key, min, max));
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final byte[] min, final byte[] max){
+		return execute(binarySortedSetOperations, (ops)->ops.zCount(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRange(final String key, final int start, final int end){
+		return execute(sortedSetOperations, (ops)->ops.zRange(key, start, end));
+	}
+
+	@Override
+	public Set<byte[]> zRange(final byte[] key, final int start, final int end){
+		return execute(binarySortedSetOperations, (ops)->ops.zRange(key, start, end));
+	}
+
+	@Override
+	public Set<String> zRange(final String key, final long start, final long end){
+		return execute(sortedSetOperations, (ops)->ops.zRange(key, start, end));
+	}
+
+	@Override
+	public Set<byte[]> zRange(final byte[] key, final long start, final long end){
+		return execute(binarySortedSetOperations, (ops)->ops.zRange(key, start, end));
+	}
+
+	@Override
+	public Set<Tuple> zRangeWithScores(final String key, final int start, final int end){
+		return execute(sortedSetOperations, (ops)->ops.zRangeWithScores(key, start, end));
+	}
+
+	@Override
+	public Set<Tuple> zRangeWithScores(final byte[] key, final int start, final int end){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeWithScores(key, start, end));
+	}
+
+	@Override
+	public Set<Tuple> zRangeWithScores(final String key, final long start, final long end){
+		return execute(sortedSetOperations, (ops)->ops.zRangeWithScores(key, start, end));
+	}
+
+	@Override
+	public Set<Tuple> zRangeWithScores(final byte[] key, final long start, final long end){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeWithScores(key, start, end));
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final float min, final float max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final float min, final float max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final double min, final double max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final int min, final int max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final int min, final int max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final long min, final long max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final String min, final String max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max));
+	}
+
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final float min, final float max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final double min, final double max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final int min, final int max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final int min, final int max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final long min, final long max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final String min, final String max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final long min, final long max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, String min, final String max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final float min, final float max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final double min, final double max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final int min, final int max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final long min, final long max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final String min, final String max){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final float min, final float max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final double min, final double max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final int min, final int max, final int offset, final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max, final int offset, final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final long min, final long max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final String min, final String max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Long zRank(final String key, final String member){
+		return execute(sortedSetOperations, (ops)->ops.zRank(key, member));
+	}
+
+	@Override
+	public Long zRank(final byte[] key, final byte[] member){
+		return execute(binarySortedSetOperations, (ops)->ops.zRank(key, member));
+	}
+
+	@Override
+	public Long zRevRank(final String key, final String member){
+		return execute(sortedSetOperations, (ops)->ops.zRank(key, member));
+	}
+
+	@Override
+	public Long zRevRank(final byte[] key, final byte[] member){
+		return execute(binarySortedSetOperations, (ops)->ops.zRank(key, member));
+	}
+
+	@Override
+	public Long zRem(final String key, final String... members){
+		return execute(sortedSetOperations, (ops)->ops.zRem(key, members));
+	}
+
+	@Override
+	public Long zRem(final byte[] key, final byte[]... members){
+		return execute(binarySortedSetOperations, (ops)->ops.zRem(key, members));
+	}
+
+	@Override
+	public Long zRemRangeByRank(final String key, final int start, final int end){
+		return execute(sortedSetOperations, (ops)->ops.zRemRangeByRank(key, start, end));
+	}
+
+	@Override
+	public Long zRemRangeByRank(final byte[] key, final int start, final int end){
+		return execute(binarySortedSetOperations, (ops)->ops.zRemRangeByRank(key, start, end));
+	}
+
+	@Override
+	public Long zRemRangeByRank(final String key, final long start, final long end){
+		return execute(sortedSetOperations, (ops)->ops.zRemRangeByRank(key, start, end));
+	}
+
+	@Override
+	public Long zRemRangeByRank(final byte[] key, final long start, final long end){
+		return execute(binarySortedSetOperations, (ops)->ops.zRemRangeByRank(key, start, end));
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final float min, final float max){
+		return execute(sortedSetOperations, (ops)->ops.zRemRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final float min, final float max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRemRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final double min, final double max){
+		return execute(sortedSetOperations, (ops)->zRemRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final double min, final double max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRemRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final int min, final int max){
+		return execute(sortedSetOperations, (ops)->ops.zRemRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final int min, final int max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRemRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final long min, final long max){
+		return execute(sortedSetOperations, (ops)->ops.zRemRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final long min, final long max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRemRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final String min, final String max){
+		return execute(sortedSetOperations, (ops)->ops.zRemRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRemRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final float min, final float max){
+		return execute(sortedSetOperations, (ops)->ops.zRemRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final byte[] key, final float min, final float max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRemRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final double min, final double max){
+		return execute(sortedSetOperations, (ops)->ops.zRemRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final byte[] key, final double min, final double max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRemRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final int min, final int max){
+		return execute(sortedSetOperations, (ops)->ops.zRemRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final byte[] key, final int min, final int max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRemRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final long min, final long max){
+		return execute(sortedSetOperations, (ops)->ops.zRemRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final byte[] key, final long min, final long max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRemRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final String min, final String max){
+		return execute(sortedSetOperations, (ops)->ops.zRemRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRemRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRevRange(final String key, final int start, final int end){
+		return execute(sortedSetOperations, (ops)->ops.zRevRange(key, start, end));
+	}
+
+	@Override
+	public Set<byte[]> zRevRange(final byte[] key, final int start, final int end){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRange(key, start, end));
+	}
+
+	@Override
+	public Set<String> zRevRange(final String key, final long start, final long end){
+		return execute(sortedSetOperations, (ops)->ops.zRevRange(key, start, end));
+	}
+
+	@Override
+	public Set<byte[]> zRevRange(final byte[] key, final long start, final long end){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRange(key, start, end));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeWithScores(final String key, final int start, final int end){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeWithScores(key, start, end));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeWithScores(final byte[] key, final int start, final int end){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeWithScores(key, start, end));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeWithScores(final String key, final long start, final long end){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeWithScores(key, start, end));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeWithScores(key, start, end));
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final float min, final float max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final float min, final float max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final double min, final double max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final int min, final int max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final int min, final int max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final long min, final long max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final long min, final long max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final String min, final String max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final float min, final float max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final double min, final double max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final int min, final int max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final int min, final int max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final long min, final long max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final String min, final String max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float min, final float max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
+			final int offset, final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
+			final int offset, final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
+			final int offset, final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
+			final int offset, final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final float min, final float max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final double min, final double max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final int min, final int max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final long min, final long max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final String min, final String max){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final float min, final float max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final double min, final double max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final int min, final int max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count))
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final long min, final long max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final String min, final String max, final int offset,
+			final int count){
+		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
+			final int count){
+		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
+	}
+
+	@Override
+	public Long zLexCount(final String key, final float min, final float max){
+		return execute(sortedSetOperations, (ops)->ops.zLexCount(key, min, max));
+	}
+
+	@Override
+	public Long zLexCount(final byte[] key, final float min, final float max){
+		return execute(binarySortedSetOperations, (ops)->ops.zLexCount(key, min, max));
+	}
+
+	@Override
+	public Long zLexCount(final String key, final double min, final double max){
+		return execute(sortedSetOperations, (ops)->ops.zLexCount(key, min, max));
+	}
+
+	@Override
+	public Long zLexCount(final byte[] key, final double min, final double max){
+		return execute(binarySortedSetOperations, (ops)->ops.zLexCount(key, min, max));
+	}
+
+	@Override
+	public Long zLexCount(final String key, final int min, final int max){
+		return execute(sortedSetOperations, (ops)->ops.zLexCount(key, min, max));
+	}
+
+	@Override
+	public Long zLexCount(final byte[] key, final int min, final int max){
+		return execute(binarySortedSetOperations, (ops)->ops.zLexCount(key, min, max));
+	}
+
+	@Override
+	public Long zLexCount(final String key, final long min, final long max){
+		return execute(sortedSetOperations, (ops)->ops.zLexCount(key, min, max));
+	}
+
+	@Override
+	public Long zLexCount(final byte[] key, final long min, final long max){
+		return execute(binarySortedSetOperations, (ops)->ops.zLexCount(key, min, max));
+	}
+
+	@Override
+	public Long zLexCount(final String key, final String min, final String max){
+		return execute(sortedSetOperations, (ops)->ops.zLexCount(key, min, max));
+	}
+
+	@Override
+	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max){
+		return execute(binarySortedSetOperations, (ops)->ops.zLexCount(key, min, max));
 	}
 
 	protected <O extends RedisOperations, R> R execute(final O operations, final Executor<O, R> executor){
