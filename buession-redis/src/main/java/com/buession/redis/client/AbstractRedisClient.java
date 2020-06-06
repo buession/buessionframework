@@ -351,7 +351,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
-	 final MigrateOperation migrateOperation){
+	 fnal MigrateOperation migrateOperation){
 		return execute(keyOperations, (ops)->ops.migrate(key, host, port, db, timeout, migrateOperation));
 	}
 
