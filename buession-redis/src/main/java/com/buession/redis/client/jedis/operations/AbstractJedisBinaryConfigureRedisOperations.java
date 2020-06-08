@@ -22,11 +22,18 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client;
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.redis.client.jedis.JedisRedisClient;
+import redis.clients.jedis.commands.BinaryJedisCommands;
 
 /**
  * @author Yong.Teng
  */
-public interface GenericRedisClient extends RedisClient {
+public abstract class AbstractJedisBinaryConfigureRedisOperations<C extends BinaryJedisCommands> extends AbstractJedisBinaryRedisOperations implements JedisBinaryConfigureRedisOperations {
+
+	public AbstractJedisBinaryConfigureRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
 
 }

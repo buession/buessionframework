@@ -22,11 +22,34 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client;
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import redis.clients.jedis.commands.BinaryJedisCommands;
 
 /**
  * @author Yong.Teng
  */
-public interface GenericRedisClient extends RedisClient {
+public abstract class AbstractJedisBinaryHyperLogLogRedisOperations<C extends BinaryJedisCommands> extends AbstractJedisBinaryRedisOperations implements JedisBinaryHyperLogLogRedisOperations {
+
+	public AbstractJedisBinaryHyperLogLogRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Status pfAdd(final byte[] key, final byte[]... elements){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("elements"
+				, elements);
+
+		if(isTransaction()){
+			return execute((C cmd)->statusForBool(getTransaction().pfadd(key, elements).get() > 0),
+					ProtocolCommand.PFADD, args);
+		}else{
+			return execute((C cmd)->statusForBool(cmd.pfadd(key, elements) > 0), ProtocolCommand.PFADD, args);
+		}
+	}
 
 }

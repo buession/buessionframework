@@ -22,11 +22,45 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client;
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import redis.clients.jedis.Jedis;
 
 /**
  * @author Yong.Teng
  */
-public interface GenericRedisClient extends RedisClient {
+public class GenericJedisBinaryHyperLogLogRedisOperations extends AbstractJedisBinaryHyperLogLogRedisOperations<Jedis> {
+
+	public GenericJedisBinaryHyperLogLogRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Status pfMerge(final byte[] destKey, final byte[]... keys){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("destKey", destKey).put(
+				"keys", keys);
+
+		if(isTransaction()){
+			return execute((Jedis cmd)->statusForOK(getTransaction().pfmerge(destKey, keys).get()),
+					ProtocolCommand.PFMERGE, args);
+		}else{
+			return execute((Jedis cmd)->statusForOK(cmd.pfmerge(destKey, keys)), ProtocolCommand.PFMERGE, args);
+		}
+	}
+
+	@Override
+	public Long pfCount(final byte[]... keys){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("keys", keys);
+
+		if(isTransaction()){
+			return execute((Jedis cmd)->getTransaction().pfcount(keys).get(), ProtocolCommand.PFCOUNT, args);
+		}else{
+			return execute((Jedis cmd)->cmd.pfcount(keys), ProtocolCommand.PFCOUNT, args);
+		}
+	}
 
 }

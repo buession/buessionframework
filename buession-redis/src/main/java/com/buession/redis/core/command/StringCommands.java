@@ -128,8 +128,8 @@ public interface StringCommands extends RedisCommands {
 	/**
 	 * 如果键 key 已经存在并且它的值是一个字符串，将 value 追加到键 key 现有值的末尾
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/string/append.html" target="_blank">http://redisdoc.com/string/append
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/string/append.html" target="_blank">http://redisdoc.com/string/append.html</a></p>
 	 *
 	 * @param key
 	 * 		Key

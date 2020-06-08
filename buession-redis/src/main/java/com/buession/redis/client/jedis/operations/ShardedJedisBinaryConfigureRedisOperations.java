@@ -22,11 +22,33 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client;
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.NotSupportedCommandException;
+import redis.clients.jedis.ShardedJedis;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public interface GenericRedisClient extends RedisClient {
+public class ShardedJedisBinaryConfigureRedisOperations extends AbstractJedisBinaryConfigureRedisOperations<ShardedJedis> {
+
+	public ShardedJedisBinaryConfigureRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final byte[] value){
+		throw new NotSupportedCommandException(ProtocolCommand.CONFIG_SET);
+	}
+
+	@Override
+	public List<byte[]> configGet(final byte[] parameter){
+		throw new NotSupportedCommandException(ProtocolCommand.CONFIG_GET);
+	}
 
 }

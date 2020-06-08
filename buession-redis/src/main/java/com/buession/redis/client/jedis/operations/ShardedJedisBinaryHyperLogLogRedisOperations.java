@@ -22,11 +22,31 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client;
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.NotSupportedCommandException;
+import redis.clients.jedis.ShardedJedis;
 
 /**
  * @author Yong.Teng
  */
-public interface GenericRedisClient extends RedisClient {
+public class ShardedJedisBinaryHyperLogLogRedisOperations extends AbstractJedisBinaryHyperLogLogRedisOperations<ShardedJedis> {
+
+	public ShardedJedisBinaryHyperLogLogRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Status pfMerge(final byte[] destKey, final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.PFMERGE);
+	}
+
+	@Override
+	public Long pfCount(final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.PFCOUNT);
+	}
 
 }

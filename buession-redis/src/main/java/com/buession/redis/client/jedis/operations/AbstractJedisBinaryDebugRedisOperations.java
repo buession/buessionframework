@@ -22,11 +22,31 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client;
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import redis.clients.jedis.commands.BinaryJedisCommands;
 
 /**
  * @author Yong.Teng
  */
-public interface GenericRedisClient extends RedisClient {
+public abstract class AbstractJedisBinaryDebugRedisOperations<C extends BinaryJedisCommands> extends AbstractJedisBinaryRedisOperations implements JedisBinaryDebugRedisOperations {
+
+	public AbstractJedisBinaryDebugRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public byte[] echo(final byte[] str){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("str", str);
+
+		if(isTransaction()){
+			return execute((C cmd)->getTransaction().echo(str).get(), ProtocolCommand.ECHO, args);
+		}else{
+			return execute((C cmd)->cmd.echo(str), ProtocolCommand.ECHO, args);
+		}
+	}
 
 }

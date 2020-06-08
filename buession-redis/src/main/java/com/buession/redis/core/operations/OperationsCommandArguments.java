@@ -25,6 +25,7 @@
 package com.buession.redis.core.operations;
 
 import com.buession.core.utils.ArrayUtils;
+import com.buession.core.validator.Validate;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -72,6 +73,38 @@ public class OperationsCommandArguments {
 
 	public Map<String, Object> build(){
 		return getParameters();
+	}
+
+	public String asString(){
+		boolean isEmpty = Validate.isEmpty(getParameters());
+		StringBuilder sb = isEmpty ? new StringBuilder() : new StringBuilder(getParameters().size() * 16);
+
+		if(isEmpty == false){
+			getParameters().forEach((name, value)->{
+				if(sb.length() > 0){
+					sb.append(", ");
+				}
+
+				sb.append(name).append(" => ");
+
+				if(value != null){
+					if(value.getClass().isArray()){
+						sb.append(ArrayUtils.toString((Object[]) value));
+					}else{
+						sb.append(value);
+					}
+				}else{
+					sb.append(value);
+				}
+			});
+		}
+
+		return sb.toString();
+	}
+
+	@Override
+	public String toString(){
+		return asString();
 	}
 
 }

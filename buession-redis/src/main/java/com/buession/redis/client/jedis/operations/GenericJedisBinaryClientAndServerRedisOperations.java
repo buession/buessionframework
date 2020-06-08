@@ -22,11 +22,46 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client;
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.exception.NotSupportedTransactionCommandException;
+import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.Jedis;
 
 /**
  * @author Yong.Teng
  */
-public interface GenericRedisClient extends RedisClient {
+public class GenericJedisBinaryClientAndServerRedisOperations extends AbstractJedisBinaryClientAndServerRedisOperations<Jedis> {
+
+	public GenericJedisBinaryClientAndServerRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Status auth(final byte[] password){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("password", "******");
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.AUTH);
+		}else{
+			return execute((Jedis cmd)->statusForOK(cmd.auth(SafeEncoder.encode(password))), ProtocolCommand.AUTH,
+					args);
+		}
+	}
+
+	@Override
+	public Status clientSetName(final byte[] name){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("name", name);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_SETNAME);
+		}else{
+			return execute((Jedis cmd)->statusForOK(cmd.clientSetname(name)), ProtocolCommand.CLIENT_SETNAME, args);
+		}
+	}
 
 }

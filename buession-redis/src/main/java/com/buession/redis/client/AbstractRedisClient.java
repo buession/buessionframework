@@ -31,50 +31,12 @@ import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
 import com.buession.redis.client.connection.RedisConnectionUtils;
-import com.buession.redis.client.operations.BinaryBitMapRedisOperations;
-import com.buession.redis.client.operations.BinaryClientAndServerRedisOperations;
-import com.buession.redis.client.operations.BinaryConfigureRedisOperations;
-import com.buession.redis.client.operations.BinaryDatabaseRedisOperations;
-import com.buession.redis.client.operations.BinaryDebugRedisOperations;
-import com.buession.redis.client.operations.BinaryGeoRedisOperations;
-import com.buession.redis.client.operations.BinaryHashRedisOperations;
-import com.buession.redis.client.operations.BinaryHyperLogLogRedisOperations;
-import com.buession.redis.client.operations.BinaryInternalRedisOperations;
-import com.buession.redis.client.operations.BinaryKeyRedisOperations;
-import com.buession.redis.client.operations.BinaryListRedisOperations;
-import com.buession.redis.client.operations.BinaryLuaRedisOperations;
-import com.buession.redis.client.operations.BinaryPersistenceRedisOperations;
-import com.buession.redis.client.operations.BinaryPubSubRedisOperations;
-import com.buession.redis.client.operations.BinaryReplicationRedisOperations;
-import com.buession.redis.client.operations.BinarySetRedisOperations;
-import com.buession.redis.client.operations.BinarySortedSetRedisOperations;
-import com.buession.redis.client.operations.BinaryStringRedisOperations;
-import com.buession.redis.client.operations.BinaryTransactionRedisOperations;
-import com.buession.redis.client.operations.BitMapRedisOperations;
-import com.buession.redis.client.operations.ClientAndServerRedisOperations;
-import com.buession.redis.client.operations.ConfigureRedisOperations;
-import com.buession.redis.client.operations.DatabaseRedisOperations;
-import com.buession.redis.client.operations.DebugRedisOperations;
-import com.buession.redis.client.operations.GeoRedisOperations;
-import com.buession.redis.client.operations.HashRedisOperations;
-import com.buession.redis.client.operations.HyperLogLogRedisOperations;
-import com.buession.redis.client.operations.InternalRedisOperations;
-import com.buession.redis.client.operations.KeyRedisOperations;
-import com.buession.redis.client.operations.ListRedisOperations;
-import com.buession.redis.client.operations.LuaRedisOperations;
-import com.buession.redis.client.operations.PersistenceRedisOperations;
-import com.buession.redis.client.operations.PubSubRedisOperations;
-import com.buession.redis.client.operations.RedisOperations;
-import com.buession.redis.client.operations.ReplicationRedisOperations;
-import com.buession.redis.client.operations.SetRedisOperations;
-import com.buession.redis.client.operations.SortedSetRedisOperations;
-import com.buession.redis.client.operations.StringRedisOperations;
-import com.buession.redis.client.operations.TransactionRedisOperations;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
-import com.buession.redis.core.Type;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
 import com.buession.redis.exception.RedisException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,87 +56,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 	private RedisConnection connection;
 
 	private boolean enableTransactionSupport = false;
-
-	protected final KeyRedisOperations keyOperations = createKeyRedisOperations();
-
-	protected final BinaryKeyRedisOperations binaryKeyOperations = createBinaryKeyRedisOperations();
-
-	protected final StringRedisOperations stringOperations = createStringRedisOperations();
-
-	protected final BinaryStringRedisOperations binaryStringOperations = createBinaryStringRedisOperations();
-
-	protected final HashRedisOperations hashOperations = createHashRedisOperations();
-
-	protected final BinaryHashRedisOperations binaryHashOperations = createBinaryHashRedisOperations();
-
-	protected final ListRedisOperations listOperations = createListRedisOperations();
-
-	protected final BinaryListRedisOperations binaryListOperations = createBinaryListRedisOperations();
-
-	protected final SetRedisOperations setOperations = createSetRedisOperations();
-
-	protected final BinarySetRedisOperations binarySetOperations = createBinarySetRedisOperations();
-
-	protected final SortedSetRedisOperations sortedSetOperations = createSortedSetRedisOperations();
-
-	protected final BinarySortedSetRedisOperations binarySortedSetOperations = createBinarySortedSetRedisOperations();
-
-	protected final HyperLogLogRedisOperations hyperLogLogOperations = createHyperLogLogRedisOperations();
-
-	protected final BinaryHyperLogLogRedisOperations binaryHyperLogLogOperations =
-	 createBinaryHyperLogLogRedisOperations();
-
-	protected final GeoRedisOperations geoOperations = createGeoRedisOperations();
-
-	protected final BinaryGeoRedisOperations binaryGeoOperations = createBinaryGeoRedisOperations();
-
-	protected final BitMapRedisOperations bitMapOperations = createBitMapRedisOperations();
-
-	protected final BinaryBitMapRedisOperations binaryBitMapOperations = createBinaryBitMapRedisOperations();
-
-	protected final TransactionRedisOperations transactionOperations = createTransactionRedisOperations();
-
-	protected final BinaryTransactionRedisOperations binaryTransactionOperations =
-	 createBinaryTransactionRedisOperations();
-
-	protected final PubSubRedisOperations pubSubOperations = createPubSubRedisOperations();
-
-	protected final BinaryPubSubRedisOperations binaryPubSubOperations = createBinaryPubSubRedisOperations();
-
-	protected final DatabaseRedisOperations databaseOperations = createDatabaseRedisOperations();
-
-	protected final BinaryDatabaseRedisOperations binaryDatabaseOperations = createBinaryDatabaseRedisOperations();
-
-	protected final LuaRedisOperations luaOperations = createLuaRedisOperations();
-
-	protected final BinaryLuaRedisOperations binaryLuaOperations = createBinaryLuaRedisOperations();
-
-	protected final PersistenceRedisOperations persistenceOperations = createPersistenceRedisOperations();
-
-	protected final BinaryPersistenceRedisOperations binaryPersistenceOperations =
-	 createBinaryPersistenceRedisOperations();
-
-	protected final ReplicationRedisOperations replicationOperations = createReplicationRedisOperations();
-
-	protected final BinaryReplicationRedisOperations binaryReplicationOperations =
-	 createBinaryReplicationRedisOperations();
-
-	protected final ClientAndServerRedisOperations clientAndServerOperations = createClientAndServerRedisOperations();
-
-	protected final BinaryClientAndServerRedisOperations binaryClientAndServerOperations =
-	 createBinaryClientAndServerRedisOperations();
-
-	protected final ConfigureRedisOperations configureOperations = createConfigureRedisOperations();
-
-	protected final BinaryConfigureRedisOperations binaryConfigureOperations = createBinaryConfigureRedisOperations();
-
-	protected final InternalRedisOperations internalOperations = createInternalRedisOperations();
-
-	protected final BinaryInternalRedisOperations binaryInternalOperations = createBinaryInternalRedisOperations();
-
-	protected final DebugRedisOperations debugOperations = createDebugRedisOperations();
-
-	protected final BinaryDebugRedisOperations binaryDebugOperations = createBinaryDebugRedisOperations();
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractRedisClient.class);
 
@@ -207,715 +88,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	public void setEnableTransactionSupport(boolean enableTransactionSupport){
 		this.enableTransactionSupport = enableTransactionSupport;
-	}
-
-	@Override
-	public boolean exists(final String key){
-		return execute(keyOperations, (ops)->ops.exists(key));
-	}
-
-	@Override
-	public boolean exists(final byte[] key){
-		return execute(binaryKeyOperations, (ops)->ops.exists(key));
-	}
-
-	@Override
-	public Type type(final String key){
-		return execute(keyOperations, (ops)->ops.type(key));
-	}
-
-	@Override
-	public Type type(final byte[] key){
-		return execute(binaryKeyOperations, (ops)->ops.type(key));
-	}
-
-	@Override
-	public Status expire(final String key, final int lifetime){
-		return execute(keyOperations, (ops)->ops.expire(key, lifetime));
-	}
-
-	@Override
-	public Status expire(final byte[] key, final int lifetime){
-		return execute(binaryKeyOperations, (ops)->ops.expire(key, lifetime));
-	}
-
-	@Override
-	public Status expireAt(final String key, final long unixTimestamp){
-		return execute(keyOperations, (ops)->ops.expireAt(key, unixTimestamp));
-	}
-
-	@Override
-	public Status expireAt(final byte[] key, final long unixTimestamp){
-		return execute(binaryKeyOperations, (ops)->ops.expireAt(key, unixTimestamp));
-	}
-
-	@Override
-	public Status pExpire(final String key, final int lifetime){
-		return execute(keyOperations, (ops)->ops.pExpire(key, lifetime));
-	}
-
-	@Override
-	public Status pExpire(final byte[] key, final int lifetime){
-		return execute(binaryKeyOperations, (ops)->ops.pExpire(key, lifetime));
-	}
-
-	@Override
-	public Status pExpireAt(final String key, final long unixTimestamp){
-		return execute(keyOperations, (ops)->ops.pExpireAt(key, unixTimestamp));
-	}
-
-	@Override
-	public Status pExpireAt(final byte[] key, final long unixTimestamp){
-		return execute(binaryKeyOperations, (ops)->ops.pExpireAt(key, unixTimestamp));
-	}
-
-	@Override
-	public Long ttl(final String key){
-		return execute(keyOperations, (ops)->ops.ttl(key));
-	}
-
-	@Override
-	public Long ttl(final byte[] key){
-		return execute(binaryKeyOperations, (ops)->ops.ttl(key));
-	}
-
-	@Override
-	public Long pTtl(final String key){
-		return execute(keyOperations, (ops)->ops.pTtl(key));
-	}
-
-	@Override
-	public Long pTtl(final byte[] key){
-		return execute(binaryKeyOperations, (ops)->ops.pTtl(key));
-	}
-
-	@Override
-	public Status persist(final String key){
-		return execute(keyOperations, (ops)->ops.persist(key));
-	}
-
-	@Override
-	public Status persist(final byte[] key){
-		return execute(binaryKeyOperations, (ops)->ops.persist(key));
-	}
-
-	@Override
-	public List<String> sort(final String key){
-		return execute(keyOperations, (ops)->ops.sort(key));
-	}
-
-	@Override
-	public List<byte[]> sort(final byte[] key){
-		return execute(binaryKeyOperations, (ops)->ops.sort(key));
-	}
-
-	@Override
-	public List<String> sort(final String key, final SortArgument sortArgument){
-		return execute(keyOperations, (ops)->ops.sort(key, sortArgument));
-	}
-
-	@Override
-	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument){
-		return execute(binaryKeyOperations, (ops)->ops.sort(key, sortArgument));
-	}
-
-	@Override
-	public byte[] dump(final String key){
-		return execute(keyOperations, (ops)->ops.dump(key));
-	}
-
-	@Override
-	public byte[] dump(final byte[] key){
-		return execute(binaryKeyOperations, (ops)->ops.dump(key));
-	}
-
-	@Override
-	public Status restore(final String key, final String serializedValue, final int ttl){
-		return execute(keyOperations, (ops)->ops.restore(key, serializedValue, ttl));
-	}
-
-	@Override
-	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
-		return execute(binaryKeyOperations, (ops)->ops.restore(key, serializedValue, ttl));
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
-		return execute(keyOperations, (ops)->ops.migrate(key, host, port, db, timeout));
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
-		return execute(binaryKeyOperations, (ops)->ops.migrate(key, host, port, db, timeout));
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
-	 final MigrateOperation migrateOperation){
-		return execute(keyOperations, (ops)->ops.migrate(key, host, port, db, timeout, migrateOperation));
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
-	 final MigrateOperation migrateOperation){
-		return execute(binaryKeyOperations, (ops)->ops.migrate(key, host, port, db, timeout, migrateOperation));
-	}
-
-	@Override
-	public Long del(final String... keys){
-		return execute(keyOperations, (ops)->ops.del(keys));
-	}
-
-	@Override
-	public Long del(final byte[]... keys){
-		return execute(binaryKeyOperations, (ops)->ops.del(keys));
-	}
-
-	@Override
-	public Status move(final String key, final int db){
-		return execute(keyOperations, (ops)->ops.move(key, db));
-	}
-
-	@Override
-	public Status move(final byte[] key, final int db){
-		return execute(binaryKeyOperations, (ops)->ops.move(key, db));
-	}
-
-	@Override
-	public Status set(final String key, final String value){
-		return execute(stringOperations, (ops)->ops.set(key, value));
-	}
-
-	@Override
-	public Status set(final byte[] key, final byte[] value){
-		return execute(binaryStringOperations, (ops)->ops.set(key, value));
-	}
-
-	@Override
-	public Status set(final String key, final String value, final SetArgument setArgument){
-		return execute(stringOperations, (ops)->ops.set(key, value, setArgument));
-	}
-
-	@Override
-	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
-		return execute(binaryStringOperations, (ops)->ops.set(key, value, setArgument));
-	}
-
-	@Override
-	public Status setEx(final String key, final String value, final int lifetime){
-		return execute(stringOperations, (ops)->ops.setEx(key, value, lifetime));
-	}
-
-	@Override
-	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
-		return execute(binaryStringOperations, (ops)->ops.setEx(key, value, lifetime));
-	}
-
-	@Override
-	public Status pSetEx(final String key, final String value, final int lifetime){
-		return execute(stringOperations, (ops)->ops.pSetEx(key, value, lifetime));
-	}
-
-	@Override
-	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
-		return execute(binaryStringOperations, (ops)->ops.pSetEx(key, value, lifetime));
-	}
-
-	@Override
-	public Status setNx(final String key, final String value){
-		return execute(stringOperations, (ops)->ops.setNx(key, value));
-	}
-
-	@Override
-	public Status setNx(final byte[] key, final byte[] value){
-		return execute(binaryStringOperations, (ops)->ops.setNx(key, value));
-	}
-
-	@Override
-	public Long append(final String key, final String value){
-		return execute(stringOperations, (ops)->ops.append(key, value));
-	}
-
-	@Override
-	public Long append(final byte[] key, final byte[] value){
-		return execute(binaryStringOperations, (ops)->ops.append(key, value));
-	}
-
-	@Override
-	public String get(final String key){
-		return execute(stringOperations, (ops)->ops.get(key));
-	}
-
-	@Override
-	public byte[] get(final byte[] key){
-		return execute(binaryStringOperations, (ops)->ops.get(key));
-	}
-
-	@Override
-	public String getSet(final String key, final String value){
-		return execute(stringOperations, (ops)->ops.getSet(key, value));
-	}
-
-	@Override
-	public byte[] getSet(final byte[] key, final byte[] value){
-		return execute(binaryStringOperations, (ops)->ops.getSet(key, value));
-	}
-
-
-	@Override
-	public Long incr(final String key){
-		return execute(stringOperations, (ops)->ops.incr(key));
-	}
-
-	@Override
-	public Long incr(final byte[] key){
-		return execute(binaryStringOperations, (ops)->ops.incr(key));
-	}
-
-	@Override
-	public Long incrBy(final String key, final int value){
-		return execute(stringOperations, (ops)->ops.incrBy(key, value));
-	}
-
-	@Override
-	public Long incrBy(final byte[] key, final int value){
-		return execute(binaryStringOperations, (ops)->ops.incrBy(key, value));
-	}
-
-	@Override
-	public Long incrBy(final String key, final long value){
-		return execute(stringOperations, (ops)->ops.incrBy(key, value));
-	}
-
-	@Override
-	public Long incrBy(final byte[] key, final long value){
-		return execute(binaryStringOperations, (ops)->ops.incrBy(key, value));
-	}
-
-	@Override
-	public Double incrByFloat(final String key, final float value){
-		return execute(stringOperations, (ops)->ops.incrByFloat(key, value));
-	}
-
-	@Override
-	public Double incrByFloat(final byte[] key, final float value){
-		return execute(binaryStringOperations, (ops)->ops.incrByFloat(key, value));
-	}
-
-	@Override
-	public Double incrByFloat(final String key, final double value){
-		return execute(stringOperations, (ops)->ops.incrByFloat(key, value));
-	}
-
-	@Override
-	public Double incrByFloat(final byte[] key, final double value){
-		return execute(binaryStringOperations, (ops)->ops.incrByFloat(key, value));
-	}
-
-	@Override
-	public Long decr(final String key){
-		return execute(stringOperations, (ops)->ops.decr(key));
-	}
-
-	@Override
-	public Long decr(final byte[] key){
-		return execute(binaryStringOperations, (ops)->ops.decr(key));
-	}
-
-	@Override
-	public Long decrBy(final String key, final int value){
-		return execute(stringOperations, (ops)->ops.decrBy(key, value));
-	}
-
-	@Override
-	public Long decrBy(final byte[] key, final int value){
-		return execute(binaryStringOperations, (ops)->ops.decrBy(key, value));
-	}
-
-	@Override
-	public Long decrBy(final String key, final long value){
-		return execute(stringOperations, (ops)->ops.decrBy(key, value));
-	}
-
-	@Override
-	public Long decrBy(final byte[] key, final long value){
-		return execute(binaryStringOperations, (ops)->ops.decrBy(key, value));
-	}
-
-	@Override
-	public Long setRange(final String key, final int offset, final String value){
-		return execute(stringOperations, (ops)->ops.setRange(key, offset, value));
-	}
-
-	@Override
-	public Long setRange(final byte[] key, final int offset, final byte[] value){
-		return execute(binaryStringOperations, (ops)->ops.setRange(key, offset, value));
-	}
-
-	@Override
-	public Long setRange(final String key, final long offset, final String value){
-		return execute(stringOperations, (ops)->ops.setRange(key, offset, value));
-	}
-
-	@Override
-	public Long setRange(final byte[] key, final long offset, final byte[] value){
-		return execute(binaryStringOperations, (ops)->ops.setRange(key, offset, value));
-	}
-
-	@Override
-	public String getRange(final String key, final int start, final int end){
-		return execute(stringOperations, (ops)->ops.getRange(key, start, end));
-	}
-
-	@Override
-	public byte[] getRange(final byte[] key, final int start, final int end){
-		return execute(binaryStringOperations, (ops)->ops.getRange(key, start, end));
-	}
-
-	@Override
-	public String getRange(final String key, final long start, final long end){
-		return execute(stringOperations, (ops)->ops.getRange(key, start, end));
-	}
-
-	@Override
-	public byte[] getRange(final byte[] key, final long start, final long end){
-		return execute(binaryStringOperations, (ops)->ops.getRange(key, start, end));
-	}
-
-	@Override
-	public String substr(final String key, final int start, final int end){
-		return execute(stringOperations, (ops)->ops.substr(key, start, end));
-	}
-
-	@Override
-	public byte[] substr(final byte[] key, final int start, final int end){
-		return execute(binaryStringOperations, (ops)->ops.substr(key, start, end));
-	}
-
-	@Override
-	public String substr(final String key, final long start, final long end){
-		return execute(stringOperations, (ops)->ops.substr(key, start, end));
-	}
-
-	@Override
-	public byte[] substr(final byte[] key, final long start, final long end){
-		return execute(binaryStringOperations, (ops)->ops.substr(key, start, end));
-	}
-
-	@Override
-	public Long strlen(final String key){
-		return execute(stringOperations, (ops)->ops.strlen(key));
-	}
-
-	@Override
-	public Long strlen(final byte[] key){
-		return execute(binaryStringOperations, (ops)->ops.strlen(key));
-	}
-
-	@Override
-	public boolean hExists(final String key, final String field){
-		return execute(hashOperations, (ops)->ops.hExists(key, field));
-	}
-
-	@Override
-	public boolean hExists(final byte[] key, final byte[] field){
-		return execute(binaryHashOperations, (ops)->ops.hExists(key, field));
-	}
-
-	@Override
-	public Set<String> hKeys(final String key){
-		return execute(hashOperations, (ops)->ops.hKeys(key));
-	}
-
-	@Override
-	public Set<byte[]> hKeys(final byte[] key){
-		return execute(binaryHashOperations, (ops)->ops.hKeys(key));
-	}
-
-	@Override
-	public List<String> hVals(final String key){
-		return execute(hashOperations, (ops)->ops.hVals(key));
-	}
-
-	@Override
-	public List<byte[]> hVals(final byte[] key){
-		return execute(binaryHashOperations, (ops)->ops.hVals(key));
-	}
-
-	@Override
-	public Status hSet(final String key, final String field, final String value){
-		return execute(hashOperations, (ops)->ops.hSet(key, field, value));
-	}
-
-	@Override
-	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
-		return execute(binaryHashOperations, (ops)->ops.hSet(key, field, value));
-	}
-
-	@Override
-	public Status hSetNx(final String key, final String field, final String value){
-		return execute(hashOperations, (ops)->ops.hSetNx(key, field, value));
-	}
-
-	@Override
-	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
-		return execute(binaryHashOperations, (ops)->ops.hSet(key, field, value));
-	}
-
-	@Override
-	public String hGet(final String key, final String field){
-		return execute(hashOperations, (ops)->ops.hGet(key, field));
-	}
-
-	@Override
-	public byte[] hGet(final byte[] key, final byte[] field){
-		return execute(binaryHashOperations, (ops)->ops.hGet(key, field));
-	}
-
-	@Override
-	public Status hMSet(final String key, final Map<String, String> data){
-		return execute(hashOperations, (ops)->ops.hMSet(key, data));
-	}
-
-	@Override
-	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
-		return execute(binaryHashOperations, (ops)->ops.hMSet(key, data));
-	}
-
-	@Override
-	public List<String> hMGet(final String key, final String... fields){
-		return execute(hashOperations, (ops)->ops.hMGet(key, fields));
-	}
-
-	@Override
-	public List<byte[]> hMGet(final byte[] key, final byte[]... fields){
-		return execute(binaryHashOperations, (ops)->ops.hMGet(key, fields));
-	}
-
-	@Override
-	public Map<String, String> hGetAll(final String key){
-		return execute(hashOperations, (ops)->ops.hGetAll(key));
-	}
-
-	@Override
-	public Map<byte[], byte[]> hGetAll(final byte[] key){
-		return execute(binaryHashOperations, (ops)->ops.hGetAll(key));
-	}
-
-	@Override
-	public Long hStrLen(final String key, final String field){
-		return execute(hashOperations, (ops)->ops.hStrLen(key, field));
-	}
-
-	@Override
-	public Long hStrLen(final byte[] key, final byte[] field){
-		return execute(binaryHashOperations, (ops)->ops.hStrLen(key, field));
-	}
-
-	@Override
-	public Long hLen(final String key){
-		return execute(hashOperations, (ops)->ops.hLen(key));
-	}
-
-	@Override
-	public Long hLen(final byte[] key){
-		return execute(binaryHashOperations, (ops)->ops.hLen(key));
-	}
-
-	@Override
-	public Long hIncrBy(final String key, final String field, final int value){
-		return execute(hashOperations, (ops)->ops.hIncrBy(key, field, value));
-	}
-
-	@Override
-	public Long hIncrBy(final byte[] key, final byte[] field, final int value){
-		return execute(binaryHashOperations, (ops)->ops.hIncrBy(key, field, value));
-	}
-
-	@Override
-	public Long hIncrBy(final String key, final String field, final long value){
-		return execute(hashOperations, (ops)->ops.hIncrBy(key, field, value));
-	}
-
-	@Override
-	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
-		return execute(binaryHashOperations, (ops)->ops.hIncrBy(key, field, value));
-	}
-
-	@Override
-	public Double hIncrByFloat(final String key, final String field, final float value){
-		return execute(hashOperations, (ops)->ops.hIncrByFloat(key, field, value));
-	}
-
-	@Override
-	public Double hIncrByFloat(final byte[] key, final byte[] field, final float value){
-		return execute(binaryHashOperations, (ops)->ops.hIncrByFloat(key, field, value));
-	}
-
-	@Override
-	public Double hIncrByFloat(final String key, final String field, final double value){
-		return execute(hashOperations, (ops)->ops.hIncrByFloat(key, field, value));
-	}
-
-	@Override
-	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
-		return execute(binaryHashOperations, (ops)->ops.hIncrByFloat(key, field, value));
-	}
-
-	@Override
-	public Long hDecrBy(final String key, final String field, final int value){
-		return execute(hashOperations, (ops)->ops.hDecrBy(key, field, value));
-	}
-
-	@Override
-	public Long hDecrBy(final byte[] key, final byte[] field, final int value){
-		return execute(binaryHashOperations, (ops)->ops.hDecrBy(key, field, value));
-	}
-
-	@Override
-	public Long hDecrBy(final String key, final String field, final long value){
-		return execute(hashOperations, (ops)->ops.hDecrBy(key, field, value));
-	}
-
-	@Override
-	public Long hDecrBy(final byte[] key, final byte[] field, final long value){
-		return execute(binaryHashOperations, (ops)->ops.hDecrBy(key, field, value));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor){
-		return execute(hashOperations, (ops)->ops.hScan(key, cursor));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor){
-		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor){
-		return execute(hashOperations, (ops)->ops.hScan(key, cursor));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor){
-		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
-		return execute(hashOperations, (ops)->ops.hScan(key, cursor));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
-		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern){
-		return execute(hashOperations, (ops)->ops.hScan(key, cursor, pattern));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern){
-		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, pattern));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
-		return execute(hashOperations, (ops)->ops.hScan(key, cursor, pattern));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern){
-		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, pattern));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
-		return execute(hashOperations, (ops)->ops.hScan(key, cursor, pattern));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, pattern));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final int count){
-		return execute(hashOperations, (ops)->ops.hScan(key, cursor, count));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final int count){
-		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, count));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count){
-		return execute(hashOperations, (ops)->ops.hScan(key, cursor, count));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count){
-		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, count));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count){
-		return execute(hashOperations, (ops)->ops.hScan(key, cursor, count));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
-		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, count));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern,
-	 final int count){
-		return execute(hashOperations, (ops)->ops.hScan(key, cursor, pattern, count));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-	 final int count){
-		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, pattern, count));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-	 final int count){
-		return execute(hashOperations, (ops)->ops.hScan(key, cursor, pattern, count));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern,
-	 final int count){
-		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, pattern, count));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-	 final int count){
-		return execute(hashOperations, (ops)->ops.hScan(key, cursor, pattern, count));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-	 final int count){
-		return execute(binaryHashOperations, (ops)->ops.hScan(key, cursor, pattern, count));
-	}
-
-	@Override
-	public Long hDel(final String key, final String... fields){
-		return execute(hashOperations, (ops)->ops.hDel(key, fields));
-	}
-
-	@Override
-	public Long hDel(final byte[] key, final byte[]... fields){
-		return execute(binaryHashOperations, (ops)->ops.hDel(key, fields));
 	}
 
 	@Override
@@ -1320,13 +492,13 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
-	 final int count){
+			final int count){
 		return execute(setOperations, (ops)->ops.sScan(key, cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-	 final int count){
+			final int count){
 		return execute(binarySetOperations, (ops)->ops.sScan(key, cursor, pattern, count));
 	}
 
@@ -1553,61 +725,61 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final float min, final float max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRangeByScore(final byte[] key, final float min, final float max, final int offset,
-	 final int count){
+			fin l int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final double min, final double max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final int min, final int max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRangeByScore(final byte[] key, final int min, final int max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final long min, final long max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final String min, final String max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScore(key, min, max, offset, count));
 	}
 
@@ -1663,61 +835,61 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
-	 final int count){
+			f nal int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
@@ -1773,25 +945,25 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final float min, final float max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final double min, final double max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
 	}
 
@@ -1807,25 +979,25 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final long min, final long max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final String min, final String max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRangeByLex(key, min, max, offset, count));
 	}
 
@@ -2071,61 +1243,61 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final float min, final float max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByScore(final byte[] key, final float min, final float max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final double min, final double max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final int min, final int max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByScore(final byte[] key, final int min, final int max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final long min, final long max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByScore(final byte[] key, final long min, final long max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final String min, final String max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScore(key, min, max, offset, count));
 	}
 
@@ -2181,61 +1353,61 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
-	 final int offset, final int count){
+			final int offset, final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
-	 final int offset, final int count){
+			final int offset, final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
-	 final int offset, final int count){
+			final int offset, final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
-	 final int offset, final int count){
+			final int offset, final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByScoreWithScores(key, min, max, offset, count));
 	}
 
@@ -2291,61 +1463,61 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public Set<String> zRevRangeByLex(final String key, final float min, final float max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRevRangeByLex(final String key, final double min, final double max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRevRangeByLex(final String key, final int min, final int max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRevRangeByLex(final String key, final long min, final long max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<String> zRevRangeByLex(final String key, final String min, final String max, final int offset,
-	 final int count){
+			final int count){
 		return execute(sortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
-	 final int count){
+			final int count){
 		return execute(binarySortedSetOperations, (ops)->ops.zRevRangeByLex(key, min, max, offset, count));
 	}
 
@@ -2581,49 +1753,49 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-	 final double radius){
+			final double radius){
 		return execute(geoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-	 final double radius){
+			final double radius){
 		return execute(binaryGeoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-	 final double radius, final GeoUnit unit){
+			final double radius, final GeoUnit unit){
 		return execute(geoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, unit));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-	 final double radius, final GeoUnit unit){
+			final double radius, final GeoUnit unit){
 		return execute(binaryGeoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, unit));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-	 final double radius, final GeoArgument geoArgument){
+			final double radius, final GeoArgument geoArgument){
 		return execute(geoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, geoArgument));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-	 final double radius, final GeoArgument geoArgument){
+			final double radius, final GeoArgument geoArgument){
 		return execute(binaryGeoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, geoArgument));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-	 final double radius, final GeoUnit unit, final GeoArgument geoArgument){
+			final double radius, final GeoUnit unit, final GeoArgument geoArgument){
 		return execute(geoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, unit, geoArgument));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-	 final double radius, final GeoUnit unit, final GeoArgument geoArgument){
+			final double radius, final GeoUnit unit, final GeoArgument geoArgument){
 		return execute(binaryGeoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, unit, geoArgument));
 	}
 
@@ -2639,37 +1811,37 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-	 final GeoUnit unit){
+			final GeoUnit unit){
 		return execute(geoOperations, (ops)->ops.geoRadiusByMember(key, member, radius, unit));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-	 final GeoUnit unit){
+			final GeoUnit unit){
 		return execute(binaryGeoOperations, (ops)->ops.geoRadiusByMember(key, member, radius, unit));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-	 final GeoArgument geoArgument){
+			final GeoArgument geoArgument){
 		return execute(geoOperations, (ops)->ops.geoRadiusByMember(key, member, radius, geoArgument));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-	 final GeoArgument geoArgument){
+			final GeoArgument geoArgument){
 		return execute(binaryGeoOperations, (ops)->ops.geoRadiusByMember(key, member, radius, geoArgument));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-	 final GeoUnit unit, final GeoArgument geoArgument){
+			final GeoUnit unit, final GeoArgument geoArgument){
 		return execute(geoOperations, (ops)->ops.geoRadiusByMember(key, member, radius, unit, geoArgument));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-	 final GeoUnit unit, final GeoArgument geoArgument){
+			final GeoUnit unit, final GeoArgument geoArgument){
 		return execute(binaryGeoOperations, (ops)->ops.geoRadiusByMember(key, member, radius, unit, geoArgument));
 	}
 
@@ -2833,8 +2005,22 @@ public abstract class AbstractRedisClient implements RedisClient {
 		return execute(binaryDebugOperations, (ops)->ops.object(command, key));
 	}
 
-	protected <O extends RedisOperations, R> R execute(final O operations, final Executor<O, R> executor){
+	protected <C, R> R doExecute(final Executor<C, R> executor, final ProtocolCommand command){
+		return doExecute(executor, command, null);
+	}
+
+	protected <C, R> R doExecute(final Executor<C, R> executor, final ProtocolCommand command,
+			final OperationsCommandArguments arguments){
+		String argumentsString = logger.isDebugEnabled() && arguments != null ? arguments.toString() : null;
 		RedisConnection connection;
+
+		if(logger.isDebugEnabled()){
+			if(arguments != null){
+				logger.debug("Execute command '{}' width arguments: {}", command, argumentsString);
+			}else{
+				logger.debug("Execute command '{}'", command);
+			}
+		}
 
 		if(enableTransactionSupport){
 			// only bind resources in case of potential transaction synchronization
@@ -2844,89 +2030,25 @@ public abstract class AbstractRedisClient implements RedisClient {
 		}
 
 		try{
-			return executor.execute(operations);
+			return connection.execute(command, executor);
 		}catch(RedisException e){
+			if(logger.isDebugEnabled()){
+				if(arguments != null){
+					logger.error("Execute command '{}' width arguments: {}, failure: {}", command, argumentsString,
+							e.getMessage());
+				}else{
+					logger.error("Execute command '{}', failure: {}", command, e.getMessage());
+				}
+			}
 			throw e;
 		}finally{
 			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
 	}
 
-	protected abstract KeyRedisOperations createKeyRedisOperations();
-
-	protected abstract BinaryKeyRedisOperations createBinaryKeyRedisOperations();
-
-	protected abstract StringRedisOperations createStringRedisOperations();
-
-	protected abstract BinaryStringRedisOperations createBinaryStringRedisOperations();
-
-	protected abstract HashRedisOperations createHashRedisOperations();
-
-	protected abstract BinaryHashRedisOperations createBinaryHashRedisOperations();
-
-	protected abstract ListRedisOperations createListRedisOperations();
-
-	protected abstract BinaryListRedisOperations createBinaryListRedisOperations();
-
-	protected abstract SetRedisOperations createSetRedisOperations();
-
-	protected abstract BinarySetRedisOperations createBinarySetRedisOperations();
-
-	protected abstract SortedSetRedisOperations createSortedSetRedisOperations();
-
-	protected abstract BinarySortedSetRedisOperations createBinarySortedSetRedisOperations();
-
-	protected abstract HyperLogLogRedisOperations createHyperLogLogRedisOperations();
-
-	protected abstract BinaryHyperLogLogRedisOperations createBinaryHyperLogLogRedisOperations();
-
-	protected abstract GeoRedisOperations createGeoRedisOperations();
-
-	protected abstract BinaryGeoRedisOperations createBinaryGeoRedisOperations();
-
-	protected abstract BitMapRedisOperations createBitMapRedisOperations();
-
-	protected abstract BinaryBitMapRedisOperations createBinaryBitMapRedisOperations();
-
-	protected abstract TransactionRedisOperations createTransactionRedisOperations();
-
-	protected abstract BinaryTransactionRedisOperations createBinaryTransactionRedisOperations();
-
-	protected abstract PubSubRedisOperations createPubSubRedisOperations();
-
-	protected abstract BinaryPubSubRedisOperations createBinaryPubSubRedisOperations();
-
-	protected abstract DatabaseRedisOperations createDatabaseRedisOperations();
-
-	protected abstract BinaryDatabaseRedisOperations createBinaryDatabaseRedisOperations();
-
-	protected abstract LuaRedisOperations createLuaRedisOperations();
-
-	protected abstract BinaryLuaRedisOperations createBinaryLuaRedisOperations();
-
-	protected abstract PersistenceRedisOperations createPersistenceRedisOperations();
-
-	protected abstract BinaryPersistenceRedisOperations createBinaryPersistenceRedisOperations();
-
-	protected abstract ReplicationRedisOperations createReplicationRedisOperations();
-
-	protected abstract BinaryReplicationRedisOperations createBinaryReplicationRedisOperations();
-
-	protected abstract ClientAndServerRedisOperations createClientAndServerRedisOperations();
-
-	protected abstract BinaryClientAndServerRedisOperations createBinaryClientAndServerRedisOperations();
-
-	protected abstract ConfigureRedisOperations createConfigureRedisOperations();
-
-	protected abstract BinaryConfigureRedisOperations createBinaryConfigureRedisOperations();
-
-	protected abstract InternalRedisOperations createInternalRedisOperations();
-
-	protected abstract BinaryInternalRedisOperations createBinaryInternalRedisOperations();
-
-	protected abstract DebugRedisOperations createDebugRedisOperations();
-
-	protected abstract BinaryDebugRedisOperations createBinaryDebugRedisOperations();
+	protected boolean isTransaction(){
+		return getConnection().isTransaction();
+	}
 
 	protected void close(){
 		try{

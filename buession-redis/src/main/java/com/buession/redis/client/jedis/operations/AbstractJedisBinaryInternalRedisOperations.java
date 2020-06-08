@@ -22,11 +22,38 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client;
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.core.Executor;
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.exception.NotSupportedCommandException;
+import redis.clients.jedis.commands.BinaryJedisCommands;
 
 /**
  * @author Yong.Teng
  */
-public interface GenericRedisClient extends RedisClient {
+public abstract class AbstractJedisBinaryInternalRedisOperations<C extends BinaryJedisCommands> extends AbstractJedisBinaryRedisOperations implements JedisBinaryInternalRedisOperations {
+
+	public AbstractJedisBinaryInternalRedisOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Object pSync(final byte[] masterRunId, final long offset){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("masterRunId",
+				masterRunId).put("offset", offset);
+
+		return execute(new Executor<C, Status>() {
+
+			@Override
+			public Status execute(C cmd){
+				throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
+			}
+
+		}, ProtocolCommand.PSYNC, args);
+	}
 
 }

@@ -25,6 +25,7 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.core.Executor;
+import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
 import com.buession.redis.client.operations.BinaryPubSubRedisOperations;
 import com.buession.redis.client.GenericRedisClient;
@@ -35,14 +36,24 @@ import com.buession.redis.client.operations.PubSubRedisOperations;
 import com.buession.redis.client.operations.TransactionRedisOperations;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.Info;
+import com.buession.redis.core.JedisScanParams;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.Type;
+import com.buession.redis.core.command.KeyCommands;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.command.StringCommands;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.transaction.Transaction;
+import com.buession.redis.utils.ReturnUtils;
+import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -61,118 +72,1084 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
+	public boolean exists(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().exists(key).get(), ProtocolCommand.EXISTS, args);
+		}else{
+			return execute((cmd)->cmd.exists(key), ProtocolCommand.EXISTS, args);
+		}
+	}
+
+	@Override
+	public Type type(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.enumValueOf(getTransaction().type(key).get(), Type.class),
+					ProtocolCommand.TYPE, args);
+		}else{
+			return execute((cmd)->ReturnUtils.enumValueOf(cmd.type(key), Type.class), ProtocolCommand.TYPE, args);
+		}
+	}
+
+	@Override
 	public Status rename(final String key, final String newKey){
-		return execute(keyOperations, (ops)->ops.rename(key, newKey));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("newKey",
+				newKey);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().rename(key, newKey).get()),
+					ProtocolCommand.RENAME, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.rename(key, newKey)), ProtocolCommand.RENAME, args);
+		}
 	}
 
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey){
-		return execute(binaryKeyOperations, (ops)->ops.rename(key, newKey));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("newKey",
+				newKey);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().rename(key, newKey).get()),
+					ProtocolCommand.RENAME, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.rename(key, newKey)), ProtocolCommand.RENAME, args);
+		}
 	}
 
 	@Override
 	public Status renameNx(final String key, final String newKey){
-		return execute(keyOperations, (ops)->ops.renameNx(key, newKey));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("newKey",
+				newKey);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().renamenx(key, newKey).get() > 0),
+					ProtocolCommand.RENAME, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.renamenx(key, newKey) > 0), ProtocolCommand.RENAME,
+					args);
+		}
 	}
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey){
-		return execute(binaryKeyOperations, (ops)->ops.renameNx(key, newKey));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("newKey",
+				newKey);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().renamenx(key, newKey).get() > 0),
+					ProtocolCommand.RENAMENX, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.renamenx(key, newKey) > 0), ProtocolCommand.RENAMENX,
+					args);
+		}
 	}
 
 	@Override
 	public String randomKey(){
-		return execute(keyOperations, (ops)->ops.randomKey());
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().randomKey().get(), ProtocolCommand.RANDOMKEY);
+		}else{
+			return execute((cmd)->cmd.randomKey(), ProtocolCommand.RANDOMKEY);
+		}
 	}
 
 	@Override
 	public Set<String> keys(final String pattern){
-		return execute(keyOperations, (ops)->ops.keys(pattern));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("pattern", pattern);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().keys(pattern).get(), ProtocolCommand.KEYS, args);
+		}else{
+			return execute((cmd)->cmd.keys(pattern), ProtocolCommand.KEYS, args);
+		}
 	}
 
 	@Override
 	public Set<byte[]> keys(final byte[] pattern){
-		return execute(binaryKeyOperations, (ops)->ops.keys(pattern));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("pattern", pattern);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().keys(pattern).get(), ProtocolCommand.KEYS, args);
+		}else{
+			return execute((cmd)->cmd.keys(pattern), ProtocolCommand.KEYS, args);
+		}
+	}
+
+	@Override
+	public Status expire(final byte[] key, final int lifetime){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("lifetime"
+				, lifetime);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expire(key, lifetime).get() == 1),
+					ProtocolCommand.EXPIRE, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.expire(key, lifetime) == 1), ProtocolCommand.EXPIRE,
+					args);
+		}
+	}
+
+	@Override
+	public Status expireAt(final byte[] key, final long unixTimestamp){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
+				"unixTimestamp", unixTimestamp);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expireAt(key, unixTimestamp).get() == 1),
+					ProtocolCommand.EXPIREAT, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.expireAt(key, unixTimestamp) == 1),
+					ProtocolCommand.EXPIREAT, args);
+		}
+	}
+
+	@Override
+	public Status pExpire(final byte[] key, final int lifetime){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("lifetime"
+				, lifetime);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpire(key, lifetime).get() == 1),
+					ProtocolCommand.PEXPIRE, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.pexpire(key, lifetime) == 1), ProtocolCommand.PEXPIRE,
+					args);
+		}
+	}
+
+	@Override
+	public Status pExpireAt(final byte[] key, final long unixTimestamp){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
+				"unixTimestamp", unixTimestamp);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() == 1)
+					, ProtocolCommand.PEXPIREAT, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.pexpireAt(key, unixTimestamp) == 1),
+					ProtocolCommand.PEXPIREAT, args);
+		}
+	}
+
+	@Override
+	public Long ttl(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().ttl(key).get(), ProtocolCommand.TTL, args);
+		}else{
+			return execute((cmd)->cmd.ttl(key), ProtocolCommand.TTL, args);
+		}
+	}
+
+	@Override
+	public Long pTtl(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().pttl(key).get(), ProtocolCommand.PTTL, args);
+		}else{
+			return execute((cmd)->cmd.pttl(key), ProtocolCommand.PTTL, args);
+		}
+	}
+
+	@Override
+	public Status persist(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().persist(key).get() > 0),
+					ProtocolCommand.PERSIST, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.persist(key) > 0), ProtocolCommand.PERSIST, args);
+		}
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final int cursor){
+		return scan(Integer.toString(cursor));
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final long cursor){
+		return scan(Long.toString(cursor));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor){
-		return execute(keyOperations, (ops)->ops.scan(cursor));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("cursor", cursor);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.scan(cursor)), ProtocolCommand.SCAN,
+					args);
+		}
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor){
-		return execute(binaryKeyOperations, (ops)->ops.scan(cursor));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("cursor", cursor);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.scan(cursor)), ProtocolCommand.SCAN,
+					args);
+		}
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final int cursor, final String pattern){
+		return scan(Integer.toString(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern){
+		return scan(NumberUtils.int2bytes(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final long cursor, final String pattern){
+		return scan(Long.toString(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
+		return scan(NumberUtils.long2bytes(cursor), pattern);
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern){
-		return execute(keyOperations, (ops)->ops.scan(cursor, pattern));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("cursor", cursor).put(
+				"pattern", pattern);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.scan(cursor,
+					new JedisScanParams(pattern))), ProtocolCommand.SCAN, args);
+		}
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
-		return execute(binaryKeyOperations, (ops)->ops.scan(cursor, pattern));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("cursor", cursor).put(
+				"pattern", pattern);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.scan(cursor,
+					new JedisScanParams(pattern))), ProtocolCommand.SCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final int cursor, final int count){
+		return scan(Integer.toString(cursor), count);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final long cursor, final int count){
+		return scan(Long.toString(cursor), count);
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final int count){
-		return execute(keyOperations, (ops)->ops.scan(cursor, count));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("cursor", cursor).put(
+				"count", count);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.scan(cursor,
+					new JedisScanParams(count))), ProtocolCommand.SCAN, args);
+		}
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count){
-		return execute(binaryKeyOperations, (ops)->ops.scan(cursor, count));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("cursor", cursor).put(
+				"count", count);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.scan(cursor,
+					new JedisScanParams(count))), ProtocolCommand.SCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final int cursor, final String pattern, final int count){
+		return scan(Integer.toString(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern, final int count){
+		return scan(NumberUtils.int2bytes(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final long cursor, final String pattern, final int count){
+		return scan(Long.toString(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count){
+		return scan(NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count){
-		return execute(keyOperations, (ops)->ops.scan(cursor, pattern, count));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("cursor", cursor).put(
+				"pattern", pattern).put("count", count);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.scan(cursor,
+					new JedisScanParams(pattern, count))), ProtocolCommand.SCAN, args);
+		}
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count){
-		return execute(binaryKeyOperations, (ops)->ops.scan(cursor, pattern, count));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("cursor", cursor).put(
+				"pattern", pattern).put("count", count);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.scan(cursor,
+					new JedisScanParams(pattern, count))), ProtocolCommand.SCAN, args);
+		}
+	}
+
+	@Override
+	public List<byte[]> sort(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sort(key).get(), ProtocolCommand.SORT, args);
+		}else{
+			return execute((cmd)->cmd.sort(key), ProtocolCommand.SORT, args);
+		}
+	}
+
+	@Override
+	public List<byte[]> sort(final byte[] key, final KeyCommands.SortArgument sortArgument){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sort(key, JedisClientUtils.sortArgumentConvert(sortArgument)).get()
+					, ProtocolCommand.SORT, args);
+		}else{
+			return execute((cmd)->cmd.sort(key, JedisClientUtils.sortArgumentConvert(sortArgument)),
+					ProtocolCommand.SORT, args);
+		}
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey){
-		return execute(keyOperations, (ops)->ops.sort(key, destKey));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("destKey"
+				, destKey);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sort(key, destKey).get(), ProtocolCommand.SORT, args);
+		}else{
+			return execute((cmd)->cmd.sort(key, destKey), ProtocolCommand.SORT, args);
+		}
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey){
-		return execute(binaryKeyOperations, (ops)->ops.sort(key, destKey));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("destKey"
+				, destKey);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sort(key, destKey).get(), ProtocolCommand.SORT, args);
+		}else{
+			return execute((cmd)->cmd.sort(key, destKey), ProtocolCommand.SORT, args);
+		}
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey, final SortArgument sortArgument){
-		return execute(keyOperations, (ops)->ops.sort(key, destKey, sortArgument));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("destKey"
+				, destKey).put("sortArgument", sortArgument);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sort(key, JedisClientUtils.sortArgumentConvert(sortArgument),
+					destKey).get(), ProtocolCommand.SORT, args);
+		}else{
+			return execute((cmd)->cmd.sort(key, JedisClientUtils.sortArgumentConvert(sortArgument), destKey),
+					ProtocolCommand.SORT, args);
+		}
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
-		return execute(binaryKeyOperations, (ops)->ops.sort(key, destKey, sortArgument));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("destKey"
+				, destKey).put("sortArgument", sortArgument);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sort(key, JedisClientUtils.sortArgumentConvert(sortArgument),
+					destKey).get(), ProtocolCommand.SORT, args);
+		}else{
+			return execute((cmd)->cmd.sort(key, JedisClientUtils.sortArgumentConvert(sortArgument), destKey),
+					ProtocolCommand.SORT, args);
+		}
+	}
+
+	@Override
+	public byte[] dump(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().dump(key).get(), ProtocolCommand.DUMP, args);
+		}else{
+			return execute((cmd)->cmd.dump(key), ProtocolCommand.DUMP, args);
+		}
+	}
+
+	@Override
+	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
+				"serializedValue", serializedValue).put("ttl", ttl);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().restore(key, ttl, serializedValue).get()),
+					ProtocolCommand.RESTORE, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.restore(key, ttl, serializedValue)),
+					ProtocolCommand.RESTORE, args);
+		}
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("host",
+				host).put("port", port).put("key", key).put("db", db).put("timeout", timeout);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, key, db, timeout).get()), ProtocolCommand.MIGRATE, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, key, db, timeout)),
+					ProtocolCommand.MIGRATE, args);
+		}
+	}
+
+	@Override
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("host",
+				host).put("port", port).put("key", key).put("db", db).put("timeout", timeout);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, key, db, timeout).get()), ProtocolCommand.MIGRATE, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, key, db, timeout)),
+					ProtocolCommand.MIGRATE, args);
+		}
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
+			final MigrateOperation migrateOperation){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("host",
+				host).put("port", port).put("key", key).put("db", db).put("timeout", timeout).put("migrate",
+				migrateOperation);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
+					JedisClientUtils.migrateOperationConvert(migrateOperation), key).get()), ProtocolCommand.MIGRATE,
+					args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, db, timeout,
+					JedisClientUtils.migrateOperationConvert(migrateOperation), key)), ProtocolCommand.MIGRATE, args);
+		}
+	}
+
+	@Override
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
+			final MigrateOperation migrateOperation){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("host",
+				host).put("port", port).put("key", key).put("db", db).put("timeout", timeout).put("migrate",
+				migrateOperation);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
+					JedisClientUtils.migrateOperationConvert(migrateOperation), key).get()), ProtocolCommand.MIGRATE,
+					args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, db, timeout,
+					JedisClientUtils.migrateOperationConvert(migrateOperation), key)), ProtocolCommand.MIGRATE, args);
+		}
+	}
+
+	@Override
+	public Long del(final String... keys){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("keys", keys);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().del(keys).get(), ProtocolCommand.DEL, args);
+		}else{
+			return execute((cmd)->cmd.del(keys), ProtocolCommand.DEL, args);
+		}
+	}
+
+	@Override
+	public Long del(final byte[]... keys){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("keys", keys);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().del(keys).get(), ProtocolCommand.DEL, args);
+		}else{
+			return execute((cmd)->cmd.del(keys), ProtocolCommand.DEL, args);
+		}
+	}
+
+	@Override
+	public Status move(final byte[] key, final int db){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("db", db);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().move(key, db).get() > 0),
+					ProtocolCommand.MOVE, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.move(key, db) > 0), ProtocolCommand.MOVE, args);
+		}
+	}
+
+	@Override
+	public Status set(final byte[] key, final byte[] value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value).get()), ProtocolCommand.SET
+					, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value)), ProtocolCommand.SET, args);
+		}
+	}
+
+	@Override
+	public Status set(final byte[] key, final byte[] value, final StringCommands.SetArgument setArgument){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value).put("setArgument", setArgument);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value,
+					JedisClientUtils.setArgumentConvert(setArgument)).get()), ProtocolCommand.SET, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value,
+					JedisClientUtils.setArgumentConvert(setArgument))), ProtocolCommand.SET, args);
+		}
+	}
+
+	@Override
+	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value).put("lifetime", lifetime);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().setex(key, lifetime, value).get()),
+					ProtocolCommand.SETEX, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.setex(key, lifetime, value)), ProtocolCommand.SETEX,
+					args);
+		}
+	}
+
+	@Override
+	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value).put("lifetime", lifetime);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().psetex(key, lifetime, value).get()),
+					ProtocolCommand.PSETEX, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.psetex(key, lifetime, value)), ProtocolCommand.PSETEX,
+					args);
+		}
+	}
+
+	@Override
+	public Status setNx(final byte[] key, final byte[] value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setnx(key, value).get() > 0),
+					ProtocolCommand.SETNX, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setnx(key, value) > 0), ProtocolCommand.SETNX, args);
+		}
+	}
+
+	@Override
+	public Long append(final byte[] key, final byte[] value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().append(key, value).get(), ProtocolCommand.APPEND, args);
+		}else{
+			return execute((cmd)->cmd.append(key, value), ProtocolCommand.APPEND, args);
+		}
+	}
+
+	@Override
+	public byte[] get(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().get(key).get(), ProtocolCommand.GET, args);
+		}else{
+			return execute((cmd)->cmd.get(key), ProtocolCommand.GET, args);
+		}
+	}
+
+	@Override
+	public byte[] getSet(final byte[] key, final byte[] value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().getSet(key, value).get(), ProtocolCommand.GETSET, args);
+		}else{
+			return execute((cmd)->cmd.getSet(key, value), ProtocolCommand.GETSET, args);
+		}
 	}
 
 	@Override
 	public Status mSet(final Map<String, String> values){
-		return execute(stringOperations, (ops)->ops.mSet(values));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("values", values);
+
+		return execute(new Executor<Jedis, Status>() {
+
+			@Override
+			public Status execute(Jedis cmd){
+				List<String> temp = new ArrayList<>(values.size() * 2);
+				String ret;
+
+				values.forEach((key, value)->{
+					temp.add(key);
+					temp.add(value);
+				});
+
+				if(isTransaction()){
+					ret = getTransaction().mset(temp.stream().toArray(String[]::new)).get();
+				}else{
+					ret = cmd.mset(temp.stream().toArray(String[]::new));
+				}
+
+				return ReturnUtils.statusForOK(ret);
+			}
+
+		}, ProtocolCommand.MSET, args);
 	}
 
 	@Override
 	public Status mSetNx(final Map<String, String> values){
-		return execute(stringOperations, (ops)->ops.mSetNx(values));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("values", values);
+
+		return execute(new Executor<Jedis, Status>() {
+
+			@Override
+			public Status execute(Jedis cmd){
+				List<String> temp = new ArrayList<>(values.size() * 2);
+				Long ret;
+
+				values.forEach((key, value)->{
+					temp.add(key);
+					temp.add(value);
+				});
+
+				if(isTransaction()){
+					ret = getTransaction().msetnx(temp.stream().toArray(String[]::new)).get();
+				}else{
+					ret = cmd.msetnx(temp.stream().toArray(String[]::new));
+				}
+
+				return ReturnUtils.statusForBool(ret > 0);
+			}
+
+		}, ProtocolCommand.MSETNX, args);
 	}
 
 	@Override
 	public List<String> mGet(final String... keys){
-		return execute(stringOperations, (ops)->ops.mGet());
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("keys", keys);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().mget(keys).get(), ProtocolCommand.MGET, args);
+		}else{
+			return execute((cmd)->cmd.mget(keys), ProtocolCommand.MGET, args);
+		}
 	}
 
 	@Override
 	public List<byte[]> mGet(final byte[]... keys){
-		return execute(binaryStringOperations, (ops)->ops.mGet());
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("keys", keys);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().mget(keys).get(), ProtocolCommand.MGET, args);
+		}else{
+			return execute((cmd)->cmd.mget(keys), ProtocolCommand.MGET, args);
+		}
+	}
+
+	@Override
+	public Long incr(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().incr(key).get(), ProtocolCommand.INCR, args);
+		}else{
+			return execute((cmd)->cmd.incr(key), ProtocolCommand.INCR, args);
+		}
+	}
+
+	@Override
+	public Long incrBy(final byte[] key, final long value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().incrBy(key, value).get(), ProtocolCommand.INCRBY, args);
+		}else{
+			return execute((cmd)->cmd.incrBy(key, value), ProtocolCommand.INCRBY, args);
+		}
+	}
+
+	@Override
+	public Double incrByFloat(final byte[] key, final double value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().incrByFloat(key, value).get(), ProtocolCommand.INCRBYFLOAT, args);
+		}else{
+			return execute((cmd)->cmd.incrByFloat(key, value), ProtocolCommand.INCRBYFLOAT, args);
+		}
+	}
+
+	@Override
+	public Long decr(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().decr(key).get(), ProtocolCommand.DECR, args);
+		}else{
+			return execute((cmd)->cmd.decr(key), ProtocolCommand.DECR, args);
+		}
+	}
+
+	@Override
+	public Long decrBy(final byte[] key, final long value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().decrBy(key, value).get(), ProtocolCommand.DECRBY, args);
+		}else{
+			return execute((cmd)->cmd.decrBy(key, value), ProtocolCommand.DECRBY, args);
+		}
+	}
+
+	@Override
+	public Long setRange(final byte[] key, final long offset, final byte[] value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("offset",
+				offset).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().setrange(key, offset, value).get(), ProtocolCommand.SETRANGE, args);
+		}else{
+			return execute((cmd)->cmd.setrange(key, offset, value), ProtocolCommand.SETRANGE, args);
+		}
+	}
+
+	@Override
+	public byte[] getRange(final byte[] key, final long start, final long end){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
+				start).put("end", end);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().getrange(key, start, end).get(), ProtocolCommand.GETRANGE, args);
+		}else{
+			return execute((cmd)->cmd.getrange(key, start, end), ProtocolCommand.GETRANGE, args);
+		}
+	}
+
+	@Override
+	public byte[] substr(final byte[] key, final int start, final int end){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
+				start).put("end", end);
+
+		if(isTransaction()){
+			return execute((cmd)->SafeEncoder.encode(getTransaction().substr(key, start, end).get()),
+					ProtocolCommand.SUBSTR, args);
+		}else{
+			return execute((cmd)->cmd.substr(key, start, end), ProtocolCommand.SUBSTR, args);
+		}
+	}
+
+	@Override
+	public Long strlen(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().strlen(key).get(), ProtocolCommand.STRLEN, args);
+		}else{
+			return execute((cmd)->cmd.strlen(key), ProtocolCommand.STRLEN, args);
+		}
+	}
+
+	@Override
+	public boolean hExists(final byte[] key, final byte[] field){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hexists(key, field).get(), ProtocolCommand.HEXISTS, args);
+		}else{
+			return execute((cmd)->cmd.hexists(key, field), ProtocolCommand.HEXISTS, args);
+		}
+	}
+
+	@Override
+	public Set<byte[]> hKeys(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hkeys(key).get(), ProtocolCommand.HKEYS, args);
+		}else{
+			return execute((cmd)->cmd.hkeys(key), ProtocolCommand.HKEYS, args);
+		}
+	}
+
+	@Override
+	public List<byte[]> hVals(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		return execute(new Executor<Jedis, List<byte[]>>() {
+
+			@Override
+			public List<byte[]> execute(Jedis cmd){
+				if(isTransaction()){
+					return getTransaction().hvals(key).get();
+				}else{
+					return cmd.hvals(key);
+				}
+			}
+
+		}, ProtocolCommand.HVALS, args);
+	}
+
+	@Override
+	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hset(key, field, value).get() > 0),
+					ProtocolCommand.HSET, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.hset(key, field, value) > 0), ProtocolCommand.HSET,
+					args);
+		}
+	}
+
+	@Override
+	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hsetnx(key, field, value).get() > 0),
+					ProtocolCommand.HSETNX, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.hsetnx(key, field, value) > 0), ProtocolCommand.HSETNX
+					, args);
+		}
+	}
+
+	@Override
+	public byte[] hGet(final byte[] key, final byte[] field){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hget(key, field).get(), ProtocolCommand.HGET, args);
+		}else{
+			return execute((cmd)->cmd.hget(key, field), ProtocolCommand.HGET, args);
+		}
+	}
+
+	@Override
+	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("data",
+				data);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().hmset(key, data).get()),
+					ProtocolCommand.HMSET, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)), ProtocolCommand.HMSET, args);
+		}
+	}
+
+	@Override
+	public List<byte[]> hMGet(final byte[] key, final byte[]... fields){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("fields",
+				fields);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hmget(key, fields).get(), ProtocolCommand.HMGET, args);
+		}else{
+			return execute((cmd)->cmd.hmget(key, fields), ProtocolCommand.HMGET, args);
+		}
+	}
+
+	@Override
+	public Map<byte[], byte[]> hGetAll(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hgetAll(key).get(), ProtocolCommand.HGETALL, args);
+		}else{
+			return execute((cmd)->cmd.hgetAll(key), ProtocolCommand.HGETALL, args);
+		}
+	}
+
+	@Override
+	public Long hStrLen(final byte[] key, final byte[] field){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hstrlen(key, field).get(), ProtocolCommand.HSTRLEN, args);
+		}else{
+			return execute((cmd)->cmd.hstrlen(key, field), ProtocolCommand.HSTRLEN, args);
+		}
+	}
+
+	@Override
+	public Long hLen(final byte[] key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hlen(key).get(), ProtocolCommand.HLEN, args);
+		}else{
+			return execute((cmd)->cmd.hlen(key), ProtocolCommand.HLEN, args);
+		}
+	}
+
+	@Override
+	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hincrBy(key, field, value).get(), ProtocolCommand.HINCRBY, args);
+		}else{
+			return execute((cmd)->cmd.hincrBy(key, field, value), ProtocolCommand.HINCRBY, args);
+		}
+	}
+
+	@Override
+	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hincrByFloat(key, field, value).get(), ProtocolCommand.HINCRBYFLOAT
+					, args);
+		}else{
+			return execute((cmd)->cmd.hincrByFloat(key, field, value), ProtocolCommand.HINCRBYFLOAT, args);
+		}
+	}
+
+	@Override
+	public Long hDecrBy(final byte[] key, final byte[] field, final long value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field).put("value", value);
+
+		final long val = value > 0 ? value * -1 : value;
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hincrBy(key, field, val).get(), ProtocolCommand.HINCRBY, args);
+		}else{
+			return execute((cmd)->cmd.hincrBy(key, field, val), ProtocolCommand.HINCRBY, args);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor)), ProtocolCommand.HSCAN
+					, args);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor).put("pattern", pattern);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
+					new JedisScanParams(pattern))), ProtocolCommand.HSCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor).put("count", count);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
+					new JedisScanParams(count))), ProtocolCommand.HSCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+			final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor).put("pattern", pattern).put("count", count);
+
+		return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor, new JedisScanParams(pattern
+				, count))), ProtocolCommand.HSCAN, args);
+	}
+
+	@Override
+	public Long hDel(final byte[] key, final byte[]... fields){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hdel(key, fields).get(), ProtocolCommand.HDEL, args);
+		}else{
+			return execute((cmd)->cmd.hdel(key, fields), ProtocolCommand.HDEL, args);
+		}
+
 	}
 
 	@Override

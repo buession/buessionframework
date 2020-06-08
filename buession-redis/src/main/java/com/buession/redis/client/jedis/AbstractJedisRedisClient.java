@@ -24,47 +24,29 @@
  */
 package com.buession.redis.client.jedis;
 
+import com.buession.core.Executor;
+import com.buession.core.utils.NumberUtils;
+import com.buession.lang.Status;
 import com.buession.redis.client.AbstractRedisClient;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryBitMapRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryClientAndServerRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryConfigureRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryDatabaseRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryDebugRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryGeoRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryHashRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryHyperLogLogRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryInternalRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryKeyRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryListRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryLuaRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryPersistenceRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryPubSubRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryReplicationRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinarySetRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinarySortedSetRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryStringRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBinaryTransactionRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisBitMapRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisClientAndServerRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisConfigureRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisDatabaseRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisDebugRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisGeoRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisHashRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisHyperLogLogRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisInternalRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisKeyRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisListRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisLuaRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisPersistenceRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisPubSubRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisReplicationRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisSetRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisSortedSetRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisStringRedisOperations;
-import com.buession.redis.client.jedis.operations.DefaultJedisTransactionRedisOperations;
+import com.buession.redis.core.JedisScanParams;
+import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.Type;
+import com.buession.redis.core.command.KeyCommands;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.exception.NotSupportedTransactionCommandException;
+import com.buession.redis.exception.RedisException;
+import com.buession.redis.transaction.jedis.JedisTransaction;
+import com.buession.redis.utils.ReturnUtils;
+import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.commands.JedisCommands;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static com.buession.redis.utils.ReturnUtils.statusForOK;
 
 /**
  * @author Yong.Teng
@@ -80,193 +62,807 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	protected DefaultJedisKeyRedisOperations createKeyRedisOperations(){
-		return new DefaultJedisKeyRedisOperations<>(this);
+	public boolean exists(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().exists(key).get(), ProtocolCommand.EXISTS, args);
+		}else{
+			return execute((cmd)->cmd.exists(key), ProtocolCommand.EXISTS, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinaryKeyRedisOperations createBinaryKeyRedisOperations(){
-		return new DefaultJedisBinaryKeyRedisOperations<>(this);
+	public Type type(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.enumValueOf(getTransaction().type(key).get(), Type.class),
+					ProtocolCommand.TYPE, args);
+		}else{
+			return execute((cmd)->ReturnUtils.enumValueOf(cmd.type(key), Type.class), ProtocolCommand.TYPE, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisStringRedisOperations createStringRedisOperations(){
-		return new DefaultJedisStringRedisOperations<>(this);
+	public Status expire(final String key, final int lifetime){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("lifetime"
+				, lifetime);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expire(key, lifetime).get() == 1),
+					ProtocolCommand.EXPIRE, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.expire(key, lifetime) == 1), ProtocolCommand.EXPIRE,
+					args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinaryStringRedisOperations createBinaryStringRedisOperations(){
-		return new DefaultJedisBinaryStringRedisOperations<>(this);
+	public Status expireAt(final String key, final long unixTimestamp){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
+				"unixTimestamp", unixTimestamp);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expireAt(key, unixTimestamp).get() == 1),
+					ProtocolCommand.EXPIREAT, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.expireAt(key, unixTimestamp) == 1),
+					ProtocolCommand.EXPIREAT, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisHashRedisOperations createHashRedisOperations(){
-		return new DefaultJedisHashRedisOperations<>(this);
+	public Status pExpire(final String key, final int lifetime){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("lifetime"
+				, lifetime);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpire(key, lifetime).get() == 1),
+					ProtocolCommand.PEXPIRE, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.pexpire(key, lifetime) == 1), ProtocolCommand.PEXPIRE,
+					args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinaryHashRedisOperations createBinaryHashRedisOperations(){
-		return new DefaultJedisBinaryHashRedisOperations<>(this);
+	public Status pExpireAt(final String key, final long unixTimestamp){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
+				"unixTimestamp", unixTimestamp);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() == 1)
+					, ProtocolCommand.PEXPIREAT, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.pexpireAt(key, unixTimestamp) == 1),
+					ProtocolCommand.PEXPIREAT, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisListRedisOperations createListRedisOperations(){
-		return new DefaultJedisListRedisOperations<>(this);
+	public Long ttl(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().ttl(key).get(), ProtocolCommand.TTL, args);
+		}else{
+			return execute((cmd)->cmd.ttl(key), ProtocolCommand.TTL, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinaryListRedisOperations createBinaryListRedisOperations(){
-		return new DefaultJedisBinaryListRedisOperations<>(this);
+	public Long pTtl(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().pttl(key).get(), ProtocolCommand.PTTL, args);
+		}else{
+			return execute((cmd)->cmd.pttl(key), ProtocolCommand.PTTL, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisSetRedisOperations createSetRedisOperations(){
-		return new DefaultJedisSetRedisOperations<>(this);
+	public Status persist(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().persist(key).get() > 0),
+					ProtocolCommand.PERSIST, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.persist(key) > 0), ProtocolCommand.PERSIST, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinarySetRedisOperations createBinarySetRedisOperations(){
-		return new DefaultJedisBinarySetRedisOperations<>(this);
+	public List<String> sort(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sort(key).get(), ProtocolCommand.SORT, args);
+		}else{
+			return execute((cmd)->cmd.sort(key), ProtocolCommand.SORT, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisSortedSetRedisOperations createSortedSetRedisOperations(){
-		return new DefaultJedisSortedSetRedisOperations<>(this);
+	public List<String> sort(final String key, final KeyCommands.SortArgument sortArgument){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
+				"sortArgument", sortArgument);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sort(key, JedisClientUtils.sortArgumentConvert(sortArgument)).get()
+					, ProtocolCommand.SORT, args);
+		}else{
+			return execute((cmd)->cmd.sort(key, JedisClientUtils.sortArgumentConvert(sortArgument)),
+					ProtocolCommand.SORT, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinarySortedSetRedisOperations createBinarySortedSetRedisOperations(){
-		return new DefaultJedisBinarySortedSetRedisOperations<>(this);
+	public byte[] dump(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().dump(key).get(), ProtocolCommand.DUMP, args);
+		}else{
+			return execute((cmd)->cmd.dump(key), ProtocolCommand.DUMP, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisHyperLogLogRedisOperations createHyperLogLogRedisOperations(){
-		return new DefaultJedisHyperLogLogRedisOperations<>(this);
+	public Status restore(final String key, final String serializedValue, final int ttl){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
+				"serializedValue", serializedValue).put("ttl", ttl);
+
+		if(isTransaction()){
+			return execute((cmd)->statusForOK(getTransaction().restore(key, ttl, SafeEncoder.encode(serializedValue)).get()), ProtocolCommand.RESTORE, args);
+		}else{
+			return execute((cmd)->statusForOK(cmd.restore(key, ttl, SafeEncoder.encode(serializedValue))),
+					ProtocolCommand.RESTORE, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinaryHyperLogLogRedisOperations createBinaryHyperLogLogRedisOperations(){
-		return new DefaultJedisBinaryHyperLogLogRedisOperations<>(this);
+	public Status move(final String key, final int db){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("db", db);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().move(key, db).get() > 0),
+					ProtocolCommand.MOVE, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.move(key, db) > 0), ProtocolCommand.MOVE, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisGeoRedisOperations createGeoRedisOperations(){
-		return new DefaultJedisGeoRedisOperations<>(this);
+	public Status set(final String key, final String value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->statusForOK(getTransaction().set(key, value).get()), ProtocolCommand.SET, args);
+		}else{
+			return execute((cmd)->statusForOK(cmd.set(key, value)), ProtocolCommand.SET, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinaryGeoRedisOperations createBinaryGeoRedisOperations(){
-		return new DefaultJedisBinaryGeoRedisOperations<>(this);
+	public Status set(final String key, final String value, final SetArgument setArgument){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value).put("setArgument", setArgument);
+
+		if(isTransaction()){
+			return execute((cmd)->statusForOK(getTransaction().set(key, value,
+					JedisClientUtils.setArgumentConvert(setArgument)).get()), ProtocolCommand.SET, args);
+		}else{
+			return execute((cmd)->statusForOK(cmd.set(key, value, JedisClientUtils.setArgumentConvert(setArgument))),
+					ProtocolCommand.SET, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBitMapRedisOperations createBitMapRedisOperations(){
-		return new DefaultJedisBitMapRedisOperations<>(this);
+	public Status setEx(final String key, final String value, final int lifetime){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value).put("lifetime", lifetime);
+
+		if(isTransaction()){
+			return execute((cmd)->statusForOK(getTransaction().setex(key, lifetime, value).get()),
+					ProtocolCommand.SETEX, args);
+		}else{
+			return execute((cmd)->statusForOK(cmd.setex(key, lifetime, value)), ProtocolCommand.SETEX, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinaryBitMapRedisOperations createBinaryBitMapRedisOperations(){
-		return new DefaultJedisBinaryBitMapRedisOperations<>(this);
+	public Status pSetEx(final String key, final String value, final int lifetime){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value).put("lifetime", lifetime);
+
+		if(isTransaction()){
+			return execute((cmd)->statusForOK(getTransaction().psetex(key, lifetime, value).get()),
+					ProtocolCommand.PSETEX, args);
+		}else{
+			return execute((cmd)->statusForOK(cmd.psetex(key, lifetime, value)), ProtocolCommand.PSETEX, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisTransactionRedisOperations createTransactionRedisOperations(){
-		return new DefaultJedisTransactionRedisOperations<>(this);
+	public Status setNx(final String key, final String value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setnx(key, value).get() > 0),
+					ProtocolCommand.SETNX, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(isTransaction() ?
+					getTransaction().setnx(key, value).get() > 0 : cmd.setnx(key, value) > 0), ProtocolCommand.SETNX,
+					args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinaryTransactionRedisOperations createBinaryTransactionRedisOperations(){
-		return new DefaultJedisBinaryTransactionRedisOperations<>(this);
+	public Long append(final String key, final String value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().append(key, value).get(), ProtocolCommand.APPEND, args);
+		}else{
+			return execute((cmd)->cmd.append(key, value), ProtocolCommand.APPEND, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisPubSubRedisOperations createPubSubRedisOperations(){
-		return new DefaultJedisPubSubRedisOperations<>(this);
+	public String get(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().get(key).get(), ProtocolCommand.GET, args);
+		}else{
+			return execute((cmd)->cmd.get(key), ProtocolCommand.GET, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinaryPubSubRedisOperations createBinaryPubSubRedisOperations(){
-		return new DefaultJedisBinaryPubSubRedisOperations<>(this);
+	public String getSet(final String key, final String value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().getSet(key, value).get(), ProtocolCommand.GETSET, args);
+		}else{
+			return execute((cmd)->cmd.getSet(key, value), ProtocolCommand.GETSET, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisDatabaseRedisOperations createDatabaseRedisOperations(){
-		return new DefaultJedisDatabaseRedisOperations<>(this);
+	public Long incr(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().incr(key).get(), ProtocolCommand.INCR, args);
+		}else{
+			return execute((cmd)->cmd.incr(key), ProtocolCommand.INCR, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinaryDatabaseRedisOperations createBinaryDatabaseRedisOperations(){
-		return new DefaultJedisBinaryDatabaseRedisOperations<>(this);
+	public Long incrBy(final String key, final int value){
+		return incrBy(key, (long) value);
 	}
 
 	@Override
-	protected DefaultJedisLuaRedisOperations createLuaRedisOperations(){
-		return new DefaultJedisLuaRedisOperations<>(this);
+	public Long incrBy(final byte[] key, final int value){
+		return incrBy(key, (long) value);
 	}
 
 	@Override
-	protected DefaultJedisBinaryLuaRedisOperations createBinaryLuaRedisOperations(){
-		return new DefaultJedisBinaryLuaRedisOperations<>(this);
+	public Long incrBy(final String key, final long value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().incrBy(key, value).get(), ProtocolCommand.INCRBY, args);
+		}else{
+			return execute((cmd)->cmd.incrBy(key, value), ProtocolCommand.INCRBY, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisPersistenceRedisOperations createPersistenceRedisOperations(){
-		return new DefaultJedisPersistenceRedisOperations<>(this);
+	public Double incrByFloat(final String key, final float value){
+		return incrByFloat(key, (double) value);
 	}
 
 	@Override
-	protected DefaultJedisBinaryPersistenceRedisOperations createBinaryPersistenceRedisOperations(){
-		return new DefaultJedisBinaryPersistenceRedisOperations<>(this);
+	public Double incrByFloat(final byte[] key, final float value){
+		return incrByFloat(key, (double) value);
 	}
 
 	@Override
-	protected DefaultJedisReplicationRedisOperations createReplicationRedisOperations(){
-		return new DefaultJedisReplicationRedisOperations<>(this);
+	public Double incrByFloat(final String key, final double value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().incrByFloat(key, value).get(), ProtocolCommand.INCRBYFLOAT, args);
+		}else{
+			return execute((cmd)->cmd.incrByFloat(key, value), ProtocolCommand.INCRBYFLOAT, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinaryReplicationRedisOperations createBinaryReplicationRedisOperations(){
-		return new DefaultJedisBinaryReplicationRedisOperations<>(this);
+	public Long decr(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().decr(key).get(), ProtocolCommand.DECR, args);
+		}else{
+			return execute((cmd)->cmd.decr(key), ProtocolCommand.DECR, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisClientAndServerRedisOperations createClientAndServerRedisOperations(){
-		return new DefaultJedisClientAndServerRedisOperations<>(this);
+	public Long decrBy(final String key, final int value){
+		return decrBy(key, (long) value);
 	}
 
 	@Override
-	protected DefaultJedisBinaryClientAndServerRedisOperations createBinaryClientAndServerRedisOperations(){
-		return new DefaultJedisBinaryClientAndServerRedisOperations<>(this);
+	public Long decrBy(final byte[] key, final int value){
+		return decrBy(key, (long) value);
 	}
 
 	@Override
-	protected DefaultJedisConfigureRedisOperations createConfigureRedisOperations(){
-		return new DefaultJedisConfigureRedisOperations<>(this);
+	public Long decrBy(final String key, final long value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
+				value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().decrBy(key, value).get(), ProtocolCommand.DECRBY, args);
+		}else{
+			return execute((cmd)->cmd.decrBy(key, value), ProtocolCommand.DECRBY, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisBinaryConfigureRedisOperations createBinaryConfigureRedisOperations(){
-		return new DefaultJedisBinaryConfigureRedisOperations<>(this);
+	public Long setRange(final String key, final int offset, final String value){
+		return setRange(key, (long) offset, value);
 	}
 
 	@Override
-	protected DefaultJedisInternalRedisOperations createInternalRedisOperations(){
-		return new DefaultJedisInternalRedisOperations<>(this);
+	public Long setRange(final byte[] key, final int offset, final byte[] value){
+		return setRange(key, (long) offset, value);
 	}
 
 	@Override
-	protected DefaultJedisBinaryInternalRedisOperations createBinaryInternalRedisOperations(){
-		return new DefaultJedisBinaryInternalRedisOperations<>(this);
+	public Long setRange(final String key, final long offset, final String value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("offset",
+				offset).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().setrange(key, offset, value).get(), ProtocolCommand.SETRANGE, args);
+		}else{
+			return execute((cmd)->cmd.setrange(key, offset, value), ProtocolCommand.SETRANGE, args);
+		}
 	}
 
 	@Override
-	protected DefaultJedisDebugRedisOperations createDebugRedisOperations(){
-		return new DefaultJedisDebugRedisOperations<>(this);
+	public String getRange(final String key, final int start, final int end){
+		return getRange(key, (long) start, (long) end);
 	}
 
 	@Override
-	protected DefaultJedisBinaryDebugRedisOperations createBinaryDebugRedisOperations(){
-		return new DefaultJedisBinaryDebugRedisOperations<>(this);
+	public byte[] getRange(final byte[] key, final int start, final int end){
+		return getRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public String getRange(final String key, final long start, final long end){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
+				start).put("end", end);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().getrange(key, start, end).get(), ProtocolCommand.GETRANGE, args);
+		}else{
+			return execute((cmd)->cmd.getrange(key, start, end), ProtocolCommand.GETRANGE, args);
+		}
+	}
+
+	@Override
+	public String substr(final String key, final int start, final int end){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
+				start).put("end", end);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().substr(key, start, end).get(), ProtocolCommand.SUBSTR, args);
+		}else{
+			return execute((cmd)->cmd.substr(key, start, end), ProtocolCommand.SUBSTR, args);
+		}
+	}
+
+	@Override
+	public String substr(final String key, final long start, final long end){
+		return substr(key, (int) start, (int) end);
+	}
+
+	@Override
+	public byte[] substr(final byte[] key, final long start, final long end){
+		return substr(key, (int) start, (int) end);
+	}
+
+	@Override
+	public Long strlen(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().strlen(key).get(), ProtocolCommand.STRLEN, args);
+		}else{
+			return execute((cmd)->cmd.strlen(key), ProtocolCommand.STRLEN, args);
+		}
+	}
+
+	@Override
+	public boolean hExists(final String key, final String field){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hexists(key, field).get(), ProtocolCommand.HEXISTS, args);
+		}else{
+			return execute((cmd)->cmd.hexists(key, field), ProtocolCommand.HEXISTS, args);
+		}
+	}
+
+	@Override
+	public Set<String> hKeys(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hkeys(key).get(), ProtocolCommand.HKEYS, args);
+		}else{
+			return execute((cmd)->cmd.hkeys(key), ProtocolCommand.HKEYS, args);
+		}
+	}
+
+	@Override
+	public List<String> hVals(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hvals(key).get(), ProtocolCommand.HVALS, args);
+		}else{
+			return execute((cmd)->cmd.hvals(key), ProtocolCommand.HVALS, args);
+		}
+	}
+
+	@Override
+	public Status hSet(final String key, final String field, final String value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hset(key, field, value).get() > 0),
+					ProtocolCommand.HSET, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.hset(key, field, value) > 0), ProtocolCommand.HSET,
+					args);
+		}
+	}
+
+	@Override
+	public Status hSetNx(final String key, final String field, final String value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hsetnx(key, field, value).get() > 0),
+					ProtocolCommand.HSETNX, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.hsetnx(key, field, value) > 0), ProtocolCommand.HSETNX
+					, args);
+		}
+	}
+
+	@Override
+	public String hGet(final String key, final String field){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hget(key, field).get(), ProtocolCommand.HGET, args);
+		}else{
+			return execute((cmd)->cmd.hget(key, field), ProtocolCommand.HGET, args);
+		}
+	}
+
+	@Override
+	public Status hMSet(final String key, final Map<String, String> data){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("data",
+				data);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().hmset(key, data).get()),
+					ProtocolCommand.HMSET, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)), ProtocolCommand.HMSET, args);
+		}
+	}
+
+	@Override
+	public List<String> hMGet(final String key, final String... fields){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("fields",
+				fields);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hmget(key, fields).get(), ProtocolCommand.HMGET, args);
+		}else{
+			return execute((cmd)->cmd.hmget(key, fields), ProtocolCommand.HMGET, args);
+		}
+	}
+
+	@Override
+	public Map<String, String> hGetAll(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hgetAll(key).get(), ProtocolCommand.HGETALL, args);
+		}else{
+			return execute((cmd)->cmd.hgetAll(key), ProtocolCommand.HGETALL, args);
+		}
+	}
+
+	@Override
+	public Long hStrLen(final String key, final String field){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hstrlen(key, field).get(), ProtocolCommand.HSTRLEN, args);
+		}else{
+			return execute((cmd)->cmd.hstrlen(key, field), ProtocolCommand.HSTRLEN, args);
+		}
+	}
+
+	@Override
+	public Long hLen(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hlen(key).get(), ProtocolCommand.HLEN, args);
+		}else{
+			return execute((cmd)->cmd.hlen(key), ProtocolCommand.HLEN, args);
+		}
+	}
+
+	@Override
+	public Long hIncrBy(final String key, final String field, final int value){
+		return hIncrBy(key, field, (long) value);
+	}
+
+	@Override
+	public Long hIncrBy(final byte[] key, final byte[] field, final int value){
+		return hIncrBy(key, field, (long) value);
+	}
+
+	@Override
+	public Long hIncrBy(final String key, final String field, final long value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hincrBy(key, field, value).get(), ProtocolCommand.HINCRBY, args);
+		}else{
+			return execute((cmd)->cmd.hincrBy(key, field, value), ProtocolCommand.HINCRBY, args);
+		}
+	}
+
+	@Override
+	public Double hIncrByFloat(final String key, final String field, final float value){
+		return hIncrByFloat(key, field, (double) value);
+	}
+
+	@Override
+	public Double hIncrByFloat(final byte[] key, final byte[] field, final float value){
+		return hIncrByFloat(key, field, (double) value);
+	}
+
+	@Override
+	public Double hIncrByFloat(final String key, final String field, final double value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hincrByFloat(key, field, value).get(), ProtocolCommand.HINCRBYFLOAT
+					, args);
+		}else{
+			return execute((cmd)->cmd.hincrByFloat(key, field, value), ProtocolCommand.HINCRBYFLOAT, args);
+		}
+	}
+
+	@Override
+	public Long hDecrBy(final String key, final String field, final int value){
+		return hDecrBy(key, field, (long) value);
+	}
+
+	@Override
+	public Long hDecrBy(final byte[] key, final byte[] field, final int value){
+		return hDecrBy(key, field, (long) value);
+	}
+
+	@Override
+	public Long hDecrBy(final String key, final String field, final long value){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
+				field).put("value", value);
+
+		final long val = value > 0 ? value * -1 : value;
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hincrBy(key, field, val).get(), ProtocolCommand.HINCRBY, args);
+		}else{
+			return execute((cmd)->cmd.hincrBy(key, field, val), ProtocolCommand.HINCRBY, args);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final int cursor){
+		return hScan(key, Integer.toString(cursor));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor){
+		return hScan(key, NumberUtils.int2bytes(cursor));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor){
+		return hScan(key, Long.toString(cursor));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor){
+		return hScan(key, NumberUtils.long2bytes(cursor));
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor)), ProtocolCommand.HSCAN
+					, args);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern){
+		return hScan(key, Integer.toString(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern){
+		return hScan(key, NumberUtils.int2bytes(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
+		return hScan(key, Long.toString(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern){
+		return hScan(key, NumberUtils.long2bytes(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor).put("pattern", pattern);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
+					new JedisScanParams(pattern))), ProtocolCommand.HSCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final int count){
+		return hScan(key, Integer.toString(cursor), count);
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final int count){
+		return hScan(key, NumberUtils.int2bytes(cursor), count);
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count){
+		return hScan(key, Long.toString(cursor), count);
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count){
+		return hScan(key, NumberUtils.long2bytes(cursor), count);
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor).put("count", count);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
+					new JedisScanParams(count))), ProtocolCommand.HSCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern,
+			final int count){
+		return hScan(key, Integer.toString(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern,
+			final int count){
+		return hScan(key, NumberUtils.int2bytes(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
+			final int count){
+		return hScan(key, Long.toString(cursor), pattern, count));
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
+			final int count){
+		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
+			final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor).put("pattern", pattern).put("count", count);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
+					new JedisScanParams(pattern, count))), ProtocolCommand.HSCAN, args);
+		}
+	}
+
+	@Override
+	public Long hDel(final String key, final String... fields){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hdel(key, fields).get(), ProtocolCommand.HDEL, args);
+		}else{
+			return execute((cmd)->cmd.hdel(key, fields), ProtocolCommand.HDEL, args);
+		}
+	}
+
+	protected redis.clients.jedis.Transaction getTransaction(){
+		JedisTransaction jedisTransaction = (JedisTransaction) getConnection().getTransaction();
+		return jedisTransaction.primitive();
+	}
+
+	protected <R> R execute(final Executor<C, R> executor, final ProtocolCommand command) throws RedisException{
+		return super.doExecute(executor, command, null);
+	}
+
+	protected <R> R execute(final Executor<C, R> executor, final ProtocolCommand command,
+			final OperationsCommandArguments arguments){
+		return super.doExecute(executor, command, arguments);
 	}
 
 }
