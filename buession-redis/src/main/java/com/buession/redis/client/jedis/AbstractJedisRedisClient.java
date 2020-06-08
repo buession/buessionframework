@@ -2585,6 +2585,19 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		}
 	}
 
+	@Override
+	public Status pfAdd(final String key, final String... elements){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("elements"
+				, elements);
+
+		if(isTransaction()){
+			return execute((cmd)->statusForBool(getTransaction().pfadd(key, elements).get() > 0),
+					ProtocolCommand.PFADD, args);
+		}else{
+			return execute((cmd)->statusForBool(cmd.pfadd(key, elements) > 0), ProtocolCommand.PFADD, args);
+		}
+	}
+
 	protected redis.clients.jedis.Transaction getTransaction(){
 		JedisTransaction jedisTransaction = (JedisTransaction) getConnection().getTransaction();
 		return jedisTransaction.primitive();

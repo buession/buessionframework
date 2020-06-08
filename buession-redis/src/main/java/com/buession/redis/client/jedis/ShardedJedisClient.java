@@ -1659,6 +1659,19 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 		}
 	}
 
+	@Override
+	public Status pfAdd(final byte[] key, final byte[]... elements){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("elements"
+				, elements);
+
+		if(isTransaction()){
+			return execute((cmd)->statusForBool(getTransaction().pfadd(key, elements).get() > 0),
+					ProtocolCommand.PFADD, args);
+		}else{
+			return execute((cmd)->statusForBool(cmd.pfadd(key, elements) > 0), ProtocolCommand.PFADD, args);
+		}
+	}
+
 	protected final static Jedis getShard(final ShardedJedis shardedJedis, final String key){
 		return shardedJedis.getShard(key);
 	}

@@ -1357,8 +1357,8 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 
 	@Override
 	public Long rPush(final byte[] key, final byte[]... values){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("values",
-		 values);
+		final OperationsCommandArguments ar
+		perationsCommandArguments.getInstance().put("key", key).put("values", values);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().rpush(key, values).get(), ProtocolCommand.RPUSH, args);
@@ -2416,23 +2416,64 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
+	public Status pfAdd(final byte[] key, final byte[]... elements){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("elements"
+		, elements);
+
+		if(isTransaction()){
+			return execute((cmd)->statusForBool(getTransaction().pfadd(key, elements).get() > 0),
+			 ProtocolCommand.PFADD, args);
+		}else{
+			return execute((cmd)->statusForBool(cmd.pfadd(key, elements) > 0), ProtocolCommand.PFADD, args);
+		}
+	}
+
+	@Override
 	public Status pfMerge(final String destKey, final String... keys){
-		return execute(hyperLogLogOperations, (ops)->ops.pfMerge(destKey, keys));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("destKey", destKey).put(
+				"keys", keys);
+
+		if(isTransaction()){
+			return execute((Jedis cmd)->statusForOK(getTransaction().pfmerge(destKey, keys).get()),
+			 ProtocolCommand.PFMERGE, args);
+		}else{
+			return execute((Jedis cmd)->statusForOK(cmd.pfmerge(destKey, keys)), ProtocolCommand.PFMERGE, args);
+		}
 	}
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
-		return execute(binaryHyperLogLogOperations, (ops)->ops.pfMerge(destKey, keys));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("destKey", destKey).put(
+				"keys", keys);
+
+		if(isTransaction()){
+			return execute((Jedis cmd)->statusForOK(getTransaction().pfmerge(destKey, keys).get()),
+			 ProtocolCommand.PFMERGE, args);
+		}else{
+			return execute((Jedis cmd)->statusForOK(cmd.pfmerge(destKey, keys)), ProtocolCommand.PFMERGE, args);
+		}
 	}
 
 	@Override
 	public Long pfCount(final String... keys){
-		return execute(hyperLogLogOperations, (ops)->ops.pfCount(keys));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("keys", keys);
+
+		if(isTransaction()){
+			return execute((Jedis cmd)->getTransaction().pfcount(keys).get(), ProtocolCommand.PFCOUNT, args);
+		}else{
+			return execute((Jedis cmd)->cmd.pfcount(keys), ProtocolCommand.PFCOUNT, args);
+		}
 	}
 
 	@Override
 	public Long pfCount(final byte[]... keys){
-		return execute(binaryHyperLogLogOperations, (ops)->ops.pfCount(keys));
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("keys", keys);
+
+		if(isTransaction()){
+			return execute((Jedis cmd)->getTransaction().pfcount(keys).get(), ProtocolCommand.PFCOUNT, args);
+		}else{
+			return execute((Jedis cmd)->cmd.pfcount(keys), ProtocolCommand.PFCOUNT, args);
+		}
 	}
 
 	@Override
