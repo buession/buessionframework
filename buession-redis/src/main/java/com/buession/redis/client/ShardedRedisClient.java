@@ -221,6 +221,16 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
+	default List<String> blPop(final String[] keys, final int timeout){
+		throw new NotSupportedCommandException(ProtocolCommand.BLPOP);
+	}
+
+	@Override
+	default List<byte[]> blPop(final byte[][] keys, final int timeout){
+		throw new NotSupportedCommandException(ProtocolCommand.BLPOP);
+	}
+
+	@Override
 	default String rPoplPush(final String source, final String destKey){
 		throw new NotSupportedCommandException(ProtocolCommand.RPOPLPUSH);
 	}
@@ -228,6 +238,16 @@ public interface ShardedRedisClient extends RedisClient {
 	@Override
 	default byte[] rPoplPush(final byte[] source, final byte[] destKey){
 		throw new NotSupportedCommandException(ProtocolCommand.RPOPLPUSH);
+	}
+
+	@Override
+	default List<String> brPop(final String[] keys, final int timeout){
+		throw new NotSupportedCommandException(ProtocolCommand.BRPOP);
+	}
+
+	@Override
+	default List<byte[]> brPop(final byte[][] keys, final int timeout){
+		throw new NotSupportedCommandException(ProtocolCommand.BRPOP);
 	}
 
 	@Override
