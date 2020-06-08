@@ -26,11 +26,13 @@ package com.buession.redis.client.jedis;
 
 import com.buession.core.Executor;
 import com.buession.core.utils.NumberUtils;
+import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.AbstractRedisClient;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.JedisScanParams;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -42,9 +44,11 @@ import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.commands.JedisCommands;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.buession.redis.utils.ReturnUtils.statusForOK;
 
@@ -817,7 +821,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
 			final int count){
-		return hScan(key, Long.toString(cursor), pattern, count));
+		return hScan(key, Long.toString(cursor), pattern, count);
 	}
 
 	@Override
@@ -1055,6 +1059,1529 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 			return execute((cmd)->getTransaction().llen(key).get(), ProtocolCommand.LLEN, args);
 		}else{
 			return execute((cmd)->cmd.llen(key), ProtocolCommand.LLEN, args);
+		}
+	}
+
+	@Override
+	public Long sAdd(final String key, final String... members){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
+				, members);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sadd(key, members).get(), ProtocolCommand.SADD, args);
+		}else{
+			return execute((cmd)->cmd.sadd(key, members), ProtocolCommand.SADD, args);
+		}
+	}
+
+	@Override
+	public Long sCard(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().scard(key).get(), ProtocolCommand.SCARD, args);
+		}else{
+			return execute((cmd)->cmd.scard(key), ProtocolCommand.SCARD, args);
+		}
+	}
+
+	@Override
+	public boolean sisMember(final String key, final String member){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
+				member);
+
+		if(isTransaction()){
+			return execute((cmd)->cmd.sismember(key, member), ProtocolCommand.SISMEMBER, args);
+		}else{
+			return execute((cmd)->cmd.sismember(key, member), ProtocolCommand.SISMEMBER, args);
+		}
+	}
+
+	@Override
+	public Set<String> sMembers(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().smembers(key).get(), ProtocolCommand.SMEMBERS, args);
+		}else{
+			return execute((cmd)->cmd.smembers(key), ProtocolCommand.SMEMBERS, args);
+		}
+	}
+
+	@Override
+	public String sPop(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().spop(key).get(), ProtocolCommand.SPOP, args);
+		}else{
+			return execute((cmd)->cmd.spop(key), ProtocolCommand.SPOP, args);
+		}
+	}
+
+	@Override
+	public String sRandMember(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().srandmember(key).get(), ProtocolCommand.SRANDMEMBER, args);
+		}else{
+			return execute((cmd)->cmd.srandmember(key), ProtocolCommand.SRANDMEMBER, args);
+		}
+	}
+
+	@Override
+	public List<String> sRandMember(final String key, final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("count",
+				count);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().srandmember(key, count).get(), ProtocolCommand.SRANDMEMBER, args);
+		}else{
+			return execute((cmd)->cmd.srandmember(key, count), ProtocolCommand.SRANDMEMBER, args);
+		}
+	}
+
+	@Override
+	public List<String> sRandMember(final String key, final long count){
+		return sRandMember(key, (int) count);
+	}
+
+	@Override
+	public List<byte[]> sRandMember(final byte[] key, final long count){
+		return sRandMember(key, (int) count);
+	}
+
+	@Override
+	public Long sRem(final String key, final String... members){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
+				, members);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().srem(key, members).get(), ProtocolCommand.SREM, args);
+		}else{
+			return execute((cmd)->cmd.srem(key, members), ProtocolCommand.SREM, args);
+		}
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final int cursor){
+		return sScan(key, Integer.toString(cursor));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor){
+		return sScan(key, NumberUtils.int2bytes(cursor));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final long cursor){
+		return sScan(key, Long.toString(cursor));
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor){
+		return sScan(key, NumberUtils.long2bytes(cursor));
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final String cursor){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor)),
+					ProtocolCommand.SSCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern){
+		return sScan(key, Integer.toString(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern){
+		return sScan(key, NumberUtils.int2bytes(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern){
+		return sScan(key, Long.toString(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern){
+		return sScan(key, NumberUtils.long2bytes(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor).put("pattern", pattern);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+					new JedisScanParams(pattern))), ProtocolCommand.SSCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final int cursor, final int count){
+		return sScan(key, Integer.toString(cursor), count);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final int count){
+		return sScan(key, NumberUtils.int2bytes(cursor), count);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final int count){
+		return sScan(key, Long.toString(cursor), count);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final int count){
+		return sScan(key, NumberUtils.long2bytes(cursor), count);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor).put("count", count);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+					new JedisScanParams(count))), ProtocolCommand.SSCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
+			final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor).put("pattern", pattern).put("count", count);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+					new JedisScanParams(pattern, count))), ProtocolCommand.SSCAN, args);
+		}
+	}
+
+	@Override
+	public Long zAdd(final String key, final Map<String, Number> members){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
+				, members);
+
+		return execute(new Executor<C, Long>() {
+
+			@Override
+			public Long execute(C cmd){
+				final Map<String, Double> data = new LinkedHashMap<>(members.size());
+
+				members.forEach((key, value)->data.put(key, value.doubleValue()));
+
+				if(isTransaction()){
+					return getTransaction().zadd(key, data).get();
+				}else{
+					return cmd.zadd(key, data);
+				}
+			}
+
+		}, ProtocolCommand.ZADD, args);
+	}
+
+	@Override
+	public Long zAdd(final String key, final List<KeyValue<String, Number>> members){
+		final Map<String, Number> data = members.stream().collect(Collectors.toMap(KeyValue::getKey,
+				KeyValue::getValue, (oldVal, currVal)->currVal, LinkedHashMap::new));
+		return zAdd(key, data);
+	}
+
+	@Override
+	public Long zAdd(final byte[] key, final List<KeyValue<byte[], Number>> members){
+		final Map<byte[], Number> data = members.stream().collect(Collectors.toMap(KeyValue::getKey,
+				KeyValue::getValue, (oldVal, currVal)->currVal, LinkedHashMap::new));
+		return zAdd(key, data);
+	}
+
+	@Override
+	public Double zScore(final String key, final String member){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
+				member);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zscore(key, member).get(), ProtocolCommand.ZSCORE, args);
+		}else{
+			return execute((cmd)->cmd.zscore(key, member), ProtocolCommand.ZSCORE, args);
+		}
+	}
+
+	@Override
+	public Long zCard(final String key){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((C cmd)->getTransaction().zcard(key).get(), ProtocolCommand.ZCARD, args);
+		}else{
+			return execute((C cmd)->cmd.zcard(key), ProtocolCommand.ZCARD, args);
+		}
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final float increment){
+		return zIncrBy(key, member, (double) increment);
+	}
+
+	@Override
+	public Double zIncrBy(final byte[] key, final byte[] member, final float increment){
+		return zIncrBy(key, member, (double) increment);
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final double increment){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
+				member).put("increment", increment);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zincrby(key, increment, member).get(), ProtocolCommand.ZINCRBY,
+					args);
+		}else{
+			return execute((cmd)->cmd.zincrby(key, increment, member), ProtocolCommand.ZINCRBY, args);
+		}
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final int increment){
+		return zIncrBy(key, member, (double) increment);
+	}
+
+	@Override
+	public Double zIncrBy(final byte[] key, final byte[] member, final int increment){
+		return zIncrBy(key, member, (double) increment);
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final long increment){
+		return zIncrBy(key, member, (double) increment);
+	}
+
+	@Override
+	public Double zIncrBy(final byte[] key, final byte[] member, final long increment){
+		return zIncrBy(key, member, (double) increment);
+	}
+
+	@Override
+	public Long zCount(final String key, final float min, final float max){
+		return zCount(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final float min, final float max){
+		return zCount(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zCount(final String key, final double min, final double max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zcount(key, min, max).get(), ProtocolCommand.ZCOUNT, args);
+		}else{
+			return execute((cmd)->cmd.zcount(key, min, max), ProtocolCommand.ZCOUNT, args);
+		}
+	}
+
+	@Override
+	public Long zCount(final String key, final int min, final int max){
+		return zCount(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final int min, final int max){
+		return zCount(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zCount(final String key, final long min, final long max){
+		return zCount(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final long min, final long max){
+		return zCount(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zCount(final String key, final String min, final String max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zcount(key, min, max).get(), ProtocolCommand.ZCOUNT, args);
+		}else{
+			return execute((cmd)->cmd.zcount(key, min, max), ProtocolCommand.ZCOUNT, args);
+		}
+	}
+
+	@Override
+	public Set<String> zRange(final String key, final int start, final int end){
+		return zRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Set<byte[]> zRange(final byte[] key, final int start, final int end){
+		return zRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Set<String> zRange(final String key, final long start, final long end){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
+				start).put("end", end);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrange(key, start, end).get(), ProtocolCommand.ZRANGE, args);
+		}else{
+			return execute((cmd)->cmd.zrange(key, start, end), ProtocolCommand.ZRANGE, args);
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRangeWithScores(final String key, final int start, final int end){
+		return zRangeWithScores(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Set<Tuple> zRangeWithScores(final byte[] key, final int start, final int end){
+		return zRangeWithScores(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Set<Tuple> zRangeWithScores(final String key, final long start, final long end){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
+				start).put("end", end);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeWithScores(key, start,
+					end).get()), ProtocolCommand.ZRANGE, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeWithScores(key, start, end)),
+					ProtocolCommand.ZRANGE, args);
+		}
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final float min, final float max){
+		return zRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final float min, final float max){
+		return zRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final double min, final double max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get(), ProtocolCommand.ZRANGEBYSCORE,
+					args);
+		}else{
+			return execute((cmd)->cmd.zrangeByScore(key, min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+		}
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final int min, final int max){
+		return zRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final int min, final int max){
+		return zRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final long min, final long max){
+		return zRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max){
+		return zRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final String min, final String max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get(), ProtocolCommand.ZRANGEBYSCORE,
+					args);
+		}else{
+			return execute((cmd)->cmd.zrangeByScore(key, min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+		}
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final float min, final float max, final int offset,
+			final int count){
+		return zRangeByScore(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return zRangeByScore(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final double min, final double max, final int offset,
+			final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max).put("offset", offset).put("count", count);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrangeByScore(key, min, max, offset, count).get(),
+					ProtocolCommand.ZRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->cmd.zrangeByScore(key, min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE,
+					args);
+		}
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final int min, final int max, final int offset,
+			final int count){
+		return zRangeByScore(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final int min, final int max, final int offset,
+			final int count){
+		return zRangeByScore(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final long min, final long max, final int offset,
+			final int count){
+		return zRangeByScore(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return zRangeByScore(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final String min, final String max, final int offset,
+			final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max).put("offset", offset).put("count", count);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrangeByScore(key, min, max, offset, count).get(),
+					ProtocolCommand.ZRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->cmd.zrangeByScore(key, min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE,
+					args);
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max){
+		return zRangeByScoreWithScores(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max){
+		return zRangeByScoreWithScores(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
+					, max).get()), ProtocolCommand.ZRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)),
+					ProtocolCommand.ZRANGEBYSCORE, args);
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max){
+		return zRangeByScoreWithScores(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max){
+		return zRangeByScoreWithScores(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max){
+		return zRangeByScoreWithScores(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final long min, final long max){
+		return zRangeByScoreWithScores(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
+					, max).get()), ProtocolCommand.ZRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)),
+					ProtocolCommand.ZRANGEBYSCORE, args);
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
+			final int count){
+		return zRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return zRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
+			final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max).put("offset", offset).put("count", count);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
+					, max, offset, count).get()), ProtocolCommand.ZRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max, offset
+					, count)), ProtocolCommand.ZRANGEBYSCORE, args);
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
+			final int count){
+		return zRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset,
+			final int count){
+		return zRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
+			final int count){
+		return zRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return zRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final float min, final float max){
+		return zRangeByLex(key, Float.toString(min), Float.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max){
+		return zRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final double min, final double max){
+		return zRangeByLex(key, Double.toString(min), Double.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max){
+		return zRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final int min, final int max){
+		return zRangeByLex(key, Integer.toString(min), Integer.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max){
+		return zRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final long min, final long max){
+		return zRangeByLex(key, Long.toString(min), Long.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max){
+		return zRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final String min, final String max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrangeByLex(key, min, max).get(), ProtocolCommand.ZRANGEBYLEX,
+					args);
+		}else{
+			return execute((cmd)->cmd.zrangeByLex(key, min, max), ProtocolCommand.ZRANGEBYLEX, args);
+		}
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final float min, final float max, final int offset,
+			final int count){
+		return zRangeByLex(key, Float.toString(min), Float.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return zRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final double min, final double max, final int offset,
+			final int count){
+		return zRangeByLex(key, Double.toString(min), Double.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final int offset,
+			final int count){
+		return zRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final int min, final int max, final int offset, final int count){
+		return zRangeByLex(key, Integer.toString(min), Integer.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max, final int offset, final int count){
+		return zRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final long min, final long max, final int offset,
+			final int count){
+		return zRangeByLex(key, Long.toString(min), Long.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return zRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final String min, final String max, final int offset,
+			final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max).put("offset", offset).put("count", count);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrangeByLex(key, min, max, offset, count).get(),
+					ProtocolCommand.ZRANGEBYLEX, args);
+		}else{
+			return execute((cmd)->cmd.zrangeByLex(key, min, max, offset, count), ProtocolCommand.ZRANGEBYLEX, args);
+		}
+	}
+
+	@Override
+	public Long zRank(final String key, final String member){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
+				member);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrank(key, member).get(), ProtocolCommand.ZRANK, args);
+		}else{
+			return execute((cmd)->cmd.zrank(key, member), ProtocolCommand.ZRANK, args);
+		}
+	}
+
+	@Override
+	public Long zRevRank(final String key, final String member){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
+				member);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrank(key, member).get(), ProtocolCommand.ZRANK, args);
+		}else{
+			return execute((cmd)->cmd.zrevrank(key, member), ProtocolCommand.ZRANK, args);
+		}
+	}
+
+	@Override
+	public Long zRem(final String key, final String... members){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
+				, members);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrem(key, members).get(), ProtocolCommand.ZREM, args);
+		}else{
+			return execute((cmd)->cmd.zrem(key, members), ProtocolCommand.ZREM, args);
+		}
+	}
+
+	@Override
+	public Long zRemRangeByRank(final String key, final int start, final int end){
+		return zRemRangeByRank(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Long zRemRangeByRank(final byte[] key, final int start, final int end){
+		return zRemRangeByRank(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Long zRemRangeByRank(final String key, final long start, final long end){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
+				start).put("end", end);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zremrangeByRank(key, start, end).get(),
+					ProtocolCommand.ZREMRANGEBYRANK, args);
+		}else{
+			return execute((cmd)->cmd.zremrangeByRank(key, start, end), ProtocolCommand.ZREMRANGEBYRANK, args);
+		}
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final float min, final float max){
+		return zRemRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final float min, final float max){
+		return zRemRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final double min, final double max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get(),
+					ProtocolCommand.ZREMRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->cmd.zremrangeByScore(key, min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+		}
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final int min, final int max){
+		return zRemRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final int min, final int max){
+		return zRemRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final long min, final long max){
+		return zRemRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final long min, final long max){
+		return zRemRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final String min, final String max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get(),
+					ProtocolCommand.ZREMRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->cmd.zremrangeByScore(key, min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+		}
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final float min, final float max){
+		return zRemRangeByLex(key, Float.toString(min), Float.toString(max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final byte[] key, final float min, final float max){
+		return zRemRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final double min, final double max){
+		return zRemRangeByLex(key, Double.toString(min), Double.toString(max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final byte[] key, final double min, final double max){
+		return zRemRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final int min, final int max){
+		return zRemRangeByLex(key, Integer.toString(min), Integer.toString(max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final byte[] key, final int min, final int max){
+		return zRemRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final long min, final long max){
+		return zRemRangeByLex(key, Long.toString(min), Long.toString(max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final byte[] key, final long min, final long max){
+		return zRemRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final String min, final String max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zremrangeByLex(key, min, max).get(), ProtocolCommand.ZREMRANGEBYLEX
+					, args);
+		}else{
+			return execute((cmd)->getTransaction().zremrangeByLex(key, min, max).get(), ProtocolCommand.ZREMRANGEBYLEX
+					, args);
+		}
+	}
+
+	@Override
+	public Set<String> zRevRange(final String key, final int start, final int end){
+		return zRevRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Set<byte[]> zRevRange(final byte[] key, final int start, final int end){
+		return zRevRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Set<String> zRevRange(final String key, final long start, final long end){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
+				start).put("end", end);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrange(key, start, end).get(), ProtocolCommand.ZREVRANGE, args);
+		}else{
+			return execute((cmd)->cmd.zrevrange(key, start, end), ProtocolCommand.ZREVRANGE, args);
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeWithScores(final String key, final int start, final int end){
+		return zRevRangeWithScores(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeWithScores(final byte[] key, final int start, final int end){
+		return zRevRangeWithScores(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeWithScores(final String key, final long start, final long end){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
+				start).put("end", end);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeWithScores(key, start,
+					end).get()), ProtocolCommand.ZREVRANGE, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeWithScores(key, start, end)),
+					ProtocolCommand.ZREVRANGE, args);
+		}
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final float min, final float max){
+		return zRevRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final float min, final float max){
+		return zRevRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final double min, final double max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get(),
+					ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->cmd.zrevrangeByScore(key, min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final int min, final int max){
+		return zRevRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final int min, final int max){
+		return zRevRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final long min, final long max){
+		return zRevRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final long min, final long max){
+		return zRevRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final String min, final String max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get(),
+					ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->cmd.zrevrangeByScore(key, min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final float min, final float max, final int offset,
+			final int count){
+		return zRevRangeByScore(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return zRevRangeByScore(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final double min, final double max, final int offset,
+			final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max).put("offset", offset).put("count", count);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get(),
+					ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->cmd.zrevrangeByScore(key, min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE
+					, args);
+		}
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final int min, final int max, final int offset,
+			final int count){
+		return zRevRangeByScore(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final int min, final int max, final int offset,
+			final int count){
+		return zRevRangeByScore(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final long min, final long max, final int offset,
+			final int count){
+		return zRevRangeByScore(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return zRevRangeByScore(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final String min, final String max, final int offset,
+			final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max).put("offset", offset).put("count", count);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get(),
+					ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->cmd.zrevrangeByScore(key, min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE
+					, args);
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float min, final float max){
+		return zRevRangeByScoreWithScores(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max){
+		return zRevRangeByScoreWithScores(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
+					min, max).get()), ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)),
+					ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max){
+		return zRevRangeByScoreWithScores(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max){
+		return zRevRangeByScoreWithScores(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max){
+		return zRevRangeByScoreWithScores(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max){
+		return zRevRangeByScoreWithScores(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
+					min, max).get()), ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)),
+					ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
+			final int count){
+		return zRevRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return zRevRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
+			final int offset, final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max).put("offset", offset).put("count", count);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
+					min, max, offset, count).get()), ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max,
+					offset, count)), ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
+			final int count){
+		return zRevRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset,
+			final int count){
+		return zRevRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
+			final int count){
+		return zRevRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return zRevRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
+			final int offset, final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max).put("offset", offset).put("count", count);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
+					min, max, offset, count).get()), ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max,
+					offset, count)), ProtocolCommand.ZREVRANGEBYSCORE, args);
+		}
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final float min, final float max){
+		return zRevRangeByLex(key, Float.toString(min), Float.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max){
+		return zRevRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final double min, final double max){
+		return zRevRangeByLex(key, Double.toString(min), Double.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max){
+		return zRevRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final int min, final int max){
+		return zRevRangeByLex(key, Integer.toString(min), Integer.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max){
+		return zRevRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final long min, final long max){
+		return zRevRangeByLex(key, Long.toString(min), Long.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max){
+		return zRevRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final String min, final String max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max).put("min", min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max).get(), ProtocolCommand.ZREVRANGEBYLEX
+					, args);
+		}else{
+			return execute((cmd)->cmd.zrevrangeByLex(key, min, max), ProtocolCommand.ZREVRANGEBYLEX, args);
+		}
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final float min, final float max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, Float.toString(min), Float.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final double min, final double max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, Double.toString(min), Double.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final int min, final int max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, Integer.toString(min), Integer.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final long min, final long max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, Long.toString(min), Long.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final String min, final String max, final int offset,
+			final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max).put("min", min).put("max", max).put("offset", offset).put("count", count);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max, offset, count).get(),
+					ProtocolCommand.ZREVRANGEBYLEX, args);
+		}else{
+			return execute((cmd)->cmd.zrevrangeByLex(key, min, max, offset, count), ProtocolCommand.ZREVRANGEBYLEX,
+					args);
+		}
+	}
+
+	@Override
+	public Long zLexCount(final String key, final float min, final float max){
+		return zLexCount(key, Float.toString(min), Float.toString(max));
+	}
+
+	@Override
+	public Long zLexCount(final byte[] key, final float min, final float max){
+		return zLexCount(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
+	}
+
+	@Override
+	public Long zLexCount(final String key, final double min, final double max){
+		return zLexCount(key, Double.toString(min), Double.toString(max));
+	}
+
+	@Override
+	public Long zLexCount(final byte[] key, final double min, final double max){
+		return zLexCount(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+	}
+
+	@Override
+	public Long zLexCount(final String key, final int min, final int max){
+		return zLexCount(key, Integer.toString(min), Integer.toString(max));
+	}
+
+	@Override
+	public Long zLexCount(final byte[] key, final int min, final int max){
+		return zLexCount(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
+	}
+
+	@Override
+	public Long zLexCount(final String key, final long min, final long max){
+		return zLexCount(key, Long.toString(min), Long.toString(max));
+	}
+
+	@Override
+	public Long zLexCount(final byte[] key, final long min, final long max){
+		return zLexCount(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
+	}
+
+	@Override
+	public Long zLexCount(final String key, final String min, final String max){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
+				min).put("max", max).put("min", min).put("max", max);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zlexcount(key, min, max).get(), ProtocolCommand.ZLEXCOUNT, args);
+		}else{
+			return execute((cmd)->cmd.zlexcount(key, min, max), ProtocolCommand.ZLEXCOUNT, args);
+		}
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final int cursor){
+		return zScan(key, Integer.toString(cursor));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor){
+		return zScan(key, NumberUtils.int2bytes(cursor));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor){
+		return zScan(key, Long.toString(cursor));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor){
+		return zScan(key, NumberUtils.long2bytes(cursor));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor)),
+					ProtocolCommand.ZSCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern){
+		return zScan(key, Integer.toString(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final byte[] pattern){
+		return zScan(key, NumberUtils.int2bytes(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern){
+		return zScan(key, Long.toString(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern){
+		return zScan(key, NumberUtils.long2bytes(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor).put("pattern", pattern);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
+					new JedisScanParams(pattern))), ProtocolCommand.ZSCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final int count){
+		return zScan(key, Integer.toString(cursor), Integer.toString(count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final int count){
+		return zScan(key, NumberUtils.int2bytes(cursor), NumberUtils.int2bytes(count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final int count){
+		return zScan(key, Long.toString(cursor), Long.toString(count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final int count){
+		return zScan(key, NumberUtils.long2bytes(cursor), NumberUtils.long2bytes(count));
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor).put("count", count);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
+					new JedisScanParams(count))), ProtocolCommand.ZSCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern, final int count){
+		return zScan(key, Integer.toString(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final int count){
+		return zScan(key, Long.toString(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final byte[] pattern, final int count){
+		return zScan(key, NumberUtils.int2bytes(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(byte[] key, long cursor, byte[] pattern, int count){
+		return zScan(key, NumberUtils.long2bytes(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final int count){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
+				cursor).put("pattern", pattern).put("count", count);
+
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
+					new JedisScanParams(pattern, count))), ProtocolCommand.ZSCAN, args);
 		}
 	}
 

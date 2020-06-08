@@ -209,8 +209,8 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sinterstore.html" target="_blank">http://redisdoc.com/set/sinterstore
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sinterstore.html" target="_blank">http://redisdoc
+	 * .com/set/sinterstorehtml</a></p>
 	 *
 	 * @param destKey
 	 * 		目标 Key
