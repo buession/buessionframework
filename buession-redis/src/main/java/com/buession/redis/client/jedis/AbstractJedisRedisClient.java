@@ -29,6 +29,8 @@ import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.client.AbstractRedisClient;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.GeoRadius;
+import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.JedisScanParams;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
@@ -44,6 +46,7 @@ import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.commands.JedisCommands;
+import redis.clients.jedis.params.GeoRadiusParam;
 import redis.clients.jedis.params.SetParams;
 
 import java.util.LinkedHashMap;
@@ -1527,6 +1530,110 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		}else{
 			return execute((cmd)->JedisClientUtils.geoListDeconvert(cmd.geopos(key, members)), ProtocolCommand.GEOPOS,
 					args);
+		}
+	}
+
+	@Override
+	public Double geoDist(final String key, final String member1, final String member2){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member1", member1).put(
+				"member2", member2);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geodist(key, member1, member2).get(), ProtocolCommand.GEODIST,
+					args);
+		}else{
+			return execute((cmd)->cmd.geodist(key, member1, member2), ProtocolCommand.GEODIST, args);
+		}
+	}
+
+	@Override
+	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member1", member1).put(
+				"member2", member2).put("unit", unit);
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geodist(key, member1, member2, geoUnit).get(),
+					ProtocolCommand.GEODIST, args);
+		}else{
+			return execute((cmd)->cmd.geodist(key, member1, member2, geoUnit), ProtocolCommand.GEODIST, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+			final double radius, final GeoUnit unit){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put(
+				"latitude", latitude).put("radius", radius).put("unit", unit);
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
+					latitude, radius, geoUnit).get()), ProtocolCommand.GEORADIUS, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
+					radius, geoUnit)), ProtocolCommand.GEORADIUS, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+			final double radius, final GeoUnit unit, final GeoArgument geoArgument){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put(
+				"latitude", latitude).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
+					latitude, radius, geoUnit, geoRadiusParam).get()), ProtocolCommand.GEORADIUS, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
+					radius, geoUnit, geoRadiusParam)), ProtocolCommand.GEORADIUS, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+			final GeoUnit unit){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("radius"
+				, radius).put("unit", unit);
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
+					member, radius, geoUnit).get()), ProtocolCommand.GEORADIUSBYMEMBER, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
+					geoUnit)), ProtocolCommand.GEORADIUSBYMEMBER, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+			final GeoUnit unit, final GeoArgument geoArgument){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("radius"
+				, radius).put("unit", unit).put("geoArgument", geoArgument);
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
+					member, radius, geoUnit, geoRadiusParam).get()), ProtocolCommand.GEORADIUSBYMEMBER, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
+					geoUnit, geoRadiusParam)), ProtocolCommand.GEORADIUSBYMEMBER, args);
+		}
+	}
+
+	@Override
+	public List<String> geoHash(final String key, final String... members){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geohash(key, members).get(), ProtocolCommand.GEOHASH, args);
+		}else{
+			return execute((cmd)->cmd.geohash(key, members), ProtocolCommand.GEOHASH, args);
 		}
 	}
 

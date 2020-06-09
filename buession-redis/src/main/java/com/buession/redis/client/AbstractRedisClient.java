@@ -36,6 +36,7 @@ import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
+import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.RedisException;
@@ -1150,277 +1151,99 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
-	public Double geoDist(final String key, final String member1, final String member2){
-		return execute(geoOperations, (ops)->ops.geoDist(key, member1, member2));
-	}
-
-	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
-		return execute(binaryGeoOperations, (ops)->ops.geoDist(key, member1, member2));
-	}
-
-	@Override
-	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
-		return execute(geoOperations, (ops)->ops.geoDist(key, member1, member2, unit));
-	}
-
-	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
-		return execute(binaryGeoOperations, (ops)->ops.geoDist(key, member1, member2, unit));
-	}
-
-	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 			final double radius){
-		return execute(geoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius));
+		return geoRadius(key, longitude, longitude, radius, GeoUnit.M);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 			final double radius){
-		return execute(binaryGeoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-			final double radius, final GeoUnit unit){
-		return execute(geoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, unit));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius, final GeoUnit unit){
-		return execute(binaryGeoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, unit));
+		return geoRadius(key, longitude, longitude, radius, GeoUnit.M);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 			final double radius, final GeoArgument geoArgument){
-		return execute(geoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, geoArgument));
+		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoArgument);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius, final GeoArgument geoArgument){
-		return execute(binaryGeoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, geoArgument));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-			final double radius, final GeoUnit unit, final GeoArgument geoArgument){
-		return execute(geoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, unit, geoArgument));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius, final GeoUnit unit, final GeoArgument geoArgument){
-		return execute(binaryGeoOperations, (ops)->ops.geoRadius(key, longitude, latitude, radius, unit, geoArgument));
+			final double radius, final GeoCommands.GeoArgument geoArgument){
+		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoArgument);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius){
-		return execute(geoOperations, (ops)->ops.geoRadiusByMember(key, member, radius));
+		return geoRadiusByMember(key, member, radius, GeoUnit.M);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius){
-		return execute(binaryGeoOperations, (ops)->ops.geoRadiusByMember(key, member, radius));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-			final GeoUnit unit){
-		return execute(geoOperations, (ops)->ops.geoRadiusByMember(key, member, radius, unit));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoUnit unit){
-		return execute(binaryGeoOperations, (ops)->ops.geoRadiusByMember(key, member, radius, unit));
+		return geoRadiusByMember(key, member, radius, GeoUnit.M);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 			final GeoArgument geoArgument){
-		return execute(geoOperations, (ops)->ops.geoRadiusByMember(key, member, radius, geoArgument));
+		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoArgument);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoArgument geoArgument){
-		return execute(binaryGeoOperations, (ops)->ops.geoRadiusByMember(key, member, radius, geoArgument));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-			final GeoUnit unit, final GeoArgument geoArgument){
-		return execute(geoOperations, (ops)->ops.geoRadiusByMember(key, member, radius, unit, geoArgument));
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoUnit unit, final GeoArgument geoArgument){
-		return execute(binaryGeoOperations, (ops)->ops.geoRadiusByMember(key, member, radius, unit, geoArgument));
-	}
-
-	@Override
-	public List<String> geoHash(final String key, final String... members){
-		return execute(geoOperations, (ops)->ops.geoHash(key, members));
-	}
-
-	@Override
-	public List<byte[]> geoHash(final byte[] key, final byte[]... members){
-		return execute(binaryGeoOperations, (ops)->ops.geoHash(key, members));
+			final GeoCommands.GeoArgument geoArgument){
+		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoArgument);
 	}
 
 	@Override
 	public Status setBit(final String key, final int offset, final String value){
-		return execute(bitMapOperations, (ops)->ops.setBit(key, offset, value));
+		return setBit(key, (long) offset, value);
 	}
 
 	@Override
 	public Status setBit(final byte[] key, final int offset, final byte[] value){
-		return execute(binaryBitMapOperations, (ops)->ops.setBit(key, offset, value));
-	}
-
-	@Override
-	public Status setBit(final String key, final long offset, final String value){
-		return execute(bitMapOperations, (ops)->ops.setBit(key, offset, value));
-	}
-
-	@Override
-	public Status setBit(final byte[] key, final long offset, final byte[] value){
-		return execute(binaryBitMapOperations, (ops)->ops.setBit(key, offset, value));
+		return setBit(key, (long) offset, value);
 	}
 
 	@Override
 	public Status setBit(final String key, final int offset, final boolean value){
-		return execute(bitMapOperations, (ops)->ops.setBit(key, offset, value));
+		return setBit(key, (long) offset, value);
 	}
 
 	@Override
 	public Status setBit(final byte[] key, final int offset, final boolean value){
-		return execute(binaryBitMapOperations, (ops)->ops.setBit(key, offset, value));
-	}
-
-	@Override
-	public Status setBit(final String key, final long offset, final boolean value){
-		return execute(bitMapOperations, (ops)->ops.setBit(key, offset, value));
-	}
-
-	@Override
-	public Status setBit(final byte[] key, final long offset, final boolean value){
-		return execute(binaryBitMapOperations, (ops)->ops.setBit(key, offset, value));
+		return setBit(key, (long) offset, value);
 	}
 
 	@Override
 	public Status getBit(final String key, final int offset){
-		return execute(bitMapOperations, (ops)->ops.getBit(key, offset));
+		return getBit(key, (long) offset);
 	}
 
 	@Override
 	public Status getBit(final byte[] key, final int offset){
-		return execute(binaryBitMapOperations, (ops)->ops.getBit(key, offset));
-	}
-
-	@Override
-	public Status getBit(final String key, final long offset){
-		return execute(bitMapOperations, (ops)->ops.getBit(key, offset));
-	}
-
-	@Override
-	public Status getBit(final byte[] key, final long offset){
-		return execute(binaryBitMapOperations, (ops)->ops.getBit(key, offset));
-	}
-
-	@Override
-	public Long bitPos(final String key, final boolean value){
-		return execute(bitMapOperations, (ops)->ops.bitPos(key, value));
-	}
-
-	@Override
-	public Long bitPos(final byte[] key, final boolean value){
-		return execute(binaryBitMapOperations, (ops)->ops.bitPos(key, value));
-	}
-
-	@Override
-	public Long bitPos(final String key, final boolean value, final int start, final int end){
-		return execute(bitMapOperations, (ops)->ops.bitPos(key, value, start, end));
-	}
-
-	@Override
-	public Long bitPos(final byte[] key, final boolean value, final int start, final int end){
-		return execute(binaryBitMapOperations, (ops)->ops.bitPos(key, value, start, end));
+		return getBit(key, (long) offset);
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end){
-		return execute(bitMapOperations, (ops)->ops.bitPos(key, value, start, end));
+		return bitPos(key, value, (int) start, (int) end);
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end){
-		return execute(binaryBitMapOperations, (ops)->ops.bitPos(key, value, start, end));
-	}
-
-	@Override
-	public List<Long> bitField(final String key, final String... arguments){
-		return execute(bitMapOperations, (ops)->ops.bitField(key, arguments));
-	}
-
-	@Override
-	public List<Long> bitField(final byte[] key, final byte[]... arguments){
-		return execute(binaryBitMapOperations, (ops)->ops.bitField(key, arguments));
-	}
-
-	@Override
-	public Long bitCount(final String key){
-		return execute(bitMapOperations, (ops)->ops.bitCount(key));
-	}
-
-	@Override
-	public Long bitCount(final byte[] key){
-		return execute(binaryBitMapOperations, (ops)->ops.bitCount(key));
+		return bitPos(key, value, (int) start, (int) end);
 	}
 
 	@Override
 	public Long bitCount(final String key, final int start, final int end){
-		return execute(bitMapOperations, (ops)->ops.bitCount(key, start, end));
+		return bitCount(key, (long) start, (long) end);
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final int start, final int end){
-		return execute(binaryBitMapOperations, (ops)->ops.bitCount(key, start, end));
-	}
-
-	@Override
-	public Long bitCount(final String key, final long start, final long end){
-		return execute(bitMapOperations, (ops)->ops.bitCount(key, start, end));
-	}
-
-	@Override
-	public Long bitCount(final byte[] key, final long start, final long end){
-		return execute(binaryBitMapOperations, (ops)->ops.bitCount(key, start, end));
-	}
-
-	@Override
-	public String echo(final String str){
-		return execute(debugOperations, (ops)->ops.echo(str));
-	}
-
-	@Override
-	public byte[] echo(final byte[] str){
-		return execute(binaryDebugOperations, (ops)->ops.echo(str));
-	}
-
-	@Override
-	public Object object(final ObjectCommand command, final String key){
-		return execute(debugOperations, (ops)->ops.object(command, key));
-	}
-
-	@Override
-	public Object object(final ObjectCommand command, final byte[] key){
-		return execute(binaryDebugOperations, (ops)->ops.object(command, key));
+		return bitCount(key, (long) start, (long) end);
 	}
 
 	protected <C, R> R doExecute(final Executor<C, R> executor, final ProtocolCommand command){
@@ -1448,7 +1271,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 		}
 
 		try{
-			return connection.execute(command, executor);
+			return connection.execute(executor);
 		}catch(RedisException e){
 			if(logger.isDebugEnabled()){
 				if(arguments != null){

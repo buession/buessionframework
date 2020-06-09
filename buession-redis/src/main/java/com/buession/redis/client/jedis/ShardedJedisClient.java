@@ -1654,6 +1654,90 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 		}
 	}
 
+	@Override
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member1", member1).put(
+				"member2", member2);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geodist(key, member1, member2).get(), ProtocolCommand.GEODIST,
+					args);
+		}else{
+			return execute((cmd)->cmd.geodist(key, member1, member2), ProtocolCommand.GEODIST, args);
+		}
+	}
+
+	@Override
+	public Status setBit(final byte[] key, final long offset, final byte[] value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value"
+				, value);
+
+		if(isTransaction()){
+			return execute((cmd)->statusForBool(getTransaction().setbit(key, offset, value).get()),
+					ProtocolCommand.SETBIT, args);
+		}else{
+			return execute((cmd)->statusForBool(cmd.setbit(key, offset, value)), ProtocolCommand.SETBIT, args);
+		}
+	}
+
+	@Override
+	public Status setBit(final byte[] key, final long offset, final boolean value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value"
+				, value);
+
+		if(isTransaction()){
+			return execute((cmd)->statusForBool(getTransaction().setbit(SafeEncoder.encode(key), offset, value).get()), ProtocolCommand.SETBIT, args);
+		}else{
+			return execute((cmd)->statusForBool(cmd.setbit(key, offset, value)), ProtocolCommand.SETBIT, args);
+		}
+	}
+
+	@Override
+	public Status getBit(final byte[] key, final long offset){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset);
+
+		if(isTransaction()){
+			return execute((cmd)->statusForBool(getTransaction().getbit(key, offset).get()), ProtocolCommand.GETBIT,
+					args);
+		}else{
+			return execute((cmd)->statusForBool(cmd.getbit(key, offset)), ProtocolCommand.GETBIT, args);
+		}
+	}
+
+	@Override
+	public List<Long> bitField(final byte[] key, final byte[]... arguments){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("arguments", arguments);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitfield(key, arguments).get(), ProtocolCommand.BITFIELD, args);
+		}else{
+			return execute((cmd)->cmd.bitfield(key, arguments), ProtocolCommand.BITFIELD, args);
+		}
+	}
+
+	@Override
+	public Long bitCount(final byte[] key){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitcount(key).get(), ProtocolCommand.BITCOUNT, args);
+		}else{
+			return execute((cmd)->cmd.bitcount(key), ProtocolCommand.BITCOUNT, args);
+		}
+	}
+
+	@Override
+	public Long bitCount(final byte[] key, final long start, final long end){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitcount(key, start, end).get(), ProtocolCommand.BITCOUNT, args);
+		}else{
+			return execute((cmd)->cmd.bitcount(key, start, end), ProtocolCommand.BITCOUNT, args);
+		}
+	}
+
 	protected final static Jedis getShard(final ShardedJedis shardedJedis, final String key){
 		return shardedJedis.getShard(key);
 	}
