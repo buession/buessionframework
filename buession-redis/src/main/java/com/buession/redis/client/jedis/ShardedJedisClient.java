@@ -1672,6 +1672,32 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 		}
 	}
 
+	@Override
+	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
+				member).put("longitude", longitude).put("latitude", latitude);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geoadd(key, longitude, latitude, member).get(),
+					ProtocolCommand.GEOADD, args);
+		}else{
+			return execute((cmd)->cmd.geoadd(key, longitude, latitude, member), ProtocolCommand.GEOADD, args);
+		}
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
+				"memberCoordinates", memberCoordinates);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geoadd(key, JedisClientUtils.geoMapConvert(memberCoordinates)).get(), ProtocolCommand.GEOADD, args);
+		}else{
+			return execute((cmd)->cmd.geoadd(key, JedisClientUtils.geoMapConvert(memberCoordinates)),
+					ProtocolCommand.GEOADD, args);
+		}
+	}
+
 	protected final static Jedis getShard(final ShardedJedis shardedJedis, final String key){
 		return shardedJedis.getShard(key);
 	}

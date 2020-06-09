@@ -2591,10 +2591,51 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 				, elements);
 
 		if(isTransaction()){
-			return execute((cmd)->statusForBool(getTransaction().pfadd(key, elements).get() > 0),
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pfadd(key, elements).get() > 0),
 					ProtocolCommand.PFADD, args);
 		}else{
-			return execute((cmd)->statusForBool(cmd.pfadd(key, elements) > 0), ProtocolCommand.PFADD, args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0), ProtocolCommand.PFADD,
+					args);
+		}
+	}
+
+	@Override
+	public Long geoAdd(final String key, final String member, final double longitude, final double latitude){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
+				member).put("longitude", longitude).put("latitude", latitude);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geoadd(key, longitude, latitude, member).get(),
+					ProtocolCommand.GEOADD, args);
+		}else{
+			return execute((cmd)->cmd.geoadd(key, longitude, latitude, member), ProtocolCommand.GEOADD, args);
+		}
+	}
+
+	@Override
+	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
+				"memberCoordinates", memberCoordinates);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geoadd(key, JedisClientUtils.geoMapConvert(memberCoordinates)).get(), ProtocolCommand.GEOADD, args);
+		}else{
+			return execute((cmd)->cmd.geoadd(key, JedisClientUtils.geoMapConvert(memberCoordinates)),
+					ProtocolCommand.GEOADD, args);
+		}
+	}
+
+	@Override
+	public List<Geo> geoPos(final String key, final String... members){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
+				, members);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.geoListDeconvert(getTransaction().geopos(key, members).get()),
+					ProtocolCommand.GEOPOS, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.geoListDeconvert(cmd.geopos(key, members)), ProtocolCommand.GEOPOS,
+					args);
 		}
 	}
 

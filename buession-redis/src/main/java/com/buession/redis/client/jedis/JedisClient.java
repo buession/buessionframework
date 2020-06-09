@@ -194,8 +194,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expire(key, lifetime).get() == 1),
 			 ProtocolCommand.EXPIRE, args);
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.expire(key, lifetime) == 1), ProtocolCommand.EXPIRE,
-			 args);
+			return execute((cmd)->ReturnUtils.statusForBool(cm(key, lifetime) == 1), ProtocolCommand.EXPIRE, args);
 		}
 	}
 
@@ -450,7 +449,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final KeyCommands.SortArgument sortArgument){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().sort(key, JedisClientUtils.sortArgumentConvert(sortArgument)).get()
@@ -462,7 +461,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
-	public Long sort(final String key, final String destKey){
+	public Lo sort(final String key, final String destKey){
 		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("destKey"
 		, destKey);
 
@@ -688,7 +687,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	@Override
 	public Status setNx(final byte[] key, final byte[] value){
 		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-		 value);
+		 vaue);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setnx(key, value).get() > 0),
@@ -872,7 +871,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	@Override
 	public Long setRange(final byte[] key, final long offset, final byte[] value){
 		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("offset",
-		 offset).put("value", value);
+		 ffset).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().setrange(key, offset, value).get(), ProtocolCommand.SETRANGE, args);
@@ -1124,7 +1123,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
 		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-		 cursor).put("count", count);
+		 cursor).put("co", count);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
@@ -1173,7 +1172,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		 values);
 
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().lpushx(key, values).get(), ProtocolCommand.LPUSHX, args);
+			return execute((cmd)->g Transaction().lpushx(key, values).get(), ProtocolCommand.LPUSHX, args);
 		}else{
 			return execute((cmd)->cmd.lpushx(key, values), ProtocolCommand.LPUSHX, args);
 		}
@@ -1357,8 +1356,8 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 
 	@Override
 	public Long rPush(final byte[] key, final byte[]... values){
-		final OperationsCommandArguments ar
-		perationsCommandArguments.getInstance().put("key", key).put("values", values);
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("values",
+		 values);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().rpush(key, values).get(), ProtocolCommand.RPUSH, args);
@@ -1667,8 +1666,8 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 				"destKey", destKey).put("member", member);
 
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().smove(source, destKey, member).get() > 0)
-			, ProtocolCommand.SMOVE, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().smove(source, destKey, ber).get() > 0),
+			 ProtocolCommand.SMOVE, args);
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.smove(source, destKey, member) > 0),
 			 ProtocolCommand.SMOVE, args);
@@ -1828,7 +1827,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	@Override
 	public Set<byte[]> zRange(final byte[] key, final long start, final long end){
 		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-		 start).put("end", end);
+		 start).put("end", end)
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrange(key, start, end).get(), ProtocolCommand.ZRANGE, args);
@@ -1895,7 +1894,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
 	 final int count){
 		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-		 min).put("max", max).put("offset", offset).put("count", count);
+		 min).put("max", max).put("offset", off).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByScore(key, min, max, offset, count).get(),
@@ -1926,8 +1925,8 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		 min).put("max", max);
 
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
-			, max).get()), ProtocolCommand.ZRANGEBYSCORE, args);
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getT saction().zrangeByScoreWitores(key, min,
+			 max).get()), ProtocolCommand.ZRANGEBYSCORE, args);
 		}else{
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)),
 			 ProtocolCommand.ZRANGEBYSCORE, args);
@@ -1982,7 +1981,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		 member);
 
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrank(key, memberget(), ProtocolCommand.ZRANK, args);
+			return execute((cmd)->getTransaction().zrank(key, emberget(), ProtocolCommand.ZRANK, args);
 		}else{
 			return execute((cmd)->cmd.zrank(key, member), ProtocolCommand.ZRANK, args);
 		}
@@ -2097,7 +2096,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		 min).put("max", max);
 
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get(),
+			return execute((cmd)->getTransaction().zrevrangeByScore(ke in, max).get(),
 			 ProtocolCommand.ZREVRANGEBYSCORE, args);
 		}else{
 			return execute((cmd)->cmd.zrevrangeByScore(key, min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
@@ -2154,7 +2153,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
-			 min, max).get()), ProtocolCommand.ZREVRANGEBYSCORE, args);
+			 min, max.get()), ProtocolCommand.ZREVRANGEBYSCORE, args);
 		}else{
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)),
 			 ProtocolCommand.ZREVRANGEBYSCORE, args);
@@ -2191,8 +2190,12 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
-	 final int offset, final int count){
+
+	public Set<Tuple> zRevRangeByScoreWithScoresinal
+
+	byte[] key, final byte[] min, final byte[] max, final int offset, final int count)
+
+	{
 		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
 		 min).put("max", max).put("offset", offset).put("count", count);
 
@@ -2297,7 +2300,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 			  args);
 		}else{
 			return execute((cmd)->cmd.zunionstore(destKey,
-			 new JedisZParams(JedisClientUtils.aggregateConvert(aggregate)), keys), ProtocolCommand.ZUNIONSTORE, args);
+			 new JedisZParams(JedisClientUtils.aggregateConvert(aggregate)), keys), ProtocolCommand.ZUNIONS args);
 		}
 	}
 
@@ -2392,7 +2395,8 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count){
 		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-		 cursor).put("count", count);
+		 cursor).put
+		count ", count);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
@@ -2421,10 +2425,11 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		, elements);
 
 		if(isTransaction()){
-			return execute((cmd)->statusForBool(getTransaction().pfadd(key, elements).get() > 0),
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pfadd(key, elements).get() > 0),
 			 ProtocolCommand.PFADD, args);
 		}else{
-			return execute((cmd)->statusForBool(cmd.pfadd(key, elements) > 0), ProtocolCommand.PFADD, args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0), ProtocolCommand.PFADD,
+			 args);
 		}
 	}
 
@@ -2434,10 +2439,10 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 				"keys", keys);
 
 		if(isTransaction()){
-			return execute((Jedis cmd)->statusForOK(getTransaction().pfmerge(destKey, keys).get()),
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().pfmerge(destKey, keys).get()),
 			 ProtocolCommand.PFMERGE, args);
 		}else{
-			return execute((Jedis cmd)->statusForOK(cmd.pfmerge(destKey, keys)), ProtocolCommand.PFMERGE, args);
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.pfmerge(destKey, keys)), ProtocolCommand.PFMERGE, args);
 		}
 	}
 
@@ -2447,10 +2452,10 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 				"keys", keys);
 
 		if(isTransaction()){
-			return execute((Jedis cmd)->statusForOK(getTransaction().pfmerge(destKey, keys).get()),
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().pfmerge(destKey, keys).get()),
 			 ProtocolCommand.PFMERGE, args);
 		}else{
-			return execute((Jedis cmd)->statusForOK(cmd.pfmerge(destKey, keys)), ProtocolCommand.PFMERGE, args);
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.pfmerge(destKey, keys)), ProtocolCommand.PFMERGE, args);
 		}
 	}
 
@@ -2459,9 +2464,9 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("keys", keys);
 
 		if(isTransaction()){
-			return execute((Jedis cmd)->getTransaction().pfcount(keys).get(), ProtocolCommand.PFCOUNT, args);
+			return execute((cmd)->getTransaction().pfcount(keys).get(), ProtocolCommand.PFCOUNT, args);
 		}else{
-			return execute((Jedis cmd)->cmd.pfcount(keys), ProtocolCommand.PFCOUNT, args);
+			return execute((cmd)->cmd.pfcount(keys), ProtocolCommand.PFCOUNT, args);
 		}
 	}
 
@@ -2470,9 +2475,35 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("keys", keys);
 
 		if(isTransaction()){
-			return execute((Jedis cmd)->getTransaction().pfcount(keys).get(), ProtocolCommand.PFCOUNT, args);
+			return execute((cmd)->getTransaction().pfcount(keys).get(), ProtocolCommand.PFCOUNT, args);
 		}else{
-			return execute((Jedis cmd)->cmd.pfcount(keys), ProtocolCommand.PFCOUNT, args);
+			return execute((cmd)->cmd.pfcount(keys), ProtocolCommand.PFCOUNT, args);
+		}
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
+		 member).put("longitude", longitude).put("latitude", latitude);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geoadd(key, longitude, latitude, member).get(),
+			 ProtocolCommand.GEOADD, args);
+		}else{
+			return execute((cmd)->cmd.geoadd(key, longitude, latitude, member), ProtocolCommand.GEOADD, args);
+		}
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
+		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
+				"memberCoordinates", memberCoordinates);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geoadd(key, JedisClientUtils.geoMapConvert(memberCoordinates)).get(), ProtocolCommand.GEOADD, args);
+		}else{
+			return execute((cmd)->cmd.geoadd(key, JedisClientUtils.geoMapConvert(memberCoordinates)),
+			 ProtocolCommand.GEOADD, args);
 		}
 	}
 

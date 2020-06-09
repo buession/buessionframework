@@ -89,36 +89,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
-	public Status pfAdd(final String key, final String... elements){
-		return execute(hyperLogLogOperations, (HyperLogLogRedisOperations ops)->ops.pfAdd(key, elements));
-	}
-
-	@Override
-	public Status pfAdd(final byte[] key, final byte[]... elements){
-		return execute(binaryHyperLogLogOperations, (BinaryHyperLogLogRedisOperations ops)->ops.pfAdd(key, elements));
-	}
-
-	@Override
-	public Long geoAdd(final String key, final String member, final double longitude, final double latitude){
-		return execute(geoOperations, (ops)->ops.geoAdd(key, member, longitude, latitude));
-	}
-
-	@Override
-	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
-		return execute(binaryGeoOperations, (ops)->ops.geoAdd(key, member, longitude, latitude));
-	}
-
-	@Override
-	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
-		return execute(geoOperations, (ops)->ops.geoAdd(key, memberCoordinates));
-	}
-
-	@Override
-	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
-		return execute(binaryGeoOperations, (ops)->ops.geoAdd(key, memberCoordinates));
-	}
-
-	@Override
 	public List<Geo> geoPos(final String key, final String... members){
 		return execute(geoOperations, (ops)->ops.geoPos(key, members));
 	}
