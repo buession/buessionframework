@@ -41,6 +41,7 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.BitPosParams;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
@@ -1673,10 +1674,11 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 				, value);
 
 		if(isTransaction()){
-			return execute((cmd)->statusForBool(getTransaction().setbit(key, offset, value).get()),
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setbit(key, offset, value).get()),
 					ProtocolCommand.SETBIT, args);
 		}else{
-			return execute((cmd)->statusForBool(cmd.setbit(key, offset, value)), ProtocolCommand.SETBIT, args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)), ProtocolCommand.SETBIT,
+					args);
 		}
 	}
 
@@ -1686,9 +1688,11 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 				, value);
 
 		if(isTransaction()){
-			return execute((cmd)->statusForBool(getTransaction().setbit(SafeEncoder.encode(key), offset, value).get()), ProtocolCommand.SETBIT, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setbit(SafeEncoder.encode(key), offset,
+					value).get()), ProtocolCommand.SETBIT, args);
 		}else{
-			return execute((cmd)->statusForBool(cmd.setbit(key, offset, value)), ProtocolCommand.SETBIT, args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)), ProtocolCommand.SETBIT,
+					args);
 		}
 	}
 
@@ -1697,10 +1701,35 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset);
 
 		if(isTransaction()){
-			return execute((cmd)->statusForBool(getTransaction().getbit(key, offset).get()), ProtocolCommand.GETBIT,
-					args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().getbit(key, offset).get()),
+					ProtocolCommand.GETBIT, args);
 		}else{
-			return execute((cmd)->statusForBool(cmd.getbit(key, offset)), ProtocolCommand.GETBIT, args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.getbit(key, offset)), ProtocolCommand.GETBIT, args);
+		}
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitpos(key, value).get(), ProtocolCommand.BITPOS, args);
+		}else{
+			return execute((cmd)->cmd.bitpos(SafeEncoder.encode(key), value), ProtocolCommand.BITPOS, args);
+		}
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final int start, final int end){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("start",
+				start).put("end", end);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitpos(key, value, new BitPosParams(start, end)).get(),
+					ProtocolCommand.BITPOS, args);
+		}else{
+			return execute((cmd)->cmd.bitpos(SafeEncoder.encode(key), value, new BitPosParams(start, end)),
+					ProtocolCommand.BITPOS, args);
 		}
 	}
 

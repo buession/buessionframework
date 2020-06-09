@@ -43,6 +43,7 @@ import com.buession.redis.exception.RedisException;
 import com.buession.redis.transaction.jedis.JedisTransaction;
 import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.BitPosParams;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.commands.JedisCommands;
@@ -1634,6 +1635,104 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 			return execute((cmd)->getTransaction().geohash(key, members).get(), ProtocolCommand.GEOHASH, args);
 		}else{
 			return execute((cmd)->cmd.geohash(key, members), ProtocolCommand.GEOHASH, args);
+		}
+	}
+
+	@Override
+	public Status setBit(final String key, final long offset, final String value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value"
+				, value);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setbit(SafeEncoder.encode(key), offset,
+					SafeEncoder.encode(value)).get()), ProtocolCommand.SETBIT, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)), ProtocolCommand.SETBIT,
+					args);
+		}
+	}
+
+	@Override
+	public Status setBit(final String key, final long offset, final boolean value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value"
+				, value);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setbit(key, offset, value).get()),
+					ProtocolCommand.SETBIT, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)), ProtocolCommand.SETBIT,
+					args);
+		}
+	}
+
+	@Override
+	public Status getBit(final String key, final long offset){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().getbit(key, offset).get()),
+					ProtocolCommand.GETBIT, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.getbit(key, offset)), ProtocolCommand.GETBIT, args);
+		}
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitpos(key, value).get(), ProtocolCommand.BITPOS, args);
+		}else{
+			return execute((cmd)->cmd.bitpos(key, value), ProtocolCommand.BITPOS, args);
+		}
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final int start, final int end){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("start",
+				start).put("end", end);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitpos(key, value, new BitPosParams(start, end)).get(),
+					ProtocolCommand.BITPOS, args);
+		}else{
+			return execute((cmd)->cmd.bitpos(key, value, new BitPosParams(start, end)), ProtocolCommand.BITPOS, args);
+		}
+	}
+
+	@Override
+	public List<Long> bitField(final String key, final String... arguments){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("arguments", arguments);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitfield(key, arguments).get(), ProtocolCommand.BITFIELD, args);
+		}else{
+			return execute((cmd)->cmd.bitfield(key, arguments), ProtocolCommand.BITFIELD, args);
+		}
+	}
+
+	@Override
+	public Long bitCount(final String key){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitcount(key).get(), ProtocolCommand.BITCOUNT, args);
+		}else{
+			return execute((cmd)->cmd.bitcount(key), ProtocolCommand.BITCOUNT, args);
+		}
+	}
+
+	@Override
+	public Long bitCount(final String key, final long start, final long end){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitcount(key, start, end).get(), ProtocolCommand.BITCOUNT, args);
+		}else{
+			return execute((cmd)->cmd.bitcount(key, start, end), ProtocolCommand.BITCOUNT, args);
 		}
 	}
 

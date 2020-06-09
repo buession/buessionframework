@@ -41,16 +41,23 @@ import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
+import com.buession.redis.core.command.BitMapCommands;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.ListCommands;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.command.SortedSetCommands;
 import com.buession.redis.core.command.StringCommands;
 import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
+import com.buession.redis.pubsub.jedis.DefaultBinaryJedisPubSub;
+import com.buession.redis.pubsub.jedis.DefaultJedisPubSub;
 import com.buession.redis.transaction.Transaction;
+import com.buession.redis.transaction.jedis.JedisTransaction;
 import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.BitOP;
+import redis.clients.jedis.BitPosParams;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.SortingParams;
@@ -2392,6 +2399,56 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
+	public Long bitPos(final byte[] key, final boolean value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitpos(key, value).get(), ProtocolCommand.BITPOS, args);
+		}else{
+			return execute((cmd)->cmd.bitpos(key, value), ProtocolCommand.BITPOS, args);
+		}
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final int start, final int end){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("start",
+				start).put("end", end);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitpos(key, value, new BitPosParams(start, end)).get(),
+					ProtocolCommand.BITPOS, args);
+		}else{
+			return execute((cmd)->cmd.bitpos(key, value, new BitPosParams(start, end)), ProtocolCommand.BITPOS, args);
+		}
+	}
+
+	@Override
+	public Long bitOp(final BitMapCommands.Operation operation, final String destKey, final String... keys){
+		final CommandArguments args = CommandArguments.getInstance().put("operation", operation).put("destKey",
+				destKey).put("keys", keys);
+		final BitOP bitOP = JedisClientUtils.bitOperationConvert(operation);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitop(bitOP, destKey, keys).get(), ProtocolCommand.BITOP, args);
+		}else{
+			return execute((cmd)->cmd.bitop(bitOP, destKey, keys), ProtocolCommand.BITOP, args);
+		}
+	}
+
+	@Override
+	public Long bitOp(final BitMapCommands.Operation operation, final byte[] destKey, final byte[]... keys){
+		final CommandArguments args = CommandArguments.getInstance().put("operation", operation).put("destKey",
+				destKey).put("keys", keys);
+		final BitOP bitOP = JedisClientUtils.bitOperationConvert(operation);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitop(bitOP, destKey, keys).get(), ProtocolCommand.BITOP, args);
+		}else{
+			return execute((cmd)->cmd.bitop(bitOP, destKey, keys), ProtocolCommand.BITOP, args);
+		}
+	}
+
+	@Override
 	public List<Long> bitField(final byte[] key, final byte[]... arguments){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("arguments", arguments);
 
@@ -2423,6 +2480,190 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		}else{
 			return execute((cmd)->cmd.bitcount(key, start, end), ProtocolCommand.BITCOUNT, args);
 		}
+	}
+
+	@Override
+	public Transaction multi(){
+		return execute((cmd)->new JedisTransaction(cmd.multi()), ProtocolCommand.MULTI);
+	}
+
+	@Override
+	public void exec(final Transaction transaction){
+		final CommandArguments args = CommandArguments.getInstance().put("transaction", transaction);
+
+		execute(new Executor<Jedis, Void>() {
+
+			@Override
+			public Void execute(Jedis cmd){
+				transaction.exec();
+				return null;
+			}
+
+		}, ProtocolCommand.EXEC, args);
+	}
+
+	@Override
+	public void discard(final Transaction transaction){
+		final CommandArguments args = CommandArguments.getInstance().put("transaction", transaction);
+
+		execute(new Executor<Jedis, Void>() {
+
+			@Override
+			public Void execute(Jedis cmd){
+				transaction.discard();
+				return null;
+			}
+
+		}, ProtocolCommand.DISCARD, args);
+	}
+
+	@Override
+	public Status watch(final String... keys){
+		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
+		return execute((cmd)->ReturnUtils.statusForOK(cmd.watch(keys)), ProtocolCommand.WATCH);
+	}
+
+	@Override
+	public Status watch(final byte[]... keys){
+		final CommandArguments arguments = CommandArguments.getInstance().put("keys", keys);
+		return execute((cmd)->ReturnUtils.statusForOK(cmd.watch(keys)), ProtocolCommand.WATCH);
+	}
+
+	@Override
+	public Status unwatch(){
+		return execute((cmd)->ReturnUtils.statusForOK(cmd.unwatch()), ProtocolCommand.UNWATCH);
+	}
+
+	@Override
+	public Long publish(final String channel, final String message){
+		final CommandArguments args = CommandArguments.getInstance().put("channel", channel).put("message", message);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().publish(channel, message).get(), ProtocolCommand.PUBLISH, args);
+		}else{
+			return execute((cmd)->cmd.publish(channel, message), ProtocolCommand.PUBLISH, args);
+		}
+	}
+
+	@Override
+	public Long publish(final byte[] channel, final byte[] message){
+		final CommandArguments args = CommandArguments.getInstance().put("channel", channel).put("message", message);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().publish(channel, message).get(), ProtocolCommand.PUBLISH, args);
+		}else{
+			return execute((cmd)->cmd.publish(channel, message), ProtocolCommand.PUBLISH, args);
+		}
+	}
+
+	@Override
+	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
+		final CommandArguments args = CommandArguments.getInstance().put("channels", channels).put("pubSubListener",
+				pubSubListener);
+
+		execute(new Executor<Jedis, Void>() {
+
+			@Override
+			public Void execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SUBSCRIBE);
+				}else{
+					cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
+					return null;
+				}
+			}
+
+		}, ProtocolCommand.SUBSCRIBE, args);
+	}
+
+	@Override
+	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
+		final CommandArguments args = CommandArguments.getInstance().put("channels", channels).put("pubSubListener",
+				pubSubListener);
+
+		execute(new Executor<Jedis, Void>() {
+
+			@Override
+			public Void execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SUBSCRIBE);
+				}else{
+					cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
+					return null;
+				}
+			}
+
+		}, ProtocolCommand.SUBSCRIBE, args);
+	}
+
+	@Override
+	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
+		final CommandArguments args = CommandArguments.getInstance().put("patterns", patterns).put("pubSubListener",
+				pubSubListener);
+
+		execute(new Executor<Jedis, Void>() {
+
+			@Override
+			public Void execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.PSUBSCRIBE);
+				}else{
+					cmd.psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
+					return null;
+				}
+			}
+
+		}, ProtocolCommand.PSUBSCRIBE, args);
+	}
+
+	@Override
+	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
+		final CommandArguments args = CommandArguments.getInstance().put("patterns", patterns).put("pubSubListener",
+				pubSubListener);
+
+		execute(new Executor<Jedis, Void>() {
+
+			@Override
+			public Void execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.PSUBSCRIBE);
+				}else{
+					cmd.psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
+					return null;
+				}
+			}
+
+		}, ProtocolCommand.PSUBSCRIBE, args);
+	}
+
+	@Override
+	public Object unSubscribe(){
+		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+	}
+
+	@Override
+	public Object unSubscribe(final String... channels){
+		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+	}
+
+	@Override
+	public Object unSubscribe(final byte[]... channels){
+		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+	}
+
+	@Override
+	public Object pUnSubscribe(){
+		throw new NotSupportedCommandException(ProtocolCommand.PUNSUBSCRIBE);
+	}
+
+	@Override
+	public Object pUnSubscribe(final String... patterns){
+		throw new NotSupportedCommandException(ProtocolCommand.PUNSUBSCRIBE);
+	}
+
+	@Override
+	public Object pUnSubscribe(final byte[]... patterns){
+		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
 	}
 
 }
