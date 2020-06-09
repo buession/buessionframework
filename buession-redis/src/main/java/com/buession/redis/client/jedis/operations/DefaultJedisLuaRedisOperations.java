@@ -47,50 +47,6 @@ public class DefaultJedisLuaRedisOperations<C extends JedisCommands> extends Abs
 	}
 
 	@Override
-	public Object eval(final String script){
-		final CommandArguments args = CommandArguments.getInstance().put("script", script);
-
-		return execute(new Executor<C, Object>() {
-
-			@Override
-			public Object execute(C cmd){
-				if(isTransaction()){
-					return getTransaction().eval(script).get();
-				}else{
-					if(cmd instanceof Jedis){
-						return ((Jedis) cmd).eval(script);
-					}else{
-						throw new NotSupportedCommandException(ProtocolCommand.EVAL);
-					}
-				}
-			}
-
-		}, ProtocolCommand.EVAL, args);
-	}
-
-	@Override
-	public Object eval(final String script, final String... params){
-		final CommandArguments args = CommandArguments.getInstance().put("script", script).put("params", params);
-
-		return execute(new Executor<C, Object>() {
-
-			@Override
-			public Object execute(C cmd){
-				if(isTransaction()){
-					return getTransaction().eval(script, params == null ? 0 : params.length, params).get();
-				}else{
-					if(cmd instanceof Jedis){
-						return ((Jedis) cmd).eval(script, params == null ? 0 : params.length, params);
-					}else{
-						throw new NotSupportedCommandException(ProtocolCommand.EVAL);
-					}
-				}
-			}
-
-		}, ProtocolCommand.EVAL, args);
-	}
-
-	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments){
 		final CommandArguments args = CommandArguments.getInstance().put("script", script).put("keys", keys).put(
 				"arguments", arguments);

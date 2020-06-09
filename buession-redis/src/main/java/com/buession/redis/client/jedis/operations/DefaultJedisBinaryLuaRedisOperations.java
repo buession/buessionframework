@@ -47,28 +47,6 @@ public class DefaultJedisBinaryLuaRedisOperations<C extends BinaryJedisCommands>
 	}
 
 	@Override
-	public Object eval(final byte[] script){
-		final CommandArguments args = CommandArguments.getInstance().put("script", script);
-
-		return execute(new Executor<C, Object>() {
-
-			@Override
-			public Object execute(C cmd){
-				if(isTransaction()){
-					return getTransaction().eval(script).get();
-				}else{
-					if(cmd instanceof Jedis){
-						return ((Jedis) cmd).eval(script);
-					}else{
-						throw new NotSupportedCommandException(ProtocolCommand.EVAL);
-					}
-				}
-			}
-
-		}, ProtocolCommand.EVAL, args);
-	}
-
-	@Override
 	public Object eval(final byte[] script, final byte[]... params){
 		final CommandArguments args = CommandArguments.getInstance().put("script", script).put("params", params);
 
