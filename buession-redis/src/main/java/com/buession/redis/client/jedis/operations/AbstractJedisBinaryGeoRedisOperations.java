@@ -24,18 +24,16 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.lang.Geo;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import redis.clients.jedis.commands.BinaryJedisCommands;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Yong.Teng
@@ -48,8 +46,8 @@ public abstract class AbstractJedisBinaryGeoRedisOperations<C extends BinaryJedi
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member1"
-				, member1).put("member2", member2);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member1", member1).put(
+				"member2", member2);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().geodist(key, member1, member2).get(), ProtocolCommand.GEODIST,
@@ -61,8 +59,8 @@ public abstract class AbstractJedisBinaryGeoRedisOperations<C extends BinaryJedi
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member1"
-				, member1).put("member2", member2).put("unit", unit);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member1", member1).put(
+				"member2", member2).put("unit", unit);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().geodist(key, member1, member2,
@@ -76,8 +74,8 @@ public abstract class AbstractJedisBinaryGeoRedisOperations<C extends BinaryJedi
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 			final double radius, final GeoUnit unit){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"longitude", longitude).put("latitude", latitude).put("radius", radius).put("unit", unit);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put(
+				"latitude", latitude).put("radius", radius).put("unit", unit);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
@@ -91,9 +89,8 @@ public abstract class AbstractJedisBinaryGeoRedisOperations<C extends BinaryJedi
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 			final double radius, final GeoUnit unit, final GeoCommands.GeoArgument geoArgument){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"longitude", longitude).put("latitude", latitude).put("radius", radius).put("unit", unit).put(
-						"geoArgument", geoArgument);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put(
+				"latitude", latitude).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
@@ -109,8 +106,8 @@ public abstract class AbstractJedisBinaryGeoRedisOperations<C extends BinaryJedi
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 			final GeoUnit unit){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member).put("radius", radius).put("unit", unit);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("radius"
+				, radius).put("unit", unit);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
@@ -125,8 +122,8 @@ public abstract class AbstractJedisBinaryGeoRedisOperations<C extends BinaryJedi
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 			final GeoUnit unit, final GeoCommands.GeoArgument geoArgument){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("radius"
+				, radius).put("unit", unit).put("geoArgument", geoArgument);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
@@ -141,8 +138,7 @@ public abstract class AbstractJedisBinaryGeoRedisOperations<C extends BinaryJedi
 
 	@Override
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
-				, members);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().geohash(key, members).get(), ProtocolCommand.GEOHASH, args);

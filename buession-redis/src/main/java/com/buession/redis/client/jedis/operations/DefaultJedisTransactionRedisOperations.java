@@ -28,7 +28,7 @@ import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.jedis.JedisTransaction;
@@ -62,8 +62,7 @@ public class DefaultJedisTransactionRedisOperations<C extends JedisCommands> ext
 
 	@Override
 	public void exec(final Transaction transaction){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("transaction",
-				transaction);
+		final CommandArguments args = CommandArguments.getInstance().put("transaction", transaction);
 
 		execute(new Executor<C, Void>() {
 
@@ -82,8 +81,7 @@ public class DefaultJedisTransactionRedisOperations<C extends JedisCommands> ext
 
 	@Override
 	public void discard(final Transaction transaction){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("transaction",
-				transaction);
+		final CommandArguments args = CommandArguments.getInstance().put("transaction", transaction);
 
 		execute(new Executor<C, Void>() {
 
@@ -102,7 +100,7 @@ public class DefaultJedisTransactionRedisOperations<C extends JedisCommands> ext
 
 	@Override
 	public Status watch(final String... keys){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("keys", keys);
+		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
 
 		return execute(new Executor<C, Status>() {
 

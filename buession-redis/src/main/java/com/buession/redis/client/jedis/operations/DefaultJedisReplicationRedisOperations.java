@@ -29,7 +29,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import redis.clients.jedis.Jedis;
@@ -46,8 +46,7 @@ public class DefaultJedisReplicationRedisOperations<C extends JedisCommands> ext
 
 	@Override
 	public Status slaveOf(final String host, final int port){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("host", host).put(
-				"port", port);
+		final CommandArguments arguments = CommandArguments.getInstance().put("host", host).put("port", port);
 
 		return execute(new Executor<C, Status>() {
 

@@ -28,7 +28,7 @@ import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import redis.clients.jedis.Jedis;
@@ -48,7 +48,7 @@ public class DefaultJedisLuaRedisOperations<C extends JedisCommands> extends Abs
 
 	@Override
 	public Object eval(final String script){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("script", script);
+		final CommandArguments args = CommandArguments.getInstance().put("script", script);
 
 		return execute(new Executor<C, Object>() {
 
@@ -70,8 +70,7 @@ public class DefaultJedisLuaRedisOperations<C extends JedisCommands> extends Abs
 
 	@Override
 	public Object eval(final String script, final String... params){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("script", script).put(
-				"params", params);
+		final CommandArguments args = CommandArguments.getInstance().put("script", script).put("params", params);
 
 		return execute(new Executor<C, Object>() {
 
@@ -93,8 +92,8 @@ public class DefaultJedisLuaRedisOperations<C extends JedisCommands> extends Abs
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("script", script).put(
-				"keys", keys).put("arguments", arguments);
+		final CommandArguments args = CommandArguments.getInstance().put("script", script).put("keys", keys).put(
+				"arguments", arguments);
 
 		return execute(new Executor<C, Object>() {
 
@@ -116,7 +115,7 @@ public class DefaultJedisLuaRedisOperations<C extends JedisCommands> extends Abs
 
 	@Override
 	public Object evalSha(final String digest){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("digest", digest);
+		final CommandArguments args = CommandArguments.getInstance().put("digest", digest);
 
 		return execute(new Executor<C, Object>() {
 
@@ -138,8 +137,7 @@ public class DefaultJedisLuaRedisOperations<C extends JedisCommands> extends Abs
 
 	@Override
 	public Object evalSha(final String digest, final String... params){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("digest", digest).put(
-				"params", params);
+		final CommandArguments args = CommandArguments.getInstance().put("digest", digest).put("params", params);
 
 		return execute(new Executor<C, Object>() {
 
@@ -161,8 +159,8 @@ public class DefaultJedisLuaRedisOperations<C extends JedisCommands> extends Abs
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("digest", digest).put(
-				"keys", keys).put("arguments", arguments);
+		final CommandArguments args = CommandArguments.getInstance().put("digest", digest).put("keys", keys).put(
+				"arguments", arguments);
 
 		return execute(new Executor<C, Object>() {
 
@@ -184,7 +182,7 @@ public class DefaultJedisLuaRedisOperations<C extends JedisCommands> extends Abs
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("sha1", sha1);
+		final CommandArguments args = CommandArguments.getInstance().put("sha1", sha1);
 
 		return execute(new Executor<C, List<Boolean>>() {
 
@@ -206,7 +204,7 @@ public class DefaultJedisLuaRedisOperations<C extends JedisCommands> extends Abs
 
 	@Override
 	public String scriptLoad(final String script){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("script", script);
+		final CommandArguments args = CommandArguments.getInstance().put("script", script);
 
 		return execute(new Executor<C, String>() {
 

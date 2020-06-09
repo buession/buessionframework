@@ -28,7 +28,7 @@ import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
 import redis.clients.jedis.commands.BinaryJedisCommands;
 
@@ -43,8 +43,8 @@ public abstract class AbstractJedisBinaryInternalRedisOperations<C extends Binar
 
 	@Override
 	public Object pSync(final byte[] masterRunId, final long offset){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("masterRunId",
-				masterRunId).put("offset", offset);
+		final CommandArguments args = CommandArguments.getInstance().put("masterRunId", masterRunId).put("offset",
+				offset);
 
 		return execute(new Executor<C, Status>() {
 

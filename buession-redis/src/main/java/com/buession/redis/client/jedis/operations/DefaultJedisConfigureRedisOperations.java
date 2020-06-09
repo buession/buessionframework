@@ -28,7 +28,7 @@ import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import redis.clients.jedis.Jedis;
@@ -48,8 +48,7 @@ public class DefaultJedisConfigureRedisOperations<C extends JedisCommands> exten
 
 	@Override
 	public Status configSet(final String parameter, final String value){
-		final OperationsCommandArguments args =
-				OperationsCommandArguments.getInstance().put("parameter", parameter).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter).put("value", value);
 
 		return execute(new Executor<C, Status>() {
 
@@ -71,7 +70,7 @@ public class DefaultJedisConfigureRedisOperations<C extends JedisCommands> exten
 
 	@Override
 	public List<String> configGet(final String parameter){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("parameter", parameter);
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter);
 
 		return execute(new Executor<C, List<String>>() {
 

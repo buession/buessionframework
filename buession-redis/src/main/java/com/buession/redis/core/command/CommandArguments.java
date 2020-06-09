@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
+package com.buession.redis.core.command;
 
 import com.buession.core.utils.ArrayUtils;
 import com.buession.core.validator.Validate;
@@ -33,33 +33,33 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class OperationsCommandArguments {
+public class CommandArguments {
 
 	private Map<String, Object> parameters = new LinkedHashMap<>();
 
-	private OperationsCommandArguments(){
+	private CommandArguments(){
 
 	}
 
-	public final static OperationsCommandArguments getInstance(){
-		return new OperationsCommandArguments();
+	public final static CommandArguments getInstance(){
+		return new CommandArguments();
 	}
 
-	public OperationsCommandArguments put(final String key, final Object value){
+	public CommandArguments put(final String key, final Object value){
 		parameters.put(key, value);
 		return this;
 	}
 
-	public OperationsCommandArguments put(final String key, final Object... value){
+	public CommandArguments put(final String key, final Object... value){
 		parameters.put(key, ArrayUtils.toString(value));
 		return this;
 	}
 
-	public OperationsCommandArguments putAll(final OperationsCommandArguments parameters){
+	public CommandArguments putAll(final CommandArguments parameters){
 		return parameters == null ? this : putAll(parameters.getParameters());
 	}
 
-	public OperationsCommandArguments putAll(final Map<String, Object> parameters){
+	public CommandArguments putAll(final Map<String, Object> parameters){
 		if(parameters != null){
 			this.parameters.putAll(parameters);
 		}

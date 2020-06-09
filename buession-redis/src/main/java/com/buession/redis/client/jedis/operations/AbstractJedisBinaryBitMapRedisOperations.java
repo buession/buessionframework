@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.commands.BinaryJedisCommands;
 
@@ -44,8 +44,8 @@ public abstract class AbstractJedisBinaryBitMapRedisOperations<C extends BinaryJ
 
 	@Override
 	public Status setBit(final byte[] key, final long offset, final byte[] value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("offset",
-				offset).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value"
+				, value);
 
 		if(isTransaction()){
 			return execute((C cmd)->statusForBool(getTransaction().setbit(key, offset, value).get()),
@@ -57,8 +57,8 @@ public abstract class AbstractJedisBinaryBitMapRedisOperations<C extends BinaryJ
 
 	@Override
 	public Status setBit(final byte[] key, final long offset, final boolean value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("offset",
-				offset).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value"
+				, value);
 
 		if(isTransaction()){
 			return execute((C cmd)->statusForBool(getTransaction().setbit(SafeEncoder.encode(key), offset, value).get()), ProtocolCommand.SETBIT, args);
@@ -69,8 +69,7 @@ public abstract class AbstractJedisBinaryBitMapRedisOperations<C extends BinaryJ
 
 	@Override
 	public Status getBit(final byte[] key, final long offset){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("offset",
-				offset);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset);
 
 		if(isTransaction()){
 			return execute((C cmd)->statusForBool(getTransaction().getbit(key, offset).get()), ProtocolCommand.GETBIT,
@@ -82,8 +81,7 @@ public abstract class AbstractJedisBinaryBitMapRedisOperations<C extends BinaryJ
 
 	@Override
 	public List<Long> bitField(final byte[] key, final byte[]... arguments){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"arguments", arguments);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("arguments", arguments);
 
 		if(isTransaction()){
 			return execute((C cmd)->getTransaction().bitfield(key, arguments).get(), ProtocolCommand.BITFIELD, args);
@@ -94,7 +92,7 @@ public abstract class AbstractJedisBinaryBitMapRedisOperations<C extends BinaryJ
 
 	@Override
 	public Long bitCount(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((C cmd)->getTransaction().bitcount(key).get(), ProtocolCommand.BITCOUNT, args);
@@ -105,8 +103,8 @@ public abstract class AbstractJedisBinaryBitMapRedisOperations<C extends BinaryJ
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((C cmd)->getTransaction().bitcount(key, start, end).get(), ProtocolCommand.BITCOUNT, args);

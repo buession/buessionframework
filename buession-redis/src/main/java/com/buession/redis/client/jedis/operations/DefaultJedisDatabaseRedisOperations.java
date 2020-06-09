@@ -28,7 +28,7 @@ import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.commands.JedisCommands;
@@ -44,7 +44,7 @@ public class DefaultJedisDatabaseRedisOperations<C extends JedisCommands> extend
 
 	@Override
 	public Status select(final int db){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("db", db);
+		final CommandArguments args = CommandArguments.getInstance().put("db", db);
 
 		return execute(new Executor<C, Status>() {
 
@@ -66,8 +66,7 @@ public class DefaultJedisDatabaseRedisOperations<C extends JedisCommands> extend
 
 	@Override
 	public Status swapdb(final int db1, final int db2){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("db1", db1).put("db2",
-				db2);
+		final CommandArguments args = CommandArguments.getInstance().put("db1", db1).put("db2", db2);
 
 		return execute(new Executor<C, Status>() {
 

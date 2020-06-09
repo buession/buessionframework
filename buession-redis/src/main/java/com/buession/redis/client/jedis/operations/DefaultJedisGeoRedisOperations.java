@@ -24,17 +24,15 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.lang.Geo;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import redis.clients.jedis.commands.JedisCommands;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Yong.Teng
@@ -47,8 +45,8 @@ public class DefaultJedisGeoRedisOperations<C extends JedisCommands> extends Abs
 
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member1"
-				, member1).put("member2", member2);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member1", member1).put(
+				"member2", member2);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().geodist(key, member1, member2).get(), ProtocolCommand.GEODIST,
@@ -60,8 +58,8 @@ public class DefaultJedisGeoRedisOperations<C extends JedisCommands> extends Abs
 
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member1"
-				, member1).put("member2", member2).put("unit", unit);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member1", member1).put(
+				"member2", member2).put("unit", unit);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().geodist(key, member1, member2,
@@ -75,8 +73,8 @@ public class DefaultJedisGeoRedisOperations<C extends JedisCommands> extends Abs
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 			final double radius, final GeoUnit unit){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"longitude", longitude).put("latitude", latitude).put("radius", radius).put("unit", unit);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put(
+				"latitude", latitude).put("radius", radius).put("unit", unit);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
@@ -90,9 +88,8 @@ public class DefaultJedisGeoRedisOperations<C extends JedisCommands> extends Abs
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 			final double radius, final GeoUnit unit, final GeoArgument geoArgument){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"longitude", longitude).put("latitude", latitude).put("radius", radius).put("unit", unit).put(
-						"geoArgument", geoArgument);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put(
+				"latitude", latitude).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
@@ -108,8 +105,8 @@ public class DefaultJedisGeoRedisOperations<C extends JedisCommands> extends Abs
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 			final GeoUnit unit){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member).put("radius", radius).put("unit", unit);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("radius"
+				, radius).put("unit", unit);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
@@ -124,8 +121,8 @@ public class DefaultJedisGeoRedisOperations<C extends JedisCommands> extends Abs
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 			final GeoUnit unit, final GeoArgument geoArgument){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("radius"
+				, radius).put("unit", unit).put("geoArgument", geoArgument);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
@@ -140,8 +137,7 @@ public class DefaultJedisGeoRedisOperations<C extends JedisCommands> extends Abs
 
 	@Override
 	public List<String> geoHash(final String key, final String... members){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
-				, members);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().geohash(key, members).get(), ProtocolCommand.GEOHASH, args);

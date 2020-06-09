@@ -36,12 +36,13 @@ import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.ListCommands;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.command.StringCommands;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.SortingParams;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,7 +66,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public boolean exists(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((ShardedJedis cmd)->getTransaction().exists(key).get(), ProtocolCommand.EXISTS, args);
@@ -76,7 +77,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Type type(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((ShardedJedis cmd)->ReturnUtils.enumValueOf(getTransaction().type(key).get(), Type.class),
@@ -88,8 +89,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("lifetime"
-				, lifetime);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("lifetime", lifetime);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expire(key, lifetime).get() == 1),
@@ -102,8 +102,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"unixTimestamp", unixTimestamp);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("unixTimestamp",
+				unixTimestamp);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expireAt(key, unixTimestamp).get() == 1),
@@ -116,8 +116,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("lifetime"
-				, lifetime);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("lifetime", lifetime);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpire(key, lifetime).get() == 1),
@@ -130,8 +129,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"unixTimestamp", unixTimestamp);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("unixTimestamp",
+				unixTimestamp);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() == 1)
@@ -144,7 +143,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long ttl(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().ttl(key).get(), ProtocolCommand.TTL, args);
@@ -155,7 +154,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long pTtl(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().pttl(key).get(), ProtocolCommand.PTTL, args);
@@ -166,7 +165,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status persist(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().persist(key).get() > 0),
@@ -178,7 +177,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public List<byte[]> sort(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().sort(key).get(), ProtocolCommand.SORT, args);
@@ -189,20 +188,19 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final KeyCommands.SortArgument sortArgument){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
+		final SortingParams sortingParams = JedisClientUtils.sortArgumentConvert(sortArgument);
 
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().sort(key, JedisClientUtils.sortArgumentConvert(sortArgument)).get()
-					, ProtocolCommand.SORT, args);
+			return execute((cmd)->getTransaction().sort(key, sortingParams).get(), ProtocolCommand.SORT, args);
 		}else{
-			return execute((cmd)->cmd.sort(key, JedisClientUtils.sortArgumentConvert(sortArgument)),
-					ProtocolCommand.SORT, args);
+			return execute((cmd)->cmd.sort(key, sortingParams), ProtocolCommand.SORT, args);
 		}
 	}
 
 	@Override
 	public byte[] dump(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().dump(key).get(), ProtocolCommand.DUMP, args);
@@ -213,8 +211,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"serializedValue", serializedValue).put("ttl", ttl);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("serializedValue",
+				serializedValue).put("ttl", ttl);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().restore(key, ttl, serializedValue).get()),
@@ -227,8 +225,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("host",
-				host).put("port", port).put("key", key).put("db", db).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("host", host).put("port",
+				port).put("key", key).put("db", db).put("timeout", timeout);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, key, db, timeout).get()), ProtocolCommand.MIGRATE, args);
@@ -240,8 +238,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("host",
-				host).put("port", port).put("key", key).put("db", db).put("timeout", timeout);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("host", host).put("port",
+				port).put("key", key).put("db", db).put("timeout", timeout);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, key, db, timeout).get()), ProtocolCommand.MIGRATE, args);
@@ -254,9 +252,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
 			final MigrateOperation migrateOperation){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("host",
-				host).put("port", port).put("key", key).put("db", db).put("timeout", timeout).put("migrate",
-				migrateOperation);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("host", host).put("port",
+				port).put("key", key).put("db", db).put("timeout", timeout).put("migrate", migrateOperation);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
@@ -271,9 +268,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
 			final MigrateOperation migrateOperation){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("host",
-				host).put("port", port).put("key", key).put("db", db).put("timeout", timeout).put("migrate",
-				migrateOperation);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("host", host).put("port",
+				port).put("key", key).put("db", db).put("timeout", timeout).put("migrate", migrateOperation);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
@@ -287,7 +283,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long del(final String... keys){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("keys", keys);
+		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
 
 		return execute(new Executor<ShardedJedis, Long>() {
 
@@ -315,7 +311,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long del(final byte[]... keys){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("keys", keys);
+		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
 
 		return execute(new Executor<ShardedJedis, Long>() {
 
@@ -343,7 +339,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status move(final byte[] key, final int db){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("db", db);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("db", db);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().move(key, db).get() > 0),
@@ -355,8 +351,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status set(final byte[] key, final byte[] value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value).get()), ProtocolCommand.SET
@@ -368,8 +363,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final StringCommands.SetArgument setArgument){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value).put("setArgument", setArgument);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put(
+				"setArgument", setArgument);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value,
@@ -382,8 +377,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value).put("lifetime", lifetime);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("lifetime"
+				, lifetime);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().setex(key, lifetime, value).get()),
@@ -396,8 +391,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value).put("lifetime", lifetime);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("lifetime"
+				, lifetime);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().psetex(key, lifetime, value).get()),
@@ -410,8 +405,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setnx(key, value).get() > 0),
@@ -423,8 +417,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long append(final byte[] key, final byte[] value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().append(key, value).get(), ProtocolCommand.APPEND, args);
@@ -435,7 +428,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public byte[] get(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().get(key).get(), ProtocolCommand.GET, args);
@@ -446,8 +439,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public byte[] getSet(final byte[] key, final byte[] value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().getSet(key, value).get(), ProtocolCommand.GETSET, args);
@@ -458,7 +450,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long incr(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().incr(key).get(), ProtocolCommand.INCR, args);
@@ -469,8 +461,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long incrBy(final byte[] key, final long value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().incrBy(key, value).get(), ProtocolCommand.INCRBY, args);
@@ -481,8 +472,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Double incrByFloat(final byte[] key, final double value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().incrByFloat(key, value).get(), ProtocolCommand.INCRBYFLOAT, args);
@@ -493,7 +483,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long decr(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().decr(key).get(), ProtocolCommand.DECR, args);
@@ -504,8 +494,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long decrBy(final byte[] key, final long value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().decrBy(key, value).get(), ProtocolCommand.DECRBY, args);
@@ -516,8 +505,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long setRange(final byte[] key, final long offset, final byte[] value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("offset",
-				offset).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value"
+				, value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().setrange(key, offset, value).get(), ProtocolCommand.SETRANGE, args);
@@ -528,8 +517,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public byte[] getRange(final byte[] key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().getrange(key, start, end).get(), ProtocolCommand.GETRANGE, args);
@@ -540,8 +529,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public byte[] substr(final byte[] key, final int start, final int end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->SafeEncoder.encode(getTransaction().substr(key, start, end).get()),
@@ -553,7 +542,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long strlen(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().strlen(key).get(), ProtocolCommand.STRLEN, args);
@@ -564,8 +553,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public boolean hExists(final byte[] key, final byte[] field){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hexists(key, field).get(), ProtocolCommand.HEXISTS, args);
@@ -576,7 +564,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<byte[]> hKeys(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hkeys(key).get(), ProtocolCommand.HKEYS, args);
@@ -587,7 +575,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public List<byte[]> hVals(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		return execute(new Executor<ShardedJedis, List<byte[]>>() {
 
@@ -606,8 +594,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
+				value);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hset(key, field, value).get() > 0),
@@ -620,8 +608,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
+				value);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hsetnx(key, field, value).get() > 0),
@@ -634,8 +622,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public byte[] hGet(final byte[] key, final byte[] field){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hget(key, field).get(), ProtocolCommand.HGET, args);
@@ -646,8 +633,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("data",
-				data);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("data", data);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().hmset(key, data).get()),
@@ -659,8 +645,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public List<byte[]> hMGet(final byte[] key, final byte[]... fields){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("fields",
-				fields);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("fields", fields);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hmget(key, fields).get(), ProtocolCommand.HMGET, args);
@@ -671,7 +656,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Map<byte[], byte[]> hGetAll(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hgetAll(key).get(), ProtocolCommand.HGETALL, args);
@@ -682,8 +667,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long hStrLen(final byte[] key, final byte[] field){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hstrlen(key, field).get(), ProtocolCommand.HSTRLEN, args);
@@ -694,7 +678,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long hLen(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hlen(key).get(), ProtocolCommand.HLEN, args);
@@ -705,8 +689,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
+				value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hincrBy(key, field, value).get(), ProtocolCommand.HINCRBY, args);
@@ -717,8 +701,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
+				value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hincrByFloat(key, field, value).get(), ProtocolCommand.HINCRBYFLOAT
@@ -729,22 +713,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
-	public Long hDecrBy(final byte[] key, final byte[] field, final long value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field).put("value", value);
-
-		final long val = value > 0 ? value * -1 : value;
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hincrBy(key, field, val).get(), ProtocolCommand.HINCRBY, args);
-		}else{
-			return execute((cmd)->cmd.hincrBy(key, field, val), ProtocolCommand.HINCRBY, args);
-		}
-	}
-
-	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
@@ -756,8 +726,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
+				"pattern", pattern);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
@@ -769,8 +739,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count"
+				, count);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
@@ -783,8 +753,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("pattern", pattern).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
+				"pattern", pattern).put("count", count);
 
 		return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor, new JedisScanParams(pattern
 				, count))), ProtocolCommand.HSCAN, args);
@@ -792,7 +762,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long hDel(final byte[] key, final byte[]... fields){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hdel(key, fields).get(), ProtocolCommand.HDEL, args);
@@ -803,8 +773,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long lPush(final byte[] key, final byte[]... values){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("values",
-				values);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().lpush(key, values).get(), ProtocolCommand.LPUSH, args);
@@ -815,8 +784,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long lPushX(final byte[] key, final byte[]... values){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("values",
-				values);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().lpushx(key, values).get(), ProtocolCommand.LPUSHX, args);
@@ -828,8 +796,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Long lInsert(final byte[] key, final byte[] value, final ListCommands.ListPosition position,
 			final byte[] pivot){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("position"
-				, position).put("pivot", pivot).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("position", position).put(
+				"pivot", pivot).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->cmd.linsert(key, JedisClientUtils.listPositionConvert(position), pivot, value),
@@ -842,8 +810,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status lSet(final byte[] key, final long index, final byte[] value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("index",
-				index).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index).put("value",
+				value);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().lset(key, index, value).get()),
@@ -855,8 +823,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public byte[] lIndex(final byte[] key, final long index){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("index",
-				index);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().lindex(key, index).get(), ProtocolCommand.LINDEX, args);
@@ -867,7 +834,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public byte[] lPop(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().lpop(key).get(), ProtocolCommand.LPOP, args);
@@ -878,7 +845,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public byte[] rPop(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().rpop(key).get(), ProtocolCommand.RPOP, args);
@@ -889,8 +856,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long rPush(final byte[] key, final byte[]... values){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("values",
-				values);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().rpush(key, values).get(), ProtocolCommand.RPUSH, args);
@@ -901,8 +867,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long rPushX(final byte[] key, final byte[]... values){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("values",
-				values);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().rpushx(key, values).get(), ProtocolCommand.RPUSHX, args);
@@ -913,8 +878,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status lTrim(final byte[] key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().ltrim(key, start, end).get()),
@@ -926,8 +891,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long lRem(final byte[] key, final byte[] value, final long count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("count",
+				count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().lrem(key, count, value).get(), ProtocolCommand.LREM, args);
@@ -938,8 +903,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public List<byte[]> lRange(final byte[] key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().lrange(key, start, end).get(), ProtocolCommand.LRANGE, args);
@@ -950,7 +915,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long lLen(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().llen(key).get(), ProtocolCommand.LLEN, args);
@@ -961,8 +926,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long sAdd(final byte[] key, final byte[]... members){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
-				, members);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().sadd(key, members).get(), ProtocolCommand.SADD, args);
@@ -973,7 +937,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long sCard(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().scard(key).get(), ProtocolCommand.SCARD, args);
@@ -984,8 +948,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public boolean sisMember(final byte[] key, final byte[] member){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().sismember(key, member).get(), ProtocolCommand.SISMEMBER, args);
@@ -996,7 +959,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<byte[]> sMembers(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().smembers(key).get(), ProtocolCommand.SMEMBERS, args);
@@ -1007,7 +970,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public byte[] sPop(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().spop(key).get(), ProtocolCommand.SPOP, args);
@@ -1018,7 +981,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public byte[] sRandMember(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().srandmember(key).get(), ProtocolCommand.SRANDMEMBER, args);
@@ -1029,8 +992,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public List<byte[]> sRandMember(final byte[] key, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("count",
-				count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().srandmember(key, count).get(), ProtocolCommand.SRANDMEMBER, args);
@@ -1041,8 +1003,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long sRem(final byte[] key, final byte[]... members){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
-				, members);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().srem(key, members).get(), ProtocolCommand.SREM, args);
@@ -1053,8 +1014,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
@@ -1066,8 +1026,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
+				"pattern", pattern);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
@@ -1079,8 +1039,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count"
+				, count);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
@@ -1093,8 +1053,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("pattern", pattern).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
+				"pattern", pattern).put("count", count);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
@@ -1106,8 +1066,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Number> members){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
-				, members);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
 
 		return execute(new Executor<ShardedJedis, Long>() {
 
@@ -1129,8 +1088,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Double zScore(final byte[] key, final byte[] member){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zscore(key, member).get(), ProtocolCommand.ZSCORE, args);
@@ -1141,7 +1099,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long zCard(final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zcard(key).get(), ProtocolCommand.ZCARD, args);
@@ -1152,8 +1110,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Double zIncrBy(final byte[] key, final byte[] member, final double increment){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member).put("increment", increment);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put(
+				"increment", increment);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zincrby(key, increment, member).get(), ProtocolCommand.ZINCRBY,
@@ -1165,8 +1123,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long zCount(final byte[] key, final double min, final double max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zcount(key, min, max).get(), ProtocolCommand.ZCOUNT, args);
@@ -1177,8 +1134,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long zCount(final byte[] key, final byte[] min, final byte[] max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zcount(key, min, max).get(), ProtocolCommand.ZCOUNT, args);
@@ -1189,8 +1145,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<byte[]> zRange(final byte[] key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrange(key, start, end).get(), ProtocolCommand.ZRANGE, args);
@@ -1201,8 +1157,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<Tuple> zRangeWithScores(final byte[] key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeWithScores(key, start,
@@ -1215,8 +1171,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get(), ProtocolCommand.ZRANGEBYSCORE,
@@ -1228,8 +1183,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get(), ProtocolCommand.ZRANGEBYSCORE,
@@ -1242,8 +1196,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get(), ProtocolCommand.ZRANGEBYSCORE,
@@ -1256,8 +1210,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByScore(key, min, max, offset, count).get(),
@@ -1270,8 +1224,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
@@ -1284,8 +1237,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
@@ -1299,8 +1251,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
@@ -1313,8 +1265,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByLex(key, min, max).get(), ProtocolCommand.ZRANGEBYLEX,
@@ -1327,8 +1278,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByLex(key, min, max, offset, count).get(),
@@ -1340,8 +1291,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long zRank(final byte[] key, final byte[] member){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrank(key, member).get(), ProtocolCommand.ZRANK, args);
@@ -1352,8 +1302,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long zRevRank(final byte[] key, final byte[] member){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrank(key, member).get(), ProtocolCommand.ZRANK, args);
@@ -1364,8 +1313,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long zRem(final byte[] key, final byte[]... members){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
-				, members);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrem(key, members).get(), ProtocolCommand.ZREM, args);
@@ -1376,8 +1324,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long zRemRangeByRank(final byte[] key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zremrangeByRank(key, start, end).get(),
@@ -1389,8 +1337,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long zRemRangeByScore(final byte[] key, final double min, final double max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get(),
@@ -1402,8 +1349,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get(),
@@ -1415,8 +1361,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zremrangeByLex(key, min, max).get(), ProtocolCommand.ZREMRANGEBYLEX
@@ -1429,8 +1374,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<byte[]> zRevRange(final byte[] key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrange(key, start, end).get(), ProtocolCommand.ZREVRANGE, args);
@@ -1441,8 +1386,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeWithScores(key, start,
@@ -1455,8 +1400,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get(),
@@ -1468,8 +1412,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get(),
@@ -1482,8 +1425,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get(),
@@ -1497,8 +1440,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get(),
@@ -1511,8 +1454,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
@@ -1525,8 +1467,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
@@ -1540,8 +1481,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
 			final int offset, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
@@ -1555,8 +1496,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
 			final int offset, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
@@ -1569,8 +1510,9 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("min", min).put("max", max);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("min", min).put(
+						"max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max).get(), ProtocolCommand.ZREVRANGEBYLEX
@@ -1583,8 +1525,9 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("min", min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("min", min).put(
+						"max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max, offset, count).get(),
@@ -1597,8 +1540,9 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("min", min).put("max", max);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("min", min).put(
+						"max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zlexcount(key, min, max).get(), ProtocolCommand.ZLEXCOUNT, args);
@@ -1609,8 +1553,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
@@ -1622,8 +1565,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
+				"pattern", pattern);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
@@ -1635,8 +1578,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count"
+				, count);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
@@ -1648,8 +1591,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("pattern", pattern).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
+				"pattern", pattern).put("count", count);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
@@ -1661,8 +1604,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("elements"
-				, elements);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("elements", elements);
 
 		if(isTransaction()){
 			return execute((cmd)->statusForBool(getTransaction().pfadd(key, elements).get() > 0),
@@ -1674,8 +1616,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member).put("longitude", longitude).put("latitude", latitude);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put(
+				"longitude", longitude).put("latitude", latitude);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().geoadd(key, longitude, latitude, member).get(),
@@ -1687,14 +1629,27 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"memberCoordinates", memberCoordinates);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("memberCoordinates",
+				memberCoordinates);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().geoadd(key, JedisClientUtils.geoMapConvert(memberCoordinates)).get(), ProtocolCommand.GEOADD, args);
 		}else{
 			return execute((cmd)->cmd.geoadd(key, JedisClientUtils.geoMapConvert(memberCoordinates)),
 					ProtocolCommand.GEOADD, args);
+		}
+	}
+
+	@Override
+	public List<Geo> geoPos(final byte[] key, final byte[]... members){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.geoListDeconvert(getTransaction().geopos(key, members).get()),
+					ProtocolCommand.GEOPOS, args);
+		}else{
+			return execute((cmd)->JedisClientUtils.geoListDeconvert(cmd.geopos(key, members)), ProtocolCommand.GEOPOS,
+					args);
 		}
 	}
 

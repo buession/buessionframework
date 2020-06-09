@@ -28,7 +28,7 @@ import com.buession.core.Executor;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.DebugCommands;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
@@ -44,8 +44,7 @@ public class ShardedJedisBinaryDebugRedisOperations extends AbstractJedisBinaryD
 
 	@Override
 	public Object object(final DebugCommands.ObjectCommand command, final byte[] key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("command", command).put(
-				"key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("command", command).put("key", key);
 
 		return execute(new Executor<ShardedJedis, Object>() {
 

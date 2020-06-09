@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.BitMapCommands;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.BitPosParams;
@@ -44,8 +44,7 @@ public class ShardedJedisBinaryBitMapRedisOperations extends AbstractJedisBinary
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((ShardedJedis cmd)->getTransaction().bitpos(key, value).get(), ProtocolCommand.BITPOS,
@@ -58,8 +57,8 @@ public class ShardedJedisBinaryBitMapRedisOperations extends AbstractJedisBinary
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final int start, final int end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("start",
+				start).put("end", end);
 		final BitPosParams bitPosParams = new BitPosParams(start, end);
 
 		if(isTransaction()){

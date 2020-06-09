@@ -25,8 +25,7 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.core.Executor;
-import com.buession.core.utils.NumberUtils;
-import com.buession.lang.KeyValue;
+import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.client.AbstractRedisClient;
 import com.buession.redis.client.connection.RedisConnection;
@@ -36,13 +35,16 @@ import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.transaction.jedis.JedisTransaction;
 import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.GeoCoordinate;
+import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.commands.JedisCommands;
+import redis.clients.jedis.params.SetParams;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -67,7 +69,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public boolean exists(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().exists(key).get(), ProtocolCommand.EXISTS, args);
@@ -78,7 +80,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Type type(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.enumValueOf(getTransaction().type(key).get(), Type.class),
@@ -90,8 +92,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Status expire(final String key, final int lifetime){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("lifetime"
-				, lifetime);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("lifetime", lifetime);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expire(key, lifetime).get() == 1),
@@ -104,8 +105,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"unixTimestamp", unixTimestamp);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("unixTimestamp",
+				unixTimestamp);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expireAt(key, unixTimestamp).get() == 1),
@@ -118,8 +119,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Status pExpire(final String key, final int lifetime){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("lifetime"
-				, lifetime);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("lifetime", lifetime);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpire(key, lifetime).get() == 1),
@@ -132,8 +132,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"unixTimestamp", unixTimestamp);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("unixTimestamp",
+				unixTimestamp);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() == 1)
@@ -146,7 +146,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long ttl(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().ttl(key).get(), ProtocolCommand.TTL, args);
@@ -157,7 +157,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long pTtl(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().pttl(key).get(), ProtocolCommand.PTTL, args);
@@ -168,7 +168,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Status persist(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().persist(key).get() > 0),
@@ -180,7 +180,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public List<String> sort(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().sort(key).get(), ProtocolCommand.SORT, args);
@@ -191,21 +191,19 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public List<String> sort(final String key, final KeyCommands.SortArgument sortArgument){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"sortArgument", sortArgument);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("sortArgument", sortArgument);
+		final SortingParams soringParams = JedisClientUtils.sortArgumentConvert(sortArgument);
 
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().sort(key, JedisClientUtils.sortArgumentConvert(sortArgument)).get()
-					, ProtocolCommand.SORT, args);
+			return execute((cmd)->getTransaction().sort(key, soringParams).get(), ProtocolCommand.SORT, args);
 		}else{
-			return execute((cmd)->cmd.sort(key, JedisClientUtils.sortArgumentConvert(sortArgument)),
-					ProtocolCommand.SORT, args);
+			return execute((cmd)->cmd.sort(key, soringParams), ProtocolCommand.SORT, args);
 		}
 	}
 
 	@Override
 	public byte[] dump(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().dump(key).get(), ProtocolCommand.DUMP, args);
@@ -216,20 +214,21 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Status restore(final String key, final String serializedValue, final int ttl){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"serializedValue", serializedValue).put("ttl", ttl);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("serializedValue",
+				serializedValue).put("ttl", ttl);
+		final byte[] serializedEncodeValue = SafeEncoder.encode(serializedValue);
 
 		if(isTransaction()){
-			return execute((cmd)->statusForOK(getTransaction().restore(key, ttl, SafeEncoder.encode(serializedValue)).get()), ProtocolCommand.RESTORE, args);
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().restore(key, ttl, serializedEncodeValue).get()), ProtocolCommand.RESTORE, args);
 		}else{
-			return execute((cmd)->statusForOK(cmd.restore(key, ttl, SafeEncoder.encode(serializedValue))),
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.restore(key, ttl, serializedEncodeValue)),
 					ProtocolCommand.RESTORE, args);
 		}
 	}
 
 	@Override
 	public Status move(final String key, final int db){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("db", db);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("db", db);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().move(key, db).get() > 0),
@@ -241,75 +240,73 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Status set(final String key, final String value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
-			return execute((cmd)->statusForOK(getTransaction().set(key, value).get()), ProtocolCommand.SET, args);
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value).get()), ProtocolCommand.SET
+					, args);
 		}else{
-			return execute((cmd)->statusForOK(cmd.set(key, value)), ProtocolCommand.SET, args);
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value)), ProtocolCommand.SET, args);
 		}
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetArgument setArgument){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value).put("setArgument", setArgument);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put(
+				"setArgument", setArgument);
+		final SetParams setParams = JedisClientUtils.setArgumentConvert(setArgument);
 
 		if(isTransaction()){
-			return execute((cmd)->statusForOK(getTransaction().set(key, value,
-					JedisClientUtils.setArgumentConvert(setArgument)).get()), ProtocolCommand.SET, args);
-		}else{
-			return execute((cmd)->statusForOK(cmd.set(key, value, JedisClientUtils.setArgumentConvert(setArgument))),
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value, setParams).get()),
 					ProtocolCommand.SET, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value, setParams)), ProtocolCommand.SET, args);
 		}
 	}
 
 	@Override
 	public Status setEx(final String key, final String value, final int lifetime){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value).put("lifetime", lifetime);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("lifetime"
+				, lifetime);
 
 		if(isTransaction()){
-			return execute((cmd)->statusForOK(getTransaction().setex(key, lifetime, value).get()),
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().setex(key, lifetime, value).get()),
 					ProtocolCommand.SETEX, args);
 		}else{
-			return execute((cmd)->statusForOK(cmd.setex(key, lifetime, value)), ProtocolCommand.SETEX, args);
-		}
-	}
-
-	@Override
-	public Status pSetEx(final String key, final String value, final int lifetime){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value).put("lifetime", lifetime);
-
-		if(isTransaction()){
-			return execute((cmd)->statusForOK(getTransaction().psetex(key, lifetime, value).get()),
-					ProtocolCommand.PSETEX, args);
-		}else{
-			return execute((cmd)->statusForOK(cmd.psetex(key, lifetime, value)), ProtocolCommand.PSETEX, args);
-		}
-	}
-
-	@Override
-	public Status setNx(final String key, final String value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
-
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setnx(key, value).get() > 0),
-					ProtocolCommand.SETNX, args);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(isTransaction() ?
-					getTransaction().setnx(key, value).get() > 0 : cmd.setnx(key, value) > 0), ProtocolCommand.SETNX,
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.setex(key, lifetime, value)), ProtocolCommand.SETEX,
 					args);
 		}
 	}
 
 	@Override
+	public Status pSetEx(final String key, final String value, final int lifetime){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("lifetime"
+				, lifetime);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().psetex(key, lifetime, value).get()),
+					ProtocolCommand.PSETEX, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.psetex(key, lifetime, value)), ProtocolCommand.PSETEX,
+					args);
+		}
+	}
+
+	@Override
+	public Status setNx(final String key, final String value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setnx(key, value).get() > 0),
+					ProtocolCommand.SETNX, args);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setnx(key, value) > 0), ProtocolCommand.SETNX, args);
+		}
+	}
+
+	@Override
 	public Long append(final String key, final String value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().append(key, value).get(), ProtocolCommand.APPEND, args);
@@ -320,7 +317,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public String get(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().get(key).get(), ProtocolCommand.GET, args);
@@ -331,8 +328,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public String getSet(final String key, final String value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().getSet(key, value).get(), ProtocolCommand.GETSET, args);
@@ -343,7 +339,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long incr(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().incr(key).get(), ProtocolCommand.INCR, args);
@@ -353,19 +349,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Long incrBy(final String key, final int value){
-		return incrBy(key, (long) value);
-	}
-
-	@Override
-	public Long incrBy(final byte[] key, final int value){
-		return incrBy(key, (long) value);
-	}
-
-	@Override
 	public Long incrBy(final String key, final long value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().incrBy(key, value).get(), ProtocolCommand.INCRBY, args);
@@ -375,19 +360,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Double incrByFloat(final String key, final float value){
-		return incrByFloat(key, (double) value);
-	}
-
-	@Override
-	public Double incrByFloat(final byte[] key, final float value){
-		return incrByFloat(key, (double) value);
-	}
-
-	@Override
 	public Double incrByFloat(final String key, final double value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().incrByFloat(key, value).get(), ProtocolCommand.INCRBYFLOAT, args);
@@ -398,7 +372,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long decr(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().decr(key).get(), ProtocolCommand.DECR, args);
@@ -408,19 +382,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Long decrBy(final String key, final int value){
-		return decrBy(key, (long) value);
-	}
-
-	@Override
-	public Long decrBy(final byte[] key, final int value){
-		return decrBy(key, (long) value);
-	}
-
-	@Override
 	public Long decrBy(final String key, final long value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().decrBy(key, value).get(), ProtocolCommand.DECRBY, args);
@@ -430,19 +393,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Long setRange(final String key, final int offset, final String value){
-		return setRange(key, (long) offset, value);
-	}
-
-	@Override
-	public Long setRange(final byte[] key, final int offset, final byte[] value){
-		return setRange(key, (long) offset, value);
-	}
-
-	@Override
 	public Long setRange(final String key, final long offset, final String value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("offset",
-				offset).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value"
+				, value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().setrange(key, offset, value).get(), ProtocolCommand.SETRANGE, args);
@@ -452,19 +405,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public String getRange(final String key, final int start, final int end){
-		return getRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public byte[] getRange(final byte[] key, final int start, final int end){
-		return getRange(key, (long) start, (long) end);
-	}
-
-	@Override
 	public String getRange(final String key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().getrange(key, start, end).get(), ProtocolCommand.GETRANGE, args);
@@ -475,8 +418,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public String substr(final String key, final int start, final int end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().substr(key, start, end).get(), ProtocolCommand.SUBSTR, args);
@@ -486,18 +429,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public String substr(final String key, final long start, final long end){
-		return substr(key, (int) start, (int) end);
-	}
-
-	@Override
-	public byte[] substr(final byte[] key, final long start, final long end){
-		return substr(key, (int) start, (int) end);
-	}
-
-	@Override
 	public Long strlen(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().strlen(key).get(), ProtocolCommand.STRLEN, args);
@@ -508,8 +441,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public boolean hExists(final String key, final String field){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hexists(key, field).get(), ProtocolCommand.HEXISTS, args);
@@ -520,7 +452,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Set<String> hKeys(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hkeys(key).get(), ProtocolCommand.HKEYS, args);
@@ -531,7 +463,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public List<String> hVals(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hvals(key).get(), ProtocolCommand.HVALS, args);
@@ -542,8 +474,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Status hSet(final String key, final String field, final String value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
+				value);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hset(key, field, value).get() > 0),
@@ -556,8 +488,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Status hSetNx(final String key, final String field, final String value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
+				value);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hsetnx(key, field, value).get() > 0),
@@ -570,8 +502,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public String hGet(final String key, final String field){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hget(key, field).get(), ProtocolCommand.HGET, args);
@@ -582,8 +513,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Status hMSet(final String key, final Map<String, String> data){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("data",
-				data);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("data", data);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().hmset(key, data).get()),
@@ -595,8 +525,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public List<String> hMGet(final String key, final String... fields){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("fields",
-				fields);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("fields", fields);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hmget(key, fields).get(), ProtocolCommand.HMGET, args);
@@ -607,7 +536,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Map<String, String> hGetAll(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hgetAll(key).get(), ProtocolCommand.HGETALL, args);
@@ -618,8 +547,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long hStrLen(final String key, final String field){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hstrlen(key, field).get(), ProtocolCommand.HSTRLEN, args);
@@ -630,7 +558,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long hLen(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hlen(key).get(), ProtocolCommand.HLEN, args);
@@ -640,19 +568,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Long hIncrBy(final String key, final String field, final int value){
-		return hIncrBy(key, field, (long) value);
-	}
-
-	@Override
-	public Long hIncrBy(final byte[] key, final byte[] field, final int value){
-		return hIncrBy(key, field, (long) value);
-	}
-
-	@Override
 	public Long hIncrBy(final String key, final String field, final long value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
+				value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hincrBy(key, field, value).get(), ProtocolCommand.HINCRBY, args);
@@ -662,19 +580,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Double hIncrByFloat(final String key, final String field, final float value){
-		return hIncrByFloat(key, field, (double) value);
-	}
-
-	@Override
-	public Double hIncrByFloat(final byte[] key, final byte[] field, final float value){
-		return hIncrByFloat(key, field, (double) value);
-	}
-
-	@Override
 	public Double hIncrByFloat(final String key, final String field, final double value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
+				value);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hincrByFloat(key, field, value).get(), ProtocolCommand.HINCRBYFLOAT
@@ -685,52 +593,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Long hDecrBy(final String key, final String field, final int value){
-		return hDecrBy(key, field, (long) value);
-	}
-
-	@Override
-	public Long hDecrBy(final byte[] key, final byte[] field, final int value){
-		return hDecrBy(key, field, (long) value);
-	}
-
-	@Override
-	public Long hDecrBy(final String key, final String field, final long value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("field",
-				field).put("value", value);
-
-		final long val = value > 0 ? value * -1 : value;
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hincrBy(key, field, val).get(), ProtocolCommand.HINCRBY, args);
-		}else{
-			return execute((cmd)->cmd.hincrBy(key, field, val), ProtocolCommand.HINCRBY, args);
-		}
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor){
-		return hScan(key, Integer.toString(cursor));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor){
-		return hScan(key, NumberUtils.int2bytes(cursor));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor){
-		return hScan(key, Long.toString(cursor));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor){
-		return hScan(key, NumberUtils.long2bytes(cursor));
-	}
-
-	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
@@ -741,29 +605,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern){
-		return hScan(key, Integer.toString(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern){
-		return hScan(key, NumberUtils.int2bytes(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
-		return hScan(key, Long.toString(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern){
-		return hScan(key, NumberUtils.long2bytes(cursor), pattern);
-	}
-
-	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
+				"pattern", pattern);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
@@ -774,29 +618,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final int count){
-		return hScan(key, Integer.toString(cursor), count);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final int count){
-		return hScan(key, NumberUtils.int2bytes(cursor), count);
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count){
-		return hScan(key, Long.toString(cursor), count);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count){
-		return hScan(key, NumberUtils.long2bytes(cursor), count);
-	}
-
-	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count"
+				, count);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
@@ -807,34 +631,10 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern,
-			final int count){
-		return hScan(key, Integer.toString(cursor), pattern, count);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern,
-			final int count){
-		return hScan(key, NumberUtils.int2bytes(cursor), pattern, count);
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-			final int count){
-		return hScan(key, Long.toString(cursor), pattern, count);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-			final int count){
-		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
-	}
-
-	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("pattern", pattern).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
+				"pattern", pattern).put("count", count);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
@@ -846,7 +646,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long hDel(final String key, final String... fields){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().hdel(key, fields).get(), ProtocolCommand.HDEL, args);
@@ -857,8 +657,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long lPush(final String key, final String... values){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("values",
-				values);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().lpush(key, values).get(), ProtocolCommand.LPUSH, args);
@@ -869,8 +668,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long lPushX(final String key, final String... values){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("values",
-				values);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().lpushx(key, values).get(), ProtocolCommand.LPUSHX, args);
@@ -881,32 +679,21 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long lInsert(final String key, final String value, final ListPosition position, final String pivot){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("position"
-				, position).put("pivot", pivot).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("position", position).put(
+				"pivot", pivot).put("value", value);
+		final redis.clients.jedis.ListPosition pos = JedisClientUtils.listPositionConvert(position);
 
 		if(isTransaction()){
-			return execute((cmd)->cmd.linsert(key, JedisClientUtils.listPositionConvert(position), pivot, value),
-					ProtocolCommand.LINSERT, args);
+			return execute((cmd)->cmd.linsert(key, pos, pivot, value), ProtocolCommand.LINSERT, args);
 		}else{
-			return execute((cmd)->cmd.linsert(key, JedisClientUtils.listPositionConvert(position), pivot, value),
-					ProtocolCommand.LINSERT, args);
+			return execute((cmd)->cmd.linsert(key, pos, pivot, value), ProtocolCommand.LINSERT, args);
 		}
 	}
 
 	@Override
-	public Status lSet(final String key, final int index, final String value){
-		return lSet(key, (long) index, value);
-	}
-
-	@Override
-	public Status lSet(final byte[] key, final int index, final byte[] value){
-		return lSet(key, (long) index, value);
-	}
-
-	@Override
 	public Status lSet(final String key, final long index, final String value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("index",
-				index).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index).put("value",
+				value);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().lset(key, index, value).get()),
@@ -917,19 +704,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public String lIndex(final String key, final int index){
-		return lIndex(key, (long) index);
-	}
-
-	@Override
-	public byte[] lIndex(final byte[] key, final int index){
-		return lIndex(key, (long) index);
-	}
-
-	@Override
 	public String lIndex(final String key, final long index){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("index",
-				index);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().lindex(key, index).get(), ProtocolCommand.LINDEX, args);
@@ -940,7 +716,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public String lPop(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().lpop(key).get(), ProtocolCommand.LPOP, args);
@@ -951,7 +727,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public String rPop(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().rpop(key).get(), ProtocolCommand.RPOP, args);
@@ -962,8 +738,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long rPush(final String key, final String... values){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("values",
-				values);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().rpush(key, values).get(), ProtocolCommand.RPUSH, args);
@@ -974,8 +749,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long rPushX(final String key, final String... values){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("values",
-				values);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().rpushx(key, values).get(), ProtocolCommand.RPUSHX, args);
@@ -985,19 +759,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Status lTrim(final String key, final int start, final int end){
-		return lTrim(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Status lTrim(final byte[] key, final int start, final int end){
-		return lTrim(key, (long) start, (long) end);
-	}
-
-	@Override
 	public Status lTrim(final String key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().ltrim(key, start, end).get()),
@@ -1008,19 +772,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Long lRem(final String key, final String value, final int count){
-		return lRem(key, value, (long) count);
-	}
-
-	@Override
-	public Long lRem(final byte[] key, final byte[] value, final int count){
-		return lRem(key, value, (long) count);
-	}
-
-	@Override
 	public Long lRem(final String key, final String value, final long count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("count",
+				count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().lrem(key, count, value).get(), ProtocolCommand.LREM, args);
@@ -1030,19 +784,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public List<String> lRange(final String key, final int start, final int end){
-		return lRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public List<byte[]> lRange(final byte[] key, final int start, final int end){
-		return lRange(key, (long) start, (long) end);
-	}
-
-	@Override
 	public List<String> lRange(final String key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().lrange(key, start, end).get(), ProtocolCommand.LRANGE, args);
@@ -1053,7 +797,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long lLen(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().llen(key).get(), ProtocolCommand.LLEN, args);
@@ -1064,8 +808,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long sAdd(final String key, final String... members){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
-				, members);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().sadd(key, members).get(), ProtocolCommand.SADD, args);
@@ -1076,7 +819,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long sCard(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().scard(key).get(), ProtocolCommand.SCARD, args);
@@ -1087,8 +830,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public boolean sisMember(final String key, final String member){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
 
 		if(isTransaction()){
 			return execute((cmd)->cmd.sismember(key, member), ProtocolCommand.SISMEMBER, args);
@@ -1099,7 +841,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Set<String> sMembers(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().smembers(key).get(), ProtocolCommand.SMEMBERS, args);
@@ -1110,7 +852,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public String sPop(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().spop(key).get(), ProtocolCommand.SPOP, args);
@@ -1121,7 +863,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public String sRandMember(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().srandmember(key).get(), ProtocolCommand.SRANDMEMBER, args);
@@ -1132,8 +874,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public List<String> sRandMember(final String key, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("count",
-				count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().srandmember(key, count).get(), ProtocolCommand.SRANDMEMBER, args);
@@ -1143,19 +884,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public List<String> sRandMember(final String key, final long count){
-		return sRandMember(key, (int) count);
-	}
-
-	@Override
-	public List<byte[]> sRandMember(final byte[] key, final long count){
-		return sRandMember(key, (int) count);
-	}
-
-	@Override
 	public Long sRem(final String key, final String... members){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
-				, members);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().srem(key, members).get(), ProtocolCommand.SREM, args);
@@ -1165,29 +895,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final int cursor){
-		return sScan(key, Integer.toString(cursor));
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor){
-		return sScan(key, NumberUtils.int2bytes(cursor));
-	}
-
-	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor){
-		return sScan(key, Long.toString(cursor));
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor){
-		return sScan(key, NumberUtils.long2bytes(cursor));
-	}
-
-	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
@@ -1198,29 +907,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern){
-		return sScan(key, Integer.toString(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern){
-		return sScan(key, NumberUtils.int2bytes(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern){
-		return sScan(key, Long.toString(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern){
-		return sScan(key, NumberUtils.long2bytes(cursor), pattern);
-	}
-
-	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
+				"pattern", pattern);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
@@ -1231,29 +920,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final int cursor, final int count){
-		return sScan(key, Integer.toString(cursor), count);
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final int count){
-		return sScan(key, NumberUtils.int2bytes(cursor), count);
-	}
-
-	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final int count){
-		return sScan(key, Long.toString(cursor), count);
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final int count){
-		return sScan(key, NumberUtils.long2bytes(cursor), count);
-	}
-
-	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count"
+				, count);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
@@ -1266,8 +935,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("pattern", pattern).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
+				"pattern", pattern).put("count", count);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
@@ -1279,45 +948,21 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Number> members){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
-				, members);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
+		final Map<String, Double> data = new LinkedHashMap<>(members.size());
 
-		return execute(new Executor<C, Long>() {
+		members.forEach((k, v)->data.put(k, v.doubleValue()));
 
-			@Override
-			public Long execute(C cmd){
-				final Map<String, Double> data = new LinkedHashMap<>(members.size());
-
-				members.forEach((key, value)->data.put(key, value.doubleValue()));
-
-				if(isTransaction()){
-					return getTransaction().zadd(key, data).get();
-				}else{
-					return cmd.zadd(key, data);
-				}
-			}
-
-		}, ProtocolCommand.ZADD, args);
-	}
-
-	@Override
-	public Long zAdd(final String key, final List<KeyValue<String, Number>> members){
-		final Map<String, Number> data = members.stream().collect(Collectors.toMap(KeyValue::getKey,
-				KeyValue::getValue, (oldVal, currVal)->currVal, LinkedHashMap::new));
-		return zAdd(key, data);
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final List<KeyValue<byte[], Number>> members){
-		final Map<byte[], Number> data = members.stream().collect(Collectors.toMap(KeyValue::getKey,
-				KeyValue::getValue, (oldVal, currVal)->currVal, LinkedHashMap::new));
-		return zAdd(key, data);
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zadd(key, data).get(), ProtocolCommand.ZADD, args);
+		}else{
+			return execute((cmd)->cmd.zadd(key, data), ProtocolCommand.ZADD, args);
+		}
 	}
 
 	@Override
 	public Double zScore(final String key, final String member){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zscore(key, member).get(), ProtocolCommand.ZSCORE, args);
@@ -1328,7 +973,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long zCard(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((C cmd)->getTransaction().zcard(key).get(), ProtocolCommand.ZCARD, args);
@@ -1338,19 +983,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Double zIncrBy(final String key, final String member, final float increment){
-		return zIncrBy(key, member, (double) increment);
-	}
-
-	@Override
-	public Double zIncrBy(final byte[] key, final byte[] member, final float increment){
-		return zIncrBy(key, member, (double) increment);
-	}
-
-	@Override
 	public Double zIncrBy(final String key, final String member, final double increment){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member).put("increment", increment);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put(
+				"increment", increment);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zincrby(key, increment, member).get(), ProtocolCommand.ZINCRBY,
@@ -1361,71 +996,19 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Double zIncrBy(final String key, final String member, final int increment){
-		return zIncrBy(key, member, (double) increment);
-	}
-
-	@Override
-	public Double zIncrBy(final byte[] key, final byte[] member, final int increment){
-		return zIncrBy(key, member, (double) increment);
-	}
-
-	@Override
-	public Double zIncrBy(final String key, final String member, final long increment){
-		return zIncrBy(key, member, (double) increment);
-	}
-
-	@Override
-	public Double zIncrBy(final byte[] key, final byte[] member, final long increment){
-		return zIncrBy(key, member, (double) increment);
-	}
-
-	@Override
-	public Long zCount(final String key, final float min, final float max){
-		return zCount(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Long zCount(final byte[] key, final float min, final float max){
-		return zCount(key, (double) min, (double) max);
-	}
-
-	@Override
 	public Long zCount(final String key, final double min, final double max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zcount(key, min, max).get(), ProtocolCommand.ZCOUNT, args);
 		}else{
 			return execute((cmd)->cmd.zcount(key, min, max), ProtocolCommand.ZCOUNT, args);
 		}
-	}
-
-	@Override
-	public Long zCount(final String key, final int min, final int max){
-		return zCount(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Long zCount(final byte[] key, final int min, final int max){
-		return zCount(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Long zCount(final String key, final long min, final long max){
-		return zCount(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Long zCount(final byte[] key, final long min, final long max){
-		return zCount(key, (double) min, (double) max);
 	}
 
 	@Override
 	public Long zCount(final String key, final String min, final String max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zcount(key, min, max).get(), ProtocolCommand.ZCOUNT, args);
@@ -1435,19 +1018,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Set<String> zRange(final String key, final int start, final int end){
-		return zRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Set<byte[]> zRange(final byte[] key, final int start, final int end){
-		return zRange(key, (long) start, (long) end);
-	}
-
-	@Override
 	public Set<String> zRange(final String key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrange(key, start, end).get(), ProtocolCommand.ZRANGE, args);
@@ -1457,19 +1030,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Set<Tuple> zRangeWithScores(final String key, final int start, final int end){
-		return zRangeWithScores(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Set<Tuple> zRangeWithScores(final byte[] key, final int start, final int end){
-		return zRangeWithScores(key, (long) start, (long) end);
-	}
-
-	@Override
 	public Set<Tuple> zRangeWithScores(final String key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeWithScores(key, start,
@@ -1481,19 +1044,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Set<String> zRangeByScore(final String key, final float min, final float max){
-		return zRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final float min, final float max){
-		return zRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
 	public Set<String> zRangeByScore(final String key, final double min, final double max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get(), ProtocolCommand.ZRANGEBYSCORE,
@@ -1501,32 +1053,11 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		}else{
 			return execute((cmd)->cmd.zrangeByScore(key, min, max), ProtocolCommand.ZRANGEBYSCORE, args);
 		}
-	}
-
-	@Override
-	public Set<String> zRangeByScore(final String key, final int min, final int max){
-		return zRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final int min, final int max){
-		return zRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<String> zRangeByScore(final String key, final long min, final long max){
-		return zRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max){
-		return zRangeByScore(key, (double) min, (double) max);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final String min, final String max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get(), ProtocolCommand.ZRANGEBYSCORE,
@@ -1534,25 +1065,13 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		}else{
 			return execute((cmd)->cmd.zrangeByScore(key, min, max), ProtocolCommand.ZRANGEBYSCORE, args);
 		}
-	}
-
-	@Override
-	public Set<String> zRangeByScore(final String key, final float min, final float max, final int offset,
-			final int count){
-		return zRangeByScore(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final float min, final float max, final int offset,
-			final int count){
-		return zRangeByScore(key, (double) min, (double) max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final double min, final double max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByScore(key, min, max, offset, count).get(),
@@ -1561,37 +1080,13 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 			return execute((cmd)->cmd.zrangeByScore(key, min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE,
 					args);
 		}
-	}
-
-	@Override
-	public Set<String> zRangeByScore(final String key, final int min, final int max, final int offset,
-			final int count){
-		return zRangeByScore(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final int min, final int max, final int offset,
-			final int count){
-		return zRangeByScore(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<String> zRangeByScore(final String key, final long min, final long max, final int offset,
-			final int count){
-		return zRangeByScore(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max, final int offset,
-			final int count){
-		return zRangeByScore(key, (double) min, (double) max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final String min, final String max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByScore(key, min, max, offset, count).get(),
@@ -1603,19 +1098,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max){
-		return zRangeByScoreWithScores(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max){
-		return zRangeByScoreWithScores(key, (double) min, (double) max);
-	}
-
-	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
@@ -1624,32 +1108,11 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)),
 					ProtocolCommand.ZRANGEBYSCORE, args);
 		}
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max){
-		return zRangeByScoreWithScores(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max){
-		return zRangeByScoreWithScores(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max){
-		return zRangeByScoreWithScores(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final long min, final long max){
-		return zRangeByScoreWithScores(key, (double) min, (double) max);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
@@ -1658,25 +1121,13 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)),
 					ProtocolCommand.ZRANGEBYSCORE, args);
 		}
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
-			final int count){
-		return zRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset,
-			final int count){
-		return zRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
@@ -1688,73 +1139,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
-			final int count){
-		return zRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset,
-			final int count){
-		return zRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
-			final int count){
-		return zRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
-			final int count){
-		return zRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final float min, final float max){
-		return zRangeByLex(key, Float.toString(min), Float.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max){
-		return zRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final double min, final double max){
-		return zRangeByLex(key, Double.toString(min), Double.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max){
-		return zRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final int min, final int max){
-		return zRangeByLex(key, Integer.toString(min), Integer.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max){
-		return zRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final long min, final long max){
-		return zRangeByLex(key, Long.toString(min), Long.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max){
-		return zRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
-	}
-
-	@Override
 	public Set<String> zRangeByLex(final String key, final String min, final String max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByLex(key, min, max).get(), ProtocolCommand.ZRANGEBYLEX,
@@ -1765,56 +1151,10 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Set<String> zRangeByLex(final String key, final float min, final float max, final int offset,
-			final int count){
-		return zRangeByLex(key, Float.toString(min), Float.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max, final int offset,
-			final int count){
-		return zRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final double min, final double max, final int offset,
-			final int count){
-		return zRangeByLex(key, Double.toString(min), Double.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final int offset,
-			final int count){
-		return zRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final int min, final int max, final int offset, final int count){
-		return zRangeByLex(key, Integer.toString(min), Integer.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max, final int offset, final int count){
-		return zRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final long min, final long max, final int offset,
-			final int count){
-		return zRangeByLex(key, Long.toString(min), Long.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max, final int offset,
-			final int count){
-		return zRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max), offset, count);
-	}
-
-	@Override
 	public Set<String> zRangeByLex(final String key, final String min, final String max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByLex(key, min, max, offset, count).get(),
@@ -1826,8 +1166,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long zRank(final String key, final String member){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrank(key, member).get(), ProtocolCommand.ZRANK, args);
@@ -1838,8 +1177,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long zRevRank(final String key, final String member){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrank(key, member).get(), ProtocolCommand.ZRANK, args);
@@ -1850,8 +1188,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long zRem(final String key, final String... members){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
-				, members);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrem(key, members).get(), ProtocolCommand.ZREM, args);
@@ -1861,19 +1198,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Long zRemRangeByRank(final String key, final int start, final int end){
-		return zRemRangeByRank(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Long zRemRangeByRank(final byte[] key, final int start, final int end){
-		return zRemRangeByRank(key, (long) start, (long) end);
-	}
-
-	@Override
 	public Long zRemRangeByRank(final String key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zremrangeByRank(key, start, end).get(),
@@ -1884,19 +1211,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Long zRemRangeByScore(final String key, final float min, final float max){
-		return zRemRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final float min, final float max){
-		return zRemRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
 	public Long zRemRangeByScore(final String key, final double min, final double max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get(),
@@ -1904,32 +1220,11 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		}else{
 			return execute((cmd)->cmd.zremrangeByScore(key, min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
 		}
-	}
-
-	@Override
-	public Long zRemRangeByScore(final String key, final int min, final int max){
-		return zRemRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final int min, final int max){
-		return zRemRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final String key, final long min, final long max){
-		return zRemRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final long min, final long max){
-		return zRemRangeByScore(key, (double) min, (double) max);
 	}
 
 	@Override
 	public Long zRemRangeByScore(final String key, final String min, final String max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get(),
@@ -1940,49 +1235,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Long zRemRangeByLex(final String key, final float min, final float max){
-		return zRemRangeByLex(key, Float.toString(min), Float.toString(max));
-	}
-
-	@Override
-	public Long zRemRangeByLex(final byte[] key, final float min, final float max){
-		return zRemRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
-	}
-
-	@Override
-	public Long zRemRangeByLex(final String key, final double min, final double max){
-		return zRemRangeByLex(key, Double.toString(min), Double.toString(max));
-	}
-
-	@Override
-	public Long zRemRangeByLex(final byte[] key, final double min, final double max){
-		return zRemRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
-	}
-
-	@Override
-	public Long zRemRangeByLex(final String key, final int min, final int max){
-		return zRemRangeByLex(key, Integer.toString(min), Integer.toString(max));
-	}
-
-	@Override
-	public Long zRemRangeByLex(final byte[] key, final int min, final int max){
-		return zRemRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
-	}
-
-	@Override
-	public Long zRemRangeByLex(final String key, final long min, final long max){
-		return zRemRangeByLex(key, Long.toString(min), Long.toString(max));
-	}
-
-	@Override
-	public Long zRemRangeByLex(final byte[] key, final long min, final long max){
-		return zRemRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
-	}
-
-	@Override
 	public Long zRemRangeByLex(final String key, final String min, final String max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zremrangeByLex(key, min, max).get(), ProtocolCommand.ZREMRANGEBYLEX
@@ -1994,19 +1248,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Set<String> zRevRange(final String key, final int start, final int end){
-		return zRevRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Set<byte[]> zRevRange(final byte[] key, final int start, final int end){
-		return zRevRange(key, (long) start, (long) end);
-	}
-
-	@Override
 	public Set<String> zRevRange(final String key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrange(key, start, end).get(), ProtocolCommand.ZREVRANGE, args);
@@ -2016,19 +1260,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Set<Tuple> zRevRangeWithScores(final String key, final int start, final int end){
-		return zRevRangeWithScores(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeWithScores(final byte[] key, final int start, final int end){
-		return zRevRangeWithScores(key, (long) start, (long) end);
-	}
-
-	@Override
 	public Set<Tuple> zRevRangeWithScores(final String key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeWithScores(key, start,
@@ -2040,19 +1274,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Set<String> zRevRangeByScore(final String key, final float min, final float max){
-		return zRevRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final float min, final float max){
-		return zRevRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
 	public Set<String> zRevRangeByScore(final String key, final double min, final double max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get(),
@@ -2060,32 +1283,11 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		}else{
 			return execute((cmd)->cmd.zrevrangeByScore(key, min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
 		}
-	}
-
-	@Override
-	public Set<String> zRevRangeByScore(final String key, final int min, final int max){
-		return zRevRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final int min, final int max){
-		return zRevRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<String> zRevRangeByScore(final String key, final long min, final long max){
-		return zRevRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final long min, final long max){
-		return zRevRangeByScore(key, (double) min, (double) max);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final String min, final String max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get(),
@@ -2093,25 +1295,13 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		}else{
 			return execute((cmd)->cmd.zrevrangeByScore(key, min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
 		}
-	}
-
-	@Override
-	public Set<String> zRevRangeByScore(final String key, final float min, final float max, final int offset,
-			final int count){
-		return zRevRangeByScore(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final float min, final float max, final int offset,
-			final int count){
-		return zRevRangeByScore(key, (double) min, (double) max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final double min, final double max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get(),
@@ -2120,37 +1310,13 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 			return execute((cmd)->cmd.zrevrangeByScore(key, min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE
 					, args);
 		}
-	}
-
-	@Override
-	public Set<String> zRevRangeByScore(final String key, final int min, final int max, final int offset,
-			final int count){
-		return zRevRangeByScore(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final int min, final int max, final int offset,
-			final int count){
-		return zRevRangeByScore(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<String> zRevRangeByScore(final String key, final long min, final long max, final int offset,
-			final int count){
-		return zRevRangeByScore(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final long min, final long max, final int offset,
-			final int count){
-		return zRevRangeByScore(key, (double) min, (double) max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final String min, final String max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get(),
@@ -2162,19 +1328,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float min, final float max){
-		return zRevRangeByScoreWithScores(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max){
-		return zRevRangeByScoreWithScores(key, (double) min, (double) max);
-	}
-
-	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
@@ -2183,32 +1338,11 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)),
 					ProtocolCommand.ZREVRANGEBYSCORE, args);
 		}
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max){
-		return zRevRangeByScoreWithScores(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max){
-		return zRevRangeByScoreWithScores(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max){
-		return zRevRangeByScoreWithScores(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max){
-		return zRevRangeByScoreWithScores(key, (double) min, (double) max);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
@@ -2217,25 +1351,13 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)),
 					ProtocolCommand.ZREVRANGEBYSCORE, args);
 		}
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
-			final int count){
-		return zRevRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset,
-			final int count){
-		return zRevRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
 			final int offset, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
@@ -2244,37 +1366,13 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max,
 					offset, count)), ProtocolCommand.ZREVRANGEBYSCORE, args);
 		}
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
-			final int count){
-		return zRevRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset,
-			final int count){
-		return zRevRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
-			final int count){
-		return zRevRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
-			final int count){
-		return zRevRangeByScoreWithScores(key, (double) min, (double) max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
 			final int offset, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
@@ -2286,49 +1384,10 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Set<String> zRevRangeByLex(final String key, final float min, final float max){
-		return zRevRangeByLex(key, Float.toString(min), Float.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max){
-		return zRevRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final double min, final double max){
-		return zRevRangeByLex(key, Double.toString(min), Double.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max){
-		return zRevRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final int min, final int max){
-		return zRevRangeByLex(key, Integer.toString(min), Integer.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max){
-		return zRevRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final long min, final long max){
-		return zRevRangeByLex(key, Long.toString(min), Long.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max){
-		return zRevRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
-	}
-
-	@Override
 	public Set<String> zRevRangeByLex(final String key, final String min, final String max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("min", min).put("max", max);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("min", min).put(
+						"max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max).get(), ProtocolCommand.ZREVRANGEBYLEX
@@ -2339,58 +1398,11 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Set<String> zRevRangeByLex(final String key, final float min, final float max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, Float.toString(min), Float.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final double min, final double max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, Double.toString(min), Double.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final int min, final int max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, Integer.toString(min), Integer.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final long min, final long max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, Long.toString(min), Long.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max), offset, count);
-	}
-
-	@Override
 	public Set<String> zRevRangeByLex(final String key, final String min, final String max, final int offset,
 			final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("min", min).put("max", max).put("offset", offset).put("count", count);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("min", min).put(
+						"max", max).put("offset", offset).put("count", count);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max, offset, count).get(),
@@ -2402,49 +1414,10 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Long zLexCount(final String key, final float min, final float max){
-		return zLexCount(key, Float.toString(min), Float.toString(max));
-	}
-
-	@Override
-	public Long zLexCount(final byte[] key, final float min, final float max){
-		return zLexCount(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
-	}
-
-	@Override
-	public Long zLexCount(final String key, final double min, final double max){
-		return zLexCount(key, Double.toString(min), Double.toString(max));
-	}
-
-	@Override
-	public Long zLexCount(final byte[] key, final double min, final double max){
-		return zLexCount(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
-	}
-
-	@Override
-	public Long zLexCount(final String key, final int min, final int max){
-		return zLexCount(key, Integer.toString(min), Integer.toString(max));
-	}
-
-	@Override
-	public Long zLexCount(final byte[] key, final int min, final int max){
-		return zLexCount(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
-	}
-
-	@Override
-	public Long zLexCount(final String key, final long min, final long max){
-		return zLexCount(key, Long.toString(min), Long.toString(max));
-	}
-
-	@Override
-	public Long zLexCount(final byte[] key, final long min, final long max){
-		return zLexCount(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
-	}
-
-	@Override
 	public Long zLexCount(final String key, final String min, final String max){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("min",
-				min).put("max", max).put("min", min).put("max", max);
+		final CommandArguments args =
+				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("min", min).put(
+						"max", max);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zlexcount(key, min, max).get(), ProtocolCommand.ZLEXCOUNT, args);
@@ -2454,29 +1427,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final int cursor){
-		return zScan(key, Integer.toString(cursor));
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor){
-		return zScan(key, NumberUtils.int2bytes(cursor));
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final long cursor){
-		return zScan(key, Long.toString(cursor));
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor){
-		return zScan(key, NumberUtils.long2bytes(cursor));
-	}
-
-	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
@@ -2487,29 +1439,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern){
-		return zScan(key, Integer.toString(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final byte[] pattern){
-		return zScan(key, NumberUtils.int2bytes(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern){
-		return zScan(key, Long.toString(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern){
-		return zScan(key, NumberUtils.long2bytes(cursor), pattern);
-	}
-
-	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("pattern", pattern);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
+				"pattern", pattern);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
@@ -2520,29 +1452,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final int count){
-		return zScan(key, Integer.toString(cursor), Integer.toString(count));
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final int count){
-		return zScan(key, NumberUtils.int2bytes(cursor), NumberUtils.int2bytes(count));
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final int count){
-		return zScan(key, Long.toString(cursor), Long.toString(count));
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final int count){
-		return zScan(key, NumberUtils.long2bytes(cursor), NumberUtils.long2bytes(count));
-	}
-
-	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count"
+				, count);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
@@ -2553,29 +1465,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern, final int count){
-		return zScan(key, Integer.toString(cursor), pattern, count);
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final int count){
-		return zScan(key, Long.toString(cursor), pattern, count);
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final byte[] pattern, final int count){
-		return zScan(key, NumberUtils.int2bytes(cursor), pattern, count);
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(byte[] key, long cursor, byte[] pattern, int count){
-		return zScan(key, NumberUtils.long2bytes(cursor), pattern, count);
-	}
-
-	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final int count){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("cursor",
-				cursor).put("pattern", pattern).put("count", count);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
+				"pattern", pattern).put("count", count);
 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
@@ -2587,8 +1479,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Status pfAdd(final String key, final String... elements){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("elements"
-				, elements);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("elements", elements);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pfadd(key, elements).get() > 0),
@@ -2601,8 +1492,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long geoAdd(final String key, final String member, final double longitude, final double latitude){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("member",
-				member).put("longitude", longitude).put("latitude", latitude);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put(
+				"longitude", longitude).put("latitude", latitude);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().geoadd(key, longitude, latitude, member).get(),
@@ -2614,21 +1505,21 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"memberCoordinates", memberCoordinates);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("memberCoordinates",
+				memberCoordinates);
+		final Map<String, GeoCoordinate> memberCoordinateMap = JedisClientUtils.geoMapConvert(memberCoordinates);
 
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().geoadd(key, JedisClientUtils.geoMapConvert(memberCoordinates)).get(), ProtocolCommand.GEOADD, args);
+			return execute((cmd)->getTransaction().geoadd(key, memberCoordinateMap).get(), ProtocolCommand.GEOADD,
+					args);
 		}else{
-			return execute((cmd)->cmd.geoadd(key, JedisClientUtils.geoMapConvert(memberCoordinates)),
-					ProtocolCommand.GEOADD, args);
+			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap), ProtocolCommand.GEOADD, args);
 		}
 	}
 
 	@Override
 	public List<Geo> geoPos(final String key, final String... members){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("members"
-				, members);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.geoListDeconvert(getTransaction().geopos(key, members).get()),
@@ -2649,7 +1540,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	protected <R> R execute(final Executor<C, R> executor, final ProtocolCommand command,
-			final OperationsCommandArguments arguments){
+			final CommandArguments arguments){
 		return super.doExecute(executor, command, arguments);
 	}
 

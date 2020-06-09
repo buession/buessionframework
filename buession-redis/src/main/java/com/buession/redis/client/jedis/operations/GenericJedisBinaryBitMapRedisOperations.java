@@ -28,7 +28,7 @@ import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.BitMapCommands;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import redis.clients.jedis.BitPosParams;
 import redis.clients.jedis.Jedis;
 
@@ -43,8 +43,7 @@ public class GenericJedisBinaryBitMapRedisOperations extends AbstractJedisBinary
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		return execute((Jedis cmd)->isTransaction() ? getTransaction().bitpos(key, value).get() : cmd.bitpos(key,
 				value), ProtocolCommand.BITPOS, args);
@@ -52,8 +51,8 @@ public class GenericJedisBinaryBitMapRedisOperations extends AbstractJedisBinary
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final int start, final int end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("start",
+				start).put("end", end);
 		final BitPosParams bitPosParams = new BitPosParams(start, end);
 
 		return execute((Jedis cmd)->isTransaction() ? getTransaction().bitpos(key, value, bitPosParams).get() :
@@ -62,9 +61,8 @@ public class GenericJedisBinaryBitMapRedisOperations extends AbstractJedisBinary
 
 	@Override
 	public Long bitOp(final BitMapCommands.Operation operation, final byte[] destKey, final byte[]... keys){
-		final OperationsCommandArguments args =
-				OperationsCommandArguments.getInstance().put("operation", operation).put("destKey", destKey).put("keys"
-						, keys);
+		final CommandArguments args = CommandArguments.getInstance().put("operation", operation).put("destKey",
+				destKey).put("keys", keys);
 
 		return execute((Jedis cmd)->isTransaction() ?
 				getTransaction().bitop(JedisClientUtils.bitOperationConvert(operation), destKey, keys).get() :

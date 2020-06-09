@@ -29,7 +29,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import redis.clients.jedis.DebugParams;
@@ -49,7 +49,7 @@ public class DefaultJedisDebugRedisOperations<C extends JedisCommands> extends A
 
 	@Override
 	public String echo(final String str){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("str", str);
+		final CommandArguments args = CommandArguments.getInstance().put("str", str);
 
 		if(isTransaction()){
 			return execute((C cmd)->getTransaction().echo(str).get(), ProtocolCommand.ECHO, args);
@@ -84,8 +84,7 @@ public class DefaultJedisDebugRedisOperations<C extends JedisCommands> extends A
 
 	@Override
 	public Object object(final ObjectCommand command, final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("command", command).put(
-				"key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("command", command).put("key", key);
 
 		return execute(new Executor<C, Object>() {
 
@@ -127,8 +126,8 @@ public class DefaultJedisDebugRedisOperations<C extends JedisCommands> extends A
 
 	@Override
 	public Object slowLog(final SlowLogCommand command, final String... arguments){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("command", command).put(
-				"arguments", arguments);
+		final CommandArguments args = CommandArguments.getInstance().put("command", command).put("arguments",
+				arguments);
 
 		return execute(new Executor<C, Object>() {
 
@@ -161,8 +160,7 @@ public class DefaultJedisDebugRedisOperations<C extends JedisCommands> extends A
 
 	@Override
 	public void monitor(final RedisMonitor redisMonitor){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("redisMonitor",
-				redisMonitor);
+		final CommandArguments args = CommandArguments.getInstance().put("redisMonitor", redisMonitor);
 
 		execute(new Executor<C, Void>() {
 
@@ -192,7 +190,7 @@ public class DefaultJedisDebugRedisOperations<C extends JedisCommands> extends A
 
 	@Override
 	public String debugObject(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		return execute(new Executor<C, String>() {
 

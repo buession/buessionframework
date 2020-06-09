@@ -28,7 +28,7 @@ import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.commands.BinaryJedisCommands;
@@ -44,7 +44,7 @@ public class DefaultJedisBinaryTransactionRedisOperations<C extends BinaryJedisC
 
 	@Override
 	public Status watch(final byte[]... keys){
-		final OperationsCommandArguments arguments = OperationsCommandArguments.getInstance().put("keys", keys);
+		final CommandArguments arguments = CommandArguments.getInstance().put("keys", keys);
 
 		return execute(new Executor<C, Status>() {
 

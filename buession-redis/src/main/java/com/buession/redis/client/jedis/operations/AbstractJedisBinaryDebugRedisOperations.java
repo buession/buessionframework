@@ -26,7 +26,7 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import redis.clients.jedis.commands.BinaryJedisCommands;
 
 /**
@@ -40,7 +40,7 @@ public abstract class AbstractJedisBinaryDebugRedisOperations<C extends BinaryJe
 
 	@Override
 	public byte[] echo(final byte[] str){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("str", str);
+		final CommandArguments args = CommandArguments.getInstance().put("str", str);
 
 		if(isTransaction()){
 			return execute((C cmd)->getTransaction().echo(str).get(), ProtocolCommand.ECHO, args);

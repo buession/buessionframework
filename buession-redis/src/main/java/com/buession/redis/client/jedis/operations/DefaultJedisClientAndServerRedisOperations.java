@@ -31,7 +31,7 @@ import com.buession.redis.core.Client;
 import com.buession.redis.core.Info;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.utils.ClientUtil;
@@ -52,7 +52,7 @@ public class DefaultJedisClientAndServerRedisOperations<C extends JedisCommands>
 
 	@Override
 	public Status auth(final String password){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("password", "******");
+		final CommandArguments args = CommandArguments.getInstance().put("password", "******");
 
 		return execute(new Executor<C, Status>() {
 
@@ -74,7 +74,7 @@ public class DefaultJedisClientAndServerRedisOperations<C extends JedisCommands>
 
 	@Override
 	public Info info(final InfoSection section){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("section", section);
+		final CommandArguments args = CommandArguments.getInstance().put("section", section);
 
 		return execute(new Executor<C, Info>() {
 
@@ -136,7 +136,7 @@ public class DefaultJedisClientAndServerRedisOperations<C extends JedisCommands>
 
 	@Override
 	public Status clientSetName(final String name){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("name", name);
+		final CommandArguments args = CommandArguments.getInstance().put("name", name);
 
 		return execute(new Executor<C, Status>() {
 
@@ -198,8 +198,7 @@ public class DefaultJedisClientAndServerRedisOperations<C extends JedisCommands>
 
 	@Override
 	public Status clientKill(final String host, final int port){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("host", host).put("port",
-				port);
+		final CommandArguments args = CommandArguments.getInstance().put("host", host).put("port", port);
 
 		return execute(new Executor<C, Status>() {
 

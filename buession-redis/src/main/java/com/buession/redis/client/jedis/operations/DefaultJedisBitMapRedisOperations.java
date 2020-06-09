@@ -29,12 +29,11 @@ import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.BitPosParams;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.commands.JedisCommands;
 
 import java.util.List;
@@ -50,8 +49,8 @@ public class DefaultJedisBitMapRedisOperations<C extends JedisCommands> extends 
 
 	@Override
 	public Status setBit(final String key, final long offset, final String value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("offset",
-				offset).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value"
+				, value);
 
 		if(isTransaction()){
 			return execute((C cmd)->statusForBool(getTransaction().setbit(SafeEncoder.encode(key), offset,
@@ -63,8 +62,8 @@ public class DefaultJedisBitMapRedisOperations<C extends JedisCommands> extends 
 
 	@Override
 	public Status setBit(final String key, final long offset, final boolean value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("offset",
-				offset).put("value", value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value"
+				, value);
 
 		if(isTransaction()){
 			return execute((C cmd)->statusForBool(getTransaction().setbit(key, offset, value).get()),
@@ -76,8 +75,7 @@ public class DefaultJedisBitMapRedisOperations<C extends JedisCommands> extends 
 
 	@Override
 	public Status getBit(final String key, final long offset){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("offset",
-				offset);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset);
 
 		if(isTransaction()){
 			return execute((C cmd)->statusForBool(getTransaction().getbit(key, offset).get()), ProtocolCommand.GETBIT,
@@ -89,8 +87,7 @@ public class DefaultJedisBitMapRedisOperations<C extends JedisCommands> extends 
 
 	@Override
 	public Long bitPos(final String key, final boolean value){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 
 		if(isTransaction()){
 			return execute((C cmd)->getTransaction().bitpos(key, value).get(), ProtocolCommand.BITPOS, args);
@@ -101,8 +98,8 @@ public class DefaultJedisBitMapRedisOperations<C extends JedisCommands> extends 
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final int start, final int end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("value",
-				value).put("start", start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("start",
+				start).put("end", end);
 
 		if(isTransaction()){
 			return execute((C cmd)->getTransaction().bitpos(key, value, new BitPosParams(start, end)).get(),
@@ -115,9 +112,8 @@ public class DefaultJedisBitMapRedisOperations<C extends JedisCommands> extends 
 
 	@Override
 	public Long bitOp(final Operation operation, final String destKey, final String... keys){
-		final OperationsCommandArguments args =
-				OperationsCommandArguments.getInstance().put("operation", operation).put("destKey", destKey).put("keys"
-						, keys);
+		final CommandArguments args = CommandArguments.getInstance().put("operation", operation).put("destKey",
+				destKey).put("keys", keys);
 
 		return execute(new Executor<C, Long>() {
 
@@ -138,8 +134,7 @@ public class DefaultJedisBitMapRedisOperations<C extends JedisCommands> extends 
 
 	@Override
 	public List<Long> bitField(final String key, final String... arguments){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put(
-				"arguments", arguments);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("arguments", arguments);
 
 		if(isTransaction()){
 			return execute((C cmd)->getTransaction().bitfield(key, arguments).get(), ProtocolCommand.BITFIELD, args);
@@ -150,7 +145,7 @@ public class DefaultJedisBitMapRedisOperations<C extends JedisCommands> extends 
 
 	@Override
 	public Long bitCount(final String key){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 
 		if(isTransaction()){
 			return execute((C cmd)->getTransaction().bitcount(key).get(), ProtocolCommand.BITCOUNT, args);
@@ -161,8 +156,8 @@ public class DefaultJedisBitMapRedisOperations<C extends JedisCommands> extends 
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("key", key).put("start",
-				start).put("end", end);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
+				end);
 
 		if(isTransaction()){
 			return execute((C cmd)->getTransaction().bitcount(key, start, end).get(), ProtocolCommand.BITCOUNT, args);

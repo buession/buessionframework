@@ -28,7 +28,7 @@ import com.buession.core.Executor;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.operations.OperationsCommandArguments;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.pubsub.jedis.DefaultJedisPubSub;
@@ -46,8 +46,7 @@ public class DefaultJedisPubSubRedisOperations<C extends JedisCommands> extends 
 
 	@Override
 	public Long publish(final String channel, final String message){
-		final OperationsCommandArguments args = OperationsCommandArguments.getInstance().put("channel", channel).put(
-				"message", message);
+		final CommandArguments args = CommandArguments.getInstance().put("channel", channel).put("message", message);
 
 		return execute(new Executor<C, Long>() {
 
@@ -69,9 +68,8 @@ public class DefaultJedisPubSubRedisOperations<C extends JedisCommands> extends 
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
-		final OperationsCommandArguments args =
-				OperationsCommandArguments.getInstance().put("channels", channels).put("pubSubListener",
-						pubSubListener);
+		final CommandArguments args = CommandArguments.getInstance().put("channels", channels).put("pubSubListener",
+				pubSubListener);
 
 		execute(new Executor<C, Void>() {
 
@@ -94,9 +92,8 @@ public class DefaultJedisPubSubRedisOperations<C extends JedisCommands> extends 
 
 	@Override
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
-		final OperationsCommandArguments args =
-				OperationsCommandArguments.getInstance().put("patterns", patterns).put("pubSubListener",
-						pubSubListener);
+		final CommandArguments args = CommandArguments.getInstance().put("patterns", patterns).put("pubSubListener",
+				pubSubListener);
 
 		execute(new Executor<C, Void>() {
 
