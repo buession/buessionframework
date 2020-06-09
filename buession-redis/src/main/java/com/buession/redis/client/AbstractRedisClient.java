@@ -1150,16 +1150,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
-	public List<Geo> geoPos(final String key, final String... members){
-		return execute(geoOperations, (ops)->ops.geoPos(key, members));
-	}
-
-	@Override
-	public List<Geo> geoPos(final byte[] key, final byte[]... members){
-		return execute(binaryGeoOperations, (ops)->ops.geoPos(key, members));
-	}
-
-	@Override
 	public Double geoDist(final String key, final String member1, final String member2){
 		return execute(geoOperations, (ops)->ops.geoDist(key, member1, member2));
 	}

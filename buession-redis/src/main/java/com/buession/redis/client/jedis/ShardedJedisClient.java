@@ -25,6 +25,7 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.core.Executor;
+import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.client.ShardedRedisClient;
 import com.buession.redis.client.connection.RedisConnection;
@@ -40,9 +41,12 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.SortingParams;
+import redis.clients.jedis.params.MigrateParams;
+import redis.clients.jedis.params.SetParams;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -254,14 +258,14 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 			final MigrateOperation migrateOperation){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("host", host).put("port",
 				port).put("key", key).put("db", db).put("timeout", timeout).put("migrate", migrateOperation);
+		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(migrateOperation);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
-					JedisClientUtils.migrateOperationConvert(migrateOperation), key).get()), ProtocolCommand.MIGRATE,
-					args);
+					migrateParams, key).get()), ProtocolCommand.MIGRATE, args);
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(getShard(cmd, key).migrate(host, port, db, timeout,
-					JedisClientUtils.migrateOperationConvert(migrateOperation), key)), ProtocolCommand.MIGRATE, args);
+					migrateParams, key)), ProtocolCommand.MIGRATE, args);
 		}
 	}
 
@@ -270,14 +274,14 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 			final MigrateOperation migrateOperation){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("host", host).put("port",
 				port).put("key", key).put("db", db).put("timeout", timeout).put("migrate", migrateOperation);
+		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(migrateOperation);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
-					JedisClientUtils.migrateOperationConvert(migrateOperation), key).get()), ProtocolCommand.MIGRATE,
-					args);
+					migrateParams, key).get()), ProtocolCommand.MIGRATE, args);
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(getShard(cmd, key).migrate(host, port, db, timeout,
-					JedisClientUtils.migrateOperationConvert(migrateOperation), key)), ProtocolCommand.MIGRATE, args);
+					migrateParams, key)), ProtocolCommand.MIGRATE, args);
 		}
 	}
 
@@ -365,13 +369,13 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	public Status set(final byte[] key, final byte[] value, final StringCommands.SetArgument setArgument){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put(
 				"setArgument", setArgument);
+		final SetParams setParams = JedisClientUtils.setArgumentConvert(setArgument);
 
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value,
-					JedisClientUtils.setArgumentConvert(setArgument)).get()), ProtocolCommand.SET, args);
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value, setParams).get()),
+					ProtocolCommand.SET, args);
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value,
-					JedisClientUtils.setArgumentConvert(setArgument))), ProtocolCommand.SET, args);
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value, setParams)), ProtocolCommand.SET, args);
 		}
 	}
 
@@ -756,8 +760,12 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
 				"pattern", pattern).put("count", count);
 
-		return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor, new JedisScanParams(pattern
-				, count))), ProtocolCommand.HSCAN, args);
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
+					new JedisScanParams(pattern, count))), ProtocolCommand.HSCAN, args);
+		}
 	}
 
 	@Override
@@ -798,13 +806,12 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 			final byte[] pivot){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("position", position).put(
 				"pivot", pivot).put("value", value);
+		final redis.clients.jedis.ListPosition pos = JedisClientUtils.listPositionConvert(position);
 
 		if(isTransaction()){
-			return execute((cmd)->cmd.linsert(key, JedisClientUtils.listPositionConvert(position), pivot, value),
-					ProtocolCommand.LINSERT, args);
+			return execute((cmd)->cmd.linsert(key, pos, pivot, value), ProtocolCommand.LINSERT, args);
 		}else{
-			return execute((cmd)->cmd.linsert(key, JedisClientUtils.listPositionConvert(position), pivot, value),
-					ProtocolCommand.LINSERT, args);
+			return execute((cmd)->cmd.linsert(key, pos, pivot, value), ProtocolCommand.LINSERT, args);
 		}
 	}
 
@@ -1067,23 +1074,15 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Number> members){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
+		final Map<byte[], Double> data = new LinkedHashMap<>(members.size());
 
-		return execute(new Executor<ShardedJedis, Long>() {
+		members.forEach((k, v)->data.put(k, v.doubleValue()));
 
-			@Override
-			public Long execute(ShardedJedis cmd){
-				final Map<byte[], Double> data = new LinkedHashMap<>(members.size());
-
-				members.forEach((key, value)->data.put(key, value.doubleValue()));
-
-				if(isTransaction()){
-					return getTransaction().zadd(key, data).get();
-				}else{
-					return cmd.zadd(key, data);
-				}
-			}
-
-		}, ProtocolCommand.ZADD, args);
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zadd(key, data).get(), ProtocolCommand.ZADD, args);
+		}else{
+			return execute((cmd)->cmd.zadd(key, data), ProtocolCommand.ZADD, args);
+		}
 	}
 
 	@Override
@@ -1607,10 +1606,11 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("elements", elements);
 
 		if(isTransaction()){
-			return execute((cmd)->statusForBool(getTransaction().pfadd(key, elements).get() > 0),
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pfadd(key, elements).get() > 0),
 					ProtocolCommand.PFADD, args);
 		}else{
-			return execute((cmd)->statusForBool(cmd.pfadd(key, elements) > 0), ProtocolCommand.PFADD, args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0), ProtocolCommand.PFADD,
+					args);
 		}
 	}
 
@@ -1631,12 +1631,13 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("memberCoordinates",
 				memberCoordinates);
+		final Map<byte[], GeoCoordinate> memberCoordinateMap = JedisClientUtils.geoMapConvert(memberCoordinates);
 
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().geoadd(key, JedisClientUtils.geoMapConvert(memberCoordinates)).get(), ProtocolCommand.GEOADD, args);
+			return execute((cmd)->getTransaction().geoadd(key, memberCoordinateMap).get(), ProtocolCommand.GEOADD,
+					args);
 		}else{
-			return execute((cmd)->cmd.geoadd(key, JedisClientUtils.geoMapConvert(memberCoordinates)),
-					ProtocolCommand.GEOADD, args);
+			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap), ProtocolCommand.GEOADD, args);
 		}
 	}
 
