@@ -37,7 +37,6 @@ import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.transaction.jedis.JedisTransaction;
@@ -54,9 +53,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-
-import static com.buession.redis.utils.ReturnUtils.statusForOK;
 
 /**
  * @author Yong.Teng
@@ -73,1666 +69,1279 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public boolean exists(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().exists(key).get(), ProtocolCommand.EXISTS, args);
+			return execute((cmd)->getTransaction().exists(key).get());
 		}else{
-			return execute((cmd)->cmd.exists(key), ProtocolCommand.EXISTS, args);
+			return execute((cmd)->cmd.exists(key));
 		}
 	}
 
 	@Override
 	public Type type(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.enumValueOf(getTransaction().type(key).get(), Type.class),
-					ProtocolCommand.TYPE, args);
+			return execute((cmd)->ReturnUtils.enumValueOf(getTransaction().type(key).get(), Type.class));
 		}else{
-			return execute((cmd)->ReturnUtils.enumValueOf(cmd.type(key), Type.class), ProtocolCommand.TYPE, args);
+			return execute((cmd)->ReturnUtils.enumValueOf(cmd.type(key), Type.class));
 		}
 	}
 
 	@Override
 	public Status expire(final String key, final int lifetime){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("lifetime", lifetime);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expire(key, lifetime).get() == 1),
-					ProtocolCommand.EXPIRE, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expire(key, lifetime).get() == 1));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.expire(key, lifetime) == 1), ProtocolCommand.EXPIRE,
-					args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.expire(key, lifetime) == 1));
 		}
 	}
 
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("unixTimestamp",
-				unixTimestamp);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expireAt(key, unixTimestamp).get() == 1),
-					ProtocolCommand.EXPIREAT, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expireAt(key, unixTimestamp).get() == 1));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.expireAt(key, unixTimestamp) == 1),
-					ProtocolCommand.EXPIREAT, args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.expireAt(key, unixTimestamp) == 1));
 		}
 	}
 
 	@Override
 	public Status pExpire(final String key, final int lifetime){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("lifetime", lifetime);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpire(key, lifetime).get() == 1),
-					ProtocolCommand.PEXPIRE, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpire(key, lifetime).get() == 1));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.pexpire(key, lifetime) == 1), ProtocolCommand.PEXPIRE,
-					args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.pexpire(key, lifetime) == 1));
 		}
 	}
 
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("unixTimestamp",
-				unixTimestamp);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() == 1)
-					, ProtocolCommand.PEXPIREAT, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() == 1));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.pexpireAt(key, unixTimestamp) == 1),
-					ProtocolCommand.PEXPIREAT, args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.pexpireAt(key, unixTimestamp) == 1));
 		}
 	}
 
 	@Override
 	public Long ttl(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().ttl(key).get(), ProtocolCommand.TTL, args);
+			return execute((cmd)->getTransaction().ttl(key).get());
 		}else{
-			return execute((cmd)->cmd.ttl(key), ProtocolCommand.TTL, args);
+			return execute((cmd)->cmd.ttl(key));
 		}
 	}
 
 	@Override
 	public Long pTtl(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().pttl(key).get(), ProtocolCommand.PTTL, args);
+			return execute((cmd)->getTransaction().pttl(key).get());
 		}else{
-			return execute((cmd)->cmd.pttl(key), ProtocolCommand.PTTL, args);
+			return execute((cmd)->cmd.pttl(key));
 		}
 	}
 
 	@Override
 	public Status persist(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().persist(key).get() > 0),
-					ProtocolCommand.PERSIST, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().persist(key).get() > 0));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.persist(key) > 0), ProtocolCommand.PERSIST, args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.persist(key) > 0));
 		}
 	}
 
 	@Override
 	public List<String> sort(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().sort(key).get(), ProtocolCommand.SORT, args);
+			return execute((cmd)->getTransaction().sort(key).get());
 		}else{
-			return execute((cmd)->cmd.sort(key), ProtocolCommand.SORT, args);
+			return execute((cmd)->cmd.sort(key));
 		}
 	}
 
 	@Override
 	public List<String> sort(final String key, final KeyCommands.SortArgument sortArgument){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("sortArgument", sortArgument);
 		final SortingParams soringParams = JedisClientUtils.sortArgumentConvert(sortArgument);
 
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().sort(key, soringParams).get(), ProtocolCommand.SORT, args);
+			return execute((cmd)->getTransaction().sort(key, soringParams).get());
 		}else{
-			return execute((cmd)->cmd.sort(key, soringParams), ProtocolCommand.SORT, args);
+			return execute((cmd)->cmd.sort(key, soringParams));
 		}
 	}
 
 	@Override
 	public byte[] dump(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().dump(key).get(), ProtocolCommand.DUMP, args);
+			return execute((cmd)->getTransaction().dump(key).get());
 		}else{
-			return execute((cmd)->cmd.dump(key), ProtocolCommand.DUMP, args);
+			return execute((cmd)->cmd.dump(key));
 		}
 	}
 
 	@Override
 	public Status restore(final String key, final String serializedValue, final int ttl){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("serializedValue",
-				serializedValue).put("ttl", ttl);
 		final byte[] serializedEncodeValue = SafeEncoder.encode(serializedValue);
 
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().restore(key, ttl, serializedEncodeValue).get()), ProtocolCommand.RESTORE, args);
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().restore(key, ttl, serializedEncodeValue).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.restore(key, ttl, serializedEncodeValue)),
-					ProtocolCommand.RESTORE, args);
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.restore(key, ttl, serializedEncodeValue)));
 		}
 	}
 
 	@Override
 	public Status move(final String key, final int db){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("db", db);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().move(key, db).get() > 0),
-					ProtocolCommand.MOVE, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().move(key, db).get() > 0));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.move(key, db) > 0), ProtocolCommand.MOVE, args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.move(key, db) > 0));
 		}
 	}
 
 	@Override
 	public Status set(final String key, final String value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value).get()), ProtocolCommand.SET
-					, args);
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value)), ProtocolCommand.SET, args);
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value)));
 		}
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetArgument setArgument){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put(
-				"setArgument", setArgument);
 		final SetParams setParams = JedisClientUtils.setArgumentConvert(setArgument);
 
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value, setParams).get()),
-					ProtocolCommand.SET, args);
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value, setParams).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value, setParams)), ProtocolCommand.SET, args);
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value, setParams)));
 		}
 	}
 
 	@Override
 	public Status setEx(final String key, final String value, final int lifetime){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("lifetime"
-				, lifetime);
 
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().setex(key, lifetime, value).get()),
-					ProtocolCommand.SETEX, args);
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().setex(key, lifetime, value).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.setex(key, lifetime, value)), ProtocolCommand.SETEX,
-					args);
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.setex(key, lifetime, value)));
 		}
 	}
 
 	@Override
 	public Status pSetEx(final String key, final String value, final int lifetime){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("lifetime"
-				, lifetime);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().psetex(key, lifetime, value).get()),
-					ProtocolCommand.PSETEX, args);
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().psetex(key, lifetime, value).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.psetex(key, lifetime, value)), ProtocolCommand.PSETEX,
-					args);
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.psetex(key, lifetime, value)));
 		}
 	}
 
 	@Override
 	public Status setNx(final String key, final String value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setnx(key, value).get() > 0),
-					ProtocolCommand.SETNX, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setnx(key, value).get() > 0));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.setnx(key, value) > 0), ProtocolCommand.SETNX, args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setnx(key, value) > 0));
 		}
 	}
 
 	@Override
 	public Long append(final String key, final String value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().append(key, value).get(), ProtocolCommand.APPEND, args);
+			return execute((cmd)->getTransaction().append(key, value).get());
 		}else{
-			return execute((cmd)->cmd.append(key, value), ProtocolCommand.APPEND, args);
+			return execute((cmd)->cmd.append(key, value));
 		}
 	}
 
 	@Override
 	public String get(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().get(key).get(), ProtocolCommand.GET, args);
+			return execute((cmd)->getTransaction().get(key).get());
 		}else{
-			return execute((cmd)->cmd.get(key), ProtocolCommand.GET, args);
+			return execute((cmd)->cmd.get(key));
 		}
 	}
 
 	@Override
 	public String getSet(final String key, final String value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().getSet(key, value).get(), ProtocolCommand.GETSET, args);
+			return execute((cmd)->getTransaction().getSet(key, value).get());
 		}else{
-			return execute((cmd)->cmd.getSet(key, value), ProtocolCommand.GETSET, args);
+			return execute((cmd)->cmd.getSet(key, value));
 		}
 	}
 
 	@Override
 	public Long incr(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().incr(key).get(), ProtocolCommand.INCR, args);
+			return execute((cmd)->getTransaction().incr(key).get());
 		}else{
-			return execute((cmd)->cmd.incr(key), ProtocolCommand.INCR, args);
+			return execute((cmd)->cmd.incr(key));
 		}
 	}
 
 	@Override
 	public Long incrBy(final String key, final long value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().incrBy(key, value).get(), ProtocolCommand.INCRBY, args);
+			return execute((cmd)->getTransaction().incrBy(key, value).get());
 		}else{
-			return execute((cmd)->cmd.incrBy(key, value), ProtocolCommand.INCRBY, args);
+			return execute((cmd)->cmd.incrBy(key, value));
 		}
 	}
 
 	@Override
 	public Double incrByFloat(final String key, final double value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().incrByFloat(key, value).get(), ProtocolCommand.INCRBYFLOAT, args);
+			return execute((cmd)->getTransaction().incrByFloat(key, value).get());
 		}else{
-			return execute((cmd)->cmd.incrByFloat(key, value), ProtocolCommand.INCRBYFLOAT, args);
+			return execute((cmd)->cmd.incrByFloat(key, value));
 		}
 	}
 
 	@Override
 	public Long decr(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().decr(key).get(), ProtocolCommand.DECR, args);
+			return execute((cmd)->getTransaction().decr(key).get());
 		}else{
-			return execute((cmd)->cmd.decr(key), ProtocolCommand.DECR, args);
+			return execute((cmd)->cmd.decr(key));
 		}
 	}
 
 	@Override
 	public Long decrBy(final String key, final long value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().decrBy(key, value).get(), ProtocolCommand.DECRBY, args);
+			return execute((cmd)->getTransaction().decrBy(key, value).get());
 		}else{
-			return execute((cmd)->cmd.decrBy(key, value), ProtocolCommand.DECRBY, args);
+			return execute((cmd)->cmd.decrBy(key, value));
 		}
 	}
 
 	@Override
 	public Long setRange(final String key, final long offset, final String value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value"
-				, value);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().setrange(key, offset, value).get(), ProtocolCommand.SETRANGE, args);
+			return execute((cmd)->getTransaction().setrange(key, offset, value).get());
 		}else{
-			return execute((cmd)->cmd.setrange(key, offset, value), ProtocolCommand.SETRANGE, args);
+			return execute((cmd)->cmd.setrange(key, offset, value));
 		}
 	}
 
 	@Override
 	public String getRange(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
-				end);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().getrange(key, start, end).get(), ProtocolCommand.GETRANGE, args);
+			return execute((cmd)->getTransaction().getrange(key, start, end).get());
 		}else{
-			return execute((cmd)->cmd.getrange(key, start, end), ProtocolCommand.GETRANGE, args);
+			return execute((cmd)->cmd.getrange(key, start, end));
 		}
 	}
 
 	@Override
 	public String substr(final String key, final int start, final int end){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
-				end);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().substr(key, start, end).get(), ProtocolCommand.SUBSTR, args);
+			return execute((cmd)->getTransaction().substr(key, start, end).get());
 		}else{
-			return execute((cmd)->cmd.substr(key, start, end), ProtocolCommand.SUBSTR, args);
+			return execute((cmd)->cmd.substr(key, start, end));
 		}
 	}
 
 	@Override
 	public Long strlen(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().strlen(key).get(), ProtocolCommand.STRLEN, args);
+			return execute((cmd)->getTransaction().strlen(key).get());
 		}else{
-			return execute((cmd)->cmd.strlen(key), ProtocolCommand.STRLEN, args);
+			return execute((cmd)->cmd.strlen(key));
 		}
 	}
 
 	@Override
 	public boolean hExists(final String key, final String field){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hexists(key, field).get(), ProtocolCommand.HEXISTS, args);
+			return execute((cmd)->getTransaction().hexists(key, field).get());
 		}else{
-			return execute((cmd)->cmd.hexists(key, field), ProtocolCommand.HEXISTS, args);
+			return execute((cmd)->cmd.hexists(key, field));
 		}
 	}
 
 	@Override
 	public Set<String> hKeys(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hkeys(key).get(), ProtocolCommand.HKEYS, args);
+			return execute((cmd)->getTransaction().hkeys(key).get());
 		}else{
-			return execute((cmd)->cmd.hkeys(key), ProtocolCommand.HKEYS, args);
+			return execute((cmd)->cmd.hkeys(key));
 		}
 	}
 
 	@Override
 	public List<String> hVals(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hvals(key).get(), ProtocolCommand.HVALS, args);
+			return execute((cmd)->getTransaction().hvals(key).get());
 		}else{
-			return execute((cmd)->cmd.hvals(key), ProtocolCommand.HVALS, args);
+			return execute((cmd)->cmd.hvals(key));
 		}
 	}
 
 	@Override
 	public Status hSet(final String key, final String field, final String value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
-				value);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hset(key, field, value).get() > 0),
-					ProtocolCommand.HSET, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hset(key, field, value).get() > 0));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.hset(key, field, value) > 0), ProtocolCommand.HSET,
-					args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.hset(key, field, value) > 0));
 		}
 	}
 
 	@Override
 	public Status hSetNx(final String key, final String field, final String value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
-				value);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hsetnx(key, field, value).get() > 0),
-					ProtocolCommand.HSETNX, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hsetnx(key, field, value).get() > 0));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.hsetnx(key, field, value) > 0), ProtocolCommand.HSETNX
-					, args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.hsetnx(key, field, value) > 0));
 		}
 	}
 
 	@Override
 	public String hGet(final String key, final String field){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hget(key, field).get(), ProtocolCommand.HGET, args);
+			return execute((cmd)->getTransaction().hget(key, field).get());
 		}else{
-			return execute((cmd)->cmd.hget(key, field), ProtocolCommand.HGET, args);
+			return execute((cmd)->cmd.hget(key, field));
 		}
 	}
 
 	@Override
 	public Status hMSet(final String key, final Map<String, String> data){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("data", data);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().hmset(key, data).get()),
-					ProtocolCommand.HMSET, args);
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().hmset(key, data).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)), ProtocolCommand.HMSET, args);
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)));
 		}
 	}
 
 	@Override
 	public List<String> hMGet(final String key, final String... fields){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("fields", fields);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hmget(key, fields).get(), ProtocolCommand.HMGET, args);
+			return execute((cmd)->getTransaction().hmget(key, fields).get());
 		}else{
-			return execute((cmd)->cmd.hmget(key, fields), ProtocolCommand.HMGET, args);
+			return execute((cmd)->cmd.hmget(key, fields));
 		}
 	}
 
 	@Override
 	public Map<String, String> hGetAll(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hgetAll(key).get(), ProtocolCommand.HGETALL, args);
+			return execute((cmd)->getTransaction().hgetAll(key).get());
 		}else{
-			return execute((cmd)->cmd.hgetAll(key), ProtocolCommand.HGETALL, args);
+			return execute((cmd)->cmd.hgetAll(key));
 		}
 	}
 
 	@Override
 	public Long hStrLen(final String key, final String field){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hstrlen(key, field).get(), ProtocolCommand.HSTRLEN, args);
+			return execute((cmd)->getTransaction().hstrlen(key, field).get());
 		}else{
-			return execute((cmd)->cmd.hstrlen(key, field), ProtocolCommand.HSTRLEN, args);
+			return execute((cmd)->cmd.hstrlen(key, field));
 		}
 	}
 
 	@Override
 	public Long hLen(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hlen(key).get(), ProtocolCommand.HLEN, args);
+			return execute((cmd)->getTransaction().hlen(key).get());
 		}else{
-			return execute((cmd)->cmd.hlen(key), ProtocolCommand.HLEN, args);
+			return execute((cmd)->cmd.hlen(key));
 		}
 	}
 
 	@Override
 	public Long hIncrBy(final String key, final String field, final long value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
-				value);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hincrBy(key, field, value).get(), ProtocolCommand.HINCRBY, args);
+			return execute((cmd)->getTransaction().hincrBy(key, field, value).get());
 		}else{
-			return execute((cmd)->cmd.hincrBy(key, field, value), ProtocolCommand.HINCRBY, args);
+			return execute((cmd)->cmd.hincrBy(key, field, value));
 		}
 	}
 
 	@Override
 	public Double hIncrByFloat(final String key, final String field, final double value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
-				value);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hincrByFloat(key, field, value).get(), ProtocolCommand.HINCRBYFLOAT
-					, args);
+			return execute((cmd)->getTransaction().hincrByFloat(key, field, value).get());
 		}else{
-			return execute((cmd)->cmd.hincrByFloat(key, field, value), ProtocolCommand.HINCRBYFLOAT, args);
+			return execute((cmd)->cmd.hincrByFloat(key, field, value));
 		}
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
-
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
 		}else{
-			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor)), ProtocolCommand.HSCAN
-					, args);
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor)));
 		}
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
-				"pattern", pattern);
-
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
 		}else{
 			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
-					new JedisScanParams(pattern))), ProtocolCommand.HSCAN, args);
+					new JedisScanParams(pattern))));
 		}
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count"
-				, count);
-
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
 		}else{
 			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
-					new JedisScanParams(count))), ProtocolCommand.HSCAN, args);
+					new JedisScanParams(count))));
 		}
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
 			final int count){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
-				"pattern", pattern).put("count", count);
-
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
 		}else{
 			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
-					new JedisScanParams(pattern, count))), ProtocolCommand.HSCAN, args);
+					new JedisScanParams(pattern, count))));
 		}
 	}
 
 	@Override
 	public Long hDel(final String key, final String... fields){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hdel(key, fields).get(), ProtocolCommand.HDEL, args);
+			return execute((cmd)->getTransaction().hdel(key, fields).get());
 		}else{
-			return execute((cmd)->cmd.hdel(key, fields), ProtocolCommand.HDEL, args);
+			return execute((cmd)->cmd.hdel(key, fields));
 		}
 	}
 
 	@Override
 	public Long lPush(final String key, final String... values){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().lpush(key, values).get(), ProtocolCommand.LPUSH, args);
+			return execute((cmd)->getTransaction().lpush(key, values).get());
 		}else{
-			return execute((cmd)->cmd.lpush(key, values), ProtocolCommand.LPUSH, args);
+			return execute((cmd)->cmd.lpush(key, values));
 		}
 	}
 
 	@Override
 	public Long lPushX(final String key, final String... values){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().lpushx(key, values).get(), ProtocolCommand.LPUSHX, args);
+			return execute((cmd)->getTransaction().lpushx(key, values).get());
 		}else{
-			return execute((cmd)->cmd.lpushx(key, values), ProtocolCommand.LPUSHX, args);
+			return execute((cmd)->cmd.lpushx(key, values));
 		}
 	}
 
 	@Override
 	public Long lInsert(final String key, final String value, final ListPosition position, final String pivot){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("position", position).put(
-				"pivot", pivot).put("value", value);
 		final redis.clients.jedis.ListPosition pos = JedisClientUtils.listPositionConvert(position);
 
 		if(isTransaction()){
-			return execute((cmd)->cmd.linsert(key, pos, pivot, value), ProtocolCommand.LINSERT, args);
+			return execute((cmd)->getTransaction().linsert(key, pos, pivot, value).get());
 		}else{
-			return execute((cmd)->cmd.linsert(key, pos, pivot, value), ProtocolCommand.LINSERT, args);
+			return execute((cmd)->cmd.linsert(key, pos, pivot, value));
 		}
 	}
 
 	@Override
 	public Status lSet(final String key, final long index, final String value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index).put("value",
-				value);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().lset(key, index, value).get()),
-					ProtocolCommand.LSET, args);
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().lset(key, index, value).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.lset(key, index, value)), ProtocolCommand.LSET, args);
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.lset(key, index, value)));
 		}
 	}
 
 	@Override
 	public String lIndex(final String key, final long index){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().lindex(key, index).get(), ProtocolCommand.LINDEX, args);
+			return execute((cmd)->getTransaction().lindex(key, index).get());
 		}else{
-			return execute((cmd)->cmd.lindex(key, index), ProtocolCommand.LINDEX, args);
+			return execute((cmd)->cmd.lindex(key, index));
 		}
 	}
 
 	@Override
 	public String lPop(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().lpop(key).get(), ProtocolCommand.LPOP, args);
+			return execute((cmd)->getTransaction().lpop(key).get());
 		}else{
-			return execute((cmd)->cmd.lpop(key), ProtocolCommand.LPOP, args);
+			return execute((cmd)->cmd.lpop(key));
 		}
 	}
 
 	@Override
 	public String rPop(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().rpop(key).get(), ProtocolCommand.RPOP, args);
+			return execute((cmd)->getTransaction().rpop(key).get());
 		}else{
-			return execute((cmd)->cmd.rpop(key), ProtocolCommand.RPOP, args);
+			return execute((cmd)->cmd.rpop(key));
 		}
 	}
 
 	@Override
 	public Long rPush(final String key, final String... values){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().rpush(key, values).get(), ProtocolCommand.RPUSH, args);
+			return execute((cmd)->getTransaction().rpush(key, values).get());
 		}else{
-			return execute((cmd)->cmd.rpush(key, values), ProtocolCommand.RPUSH, args);
+			return execute((cmd)->cmd.rpush(key, values));
 		}
 	}
 
 	@Override
 	public Long rPushX(final String key, final String... values){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().rpushx(key, values).get(), ProtocolCommand.RPUSHX, args);
+			return execute((cmd)->getTransaction().rpushx(key, values).get());
 		}else{
-			return execute((cmd)->cmd.rpushx(key, values), ProtocolCommand.RPUSHX, args);
+			return execute((cmd)->cmd.rpushx(key, values));
 		}
 	}
 
 	@Override
 	public Status lTrim(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
-				end);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().ltrim(key, start, end).get()),
-					ProtocolCommand.LTRIM, args);
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().ltrim(key, start, end).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.ltrim(key, start, end)), ProtocolCommand.LTRIM, args);
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.ltrim(key, start, end)));
 		}
 	}
 
 	@Override
 	public Long lRem(final String key, final String value, final long count){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("count",
-				count);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().lrem(key, count, value).get(), ProtocolCommand.LREM, args);
+			return execute((cmd)->getTransaction().lrem(key, count, value).get());
 		}else{
-			return execute((cmd)->cmd.lrem(key, count, value), ProtocolCommand.LREM, args);
+			return execute((cmd)->cmd.lrem(key, count, value));
 		}
 	}
 
 	@Override
 	public List<String> lRange(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
-				end);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().lrange(key, start, end).get(), ProtocolCommand.LRANGE, args);
+			return execute((cmd)->getTransaction().lrange(key, start, end).get());
 		}else{
-			return execute((cmd)->cmd.lrange(key, start, end), ProtocolCommand.LRANGE, args);
+			return execute((cmd)->cmd.lrange(key, start, end));
 		}
 	}
 
 	@Override
 	public Long lLen(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().llen(key).get(), ProtocolCommand.LLEN, args);
+			return execute((cmd)->getTransaction().llen(key).get());
 		}else{
-			return execute((cmd)->cmd.llen(key), ProtocolCommand.LLEN, args);
+			return execute((cmd)->cmd.llen(key));
 		}
 	}
 
 	@Override
 	public Long sAdd(final String key, final String... members){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().sadd(key, members).get(), ProtocolCommand.SADD, args);
+			return execute((cmd)->getTransaction().sadd(key, members).get());
 		}else{
-			return execute((cmd)->cmd.sadd(key, members), ProtocolCommand.SADD, args);
+			return execute((cmd)->cmd.sadd(key, members));
 		}
 	}
 
 	@Override
 	public Long sCard(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().scard(key).get(), ProtocolCommand.SCARD, args);
+			return execute((cmd)->getTransaction().scard(key).get());
 		}else{
-			return execute((cmd)->cmd.scard(key), ProtocolCommand.SCARD, args);
+			return execute((cmd)->cmd.scard(key));
 		}
 	}
 
 	@Override
 	public boolean sisMember(final String key, final String member){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
-
 		if(isTransaction()){
-			return execute((cmd)->cmd.sismember(key, member), ProtocolCommand.SISMEMBER, args);
+			return execute((cmd)->cmd.sismember(key, member));
 		}else{
-			return execute((cmd)->cmd.sismember(key, member), ProtocolCommand.SISMEMBER, args);
+			return execute((cmd)->cmd.sismember(key, member));
 		}
 	}
 
 	@Override
 	public Set<String> sMembers(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().smembers(key).get(), ProtocolCommand.SMEMBERS, args);
+			return execute((cmd)->getTransaction().smembers(key).get());
 		}else{
-			return execute((cmd)->cmd.smembers(key), ProtocolCommand.SMEMBERS, args);
+			return execute((cmd)->cmd.smembers(key));
 		}
 	}
 
 	@Override
 	public String sPop(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().spop(key).get(), ProtocolCommand.SPOP, args);
+			return execute((cmd)->getTransaction().spop(key).get());
 		}else{
-			return execute((cmd)->cmd.spop(key), ProtocolCommand.SPOP, args);
+			return execute((cmd)->cmd.spop(key));
 		}
 	}
 
 	@Override
 	public String sRandMember(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().srandmember(key).get(), ProtocolCommand.SRANDMEMBER, args);
+			return execute((cmd)->getTransaction().srandmember(key).get());
 		}else{
-			return execute((cmd)->cmd.srandmember(key), ProtocolCommand.SRANDMEMBER, args);
+			return execute((cmd)->cmd.srandmember(key));
 		}
 	}
 
 	@Override
 	public List<String> sRandMember(final String key, final int count){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("count", count);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().srandmember(key, count).get(), ProtocolCommand.SRANDMEMBER, args);
+			return execute((cmd)->getTransaction().srandmember(key, count).get());
 		}else{
-			return execute((cmd)->cmd.srandmember(key, count), ProtocolCommand.SRANDMEMBER, args);
+			return execute((cmd)->cmd.srandmember(key, count));
 		}
 	}
 
 	@Override
 	public Long sRem(final String key, final String... members){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().srem(key, members).get(), ProtocolCommand.SREM, args);
+			return execute((cmd)->getTransaction().srem(key, members).get());
 		}else{
-			return execute((cmd)->cmd.srem(key, members), ProtocolCommand.SREM, args);
+			return execute((cmd)->cmd.srem(key, members));
 		}
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
-
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
 		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor)),
-					ProtocolCommand.SSCAN, args);
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor)));
 		}
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
-				"pattern", pattern);
-
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
 		}else{
 			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
-					new JedisScanParams(pattern))), ProtocolCommand.SSCAN, args);
+					new JedisScanParams(pattern))));
 		}
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final int count){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count"
-				, count);
-
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
 		}else{
 			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
-					new JedisScanParams(count))), ProtocolCommand.SSCAN, args);
+					new JedisScanParams(count))));
 		}
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
 			final int count){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
-				"pattern", pattern).put("count", count);
-
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
 		}else{
 			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
-					new JedisScanParams(pattern, count))), ProtocolCommand.SSCAN, args);
+					new JedisScanParams(pattern, count))));
 		}
 	}
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Number> members){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
 		final Map<String, Double> data = new LinkedHashMap<>(members.size());
 
 		members.forEach((k, v)->data.put(k, v.doubleValue()));
 
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zadd(key, data).get(), ProtocolCommand.ZADD, args);
+			return execute((cmd)->getTransaction().zadd(key, data).get());
 		}else{
-			return execute((cmd)->cmd.zadd(key, data), ProtocolCommand.ZADD, args);
+			return execute((cmd)->cmd.zadd(key, data));
 		}
 	}
 
 	@Override
 	public Double zScore(final String key, final String member){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zscore(key, member).get(), ProtocolCommand.ZSCORE, args);
+			return execute((cmd)->getTransaction().zscore(key, member).get());
 		}else{
-			return execute((cmd)->cmd.zscore(key, member), ProtocolCommand.ZSCORE, args);
+			return execute((cmd)->cmd.zscore(key, member));
 		}
 	}
 
 	@Override
 	public Long zCard(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((C cmd)->getTransaction().zcard(key).get(), ProtocolCommand.ZCARD, args);
+			return execute((C cmd)->getTransaction().zcard(key).get());
 		}else{
-			return execute((C cmd)->cmd.zcard(key), ProtocolCommand.ZCARD, args);
+			return execute((C cmd)->cmd.zcard(key));
 		}
 	}
 
 	@Override
 	public Double zIncrBy(final String key, final String member, final double increment){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put(
-				"increment", increment);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zincrby(key, increment, member).get(), ProtocolCommand.ZINCRBY,
-					args);
+			return execute((cmd)->getTransaction().zincrby(key, increment, member).get());
 		}else{
-			return execute((cmd)->cmd.zincrby(key, increment, member), ProtocolCommand.ZINCRBY, args);
+			return execute((cmd)->cmd.zincrby(key, increment, member));
 		}
 	}
 
 	@Override
 	public Long zCount(final String key, final double min, final double max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zcount(key, min, max).get(), ProtocolCommand.ZCOUNT, args);
+			return execute((cmd)->getTransaction().zcount(key, min, max).get());
 		}else{
-			return execute((cmd)->cmd.zcount(key, min, max), ProtocolCommand.ZCOUNT, args);
+			return execute((cmd)->cmd.zcount(key, min, max));
 		}
 	}
 
 	@Override
 	public Long zCount(final String key, final String min, final String max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zcount(key, min, max).get(), ProtocolCommand.ZCOUNT, args);
+			return execute((cmd)->getTransaction().zcount(key, min, max).get());
 		}else{
-			return execute((cmd)->cmd.zcount(key, min, max), ProtocolCommand.ZCOUNT, args);
+			return execute((cmd)->cmd.zcount(key, min, max));
 		}
 	}
 
 	@Override
 	public Set<String> zRange(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
-				end);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrange(key, start, end).get(), ProtocolCommand.ZRANGE, args);
+			return execute((cmd)->getTransaction().zrange(key, start, end).get());
 		}else{
-			return execute((cmd)->cmd.zrange(key, start, end), ProtocolCommand.ZRANGE, args);
+			return execute((cmd)->cmd.zrange(key, start, end));
 		}
 	}
 
 	@Override
 	public Set<Tuple> zRangeWithScores(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
-				end);
-
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeWithScores(key, start,
-					end).get()), ProtocolCommand.ZRANGE, args);
+					end).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeWithScores(key, start, end)),
-					ProtocolCommand.ZRANGE, args);
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeWithScores(key, start, end)));
 		}
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final double min, final double max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get(), ProtocolCommand.ZRANGEBYSCORE,
-					args);
+			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get());
 		}else{
-			return execute((cmd)->cmd.zrangeByScore(key, min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+			return execute((cmd)->cmd.zrangeByScore(key, min, max));
 		}
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final String min, final String max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get(), ProtocolCommand.ZRANGEBYSCORE,
-					args);
+			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get());
 		}else{
-			return execute((cmd)->cmd.zrangeByScore(key, min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+			return execute((cmd)->cmd.zrangeByScore(key, min, max));
 		}
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final double min, final double max, final int offset,
 			final int count){
-		final CommandArguments args =
-				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrangeByScore(key, min, max, offset, count).get(),
-					ProtocolCommand.ZRANGEBYSCORE, args);
+			return execute((cmd)->getTransaction().zrangeByScore(key, min, max, offset, count).get());
 		}else{
-			return execute((cmd)->cmd.zrangeByScore(key, min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE,
-					args);
+			return execute((cmd)->cmd.zrangeByScore(key, min, max, offset, count));
 		}
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final String min, final String max, final int offset,
 			final int count){
-		final CommandArguments args =
-				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrangeByScore(key, min, max, offset, count).get(),
-					ProtocolCommand.ZRANGEBYSCORE, args);
+			return execute((cmd)->getTransaction().zrangeByScore(key, min, max, offset, count).get());
 		}else{
-			return execute((cmd)->cmd.zrangeByScore(key, min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE,
-					args);
+			return execute((cmd)->cmd.zrangeByScore(key, min, max, offset, count));
 		}
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
-					, max).get()), ProtocolCommand.ZRANGEBYSCORE, args);
+					, max).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)),
-					ProtocolCommand.ZRANGEBYSCORE, args);
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)));
 		}
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
-					, max).get()), ProtocolCommand.ZRANGEBYSCORE, args);
+					, max).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)),
-					ProtocolCommand.ZRANGEBYSCORE, args);
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)));
 		}
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
 			final int count){
-		final CommandArguments args =
-				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
-
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
-					, max, offset, count).get()), ProtocolCommand.ZRANGEBYSCORE, args);
+					, max, offset, count).get()));
 		}else{
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max, offset
-					, count)), ProtocolCommand.ZRANGEBYSCORE, args);
+					, count)));
 		}
 	}
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final String min, final String max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrangeByLex(key, min, max).get(), ProtocolCommand.ZRANGEBYLEX,
-					args);
+			return execute((cmd)->getTransaction().zrangeByLex(key, min, max).get());
 		}else{
-			return execute((cmd)->cmd.zrangeByLex(key, min, max), ProtocolCommand.ZRANGEBYLEX, args);
+			return execute((cmd)->cmd.zrangeByLex(key, min, max));
 		}
 	}
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final String min, final String max, final int offset,
 			final int count){
-		final CommandArguments args =
-				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrangeByLex(key, min, max, offset, count).get(),
-					ProtocolCommand.ZRANGEBYLEX, args);
+			return execute((cmd)->getTransaction().zrangeByLex(key, min, max, offset, count).get());
 		}else{
-			return execute((cmd)->cmd.zrangeByLex(key, min, max, offset, count), ProtocolCommand.ZRANGEBYLEX, args);
+			return execute((cmd)->cmd.zrangeByLex(key, min, max, offset, count));
 		}
 	}
 
 	@Override
 	public Long zRank(final String key, final String member){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrank(key, member).get(), ProtocolCommand.ZRANK, args);
+			return execute((cmd)->getTransaction().zrank(key, member).get());
 		}else{
-			return execute((cmd)->cmd.zrank(key, member), ProtocolCommand.ZRANK, args);
+			return execute((cmd)->cmd.zrank(key, member));
 		}
 	}
 
 	@Override
 	public Long zRevRank(final String key, final String member){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrank(key, member).get(), ProtocolCommand.ZRANK, args);
+			return execute((cmd)->getTransaction().zrevrank(key, member).get());
 		}else{
-			return execute((cmd)->cmd.zrevrank(key, member), ProtocolCommand.ZRANK, args);
+			return execute((cmd)->cmd.zrevrank(key, member));
 		}
 	}
 
 	@Override
 	public Long zRem(final String key, final String... members){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrem(key, members).get(), ProtocolCommand.ZREM, args);
+			return execute((cmd)->getTransaction().zrem(key, members).get());
 		}else{
-			return execute((cmd)->cmd.zrem(key, members), ProtocolCommand.ZREM, args);
+			return execute((cmd)->cmd.zrem(key, members));
 		}
 	}
 
 	@Override
 	public Long zRemRangeByRank(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
-				end);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zremrangeByRank(key, start, end).get(),
-					ProtocolCommand.ZREMRANGEBYRANK, args);
+			return execute((cmd)->getTransaction().zremrangeByRank(key, start, end).get());
 		}else{
-			return execute((cmd)->cmd.zremrangeByRank(key, start, end), ProtocolCommand.ZREMRANGEBYRANK, args);
+			return execute((cmd)->cmd.zremrangeByRank(key, start, end));
 		}
 	}
 
 	@Override
 	public Long zRemRangeByScore(final String key, final double min, final double max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get(),
-					ProtocolCommand.ZREMRANGEBYSCORE, args);
+			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get());
 		}else{
-			return execute((cmd)->cmd.zremrangeByScore(key, min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+			return execute((cmd)->cmd.zremrangeByScore(key, min, max));
 		}
 	}
 
 	@Override
 	public Long zRemRangeByScore(final String key, final String min, final String max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get(),
-					ProtocolCommand.ZREMRANGEBYSCORE, args);
+			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get());
 		}else{
-			return execute((cmd)->cmd.zremrangeByScore(key, min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+			return execute((cmd)->cmd.zremrangeByScore(key, min, max));
 		}
 	}
 
 	@Override
 	public Long zRemRangeByLex(final String key, final String min, final String max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zremrangeByLex(key, min, max).get(), ProtocolCommand.ZREMRANGEBYLEX
-					, args);
+			return execute((cmd)->getTransaction().zremrangeByLex(key, min, max).get());
 		}else{
-			return execute((cmd)->getTransaction().zremrangeByLex(key, min, max).get(), ProtocolCommand.ZREMRANGEBYLEX
-					, args);
+			return execute((cmd)->getTransaction().zremrangeByLex(key, min, max).get());
 		}
 	}
 
 	@Override
 	public Set<String> zRevRange(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
-				end);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrange(key, start, end).get(), ProtocolCommand.ZREVRANGE, args);
+			return execute((cmd)->getTransaction().zrevrange(key, start, end).get());
 		}else{
-			return execute((cmd)->cmd.zrevrange(key, start, end), ProtocolCommand.ZREVRANGE, args);
+			return execute((cmd)->cmd.zrevrange(key, start, end));
 		}
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeWithScores(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
-				end);
-
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeWithScores(key, start,
-					end).get()), ProtocolCommand.ZREVRANGE, args);
+					end).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeWithScores(key, start, end)),
-					ProtocolCommand.ZREVRANGE, args);
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeWithScores(key, start, end)));
 		}
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final double min, final double max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get(),
-					ProtocolCommand.ZREVRANGEBYSCORE, args);
+			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get());
 		}else{
-			return execute((cmd)->cmd.zrevrangeByScore(key, min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+			return execute((cmd)->cmd.zrevrangeByScore(key, min, max));
 		}
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final String min, final String max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get(),
-					ProtocolCommand.ZREVRANGEBYSCORE, args);
+			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get());
 		}else{
-			return execute((cmd)->cmd.zrevrangeByScore(key, min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+			return execute((cmd)->cmd.zrevrangeByScore(key, min, max));
 		}
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final double min, final double max, final int offset,
 			final int count){
-		final CommandArguments args =
-				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get(),
-					ProtocolCommand.ZREVRANGEBYSCORE, args);
+			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get());
 		}else{
-			return execute((cmd)->cmd.zrevrangeByScore(key, min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE
-					, args);
+			return execute((cmd)->cmd.zrevrangeByScore(key, min, max, offset, count));
 		}
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final String min, final String max, final int offset,
 			final int count){
-		final CommandArguments args =
-				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get(),
-					ProtocolCommand.ZREVRANGEBYSCORE, args);
+			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get());
 		}else{
-			return execute((cmd)->cmd.zrevrangeByScore(key, min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE
-					, args);
+			return execute((cmd)->cmd.zrevrangeByScore(key, min, max, offset, count));
 		}
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
-					min, max).get()), ProtocolCommand.ZREVRANGEBYSCORE, args);
+					min, max).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)),
-					ProtocolCommand.ZREVRANGEBYSCORE, args);
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)));
 		}
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
-					min, max).get()), ProtocolCommand.ZREVRANGEBYSCORE, args);
+					min, max).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)),
-					ProtocolCommand.ZREVRANGEBYSCORE, args);
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)));
 		}
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
 			final int offset, final int count){
-		final CommandArguments args =
-				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
-
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
-					min, max, offset, count).get()), ProtocolCommand.ZREVRANGEBYSCORE, args);
+					min, max, offset, count).get()));
 		}else{
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max,
-					offset, count)), ProtocolCommand.ZREVRANGEBYSCORE, args);
+					offset, count)));
 		}
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
 			final int offset, final int count){
-		final CommandArguments args =
-				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
-
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
-					min, max, offset, count).get()), ProtocolCommand.ZREVRANGEBYSCORE, args);
+					min, max, offset, count).get()));
 		}else{
 			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max,
-					offset, count)), ProtocolCommand.ZREVRANGEBYSCORE, args);
+					offset, count)));
 		}
 	}
 
 	@Override
 	public Set<String> zRevRangeByLex(final String key, final String min, final String max){
-		final CommandArguments args =
-				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("min", min).put(
-						"max", max);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max).get(), ProtocolCommand.ZREVRANGEBYLEX
-					, args);
+			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max).get());
 		}else{
-			return execute((cmd)->cmd.zrevrangeByLex(key, min, max), ProtocolCommand.ZREVRANGEBYLEX, args);
+			return execute((cmd)->cmd.zrevrangeByLex(key, min, max));
 		}
 	}
 
 	@Override
 	public Set<String> zRevRangeByLex(final String key, final String min, final String max, final int offset,
 			final int count){
-		final CommandArguments args =
-				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("min", min).put(
-						"max", max).put("offset", offset).put("count", count);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max, offset, count).get(),
-					ProtocolCommand.ZREVRANGEBYLEX, args);
+			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max, offset, count).get());
 		}else{
-			return execute((cmd)->cmd.zrevrangeByLex(key, min, max, offset, count), ProtocolCommand.ZREVRANGEBYLEX,
-					args);
+			return execute((cmd)->cmd.zrevrangeByLex(key, min, max, offset, count));
 		}
 	}
 
 	@Override
 	public Long zLexCount(final String key, final String min, final String max){
-		final CommandArguments args =
-				CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("min", min).put(
-						"max", max);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().zlexcount(key, min, max).get(), ProtocolCommand.ZLEXCOUNT, args);
+			return execute((cmd)->getTransaction().zlexcount(key, min, max).get());
 		}else{
-			return execute((cmd)->cmd.zlexcount(key, min, max), ProtocolCommand.ZLEXCOUNT, args);
+			return execute((cmd)->cmd.zlexcount(key, min, max));
 		}
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
-
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
 		}else{
-			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor)),
-					ProtocolCommand.ZSCAN, args);
+			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor)));
 		}
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
-				"pattern", pattern);
-
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
 		}else{
 			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
-					new JedisScanParams(pattern))), ProtocolCommand.ZSCAN, args);
+					new JedisScanParams(pattern))));
 		}
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final int count){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count"
-				, count);
-
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
 		}else{
 			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
-					new JedisScanParams(count))), ProtocolCommand.ZSCAN, args);
+					new JedisScanParams(count))));
 		}
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final int count){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put(
-				"pattern", pattern).put("count", count);
-
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
 		}else{
 			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
-					new JedisScanParams(pattern, count))), ProtocolCommand.ZSCAN, args);
+					new JedisScanParams(pattern, count))));
 		}
 	}
 
 	@Override
 	public Status pfAdd(final String key, final String... elements){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("elements", elements);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pfadd(key, elements).get() > 0),
-					ProtocolCommand.PFADD, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pfadd(key, elements).get() > 0));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0), ProtocolCommand.PFADD,
-					args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0));
 		}
 	}
 
 	@Override
 	public Long geoAdd(final String key, final String member, final double longitude, final double latitude){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put(
-				"longitude", longitude).put("latitude", latitude);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().geoadd(key, longitude, latitude, member).get(),
-					ProtocolCommand.GEOADD, args);
+			return execute((cmd)->getTransaction().geoadd(key, longitude, latitude, member).get());
 		}else{
-			return execute((cmd)->cmd.geoadd(key, longitude, latitude, member), ProtocolCommand.GEOADD, args);
+			return execute((cmd)->cmd.geoadd(key, longitude, latitude, member));
 		}
 	}
 
 	@Override
 	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("memberCoordinates",
-				memberCoordinates);
 		final Map<String, GeoCoordinate> memberCoordinateMap = JedisClientUtils.geoMapConvert(memberCoordinates);
 
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().geoadd(key, memberCoordinateMap).get(), ProtocolCommand.GEOADD,
-					args);
+			return execute((cmd)->getTransaction().geoadd(key, memberCoordinateMap).get());
 		}else{
-			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap), ProtocolCommand.GEOADD, args);
+			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap));
 		}
 	}
 
 	@Override
 	public List<Geo> geoPos(final String key, final String... members){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
-
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.geoListDeconvert(getTransaction().geopos(key, members).get()),
-					ProtocolCommand.GEOPOS, args);
+			return execute((cmd)->JedisClientUtils.geoListDeconvert(getTransaction().geopos(key, members).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.geoListDeconvert(cmd.geopos(key, members)), ProtocolCommand.GEOPOS,
-					args);
+			return execute((cmd)->JedisClientUtils.geoListDeconvert(cmd.geopos(key, members)));
 		}
 	}
 
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member1", member1).put(
-				"member2", member2);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().geodist(key, member1, member2).get(), ProtocolCommand.GEODIST,
-					args);
+			return execute((cmd)->getTransaction().geodist(key, member1, member2).get());
 		}else{
-			return execute((cmd)->cmd.geodist(key, member1, member2), ProtocolCommand.GEODIST, args);
+			return execute((cmd)->cmd.geodist(key, member1, member2));
 		}
 	}
 
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member1", member1).put(
-				"member2", member2).put("unit", unit);
 		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
 
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().geodist(key, member1, member2, geoUnit).get(),
-					ProtocolCommand.GEODIST, args);
+			return execute((cmd)->getTransaction().geodist(key, member1, member2, geoUnit).get());
 		}else{
-			return execute((cmd)->cmd.geodist(key, member1, member2, geoUnit), ProtocolCommand.GEODIST, args);
+			return execute((cmd)->cmd.geodist(key, member1, member2, geoUnit));
 		}
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 			final double radius, final GeoUnit unit){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put(
-				"latitude", latitude).put("radius", radius).put("unit", unit);
 		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
-					latitude, radius, geoUnit).get()), ProtocolCommand.GEORADIUS, args);
+					latitude, radius, geoUnit).get()));
 		}else{
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
-					radius, geoUnit)), ProtocolCommand.GEORADIUS, args);
+					radius, geoUnit)));
 		}
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 			final double radius, final GeoUnit unit, final GeoArgument geoArgument){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put(
-				"latitude", latitude).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
 		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
 		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
-					latitude, radius, geoUnit, geoRadiusParam).get()), ProtocolCommand.GEORADIUS, args);
+					latitude, radius, geoUnit, geoRadiusParam).get()));
 		}else{
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
-					radius, geoUnit, geoRadiusParam)), ProtocolCommand.GEORADIUS, args);
+					radius, geoUnit, geoRadiusParam)));
 		}
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 			final GeoUnit unit){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("radius"
-				, radius).put("unit", unit);
 		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
-					member, radius, geoUnit).get()), ProtocolCommand.GEORADIUSBYMEMBER, args);
+					member, radius, geoUnit).get()));
 		}else{
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
-					geoUnit)), ProtocolCommand.GEORADIUSBYMEMBER, args);
+					geoUnit)));
 		}
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 			final GeoUnit unit, final GeoArgument geoArgument){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("radius"
-				, radius).put("unit", unit).put("geoArgument", geoArgument);
 		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
 		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
 
 		if(isTransaction()){
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
-					member, radius, geoUnit, geoRadiusParam).get()), ProtocolCommand.GEORADIUSBYMEMBER, args);
+					member, radius, geoUnit, geoRadiusParam).get()));
 		}else{
 			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
-					geoUnit, geoRadiusParam)), ProtocolCommand.GEORADIUSBYMEMBER, args);
+					geoUnit, geoRadiusParam)));
 		}
 	}
 
 	@Override
 	public List<String> geoHash(final String key, final String... members){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().geohash(key, members).get(), ProtocolCommand.GEOHASH, args);
+			return execute((cmd)->getTransaction().geohash(key, members).get());
 		}else{
-			return execute((cmd)->cmd.geohash(key, members), ProtocolCommand.GEOHASH, args);
+			return execute((cmd)->cmd.geohash(key, members));
 		}
 	}
 
 	@Override
 	public Status setBit(final String key, final long offset, final String value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value"
-				, value);
-
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setbit(SafeEncoder.encode(key), offset,
-					SafeEncoder.encode(value)).get()), ProtocolCommand.SETBIT, args);
+					SafeEncoder.encode(value)).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)), ProtocolCommand.SETBIT,
-					args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)));
 		}
 	}
 
 	@Override
 	public Status setBit(final String key, final long offset, final boolean value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value"
-				, value);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setbit(key, offset, value).get()),
-					ProtocolCommand.SETBIT, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setbit(key, offset, value).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)), ProtocolCommand.SETBIT,
-					args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)));
 		}
 	}
 
 	@Override
 	public Status getBit(final String key, final long offset){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset);
-
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().getbit(key, offset).get()),
-					ProtocolCommand.GETBIT, args);
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().getbit(key, offset).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.getbit(key, offset)), ProtocolCommand.GETBIT, args);
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.getbit(key, offset)));
 		}
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitpos(key, value).get(), ProtocolCommand.BITPOS, args);
+			return execute((cmd)->getTransaction().bitpos(key, value).get());
 		}else{
-			return execute((cmd)->cmd.bitpos(key, value), ProtocolCommand.BITPOS, args);
+			return execute((cmd)->cmd.bitpos(key, value));
 		}
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final int start, final int end){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("start",
-				start).put("end", end);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitpos(key, value, new BitPosParams(start, end)).get(),
-					ProtocolCommand.BITPOS, args);
+			return execute((cmd)->getTransaction().bitpos(key, value, new BitPosParams(start, end)).get());
 		}else{
-			return execute((cmd)->cmd.bitpos(key, value, new BitPosParams(start, end)), ProtocolCommand.BITPOS, args);
+			return execute((cmd)->cmd.bitpos(key, value, new BitPosParams(start, end)));
 		}
 	}
 
 	@Override
 	public List<Long> bitField(final String key, final String... arguments){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("arguments", arguments);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitfield(key, arguments).get(), ProtocolCommand.BITFIELD, args);
+			return execute((cmd)->getTransaction().bitfield(key, arguments).get());
 		}else{
-			return execute((cmd)->cmd.bitfield(key, arguments), ProtocolCommand.BITFIELD, args);
+			return execute((cmd)->cmd.bitfield(key, arguments));
 		}
 	}
 
 	@Override
 	public Long bitCount(final String key){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitcount(key).get(), ProtocolCommand.BITCOUNT, args);
+			return execute((cmd)->getTransaction().bitcount(key).get());
 		}else{
-			return execute((cmd)->cmd.bitcount(key), ProtocolCommand.BITCOUNT, args);
+			return execute((cmd)->cmd.bitcount(key));
 		}
 	}
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end",
-				end);
-
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitcount(key, start, end).get(), ProtocolCommand.BITCOUNT, args);
+			return execute((cmd)->getTransaction().bitcount(key, start, end).get());
 		}else{
-			return execute((cmd)->cmd.bitcount(key, start, end), ProtocolCommand.BITCOUNT, args);
+			return execute((cmd)->cmd.bitcount(key, start, end));
 		}
 	}
 
@@ -1741,13 +1350,8 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		return jedisTransaction.primitive();
 	}
 
-	protected <R> R execute(final Executor<C, R> executor, final ProtocolCommand command) throws RedisException{
-		return super.doExecute(executor, command, null);
-	}
-
-	protected <R> R execute(final Executor<C, R> executor, final ProtocolCommand command,
-			final CommandArguments arguments){
-		return super.doExecute(executor, command, arguments);
+	protected <R> R execute(final Executor<C, R> executor) throws RedisException{
+		return super.doExecute(executor);
 	}
 
 }

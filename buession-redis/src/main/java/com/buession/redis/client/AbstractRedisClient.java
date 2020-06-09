@@ -26,7 +26,6 @@ package com.buession.redis.client;
 
 import com.buession.core.Executor;
 import com.buession.core.utils.NumberUtils;
-import com.buession.lang.Geo;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
@@ -40,7 +39,6 @@ import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.utils.ReturnUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1247,22 +1245,8 @@ public abstract class AbstractRedisClient implements RedisClient {
 		return bitCount(key, (long) start, (long) end);
 	}
 
-	protected <C, R> R doExecute(final Executor<C, R> executor, final ProtocolCommand command){
-		return doExecute(executor, command, null);
-	}
-
-	protected <C, R> R doExecute(final Executor<C, R> executor, final ProtocolCommand command,
-			final CommandArguments arguments){
-		String argumentsString = logger.isDebugEnabled() && arguments != null ? arguments.toString() : null;
+	protected <C, R> R doExecute(final Executor<C, R> executor){
 		RedisConnection connection;
-
-		if(logger.isDebugEnabled()){
-			if(arguments != null){
-				logger.debug("Execute command '{}' width arguments: {}", command, argumentsString);
-			}else{
-				logger.debug("Execute command '{}'", command);
-			}
-		}
 
 		if(enableTransactionSupport){
 			// only bind resources in case of potential transaction synchronization
@@ -1274,14 +1258,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 		try{
 			return connection.execute(executor);
 		}catch(RedisException e){
-			if(logger.isDebugEnabled()){
-				if(arguments != null){
-					logger.error("Execute command '{}' width arguments: {}, failure: {}", command, argumentsString,
-							e.getMessage());
-				}else{
-					logger.error("Execute command '{}', failure: {}", command, e.getMessage());
-				}
-			}
 			throw e;
 		}finally{
 			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);

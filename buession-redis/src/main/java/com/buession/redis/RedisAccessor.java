@@ -33,6 +33,8 @@ import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.client.jedis.ShardedJedisClient;
 import com.buession.redis.core.Executor;
 import com.buession.redis.core.Options;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.serializer.JacksonJsonSerializer;
 import com.buession.redis.serializer.Serializer;
@@ -118,11 +120,33 @@ public abstract class RedisAccessor {
 		client = doGetRedisClient(connection);
 	}
 
-	protected <R> R execute(final Executor<R> executor){
+	protected <R> R execute(final Executor<R> executor, final ProtocolCommand command){
+		return execute(executor, command, null);
+	}
+
+	protected <R> R execute(final Executor<R> executor, final ProtocolCommand command,
+			final CommandArguments arguments){
+		String argumentsString = logger.isDebugEnabled() && arguments != null ? arguments.toString() : null;
+
+		if(logger.isDebugEnabled()){
+			if(arguments != null){
+				logger.debug("Execute command '{}' width arguments: {}", command, argumentsString);
+			}else{
+				logger.debug("Execute command '{}'", command);
+			}
+		}
+
 		try{
 			return executor.execute(client);
 		}catch(Exception e){
-			logger.error("Execute executor failure: {}", e.getMessage(), e);
+			if(logger.isDebugEnabled()){
+				if(arguments != null){
+					logger.error("Execute command '{}' width arguments: {}, failure: {}", command, argumentsString,
+							e.getMessage());
+				}else{
+					logger.error("Execute command '{}', failure: {}", command, e.getMessage());
+				}
+			}
 			throw e;
 		}
 	}
