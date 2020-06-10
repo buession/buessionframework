@@ -29,10 +29,13 @@ import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.client.ShardedRedisClient;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.GeoRadius;
+import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.JedisScanParams;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
+import com.buession.redis.core.command.DebugCommands;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.ListCommands;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -45,6 +48,7 @@ import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.SortingParams;
+import redis.clients.jedis.params.GeoRadiusParam;
 import redis.clients.jedis.params.MigrateParams;
 import redis.clients.jedis.params.SetParams;
 
@@ -1003,6 +1007,18 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int offset,
+			final int count){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
+					, max, offset, count).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max, offset
+					, count)));
+		}
+	}
+
+	@Override
 	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max){
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByLex(key, min, max).get());
@@ -1291,11 +1307,89 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+			final double radius, final GeoUnit unit){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
+					latitude, radius, geoUnit).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
+					radius, geoUnit)));
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+			final double radius, final GeoUnit unit, final GeoArgument geoArgument){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
+					latitude, radius, geoUnit, geoRadiusParam).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
+					radius, geoUnit, geoRadiusParam)));
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+			final GeoUnit unit){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
+					member, radius, geoUnit).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
+					geoUnit)));
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+			final GeoUnit unit, final GeoArgument geoArgument){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
+					member, radius, geoUnit, geoRadiusParam).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
+					geoUnit, geoRadiusParam)));
+		}
+	}
+
+	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().geodist(key, member1, member2).get());
 		}else{
 			return execute((cmd)->cmd.geodist(key, member1, member2));
+		}
+	}
+
+	@Override
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geodist(key, member1, member2, geoUnit).get());
+		}else{
+			return execute((cmd)->cmd.geodist(key, member1, member2, geoUnit));
+		}
+	}
+
+	@Override
+	public List<byte[]> geoHash(final byte[] key, final byte[]... members){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geohash(key, members).get());
+		}else{
+			return execute((cmd)->cmd.geohash(key, members));
 		}
 	}
 
@@ -1370,6 +1464,95 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 		}else{
 			return execute((cmd)->cmd.bitcount(key, start, end));
 		}
+	}
+
+	@Override
+	public byte[] echo(final byte[] str){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().echo(str).get());
+		}else{
+			return execute((cmd)->cmd.echo(str));
+		}
+	}
+
+	@Override
+	public Object object(final ObjectCommand command, final String key){
+		return execute(new Executor<ShardedJedis, Object>() {
+
+			@Override
+			public Object execute(ShardedJedis cmd){
+				if(isTransaction()){
+					switch(command){
+						case ENCODING:
+							return getTransaction().objectEncoding(key).get();
+						case IDLETIME:
+							return getTransaction().objectIdletime(key).get();
+						case REFCOUNT:
+							return getTransaction().objectRefcount(key).get();
+						default:
+							return null;
+					}
+				}else{
+					Jedis jedis = getShard(cmd, key);
+
+					if(jedis == null){
+						return null;
+					}
+
+					switch(command){
+						case ENCODING:
+							return jedis.objectEncoding(key);
+						case IDLETIME:
+							return jedis.objectIdletime(key);
+						case REFCOUNT:
+							return jedis.objectRefcount(key);
+						default:
+							return null;
+					}
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Object object(final DebugCommands.ObjectCommand command, final byte[] key){
+		return execute(new Executor<ShardedJedis, Object>() {
+
+			@Override
+			public Object execute(ShardedJedis cmd){
+				if(isTransaction()){
+					switch(command){
+						case ENCODING:
+							return getTransaction().objectEncoding(key).get();
+						case IDLETIME:
+							return getTransaction().objectIdletime(key).get();
+						case REFCOUNT:
+							return getTransaction().objectRefcount(key).get();
+						default:
+							return null;
+					}
+				}else{
+					Jedis jedis = getShard(cmd, key);
+
+					if(jedis == null){
+						return null;
+					}
+
+					switch(command){
+						case ENCODING:
+							return jedis.objectEncoding(key);
+						case IDLETIME:
+							return jedis.objectIdletime(key);
+						case REFCOUNT:
+							return jedis.objectRefcount(key);
+						default:
+							return null;
+					}
+				}
+			}
+
+		});
 	}
 
 	protected final static Jedis getShard(final ShardedJedis shardedJedis, final String key){

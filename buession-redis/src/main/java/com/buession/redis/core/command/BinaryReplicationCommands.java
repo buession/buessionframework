@@ -24,8 +24,6 @@
  */
 package com.buession.redis.core.command;
 
-import com.buession.lang.Status;
-
 /**
  * 复制命令
  *
@@ -36,21 +34,5 @@ import com.buession.lang.Status;
  * @author Yong.Teng
  */
 public interface BinaryReplicationCommands extends BinaryRedisCommands {
-
-	/**
-	 * 用于在 Redis 运行时动态地修改复制(replication)功能的行为；
-	 * 可以将当前服务器转变为指定服务器的从属服务器(slave server)
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/replication/slaveof.html" target="_blank">http://redisdoc.com/replication/slaveof.html</a></p>
-	 *
-	 * @param host
-	 * 		Redis Slave Server 主机地址
-	 * @param port
-	 * 		Redis Slave Server 端口
-	 *
-	 * @return 总是返回 Status.SUCCESS
-	 */
-	Status slaveOf(final byte[] host, final int port);
 
 }

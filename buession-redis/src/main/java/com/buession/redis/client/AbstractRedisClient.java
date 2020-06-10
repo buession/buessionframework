@@ -36,8 +36,6 @@ import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.command.GeoCommands;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.exception.RedisException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -395,6 +393,26 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final int count){
 		return sScan(key, NumberUtils.long2bytes(cursor), count);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern, final int count){
+		return sScan(key, Integer.toString(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern, final int count){
+		return sScan(key, NumberUtils.int2bytes(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final int count){
+		return sScan(key, Long.toString(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count){
+		return sScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
 	@Override
@@ -1243,6 +1261,46 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public Long bitCount(final byte[] key, final int start, final int end){
 		return bitCount(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Status configSet(final String parameter, final float value){
+		return configSet(parameter, Float.toString(value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final float value){
+		return configSet(parameter, NumberUtils.float2bytes(value));
+	}
+
+	@Override
+	public Status configSet(final String parameter, final double value){
+		return configSet(parameter, Double.toString(value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final double value){
+		return configSet(parameter, NumberUtils.double2bytes(value));
+	}
+
+	@Override
+	public Status configSet(final String parameter, final int value){
+		return configSet(parameter, Integer.toString(value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final long value){
+		return configSet(parameter, NumberUtils.long2bytes(value));
+	}
+
+	@Override
+	public Status configSet(final String parameter, final long value){
+		return configSet(parameter, Long.toString(value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final int value){
+		return configSet(parameter, NumberUtils.int2bytes(value));
 	}
 
 	protected <C, R> R doExecute(final Executor<C, R> executor){

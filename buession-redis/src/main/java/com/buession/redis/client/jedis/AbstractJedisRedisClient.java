@@ -37,6 +37,7 @@ import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.transaction.jedis.JedisTransaction;
@@ -898,6 +899,18 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final int offset,
+			final int count){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
+					, max, offset, count).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max, offset
+					, count)));
+		}
+	}
+
+	@Override
 	public Set<String> zRangeByLex(final String key, final String min, final String max){
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zrangeByLex(key, min, max).get());
@@ -1342,6 +1355,35 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 			return execute((cmd)->getTransaction().bitcount(key, start, end).get());
 		}else{
 			return execute((cmd)->cmd.bitcount(key, start, end));
+		}
+	}
+
+	@Override
+	public Object pSync(final String masterRunId, final int offset){
+		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
+	}
+
+	@Override
+	public Object pSync(final byte[] masterRunId, final int offset){
+		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
+	}
+
+	@Override
+	public Object pSync(final String masterRunId, final long offset){
+		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
+	}
+
+	@Override
+	public Object pSync(final byte[] masterRunId, final long offset){
+		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
+	}
+
+	@Override
+	public String echo(final String str){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().echo(str).get());
+		}else{
+			return execute((cmd)->cmd.echo(str));
 		}
 	}
 
