@@ -32,6 +32,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.command.BitMapCommands;
+import com.buession.redis.core.command.DebugCommands;
 import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.ListCommands;
@@ -189,6 +190,34 @@ public class JedisClientUtils {
 	public final static BitOP bitOperationConvert(final BitMapCommands.Operation bitMapOperation){
 		final BitOperationConvert bitOperationConvert = new BitOperationConvert();
 		return bitOperationConvert.convert(bitMapOperation);
+	}
+
+	public final static Object objectDebug(final DebugCommands.ObjectCommand command, final Jedis jedis,
+			final String key){
+		switch(command){
+			case ENCODING:
+				return jedis.objectEncoding(key);
+			case IDLETIME:
+				return jedis.objectIdletime(key);
+			case REFCOUNT:
+				return jedis.objectRefcount(key);
+			default:
+				return null;
+		}
+	}
+
+	public final static Object objectDebug(final DebugCommands.ObjectCommand command, final Jedis jedis,
+			final byte[] key){
+		switch(command){
+			case ENCODING:
+				return jedis.objectEncoding(key);
+			case IDLETIME:
+				return jedis.objectIdletime(key);
+			case REFCOUNT:
+				return jedis.objectRefcount(key);
+			default:
+				return null;
+		}
 	}
 
 }

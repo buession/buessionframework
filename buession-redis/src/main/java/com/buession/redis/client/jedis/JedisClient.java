@@ -2723,7 +2723,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 			public List<byte[]> execute(Jedis cmd){
 				if(isTransaction()){
 					List<String> result = getTransaction().configGet(SafeEncoder.encode(parameter)).get();
-
 					return result == null ? null :
 							Collections.unmodifiableList(result.stream().map(SafeEncoder::encode).collect(Collectors.toList()));
 				}else{
@@ -2805,16 +2804,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 							return null;
 					}
 				}else{
-					switch(command){
-						case ENCODING:
-							return cmd.objectEncoding(key);
-						case IDLETIME:
-							return cmd.objectIdletime(key);
-						case REFCOUNT:
-							return cmd.objectRefcount(key);
-						default:
-							return null;
-					}
+					return JedisClientUtils.objectDebug(command, cmd, key);
 				}
 			}
 
@@ -2839,16 +2829,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 							return null;
 					}
 				}else{
-					switch(command){
-						case ENCODING:
-							return cmd.objectEncoding(key);
-						case IDLETIME:
-							return cmd.objectIdletime(key);
-						case REFCOUNT:
-							return cmd.objectRefcount(key);
-						default:
-							return null;
-					}
+					return JedisClientUtils.objectDebug(command, cmd, key);
 				}
 			}
 

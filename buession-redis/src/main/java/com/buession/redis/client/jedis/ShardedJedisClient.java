@@ -1493,22 +1493,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 							return null;
 					}
 				}else{
-					Jedis jedis = getShard(cmd, key);
-
-					if(jedis == null){
-						return null;
-					}
-
-					switch(command){
-						case ENCODING:
-							return jedis.objectEncoding(key);
-						case IDLETIME:
-							return jedis.objectIdletime(key);
-						case REFCOUNT:
-							return jedis.objectRefcount(key);
-						default:
-							return null;
-					}
+					return JedisClientUtils.objectDebug(command, getShard(cmd, key), key);
 				}
 			}
 
@@ -1533,22 +1518,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 							return null;
 					}
 				}else{
-					Jedis jedis = getShard(cmd, key);
-
-					if(jedis == null){
-						return null;
-					}
-
-					switch(command){
-						case ENCODING:
-							return jedis.objectEncoding(key);
-						case IDLETIME:
-							return jedis.objectIdletime(key);
-						case REFCOUNT:
-							return jedis.objectRefcount(key);
-						default:
-							return null;
-					}
+					return JedisClientUtils.objectDebug(command, getShard(cmd, key), key);
 				}
 			}
 
