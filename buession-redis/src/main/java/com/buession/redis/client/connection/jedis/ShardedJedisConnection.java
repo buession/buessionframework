@@ -95,6 +95,11 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	}
 
 	@Override
+	public ShardedJedisPool getPool(){
+		return pool;
+	}
+
+	@Override
 	public boolean isTransaction(){
 		return JedisClientUtils.isInMulti(shardedJedis);
 	}

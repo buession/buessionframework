@@ -26,10 +26,13 @@ package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.RedisConnection;
 import redis.clients.jedis.commands.JedisCommands;
+import redis.clients.jedis.util.Pool;
 
 /**
  * @author Yong.Teng
  */
 public interface JedisRedisConnection<T extends JedisCommands> extends RedisConnection {
+
+	Pool<T> getPool();
 
 }

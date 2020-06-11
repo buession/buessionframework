@@ -24,6 +24,8 @@
  */
 package com.buession.redis.spring;
 
+import com.buession.core.utils.ReflectUtils;
+import com.buession.redis.client.connection.SslConfiguration;
 import com.buession.redis.client.connection.datasource.jedis.GenericJedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.GenericShardedJedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisPoolDataSource;
@@ -35,9 +37,7 @@ import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.exception.PoolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.ShardedJedisPool;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
@@ -50,10 +50,6 @@ import java.util.Set;
 public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<JedisRedisConnection> {
 
 	private JedisPoolConfig poolConfig = new JedisPoolConfig();
-
-	private JedisPool jedisPool = null;
-
-	private ShardedJedisPool shardedJedisPool = null;
 
 	private final static Logger logger = LoggerFactory.getLogger(JedisRedisConnectionFactoryBean.class);
 
@@ -418,55 +414,56 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 
 	@Override
 	public void afterPropertiesSet() throws Exception{
+		final SslConfiguration sslConfiguration = new SslConfiguration();
+
+		sslConfiguration.setSslSocketFactory(getSslSocketFactory());
+		sslConfiguration.setSslParameters(getSslParameters());
+		sslConfiguration.setHostnameVerifier(getHostnameVerifier());
+
 		if(isUsePool()){
 			if(isShardedConnection()){
 				final ShardedJedisPoolDataSource dataSource = createShardedJedisPoolDataSource();
 
-				shardedJedisPool = dataSource.getPool();
-				setConnection(new ShardedJedisConnection(dataSource));
-				logger.debug("Initialize sharded connection for pool.");
+				setConnection(new ShardedJedisConnection(dataSource, getClientName(), isUseSsl(), sslConfiguration));
+				logger.debug("Initialize sharded connection with pool.");
 			}else{
 				final JedisPoolDataSource dataSource = createJedisPoolDataSource();
 
-				jedisPool = dataSource.getPool();
-				setConnection(new JedisConnection(dataSource));
-				logger.debug("Initialize connection for pool.");
+				setConnection(new JedisConnection(dataSource, getClientName(), isUseSsl(), sslConfiguration));
+				logger.debug("Initialize connection with pool.");
 			}
 		}else{
 			if(isShardedConnection()){
-				final GenericJedisDataSource dataSource = createGenericJedisDataSource();
-
-				setConnection(new JedisConnection(dataSource));
-				logger.debug("Initialize connection for generic.");
-			}else{
 				final GenericShardedJedisDataSource dataSource = createGenericShardedJedisDataSource();
 
-				setConnection(new ShardedJedisConnection(dataSource));
-				logger.debug("Initialize sharded connection for generic.");
+				setConnection(new ShardedJedisConnection(dataSource, getClientName(), isUseSsl(), sslConfiguration));
+				logger.debug("Initialize sharded connection.");
+			}else{
+				final GenericJedisDataSource dataSource = createGenericJedisDataSource();
+
+				setConnection(new JedisConnection(dataSource, getClientName(), isUseSsl(), sslConfiguration));
+				logger.debug("Initialize connection.");
 			}
 		}
 	}
 
 	protected GenericJedisDataSource createGenericJedisDataSource(){
-		return new GenericJedisDataSource(getHost(), getPort(), getPassword(), getDatabase(), getClientName(),
-				getConnectTimeout(), getSoTimeout(), isUseSsl(), getSslSocketFactory(), getSslParameters(),
-				getHostnameVerifier());
+		return new GenericJedisDataSource(getHost(), getPort(), getPassword(), getDatabase(), getConnectTimeout(),
+				getSoTimeout());
 	}
 
 	protected JedisPoolDataSource createJedisPoolDataSource(){
-		return new JedisPoolDataSource(getHost(), getPort(), getPassword(), getDatabase(), getClientName(),
-				getConnectTimeout(), getSoTimeout(), isUseSsl(), getSslSocketFactory(), getSslParameters(),
-				getHostnameVerifier(), getPoolConfig());
+		return new JedisPoolDataSource(getHost(), getPort(), getPassword(), getDatabase(), getConnectTimeout(),
+				getSoTimeout(), getPoolConfig());
 	}
 
 	protected GenericShardedJedisDataSource createGenericShardedJedisDataSource(){
-		return new GenericShardedJedisDataSource(getRedisNodes(), getDatabase(), getConnectTimeout(), getSoTimeout(),
-				isUseSsl(), getSslSocketFactory(), getSslParameters(), getHostnameVerifier());
+		return new GenericShardedJedisDataSource(getRedisNodes(), getDatabase(), getConnectTimeout(), getSoTimeout());
 	}
 
 	protected ShardedJedisPoolDataSource createShardedJedisPoolDataSource(){
 		return new ShardedJedisPoolDataSource(getRedisNodes(), getDatabase(), getConnectTimeout(), getSoTimeout(),
-				isUseSsl(), getSslSocketFactory(), getSslParameters(), getHostnameVerifier(), getPoolConfig());
+				getPoolConfig());
 	}
 
 	@Override
@@ -475,22 +472,20 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 			return;
 		}
 
-		if(shardedJedisPool != null){
-			try{
-				shardedJedisPool.destroy();
-			}catch(Exception e){
-				logger.warn("Cannot properly close ShardedJedis pool", e);
-				throw new PoolException(e.getMessage(), e);
-			}
-			shardedJedisPool = null;
-		}else if(jedisPool != null){
-			try{
-				jedisPool.destroy();
-			}catch(Exception e){
-				logger.warn("Cannot properly close Jedis pool", e);
-				throw new PoolException(e.getMessage(), e);
-			}
-			jedisPool = null;
+		if(connection == null){
+			return;
+		}
+
+		if(connection.getPool() == null){
+			return;
+		}
+
+		try{
+			connection.getPool().destroy();
+			ReflectUtils.setField(connection, "pool", null);
+		}catch(Exception e){
+			logger.warn("Cannot properly close ShardedJedis pool", e);
+			throw new PoolException(e.getMessage(), e);
 		}
 	}
 

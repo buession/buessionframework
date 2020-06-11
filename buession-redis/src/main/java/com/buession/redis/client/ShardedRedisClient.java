@@ -675,11 +675,6 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
-	default Status slaveOf(final byte[] host, final int port){
-		throw new NotSupportedCommandException(ProtocolCommand.SLAVEOF);
-	}
-
-	@Override
 	default Role role(){
 		throw new NotSupportedCommandException(ProtocolCommand.ROLE);
 	}

@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Client;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.util.Pool;
 
 import java.io.IOException;
 
@@ -89,6 +90,11 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	public JedisConnection(JedisDataSource dataSource, String clientName, boolean useSsl,
 			SslConfiguration sslConfiguration){
 		super(dataSource, clientName, useSsl, sslConfiguration);
+	}
+
+	@Override
+	public JedisPool getPool(){
+		return pool;
 	}
 
 	@Override
