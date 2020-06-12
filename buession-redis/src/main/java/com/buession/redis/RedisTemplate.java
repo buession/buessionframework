@@ -1446,6 +1446,5 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double weight, final byte[] key){
 		return zUnionStore(destKey, aggregate, new double[]{weight}, new byte[][]{key});
 	}
-
-
+	
 }

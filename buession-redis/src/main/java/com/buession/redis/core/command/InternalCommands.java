@@ -37,8 +37,8 @@ public interface InternalCommands extends RedisCommands {
 	/**
 	 * 用于复制功能(replication)的内部命令
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/internal/sync.html" target="_blank">http://redisdoc.com/internal/sync
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/internal/sync.html" target="_blank">http://redisdoc.com/internal/sync.html</a></p>
 	 *
 	 * @return 序列化数据
 	 */
@@ -47,8 +47,9 @@ public interface InternalCommands extends RedisCommands {
 	/**
 	 * 用于复制功能(replication)的内部命令
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/internal/psync.html" target="_blank">http://redisdoc.com/internal/psync
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/internal/psync.html" target="_blank">http://redisdoc.com/internal/psync.html</a>
+	 * </p>
 	 *
 	 * @param masterRunId
 	 * 		Master Run Id
@@ -62,8 +63,9 @@ public interface InternalCommands extends RedisCommands {
 	/**
 	 * 用于复制功能(replication)的内部命令
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/internal/psync.html" target="_blank">http://redisdoc.com/internal/psync
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/internal/psync.html" target="_blank">http://redisdoc.com/internal/psync.html</a>
+	 * </p>
 	 *
 	 * @param masterRunId
 	 * 		Master Run Id

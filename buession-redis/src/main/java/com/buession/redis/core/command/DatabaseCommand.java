@@ -93,8 +93,8 @@ public interface DatabaseCommand extends RedisCommands {
 	 * 清空整个 Redis 服务器的数据（删除所有数据库的所有 key ）
 	 *
 	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/flushall.html" target="_blank">http://redisdoc.com/database/flushall
-	 * .html</a></p>
+	 * <a href="http://redisdoc.com/database/flushall.html" target="_blank">http://redisdoc
+	 * .com/database/flushallhtml</a></p>
 	 *
 	 * @return 始终返回 Status.SUCCESS
 	 */

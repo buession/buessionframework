@@ -29,14 +29,20 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.RedisClient;
+import com.buession.redis.core.Client;
 import com.buession.redis.core.Executor;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.Info;
 import com.buession.redis.core.PubSubListener;
+import com.buession.redis.core.RedisMonitor;
+import com.buession.redis.core.RedisServerTime;
+import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.DebugCommands;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.transaction.Transaction;
 
@@ -3194,7 +3200,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("keys", keys);
-		return execute((client)->client.pfMerge(makeByteKeys(destKey), makeByteKey(keys)), ProtocolCommand.PFMERGE, args);
+		return execute((client)->client.pfMerge(makeByteKey(destKey), makeByteKeys(keys)), ProtocolCommand.PFMERGE, args);
 	}
 
 	@Override
@@ -3219,18 +3225,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("longitude", longitude).put("latitude", latitude);
 		return execute((client)->client.geoAdd(makeByteKey(key), member, longitude, latitude), ProtocolCommand.GEOADD, args);
-	}
-
-	@Override
-	public Long geoAdd(final String key, final String member, final Geo geo){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("geo", geo);
-		return execute((client)->client.geoAdd(makeRawKey(key), member, geo), ProtocolCommand.GEOADD, args);
-	}
-
-	@Override
-	public Long geoAdd(final byte[] key, final byte[] member, final Geo geo){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("geo", geo);
-		return execute((client)->client.geoAdd(makeByteKey(key), member, geo), ProtocolCommand.GEOADD, args);
 	}
 
 	@Override
@@ -3288,21 +3282,9 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<GeoRadius> geoRadius(final byte[]key,final double ongitude,final double latitude, final double radius){
+	public List<GeoRadius> geoRadius(final byte[]key,final double longitude, final double latitude, final double radius){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put("latitude", latitude).put("radius", radius);
 		return execute((client)->client.geoRadius(makeByteKey(key), longitude, latitude, radius), ProtocolCommand.GEORADIUS, args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("geo", geo).put("radius", radius);
-		return execute((client)->client.geoRadius(makeRawKey(key), geo, radius), ProtocolCommand.GEORADIUS, args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("geo", geo).put("radius", radius);
-		return execute((client)->client.geoRadius(makeByteKey(key), geo, radius), ProtocolCommand.GEORADIUS, args);
 	}
 
 	@Override
@@ -3318,63 +3300,27 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<GeoRadius> geoRdius(final String key, final Geo geo, final double radius, final GeoUnit unit){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("geo", geo).put("radius", radius).put("unit", unit);
-		return execute((client)->client.geoRadius(makeRawKey(key), geo, radius, unit), ProtocolCommand.GEORADIUS, args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("geo", geo).put("radius", radius).put("unit", unit);
-		return execute((client)->client.geoRadius(makeByteKey(key), geo, radius, unit), ProtocolCommand.GEORADIUS, args);
-	}
-
-	@Override
 	public List<GeoRadius> geoRadius(final String key,final double longitude,final double latitude, final double radius,final GeoArgument geoArgument){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put("latitude", latitude).put("radius", radius).put("geoArgument", geoArgument);
 		return execute((client)->client.geoRadius(makeRawKey(key), longitude, latitude, radius, geoArgument), ProtocolCommand.GEORADIUS, args);
 	}
 
 	@Override
-	public List<GeoRadius> geoRadius(byte[] key, final double longitde, final double latitude, final double raius, final GeoArgument geoArgument){
+	public List<GeoRadius> geoRadius(byte[] key, final double longitude, final double latitude, final double radius, final GeoArgument geoArgument){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put("latitude", latitude).put("radius", radius).put("geoArgument", geoArgument);
 		return execute((client)->client.geoRadius(makeByteKey(key), longitude, latitude ,radius, geoArgument), ProtocolCommand.GEORADIUS, args);
 	}
 
 	@Override
-	public List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoArgument geoArgument){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("geo", geo).put("geoArgument", geoArgument);
-		return execute((client)->client.geoRadius(makeRawKey(key), geo, radius, geoArgument), ProtocolCommand.GEORADIUS, args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoArgument geoArgument){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("geo", geo).put("radius", radius).put("geoArgument", geoArgument);
-		return execute((client)->client.geoRadius(makeByteKey(key), geo, radius, geoArgument), ProtocolCommand.GEORADIUS, args);
-	}
-
-	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius, final GeoUnit unit, final GeoArgument geoArgument){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("geo", geo).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put("latitude", latitude).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
 		return execute((client)->client.geoRadius(makeRawKey(key), longitude, latitude, radius, unit, geoArgument), ProtocolCommand.GEORADIUS, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius, final GeoUnit unit, final GeoArgument geoArgument){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("geo", geo).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put("latitude", latitude).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
 		return execute((client)->client.geoRadius(makeByteKey(key), longitude, latitude, radius, unit, geoArgument), ProtocolCommand.GEORADIUS, args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit, final GeoArgument geoArgument){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("geo", geo).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
-		return execute((client)->client.geoRadius(makeRawKey(key), geo, radius, unit, geoArgument), ProtocolCommand.GEORADIUS, args);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit, final GeoArgument geArgument){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("geo", geo).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
-		return execute((client)->client.geoRadius(makeByteKey(key), geo, radius, unit, geoArgument), ProtocolCommand.GEORADIUSBYMEMBER, args);
 	}
 
 	@Override
@@ -3438,6 +3384,18 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public Status setBit(final String key, final int offset, final String value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value", value);
+		return execute((client)->client.setBit(makeRawKey(key), offset, value), ProtocolCommand.SETBIT, args);
+	}
+
+	@Override
+	public Status setBit(final byte[] key, final int offset, final byte[] value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value", value);
+		return execute((client)->client.setBit(makeByteKey(key), offset, value), ProtocolCommand.SETBIT, args);
+	}
+
+	@Override
 	public Status setBit(final String key, final long offset, final String value){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value", value);
 		return execute((client)->client.setBit(makeRawKey(key), offset, value), ProtocolCommand.SETBIT, args);
@@ -3450,15 +3408,39 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Status setBit(final String key,final long offset,final boolean value){
+	public Status setBit(final String key, final int offset, final boolean value){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value", value);
 		return execute((client)->client.setBit(makeRawKey(key), offset, value), ProtocolCommand.SETBIT, args);
 	}
 
 	@Override
-	public Status setBit(final byte[]key,final long offset,final boolean value){
+	public Status setBit(final byte[] key, final int offset, final boolean value){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value", value);
 		return execute((client)->client.setBit(makeByteKey(key), offset, value), ProtocolCommand.SETBIT, args);
+	}
+
+	@Override
+	public Status setBit(final String key, final long offset, final boolean value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value", value);
+		return execute((client)->client.setBit(makeRawKey(key), offset, value), ProtocolCommand.SETBIT, args);
+	}
+
+	@Override
+	public Status setBit(final byte[] key, final long offset, final boolean value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset).put("value", value);
+		return execute((client)->client.setBit(makeByteKey(key), offset, value), ProtocolCommand.SETBIT, args);
+	}
+
+	@Override
+	public Status getBit(final String key, final int offset){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset);
+		return execute((client)->client.getBit(makeRawKey(key), offset), ProtocolCommand.GETBIT, args);
+	}
+
+	@Override
+	public Status getBit(final byte[] key, final int offset){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("offset", offset);
+		return execute((client)->client.getBit(makeByteKey(key), offset), ProtocolCommand.GETBIT, args);
 	}
 
 	@Override
@@ -3480,13 +3462,13 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Long bitPos(final byte[]key,final boolean value){
+	public Long bitPos(final byte[] key, final boolean value){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value);
 		return execute((client)->client.bitPos(makeByteKey(key), value), ProtocolCommand.BITPOS, args);
 	}
 
 	@Override
-	public Long bitPos(final String key,final boolean value,final int start,final int end){
+	public Long bitPos(final String key, final boolean value, final int start, final int end){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("start", start).put("end", end);
 		return execute((client)->client.bitPos(makeRawKey(key), value, start, end), ProtocolCommand.BITPOS, args);
 	}
@@ -3498,7 +3480,19 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Long bitOp(final Operation operation,final String destKey,final String...keys){
+	public Long bitPos(final String key, final boolean value, final long start, final long end){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("start", start).put("end", end);
+		return execute((client)->client.bitPos(makeRawKey(key), value, start, end), ProtocolCommand.BITPOS, args);
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final long start, final long end){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("start", start).put("end", end);
+		return execute((client)->client.bitPos(makeByteKey(key), value, start, end), ProtocolCommand.BITPOS, args);
+	}
+
+	@Override
+	public Long bitOp(final Operation operation, final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.getInstance().put("operation", operation).put("destKey", destKey).put("keys", keys);
 		return execute((client)->client.bitOp(operation,makeRawKey(destKey), makeRawKeys(keys)), ProtocolCommand.BITOP, args);
 	}
@@ -3531,6 +3525,18 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Long bitCount(final byte[] key){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 		return execute((client)->client.bitCount(makeByteKey(key)), ProtocolCommand.BITCOUNT, args);
+	}
+
+	@Override
+	public Long bitCount(final String key, final int start, final int end){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+		return execute((client)->client.bitCount(makeRawKey(key), start, end), ProtocolCommand.BITCOUNT, args);
+	}
+
+	@Override
+	public Long bitCount(final byte[] key, final int start, final int end){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+		return execute((client)->client.bitCount(makeByteKey(key), start, end), ProtocolCommand.BITCOUNT, args);
 	}
 
 	@Override
@@ -3702,6 +3708,33 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public Status select(final int db){
+		final CommandArguments args = CommandArguments.getInstance().put("db", db);
+		return execute((client)->client.select(db), ProtocolCommand.SELECT, args);
+	}
+
+	@Override
+	public Status swapdb(final int db1, final int db2){
+		final CommandArguments args = CommandArguments.getInstance().put("db1", db1).put("db2", db2);
+		return execute((client)->client.swapdb(db1, db2), ProtocolCommand.SWAPDB, args);
+	}
+
+	@Override
+	public Long dbSize(){
+		return execute((client)->client.dbSize(), ProtocolCommand.DBSIZE);
+	}
+
+	@Override
+	public Status flushDb(){
+		return execute((client)->client.flushDb(), ProtocolCommand.FLUSHDB);
+	}
+
+	@Override
+	public Status flushAll(){
+		return execute((client)->client.flushAll(), ProtocolCommand.FLUSHALL);
+	}
+
+	@Override
 	public Object eval(final String script){
 		final CommandArguments args = CommandArguments.getInstance().put("script", script);
 		return execute((client)->client.eval(script), ProtocolCommand.EVAL, args);
@@ -3726,15 +3759,15 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Object eval(final String script, final String[] keys, final String[] args){
-		final CommandArguments args = CommandArguments.getInstance().put("script", script).put("keys", keys).put("args", args);
-		return execute((client)->client.eval(script, keys, args), ProtocolCommand.EVAL, args);
+	public Object eval(final String script, final String[] keys, final String[] arguments){
+		final CommandArguments args = CommandArguments.getInstance().put("script", script).put("keys", keys).put("arguments", arguments);
+		return execute((client)->client.eval(script, keys, arguments), ProtocolCommand.EVAL, args);
 	}
 
 	@Override
-	public Object eval(final byte[] script, final byte[][] keys, final byte[][] args){
-		final CommandArguments args = CommandArguments.getInstance().put("script", script).put("keys", keys).put("args", args);
-		return execute((client)->client.eval(script, keys, args), ProtocolCommand.EVAL, args);
+	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments){
+		final CommandArguments args = CommandArguments.getInstance().put("script", script).put("keys", keys).put("arguments", arguments);
+		return execute((client)->client.eval(script, keys, arguments), ProtocolCommand.EVAL, args);
 	}
 
 	@Override
@@ -3805,6 +3838,304 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Status scriptFlush(){
 		return execute((client)->client.scriptFlush(), ProtocolCommand.SCRIPT_FLUSH);
+	}
+
+	@Override
+	public Status save(){
+		return execute((client)->client.save(), ProtocolCommand.SAVE);
+	}
+
+	@Override
+	public String bgSave(){
+		return execute((client)->client.bgSave(), ProtocolCommand.BGSAVE);
+	}
+
+	@Override
+	public String bgRewriteAof(){
+		return execute((client)->client.bgSave(), ProtocolCommand.BGREWRITEAOF);
+	}
+
+	@Override
+	public Long lastSave(){
+		return execute((client)->client.lastSave(), ProtocolCommand.LASTSAVE);
+	}
+
+	@Override
+	public Status slaveOf(final String host, final int port){
+		final CommandArguments args = CommandArguments.getInstance().put("host", host).put("port", port);
+		return execute((client)->client.slaveOf(host, port), ProtocolCommand.SLAVEOF, args);
+	}
+
+	@Override
+	public Role role(){
+		return execute((client)->client.role(), ProtocolCommand.ROLE);
+	}
+
+	@Override
+	public Status auth(final String password){
+		final CommandArguments args = CommandArguments.getInstance().put("password", password);
+		return execute((client)->client.auth(password), ProtocolCommand.AUTH, args);
+	}
+
+	@Override
+	public Status auth(final byte[] password){
+		final CommandArguments args = CommandArguments.getInstance().put("password", password);
+		return execute((client)->client.auth(password), ProtocolCommand.AUTH, args);
+	}
+
+	@Override
+	public Info info(final InfoSection section){
+		final CommandArguments args = CommandArguments.getInstance().put("section", section);
+		return execute((client)->client.info(), ProtocolCommand.INFO, args);
+	}
+
+	@Override
+	public Info info(){
+		return execute((client)->client.info(), ProtocolCommand.INFO);
+	}
+
+	@Override
+	public RedisServerTime time(){
+		return execute((client)->client.time(), ProtocolCommand.TIME);
+	}
+
+	@Override
+	public Status clientSetName(final String name){
+		final CommandArguments args = CommandArguments.getInstance().put("name", name);
+		return execute((client)->client.clientSetName(name), ProtocolCommand.CLIENT_SETNAME, args);
+	}
+
+	@Override
+	public Status clientSetName(final byte[] name){
+		final CommandArguments args = CommandArguments.getInstance().put("name", name);
+		return execute((client)->client.clientSetName(name), ProtocolCommand.CLIENT_SETNAME, args);
+	}
+
+	@Override
+	public String clientGetName(){
+		return execute((client)->client.clientGetName(), ProtocolCommand.CLIENT_GETNAME);
+	}
+
+	@Override
+	public List<Client> clientList(){
+		return execute((client)->client.clientList(), ProtocolCommand.CLIENT_LIST);
+	}
+
+	@Override
+	public Status clientKill(final String host, final int port){
+		final CommandArguments args = CommandArguments.getInstance().put("host", host).put("port", port);
+		return execute((client)->client.clientKill(host, port), ProtocolCommand.CLIENT_KILL, args);
+	}
+
+	@Override
+	public Status quit(){
+		return execute((client)->client.quit(), ProtocolCommand.QUIT);
+	}
+
+	@Override
+	public void shutdown(){
+		execute(new Executor<Void>() {
+
+			@Override
+			public Void execute(RedisClient client){
+				client.shutdown();
+				return null;
+			}
+
+		}, ProtocolCommand.SHUTDOWN);
+	}
+
+	@Override
+	public void shutdown(final boolean save){
+		final CommandArguments args = CommandArguments.getInstance().put("save", save);
+
+		execute(new Executor<Void>() {
+
+			@Override
+			public Void execute(RedisClient client){
+				client.shutdown();
+				return null;
+			}
+
+		}, ProtocolCommand.SHUTDOWN, args);
+	}
+
+	@Override
+	public Status configSet(final String parameter, final float value){
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter).put("value", value);
+		return execute((client)->client.configSet(parameter, value), ProtocolCommand.CONFIG_SET, args);
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final float value){
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter).put("value", value);
+		return execute((client)->client.configSet(parameter, value), ProtocolCommand.CONFIG_SET, args);
+	}
+
+	@Override
+	public Status configSet(final String parameter, final double value){
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter).put("value", value);
+		return execute((client)->client.configSet(parameter, value), ProtocolCommand.CONFIG_SET, args);
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final double value){
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter).put("value", value);
+		return execute((client)->client.configSet(parameter, value), ProtocolCommand.CONFIG_SET, args);
+	}
+
+	@Override
+	public Status configSet(final String parameter, final int value){
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter).put("value", value);
+		return execute((client)->client.configSet(parameter, value), ProtocolCommand.CONFIG_SET, args);
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final int value){
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter).put("value", value);
+		return execute((client)->client.configSet(parameter, value), ProtocolCommand.CONFIG_SET, args);
+	}
+
+	@Override
+	public Status configSet(final String parameter, final long value){
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter).put("value", value);
+		return execute((client)->client.configSet(parameter, value), ProtocolCommand.CONFIG_SET, args);
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final long value){
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter).put("value", value);
+		return execute((client)->client.configSet(parameter, value), ProtocolCommand.CONFIG_SET, args);
+	}
+
+	@Override
+	public Status configSet(final String parameter, final String value){
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter).put("value", value);
+		return execute((client)->client.configSet(parameter, value), ProtocolCommand.CONFIG_SET, args);
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final byte[] value){
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter).put("value", value);
+		return execute((client)->client.configSet(parameter, value), ProtocolCommand.CONFIG_SET, args);
+	}
+
+	@Override
+	public List<String> configGet(final String parameter){
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter);
+		return execute((client)->client.configGet(parameter), ProtocolCommand.CONFIG_GET, args);
+	}
+
+	@Override
+	public List<byte[]> configGet(final byte[] parameter){
+		final CommandArguments args = CommandArguments.getInstance().put("parameter", parameter);
+		return execute((client)->client.configGet(parameter), ProtocolCommand.CONFIG_GET, args);
+	}
+
+	@Override
+	public Status configResetStat(){
+		return execute((client)->client.configResetStat(), ProtocolCommand.CONFIG_RESETSTAT);
+	}
+
+	@Override
+	public Status configRewrite(){
+		return execute((client)->client.configRewrite(), ProtocolCommand.CONFIG_REWRITE);
+	}
+
+	@Override
+	public Object sync(){
+		return execute((client)->client.sync(), ProtocolCommand.SYNC);
+	}
+
+	@Override
+	public Object pSync(final String masterRunId, final int offset){
+		final CommandArguments args = CommandArguments.getInstance().put("masterRunId", masterRunId).put("offset", offset);
+		return execute((client)->client.pSync(masterRunId, offset), ProtocolCommand.PSYNC, args);
+	}
+
+	@Override
+	public Object pSync(final byte[] masterRunId, final int offset){
+		final CommandArguments args = CommandArguments.getInstance().put("masterRunId", masterRunId).put("offset", offset);
+		return execute((client)->client.pSync(masterRunId, offset), ProtocolCommand.PSYNC, args);
+	}
+
+	@Override
+	public Object pSync(final String masterRunId, final long offset){
+		final CommandArguments args = CommandArguments.getInstance().put("masterRunId", masterRunId).put("offset", offset);
+		return execute((client)->client.pSync(masterRunId, offset), ProtocolCommand.PSYNC, args);
+	}
+
+	@Override
+	public Object pSync(final byte[] masterRunId, final long offset){
+		final CommandArguments args = CommandArguments.getInstance().put("masterRunId", masterRunId).put("offset", offset);
+		return execute((client)->client.pSync(masterRunId, offset), ProtocolCommand.PSYNC, args);
+	}
+
+	@Override
+	public String echo(final String str){
+		final CommandArguments args = CommandArguments.getInstance().put("str", str);
+		return execute((client)->client.echo(str), ProtocolCommand.ECHO, args);
+	}
+
+	@Override
+	public byte[] echo(final byte[] str){
+		final CommandArguments args = CommandArguments.getInstance().put("str", str);
+		return execute((client)->client.echo(str), ProtocolCommand.ECHO, args);
+	}
+
+	@Override
+	public Status ping(){
+		return execute((client)->client.ping(), ProtocolCommand.PING);
+	}
+
+	@Override
+	public Object object(final ObjectCommand command, final String key){
+		final CommandArguments args = CommandArguments.getInstance().put("command", command).put("key", key);
+		return execute((client)->client.object(command, makeRawKey(key)), ProtocolCommand.OBJECT, args);
+	}
+
+	@Override
+	public Object object(final DebugCommands.ObjectCommand command, final byte[] key){
+		final CommandArguments args = CommandArguments.getInstance().put("command", command).put("key", key);
+		return execute((client)->client.object(command, makeByteKey(key)), ProtocolCommand.OBJECT, args);
+	}
+
+	@Override
+	public Object slowLog(final SlowLogCommand command, final String... arguments){
+		final CommandArguments args = CommandArguments.getInstance().put("command", command).put("arguments", arguments);
+		return execute((client)->client.slowLog(command, arguments), ProtocolCommand.SLOWLOG, args);
+	}
+
+	@Override
+	public Object slowLog(final DebugCommands.SlowLogCommand command, final byte[]... arguments){
+		final CommandArguments args = CommandArguments.getInstance().put("command", command).put("arguments", arguments);
+		return execute((client)->client.slowLog(command, arguments), ProtocolCommand.SLOWLOG, args);
+	}
+
+	@Override
+	public void monitor(final RedisMonitor redisMonitor){
+		final CommandArguments args = CommandArguments.getInstance().put("redisMonitor", redisMonitor);
+
+		execute(new Executor<Void>() {
+
+			@Override
+			public Void execute(RedisClient client){
+				client.monitor(redisMonitor);
+				return null;
+			}
+
+		}, ProtocolCommand.MONITOR, args);
+	}
+
+	@Override
+	public String debugObject(final String key){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
+		return execute((client)->client.debugObject(makeRawKey(key)), ProtocolCommand.DEBUG_OBJECT, args);
+	}
+
+	@Override
+	public String debugSegfault(){
+		return execute((client)->client.debugSegfault(), ProtocolCommand.DEBUG_SEGFAULT);
 	}
 
 }
