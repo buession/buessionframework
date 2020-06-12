@@ -99,7 +99,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 
 	@Override
 	public boolean isTransaction(){
-		return JedisClientUtils.isInMulti(jedis);
+		return jedis == null ? false : JedisClientUtils.isInMulti(jedis);
 	}
 
 	@Override

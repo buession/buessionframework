@@ -22,19 +22,19 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
+package com.buession.redis;
 
-import com.buession.redis.core.command.BinaryInternalCommands;
-import com.buession.redis.core.command.InternalCommands;
+import org.junit.Test;
 
 /**
- * 内部命令运算
- *
- * <p>详情说明 <a href="http://redisdoc.com/internal/index.html" target="_blank">http://redisdoc.com/internal/index.html</a>
- * </p>
- *
  * @author Yong.Teng
  */
-public interface InternalOperations extends InternalCommands, BinaryInternalCommands, RedisOperations {
+public class JedisClientTest extends AbstractJedisRedisTest {
+
+	@Test
+	public void info(){
+		RedisTemplate redisTemplate = getRedisTemplate();
+		System.out.println(redisTemplate.info());
+	}
 
 }

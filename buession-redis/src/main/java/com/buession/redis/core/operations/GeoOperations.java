@@ -262,7 +262,10 @@ public interface GeoOperations extends GeoCommands, BinaryGeoCommands, RedisOper
 	 *
 	 * @return 经纬度
 	 */
-	Geo geoPos(final String key, final String member);
+	default Geo geoPos(final String key, final String member){
+		List<Geo> result = geoPos(key, new String[]{member});
+		return result == null ? null : result.get(0);
+	}
 
 	/**
 	 * 从键里面返回所有给定位置元素的位置（经度和纬度）
@@ -274,7 +277,10 @@ public interface GeoOperations extends GeoCommands, BinaryGeoCommands, RedisOper
 	 *
 	 * @return 经纬度
 	 */
-	Geo geoPos(final byte[] key, final byte[] member);
+	default Geo geoPos(final byte[] key, final byte[] member){
+		List<Geo> result = geoPos(key, new byte[][]{member});
+		return result == null ? null : result.get(0);
+	}
 
 	/**
 	 * 获取位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
@@ -286,7 +292,10 @@ public interface GeoOperations extends GeoCommands, BinaryGeoCommands, RedisOper
 	 *
 	 * @return Geohash 数组
 	 */
-	String geoHash(final String key, final String member);
+	default String geoHash(final String key, final String member){
+		List<String> result = geoHash(key, new String[]{member});
+		return result == null ? null : result.get(0);
+	}
 
 	/**
 	 * 获取位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
@@ -298,6 +307,9 @@ public interface GeoOperations extends GeoCommands, BinaryGeoCommands, RedisOper
 	 *
 	 * @return Geohash 数组
 	 */
-	byte[] geoHash(final byte[] key, final byte[] member);
+	default byte[] geoHash(final byte[] key, final byte[] member){
+		List<byte[]> result = geoHash(key, new byte[][]{member});
+		return result == null ? null : result.get(0);
+	}
 
 }

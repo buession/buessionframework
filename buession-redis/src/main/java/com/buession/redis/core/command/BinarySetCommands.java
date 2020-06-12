@@ -246,11 +246,11 @@ public interface BinarySetCommands extends BinaryRedisCommands {
 	Long sUnionStore(final byte[] destKey, final byte[]... keys);
 
 	/**
-	 * 将 member 元素从 source 集合移动到 destKey 集合 中
+	 * 将 member 元素从 key 集合移动到 destKey 集合 中
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/smove.html" target="_blank">http://redisdoc.com/set/smove.html</a></p>
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -259,7 +259,7 @@ public interface BinarySetCommands extends BinaryRedisCommands {
 	 *
 	 * @return 如果 member 元素被成功移除，则返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	Status sMove(final byte[] source, final byte[] destKey, final byte[] member);
+	Status sMove(final byte[] key, final byte[] destKey, final byte[] member);
 
 	/**
 	 * 迭代集合键中的元素

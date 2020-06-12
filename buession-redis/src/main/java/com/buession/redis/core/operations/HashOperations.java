@@ -29,6 +29,7 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.command.BinaryHashCommands;
 import com.buession.redis.core.command.HashCommands;
+import com.buession.redis.utils.ReturnUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -528,7 +529,9 @@ public interface HashOperations extends HashCommands, BinaryHashCommands, RedisO
 	 *
 	 * @return 操作结果，成功删除的域的数量 为 0 时，返回 Status.FAILURE；否则返回 Status.SUCCESS
 	 */
-	Status hDel(final String key, final String field);
+	default Status hDel(final String key, final String field){
+		return ReturnUtils.statusForBool(hDel(key, new String[]{field}) > 0);
+	}
 
 	/**
 	 * 删除哈希表 key 中的指定域
@@ -540,7 +543,9 @@ public interface HashOperations extends HashCommands, BinaryHashCommands, RedisO
 	 *
 	 * @return 操作结果，成功删除的域的数量 为 0 时，返回 Status.FAILURE；否则返回 Status.SUCCESS
 	 */
-	Status hDel(final byte[] key, final byte[] field);
+	default Status hDel(final byte[] key, final byte[] field){
+		return ReturnUtils.statusForBool(hDel(key, new byte[][]{field}) > 0);
+	}
 
 	/**
 	 * 删除哈希表 key 中的指定域

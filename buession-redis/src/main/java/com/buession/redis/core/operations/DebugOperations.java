@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.redis.core.command.BinaryDebugCommands;
 import com.buession.redis.core.command.DebugCommands;
 
 /**
@@ -33,6 +34,6 @@ import com.buession.redis.core.command.DebugCommands;
  *
  * @author Yong.Teng
  */
-public interface DebugOperations extends DebugCommands, RedisOperations {
+public interface DebugOperations extends DebugCommands, BinaryDebugCommands, RedisOperations {
 
 }

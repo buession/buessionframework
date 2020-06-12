@@ -25,22 +25,12 @@
 package com.buession.redis;
 
 import com.buession.core.serializer.type.TypeReference;
-import com.buession.core.utils.Assert;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.RedisNode;
-import com.buession.redis.core.operations.HashOperations;
-import com.buession.redis.core.operations.KeyOperations;
-import com.buession.redis.core.operations.ListOperations;
-import com.buession.redis.core.operations.SetOperations;
-import com.buession.redis.core.operations.SortedSetOperations;
-import com.buession.redis.core.operations.StringOperations;
+import com.buession.redis.core.operations.*;
 import com.buession.redis.utils.ReturnUtils;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +42,9 @@ import java.util.Set;
  * @author Yong.Teng
  */
 public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, StringOperations, HashOperations,
-		ListOperations, SetOperations, SortedSetOperations {
+		ListOperations, SetOperations, SortedSetOperations, HyperLogLogOperations, GeoOperations, BitMapOperations,
+		TransactionOperations, PubSubOperations, DatabaseOperations, LuaOperations, PersistenceOperations,
+		ReplicationOperations, ClientAndServerOperations, ConfigureOperations, InternalOperations, DebugOperations {
 
 	/**
 	 * 构造函数
@@ -69,94 +61,6 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	 */
 	public RedisTemplate(RedisConnection connection){
 		super(connection);
-	}
-
-	@Override
-	public Status expireAt(final String key, final Date date){
-		Assert.isNull(date, "Expire date could not be null");
-		return expireAt(key, date.getTime() / 1000L);
-	}
-
-	@Override
-	public Status expireAt(final byte[] key, final Date date){
-		Assert.isNull(date, "Expire date could not be null");
-		return expireAt(key, date.getTime() / 1000L);
-	}
-
-	@Override
-	public Status pExpireAt(final String key, final Date date){
-		Assert.isNull(date, "Expire date could not be null");
-		return pExpireAt(key, date.getTime());
-	}
-
-	@Override
-	public Status pExpireAt(final byte[] key, final Date date){
-		Assert.isNull(date, "Expire date could not be null");
-		return pExpireAt(key, date.getTime());
-	}
-
-	@Override
-	public Date ttlAt(final String key){
-		return new Date(System.currentTimeMillis() + ttl(key) * 1000L);
-	}
-
-	@Override
-	public Date ttlAt(final byte[] key){
-		return new Date(System.currentTimeMillis() + ttl(key) * 1000L);
-	}
-
-	@Override
-	public Date pTtlAt(final String key){
-		return new Date(System.currentTimeMillis() + pTtl(key));
-	}
-
-	@Override
-	public Date pTtlAt(final byte[] key){
-		return new Date(System.currentTimeMillis() + pTtl(key));
-	}
-
-	@Override
-	public Status restore(final String key, final String serializedValue, final Date ttl){
-		Assert.isNull(ttl, "Ttl date could not be null");
-		return restore(key, serializedValue, ttl);
-	}
-
-	@Override
-	public Status restore(final byte[] key, final byte[] serializedValue, final Date ttl){
-		Assert.isNull(ttl, "Ttl date could not be null");
-		return restore(key, serializedValue, ttl);
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int db, final int timeout){
-		return migrate(key, host, RedisNode.DEFAULT_PORT, db, timeout);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int db, final int timeout){
-		return migrate(key, host, RedisNode.DEFAULT_PORT, db, timeout);
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int db, final int timeout,
-			final MigrateOperation migrateOperation){
-		return migrate(key, host, RedisNode.DEFAULT_PORT, db, timeout, migrateOperation);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int db, final int timeout,
-			final MigrateOperation migrateOperation){
-		return migrate(key, host, RedisNode.DEFAULT_PORT, db, timeout, migrateOperation);
-	}
-
-	@Override
-	public Status del(final String key){
-		return ReturnUtils.statusForBool(del(new String[]{key}) > 0);
-	}
-
-	@Override
-	public Status del(final byte[] key){
-		return ReturnUtils.statusForBool(del(new byte[][]{key}) > 0);
 	}
 
 	@Override
@@ -267,36 +171,6 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	@Override
 	public <V> V getSet(final byte[] key, final V value, final TypeReference<V> type){
 		return serializer.deserialize(getSet(key, serializer.serialize(value)), type);
-	}
-
-	@Override
-	public Status mSet(final List<KeyValue<String, String>> values){
-		if(values == null){
-			return Status.FAILURE;
-		}else{
-			Map<String, String> data = new LinkedHashMap<>(values.size());
-
-			for(KeyValue<String, String> v : values){
-				data.put(v.getKey(), v.getValue());
-			}
-
-			return mSet(data);
-		}
-	}
-
-	@Override
-	public Status mSetNx(final List<KeyValue<String, String>> values){
-		if(values == null){
-			return Status.FAILURE;
-		}else{
-			Map<String, String> data = new LinkedHashMap<>(values.size());
-
-			for(KeyValue<String, String> v : values){
-				data.put(v.getKey(), v.getValue());
-			}
-
-			return mSetNx(data);
-		}
 	}
 
 	@Override
@@ -508,26 +382,6 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	}
 
 	@Override
-	public Status hDel(final String key, final String field){
-		return ReturnUtils.statusForBool(hDel(key, new String[]{field}) > 0);
-	}
-
-	@Override
-	public Status hDel(final byte[] key, final byte[] field){
-		return ReturnUtils.statusForBool(hDel(key, new byte[][]{field}) > 0);
-	}
-
-	@Override
-	public Long lPush(final String key, final String value){
-		return lPush(key, new String[]{value});
-	}
-
-	@Override
-	public Long lPush(final byte[] key, final byte[] value){
-		return lPush(key, new byte[][]{value});
-	}
-
-	@Override
 	public <V> Long lPush(final String key, final V value){
 		return lPush(key, serializer.serialize(value));
 	}
@@ -545,16 +399,6 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	@Override
 	public <V> Long lPush(final byte[] key, final V... values){
 		return lPush(key, serializerAsByte(values));
-	}
-
-	@Override
-	public Long lPushX(final String key, final String value){
-		return lPushX(key, new String[]{value});
-	}
-
-	@Override
-	public Long lPushX(final byte[] key, final byte[] value){
-		return lPushX(key, new byte[][]{value});
 	}
 
 	@Override
@@ -698,16 +542,6 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	}
 
 	@Override
-	public List<String> blPop(final String key, final int timeout){
-		return blPop(new String[]{key}, timeout);
-	}
-
-	@Override
-	public List<byte[]> blPop(final byte[] key, final int timeout){
-		return blPop(new byte[][]{key}, timeout);
-	}
-
-	@Override
 	public <V> List<V> blPopObject(final String key, final int timeout){
 		return ReturnUtils.objectFromListString(serializer, blPop(key, timeout));
 	}
@@ -768,43 +602,33 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	}
 
 	@Override
-	public <V> V rPoplPushObject(final String source, final String destKey){
-		return serializer.deserialize(rPoplPush(source, destKey));
+	public <V> V rPoplPushObject(final String key, final String destKey){
+		return serializer.deserialize(rPoplPush(key, destKey));
 	}
 
 	@Override
-	public <V> V rPoplPushObject(final byte[] source, final byte[] destKey){
-		return serializer.deserialize(rPoplPush(source, destKey));
+	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey){
+		return serializer.deserialize(rPoplPush(key, destKey));
 	}
 
 	@Override
-	public <V> V rPoplPushObject(final String source, final String destKey, final Class<V> clazz){
-		return serializer.deserialize(rPoplPush(source, destKey), clazz);
+	public <V> V rPoplPushObject(final String key, final String destKey, final Class<V> clazz){
+		return serializer.deserialize(rPoplPush(key, destKey), clazz);
 	}
 
 	@Override
-	public <V> V rPoplPushObject(final byte[] source, final byte[] destKey, final Class<V> clazz){
-		return serializer.deserialize(rPoplPush(source, destKey), clazz);
+	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey, final Class<V> clazz){
+		return serializer.deserialize(rPoplPush(key, destKey), clazz);
 	}
 
 	@Override
-	public <V> V rPoplPushObject(final String source, final String destKey, final TypeReference<V> type){
-		return serializer.deserialize(rPoplPush(source, destKey), type);
+	public <V> V rPoplPushObject(final String key, final String destKey, final TypeReference<V> type){
+		return serializer.deserialize(rPoplPush(key, destKey), type);
 	}
 
 	@Override
-	public <V> V rPoplPushObject(final byte[] source, final byte[] destKey, final TypeReference<V> type){
-		return serializer.deserialize(rPoplPush(source, destKey), type);
-	}
-
-	@Override
-	public List<String> brPop(final String key, final int timeout){
-		return brPop(new String[]{key}, timeout);
-	}
-
-	@Override
-	public List<byte[]> brPop(final byte[] key, final int timeout){
-		return brPop(new byte[][]{key}, timeout);
+	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey, final TypeReference<V> type){
+		return serializer.deserialize(rPoplPush(key, destKey), type);
 	}
 
 	@Override
@@ -838,45 +662,35 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	}
 
 	@Override
-	public <V> V brPoplPushObject(final String source, final String destKey, final int timeout){
-		return serializer.deserialize(brPoplPush(source, destKey, timeout));
+	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout){
+		return serializer.deserialize(brPoplPush(key, destKey, timeout));
 	}
 
 	@Override
-	public <V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout){
-		return serializer.deserialize(brPoplPush(source, destKey, timeout));
+	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout){
+		return serializer.deserialize(brPoplPush(key, destKey, timeout));
 	}
 
 	@Override
-	public <V> V brPoplPushObject(final String source, final String destKey, final int timeout, final Class<V> clazz){
-		return serializer.deserialize(brPoplPush(source, destKey, timeout), clazz);
+	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout, final Class<V> clazz){
+		return serializer.deserialize(brPoplPush(key, destKey, timeout), clazz);
 	}
 
 	@Override
-	public <V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout, final Class<V> clazz){
-		return serializer.deserialize(brPoplPush(source, destKey, timeout), clazz);
+	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout, final Class<V> clazz){
+		return serializer.deserialize(brPoplPush(key, destKey, timeout), clazz);
 	}
 
 	@Override
-	public <V> V brPoplPushObject(final String source, final String destKey, final int timeout,
+	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout,
 			final TypeReference<V> type){
-		return serializer.deserialize(brPoplPush(source, destKey, timeout), type);
+		return serializer.deserialize(brPoplPush(key, destKey, timeout), type);
 	}
 
 	@Override
-	public <V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout,
+	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout,
 			final TypeReference<V> type){
-		return serializer.deserialize(brPoplPush(source, destKey, timeout), type);
-	}
-
-	@Override
-	public Long rPush(final String key, final String value){
-		return rPush(key, new String[]{value});
-	}
-
-	@Override
-	public Long rPush(final byte[] key, final byte[] value){
-		return rPush(key, new byte[][]{value});
+		return serializer.deserialize(brPoplPush(key, destKey, timeout), type);
 	}
 
 	@Override
@@ -897,16 +711,6 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	@Override
 	public <V> Long rPush(final byte[] key, final V... values){
 		return rPush(key, serializerAsByte(values));
-	}
-
-	@Override
-	public Long rPushX(final String key, final String value){
-		return rPushX(key, new String[]{value});
-	}
-
-	@Override
-	public Long rPushX(final byte[] key, final byte[] value){
-		return rPushX(key, new byte[][]{value});
 	}
 
 	@Override
@@ -987,16 +791,6 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	@Override
 	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type){
 		return ReturnUtils.objectFromListByte(serializer, lRange(key, start, end), type);
-	}
-
-	@Override
-	public Long sAdd(final String key, final String member){
-		return sAdd(key, new String[]{member});
-	}
-
-	@Override
-	public Long sAdd(final byte[] key, final byte[] member){
-		return sAdd(key, new byte[][]{member});
 	}
 
 	@Override
@@ -1170,16 +964,6 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	}
 
 	@Override
-	public Long sRem(final String key, final String member){
-		return sRem(key, new String[]{member});
-	}
-
-	@Override
-	public Long sRem(final byte[] key, final byte[] member){
-		return sRem(key, new byte[][]{member});
-	}
-
-	@Override
 	public <V> Long sRem(final String key, final V member){
 		return sRem(key, serializer.serialize(member));
 	}
@@ -1197,16 +981,6 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 	@Override
 	public <V> Long sRem(final byte[] key, final V... members){
 		return sRem(key, serializerAsByte(members));
-	}
-
-	@Override
-	public Set<String> sDiff(final String key){
-		return sDiff(new String[]{key});
-	}
-
-	@Override
-	public Set<byte[]> sDiff(final byte[] key){
-		return sDiff(new byte[][]{key});
 	}
 
 	@Override
@@ -1239,212 +1013,4 @@ public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, S
 		return ReturnUtils.objectFromSetByte(serializer, sDiff(key), type);
 	}
 
-	@Override
-	public Long sDiffStore(final String destKey, final String key){
-		return sDiffStore(destKey, new String[]{key});
-	}
-
-	@Override
-	public Long sDiffStore(final byte[] destKey, final byte[] key){
-		return sDiffStore(destKey, new byte[][]{key});
-	}
-
-	@Override
-	public Set<String> sInter(final String key){
-		return sInter(new String[]{key});
-	}
-
-	@Override
-	public Set<byte[]> sInter(final byte[] key){
-		return sInter(new byte[][]{key});
-	}
-
-	@Override
-	public Long sInterStore(final String destKey, final String key){
-		return sInterStore(destKey, new String[]{key});
-	}
-
-	@Override
-	public Long sInterStore(final byte[] destKey, final byte[] key){
-		return sInterStore(destKey, new byte[][]{key});
-	}
-
-	@Override
-	public Set<String> sUnion(final String key){
-		return sUnion(new String[]{key});
-	}
-
-	@Override
-	public Set<byte[]> sUnion(final byte[] key){
-		return sUnion(new byte[][]{key});
-	}
-
-	@Override
-	public Long sUnionStore(final String destKey, final String key){
-		return sUnionStore(destKey, new String[]{key});
-	}
-
-	@Override
-	public Long sUnionStore(final byte[] destKey, final byte[] key){
-		return sUnionStore(destKey, new byte[][]{key});
-	}
-
-	@Override
-	public Long zAdd(final String key, final float score, final String member){
-		return zAdd(key, new Float(score), member);
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final float score, final byte[] member){
-		return zAdd(key, new Float(score), member);
-	}
-
-	@Override
-	public Long zAdd(final String key, final double score, final String member){
-		return zAdd(key, new Double(score), member);
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final double score, final byte[] member){
-		return zAdd(key, new Double(score), member);
-	}
-
-	@Override
-	public Long zAdd(final String key, final int score, final String member){
-		return zAdd(key, new Integer(score), member);
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final int score, final byte[] member){
-		return zAdd(key, new Integer(score), member);
-	}
-
-	@Override
-	public Long zAdd(final String key, final long score, final String member){
-		return zAdd(key, new Long(score), member);
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final long score, final byte[] member){
-		return zAdd(key, new Long(score), member);
-	}
-
-	@Override
-	public Long zAdd(final String key, final Number score, final String member){
-		final Map<String, Number> members = new HashMap<>(1);
-
-		members.put(member, score);
-
-		return zAdd(key, members);
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final Number score, final byte[] member){
-		final Map<byte[], Number> members = new HashMap<>(1);
-
-		members.put(member, score);
-
-		return zAdd(key, members);
-	}
-
-	@Override
-	public Long zAdd(final String key, final KeyValue<String, Number> member){
-		return zAdd(key, Arrays.asList(member));
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final KeyValue<byte[], Number> member){
-		return zAdd(key, Arrays.asList(member));
-	}
-
-	@Override
-	public Long zRem(final String key, final String member){
-		return zRem(key, new String[]{member});
-	}
-
-	@Override
-	public Long zRem(final byte[] key, final byte[] member){
-		return zRem(key, new byte[][]{member});
-	}
-
-	@Override
-	public Long zInterStore(final String destKey, final String key){
-		return zInterStore(destKey, new String[]{key});
-	}
-
-	@Override
-	public Long zInterStore(final byte[] destKey, final byte[] key){
-		return zInterStore(destKey, new byte[][]{key});
-	}
-
-	@Override
-	public Long zInterStore(final String destKey, final Aggregate aggregate, final String key){
-		return zInterStore(destKey, aggregate, new String[]{key});
-	}
-
-	@Override
-	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final byte[] key){
-		return zInterStore(destKey, aggregate, new byte[][]{key});
-	}
-
-	@Override
-	public Long zInterStore(final String destKey, final double weight, final String key){
-		return zInterStore(destKey, new double[]{weight}, new String[]{key});
-	}
-
-	@Override
-	public Long zInterStore(final byte[] destKey, final double weight, final byte[] key){
-		return zInterStore(destKey, new double[]{weight}, new byte[][]{key});
-	}
-
-	@Override
-	public Long zInterStore(final String destKey, final Aggregate aggregate, final double weight, final String key){
-		return zInterStore(destKey, aggregate, new double[]{weight}, new String[]{key});
-	}
-
-	@Override
-	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double weight, final byte[] key){
-		return zInterStore(destKey, aggregate, new double[]{weight}, new byte[][]{key});
-	}
-
-	@Override
-	public Long zUnionStore(final String destKey, final String key){
-		return zUnionStore(destKey, new String[]{key});
-	}
-
-	@Override
-	public Long zUnionStore(final byte[] destKey, final byte[] key){
-		return zUnionStore(destKey, new byte[][]{key});
-	}
-
-	@Override
-	public Long zUnionStore(final String destKey, final Aggregate aggregate, final String key){
-		return zUnionStore(destKey, aggregate, new String[]{key});
-	}
-
-	@Override
-	public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final byte[] key){
-		return zUnionStore(destKey, aggregate, new byte[][]{key});
-	}
-
-	@Override
-	public Long zUnionStore(final String destKey, final double weight, final String key){
-		return zUnionStore(destKey, new double[]{weight}, new String[]{key});
-	}
-
-	@Override
-	public Long zUnionStore(final byte[] destKey, final double weight, final byte[] key){
-		return zUnionStore(destKey, new double[]{weight}, new byte[][]{key});
-	}
-
-	@Override
-	public Long zUnionStore(final String destKey, final Aggregate aggregate, final double weight, final String key){
-		return zUnionStore(destKey, aggregate, new double[]{weight}, new String[]{key});
-	}
-
-	@Override
-	public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double weight, final byte[] key){
-		return zUnionStore(destKey, aggregate, new double[]{weight}, new byte[][]{key});
-	}
-	
 }

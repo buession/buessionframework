@@ -25,6 +25,7 @@
 package com.buession.redis.core.operations;
 
 import com.buession.redis.core.PubSubListener;
+import com.buession.redis.core.command.BinaryPubSubCommands;
 import com.buession.redis.core.command.PubSubCommands;
 
 /**
@@ -34,86 +35,102 @@ import com.buession.redis.core.command.PubSubCommands;
  *
  * @author Yong.Teng
  */
-public interface PubSubOperations extends PubSubCommands, RedisOperations {
+public interface PubSubOperations extends PubSubCommands, BinaryPubSubCommands, RedisOperations {
 
-    /**
-     * 订阅给定的频道的信息
-     *
-     * @param channel
-     *         频道
-     * @param pubSubListener
-     *         订阅监听者
-     */
-    void subscribe(final String channel, final PubSubListener<String> pubSubListener);
+	/**
+	 * 订阅给定的频道的信息
+	 *
+	 * @param channel
+	 * 		频道
+	 * @param pubSubListener
+	 * 		订阅监听者
+	 */
+	default void subscribe(final String channel, final PubSubListener<String> pubSubListener){
+		subscribe(new String[]{channel}, pubSubListener);
+	}
 
-    /**
-     * 订阅给定的频道的信息
-     *
-     * @param channel
-     *         频道
-     * @param pubSubListener
-     *         订阅监听者
-     */
-    void subscribe(final byte[] channel, final PubSubListener<byte[]> pubSubListener);
+	/**
+	 * 订阅给定的频道的信息
+	 *
+	 * @param channel
+	 * 		频道
+	 * @param pubSubListener
+	 * 		订阅监听者
+	 */
+	default void subscribe(final byte[] channel, final PubSubListener<byte[]> pubSubListener){
+		subscribe(new byte[][]{channel}, pubSubListener);
+	}
 
-    /**
-     * 订阅给定模式的频道的信息
-     *
-     * @param pattern
-     *         模式
-     * @param pubSubListener
-     *         订阅监听者
-     */
-    void pSubscribe(final String pattern, final PubSubListener<String> pubSubListener);
+	/**
+	 * 订阅给定模式的频道的信息
+	 *
+	 * @param pattern
+	 * 		模式
+	 * @param pubSubListener
+	 * 		订阅监听者
+	 */
+	default void pSubscribe(final String pattern, final PubSubListener<String> pubSubListener){
+		pSubscribe(new String[]{pattern}, pubSubListener);
+	}
 
-    /**
-     * 订阅给定模式的频道的信息
-     *
-     * @param pattern
-     *         模式
-     * @param pubSubListener
-     *         订阅监听者
-     */
-    void pSubscribe(final byte[] pattern, final PubSubListener<byte[]> pubSubListener);
+	/**
+	 * 订阅给定模式的频道的信息
+	 *
+	 * @param pattern
+	 * 		模式
+	 * @param pubSubListener
+	 * 		订阅监听者
+	 */
+	default void pSubscribe(final byte[] pattern, final PubSubListener<byte[]> pubSubListener){
+		pSubscribe(new byte[][]{pattern}, pubSubListener);
+	}
 
-    /**
-     * 指示客户端退订给定的频道
-     *
-     * @param channel
-     *         频道
-     *
-     * @return 在不同的客户端中有不同的表现
-     */
-    Object unSubscribe(final String channel);
+	/**
+	 * 指示客户端退订给定的频道
+	 *
+	 * @param channel
+	 * 		频道
+	 *
+	 * @return 在不同的客户端中有不同的表现
+	 */
+	default Object unSubscribe(final String channel){
+		return unSubscribe(new String[]{channel});
+	}
 
-    /**
-     * 指示客户端退订给定的频道
-     *
-     * @param channel
-     *         频道
-     *
-     * @return 在不同的客户端中有不同的表现
-     */
-    Object unSubscribe(final byte[] channel);
+	/**
+	 * 指示客户端退订给定的频道
+	 *
+	 * @param channel
+	 * 		频道
+	 *
+	 * @return 在不同的客户端中有不同的表现
+	 */
+	default Object unSubscribe(final byte[] channel){
+		return unSubscribe(new byte[][]{channel});
+	}
 
-    /**
-     * 指示客户端退订所有给定模式的消息
-     *
-     * @param pattern
-     *         模式
-     *
-     * @return 在不同的客户端中有不同的表现
-     */
-    Object pUnSubscribe(final String pattern);
+	/**
+	 * 指示客户端退订所有给定模式的消息
+	 *
+	 * @param pattern
+	 * 		模式
+	 *
+	 * @return 在不同的客户端中有不同的表现
+	 */
+	default Object pUnSubscribe(final String pattern){
+		return pUnSubscribe(new String[]{pattern});
+	}
 
-    /**
-     * 指示客户端退订所有给定模式的消息
-     *
-     * @param pattern
-     *         模式
-     *
-     * @return 在不同的客户端中有不同的表现
-     */
-    Object pUnSubscribe(final byte[] pattern);
+	/**
+	 * 指示客户端退订所有给定模式的消息
+	 *
+	 * @param pattern
+	 * 		模式
+	 *
+	 * @return 在不同的客户端中有不同的表现
+	 */
+	default Object pUnSubscribe(final byte[] pattern){
+		return pUnSubscribe(new byte[][]{pattern});
+	}
 
 }

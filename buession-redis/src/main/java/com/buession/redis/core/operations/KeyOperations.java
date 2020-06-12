@@ -24,9 +24,12 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
+import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.command.BinaryKeyCommands;
 import com.buession.redis.core.command.KeyCommands;
+import com.buession.redis.utils.ReturnUtils;
 
 import java.util.Date;
 
@@ -50,7 +53,10 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 操作结果
 	 */
-	Status expireAt(final String key, final Date date);
+	default Status expireAt(final String key, final Date date){
+		Assert.isNull(date, "Expire date could not be null");
+		return expireAt(key, date.getTime() / 1000L);
+	}
 
 	/**
 	 * 为给定 key 设置过期时间
@@ -62,7 +68,10 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 操作结果
 	 */
-	Status expireAt(final byte[] key, final Date date);
+	default Status expireAt(final byte[] key, final Date date){
+		Assert.isNull(date, "Expire date could not be null");
+		return expireAt(key, date.getTime() / 1000L);
+	}
 
 	/**
 	 * 为给定 key 设置过期时间
@@ -74,7 +83,10 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 操作结果
 	 */
-	Status pExpireAt(final String key, final Date date);
+	default Status pExpireAt(final String key, final Date date){
+		Assert.isNull(date, "Expire date could not be null");
+		return pExpireAt(key, date.getTime());
+	}
 
 	/**
 	 * 为给定 key 设置过期时间
@@ -86,7 +98,10 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 操作结果
 	 */
-	Status pExpireAt(final byte[] key, final Date date);
+	default Status pExpireAt(final byte[] key, final Date date){
+		Assert.isNull(date, "Expire date could not be null");
+		return pExpireAt(key, date.getTime());
+	}
 
 	/**
 	 * 获取给定 key 的过期时间
@@ -96,7 +111,9 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
 	 */
-	Date ttlAt(final String key);
+	default Date ttlAt(final String key){
+		return new Date(System.currentTimeMillis() + ttl(key) * 1000L);
+	}
 
 	/**
 	 * 获取给定 key 的过期时间
@@ -106,7 +123,9 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
 	 */
-	Date ttlAt(final byte[] key);
+	default Date ttlAt(final byte[] key){
+		return new Date(System.currentTimeMillis() + ttl(key) * 1000L);
+	}
 
 	/**
 	 * 获取给定 key 的过期时间
@@ -116,7 +135,9 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
 	 */
-	Date pTtlAt(final String key);
+	default Date pTtlAt(final String key){
+		return new Date(System.currentTimeMillis() + pTtl(key));
+	}
 
 	/**
 	 * 获取给定 key 的过期时间
@@ -126,7 +147,9 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
 	 */
-	Date pTtlAt(final byte[] key);
+	default Date pTtlAt(final byte[] key){
+		return new Date(System.currentTimeMillis() + pTtl(key));
+	}
 
 	/**
 	 * 反序列化给定的序列化值，并将它和给定的 key 关联
@@ -140,7 +163,10 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 操作结果
 	 */
-	Status restore(final String key, final String serializedValue, final Date ttl);
+	default Status restore(final String key, final String serializedValue, final Date ttl){
+		Assert.isNull(ttl, "Ttl date could not be null");
+		return restore(key, serializedValue, (int) (ttl.getTime() - System.currentTimeMillis()));
+	}
 
 	/**
 	 * 反序列化给定的序列化值，并将它和给定的 key 关联
@@ -154,7 +180,10 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 操作结果
 	 */
-	Status restore(final byte[] key, final byte[] serializedValue, final Date ttl);
+	default Status restore(final byte[] key, final byte[] serializedValue, final Date ttl){
+		Assert.isNull(ttl, "Ttl date could not be null");
+		return restore(key, serializedValue, (int) (ttl.getTime() - System.currentTimeMillis()));
+	}
 
 	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
@@ -171,7 +200,9 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 操作结果
 	 */
-	Status migrate(final String key, final String host, final int db, final int timeout);
+	default Status migrate(final String key, final String host, final int db, final int timeout){
+		return migrate(key, host, RedisNode.DEFAULT_PORT, db, timeout);
+	}
 
 	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
@@ -188,7 +219,9 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 操作结果
 	 */
-	Status migrate(final byte[] key, final String host, final int db, final int timeout);
+	default Status migrate(final byte[] key, final String host, final int db, final int timeout){
+		return migrate(key, host, RedisNode.DEFAULT_PORT, db, timeout);
+	}
 
 	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
@@ -207,8 +240,10 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 操作结果
 	 */
-	Status migrate(final String key, final String host, final int db, final int timeout,
-				   final MigrateOperation migrateOperation);
+	default Status migrate(final String key, final String host, final int db, final int timeout,
+			final MigrateOperation migrateOperation){
+		return migrate(key, host, RedisNode.DEFAULT_PORT, db, timeout, migrateOperation);
+	}
 
 	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
@@ -227,8 +262,10 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 操作结果
 	 */
-	Status migrate(final byte[] key, final String host, final int db, final int timeout,
-				   final MigrateOperation migrateOperation);
+	default Status migrate(final byte[] key, final String host, final int db, final int timeout,
+			final MigrateOperation migrateOperation){
+		return migrate(key, host, RedisNode.DEFAULT_PORT, db, timeout, migrateOperation);
+	}
 
 	/**
 	 * 删除给定的 key
@@ -238,7 +275,9 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 当有 key 被删除时返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status del(final String key);
+	default Status del(final String key){
+		return ReturnUtils.statusForBool(del(new String[]{key}) > 0);
+	}
 
 	/**
 	 * 删除给定的 key
@@ -248,7 +287,9 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	 *
 	 * @return 当有 key 被删除时返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status del(final byte[] key);
+	default Status del(final byte[] key){
+		return ReturnUtils.statusForBool(del(new byte[][]{key}) > 0);
+	}
 
 	/**
 	 * 删除给定的 key

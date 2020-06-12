@@ -22,41 +22,34 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis;
 
-import java.io.Serializable;
+import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
 
 /**
- * 实例在复制中担任的角色信息
- *
  * @author Yong.Teng
  */
-public class RoleInfo implements Serializable {
+public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 
-    private final static long serialVersionUID = 7129823494008186715L;
+	protected RedisConnection createRedisConnection(){
+		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("10.101.0.36", 6379,
+				"tQP" + "!Vf7JxL-nrH-x", 10);
 
-    /**
-     * 实例在复制中担任的角色
-     */
-    private Role role;
+		try{
+			factoryBean.afterPropertiesSet();
+			return factoryBean.getObject();
+		}catch(Exception e){
+			return null;
+		}
+	}
 
-    /**
-     * 获取实例在复制中担任的角色
-     *
-     * @return 实例在复制中担任的角色
-     */
-    public Role getRole(){
-        return role;
-    }
+	protected RedisTemplate getRedisTemplate(){
+		RedisTemplate redisTemplate = new RedisTemplate(createRedisConnection());
 
-    /**
-     * 设置实例在复制中担任的角色
-     *
-     * @param role
-     *         实例在复制中担任的角色
-     */
-    public void setRole(Role role){
-        this.role = role;
-    }
+		redisTemplate.afterPropertiesSet();
+
+		return redisTemplate;
+	}
 
 }

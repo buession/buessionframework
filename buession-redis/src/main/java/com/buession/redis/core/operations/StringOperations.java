@@ -30,7 +30,9 @@ import com.buession.lang.Status;
 import com.buession.redis.core.command.BinaryStringCommands;
 import com.buession.redis.core.command.StringCommands;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * STRING 运算
@@ -403,7 +405,19 @@ public interface StringOperations extends StringCommands, BinaryStringCommands, 
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status mSet(final List<KeyValue<String, String>> values);
+	default Status mSet(final List<KeyValue<String, String>> values){
+		if(values == null){
+			return Status.FAILURE;
+		}else{
+			Map<String, String> data = new LinkedHashMap<>(values.size());
+
+			for(KeyValue<String, String> v : values){
+				data.put(v.getKey(), v.getValue());
+			}
+
+			return mSet(data);
+		}
+	}
 
 	/**
 	 * 当且仅当所有给定键都不存在时， 为所有给定键设置值
@@ -413,7 +427,19 @@ public interface StringOperations extends StringCommands, BinaryStringCommands, 
 	 *
 	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status mSetNx(final List<KeyValue<String, String>> values);
+	default Status mSetNx(final List<KeyValue<String, String>> values){
+		if(values == null){
+			return Status.FAILURE;
+		}else{
+			Map<String, String> data = new LinkedHashMap<>(values.size());
+
+			for(KeyValue<String, String> v : values){
+				data.put(v.getKey(), v.getValue());
+			}
+
+			return mSetNx(data);
+		}
+	}
 
 	/**
 	 * 获取给定的一个或多个字符串键的值，并反序列化为对象

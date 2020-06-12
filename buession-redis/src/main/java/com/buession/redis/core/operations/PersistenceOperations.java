@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.redis.core.command.BinaryPersistenceCommand;
 import com.buession.redis.core.command.PersistenceCommand;
 
 /**
@@ -35,6 +36,6 @@ import com.buession.redis.core.command.PersistenceCommand;
  *
  * @author Yong.Teng
  */
-public interface PersistenceOperations extends PersistenceCommand, RedisOperations {
+public interface PersistenceOperations extends PersistenceCommand, BinaryPersistenceCommand, RedisOperations {
 
 }

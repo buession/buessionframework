@@ -190,22 +190,22 @@ public interface ListCommands extends RedisCommands {
 	String rPop(final String key);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 sourkeyce 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 *
 	 * <p>详情说明
 	 * <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush.html</a>
 	 * </p>
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
 	 *
 	 * @return 被弹出的元素
 	 */
-	String rPoplPush(final String source, final String destKey);
+	String rPoplPush(final String key, final String destKey);
 
 	/**
 	 * 移除并返回列表中一个或多个 key 的尾元素，BRPOP 是列表的阻塞式(blocking)弹出原语；
@@ -224,16 +224,16 @@ public interface ListCommands extends RedisCommands {
 	List<String> brPop(final String[] keys, final int timeout);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
 	 *
 	 * <p>详情说明
 	 * <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush.html</a>
 	 * </p>
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -242,7 +242,7 @@ public interface ListCommands extends RedisCommands {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值 ，第二个等待时长
 	 */
-	String brPoplPush(final String source, final String destKey, final int timeout);
+	String brPoplPush(final String key, final String destKey, final int timeout);
 
 	/**
 	 * 将一个或多个值 value 插入到列表 key 的表尾

@@ -25,6 +25,8 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.command.BinaryReplicationCommands;
 import com.buession.redis.core.command.ReplicationCommands;
 
 /**
@@ -36,7 +38,7 @@ import com.buession.redis.core.command.ReplicationCommands;
  *
  * @author Yong.Teng
  */
-public interface ReplicationOperations extends ReplicationCommands, RedisOperations {
+public interface ReplicationOperations extends ReplicationCommands, BinaryReplicationCommands, RedisOperations {
 
 	/**
 	 * 用于在 Redis 运行时动态地修改复制(replication)功能的行为；
@@ -47,6 +49,8 @@ public interface ReplicationOperations extends ReplicationCommands, RedisOperati
 	 *
 	 * @return 总是返回 Status.SUCCESS
 	 */
-	Status slaveOf(final String host);
+	default Status slaveOf(final String host){
+		return slaveOf(host, RedisNode.DEFAULT_PORT);
+	}
 
 }

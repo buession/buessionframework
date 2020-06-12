@@ -50,7 +50,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
 	 */
-	Long sAdd(final String key, final String member);
+	default Long sAdd(final String key, final String member){
+		return sAdd(key, new String[]{member});
+	}
 
 	/**
 	 * 将 member 元素加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
@@ -62,7 +64,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
 	 */
-	Long sAdd(final byte[] key, final byte[] member);
+	default Long sAdd(final byte[] key, final byte[] member){
+		return sAdd(key, new byte[][]{member});
+	}
 
 	/**
 	 * 将 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
@@ -594,7 +598,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
-	Long sRem(final String key, final String member);
+	default Long sRem(final String key, final String member){
+		return sRem(key, new String[]{member});
+	}
 
 	/**
 	 * 移除集合 key 中的 member 元素，不存在的 member 元素会被忽略
@@ -606,7 +612,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
-	Long sRem(final byte[] key, final byte[] member);
+	default Long sRem(final byte[] key, final byte[] member){
+		return sRem(key, new byte[][]{member});
+	}
 
 	/**
 	 * 移除集合 key 中的 member 序列化后的元素，不存在的 member 元素会被忽略
@@ -672,7 +680,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 一个包含差集成员的列表
 	 */
-	Set<String> sDiff(final String key);
+	default Set<String> sDiff(final String key){
+		return sDiff(new String[]{key});
+	}
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
@@ -682,7 +692,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 一个包含差集成员的列表
 	 */
-	Set<byte[]> sDiff(final byte[] key);
+	default Set<byte[]> sDiff(final byte[] key){
+		return sDiff(new byte[][]{key});
+	}
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
@@ -782,7 +794,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	Long sDiffStore(final String destKey, final String key);
+	default Long sDiffStore(final String destKey, final String key){
+		return sDiffStore(destKey, new String[]{key});
+	}
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
@@ -794,7 +808,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	Long sDiffStore(final byte[] destKey, final byte[] key);
+	default Long sDiffStore(final byte[] destKey, final byte[] key){
+		return sDiffStore(destKey, new byte[][]{key});
+	}
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
@@ -804,7 +820,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 交集成员的列表
 	 */
-	Set<String> sInter(final String key);
+	default Set<String> sInter(final String key){
+		return sInter(new String[]{key});
+	}
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
@@ -814,7 +832,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 交集成员的列表
 	 */
-	Set<byte[]> sInter(final byte[] key);
+	default Set<byte[]> sInter(final byte[] key){
+		return sInter(new byte[][]{key});
+	}
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
@@ -826,7 +846,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	Long sInterStore(final String destKey, final String key);
+	default Long sInterStore(final String destKey, final String key){
+		return sInterStore(destKey, new String[]{key});
+	}
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
@@ -838,7 +860,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	Long sInterStore(final byte[] destKey, final byte[] key);
+	default Long sInterStore(final byte[] destKey, final byte[] key){
+		return sInterStore(destKey, new byte[][]{key});
+	}
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
@@ -848,7 +872,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 并集成员的列表
 	 */
-	Set<String> sUnion(final String key);
+	default Set<String> sUnion(final String key){
+		return sUnion(new String[]{key});
+	}
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
@@ -858,7 +884,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 并集成员的列表
 	 */
-	Set<byte[]> sUnion(final byte[] key);
+	default Set<byte[]> sUnion(final byte[] key){
+		return sUnion(new byte[][]{key});
+	}
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
@@ -870,7 +898,9 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	Long sUnionStore(final String destKey, final String key);
+	default Long sUnionStore(final String destKey, final String key){
+		return sUnionStore(destKey, new String[]{key});
+	}
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
@@ -882,6 +912,8 @@ public interface SetOperations extends SetCommands, BinarySetCommands, RedisOper
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	Long sUnionStore(final byte[] destKey, final byte[] key);
+	default Long sUnionStore(final byte[] destKey, final byte[] key){
+		return sUnionStore(destKey, new byte[][]{key});
+	}
 
 }

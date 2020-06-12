@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.redis.core.command.BinaryClientAndServerCommands;
 import com.buession.redis.core.command.ClientAndServerCommands;
 
 /**
@@ -34,6 +35,7 @@ import com.buession.redis.core.command.ClientAndServerCommands;
  *
  * @author Yong.Teng
  */
-public interface ClientAndServerOperations extends ClientAndServerCommands, RedisOperations {
+public interface ClientAndServerOperations extends ClientAndServerCommands, BinaryClientAndServerCommands,
+		RedisOperations {
 
 }

@@ -25,6 +25,7 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.command.BinaryHyperLogLogCommands;
 import com.buession.redis.core.command.HyperLogLogCommands;
 
 /**
@@ -36,7 +37,7 @@ import com.buession.redis.core.command.HyperLogLogCommands;
  *
  * @author Yong.Teng
  */
-public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperations {
+public interface HyperLogLogOperations extends HyperLogLogCommands, BinaryHyperLogLogCommands, RedisOperations {
 
 	/**
 	 * 将元素添加到指定的 HyperLogLog 里面
@@ -48,7 +49,9 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 	 *
 	 * @return 操作结果，如果 HyperLogLog 的内部储存被修改了，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status pfAdd(final String key, final String element);
+	default Status pfAdd(final String key, final String element){
+		return pfAdd(key, new String[]{element});
+	}
 
 	/**
 	 * 将元素添加到指定的 HyperLogLog 里面
@@ -60,7 +63,9 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 	 *
 	 * @return 操作结果，如果 HyperLogLog 的内部储存被修改了，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status pfAdd(final byte[] key, final byte[] element);
+	default Status pfAdd(final byte[] key, final byte[] element){
+		return pfAdd(key, new byte[][]{element});
+	}
 
 	/**
 	 * 将多个 HyperLogLog 合并（merge）为一个 HyperLogLog，并保存到 destKey 中
@@ -72,19 +77,23 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 	 *
 	 * @return 操作结果
 	 */
-	Status pfMerge(final String destKey, final String key);
+	default Status pfMerge(final String destKey, final String key){
+		return pfMerge(destKey, new String[]{key});
+	}
 
 	/**
 	 * 将多个 HyperLogLog 合并（merge）为一个 HyperLogLog，并保存到 destKey 中
 	 *
 	 * @param destKey
 	 * 		目标 Key
-	 * @param keys
+	 * @param key
 	 * 		一待合并的 Key
 	 *
 	 * @return 操作结果
 	 */
-	Status pfMerge(final byte[] destKey, final byte[] keys);
+	default Status pfMerge(final byte[] destKey, final byte[] key){
+		return pfMerge(destKey, new byte[][]{key});
+	}
 
 	/**
 	 * 获取储存在给定键的 HyperLogLog 的近似基数
@@ -94,7 +103,9 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 	 *
 	 * @return 储存在给定键的 HyperLogLog 的近似基数，如果键不存在，那么返回 0；
 	 */
-	Long pfCount(final String key);
+	default Long pfCount(final String key){
+		return pfCount(new String[]{key});
+	}
 
 	/**
 	 * 获取储存在给定键的 HyperLogLog 的近似基数
@@ -104,6 +115,8 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 	 *
 	 * @return 储存在给定键的 HyperLogLog 的近似基数，如果键不存在，那么返回 0；
 	 */
-	Long pfCount(final byte[] key);
+	default Long pfCount(final byte[] key){
+		return pfCount(new byte[][]{key});
+	}
 
 }

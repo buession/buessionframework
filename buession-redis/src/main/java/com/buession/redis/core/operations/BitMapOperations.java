@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.redis.core.command.BinaryBitMapCommands;
 import com.buession.redis.core.command.BitMapCommands;
 
 /**
@@ -33,36 +34,40 @@ import com.buession.redis.core.command.BitMapCommands;
  *
  * @author Yong.Teng
  */
-public interface BitMapOperations extends BitMapCommands, RedisOperations {
+public interface BitMapOperations extends BitMapCommands, BinaryBitMapCommands, RedisOperations {
 
-    /**
-     * 对一个二进制位的字符串 key 进行位元操作，并将结果保存到 destKey 上，
-     * 除了 Operation.NOT 操作之外，其他操作都可以接受一个或多个 key 作为输入
-     *
-     * @param operation
-     *         运算操作
-     * @param destKey
-     *         目标 Key
-     * @param key
-     *         Key
-     *
-     * @return 保存到 destKey 的字符串的长度
-     */
-    Long bitOp(final Operation operation, final String destKey, final String key);
+	/**
+	 * 对一个二进制位的字符串 key 进行位元操作，并将结果保存到 destKey 上，
+	 * 除了 Operation.NOT 操作之外，其他操作都可以接受一个或多个 key 作为输入
+	 *
+	 * @param operation
+	 * 		运算操作
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 保存到 destKey 的字符串的长度
+	 */
+	default Long bitOp(final Operation operation, final String destKey, final String key){
+		return bitOp(operation, destKey, new String[]{key});
+	}
 
-    /**
-     * 对一个二进制位的字符串 key 进行位元操作，并将结果保存到 destKey 上，
-     * 除了 Operation.NOT 操作之外，其他操作都可以接受一个或多个 key 作为输入
-     *
-     * @param operation
-     *         运算操作
-     * @param destKey
-     *         目标 Key
-     * @param key
-     *         Key
-     *
-     * @return 保存到 destKey 的字符串的长度
-     */
-    Long bitOp(final Operation operation, final byte[] destKey, final byte[] key);
+	/**
+	 * 对一个二进制位的字符串 key 进行位元操作，并将结果保存到 destKey 上，
+	 * 除了 Operation.NOT 操作之外，其他操作都可以接受一个或多个 key 作为输入
+	 *
+	 * @param operation
+	 * 		运算操作
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 保存到 destKey 的字符串的长度
+	 */
+	default Long bitOp(final Operation operation, final byte[] destKey, final byte[] key){
+		return bitOp(operation, destKey, new byte[][]{key});
+	}
 
 }

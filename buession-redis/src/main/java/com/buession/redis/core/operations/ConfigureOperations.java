@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.redis.core.command.BinaryConfigureCommands;
 import com.buession.redis.core.command.ConfigureCommands;
 
 /**
@@ -34,6 +35,6 @@ import com.buession.redis.core.command.ConfigureCommands;
  *
  * @author Yong.Teng
  */
-public interface ConfigureOperations extends ConfigureCommands, RedisOperations {
+public interface ConfigureOperations extends ConfigureCommands, BinaryConfigureCommands, RedisOperations {
 
 }

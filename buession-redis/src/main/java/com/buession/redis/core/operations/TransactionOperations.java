@@ -25,6 +25,7 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.command.BinaryTransactionCommands;
 import com.buession.redis.core.command.TransactionCommands;
 
 /**
@@ -36,7 +37,7 @@ import com.buession.redis.core.command.TransactionCommands;
  *
  * @author Yong.Teng
  */
-public interface TransactionOperations extends TransactionCommands, RedisOperations {
+public interface TransactionOperations extends TransactionCommands, BinaryTransactionCommands, RedisOperations {
 
 	/**
 	 * 监视一 key ，如果在事务执行之前这个 key 被其他命令所改动，那么事务将被打断
@@ -46,7 +47,9 @@ public interface TransactionOperations extends TransactionCommands, RedisOperati
 	 *
 	 * @return 总是返回 Status.SUCCESS
 	 */
-	Status watch(final String key);
+	default Status watch(final String key){
+		return watch(new String[]{key});
+	}
 
 	/**
 	 * 监视一 key ，如果在事务执行之前这个 key 被其他命令所改动，那么事务将被打断
@@ -56,6 +59,8 @@ public interface TransactionOperations extends TransactionCommands, RedisOperati
 	 *
 	 * @return 总是返回 Status.SUCCESS
 	 */
-	Status watch(final byte[] key);
+	default Status watch(final byte[] key){
+		return watch(new byte[][]{key});
+	}
 
 }

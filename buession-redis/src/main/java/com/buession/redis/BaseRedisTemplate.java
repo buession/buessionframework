@@ -1268,15 +1268,15 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public String brPoplPush(final String source, final String destKey, final int timeout){
-		final CommandArguments args = CommandArguments.getInstance().put("source", source).put("destKey", destKey).put("timeout", timeout);
-		return execute((client)->client.brPoplPush(makeRawKey(source), makeRawKey(destKey), timeout), ProtocolCommand.BRPOPLPUSH, args);
+	public String brPoplPush(final String key, final String destKey, final int timeout){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("destKey", destKey).put("timeout", timeout);
+		return execute((client)->client.brPoplPush(makeRawKey(key), makeRawKey(destKey), timeout), ProtocolCommand.BRPOPLPUSH, args);
 	}
 
 	@Override
-	public byte[] brPoplPush(final byte[] source, final byte[] destKey, final int timeout){
-		final CommandArguments args = CommandArguments.getInstance().put("source", source).put("destKey", destKey).put("timeout", timeout);
-		return execute((client)->client.brPoplPush(makeByteKey(source), makeByteKey(destKey), timeout), ProtocolCommand.BRPOPLPUSH, args);
+	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("destKey", destKey).put("timeout", timeout);
+		return execute((client)->client.brPoplPush(makeByteKey(key), makeByteKey(destKey), timeout), ProtocolCommand.BRPOPLPUSH, args);
 	}
 
 	@Override

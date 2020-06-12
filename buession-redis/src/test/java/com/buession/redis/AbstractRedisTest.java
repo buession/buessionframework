@@ -22,19 +22,11 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
-
-import com.buession.redis.core.command.BinaryInternalCommands;
-import com.buession.redis.core.command.InternalCommands;
+package com.buession.redis;
 
 /**
- * 内部命令运算
- *
- * <p>详情说明 <a href="http://redisdoc.com/internal/index.html" target="_blank">http://redisdoc.com/internal/index.html</a>
- * </p>
- *
  * @author Yong.Teng
  */
-public interface InternalOperations extends InternalCommands, BinaryInternalCommands, RedisOperations {
+public abstract class AbstractRedisTest {
 
 }

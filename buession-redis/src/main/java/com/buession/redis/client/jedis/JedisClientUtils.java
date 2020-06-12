@@ -104,12 +104,6 @@ public class JedisClientUtils {
 	}
 
 	public static boolean isInMulti(final ShardedJedis shardedJedis){
-		for(Jedis jedis : shardedJedis.getAllShards()){
-			if(jedis.getClient().isInMulti()){
-				return true;
-			}
-		}
-
 		return false;
 	}
 

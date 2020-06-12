@@ -24,7 +24,10 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.redis.core.command.BinaryLuaCommands;
 import com.buession.redis.core.command.LuaCommands;
+
+import java.util.List;
 
 /**
  * LUA 脚本运算
@@ -33,74 +36,88 @@ import com.buession.redis.core.command.LuaCommands;
  *
  * @author Yong.Teng
  */
-public interface LuaOperations extends LuaCommands, RedisOperations {
+public interface LuaOperations extends LuaCommands, BinaryLuaCommands, RedisOperations {
 
-    /**
-     * 对 Lua 脚本进行求值
-     *
-     * @param script
-     *         脚本程序
-     * @param params
-     *         键名参数
-     *
-     * @return 求值结果
-     */
-    Object eval(final String script, final String params);
+	/**
+	 * 对 Lua 脚本进行求值
+	 *
+	 * @param script
+	 * 		脚本程序
+	 * @param param
+	 * 		键名参数
+	 *
+	 * @return 求值结果
+	 */
+	default Object eval(final String script, final String param){
+		return eval(script, new String[]{param});
+	}
 
-    /**
-     * 对 Lua 脚本进行求值
-     *
-     * @param script
-     *         脚本程序
-     * @param param
-     *         键名参数
-     *
-     * @return 求值结果
-     */
-    Object eval(final byte[] script, final byte[] param);
+	/**
+	 * 对 Lua 脚本进行求值
+	 *
+	 * @param script
+	 * 		脚本程序
+	 * @param param
+	 * 		键名参数
+	 *
+	 * @return 求值结果
+	 */
+	default Object eval(final byte[] script, final byte[] param){
+		return eval(script, new byte[][]{param});
+	}
 
-    /**
-     * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
-     *
-     * @param digest
-     *         SHA1 校验码
-     * @param param
-     *         键名参数
-     *
-     * @return 根据 SHA1 校验码，对脚本的求值结果
-     */
-    Object evalSha(final String digest, final String param);
+	/**
+	 * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
+	 *
+	 * @param digest
+	 * 		SHA1 校验码
+	 * @param param
+	 * 		键名参数
+	 *
+	 * @return 根据 SHA1 校验码，对脚本的求值结果
+	 */
+	default Object evalSha(final String digest, final String param){
+		return evalSha(digest, new String[]{param});
+	}
 
-    /**
-     * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
-     *
-     * @param digest
-     *         SHA1 校验码
-     * @param param
-     *         键名参数
-     *
-     * @return 根据 SHA1 校验码，对脚本的求值结果
-     */
-    Object evalSha(final byte[] digest, final byte[] param);
+	/**
+	 * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
+	 *
+	 * @param digest
+	 * 		SHA1 校验码
+	 * @param param
+	 * 		键名参数
+	 *
+	 * @return 根据 SHA1 校验码，对脚本的求值结果
+	 */
+	default Object evalSha(final byte[] digest, final byte[] param){
+		return evalSha(digest, new byte[][]{param});
+	}
 
-    /**
-     * 根据 SHA1 校验和，检测校验和所指定的脚本是否已经被保存在缓存当中
-     *
-     * @param sha1
-     *         SHA1 校验和
-     *
-     * @return 返回一个包含布尔值，true 表示脚本已经在缓存里面了；false 表示脚本不存在于缓存
-     */
-    Boolean scriptExists(final String sha1);
+	/**
+	 * 根据 SHA1 校验和，检测校验和所指定的脚本是否已经被保存在缓存当中
+	 *
+	 * @param sha1
+	 * 		SHA1 校验和
+	 *
+	 * @return 返回一个包含布尔值，true 表示脚本已经在缓存里面了；false 表示脚本不存在于缓存
+	 */
+	default Boolean scriptExists(final String sha1){
+		List<Boolean> result = scriptExists(new String[]{sha1});
+		return result == null ? null : result.get(0);
+	}
 
-    /**
-     * 根据 SHA1 校验和，检测校验和所指定的脚本是否已经被保存在缓存当中
-     *
-     * @param sha1
-     *         SHA1 校验和
-     *
-     * @return 返回一个包含布尔值，true 表示脚本已经在缓存里面了；false 表示脚本不存在于缓存
-     */
-    Boolean scriptExists(final byte[] sha1);
+	/**
+	 * 根据 SHA1 校验和，检测校验和所指定的脚本是否已经被保存在缓存当中
+	 *
+	 * @param sha1
+	 * 		SHA1 校验和
+	 *
+	 * @return 返回一个包含布尔值，true 表示脚本已经在缓存里面了；false 表示脚本不存在于缓存
+	 */
+	default Boolean scriptExists(final byte[] sha1){
+		List<Boolean> result = scriptExists(new byte[][]{sha1});
+		return result == null ? null : result.get(0);
+	}
 
 }

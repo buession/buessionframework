@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.redis.core.command.BinaryDatabaseCommand;
 import com.buession.redis.core.command.DatabaseCommand;
 
 /**
@@ -34,6 +35,6 @@ import com.buession.redis.core.command.DatabaseCommand;
  *
  * @author Yong.Teng
  */
-public interface DatabaseOperations extends DatabaseCommand, RedisOperations {
+public interface DatabaseOperations extends DatabaseCommand, BinaryDatabaseCommand, RedisOperations {
 
 }

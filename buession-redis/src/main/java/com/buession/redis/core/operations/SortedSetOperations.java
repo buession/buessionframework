@@ -28,6 +28,10 @@ import com.buession.lang.KeyValue;
 import com.buession.redis.core.command.BinarySortedSetCommands;
 import com.buession.redis.core.command.SortedSetCommands;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 有序集合运算
  *
@@ -50,7 +54,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final String key, final float score, final String member);
+	default Long zAdd(final String key, final float score, final String member){
+		return zAdd(key, new Float(score), member);
+	}
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -64,7 +70,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final byte[] key, final float score, final byte[] member);
+	default Long zAdd(final byte[] key, final float score, final byte[] member){
+		return zAdd(key, new Float(score), member);
+	}
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -78,7 +86,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final String key, final double score, final String member);
+	default Long zAdd(final String key, final double score, final String member){
+		return zAdd(key, new Double(score), member);
+	}
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -92,7 +102,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final byte[] key, final double score, final byte[] member);
+	default Long zAdd(final byte[] key, final double score, final byte[] member){
+		return zAdd(key, new Double(score), member);
+	}
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -106,7 +118,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final String key, final int score, final String member);
+	default Long zAdd(final String key, final int score, final String member){
+		return zAdd(key, new Integer(score), member);
+	}
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -120,7 +134,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final byte[] key, final int score, final byte[] member);
+	default Long zAdd(final byte[] key, final int score, final byte[] member){
+		return zAdd(key, new Integer(score), member);
+	}
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -134,7 +150,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final String key, final long score, final String member);
+	default Long zAdd(final String key, final long score, final String member){
+		return zAdd(key, new Long(score), member);
+	}
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -148,7 +166,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final byte[] key, final long score, final byte[] member);
+	default Long zAdd(final byte[] key, final long score, final byte[] member){
+		return zAdd(key, new Long(score), member);
+	}
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -162,7 +182,13 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final String key, final Number score, final String member);
+	default Long zAdd(final String key, final Number score, final String member){
+		final Map<String, Number> members = new HashMap<>(1);
+
+		members.put(member, score);
+
+		return zAdd(key, members);
+	}
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -176,7 +202,13 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final byte[] key, final Number score, final byte[] member);
+	default Long zAdd(final byte[] key, final Number score, final byte[] member){
+		final Map<byte[], Number> members = new HashMap<>(1);
+
+		members.put(member, score);
+
+		return zAdd(key, members);
+	}
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -188,7 +220,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final String key, final KeyValue<String, Number> member);
+	default Long zAdd(final String key, final KeyValue<String, Number> member){
+		return zAdd(key, Arrays.asList(member));
+	}
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -200,7 +234,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final byte[] key, final KeyValue<byte[], Number> member);
+	default Long zAdd(final byte[] key, final KeyValue<byte[], Number> member){
+		return zAdd(key, Arrays.asList(member));
+	}
 
 	/**
 	 * 为有序集 key 的成员 member 的 score 值加上增量一
@@ -240,7 +276,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功移除的成员的数量，不包括被忽略的成员
 	 */
-	Long zRem(final String key, final String member);
+	default Long zRem(final String key, final String member){
+		return zRem(key, new String[]{member});
+	}
 
 	/**
 	 * 移除有序集 key 中的成员，不存在的成员将被忽略
@@ -252,7 +290,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 被成功移除的成员的数量，不包括被忽略的成员
 	 */
-	Long zRem(final byte[] key, final byte[] member);
+	default Long zRem(final byte[] key, final byte[] member){
+		return zRem(key, new byte[][]{member});
+	}
 
 	/**
 	 * 计算给定的一个有序集的交集，并将该交集储存到 destKey 中
@@ -264,7 +304,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 结果集的基数
 	 */
-	Long zInterStore(final String destKey, final String key);
+	default Long zInterStore(final String destKey, final String key){
+		return zInterStore(destKey, new String[]{key});
+	}
 
 	/**
 	 * 计算给定的一个有序集的交集，并将该交集储存到 destKey 中
@@ -276,21 +318,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 结果集的基数
 	 */
-	Long zInterStore(final byte[] destKey, final byte[] key);
-
-	/**
-	 * 计算给定的一个有序集的交集，并将该交集储存到 destKey 中
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param aggregate
-	 * 		并集的结果集的聚合方式
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 保存到 destKey 结果集的基数
-	 */
-	Long zInterStore(final String destKey, final Aggregate aggregate, final String key);
+	default Long zInterStore(final byte[] destKey, final byte[] key){
+		return zInterStore(destKey, new byte[][]{key});
+	}
 
 	/**
 	 * 计算给定的一个有序集的交集，并将该交集储存到 destKey 中
@@ -304,7 +334,25 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 结果集的基数
 	 */
-	Long zInterStore(final byte[] destKey, final Aggregate aggregate, final byte[] key);
+	default Long zInterStore(final String destKey, final Aggregate aggregate, final String key){
+		return zInterStore(destKey, aggregate, new String[]{key});
+	}
+
+	/**
+	 * 计算给定的一个有序集的交集，并将该交集储存到 destKey 中
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 保存到 destKey 结果集的基数
+	 */
+	default Long zInterStore(final byte[] destKey, final Aggregate aggregate, final byte[] key){
+		return zInterStore(destKey, aggregate, new byte[][]{key});
+	}
 
 	/**
 	 * 计算给定的一个有序集的交集，并将该交集储存到 destKey 中
@@ -318,7 +366,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 结果集的基数
 	 */
-	Long zInterStore(final String destKey, final double weight, final String key);
+	default Long zInterStore(final String destKey, final double weight, final String key){
+		return zInterStore(destKey, new double[]{weight}, new String[]{key});
+	}
 
 	/**
 	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
@@ -332,7 +382,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 结果集的基数
 	 */
-	Long zInterStore(final byte[] destKey, final double weight, final byte[] key);
+	default Long zInterStore(final byte[] destKey, final double weight, final byte[] key){
+		return zInterStore(destKey, new double[]{weight}, new byte[][]{key});
+	}
 
 	/**
 	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
@@ -348,7 +400,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 结果集的基数
 	 */
-	Long zInterStore(final String destKey, final Aggregate aggregate, final double weight, final String key);
+	default Long zInterStore(final String destKey, final Aggregate aggregate, final double weight, final String key){
+		return zInterStore(destKey, aggregate, new double[]{weight}, new String[]{key});
+	}
 
 	/**
 	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
@@ -364,7 +418,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 结果集的基数
 	 */
-	Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double weight, final byte[] key);
+	default Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double weight, final byte[] key){
+		return zInterStore(destKey, aggregate, new double[]{weight}, new byte[][]{key});
+	}
 
 	/**
 	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
@@ -376,7 +432,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 的结果集的基数
 	 */
-	Long zUnionStore(final String destKey, final String key);
+	default Long zUnionStore(final String destKey, final String key){
+		return zUnionStore(destKey, new String[]{key});
+	}
 
 	/**
 	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
@@ -388,21 +446,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 的结果集的基数
 	 */
-	Long zUnionStore(final byte[] destKey, final byte[] key);
-
-	/**
-	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param aggregate
-	 * 		并集的结果集的聚合方式
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 保存到 destKey 的结果集的基数
-	 */
-	Long zUnionStore(final String destKey, final Aggregate aggregate, final String key);
+	default Long zUnionStore(final byte[] destKey, final byte[] key){
+		return zUnionStore(destKey, new byte[][]{key});
+	}
 
 	/**
 	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
@@ -416,7 +462,25 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 的结果集的基数
 	 */
-	Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final byte[] key);
+	default Long zUnionStore(final String destKey, final Aggregate aggregate, final String key){
+		return zUnionStore(destKey, aggregate, new String[]{key});
+	}
+
+	/**
+	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 保存到 destKey 的结果集的基数
+	 */
+	default Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final byte[] key){
+		return zUnionStore(destKey, aggregate, new byte[][]{key});
+	}
 
 	/**
 	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
@@ -430,7 +494,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 的结果集的基数
 	 */
-	Long zUnionStore(final String destKey, final double weight, final String key);
+	default Long zUnionStore(final String destKey, final double weight, final String key){
+		return zUnionStore(destKey, new double[]{weight}, new String[]{key});
+	}
 
 	/**
 	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
@@ -444,7 +510,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 的结果集的基数
 	 */
-	Long zUnionStore(final byte[] destKey, final double weight, final byte[] key);
+	default Long zUnionStore(final byte[] destKey, final double weight, final byte[] key){
+		return zUnionStore(destKey, new double[]{weight}, new byte[][]{key});
+	}
 
 	/**
 	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
@@ -460,7 +528,9 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 的结果集的基数
 	 */
-	Long zUnionStore(final String destKey, final Aggregate aggregate, final double weight, final String key);
+	default Long zUnionStore(final String destKey, final Aggregate aggregate, final double weight, final String key){
+		return zUnionStore(destKey, aggregate, new double[]{weight}, new String[]{key});
+	}
 
 	/**
 	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
@@ -476,6 +546,8 @@ public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetC
 	 *
 	 * @return 保存到 destKey 的结果集的基数
 	 */
-	Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double weight, final byte[] key);
+	default Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double weight, final byte[] key){
+		return zUnionStore(destKey, aggregate, new double[]{weight}, new byte[][]{key});
+	}
 
 }

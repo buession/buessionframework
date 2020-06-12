@@ -934,20 +934,20 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
-	public String rPoplPush(final String source, final String destKey){
+	public String rPoplPush(final String key, final String destKey){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().rpoplpush(source, destKey).get());
+			return execute((cmd)->getTransaction().rpoplpush(key, destKey).get());
 		}else{
-			return execute((cmd)->cmd.rpoplpush(source, destKey));
+			return execute((cmd)->cmd.rpoplpush(key, destKey));
 		}
 	}
 
 	@Override
-	public byte[] rPoplPush(final byte[] source, final byte[] destKey){
+	public byte[] rPoplPush(final byte[] key, final byte[] destKey){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().rpoplpush(source, destKey).get());
+			return execute((cmd)->getTransaction().rpoplpush(key, destKey).get());
 		}else{
-			return execute((cmd)->cmd.rpoplpush(source, destKey));
+			return execute((cmd)->cmd.rpoplpush(key, destKey));
 		}
 	}
 
@@ -978,20 +978,20 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
-	public String brPoplPush(final String source, final String destKey, final int timeout){
+	public String brPoplPush(final String key, final String destKey, final int timeout){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().brpoplpush(source, destKey, timeout).get());
+			return execute((cmd)->getTransaction().brpoplpush(key, destKey, timeout).get());
 		}else{
-			return execute((cmd)->cmd.brpoplpush(source, destKey, timeout));
+			return execute((cmd)->cmd.brpoplpush(key, destKey, timeout));
 		}
 	}
 
 	@Override
-	public byte[] brPoplPush(final byte[] source, final byte[] destKey, final int timeout){
+	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().brpoplpush(source, destKey, timeout).get());
+			return execute((cmd)->getTransaction().brpoplpush(key, destKey, timeout).get());
 		}else{
-			return execute((cmd)->cmd.brpoplpush(source, destKey, timeout));
+			return execute((cmd)->cmd.brpoplpush(key, destKey, timeout));
 		}
 	}
 
@@ -1232,20 +1232,20 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
-	public Status sMove(final String source, final String destKey, final String member){
+	public Status sMove(final String key, final String destKey, final String member){
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().smove(source, destKey, member).get() > 0));
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().smove(key, destKey, member).get() > 0));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.smove(source, destKey, member) > 0));
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.smove(key, destKey, member) > 0));
 		}
 	}
 
 	@Override
-	public Status sMove(final byte[] source, final byte[] destKey, final byte[] member){
+	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member){
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().smove(source, destKey, member).get() > 0));
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().smove(key, destKey, member).get() > 0));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.smove(source, destKey, member) > 0));
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.smove(key, destKey, member) > 0));
 		}
 	}
 
@@ -2595,11 +2595,15 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 
 	@Override
 	public Info info(){
+		Info info;
+
 		if(isTransaction()){
-			return execute((cmd)->InfoUtil.convert(getTransaction().info().get()));
+			info = execute((cmd)->InfoUtil.convert(getTransaction().info().get()));
 		}else{
-			return execute((cmd)->InfoUtil.convert(cmd.info()));
+			info = execute((cmd)->InfoUtil.convert(cmd.info()));
 		}
+
+		return info;
 	}
 
 	@Override

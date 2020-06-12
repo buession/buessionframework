@@ -236,7 +236,7 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
-	default byte[] rPoplPush(final byte[] source, final byte[] destKey){
+	default byte[] rPoplPush(final byte[] key, final byte[] destKey){
 		throw new NotSupportedCommandException(ProtocolCommand.RPOPLPUSH);
 	}
 
@@ -251,12 +251,12 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
-	default String brPoplPush(final String source, final String destKey, final int timeout){
+	default String brPoplPush(final String key, final String destKey, final int timeout){
 		throw new NotSupportedCommandException(ProtocolCommand.BRPOPLPUSH);
 	}
 
 	@Override
-	default byte[] brPoplPush(final byte[] source, final byte[] destKey, final int timeout){
+	default byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout){
 		throw new NotSupportedCommandException(ProtocolCommand.BRPOPLPUSH);
 	}
 
@@ -321,12 +321,12 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
-	default Status sMove(final String source, final String destKey, final String member){
+	default Status sMove(final String key, final String destKey, final String member){
 		throw new NotSupportedCommandException(ProtocolCommand.SMOVE);
 	}
 
 	@Override
-	default Status sMove(final byte[] source, final byte[] destKey, final byte[] member){
+	default Status sMove(final byte[] key, final byte[] destKey, final byte[] member){
 		throw new NotSupportedCommandException(ProtocolCommand.SMOVE);
 	}
 

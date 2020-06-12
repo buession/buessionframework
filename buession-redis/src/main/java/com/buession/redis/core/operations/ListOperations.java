@@ -26,6 +26,7 @@ package com.buession.redis.core.operations;
 
 import com.buession.core.serializer.type.TypeReference;
 import com.buession.lang.Status;
+import com.buession.redis.core.command.BinaryListCommands;
 import com.buession.redis.core.command.ListCommands;
 
 import java.util.List;
@@ -37,7 +38,7 @@ import java.util.List;
  *
  * @author Yong.Teng
  */
-public interface ListOperations extends ListCommands, RedisOperations {
+public interface ListOperations extends ListCommands, BinaryListCommands, RedisOperations {
 
 	/**
 	 * 将值 value 插入到列表 key 的表头
@@ -49,7 +50,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSH 命令后，列表的长度
 	 */
-	Long lPush(final String key, final String value);
+	default Long lPush(final String key, final String value){
+		return lPush(key, new String[]{value});
+	}
 
 	/**
 	 * 将值 value 插入到列表 key 的表头
@@ -61,7 +64,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSH 命令后，列表的长度
 	 */
-	Long lPush(final byte[] key, final byte[] value);
+	default Long lPush(final byte[] key, final byte[] value){
+		return lPush(key, new byte[][]{value});
+	}
 
 	/**
 	 * 将值 value 序列化后，插入到列表 key 的表头
@@ -129,7 +134,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSHX 命令后，列表的长度
 	 */
-	Long lPushX(final String key, final String value);
+	default Long lPushX(final String key, final String value){
+		return lPushX(key, new String[]{value});
+	}
 
 	/**
 	 * 将值 value 插入到列表 key 的表头，当且仅当 key 存在并且是一个列表
@@ -141,7 +148,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 LPUSHX 命令后，列表的长度
 	 */
-	Long lPushX(final byte[] key, final byte[] value);
+	default Long lPushX(final byte[] key, final byte[] value){
+		return lPushX(key, new byte[][]{value});
+	}
 
 	/**
 	 * 将值 value 序列化后，插入到列表 key 的表头，当且仅当 key 存在并且是一个列表
@@ -600,7 +609,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值。
 	 */
-	List<String> blPop(final String key, final int timeout);
+	default List<String> blPop(final String key, final int timeout){
+		return blPop(new String[]{key}, timeout);
+	}
 
 	/**
 	 * 移除并返回列表中 key 的头元素，BLPOP 是列表的阻塞式(blocking)弹出原语；
@@ -613,7 +624,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值。
 	 */
-	List<byte[]> blPop(final byte[] key, final int timeout);
+	default List<byte[]> blPop(final byte[] key, final int timeout){
+		return blPop(new byte[][]{key}, timeout);
+	}
 
 	/**
 	 * 移除并返回 key 的头元素反序列化后的对象，BLPOP 是列表的阻塞式(blocking)弹出原语；
@@ -810,11 +823,11 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	<V> V rPopObject(final byte[] key, final TypeReference<V> type);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并反序列化为对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并反序列化为对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -823,14 +836,14 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素反序列化后的对象
 	 */
-	<V> V rPoplPushObject(final String source, final String destKey);
+	<V> V rPoplPushObject(final String key, final String destKey);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并反序列化为对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并反序列化为对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -839,14 +852,14 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被弹出的元素反序列化后的对象
 	 */
-	<V> V rPoplPushObject(final byte[] source, final byte[] destKey);
+	<V> V rPoplPushObject(final byte[] key, final byte[] destKey);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并反序列化为 clazz 指定的对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并反序列化为 clazz 指定的对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -859,14 +872,14 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @see java.lang.Class
 	 */
-	<V> V rPoplPushObject(final String source, final String destKey, final Class<V> clazz);
+	<V> V rPoplPushObject(final String key, final String destKey, final Class<V> clazz);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并反序列化为 clazz 指定的对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并反序列化为 clazz 指定的对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -879,14 +892,14 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @see java.lang.Class
 	 */
-	<V> V rPoplPushObject(final byte[] source, final byte[] destKey, final Class<V> clazz);
+	<V> V rPoplPushObject(final byte[] key, final byte[] destKey, final Class<V> clazz);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并反序列化为 type 指定的对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并反序列化为 type 指定的对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -899,14 +912,14 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @see com.buession.core.serializer.type.TypeReference
 	 */
-	<V> V rPoplPushObject(final String source, final String destKey, final TypeReference<V> type);
+	<V> V rPoplPushObject(final String key, final String destKey, final TypeReference<V> type);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并反序列化为 type 指定的对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并反序列化为 type 指定的对象后返回；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -919,7 +932,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @see com.buession.core.serializer.type.TypeReference
 	 */
-	<V> V rPoplPushObject(final byte[] source, final byte[] destKey, final TypeReference<V> type);
+	<V> V rPoplPushObject(final byte[] key, final byte[] destKey, final TypeReference<V> type);
 
 	/**
 	 * 移除并返回列表中 key 的尾元素，BRPOP 是列表的阻塞式(blocking)弹出原语；
@@ -932,7 +945,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值。
 	 */
-	List<String> brPop(final String key, final int timeout);
+	default List<String> brPop(final String key, final int timeout){
+		return brPop(new String[]{key}, timeout);
+	}
 
 	/**
 	 * 移除并返回列表中 key 的尾元素，BRPOP 是列表的阻塞式(blocking)弹出原语；
@@ -945,7 +960,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素所属的 key ，第二个元素是被弹出元素的值。
 	 */
-	List<byte[]> brPop(final byte[] key, final int timeout);
+	default List<byte[]> brPop(final byte[] key, final int timeout){
+		return brPop(new byte[][]{key}, timeout);
+	}
 
 	/**
 	 * 移除并返回列表中 key 的尾元素反序列化后的对象，BRPOP 是列表的阻塞式(blocking)弹出原语；
@@ -1054,15 +1071,16 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	<V> List<V> brPopObject(final byte[] key, final int timeout, final TypeReference<V> type);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并返回反序列化后的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并返回反序列化后的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush.html</a>
+	 * </p>
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -1073,18 +1091,19 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化后的对象 ，第二个等待时长
 	 */
-	<V> V brPoplPushObject(final String source, final String destKey, final int timeout);
+	<V> V brPoplPushObject(final String key, final String destKey, final int timeout);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并返回反序列化后的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并返回反序列化后的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush.html</a>
+	 * </p>
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -1095,18 +1114,18 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 如果列表为空，返回一个 null；否则，返回一个含有两个元素的列表，第一个元素是被弹出元素的值反序列化后的对象 ，第二个等待时长
 	 */
-	<V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout);
+	<V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并返回反序列化为 clazz 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并返回反序列化为 clazz 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
 	 * .html</a></p>
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -1121,18 +1140,19 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @see java.lang.Class
 	 */
-	<V> V brPoplPushObject(final String source, final String destKey, final int timeout, final Class<V> clazz);
+	<V> V brPoplPushObject(final String key, final String destKey, final int timeout, final Class<V> clazz);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并返回反序列化为 clazz 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并返回反序列化为 clazz 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush.html</a>
+	 * </p>
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -1147,18 +1167,19 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @see java.lang.Class
 	 */
-	<V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout, final Class<V> clazz);
+	<V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout, final Class<V> clazz);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并返回反序列化为 type 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并返回反序列化为 type 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush.html</a>
+	 * </p>
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -1173,18 +1194,18 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @see java.lang.Class
 	 */
-	<V> V brPoplPushObject(final String source, final String destKey, final int timeout, final TypeReference<V> type);
+	<V> V brPoplPushObject(final String key, final String destKey, final int timeout, final TypeReference<V> type);
 
 	/**
-	 * 将列表 source 中的最后尾元素弹出，并返回反序列化为 type 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
-	 * 如果 source 不存在，值 null 被返回，并且不执行其他动作；
-	 * 如果 source 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
+	 * 将列表 key 中的最后尾元素弹出，并返回反序列化为 type 指定的对象；弹出的元素插入到列表 destKey ，作为 destKey 列表的的头元素；
+	 * 如果 key 不存在，值 null 被返回，并且不执行其他动作；
+	 * 如果 key 和 destKey 相同，则列表中的表尾元素被移动到表头，并返回该元素，可以把这种特殊情况视作列表的旋转(rotation)操作
 	 * RPOPLPUSH 是列表的阻塞式(blocking)弹出原语
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/list/rpoplpush.html" target="_blank">http://redisdoc.com/list/rpoplpush
 	 * .html</a></p>
 	 *
-	 * @param source
+	 * @param key
 	 * 		Key
 	 * @param destKey
 	 * 		目标 Key
@@ -1199,7 +1220,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @see java.lang.Class
 	 */
-	<V> V brPoplPushObject(final byte[] source, final byte[] destKey, final int timeout, final TypeReference<V> type);
+	<V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout, final TypeReference<V> type);
 
 	/**
 	 * 将值 value 插入到列表 key 的表尾
@@ -1211,7 +1232,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSH 操作后，表的长度
 	 */
-	Long rPush(final String key, final String value);
+	default Long rPush(final String key, final String value){
+		return rPush(key, new String[]{value});
+	}
 
 	/**
 	 * 将值 value 插入到列表 key 的表尾
@@ -1223,7 +1246,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSH 操作后，表的长度
 	 */
-	Long rPush(final byte[] key, final byte[] value);
+	default Long rPush(final byte[] key, final byte[] value){
+		return rPush(key, new byte[][]{value});
+	}
 
 	/**
 	 * 将值 value 序列化后，插入到列表 key 的表尾
@@ -1291,7 +1316,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
-	Long rPushX(final String key, final String value);
+	default Long rPushX(final String key, final String value){
+		return rPushX(key, new String[]{value});
+	}
 
 	/**
 	 * 将值 value 插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表
@@ -1303,7 +1330,9 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
-	Long rPushX(final byte[] key, final byte[] value);
+	default Long rPushX(final byte[] key, final byte[] value){
+		return rPushX(key, new byte[][]{value});
+	}
 
 	/**
 	 * 将值 value 序列化后，插入到列表 key 的表尾，当且仅当 key 存在并且是一个列表
