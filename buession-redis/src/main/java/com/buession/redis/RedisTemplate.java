@@ -43,8 +43,9 @@ import java.util.Set;
  */
 public class RedisTemplate extends BaseRedisTemplate implements KeyOperations, StringOperations, HashOperations,
 		ListOperations, SetOperations, SortedSetOperations, HyperLogLogOperations, GeoOperations, BitMapOperations,
-		TransactionOperations, PubSubOperations, DatabaseOperations, LuaOperations, PersistenceOperations,
-		ReplicationOperations, ClientAndServerOperations, ConfigureOperations, InternalOperations, DebugOperations {
+		TransactionOperations, PubSubOperations, ConnectionOperations, DatabaseOperations, ScriptOperations,
+		PersistenceOperations, ReplicationOperations, ServerOperations, ConfigureOperations, InternalOperations,
+		DebugOperations {
 
 	/**
 	 * 构造函数

@@ -27,57 +27,39 @@ package com.buession.redis.core.command;
 import com.buession.lang.Status;
 
 /**
- * HyperLogLog 命令
+ * 连接相关命令
  *
  * <p>详情说明
- * <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a>
- * </p>
+ * <a href="http://www.redis.cn/commands.html#connection" target="_blank">http://www.redis.cn/commands.html#connection</a></p>
  *
  * @author Yong.Teng
  */
-public interface BinaryHyperLogLogCommands extends BinaryRedisCommands {
+public interface BinaryConnectionCommands extends BinaryRedisCommands {
 
 	/**
-	 * 将任意数量的元素添加到指定的 HyperLogLog 里面
+	 * 通过密码进行认证
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/pfadd.html" target="_blank">http://redisdoc
-	 * .com/hyperloglog/pfadd.html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/client_and_server/auth.html" target="_blank">http://redisdoc.com/client_and_server/auth.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
-	 * @param elements
-	 * 		一个或多个元素
+	 * @param password
+	 * 		密码
 	 *
-	 * @return 操作结果，如果 HyperLogLog 的内部储存被修改了，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 * @return 密码匹配时返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	Status pfAdd(final byte[] key, final byte[]... elements);
+	Status auth(final byte[] password);
 
 	/**
-	 * 将多个 HyperLogLog 合并（merge）为一个 HyperLogLog，并保存到 destKey 中
+	 * 打印一个特定的字符串
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/pfmerge.html" target="_blank">http://redisdoc
-	 * .com/hyperloglog/pfmerge.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/debug/echo.html" target="_blank">http://redisdoc.com/debug/echo.html</a>
+	 * </p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param keys
-	 * 		一个或多个待合并的 Key
+	 * @param str
+	 * 		待打印的字符串
 	 *
-	 * @return 操作结果
+	 * @return 字符串本身
 	 */
-	Status pfMerge(final byte[] destKey, final byte[]... keys);
-
-	/**
-	 * 获取所有给定 HyperLogLog 的并集的近似基数，这个近似基数是通过将所有给定 HyperLogLog 合并至一个临时 HyperLogLog 来计算得出的
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/pfmerge.html" target="_blank">http://redisdoc
-	 * .com/hyperloglog/pfmerge.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 所有给定 HyperLogLog 的并集的近似基数
-	 */
-	Long pfCount(final byte[]... keys);
+	byte[] echo(final byte[] str);
 
 }

@@ -30,14 +30,12 @@ import com.buession.redis.core.command.*;
 /**
  * @author Yong.Teng
  */
-public interface RedisClient extends KeyCommands, BinaryKeyCommands, StringCommands, BinaryStringCommands,
-		HashCommands, BinaryHashCommands, ListCommands, BinaryListCommands, SetCommands, BinarySetCommands,
-		SortedSetCommands, BinarySortedSetCommands, HyperLogLogCommands, BinaryHyperLogLogCommands, GeoCommands,
-		BinaryGeoCommands, BitMapCommands, BinaryBitMapCommands, TransactionCommands, BinaryTransactionCommands,
-		PubSubCommands, BinaryPubSubCommands, DatabaseCommand, BinaryDatabaseCommand, LuaCommands, BinaryLuaCommands,
-		PersistenceCommand, BinaryPersistenceCommand, ReplicationCommands, BinaryReplicationCommands,
-		ClientAndServerCommands, BinaryClientAndServerCommands, ConfigureCommands, BinaryConfigureCommands,
-		InternalCommands, BinaryInternalCommands, DebugCommands, BinaryDebugCommands {
+public interface RedisClient extends KeyCommands, StringCommands, BinaryStringCommands, HashCommands, ListCommands,
+		SetCommands, BinarySetCommands, SortedSetCommands, BinarySortedSetCommands, HyperLogLogCommands, GeoCommands,
+		BitMapCommands, BinaryBitMapCommands, TransactionCommands, BinaryTransactionCommands, PubSubCommands,
+		ConnectionCommands, DatabaseCommand, ScriptCommands, PersistenceCommand, ReplicationCommands, ServerCommands,
+		ConfigureCommands, BinaryConfigureCommands, InternalCommands, BinaryInternalCommands, DebugCommands,
+		BinaryDebugCommands, BinaryRedisCommands {
 
 	RedisConnection getConnection();
 

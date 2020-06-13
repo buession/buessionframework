@@ -238,6 +238,110 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
+	public Long touch(final String... keys){
+		return execute(new Executor<ShardedJedis, Long>() {
+
+			@Override
+			public Long execute(ShardedJedis cmd){
+				if(isTransaction()){
+					return getTransaction().touch(keys).get();
+				}else{
+					if(keys != null){
+						long result = 0;
+
+						for(String key : keys){
+							result += cmd.touch(key);
+						}
+
+						return result;
+					}
+
+					return 0L;
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Long touch(final byte[]... keys){
+		return execute(new Executor<ShardedJedis, Long>() {
+
+			@Override
+			public Long execute(ShardedJedis cmd){
+				if(isTransaction()){
+					return getTransaction().touch(keys).get();
+				}else{
+					if(keys != null){
+						long result = 0;
+
+						for(byte[] key : keys){
+							result += cmd.touch(key);
+						}
+
+						return result;
+					}
+
+					return 0L;
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Long unlink(final String... keys){
+		return execute(new Executor<ShardedJedis, Long>() {
+
+			@Override
+			public Long execute(ShardedJedis cmd){
+				if(isTransaction()){
+					return getTransaction().unlink(keys).get();
+				}else{
+					if(keys != null){
+						long result = 0;
+
+						for(String key : keys){
+							result += cmd.unlink(key);
+						}
+
+						return result;
+					}
+
+					return 0L;
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Long unlink(final byte[]... keys){
+		return execute(new Executor<ShardedJedis, Long>() {
+
+			@Override
+			public Long execute(ShardedJedis cmd){
+				if(isTransaction()){
+					return getTransaction().unlink(keys).get();
+				}else{
+					if(keys != null){
+						long result = 0;
+
+						for(byte[] key : keys){
+							result += cmd.unlink(key);
+						}
+
+						return result;
+					}
+
+					return 0L;
+				}
+			}
+
+		});
+	}
+
+	@Override
 	public Long del(final String... keys){
 		return execute(new Executor<ShardedJedis, Long>() {
 

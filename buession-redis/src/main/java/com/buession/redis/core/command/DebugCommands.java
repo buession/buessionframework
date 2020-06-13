@@ -37,30 +37,6 @@ import com.buession.redis.core.RedisMonitor;
 public interface DebugCommands extends RedisCommands {
 
 	/**
-	 * 打印一个特定的字符串
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/debug/echo.html" target="_blank">http://redisdoc.com/debug/echo.html</a>
-	 * </p>
-	 *
-	 * @param str
-	 * 		待打印的字符串
-	 *
-	 * @return 字符串本身
-	 */
-	String echo(final String str);
-
-	/**
-	 * 使用客户端向 Redis 服务器发送一个 PING ，如果服务器运作正常的话，会返回一个 PONG；
-	 * 通常用于测试与服务器的连接是否仍然生效，或者用于测量延迟值
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/debug/ping.html" target="_blank">http://redisdoc.com/debug/ping.html</a>
-	 * </p>
-	 *
-	 * @return PING 结果
-	 */
-	Status ping();
-
-	/**
 	 * 命令允许从内部察看给定 key 的 Redis 对象，它通常用在除错(debugging)
 	 * 或者了解为了节省空间而对 key 使用特殊编码的情况；
 	 * 当将Redis用作缓存程序时，你也可以通过 OBJECT 命令中的信息，决定 key 的驱逐策略(eviction policies)
@@ -110,7 +86,8 @@ public interface DebugCommands extends RedisCommands {
 	 * 是一个调试命令，它不应被客户端所使用
 	 *
 	 * <p>详情说明
-	 * <a href="http://redisdoc.com/debug/debug_object.html" target="_blank">http://redisdoc.com/debug/debug_object.html</a></p>
+	 * <a href="http://redisdoc.com/debug/debug_object.html" target="_blank">http://redisdoc.com/debug/debug_object
+	 * .html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -123,7 +100,8 @@ public interface DebugCommands extends RedisCommands {
 	 * 执行一个不合法的内存访问从而让 Redis 崩溃，仅在开发时用于 BUG 模拟
 	 *
 	 * <p>详情说明
-	 * <a href="http://redisdoc.com/debug/debug_segfault.html" target="_blank">http://redisdoc.com/debug/debug_segfault.html</a></p>
+	 * <a href="http://redisdoc.com/debug/debug_segfault.html" target="_blank">http://redisdoc.com/debug
+	 * /debug_segfault.html</a></p>
 	 *
 	 * @return 调试信息
 	 */

@@ -440,6 +440,30 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public Long touch(final String... keys){
+		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
+		return execute((client)->client.touch(makeRawKeys(keys)), ProtocolCommand.TOUCH, args);
+	}
+
+	@Override
+	public Long touch(final byte[]... keys){
+		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
+		return execute((client)->client.touch(makeByteKeys(keys)), ProtocolCommand.TOUCH, args);
+	}
+
+	@Override
+	public Long unlink(final String... keys){
+		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
+		return execute((client)->client.unlink(makeRawKeys(keys)), ProtocolCommand.UNLINK, args);
+	}
+
+	@Override
+	public Long unlink(final byte[]... keys){
+		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
+		return execute((client)->client.unlink(makeByteKeys(keys)), ProtocolCommand.UNLINK, args);
+	}
+
+	@Override
 	public Long del(final String... keys){
 		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
 		return execute((client)->client.del(makeRawKeys(keys)), ProtocolCommand.DEL, args);
@@ -3707,17 +3731,51 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		return execute((client)->client.pUnSubscribe(patterns), ProtocolCommand.PUNSUBSCRIBE, args);
 	}
 
-	@Override
-	public Status select(final int db){
-		final CommandArguments args = CommandArguments.getInstance().put("db", db);
-		return execute((client)->client.select(db), ProtocolCommand.SELECT, args);
-	}
+    @Override
+    public Status auth(final String password){
+        final CommandArguments args = CommandArguments.getInstance().put("password", password);
+        return execute((client)->client.auth(password), ProtocolCommand.AUTH, args);
+    }
 
-	@Override
-	public Status swapdb(final int db1, final int db2){
-		final CommandArguments args = CommandArguments.getInstance().put("db1", db1).put("db2", db2);
-		return execute((client)->client.swapdb(db1, db2), ProtocolCommand.SWAPDB, args);
-	}
+    @Override
+    public Status auth(final byte[] password){
+        final CommandArguments args = CommandArguments.getInstance().put("password", password);
+        return execute((client)->client.auth(password), ProtocolCommand.AUTH, args);
+    }
+
+    @Override
+    public String echo(final String str){
+        final CommandArguments args = CommandArguments.getInstance().put("str", str);
+        return execute((client)->client.echo(str), ProtocolCommand.ECHO, args);
+    }
+
+    @Override
+    public byte[] echo(final byte[] str){
+        final CommandArguments args = CommandArguments.getInstance().put("str", str);
+        return execute((client)->client.echo(str), ProtocolCommand.ECHO, args);
+    }
+
+    @Override
+    public Status ping(){
+        return execute((client)->client.ping(), ProtocolCommand.PING);
+    }
+
+    @Override
+    public Status quit(){
+        return execute((client)->client.quit(), ProtocolCommand.QUIT);
+    }
+
+    @Override
+    public Status select(final int db){
+        final CommandArguments args = CommandArguments.getInstance().put("db", db);
+        return execute((client)->client.select(db), ProtocolCommand.SELECT, args);
+    }
+
+    @Override
+    public Status swapdb(final int db1, final int db2){
+        final CommandArguments args = CommandArguments.getInstance().put("db1", db1).put("db2", db2);
+        return execute((client)->client.swapdb(db1, db2), ProtocolCommand.SWAPDB, args);
+    }
 
 	@Override
 	public Long dbSize(){
@@ -3872,18 +3930,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Status auth(final String password){
-		final CommandArguments args = CommandArguments.getInstance().put("password", password);
-		return execute((client)->client.auth(password), ProtocolCommand.AUTH, args);
-	}
-
-	@Override
-	public Status auth(final byte[] password){
-		final CommandArguments args = CommandArguments.getInstance().put("password", password);
-		return execute((client)->client.auth(password), ProtocolCommand.AUTH, args);
-	}
-
-	@Override
 	public Info info(final InfoSection section){
 		final CommandArguments args = CommandArguments.getInstance().put("section", section);
 		return execute((client)->client.info(), ProtocolCommand.INFO, args);
@@ -3925,11 +3971,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Status clientKill(final String host, final int port){
 		final CommandArguments args = CommandArguments.getInstance().put("host", host).put("port", port);
 		return execute((client)->client.clientKill(host, port), ProtocolCommand.CLIENT_KILL, args);
-	}
-
-	@Override
-	public Status quit(){
-		return execute((client)->client.quit(), ProtocolCommand.QUIT);
 	}
 
 	@Override
@@ -4069,23 +4110,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Object pSync(final byte[] masterRunId, final long offset){
 		final CommandArguments args = CommandArguments.getInstance().put("masterRunId", masterRunId).put("offset", offset);
 		return execute((client)->client.pSync(masterRunId, offset), ProtocolCommand.PSYNC, args);
-	}
-
-	@Override
-	public String echo(final String str){
-		final CommandArguments args = CommandArguments.getInstance().put("str", str);
-		return execute((client)->client.echo(str), ProtocolCommand.ECHO, args);
-	}
-
-	@Override
-	public byte[] echo(final byte[] str){
-		final CommandArguments args = CommandArguments.getInstance().put("str", str);
-		return execute((client)->client.echo(str), ProtocolCommand.ECHO, args);
-	}
-
-	@Override
-	public Status ping(){
-		return execute((client)->client.ping(), ProtocolCommand.PING);
 	}
 
 	@Override

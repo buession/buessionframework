@@ -34,19 +34,6 @@ package com.buession.redis.core.command;
 public interface BinaryDebugCommands extends BinaryRedisCommands {
 
 	/**
-	 * 打印一个特定的字符串
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/debug/echo.html" target="_blank">http://redisdoc.com/debug/echo.html</a>
-	 * </p>
-	 *
-	 * @param str
-	 * 		待打印的字符串
-	 *
-	 * @return 字符串本身
-	 */
-	byte[] echo(final byte[] str);
-
-	/**
 	 * 命令允许从内部察看给定 key 的 Redis 对象，它通常用在除错(debugging)
 	 * 或者了解为了节省空间而对 key 使用特殊编码的情况；
 	 * 当将Redis用作缓存程序时，你也可以通过 OBJECT 命令中的信息，决定 key 的驱逐策略(eviction policies)

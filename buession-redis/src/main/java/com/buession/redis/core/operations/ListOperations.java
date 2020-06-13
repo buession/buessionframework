@@ -26,7 +26,6 @@ package com.buession.redis.core.operations;
 
 import com.buession.core.serializer.type.TypeReference;
 import com.buession.lang.Status;
-import com.buession.redis.core.command.BinaryListCommands;
 import com.buession.redis.core.command.ListCommands;
 
 import java.util.List;
@@ -38,7 +37,7 @@ import java.util.List;
  *
  * @author Yong.Teng
  */
-public interface ListOperations extends ListCommands, BinaryListCommands, RedisOperations {
+public interface ListOperations extends ListCommands, RedisOperations {
 
 	/**
 	 * 将值 value 插入到列表 key 的表头

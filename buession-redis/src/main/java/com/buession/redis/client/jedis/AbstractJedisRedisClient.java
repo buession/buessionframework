@@ -1359,6 +1359,15 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
+	public String echo(final String str){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().echo(str).get());
+		}else{
+			return execute((cmd)->cmd.echo(str));
+		}
+	}
+
+	@Override
 	public Object pSync(final String masterRunId, final int offset){
 		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
 	}
@@ -1376,15 +1385,6 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public Object pSync(final byte[] masterRunId, final long offset){
 		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
-	}
-
-	@Override
-	public String echo(final String str){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().echo(str).get());
-		}else{
-			return execute((cmd)->cmd.echo(str));
-		}
 	}
 
 	protected redis.clients.jedis.Transaction getTransaction(){

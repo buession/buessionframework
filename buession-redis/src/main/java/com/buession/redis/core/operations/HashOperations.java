@@ -27,7 +27,6 @@ package com.buession.redis.core.operations;
 import com.buession.core.serializer.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
-import com.buession.redis.core.command.BinaryHashCommands;
 import com.buession.redis.core.command.HashCommands;
 import com.buession.redis.utils.ReturnUtils;
 
@@ -41,7 +40,7 @@ import java.util.Map;
  *
  * @author Yong.Teng
  */
-public interface HashOperations extends HashCommands, BinaryHashCommands, RedisOperations {
+public interface HashOperations extends HashCommands, RedisOperations {
 
 	/**
 	 * 获取哈希表 key 中所有域的值，并将值反序列化为对象

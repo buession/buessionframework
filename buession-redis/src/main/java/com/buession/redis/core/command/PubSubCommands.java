@@ -38,8 +38,9 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 将信息 message 发送到指定的频道 channel
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/publish.html" target="_blank">http://redisdoc.com/pubsub/publish
-	 * .html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/pubsub/publish.html" target="_blank">http://redisdoc.com/pubsub/publish.html</a>
+	 * </p>
 	 *
 	 * @param channel
 	 * 		频道名称
@@ -49,6 +50,22 @@ public interface PubSubCommands extends RedisCommands {
 	 * @return 接收到信息 message 的订阅者数量
 	 */
 	Long publish(final String channel, final String message);
+
+	/**
+	 * 将信息 message 发送到指定的频道 channel
+	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/pubsub/publish.html" target="_blank">http://redisdoc.com/pubsub/publish.html</a>
+	 * </p>
+	 *
+	 * @param channel
+	 * 		频道名称
+	 * @param message
+	 * 		信息
+	 *
+	 * @return 接收到信息 message 的订阅者数量
+	 */
+	Long publish(final byte[] channel, final byte[] message);
 
 	/**
 	 * 订阅给定的一个或多个频道的信息
@@ -64,6 +81,19 @@ public interface PubSubCommands extends RedisCommands {
 	void subscribe(final String[] channels, final PubSubListener<String> pubSubListener);
 
 	/**
+	 * 订阅给定的一个或多个频道的信息
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/subscribe.html" target="_blank">http://redisdoc
+	 * .com/pubsub/subscribe.html</a></p>
+	 *
+	 * @param channels
+	 * 		一个或多个频道
+	 * @param pubSubListener
+	 * 		订阅监听者
+	 */
+	void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener);
+
+	/**
 	 * 订阅一个或多个符合给定模式的频道的信息
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/psubscribe.html" target="_blank">http://redisdoc
@@ -77,10 +107,23 @@ public interface PubSubCommands extends RedisCommands {
 	void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener);
 
 	/**
+	 * 订阅一个或多个符合给定模式的频道的信息
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/psubscribe.html" target="_blank">http://redisdoc.com/pubsub
+	 * /psubscribe.html</a></p>
+	 *
+	 * @param patterns
+	 * 		一个或多个模式
+	 * @param pubSubListener
+	 * 		订阅监听者
+	 */
+	void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener);
+
+	/**
 	 * 指示客户端退订所有频道
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/unsubscribe.html" target="_blank">http://redisdoc
-	 * .com/pubsub/unsubscribe.html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/pubsub/unsubscribe.html" target="_blank">http://redisdoc.com/pubsub/unsubscribe.html</a></p>
 	 *
 	 * @return 在不同的客户端中有不同的表现
 	 */
@@ -89,8 +132,8 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 指示客户端退订给定的一个或多个频道
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/unsubscribe.html" target="_blank">http://redisdoc
-	 * .com/pubsub/unsubscribe.html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/pubsub/unsubscribe.html" target="_blank">http://redisdoc.com/pubsub/unsubscribe.html</a></p>
 	 *
 	 * @param channels
 	 * 		一个或多个频道
@@ -100,10 +143,23 @@ public interface PubSubCommands extends RedisCommands {
 	Object unSubscribe(final String... channels);
 
 	/**
+	 * 指示客户端退订给定的一个或多个频道
+	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/pubsub/unsubscribe.html" target="_blank">http://redisdoc.com/pubsub/unsubscribe.html</a></p>
+	 *
+	 * @param channels
+	 * 		一个或多个频道
+	 *
+	 * @return 在不同的客户端中有不同的表现
+	 */
+	Object unSubscribe(final byte[]... channels);
+
+	/**
 	 * 指示客户端退订使用 PSUBSCRIBE pattern [pattern …] 命令订阅的所有模式消息
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/punsubscribe.html" target="_blank">http://redisdoc
-	 * .com/pubsub/punsubscribe.html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/pubsub/punsubscribe.html" target="_blank">http://redisdoc.com/pubsub/punsubscribe.html</a></p>
 	 *
 	 * @return 在不同的客户端中有不同的表现
 	 */
@@ -112,8 +168,8 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 指示客户端退订所有给定一个或多个模式的消息
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/punsubscribe.html" target="_blank">http://redisdoc
-	 * .com/pubsub/punsubscribe.html</a></p>
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/pubsub/punsubscribe.html" target="_blank">http://redisdoc.com/pubsub/punsubscribe.html</a></p>
 	 *
 	 * @param patterns
 	 * 		一个或多个模式
@@ -121,5 +177,18 @@ public interface PubSubCommands extends RedisCommands {
 	 * @return 在不同的客户端中有不同的表现
 	 */
 	Object pUnSubscribe(final String... patterns);
+
+	/**
+	 * 指示客户端退订所有给定一个或多个模式的消息
+	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/pubsub/punsubscribe.html" target="_blank">http://redisdoc.com/pubsub/punsubscribe.html</a></p>
+	 *
+	 * @param patterns
+	 * 		一个或多个模式
+	 *
+	 * @return 在不同的客户端中有不同的表现
+	 */
+	Object pUnSubscribe(final byte[]... patterns);
 
 }

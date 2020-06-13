@@ -27,7 +27,6 @@ package com.buession.redis.core.operations;
 import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
 import com.buession.redis.core.RedisNode;
-import com.buession.redis.core.command.BinaryKeyCommands;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.utils.ReturnUtils;
 
@@ -41,7 +40,7 @@ import java.util.Date;
  *
  * @author Yong.Teng
  */
-public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOperations {
+public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	/**
 	 * 为给定 key 设置过期时间
@@ -265,6 +264,56 @@ public interface KeyOperations extends KeyCommands, BinaryKeyCommands, RedisOper
 	default Status migrate(final byte[] key, final String host, final int db, final int timeout,
 			final MigrateOperation migrateOperation){
 		return migrate(key, host, RedisNode.DEFAULT_PORT, db, timeout, migrateOperation);
+	}
+
+	/**
+	 * 修改指定一个或多个 key 最后访问时间
+	 *
+	 * @param key
+	 * 		key
+	 *
+	 * @return 操作成功时返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status touch(final String key){
+		return ReturnUtils.statusForBool(touch(new String[]{key}) > 0);
+	}
+
+	/**
+	 * 修改指定一个或多个 key 最后访问时间
+	 *
+	 * @param key
+	 * 		key
+	 *
+	 * @return 操作成功时返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status touch(final byte[] key){
+		return ReturnUtils.statusForBool(touch(new byte[][]{key}) > 0);
+	}
+
+	/**
+	 * 删除给定的 key，该命令会在另一个线程中回收内存，因此它是非阻塞的。
+	 * 仅将 keys 从 keyspace 元数据中删除，真正的删除会在后续异步操作。
+	 *
+	 * @param key
+	 * 		key
+	 *
+	 * @return 当有 key 被删除时返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status unlink(final String key){
+		return ReturnUtils.statusForBool(unlink(new String[]{key}) > 0);
+	}
+
+	/**
+	 * 删除给定的 key，该命令会在另一个线程中回收内存，因此它是非阻塞的。
+	 * 仅将 keys 从 keyspace 元数据中删除，真正的删除会在后续异步操作。
+	 *
+	 * @param key
+	 * 		key
+	 *
+	 * @return 当有 key 被删除时返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status unlink(final byte[] key){
+		return ReturnUtils.statusForBool(unlink(new byte[][]{key}) > 0);
 	}
 
 	/**

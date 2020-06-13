@@ -24,8 +24,7 @@
  */
 package com.buession.redis.core.operations;
 
-import com.buession.redis.core.command.BinaryLuaCommands;
-import com.buession.redis.core.command.LuaCommands;
+import com.buession.redis.core.command.ScriptCommands;
 
 import java.util.List;
 
@@ -36,7 +35,7 @@ import java.util.List;
  *
  * @author Yong.Teng
  */
-public interface LuaOperations extends LuaCommands, BinaryLuaCommands, RedisOperations {
+public interface ScriptOperations extends ScriptCommands, RedisOperations {
 
 	/**
 	 * 对 Lua 脚本进行求值

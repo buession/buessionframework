@@ -438,6 +438,42 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
+	public Long touch(final String... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().touch(keys).get());
+		}else{
+			return execute((cmd)->cmd.touch(keys));
+		}
+	}
+
+	@Override
+	public Long touch(final byte[]... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().touch(keys).get());
+		}else{
+			return execute((cmd)->cmd.touch(keys));
+		}
+	}
+
+	@Override
+	public Long unlink(final String... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().unlink(keys).get());
+		}else{
+			return execute((cmd)->cmd.unlink(keys));
+		}
+	}
+
+	@Override
+	public Long unlink(final byte[]... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().unlink(keys).get());
+		}else{
+			return execute((cmd)->cmd.unlink(keys));
+		}
+	}
+
+	@Override
 	public Long del(final String... keys){
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().del(keys).get());
@@ -2287,6 +2323,56 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
+	public Status auth(final String password){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.AUTH);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.auth(password)));
+		}
+	}
+
+	@Override
+	public Status auth(final byte[] password){
+		return auth(SafeEncoder.encode(password));
+	}
+
+	@Override
+	public String echo(final String str){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().echo(str).get());
+		}else{
+			return execute((cmd)->cmd.echo(str));
+		}
+	}
+
+	@Override
+	public byte[] echo(final byte[] str){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().echo(str).get());
+		}else{
+			return execute((cmd)->cmd.echo(str));
+		}
+	}
+
+	@Override
+	public Status ping(){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool("PONG".equalsIgnoreCase(getTransaction().ping().get())));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool("PONG".equalsIgnoreCase(cmd.ping())));
+		}
+	}
+
+	@Override
+	public Status quit(){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.QUIT);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.quit()));
+		}
+	}
+
+	@Override
 	public Status select(final int db){
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().select(db).get()));
@@ -2571,20 +2657,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
-	public Status auth(final String password){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.AUTH);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.auth(password)));
-		}
-	}
-
-	@Override
-	public Status auth(final byte[] password){
-		return auth(SafeEncoder.encode(password));
-	}
-
-	@Override
 	public Info info(final InfoSection section){
 		if(isTransaction()){
 			return execute((cmd)->InfoUtil.convert(getTransaction().info(section.name().toLowerCase()).get()));
@@ -2643,6 +2715,11 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
+	public String clientId(){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_ID);
+	}
+
+	@Override
 	public List<Client> clientList(){
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_LIST);
@@ -2657,15 +2734,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_KILL);
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.clientKill(host + ":" + port)));
-		}
-	}
-
-	@Override
-	public Status quit(){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.QUIT);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.quit()));
 		}
 	}
 
@@ -2770,24 +2838,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 
 			}
 		});
-	}
-
-	@Override
-	public byte[] echo(final byte[] str){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().echo(str).get());
-		}else{
-			return execute((cmd)->cmd.echo(str));
-		}
-	}
-
-	@Override
-	public Status ping(){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool("PONG".equalsIgnoreCase(getTransaction().ping().get())));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool("PONG".equalsIgnoreCase(cmd.ping())));
-		}
 	}
 
 	@Override

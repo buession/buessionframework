@@ -27,7 +27,6 @@ package com.buession.redis.core.operations;
 import com.buession.lang.Geo;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
-import com.buession.redis.core.command.BinaryGeoCommands;
 import com.buession.redis.core.command.GeoCommands;
 
 import java.util.List;
@@ -39,7 +38,7 @@ import java.util.List;
  *
  * @author Yong.Teng
  */
-public interface GeoOperations extends GeoCommands, BinaryGeoCommands, RedisOperations {
+public interface GeoOperations extends GeoCommands, RedisOperations {
 
 	/**
 	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面

@@ -26,7 +26,6 @@ package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.core.RedisNode;
-import com.buession.redis.core.command.BinaryReplicationCommands;
 import com.buession.redis.core.command.ReplicationCommands;
 
 /**
@@ -38,7 +37,7 @@ import com.buession.redis.core.command.ReplicationCommands;
  *
  * @author Yong.Teng
  */
-public interface ReplicationOperations extends ReplicationCommands, BinaryReplicationCommands, RedisOperations {
+public interface ReplicationOperations extends ReplicationCommands, RedisOperations {
 
 	/**
 	 * 用于在 Redis 运行时动态地修改复制(replication)功能的行为；

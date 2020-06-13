@@ -25,13 +25,53 @@
 package com.buession.redis.core.command;
 
 /**
- * 数据库命令
- *
- * <p>详情说明 <a href="http://redisdoc.com/database/index.html" target="_blank">http://redisdoc.com/database/index.html</a>
- * </p>
- *
  * @author Yong.Teng
  */
-public interface BinaryDatabaseCommand extends BinaryRedisCommands {
+public enum ProtocolCommandGroup {
+
+	CLUSTER("Cluster"),
+
+	CONNECTION("Connection"),
+
+	GEO("Geo"),
+
+	HASH("Hash"),
+
+	HYPERLOGLOG("HyperLogLog"),
+
+	KEY("Key"),
+
+	LIST("List"),
+
+	PUBSUB("PubSub"),
+
+	SCRIPTING("Scripting"),
+
+	SERVER("Server"),
+
+	SET("Set"),
+
+	SORTEDSET("Sorted Set"),
+
+	STREAM("Stream"),
+
+	STRING("String"),
+
+	TRANSACTION("Transaction");
+
+	private String value;
+
+	ProtocolCommandGroup(final String value){
+		this.value = value;
+	}
+
+	public String getValue(){
+		return value;
+	}
+
+	@Override
+	public String toString(){
+		return value;
+	}
 
 }

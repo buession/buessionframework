@@ -32,27 +32,14 @@ import com.buession.redis.core.RedisServerTime;
 import java.util.List;
 
 /**
- * 客户端与服务器命令
+ * 服务端命令
  *
  * <p>详情说明
- * <a href="http://redisdoc.com/client_and_server/index.html" target="_blank">http://redisdoc.com/client_and_server/index.html</a></p>
+ * <a href="http://www.redis.cn/commands.html#server" target="_blank">http://www.redis.cn/commands.html#server</a></p>
  *
  * @author Yong.Teng
  */
-public interface ClientAndServerCommands extends RedisCommands {
-
-	/**
-	 * 通过密码进行认证
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/client_and_server/auth.html" target="_blank">http://redisdoc.com/client_and_server/auth.html</a></p>
-	 *
-	 * @param password
-	 * 		密码
-	 *
-	 * @return 密码匹配时返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status auth(final String password);
+public interface ServerCommands extends RedisCommands {
 
 	/**
 	 * 获取关于 Redis 服务器通过 section 指定的部分信息
@@ -101,6 +88,19 @@ public interface ClientAndServerCommands extends RedisCommands {
 	Status clientSetName(final String name);
 
 	/**
+	 * 为当前连接分配一个名字
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_setname.html" target="_blank">http://redisdoc
+	 * .com/client_and_server/client_setname.html</a></p>
+	 *
+	 * @param name
+	 * 		名字
+	 *
+	 * @return 设置成功时返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status clientSetName(final byte[] name);
+
+	/**
 	 * 获取连接时设置的名字
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_getname.html" target="_blank">http://redisdoc
@@ -109,6 +109,16 @@ public interface ClientAndServerCommands extends RedisCommands {
 	 * @return 连接时设置的名字
 	 */
 	String clientGetName();
+
+	/**
+	 * 获取连接时设置的名字
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_getname.html" target="_blank">http://redisdoc
+	 * .com/client_and_server/client_getname.html</a></p>
+	 *
+	 * @return 连接时设置的名字
+	 */
+	String clientId();
 
 	/**
 	 * 获取所有连接到服务器的客户端信息和统计数据
@@ -136,16 +146,6 @@ public interface ClientAndServerCommands extends RedisCommands {
 	Status clientKill(final String host, final int port);
 
 	/**
-	 * 请求服务器关闭与当前客户端的连接
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/client_and_server/quit.html" target="_blank">http://redisdoc.com/client_and_server/quit.html</a></p>
-	 *
-	 * @return 总是返回 Status.SUCCESS
-	 */
-	Status quit();
-
-	/**
 	 * SHUTDOWN 命令执行以下操作：
 	 * 1）停止所有客户端
 	 * 2）如果有至少一个保存点在等待，执行 SAVE 命令
@@ -153,8 +153,8 @@ public interface ClientAndServerCommands extends RedisCommands {
 	 * 4）关闭 redis 服务器
 	 *
 	 * <p>详情说明
-	 * <a href="http://redisdoc.com/client_and_server/shutdown.html" target="_blank">http://redisdoc.com
-	 * /client_and_server/shutdown.html</a></p>
+	 * <a href="http://redisdoc.com/client_and_server/shutdown.html" target="_blank">http://redisdoc
+	 * .com/client_and_server/shutdown.html</a></p>
 	 */
 	void shutdown();
 
@@ -166,7 +166,8 @@ public interface ClientAndServerCommands extends RedisCommands {
 	 * 4）关闭 redis 服务器(server)
 	 *
 	 * <p>详情说明
-	 * <a href="http://redisdoc.com/client_and_server/shutdown.html" target="_blank">http://redisdoc.com/client_and_server/shutdown.html</a></p>
+	 * <a href="http://redisdoc.com/client_and_server/shutdown.html" target="_blank">http://redisdoc
+	 * .com/client_and_server/shutdown.html</a></p>
 	 *
 	 * @param save
 	 * 		是否强制让数据库执行保存操作

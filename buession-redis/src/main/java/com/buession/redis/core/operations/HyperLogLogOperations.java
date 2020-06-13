@@ -25,7 +25,6 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.core.command.BinaryHyperLogLogCommands;
 import com.buession.redis.core.command.HyperLogLogCommands;
 
 /**
@@ -37,7 +36,7 @@ import com.buession.redis.core.command.HyperLogLogCommands;
  *
  * @author Yong.Teng
  */
-public interface HyperLogLogOperations extends HyperLogLogCommands, BinaryHyperLogLogCommands, RedisOperations {
+public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperations {
 
 	/**
 	 * 将元素添加到指定的 HyperLogLog 里面

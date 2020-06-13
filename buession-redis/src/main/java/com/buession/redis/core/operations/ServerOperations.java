@@ -24,18 +24,16 @@
  */
 package com.buession.redis.core.operations;
 
-import com.buession.redis.core.command.BinaryClientAndServerCommands;
-import com.buession.redis.core.command.ClientAndServerCommands;
+import com.buession.redis.core.command.ServerCommands;
 
 /**
- * 客户端与服务器运算
+ * 服务端运算
  *
  * <p>详情说明
- * <a href="http://redisdoc.com/client_and_server/index.html" target="_blank">http://redisdoc.com/client_and_server/index.html</a></p>
+ * <a href="http://www.redis.cn/commands.html#server" target="_blank">http://www.redis.cn/commands.html#server</a></p>
  *
  * @author Yong.Teng
  */
-public interface ClientAndServerOperations extends ClientAndServerCommands, BinaryClientAndServerCommands,
-		RedisOperations {
+public interface ServerOperations extends ServerCommands, RedisOperations {
 
 }

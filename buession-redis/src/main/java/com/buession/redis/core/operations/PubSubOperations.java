@@ -25,7 +25,6 @@
 package com.buession.redis.core.operations;
 
 import com.buession.redis.core.PubSubListener;
-import com.buession.redis.core.command.BinaryPubSubCommands;
 import com.buession.redis.core.command.PubSubCommands;
 
 /**
@@ -35,7 +34,7 @@ import com.buession.redis.core.command.PubSubCommands;
  *
  * @author Yong.Teng
  */
-public interface PubSubOperations extends PubSubCommands, BinaryPubSubCommands, RedisOperations {
+public interface PubSubOperations extends PubSubCommands, RedisOperations {
 
 	/**
 	 * 订阅给定的频道的信息

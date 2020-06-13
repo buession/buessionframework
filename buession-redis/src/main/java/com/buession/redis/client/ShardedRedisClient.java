@@ -535,6 +535,26 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
+	default Status auth(final String password){
+		throw new NotSupportedCommandException(ProtocolCommand.AUTH);
+	}
+
+	@Override
+	default Status auth(final byte[] password){
+		throw new NotSupportedCommandException(ProtocolCommand.AUTH);
+	}
+
+	@Override
+	default Status ping(){
+		throw new NotSupportedCommandException(ProtocolCommand.PING);
+	}
+
+	@Override
+	default Status quit(){
+		throw new NotSupportedCommandException(ProtocolCommand.QUIT);
+	}
+
+	@Override
 	default Status select(final int db){
 		throw new NotSupportedCommandException(ProtocolCommand.SELECT);
 	}
@@ -680,16 +700,6 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
-	default Status auth(final String password){
-		throw new NotSupportedCommandException(ProtocolCommand.AUTH);
-	}
-
-	@Override
-	default Status auth(final byte[] password){
-		throw new NotSupportedCommandException(ProtocolCommand.AUTH);
-	}
-
-	@Override
 	default Info info(final InfoSection section){
 		throw new NotSupportedCommandException(ProtocolCommand.INFO);
 	}
@@ -727,11 +737,6 @@ public interface ShardedRedisClient extends RedisClient {
 	@Override
 	default Status clientKill(final String host, final int port){
 		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_KILL);
-	}
-
-	@Override
-	default Status quit(){
-		throw new NotSupportedCommandException(ProtocolCommand.QUIT);
 	}
 
 	@Override
@@ -837,11 +842,6 @@ public interface ShardedRedisClient extends RedisClient {
 	@Override
 	default Object pSync(final byte[] masterRunId, final long offset){
 		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
-	}
-
-	@Override
-	default Status ping(){
-		throw new NotSupportedCommandException(ProtocolCommand.PING);
 	}
 
 	@Override

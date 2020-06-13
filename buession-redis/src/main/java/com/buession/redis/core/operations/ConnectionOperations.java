@@ -22,17 +22,18 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command;
+package com.buession.redis.core.operations;
+
+import com.buession.redis.core.command.ConnectionCommands;
 
 /**
- * 持久化命令
+ * 连接相关命令
  *
  * <p>详情说明
- * <a href="http://redisdoc.com/persistence/index.html" target="_blank">http://redisdoc.com/persistence/index.html</a>
- * </p>
+ * <a href="http://www.redis.cn/commands.html#connection" target="_blank">http://www.redis.cn/commands.html#connection</a></p>
  *
  * @author Yong.Teng
  */
-public interface BinaryPersistenceCommand extends BinaryRedisCommands {
+public interface ConnectionOperations extends ConnectionCommands, RedisOperations {
 
 }

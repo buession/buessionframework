@@ -30,15 +30,13 @@ import com.buession.redis.core.command.*;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRedisTemplate extends RedisAccessor implements KeyCommands, BinaryKeyCommands,
-		StringCommands, BinaryStringCommands, HashCommands, BinaryHashCommands, ListCommands, BinaryListCommands,
-		SetCommands, BinarySetCommands, SortedSetCommands, BinarySortedSetCommands, HyperLogLogCommands,
-		BinaryHyperLogLogCommands, GeoCommands, BinaryGeoCommands, BitMapCommands, BinaryBitMapCommands,
-		TransactionCommands, BinaryTransactionCommands, PubSubCommands, BinaryPubSubCommands, DatabaseCommand,
-		BinaryDatabaseCommand, LuaCommands, BinaryLuaCommands, PersistenceCommand, BinaryPersistenceCommand,
-		ReplicationCommands, BinaryReplicationCommands, ClientAndServerCommands, BinaryClientAndServerCommands,
-		ConfigureCommands, BinaryConfigureCommands, InternalCommands, BinaryInternalCommands, DebugCommands,
-		BinaryDebugCommands {
+public abstract class AbstractRedisTemplate extends RedisAccessor implements KeyCommands, StringCommands,
+		BinaryStringCommands, HashCommands, ListCommands, SetCommands, BinarySetCommands, SortedSetCommands,
+		BinarySortedSetCommands, HyperLogLogCommands, GeoCommands, BitMapCommands, BinaryBitMapCommands,
+		TransactionCommands, BinaryTransactionCommands, PubSubCommands, ConnectionCommands, BinaryConnectionCommands,
+		DatabaseCommand, ScriptCommands, PersistenceCommand, ReplicationCommands, ServerCommands, ConfigureCommands,
+		BinaryConfigureCommands, InternalCommands, BinaryInternalCommands, DebugCommands, BinaryDebugCommands,
+		BinaryRedisCommands {
 
 	/**
 	 * 构造函数
