@@ -29,8 +29,11 @@ import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.ListPosition;
+import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.ShardedRedisNode;
+import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.command.DebugCommands;
 import com.buession.redis.core.command.GeoCommands;
@@ -54,7 +57,6 @@ import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisShardInfo;
-import redis.clients.jedis.ListPosition;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.ZParams;
@@ -126,12 +128,12 @@ public class JedisClientUtils {
 		return scanResultConvert.deconvert(scanResult);
 	}
 
-	public final static SortingParams sortArgumentConvert(final KeyCommands.SortArgument sortArgument){
+	public final static SortingParams sortArgumentConvert(final SortArgument sortArgument){
 		final SortArgumentConvert sortArgumentConvert = new SortArgumentConvert();
 		return sortArgumentConvert.convert(sortArgument);
 	}
 
-	public final static MigrateParams migrateOperationConvert(final KeyCommands.MigrateOperation migrateOperation){
+	public final static MigrateParams migrateOperationConvert(final MigrateOperation migrateOperation){
 		final MigrateOperationConvert migrateOperationConvert = new MigrateOperationConvert();
 		return migrateOperationConvert.convert(migrateOperation);
 	}
@@ -141,7 +143,7 @@ public class JedisClientUtils {
 		return setArgumentConvert.convert(setArgument);
 	}
 
-	public final static ListPosition listPositionConvert(final ListCommands.ListPosition position){
+	public final static redis.clients.jedis.ListPosition listPositionConvert(final ListPosition position){
 		final ListPositionConvert listPositionConvert = new ListPositionConvert();
 		return listPositionConvert.convert(position);
 	}

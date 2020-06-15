@@ -31,7 +31,7 @@ import com.buession.redis.core.command.*;
  * @author Yong.Teng
  */
 public interface RedisClient extends ConnectionCommands, GeoCommands, HashCommands, HyperLogLogCommands, KeyCommands,
-		StringCommands, ListCommands, SetCommands, SortedSetCommands, TransactionCommands, PubSubCommands,
+		ListCommands, StringCommands, SetCommands, SortedSetCommands, TransactionCommands, PubSubCommands,
 		ScriptCommands, ServerCommands, DebugCommands {
 
 	RedisConnection getConnection();

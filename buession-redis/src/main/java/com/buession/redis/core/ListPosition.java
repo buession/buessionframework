@@ -22,38 +22,15 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
-
-import com.buession.redis.core.ListPosition;
-import com.buession.redis.core.convert.Convert;
+package com.buession.redis.core;
 
 /**
  * @author Yong.Teng
  */
-public class ListPositionConvert implements Convert<ListPosition, redis.clients.jedis.ListPosition> {
+public enum ListPosition {
 
-	@Override
-	public redis.clients.jedis.ListPosition convert(final ListPosition source){
-		switch(source){
-			case BEFORE:
-				return redis.clients.jedis.ListPosition.BEFORE;
-			case AFTER:
-				return redis.clients.jedis.ListPosition.AFTER;
-			default:
-				return null;
-		}
-	}
+	BEFORE,
 
-	@Override
-	public ListPosition deconvert(final redis.clients.jedis.ListPosition target){
-		switch(target){
-			case BEFORE:
-				return ListPosition.BEFORE;
-			case AFTER:
-				return ListPosition.AFTER;
-			default:
-				return null;
-		}
-	}
-
+	AFTER
+	
 }

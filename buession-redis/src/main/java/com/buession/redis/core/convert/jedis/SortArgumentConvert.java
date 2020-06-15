@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.convert.jedis;
 
 import com.buession.lang.Order;
-import com.buession.redis.core.command.KeyCommands;
+import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.convert.Convert;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Protocol;
@@ -37,69 +37,69 @@ import java.util.Iterator;
 /**
  * @author Yong.Teng
  */
-public class SortArgumentConvert implements Convert<KeyCommands.SortArgument, SortingParams> {
+public class SortArgumentConvert implements Convert<SortArgument, SortingParams> {
 
-    @Override
-    public SortingParams convert(final KeyCommands.SortArgument source){
-        if(source == null){
-            return null;
-        }
+	@Override
+	public SortingParams convert(final SortArgument source){
+		if(source == null){
+			return null;
+		}
 
-        final SortingParams sortingParams = new SortingParams();
+		final SortingParams sortingParams = new SortingParams();
 
-        if(source.getBy() != null){
-            sortingParams.by(source.getBy());
-        }
+		if(source.getBy() != null){
+			sortingParams.by(source.getBy());
+		}
 
-        if(source.getOrder() == Order.ASC){
-            sortingParams.asc();
-        }else if(source.getOrder() == Order.DESC){
-            sortingParams.desc();
-        }
+		if(source.getOrder() == Order.ASC){
+			sortingParams.asc();
+		}else if(source.getOrder() == Order.DESC){
+			sortingParams.desc();
+		}
 
-        if(source.getLimit() != null){
-            sortingParams.limit((int) source.getLimit().getOffset(), (int) source.getLimit().getCount());
-        }
+		if(source.getLimit() != null){
+			sortingParams.limit((int) source.getLimit().getOffset(), (int) source.getLimit().getCount());
+		}
 
-        if(source.getAlpha() != null){
-            sortingParams.alpha();
-        }
+		if(source.getAlpha() != null){
+			sortingParams.alpha();
+		}
 
-        return sortingParams;
-    }
+		return sortingParams;
+	}
 
-    @Override
-    public KeyCommands.SortArgument deconvert(final SortingParams target){
-        if(target == null){
-            return null;
-        }
+	@Override
+	public SortArgument deconvert(final SortingParams target){
+		if(target == null){
+			return null;
+		}
 
-        final KeyCommands.SortArgument.Builder sortArgumentBuilder = KeyCommands.SortArgument.Builder.create();
+		final SortArgument.Builder sortArgumentBuilder = SortArgument.Builder.create();
 
-        Collection<byte[]> collections = target.getParams();
-        Iterator<byte[]> iterator = collections.iterator();
+		Collection<byte[]> collections = target.getParams();
+		Iterator<byte[]> iterator = collections.iterator();
 
-        while(iterator.hasNext()){
-            byte[] v = iterator.next();
+		while(iterator.hasNext()){
+			byte[] v = iterator.next();
 
-            if(v == Protocol.Keyword.BY.raw){
-                v = iterator.next();
-                sortArgumentBuilder.by(SafeEncoder.encode(v));
-            }else if(v == Protocol.Keyword.ASC.raw){
-                sortArgumentBuilder.asc();
-            }else if(v == Protocol.Keyword.DESC.raw){
-                sortArgumentBuilder.desc();
-            }else if(v == Protocol.Keyword.LIMIT.raw){
-                byte[] start = iterator.next();
-                byte[] end = iterator.next();
-                sortArgumentBuilder.limit(Long.valueOf(SafeEncoder.encode(start)), Long.valueOf(SafeEncoder.encode
-                        (end)));
-            }else if(v == Protocol.Keyword.ALPHA.raw){
-                sortArgumentBuilder.alpha();
-            }
-        }
+			if(v == Protocol.Keyword.BY.raw){
+				v = iterator.next();
+				sortArgumentBuilder.by(SafeEncoder.encode(v));
+			}else if(v == Protocol.Keyword.ASC.raw){
+				sortArgumentBuilder.asc();
+			}else if(v == Protocol.Keyword.DESC.raw){
+				sortArgumentBuilder.desc();
+			}else if(v == Protocol.Keyword.LIMIT.raw){
+				byte[] start = iterator.next();
+				byte[] end = iterator.next();
+				sortArgumentBuilder.limit(Long.valueOf(SafeEncoder.encode(start)),
+						Long.valueOf(SafeEncoder.encode(end)));
+			}else if(v == Protocol.Keyword.ALPHA.raw){
+				sortArgumentBuilder.alpha();
+			}
+		}
 
-        return sortArgumentBuilder.build();
-    }
+		return sortArgumentBuilder.build();
+	}
 
 }

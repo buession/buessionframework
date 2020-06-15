@@ -31,6 +31,7 @@ import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.operations.*;
 import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.ListPosition;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,7 +44,7 @@ import java.util.Set;
  * @author Yong.Teng
  */
 public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperations, GeoOperations, HashOperations,
-		HyperLogLogOperations, KeyOperations, StringOperations, ListOperations, SetOperations, SortedSetOperations,
+		HyperLogLogOperations, KeyOperations, ListOperations, StringOperations, SetOperations, SortedSetOperations,
 		TransactionOperations, PubSubOperations, ScriptOperations, ServerOperations, DebugOperations {
 
 	/**
@@ -70,7 +71,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> V hGetObject(final byte[] key, final byte[] field){
-		return deserialize(hGet(key, field));
+		return deserializeBytes(hGet(key, field));
 	}
 
 	@Override
@@ -80,7 +81,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> V hGetObject(final byte[] key, final byte[] field, final Class<V> clazz){
-		return deserialize(hGet(key, field), clazz);
+		return deserializeBytes(hGet(key, field), clazz);
 	}
 
 	@Override
@@ -90,67 +91,67 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> V hGetObject(final byte[] key, final byte[] field, final TypeReference<V> type){
-		return deserialize(hGet(key, field), type);
+		return deserializeBytes(hGet(key, field), type);
 	}
 
 	@Override
 	public <V> Map<String, V> hGetAllObject(final String key){
-		return ReturnUtils.objectFromMapString(serializer, hGetAll(key));
+		return deserialize(hGetAll(key));
 	}
 
 	@Override
 	public <V> Map<byte[], V> hGetAllObject(final byte[] key){
-		return ReturnUtils.objectFromMapByte(serializer, hGetAll(key));
+		return deserializeBytes(hGetAll(key));
 	}
 
 	@Override
 	public <V> Map<String, V> hGetAllObject(final String key, final Class<V> clazz){
-		return ReturnUtils.objectFromMapString(serializer, hGetAll(key), clazz);
+		return deserialize(hGetAll(key), clazz);
 	}
 
 	@Override
 	public <V> Map<byte[], V> hGetAllObject(final byte[] key, final Class<V> clazz){
-		return ReturnUtils.objectFromMapByte(serializer, hGetAll(key), clazz);
+		return deserializeBytes(hGetAll(key), clazz);
 	}
 
 	@Override
 	public <V> Map<String, V> hGetAllObject(final String key, final TypeReference<V> type){
-		return ReturnUtils.objectFromMapString(serializer, hGetAll(key), type);
+		return deserialize(hGetAll(key), type);
 	}
 
 	@Override
 	public <V> Map<byte[], V> hGetAllObject(final byte[] key, final TypeReference<V> type){
-		return ReturnUtils.objectFromMapByte(serializer, hGetAll(key), type);
+		return deserializeBytes(hGetAll(key), type);
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final String key, final String... fields){
-		return ReturnUtils.objectFromListString(serializer, hMGet(key, fields));
+		return deserialize(hMGet(key, fields));
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final byte[] key, final byte[]... fields){
-		return ReturnUtils.objectFromListByte(serializer, hMGet(key, fields));
+		return deserializeBytes(hMGet(key, fields));
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final String key, final String[] fields, final Class<V> clazz){
-		return ReturnUtils.objectFromListString(serializer, hMGet(key, fields), clazz);
+		return deserialize(hMGet(key, fields), clazz);
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final Class<V> clazz){
-		return ReturnUtils.objectFromListByte(serializer, hMGet(key, fields), clazz);
+		return deserializeBytes(hMGet(key, fields), clazz);
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final String key, final String[] fields, final TypeReference<V> type){
-		return ReturnUtils.objectFromListString(serializer, hMGet(key, fields), type);
+		return deserialize(hMGet(key, fields), type);
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final TypeReference<V> type){
-		return ReturnUtils.objectFromListByte(serializer, hMGet(key, fields), type);
+		return deserializeBytes(hMGet(key, fields), type);
 	}
 
 	@Override
@@ -197,64 +198,444 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> List<V> hValsObject(final String key){
-		return ReturnUtils.objectFromListString(serializer, hVals(key));
+		return deserialize(hVals(key));
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final byte[] key){
-		return ReturnUtils.objectFromListByte(serializer, hVals(key));
+		return deserializeBytes(hVals(key));
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final String key, final Class<V> clazz){
-		return ReturnUtils.objectFromListString(serializer, hVals(key), clazz);
+		return deserialize(hVals(key), clazz);
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final byte[] key, final Class<V> clazz){
-		return ReturnUtils.objectFromListByte(serializer, hVals(key), clazz);
+		return deserializeBytes(hVals(key), clazz);
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final String key, final TypeReference<V> type){
-		return ReturnUtils.objectFromListString(serializer, hVals(key), type);
+		return deserialize(hVals(key), type);
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final byte[] key, final TypeReference<V> type){
-		return ReturnUtils.objectFromListByte(serializer, hVals(key), type);
+		return deserializeBytes(hVals(key), type);
 	}
 
-	protected <V> String serialize(final V object){
-		return serializer.serialize(object);
+	@Override
+	public <V> List<V> blPopObject(final String key, final int timeout){
+		return deserialize(blPop(key, timeout));
 	}
 
-	protected <V> byte[] serializeAsBytes(final V object){
-		return serializer.serializeAsBytes(object);
+	@Override
+	public <V> List<V> blPopObject(final byte[] key, final int timeout){
+		return deserializeBytes(blPop(key, timeout));
 	}
 
-	protected <V> V deserialize(final String str){
-		return serializer.deserialize(str);
+	@Override
+	public <V> List<V> blPopObject(final String key, final int timeout, final Class<V> clazz){
+		return deserialize(blPop(key, timeout), clazz);
 	}
 
-	protected <V> V deserialize(final byte[] str){
-		return serializer.deserialize(str);
+	@Override
+	public <V> List<V> blPopObject(final byte[] key, final int timeout, final Class<V> clazz){
+		return deserializeBytes(blPop(key, timeout), clazz);
 	}
 
-	protected <V> V deserialize(final String str, final Class<V> clazz){
-		return serializer.deserialize(str, clazz);
+	@Override
+	public <V> List<V> blPopObject(final String key, final int timeout, final TypeReference<V> type){
+		return deserialize(blPop(key, timeout), type);
 	}
 
-	protected <V> V deserialize(final byte[] str, final Class<V> clazz){
-		return serializer.deserialize(str, clazz);
+	@Override
+	public <V> List<V> blPopObject(final byte[] key, final int timeout, final TypeReference<V> type){
+		return deserializeBytes(blPop(key, timeout), type);
 	}
 
-	protected <V> V deserialize(final String str, final TypeReference<V> type){
-		return serializer.deserialize(str, type);
+	@Override
+	public <V> List<V> brPopObject(final String key, final int timeout){
+		return deserialize(brPop(key, timeout));
 	}
 
-	protected <V> V deserialize(final byte[] str, final TypeReference<V> type){
-		return serializer.deserialize(str, type);
+	@Override
+	public <V> List<V> brPopObject(final byte[] key, final int timeout){
+		return deserializeBytes(brPop(key, timeout));
+	}
+
+	@Override
+	public <V> List<V> brPopObject(final String key, final int timeout, final Class<V> clazz){
+		return deserialize(brPop(key, timeout), clazz);
+	}
+
+	@Override
+	public <V> List<V> brPopObject(final byte[] key, final int timeout, final Class<V> clazz){
+		return deserializeBytes(brPop(key, timeout), clazz);
+	}
+
+	@Override
+	public <V> List<V> brPopObject(final String key, final int timeout, final TypeReference<V> type){
+		return deserialize(brPop(key, timeout), type);
+	}
+
+	@Override
+	public <V> List<V> brPopObject(final byte[] key, final int timeout, final TypeReference<V> type){
+		return deserializeBytes(brPop(key, timeout), type);
+	}
+
+	@Override
+	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout){
+		return deserialize(brPoplPush(key, destKey, timeout));
+	}
+
+	@Override
+	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout){
+		return deserializeBytes(brPoplPush(key, destKey, timeout));
+	}
+
+	@Override
+	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout, final Class<V> clazz){
+		return deserialize(brPoplPush(key, destKey, timeout), clazz);
+	}
+
+	@Override
+	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout, final Class<V> clazz){
+		return deserializeBytes(brPoplPush(key, destKey, timeout), clazz);
+	}
+
+	@Override
+	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout,
+			final TypeReference<V> type){
+		return deserialize(brPoplPush(key, destKey, timeout), type);
+	}
+
+	@Override
+	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout,
+			final TypeReference<V> type){
+		return deserializeBytes(brPoplPush(key, destKey, timeout), type);
+	}
+
+	@Override
+	public <V> V lIndexObject(final String key, final int index){
+		return deserialize(lIndex(key, index));
+	}
+
+	@Override
+	public <V> V lIndexObject(final byte[] key, final int index){
+		return deserializeBytes(lIndex(key, index));
+	}
+
+	@Override
+	public <V> V lIndexObject(final String key, final int index, final Class<V> clazz){
+		return deserialize(lIndex(key, index), clazz);
+	}
+
+	@Override
+	public <V> V lIndexObject(final byte[] key, final int index, final Class<V> clazz){
+		return deserializeBytes(lIndex(key, index), clazz);
+	}
+
+	@Override
+	public <V> V lIndexObject(final String key, final int index, final TypeReference<V> type){
+		return deserialize(lIndex(key, index), type);
+	}
+
+	@Override
+	public <V> V lIndexObject(final byte[] key, final int index, final TypeReference<V> type){
+		return deserializeBytes(lIndex(key, index), type);
+	}
+
+	@Override
+	public <V> V lIndexObject(final String key, final long index){
+		return deserialize(lIndex(key, index));
+	}
+
+	@Override
+	public <V> V lIndexObject(final byte[] key, final long index){
+		return deserializeBytes(lIndex(key, index));
+	}
+
+	@Override
+	public <V> V lIndexObject(final String key, final long index, final Class<V> clazz){
+		return deserialize(lIndex(key, index), clazz);
+	}
+
+	@Override
+	public <V> V lIndexObject(final byte[] key, final long index, final Class<V> clazz){
+		return deserializeBytes(lIndex(key, index), clazz);
+	}
+
+	@Override
+	public <V> V lIndexObject(final String key, final long index, final TypeReference<V> type){
+		return deserialize(lIndex(key, index), type);
+	}
+
+	@Override
+	public <V> V lIndexObject(final byte[] key, final long index, final TypeReference<V> type){
+		return deserializeBytes(lIndex(key, index), type);
+	}
+
+	@Override
+	public <V> Long lInsert(final String key, final V value, final ListPosition position, final V pivot){
+		return lInsert(key, serialize(value), position, serialize(pivot));
+	}
+
+	@Override
+	public <V> Long lInsert(final byte[] key, final V value, final ListPosition position, final V pivot){
+		return lInsert(key, serializeAsBytes(value), position, serializeAsBytes(pivot));
+	}
+
+	@Override
+	public <V> V lPopObject(final String key){
+		return deserialize(lPop(key));
+	}
+
+	@Override
+	public <V> V lPopObject(final byte[] key){
+		return deserializeBytes(lPop(key));
+	}
+
+	@Override
+	public <V> V lPopObject(final String key, final Class<V> clazz){
+		return deserialize(lPop(key), clazz);
+	}
+
+	@Override
+	public <V> V lPopObject(final byte[] key, final Class<V> clazz){
+		return deserializeBytes(lPop(key), clazz);
+	}
+
+	@Override
+	public <V> V lPopObject(final String key, final TypeReference<V> type){
+		return deserialize(lPop(key), type);
+	}
+
+	@Override
+	public <V> V lPopObject(final byte[] key, final TypeReference<V> type){
+		return deserializeBytes(lPop(key), type);
+	}
+
+	@Override
+	public <V> Long lPush(final String key, final V value){
+		return lPush(key, serialize(value));
+	}
+
+	@Override
+	public <V> Long lPush(final byte[] key, final V value){
+		return lPush(key, serializeAsBytes(value));
+	}
+
+	@Override
+	public <V> Long lPush(final String key, final V... values){
+		return lPush(key, serialize(values));
+	}
+
+	@Override
+	public <V> Long lPush(final byte[] key, final V... values){
+		return lPush(key, serializeAsBytes(values));
+	}
+
+	@Override
+	public <V> Long lPushX(final String key, final V value){
+		return lPushX(key, serialize(value));
+	}
+
+	@Override
+	public <V> Long lPushX(final byte[] key, final V value){
+		return lPushX(key, serializeAsBytes(value));
+	}
+
+	@Override
+	public <V> Long lPushX(final String key, final V... values){
+		return lPushX(key, serialize(values));
+	}
+
+	@Override
+	public <V> Long lPushX(final byte[] key, final V... values){
+		return lPushX(key, serializeAsBytes(values));
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final String key, final int start, final int end){
+		return deserialize(lRange(key, start, end));
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final byte[] key, final int start, final int end){
+		return deserializeBytes(lRange(key, start, end));
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final String key, final long start, final long end){
+		return deserialize(lRange(key, start, end));
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end){
+		return deserializeBytes(lRange(key, start, end));
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final String key, final int start, final int end, final Class<V> clazz){
+		return deserialize(lRange(key, start, end), clazz);
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final byte[] key, final int start, final int end, final Class<V> clazz){
+		return deserializeBytes(lRange(key, start, end), clazz);
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final String key, final long start, final long end, final Class<V> clazz){
+		return deserialize(lRange(key, start, end), clazz);
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz){
+		return deserializeBytes(lRange(key, start, end), clazz);
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final String key, final int start, final int end, final TypeReference<V> type){
+		return deserialize(lRange(key, start, end), type);
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final byte[] key, final int start, final int end, final TypeReference<V> type){
+		return deserializeBytes(lRange(key, start, end), type);
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final String key, final long start, final long end, final TypeReference<V> type){
+		return deserialize(lRange(key, start, end), type);
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type){
+		return deserializeBytes(lRange(key, start, end), type);
+	}
+
+	@Override
+	public <V> Status lSet(final String key, final int index, final V value){
+		return lSet(key, index, serialize(value));
+	}
+
+	@Override
+	public <V> Status lSet(final byte[] key, final int index, final V value){
+		return lSet(key, index, serializeAsBytes(value));
+	}
+
+	@Override
+	public <V> Status lSet(final String key, final long index, final V value){
+		return lSet(key, index, serialize(value));
+	}
+
+	@Override
+	public <V> Status lSet(final byte[] key, final long index, final V value){
+		return lSet(key, index, serializeAsBytes(value));
+	}
+
+	@Override
+	public <V> V rPopObject(final String key){
+		return deserialize(rPop(key));
+	}
+
+	@Override
+	public <V> V rPopObject(final byte[] key){
+		return deserializeBytes(rPop(key));
+	}
+
+	@Override
+	public <V> V rPopObject(final String key, final Class<V> clazz){
+		return deserialize(rPop(key), clazz);
+	}
+
+	@Override
+	public <V> V rPopObject(final byte[] key, final Class<V> clazz){
+		return deserializeBytes(rPop(key), clazz);
+	}
+
+	@Override
+	public <V> V rPopObject(final String key, final TypeReference<V> type){
+		return deserialize(rPop(key), type);
+	}
+
+	@Override
+	public <V> V rPopObject(final byte[] key, final TypeReference<V> type){
+		return deserializeBytes(rPop(key), type);
+	}
+
+	@Override
+	public <V> V rPoplPushObject(final String key, final String destKey){
+		return deserialize(rPoplPush(key, destKey));
+	}
+
+	@Override
+	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey){
+		return deserializeBytes(rPoplPush(key, destKey));
+	}
+
+	@Override
+	public <V> V rPoplPushObject(final String key, final String destKey, final Class<V> clazz){
+		return deserialize(rPoplPush(key, destKey), clazz);
+	}
+
+	@Override
+	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey, final Class<V> clazz){
+		return deserializeBytes(rPoplPush(key, destKey), clazz);
+	}
+
+	@Override
+	public <V> V rPoplPushObject(final String key, final String destKey, final TypeReference<V> type){
+		return deserialize(rPoplPush(key, destKey), type);
+	}
+
+	@Override
+	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey, final TypeReference<V> type){
+		return deserializeBytes(rPoplPush(key, destKey), type);
+	}
+
+	@Override
+	public <V> Long rPush(final String key, final V value){
+		return rPush(key, serialize(value));
+	}
+
+	@Override
+	public <V> Long rPush(final byte[] key, final V value){
+		return rPush(key, serializeAsBytes(value));
+	}
+
+	@Override
+	public <V> Long rPush(final String key, final V... values){
+		return rPush(key, serialize(values));
+	}
+
+	@Override
+	public <V> Long rPush(final byte[] key, final V... values){
+		return rPush(key, serializeAsBytes(values));
+	}
+
+	@Override
+	public <V> Long rPushX(final String key, final V value){
+		return rPushX(key, serialize(value));
+	}
+
+	@Override
+	public <V> Long rPushX(final byte[] key, final V value){
+		return rPushX(key, serializeAsBytes(value));
+	}
+
+	@Override
+	public <V> Long rPushX(final String key, final V... values){
+		return rPushX(key, serialize(values));
+	}
+
+	@Override
+	public <V> Long rPushX(final byte[] key, final V... values){
+		return rPushX(key, serializeAsBytes(values));
 	}
 
 }

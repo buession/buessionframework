@@ -39,6 +39,7 @@ import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
@@ -836,6 +837,587 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
     public Status move(final byte[] key, final int db){
         final CommandArguments args = CommandArguments.getInstance().put("key", key).put("db", db);
         return execute((client)->client.move(makeByteKey(key), db), ProtocolCommand.MOVE, args);
+    }
+
+    @Override
+    public Set<String> keys(final String pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("pattern", pattern);
+        return execute((client)->client.keys(pattern), ProtocolCommand.KEYS, args);
+    }
+
+    @Override
+    public Set<byte[]> keys(final byte[] pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("pattern", pattern);
+        return execute((client)->client.keys(pattern), ProtocolCommand.KEYS, args);
+    }
+
+    @Override
+    public Status persist(final String key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.persist(makeRawKey(key)), ProtocolCommand.PERSIST, args);
+    }
+
+    @Override
+    public Status persist(final byte[] key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.persist(makeByteKey(key)), ProtocolCommand.PERSIST, args);
+    }
+
+    @Override
+    public Status pExpire(final String key, final int lifetime){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("lifetime", lifetime);
+        return execute((client)->client.pExpire(makeRawKey(key), lifetime), ProtocolCommand.PEXPIRE, args);
+    }
+
+    @Override
+    public Status pExpire(final byte[] key, final int lifetime){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("lifetime", lifetime);
+        return execute((client)->client.pExpire(makeByteKey(key), lifetime), ProtocolCommand.PEXPIRE, args);
+    }
+
+    @Override
+    public Status pExpireAt(final String key, final long unixTimestamp){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("unixTimestamp", unixTimestamp);
+        return execute((client)->client.pExpireAt(makeRawKey(key), unixTimestamp), ProtocolCommand.PEXPIREAT, args);
+    }
+
+    @Override
+    public Status pExpireAt(final byte[] key, final long unixTimestamp){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("unixTimestamp", unixTimestamp);
+        return execute((client)->client.pExpireAt(makeByteKey(key), unixTimestamp), ProtocolCommand.PEXPIREAT, args);
+    }
+
+    @Override
+    public Long pTtl(final String key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.pTtl(makeRawKey(key)), ProtocolCommand.PTTL, args);
+    }
+
+    @Override
+    public Long pTtl(final byte[] key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.pTtl(makeByteKey(key)), ProtocolCommand.PTTL, args);
+    }
+
+    @Override
+    public String randomKey(){
+        return execute((client)->client.randomKey(), ProtocolCommand.RANDOMKEY);
+    }
+
+    @Override
+    public Status rename(final String key, final String newKey){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("newKey", newKey);
+        return execute((client)->client.rename(makeRawKey(key), makeRawKey(newKey)), ProtocolCommand.RENAME, args);
+    }
+
+    @Override
+    public Status rename(final byte[] key, final byte[] newKey){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("newKey", newKey);
+        return execute((client)->client.rename(makeByteKey(key), makeByteKey(newKey)), ProtocolCommand.RENAME, args);
+    }
+
+    @Override
+    public Status renameNx(final String key, final String newKey){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("newKey", newKey);
+        return execute((client)->client.renameNx(makeRawKey(key), makeRawKey(newKey)), ProtocolCommand.RENAMENX, args);
+    }
+
+    @Override
+    public Status renameNx(final byte[] key, final byte[] newKey){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("newKey", newKey);
+        return execute((client)->client.renameNx(makeByteKey(key), makeByteKey(newKey)), ProtocolCommand.RENAMENX, args);
+    }
+
+    @Override
+    public Status restore(final String key, final String serializedValue, final int ttl){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("serializedValue", serializedValue).put("ttl", ttl);
+        return execute((client)->client.restore(makeRawKey(key), serializedValue, ttl), ProtocolCommand.RESTORE, args);
+    }
+
+    @Override
+    public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("serializedValue", serializedValue).put("ttl", ttl);
+        return execute((client)->client.restore(makeByteKey(key), serializedValue, ttl), ProtocolCommand.RESTORE, args);
+    }
+
+    @Override
+    public ScanResult<List<String>> scan(final int cursor){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor);
+        return execute((client)->client.scan(cursor), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<String>> scan(final long cursor){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor);
+        return execute((client)->client.scan(cursor), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<String>> scan(final String cursor){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor);
+        return execute((client)->client.scan(cursor), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<byte[]>> scan(final byte[] cursor){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor);
+        return execute((client)->client.scan(cursor), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<String>> scan(final int cursor, final String pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern);
+        return execute((client)->client.scan(cursor, pattern), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern);
+        return execute((client)->client.scan(cursor, pattern), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<String>> scan(final long cursor, final String pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern);
+        return execute((client)->client.scan(cursor, pattern), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern);
+        return execute((client)->client.scan(cursor, pattern), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<String>> scan(final String cursor, final String pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern);
+        return execute((client)->client.scan(cursor, pattern), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern);
+        return execute((client)->client.scan(cursor, pattern), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<String>> scan(final int cursor, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("count", count);
+        return execute((client)->client.scan(cursor, count), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<String>> scan(final long cursor, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("count", count);
+        return execute((client)->client.scan(cursor, count), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<String>> scan(final String cursor, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("count", count);
+        return execute((client)->client.scan(cursor, count), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("count", count);
+        return execute((client)->client.scan(cursor, count), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<String>> scan(final int cursor, final String pattern, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern).put("count", count);
+        return execute((client)->client.scan(cursor, pattern, count), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern).put("count", count);
+        return execute((client)->client.scan(cursor, pattern, count), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<String>> scan(final long cursor, final String pattern, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern).put("count", count);
+        return execute((client)->client.scan(cursor, pattern, count), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern).put("count", count);
+        return execute((client)->client.scan(cursor, pattern, count), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern).put("count", count);
+        return execute((client)->client.scan(cursor, pattern, count), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("cursor", cursor).put("pattern", pattern).put("count", count);
+        return execute((client)->client.scan(cursor, pattern, count), ProtocolCommand.SCAN, args);
+    }
+
+    @Override
+    public List<String> sort(final String key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.sort(makeRawKey(key)), ProtocolCommand.SORT, args);
+    }
+
+    @Override
+    public List<byte[]> sort(final byte[] key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.sort(makeByteKey(key)), ProtocolCommand.SORT, args);
+    }
+
+    @Override
+    public List<String> sort(final String key, final SortArgument sortArgument){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("sortArgument", sortArgument);
+        return execute((client)->client.sort(makeRawKey(key), sortArgument), ProtocolCommand.SORT, args);
+    }
+
+    @Override
+    public List<byte[]> sort(final byte[] key, final SortArgument sortArgument){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("sortArgument", sortArgument);
+        return execute((client)->client.sort(makeByteKey(key), sortArgument), ProtocolCommand.SORT, args);
+    }
+
+    @Override
+    public Long sort(final String key, final String destKey){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("destKey", destKey);
+        return execute((client)->client.sort(makeRawKey(key), makeRawKey(destKey)), ProtocolCommand.SORT, args);
+    }
+
+    @Override
+    public Long sort(final byte[] key, final byte[] destKey){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("destKey", destKey);
+        return execute((client)->client.sort(makeByteKey(key), makeByteKey(destKey)), ProtocolCommand.SORT, args);
+    }
+
+    @Override
+    public Long sort(final String key, final String destKey, final SortArgument sortArgument){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("destKey", destKey).put("sortArgument", sortArgument);
+        return execute((client)->client.sort(makeRawKey(key), makeRawKey(destKey), sortArgument), ProtocolCommand.SORT, args);
+    }
+
+    @Override
+    public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("destKey", destKey).put("sortArgument", sortArgument);
+        return execute((client)->client.sort(makeByteKey(key), makeByteKey(destKey), sortArgument), ProtocolCommand.SORT, args);
+    }
+
+    @Override
+    public Long ttl(final String key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.ttl(makeRawKey(key)), ProtocolCommand.TTL, args);
+    }
+
+    @Override
+    public Long ttl(final byte[] key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.ttl(makeByteKey(key)), ProtocolCommand.TTL, args);
+    }
+
+    @Override
+    public Type type(final String key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.type(makeRawKey(key)), ProtocolCommand.TYPE, args);
+    }
+
+    @Override
+    public Type type(final byte[] key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.type(makeByteKey(key)), ProtocolCommand.TYPE, args);
+    }
+
+    @Override
+    public Long touch(final String... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
+        return execute((client)->client.touch(makeRawKeys(keys)), ProtocolCommand.TOUCH, args);
+    }
+
+    @Override
+    public Long touch(final byte[]... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
+        return execute((client)->client.touch(makeByteKeys(keys)), ProtocolCommand.TOUCH, args);
+    }
+
+    @Override
+    public Long unlink(final String... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
+        return execute((client)->client.unlink(makeRawKeys(keys)), ProtocolCommand.UNLINK, args);
+    }
+
+    @Override
+    public Long unlink(final byte[]... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
+        return execute((client)->client.unlink(makeByteKeys(keys)), ProtocolCommand.UNLINK, args);
+    }
+
+    @Override
+    public List<String> blPop(final String[] keys, final int timeout){
+        final CommandArguments args = CommandArguments.getInstance().put("keys", keys).put("timeout", timeout);
+        return execute((client)->client.blPop(makeRawKeys(keys), timeout), ProtocolCommand.BLPOP, args);
+    }
+
+    @Override
+    public List<byte[]> blPop(final byte[][] keys, final int timeout){
+        final CommandArguments args = CommandArguments.getInstance().put("keys", keys).put("timeout", timeout);
+        return execute((client)->client.blPop(makeByteKeys(keys), timeout), ProtocolCommand.BLPOP, args);
+    }
+
+    @Override
+    public List<String> brPop(final String[] keys, final int timeout){
+        final CommandArguments args = CommandArguments.getInstance().put("keys", keys).put("timeout", timeout);
+        return execute((client)->client.brPop(makeRawKeys(keys), timeout), ProtocolCommand.BRPOP, args);
+    }
+
+    @Override
+    public List<byte[]> brPop(final byte[][] keys, final int timeout){
+        final CommandArguments args = CommandArguments.getInstance().put("keys", keys).put("timeout", timeout);
+        return execute((client)->client.brPop(makeByteKeys(keys), timeout), ProtocolCommand.BRPOP, args);
+    }
+
+    @Override
+    public String brPoplPush(final String key, final String destKey, final int timeout){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("destKey", destKey).put("timeout", timeout);
+        return execute((client)->client.brPoplPush(makeRawKey(key), makeRawKey(destKey), timeout), ProtocolCommand.BRPOPLPUSH, args);
+    }
+
+    @Override
+    public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("destKey", destKey).put("timeout", timeout);
+        return execute((client)->client.brPoplPush(makeByteKey(key), makeByteKey(destKey), timeout), ProtocolCommand.BRPOPLPUSH, args);
+    }
+
+    @Override
+    public String lIndex(final String key, final int index){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index);
+        return execute((client)->client.lIndex(makeRawKey(key), index), ProtocolCommand.LINDEX, args);
+    }
+
+    @Override
+    public byte[] lIndex(final byte[] key, final int index){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index);
+        return execute((client)->client.lIndex(makeByteKey(key), index), ProtocolCommand.LINDEX, args);
+    }
+
+    @Override
+    public String lIndex(final String key, final long index){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index);
+        return execute((client)->client.lIndex(makeRawKey(key), index), ProtocolCommand.LINDEX, args);
+    }
+
+    @Override
+    public byte[] lIndex(final byte[] key, final long index){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index);
+        return execute((client)->client.lIndex(makeByteKey(key), index), ProtocolCommand.LINDEX, args);
+    }
+
+    @Override
+    public Long lInsert(final String key, final String value, final ListPosition position, final String pivot){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("position", position).put("pivot", pivot);
+        return execute((client)->client.lInsert(makeRawKey(key), value, position, pivot), ProtocolCommand.LINSERT, args);
+    }
+
+    @Override
+    public Long lInsert(final byte[] key, final byte[] value, final ListPosition position, final byte[] pivot){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("position", position).put("pivot", pivot);
+        return execute((client)->client.lInsert(makeByteKey(key), value, position, pivot), ProtocolCommand.LINSERT, args);
+    }
+
+    @Override
+    public Long lLen(final String key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.lLen(makeRawKey(key)), ProtocolCommand.LLEN, args);
+    }
+
+    @Override
+    public Long lLen(final byte[] key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.lLen(makeByteKey(key)), ProtocolCommand.LLEN, args);
+    }
+
+    @Override
+    public String lPop(final String key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.lPop(makeRawKey(key)), ProtocolCommand.LPOP, args);
+    }
+
+    @Override
+    public byte[] lPop(final byte[] key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.lPop(makeByteKey(key)), ProtocolCommand.LPOP, args);
+    }
+
+    @Override
+    public Long lPush(final String key, final String... values){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
+        return execute((client)->client.lPush(makeRawKey(key), values), ProtocolCommand.LPUSH, args);
+    }
+
+    @Override
+    public Long lPush(final byte[] key, final byte[]... values){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
+        return execute((client)->client.lPush(makeByteKey(key), values), ProtocolCommand.LPUSH, args);
+    }
+
+    @Override
+    public Long lPushX(final String key, final String... values){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
+        return execute((client)->client.lPushX(makeRawKey(key), values), ProtocolCommand.LPUSHX, args);
+    }
+
+    @Override
+    public Long lPushX(final byte[] key, final byte[]... values){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
+        return execute((client)->client.lPushX(makeByteKey(key), values), ProtocolCommand.LPUSHX, args);
+    }
+
+    @Override
+    public List<String> lRange(final String key, final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.lRange(makeRawKey(key), start, end), ProtocolCommand.LRANGE, args);
+    }
+
+    @Override
+    public List<byte[]> lRange(final byte[] key, final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.lRange(makeByteKey(key), start, end), ProtocolCommand.LRANGE, args);
+    }
+
+    @Override
+    public List<String> lRange(final String key, final long start, final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.lRange(makeRawKey(key), start, end), ProtocolCommand.LRANGE, args);
+    }
+
+    @Override
+    public List<byte[]> lRange(final byte[] key, final long start, final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.lRange(makeByteKey(key), start, end), ProtocolCommand.LRANGE, args);
+    }
+
+    @Override
+    public Long lRem(final String key, final String value, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("count", count);
+        return execute((client)->client.lRem(makeRawKey(key), value, count), ProtocolCommand.LREM, args);
+    }
+
+    @Override
+    public Long lRem(final byte[] key, final byte[] value, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("count", count);
+        return execute((client)->client.lRem(makeByteKey(key), value, count), ProtocolCommand.LREM, args);
+    }
+
+    @Override
+    public Long lRem(final String key, final String value, final long count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("count", count);
+        return execute((client)->client.lRem(makeRawKey(key), value, count), ProtocolCommand.LREM, args);
+    }
+
+    @Override
+    public Long lRem(final byte[] key, final byte[] value, final long count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("value", value).put("count", count);
+        return execute((client)->client.lRem(makeByteKey(key), value, count), ProtocolCommand.LREM, args);
+    }
+
+    @Override
+    public Status lSet(final String key, final int index, final String value){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index).put("value", value);
+        return execute((client)->client.lSet(makeRawKey(key), index, value), ProtocolCommand.LSET, args);
+    }
+
+    @Override
+    public Status lSet(final byte[] key, final int index, final byte[] value){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index).put("value", value);
+        return execute((client)->client.lSet(makeByteKey(key), index, value), ProtocolCommand.LSET, args);
+    }
+
+    @Override
+    public Status lSet(final String key, final long index, final String value){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index).put("value", value);
+        return execute((client)->client.lSet(makeRawKey(key), index, value), ProtocolCommand.LSET, args);
+    }
+
+    @Override
+    public Status lSet(final byte[] key, final long index, final byte[] value){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("index", index).put("value", value);
+        return execute((client)->client.lSet(makeByteKey(key), index, value), ProtocolCommand.LSET, args);
+    }
+
+    @Override
+    public Status lTrim(final String key, final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.lTrim(makeRawKey(key), start, end), ProtocolCommand.LTRIM, args);
+    }
+
+    @Override
+    public Status lTrim(final byte[] key, final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.lTrim(makeByteKey(key), start, end), ProtocolCommand.LTRIM, args);
+    }
+
+    @Override
+    public Status lTrim(final String key, final long start, final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.lTrim(makeRawKey(key), start, end), ProtocolCommand.LTRIM, args);
+    }
+
+    @Override
+    public Status lTrim(final byte[] key, final long start, final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.lTrim(makeByteKey(key), start, end), ProtocolCommand.LTRIM, args);
+    }
+
+    @Override
+    public String rPop(final String key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.rPop(makeRawKey(key)), ProtocolCommand.RPOP, args);
+    }
+
+    @Override
+    public byte[] rPop(final byte[] key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.rPop(makeByteKey(key)), ProtocolCommand.RPOP, args);
+    }
+
+    @Override
+    public String rPoplPush(final String key, final String destKey){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("destKey", destKey);
+        return execute((client)->client.rPoplPush(makeRawKey(key), makeRawKey(destKey)), ProtocolCommand.RPOPLPUSH, args);
+    }
+
+    @Override
+    public byte[] rPoplPush(final byte[] key, final byte[] destKey){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("destKey", destKey);
+        return execute((client)->client.rPoplPush(makeByteKey(key), makeByteKey(destKey)), ProtocolCommand.RPOPLPUSH, args);
+    }
+
+    @Override
+    public Long rPush(final String key, final String... values){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
+        return execute((client)->client.rPush(makeRawKey(key), values), ProtocolCommand.RPUSH, args);
+    }
+
+    @Override
+    public Long rPush(final byte[] key, final byte[]... values){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
+        return execute((client)->client.rPush(makeByteKey(key), values), ProtocolCommand.RPUSH, args);
+    }
+
+    @Override
+    public Long rPushX(final String key, final String... values){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
+        return execute((client)->client.rPushX(makeRawKey(key), values), ProtocolCommand.RPUSHX, args);
+    }
+
+    @Override
+    public Long rPushX(final byte[] key, final byte[]... values){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("values", values);
+        return execute((client)->client.rPushX(makeByteKey(key), values), ProtocolCommand.RPUSHX, args);
     }
 
 }

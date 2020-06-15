@@ -24,6 +24,7 @@
  */
 package com.buession.redis;
 
+import com.buession.core.serializer.type.TypeReference;
 import com.buession.core.utils.Assert;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.RedisConnection;
@@ -41,6 +42,10 @@ import com.buession.redis.serializer.Serializer;
 import com.buession.redis.utils.KeyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Yong.Teng
@@ -187,32 +192,116 @@ public abstract class RedisAccessor {
 		return KeyUtil.makeByteKeys(getOptions().getPrefix(), keys);
 	}
 
-	protected <V> String[] serializer(final V[] values){
-		if(values == null){
-			return null;
-		}else{
-			final String[] temp = new String[values.length];
-
-			for(int i = 0; i < values.length; i++){
-				temp[i] = serializer.serialize(values[i]);
-			}
-
-			return temp;
-		}
+	protected <V> String serialize(final V object){
+		return serializer.serialize(object);
 	}
 
-	protected <V> byte[][] serializerAsByte(final V[] values){
-		if(values == null){
-			return null;
-		}else{
-			final byte[][] temp = new byte[values.length][];
+	protected <V> String[] serialize(final V[] objects){
+		return serializer.serialize(objects);
+	}
 
-			for(int i = 0; i < values.length; i++){
-				temp[i] = serializer.serializeAsBytes(values[i]);
-			}
+	protected <V> byte[] serializeAsBytes(final V object){
+		return serializer.serializeAsBytes(object);
+	}
 
-			return temp;
-		}
+	protected <V> byte[][] serializeAsBytes(final V[] objects){
+		return serializer.serializeAsBytes(objects);
+	}
+
+	protected <V> V deserialize(final String str){
+		return serializer.deserialize(str);
+	}
+
+	protected <V> V deserializeBytes(final byte[] bytes){
+		return serializer.deserializeBytes(bytes);
+	}
+
+	protected <V> List<V> deserialize(final List<String> str){
+		return serializer.deserialize(str);
+	}
+
+	protected <V> List<V> deserializeBytes(final List<byte[]> bytes){
+		return serializer.deserializeBytes(bytes);
+	}
+
+	protected <V> Set<V> deserialize(final Set<String> str){
+		return serializer.deserialize(str);
+	}
+
+	protected <V> Set<V> deserializeBytes(final Set<byte[]> bytes){
+		return serializer.deserializeBytes(bytes);
+	}
+
+	protected <V> Map<String, V> deserialize(final Map<String, String> str){
+		return serializer.deserialize(str);
+	}
+
+	protected <V> Map<byte[], V> deserializeBytes(final Map<byte[], byte[]> bytes){
+		return serializer.deserializeBytes(bytes);
+	}
+
+	protected <V> V deserialize(final String str, final Class<V> clazz){
+		return serializer.deserialize(str, clazz);
+	}
+
+	protected <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz){
+		return serializer.deserializeBytes(bytes, clazz);
+	}
+
+	protected <V> List<V> deserialize(final List<String> str, final Class<V> clazz){
+		return serializer.deserialize(str, clazz);
+	}
+
+	protected <V> List<V> deserializeBytes(final List<byte[]> bytes, final Class<V> clazz){
+		return serializer.deserializeBytes(bytes, clazz);
+	}
+
+	protected <V> Set<V> deserialize(final Set<String> str, final Class<V> clazz){
+		return serializer.deserialize(str, clazz);
+	}
+
+	protected <V> Set<V> deserializeBytes(final Set<byte[]> bytes, final Class<V> clazz){
+		return serializer.deserializeBytes(bytes, clazz);
+	}
+
+	protected <V> Map<String, V> deserialize(final Map<String, String> str, final Class<V> clazz){
+		return serializer.deserialize(str, clazz);
+	}
+
+	protected <V> Map<byte[], V> deserializeBytes(final Map<byte[], byte[]> bytes, final Class<V> clazz){
+		return serializer.deserializeBytes(bytes, clazz);
+	}
+
+	protected <V> V deserialize(final String str, final TypeReference<V> type){
+		return serializer.deserialize(str, type);
+	}
+
+	protected <V> V deserializeBytes(final byte[] bytes, final TypeReference<V> type){
+		return serializer.deserializeBytes(bytes, type);
+	}
+
+	protected <V> List<V> deserialize(final List<String> str, final TypeReference<V> type){
+		return serializer.deserialize(str, type);
+	}
+
+	protected <V> List<V> deserializeBytes(final List<byte[]> bytes, final TypeReference<V> type){
+		return serializer.deserializeBytes(bytes, type);
+	}
+
+	protected <V> Set<V> deserialize(final Set<String> str, final TypeReference<V> type){
+		return serializer.deserialize(str, type);
+	}
+
+	protected <V> Set<V> deserializeBytes(final Set<byte[]> bytes, final TypeReference<V> type){
+		return serializer.deserializeBytes(bytes, type);
+	}
+
+	protected <V> Map<String, V> deserialize(final Map<String, String> str, final TypeReference<V> type){
+		return serializer.deserialize(str, type);
+	}
+
+	protected <V> Map<byte[], V> deserializeBytes(final Map<byte[], byte[]> bytes, final TypeReference<V> type){
+		return serializer.deserializeBytes(bytes, type);
 	}
 
 }

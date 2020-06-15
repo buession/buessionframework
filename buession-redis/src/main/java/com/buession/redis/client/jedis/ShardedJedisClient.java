@@ -32,8 +32,10 @@ import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.JedisScanParams;
+import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.DebugCommands;
@@ -533,8 +535,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
-			final MigrateOperation migrateOperation){
-		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(migrateOperation);
+			final MigrateOperation operation){
+		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(operation);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
@@ -547,8 +549,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	@Override
 	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
-			final MigrateOperation migrateOperation){
-		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(migrateOperation);
+			final MigrateOperation operation){
+		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(operation);
 
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
@@ -567,14 +569,13 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.move(key, db) > 0));
 		}
 	}
-/*
 
 	@Override
-	public Type type(final byte[] key){
+	public Status persist(final byte[] key){
 		if(isTransaction()){
-			return execute((ShardedJedis cmd)->ReturnUtils.enumValueOf(getTransaction().type(key).get(), Type.class));
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().persist(key).get() > 0));
 		}else{
-			return execute((cmd)->ReturnUtils.enumValueOf(cmd.type(key), Type.class));
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.persist(key) > 0));
 		}
 	}
 
@@ -590,19 +591,9 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp){
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() ==
-			1));
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() == 1));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.pexpireAt(key, unixTimestamp) == 1));
-		}
-	}
-
-	@Override
-	public Long ttl(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().ttl(key).get());
-		}else{
-			return execute((cmd)->cmd.ttl(key));
 		}
 	}
 
@@ -616,11 +607,11 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
-	public Status persist(final byte[] key){
+	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().persist(key).get() > 0));
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().restore(key, ttl, serializedValue).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.persist(key) > 0));
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.restore(key, ttl, serializedValue)));
 		}
 	}
 
@@ -634,7 +625,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
-	public List<byte[]> sort(final byte[] key, final KeyCommands.SortArgument sortArgument){
+	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument){
 		final SortingParams sortingParams = JedisClientUtils.sortArgumentConvert(sortArgument);
 
 		if(isTransaction()){
@@ -645,11 +636,20 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
-	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
+	public Long ttl(final byte[] key){
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().restore(key, ttl, serializedValue).get()));
+			return execute((cmd)->getTransaction().ttl(key).get());
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.restore(key, ttl, serializedValue)));
+			return execute((cmd)->cmd.ttl(key));
+		}
+	}
+
+	@Override
+	public Type type(final byte[] key){
+		if(isTransaction()){
+			return execute((ShardedJedis cmd)->ReturnUtils.enumValueOf(getTransaction().type(key).get(), Type.class));
+		}else{
+			return execute((cmd)->ReturnUtils.enumValueOf(cmd.type(key), Type.class));
 		}
 	}
 
@@ -756,6 +756,126 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 		});
 	}
+
+	@Override
+	public byte[] lIndex(final byte[] key, final long index){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lindex(key, index).get());
+		}else{
+			return execute((cmd)->cmd.lindex(key, index));
+		}
+	}
+
+	@Override
+	public Long lInsert(final byte[] key, final byte[] value, final ListPosition position, final byte[] pivot){
+		final redis.clients.jedis.ListPosition pos = JedisClientUtils.listPositionConvert(position);
+
+		if(isTransaction()){
+			return execute((cmd)->cmd.linsert(key, pos, pivot, value));
+		}else{
+			return execute((cmd)->cmd.linsert(key, pos, pivot, value));
+		}
+	}
+
+	@Override
+	public Long lLen(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().llen(key).get());
+		}else{
+			return execute((cmd)->cmd.llen(key));
+		}
+	}
+
+	@Override
+	public byte[] lPop(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lpop(key).get());
+		}else{
+			return execute((cmd)->cmd.lpop(key));
+		}
+	}
+
+	@Override
+	public Long lPush(final byte[] key, final byte[]... values){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lpush(key, values).get());
+		}else{
+			return execute((cmd)->cmd.lpush(key, values));
+		}
+	}
+
+	@Override
+	public Long lPushX(final byte[] key, final byte[]... values){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lpushx(key, values).get());
+		}else{
+			return execute((cmd)->cmd.lpushx(key, values));
+		}
+	}
+
+	@Override
+	public List<byte[]> lRange(final byte[] key, final long start, final long end){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lrange(key, start, end).get());
+		}else{
+			return execute((cmd)->cmd.lrange(key, start, end));
+		}
+	}
+
+	@Override
+	public Long lRem(final byte[] key, final byte[] value, final long count){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lrem(key, count, value).get());
+		}else{
+			return execute((cmd)->cmd.lrem(key, count, value));
+		}
+	}
+
+	@Override
+	public Status lSet(final byte[] key, final long index, final byte[] value){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().lset(key, index, value).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.lset(key, index, value)));
+		}
+	}
+
+	@Override
+	public Status lTrim(final byte[] key, final long start, final long end){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().ltrim(key, start, end).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.ltrim(key, start, end)));
+		}
+	}
+
+	@Override
+	public byte[] rPop(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().rpop(key).get());
+		}else{
+			return execute((cmd)->cmd.rpop(key));
+		}
+	}
+
+	@Override
+	public Long rPush(final byte[] key, final byte[]... values){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().rpush(key, values).get());
+		}else{
+			return execute((cmd)->cmd.rpush(key, values));
+		}
+	}
+
+	@Override
+	public Long rPushX(final byte[] key, final byte[]... values){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().rpushx(key, values).get());
+		}else{
+			return execute((cmd)->cmd.rpushx(key, values));
+		}
+	}
+/*
 
 	@Override
 	public Status set(final byte[] key, final byte[] value){
@@ -909,126 +1029,6 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 			return execute((cmd)->getTransaction().strlen(key).get());
 		}else{
 			return execute((cmd)->cmd.strlen(key));
-		}
-	}
-
-	@Override
-	public Long lPush(final byte[] key, final byte[]... values){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lpush(key, values).get());
-		}else{
-			return execute((cmd)->cmd.lpush(key, values));
-		}
-	}
-
-	@Override
-	public Long lPushX(final byte[] key, final byte[]... values){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lpushx(key, values).get());
-		}else{
-			return execute((cmd)->cmd.lpushx(key, values));
-		}
-	}
-
-	@Override
-	public Long lInsert(final byte[] key, final byte[] value, final ListCommands.ListPosition position,
-			final byte[] pivot){
-		final redis.clients.jedis.ListPosition pos = JedisClientUtils.listPositionConvert(position);
-
-		if(isTransaction()){
-			return execute((cmd)->cmd.linsert(key, pos, pivot, value));
-		}else{
-			return execute((cmd)->cmd.linsert(key, pos, pivot, value));
-		}
-	}
-
-	@Override
-	public Status lSet(final byte[] key, final long index, final byte[] value){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().lset(key, index, value).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.lset(key, index, value)));
-		}
-	}
-
-	@Override
-	public byte[] lIndex(final byte[] key, final long index){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lindex(key, index).get());
-		}else{
-			return execute((cmd)->cmd.lindex(key, index));
-		}
-	}
-
-	@Override
-	public byte[] lPop(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lpop(key).get());
-		}else{
-			return execute((cmd)->cmd.lpop(key));
-		}
-	}
-
-	@Override
-	public byte[] rPop(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().rpop(key).get());
-		}else{
-			return execute((cmd)->cmd.rpop(key));
-		}
-	}
-
-	@Override
-	public Long rPush(final byte[] key, final byte[]... values){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().rpush(key, values).get());
-		}else{
-			return execute((cmd)->cmd.rpush(key, values));
-		}
-	}
-
-	@Override
-	public Long rPushX(final byte[] key, final byte[]... values){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().rpushx(key, values).get());
-		}else{
-			return execute((cmd)->cmd.rpushx(key, values));
-		}
-	}
-
-	@Override
-	public Status lTrim(final byte[] key, final long start, final long end){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().ltrim(key, start, end).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.ltrim(key, start, end)));
-		}
-	}
-
-	@Override
-	public Long lRem(final byte[] key, final byte[] value, final long count){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lrem(key, count, value).get());
-		}else{
-			return execute((cmd)->cmd.lrem(key, count, value));
-		}
-	}
-
-	@Override
-	public List<byte[]> lRange(final byte[] key, final long start, final long end){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lrange(key, start, end).get());
-		}else{
-			return execute((cmd)->cmd.lrange(key, start, end));
-		}
-	}
-
-	@Override
-	public Long lLen(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().llen(key).get());
-		}else{
-			return execute((cmd)->cmd.llen(key));
 		}
 	}
 

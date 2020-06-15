@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Yong.Teng
  */
-public class ByteArraySerializer implements Serializer {
+public class ByteArraySerializer extends AbstractSerializer {
 
 	private final static DefaultByteArraySerializer serializer = new DefaultByteArraySerializer();
 
@@ -84,7 +84,7 @@ public class ByteArraySerializer implements Serializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes){
+	public <V> V deserializeBytes(final byte[] bytes){
 		if(bytes == null){
 			return null;
 		}
@@ -103,8 +103,8 @@ public class ByteArraySerializer implements Serializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes, final Class<V> clazz){
-		return deserialize(bytes);
+	public <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz){
+		return deserializeBytes(bytes);
 	}
 
 	@Override
@@ -113,8 +113,8 @@ public class ByteArraySerializer implements Serializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type){
-		return deserialize(bytes);
+	public <V> V deserializeBytes(final byte[] bytes, final TypeReference<V> type){
+		return deserializeBytes(bytes);
 	}
 
 }

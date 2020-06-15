@@ -261,6 +261,56 @@ public abstract class AbstractRedisClient implements RedisClient {
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
+	@Override
+	public String lIndex(final String key, final int index){
+		return lIndex(key, (long) index);
+	}
+
+	@Override
+	public byte[] lIndex(final byte[] key, final int index){
+		return lIndex(key, (long) index);
+	}
+
+	@Override
+	public List<String> lRange(final String key, final int start, final int end){
+		return lRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public List<byte[]> lRange(final byte[] key, final int start, final int end){
+		return lRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Long lRem(final String key, final String value, final int count){
+		return lRem(key, value, (long) count);
+	}
+
+	@Override
+	public Long lRem(final byte[] key, final byte[] value, final int count){
+		return lRem(key, value, (long) count);
+	}
+
+	@Override
+	public Status lSet(final String key, final int index, final String value){
+		return lSet(key, (long) index, value);
+	}
+
+	@Override
+	public Status lSet(final byte[] key, final int index, final byte[] value){
+		return lSet(key, (long) index, value);
+	}
+
+	@Override
+	public Status lTrim(final String key, final int start, final int end){
+		return lTrim(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Status lTrim(final byte[] key, final int start, final int end){
+		return lTrim(key, (long) start, (long) end);
+	}
+
 	/*@Override
 	public Long incrBy(final String key, final int value){
 		return incrBy(key, (long) value);
@@ -319,56 +369,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end){
 		return substr(key, (int) start, (int) end);
-	}
-
-	@Override
-	public Status lSet(final String key, final int index, final String value){
-		return lSet(key, (long) index, value);
-	}
-
-	@Override
-	public Status lSet(final byte[] key, final int index, final byte[] value){
-		return lSet(key, (long) index, value);
-	}
-
-	@Override
-	public String lIndex(final String key, final int index){
-		return lIndex(key, (long) index);
-	}
-
-	@Override
-	public byte[] lIndex(final byte[] key, final int index){
-		return lIndex(key, (long) index);
-	}
-
-	@Override
-	public Status lTrim(final String key, final int start, final int end){
-		return lTrim(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Status lTrim(final byte[] key, final int start, final int end){
-		return lTrim(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Long lRem(final String key, final String value, final int count){
-		return lRem(key, value, (long) count);
-	}
-
-	@Override
-	public Long lRem(final byte[] key, final byte[] value, final int count){
-		return lRem(key, value, (long) count);
-	}
-
-	@Override
-	public List<String> lRange(final String key, final int start, final int end){
-		return lRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public List<byte[]> lRange(final byte[] key, final int start, final int end){
-		return lRange(key, (long) start, (long) end);
 	}
 
 	@Override

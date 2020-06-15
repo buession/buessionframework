@@ -32,10 +32,10 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Yong.Teng
  */
-public class FastJsonJsonSerializer implements Serializer {
+public class FastJsonJsonSerializer extends AbstractSerializer {
 
-	private final static com.buession.core.serializer.FastJsonJsonSerializer serializer = new com.buession.core
-			.serializer.FastJsonJsonSerializer();
+	private final static com.buession.core.serializer.FastJsonJsonSerializer serializer =
+			new com.buession.core.serializer.FastJsonJsonSerializer();
 
 	private final static Logger logger = LoggerFactory.getLogger(FastJsonJsonSerializer.class);
 
@@ -82,7 +82,7 @@ public class FastJsonJsonSerializer implements Serializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes){
+	public <V> V deserializeBytes(final byte[] bytes){
 		if(bytes == null){
 			return null;
 		}
@@ -110,7 +110,7 @@ public class FastJsonJsonSerializer implements Serializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes, final Class<V> clazz){
+	public <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz){
 		if(bytes == null){
 			return null;
 		}
@@ -138,7 +138,7 @@ public class FastJsonJsonSerializer implements Serializer {
 	}
 
 	@Override
-	public <V> V deserialize(final byte[] bytes, final TypeReference<V> type){
+	public <V> V deserializeBytes(final byte[] bytes, final TypeReference<V> type){
 		if(bytes == null){
 			return null;
 		}

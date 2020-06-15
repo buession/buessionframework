@@ -131,38 +131,77 @@ public enum ProtocolCommand {
 	MIGRATE(ProtocolCommandGroup.KEY, "rw"),
 
 	MOVE(ProtocolCommandGroup.KEY, "rw"),
-	...
-
-	TYPE(ProtocolCommandGroup.KEY, "r"),
-
-	RENAME(ProtocolCommandGroup.KEY, "w"),
-
-	RENAMENX(ProtocolCommandGroup.KEY, "w"),
 
 	KEYS(ProtocolCommandGroup.KEY, "r"),
+
+	PERSIST(ProtocolCommandGroup.KEY, "rw"),
 
 	PEXPIRE(ProtocolCommandGroup.KEY, "rw"),
 
 	PEXPIREAT(ProtocolCommandGroup.KEY, "rw"),
 
-	RANDOMKEY(ProtocolCommandGroup.KEY, "r"),
-
-	TTL(ProtocolCommandGroup.KEY, "r"),
-
 	PTTL(ProtocolCommandGroup.KEY, "r"),
 
-	PERSIST(ProtocolCommandGroup.KEY, "rw"),
+	RANDOMKEY(ProtocolCommandGroup.KEY, "r"),
+
+	RENAME(ProtocolCommandGroup.KEY, "w"),
+
+	RENAMENX(ProtocolCommandGroup.KEY, "w"),
+
+	RESTORE(ProtocolCommandGroup.KEY, "w"),
 
 	SCAN(ProtocolCommandGroup.KEY, "r"),
 
 	SORT(ProtocolCommandGroup.KEY, "rw"),
 
-	RESTORE(ProtocolCommandGroup.KEY, "w"),
+	TTL(ProtocolCommandGroup.KEY, "r"),
+
+	TYPE(ProtocolCommandGroup.KEY, "r"),
 
 	TOUCH(ProtocolCommandGroup.KEY, "rw"),
 
 	UNLINK(ProtocolCommandGroup.KEY, "rw"),
 	/** key command end **/
+
+	/**
+	 * list command start
+	 **/
+	BLPOP(ProtocolCommandGroup.LIST, "rw"),
+
+	BRPOP(ProtocolCommandGroup.LIST, "rw"),
+
+	BRPOPLPUSH(ProtocolCommandGroup.LIST, "rw"),
+
+	LINDEX(ProtocolCommandGroup.LIST, "r"),
+
+	LINSERT(ProtocolCommandGroup.LIST, "rw"),
+
+	LLEN(ProtocolCommandGroup.LIST, "r"),
+
+	LPOP(ProtocolCommandGroup.LIST, "rw"),
+
+	LPUSH(ProtocolCommandGroup.LIST, "rw"),
+
+	LPUSHX(ProtocolCommandGroup.LIST, "rw"),
+
+	LRANGE(ProtocolCommandGroup.LIST, "r"),
+
+	LREM(ProtocolCommandGroup.LIST, "rw"),
+
+	LSET(ProtocolCommandGroup.LIST, "w"),
+
+	LTRIM(ProtocolCommandGroup.LIST, "w"),
+
+	RPOP(ProtocolCommandGroup.LIST, "rw"),
+
+	RPOPLPUSH(ProtocolCommandGroup.LIST, "rw"),
+
+	RPUSH(ProtocolCommandGroup.LIST, "rw"),
+
+	RPUSHX(ProtocolCommandGroup.LIST, "rw"),
+	/**
+	 * list command end
+	 **/
 ---
 
 	/**
@@ -206,46 +245,6 @@ public enum ProtocolCommand {
 
 	STRLEN(ProtocolCommandGroup.STRING, "r"),
 	/** string command end **/
-
-	/**
-	 * list command start
-	 **/
-	LPUSH(ProtocolCommandGroup.LIST, "rw"),
-
-	LPUSHX(ProtocolCommandGroup.LIST, "rw"),
-
-	RPUSH(ProtocolCommandGroup.LIST, "rw"),
-
-	RPUSHX(ProtocolCommandGroup.LIST, "rw"),
-
-	LPOP(ProtocolCommandGroup.LIST, "rw"),
-
-	RPOP(ProtocolCommandGroup.LIST, "rw"),
-
-	RPOPLPUSH(ProtocolCommandGroup.LIST, "rw"),
-
-	LREM(ProtocolCommandGroup.LIST, "rw"),
-
-	LLEN(ProtocolCommandGroup.LIST, "r"),
-
-	LINDEX(ProtocolCommandGroup.LIST, "r"),
-
-	LINSERT(ProtocolCommandGroup.LIST, "rw"),
-
-	LSET(ProtocolCommandGroup.LIST, "w"),
-
-	LRANGE(ProtocolCommandGroup.LIST, "r"),
-
-	LTRIM(ProtocolCommandGroup.LIST, "w"),
-
-	BLPOP(ProtocolCommandGroup.LIST, "rw"),
-
-	BRPOP(ProtocolCommandGroup.LIST, "rw"),
-
-	BRPOPLPUSH(ProtocolCommandGroup.LIST, "rw"),
-	/**
-	 * list command end
-	 **/
 
 	/**
 	 * set command start

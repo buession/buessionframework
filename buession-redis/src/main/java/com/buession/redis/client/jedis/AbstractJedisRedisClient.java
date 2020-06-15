@@ -32,7 +32,9 @@ import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.JedisScanParams;
+import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.KeyCommands;
@@ -373,14 +375,12 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		}
 	}
 
-	/*
-
 	@Override
-	public Type type(final String key){
+	public Status persist(final String key){
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.enumValueOf(getTransaction().type(key).get(), Type.class));
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().persist(key).get() > 0));
 		}else{
-			return execute((cmd)->ReturnUtils.enumValueOf(cmd.type(key), Type.class));
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.persist(key) > 0));
 		}
 	}
 
@@ -396,19 +396,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp){
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() ==
-			1));
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() == 1));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.pexpireAt(key, unixTimestamp) == 1));
-		}
-	}
-
-	@Override
-	public Long ttl(final String key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().ttl(key).get());
-		}else{
-			return execute((cmd)->cmd.ttl(key));
 		}
 	}
 
@@ -422,11 +412,13 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Status persist(final String key){
+	public Status restore(final String key, final String serializedValue, final int ttl){
+		final byte[] serializedEncodeValue = SafeEncoder.encode(serializedValue);
+
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().persist(key).get() > 0));
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().restore(key, ttl, serializedEncodeValue).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.persist(key) > 0));
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.restore(key, ttl, serializedEncodeValue)));
 		}
 	}
 
@@ -440,7 +432,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public List<String> sort(final String key, final KeyCommands.SortArgument sortArgument){
+	public List<String> sort(final String key, final SortArgument sortArgument){
 		final SortingParams soringParams = JedisClientUtils.sortArgumentConvert(sortArgument);
 
 		if(isTransaction()){
@@ -451,16 +443,143 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Status restore(final String key, final String serializedValue, final int ttl){
-		final byte[] serializedEncodeValue = SafeEncoder.encode(serializedValue);
-
+	public Long ttl(final String key){
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().restore(key, ttl, serializedEncodeValue)
-			.get()));
+			return execute((cmd)->getTransaction().ttl(key).get());
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.restore(key, ttl, serializedEncodeValue)));
+			return execute((cmd)->cmd.ttl(key));
 		}
 	}
+
+	@Override
+	public Type type(final String key){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.enumValueOf(getTransaction().type(key).get(), Type.class));
+		}else{
+			return execute((cmd)->ReturnUtils.enumValueOf(cmd.type(key), Type.class));
+		}
+	}
+
+	@Override
+	public String lIndex(final String key, final long index){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lindex(key, index).get());
+		}else{
+			return execute((cmd)->cmd.lindex(key, index));
+		}
+	}
+
+	@Override
+	public Long lInsert(final String key, final String value, final ListPosition position, final String pivot){
+		final redis.clients.jedis.ListPosition pos = JedisClientUtils.listPositionConvert(position);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().linsert(key, pos, pivot, value).get());
+		}else{
+			return execute((cmd)->cmd.linsert(key, pos, pivot, value));
+		}
+	}
+
+	@Override
+	public Long lLen(final String key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().llen(key).get());
+		}else{
+			return execute((cmd)->cmd.llen(key));
+		}
+	}
+
+	@Override
+	public String lPop(final String key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lpop(key).get());
+		}else{
+			return execute((cmd)->cmd.lpop(key));
+		}
+	}
+
+	@Override
+	public Long lPush(final String key, final String... values){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lpush(key, values).get());
+		}else{
+			return execute((cmd)->cmd.lpush(key, values));
+		}
+	}
+
+	@Override
+	public Long lPushX(final String key, final String... values){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lpushx(key, values).get());
+		}else{
+			return execute((cmd)->cmd.lpushx(key, values));
+		}
+	}
+
+	@Override
+	public List<String> lRange(final String key, final long start, final long end){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lrange(key, start, end).get());
+		}else{
+			return execute((cmd)->cmd.lrange(key, start, end));
+		}
+	}
+
+	@Override
+	public Long lRem(final String key, final String value, final long count){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lrem(key, count, value).get());
+		}else{
+			return execute((cmd)->cmd.lrem(key, count, value));
+		}
+	}
+
+	@Override
+	public Status lSet(final String key, final long index, final String value){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().lset(key, index, value).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.lset(key, index, value)));
+		}
+	}
+
+	@Override
+	public Status lTrim(final String key, final long start, final long end){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().ltrim(key, start, end).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.ltrim(key, start, end)));
+		}
+	}
+
+	@Override
+	public String rPop(final String key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().rpop(key).get());
+		}else{
+			return execute((cmd)->cmd.rpop(key));
+		}
+	}
+
+	@Override
+	public Long rPush(final String key, final String... values){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().rpush(key, values).get());
+		}else{
+			return execute((cmd)->cmd.rpush(key, values));
+		}
+	}
+
+	@Override
+	public Long rPushX(final String key, final String... values){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().rpushx(key, values).get());
+		}else{
+			return execute((cmd)->cmd.rpushx(key, values));
+		}
+	}
+
+/*
 
 	@Override
 	public Status set(final String key, final String value){
@@ -664,125 +783,6 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		}else{
 			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
 					new JedisScanParams(pattern, count))));
-		}
-	}
-
-	@Override
-	public Long lPush(final String key, final String... values){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lpush(key, values).get());
-		}else{
-			return execute((cmd)->cmd.lpush(key, values));
-		}
-	}
-
-	@Override
-	public Long lPushX(final String key, final String... values){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lpushx(key, values).get());
-		}else{
-			return execute((cmd)->cmd.lpushx(key, values));
-		}
-	}
-
-	@Override
-	public Long lInsert(final String key, final String value, final ListPosition position, final String pivot){
-		final redis.clients.jedis.ListPosition pos = JedisClientUtils.listPositionConvert(position);
-
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().linsert(key, pos, pivot, value).get());
-		}else{
-			return execute((cmd)->cmd.linsert(key, pos, pivot, value));
-		}
-	}
-
-	@Override
-	public Status lSet(final String key, final long index, final String value){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().lset(key, index, value).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.lset(key, index, value)));
-		}
-	}
-
-	@Override
-	public String lIndex(final String key, final long index){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lindex(key, index).get());
-		}else{
-			return execute((cmd)->cmd.lindex(key, index));
-		}
-	}
-
-	@Override
-	public String lPop(final String key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lpop(key).get());
-		}else{
-			return execute((cmd)->cmd.lpop(key));
-		}
-	}
-
-	@Override
-	public String rPop(final String key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().rpop(key).get());
-		}else{
-			return execute((cmd)->cmd.rpop(key));
-		}
-	}
-
-	@Override
-	public Long rPush(final String key, final String... values){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().rpush(key, values).get());
-		}else{
-			return execute((cmd)->cmd.rpush(key, values));
-		}
-	}
-
-	@Override
-	public Long rPushX(final String key, final String... values){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().rpushx(key, values).get());
-		}else{
-			return execute((cmd)->cmd.rpushx(key, values));
-		}
-	}
-
-	@Override
-	public Status lTrim(final String key, final long start, final long end){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().ltrim(key, start, end).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.ltrim(key, start, end)));
-		}
-	}
-
-	@Override
-	public Long lRem(final String key, final String value, final long count){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lrem(key, count, value).get());
-		}else{
-			return execute((cmd)->cmd.lrem(key, count, value));
-		}
-	}
-
-	@Override
-	public List<String> lRange(final String key, final long start, final long end){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lrange(key, start, end).get());
-		}else{
-			return execute((cmd)->cmd.lrange(key, start, end));
-		}
-	}
-
-	@Override
-	public Long lLen(final String key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().llen(key).get());
-		}else{
-			return execute((cmd)->cmd.llen(key));
 		}
 	}
 

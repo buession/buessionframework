@@ -24,17 +24,17 @@
  */
 package com.buession.redis.core.convert.jedis;
 
-import com.buession.redis.core.command.KeyCommands;
+import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.convert.Convert;
 import redis.clients.jedis.params.MigrateParams;
 
 /**
  * @author Yong.Teng
  */
-public class MigrateOperationConvert implements Convert<KeyCommands.MigrateOperation, MigrateParams> {
+public class MigrateOperationConvert implements Convert<MigrateOperation, MigrateParams> {
 
 	@Override
-	public MigrateParams convert(final KeyCommands.MigrateOperation source){
+	public MigrateParams convert(final MigrateOperation source){
 		switch(source){
 			case COPY:
 				return MigrateParams.migrateParams().copy();
@@ -46,11 +46,11 @@ public class MigrateOperationConvert implements Convert<KeyCommands.MigrateOpera
 	}
 
 	@Override
-	public KeyCommands.MigrateOperation deconvert(final MigrateParams target){
-		if(target.getParam(KeyCommands.MigrateOperation.COPY.name())){
-			return KeyCommands.MigrateOperation.COPY;
-		}else if(target.getParam(KeyCommands.MigrateOperation.REPLACE.name())){
-			return KeyCommands.MigrateOperation.REPLACE;
+	public MigrateOperation deconvert(final MigrateParams target){
+		if(target.getParam(MigrateOperation.COPY.name())){
+			return MigrateOperation.COPY;
+		}else if(target.getParam(MigrateOperation.REPLACE.name())){
+			return MigrateOperation.REPLACE;
 		}else{
 			return null;
 		}

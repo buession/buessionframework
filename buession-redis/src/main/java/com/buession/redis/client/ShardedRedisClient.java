@@ -32,6 +32,7 @@ import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.transaction.Transaction;
@@ -85,7 +86,22 @@ public interface ShardedRedisClient extends RedisClient {
 		throw new NotSupportedCommandException(ProtocolCommand.PFMERGE);
 	}
 
-	/*@Override
+	@Override
+	default Set<String> keys(final String pattern){
+		throw new NotSupportedCommandException(ProtocolCommand.KEYS);
+	}
+
+	@Override
+	default Set<byte[]> keys(final byte[] pattern){
+		throw new NotSupportedCommandException(ProtocolCommand.KEYS);
+	}
+
+	@Override
+	default String randomKey(){
+		throw new NotSupportedCommandException(ProtocolCommand.RANDOMKEY);
+	}
+
+	@Override
 	default Status rename(final String key, final String newKey){
 		throw new NotSupportedCommandException(ProtocolCommand.RENAME);
 	}
@@ -103,21 +119,6 @@ public interface ShardedRedisClient extends RedisClient {
 	@Override
 	default Status renameNx(final byte[] key, final byte[] newKey){
 		throw new NotSupportedCommandException(ProtocolCommand.RENAMENX);
-	}
-
-	@Override
-	default String randomKey(){
-		throw new NotSupportedCommandException(ProtocolCommand.RANDOMKEY);
-	}
-
-	@Override
-	default Set<String> keys(final String pattern){
-		throw new NotSupportedCommandException(ProtocolCommand.KEYS);
-	}
-
-	@Override
-	default Set<byte[]> keys(final byte[] pattern){
-		throw new NotSupportedCommandException(ProtocolCommand.KEYS);
 	}
 
 	@Override
@@ -241,26 +242,6 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
-	default Status mSet(final Map<String, String> values){
-		throw new NotSupportedCommandException(ProtocolCommand.MGET);
-	}
-
-	@Override
-	default Status mSetNx(final Map<String, String> values){
-		throw new NotSupportedCommandException(ProtocolCommand.MGET);
-	}
-
-	@Override
-	default List<String> mGet(final String... keys){
-		throw new NotSupportedCommandException(ProtocolCommand.MGET);
-	}
-
-	@Override
-	default List<byte[]> mGet(final byte[]... keys){
-		throw new NotSupportedCommandException(ProtocolCommand.MGET);
-	}
-
-	@Override
 	default List<String> blPop(final String[] keys, final int timeout){
 		throw new NotSupportedCommandException(ProtocolCommand.BLPOP);
 	}
@@ -268,16 +249,6 @@ public interface ShardedRedisClient extends RedisClient {
 	@Override
 	default List<byte[]> blPop(final byte[][] keys, final int timeout){
 		throw new NotSupportedCommandException(ProtocolCommand.BLPOP);
-	}
-
-	@Override
-	default String rPoplPush(final String source, final String destKey){
-		throw new NotSupportedCommandException(ProtocolCommand.RPOPLPUSH);
-	}
-
-	@Override
-	default byte[] rPoplPush(final byte[] key, final byte[] destKey){
-		throw new NotSupportedCommandException(ProtocolCommand.RPOPLPUSH);
 	}
 
 	@Override
@@ -298,6 +269,38 @@ public interface ShardedRedisClient extends RedisClient {
 	@Override
 	default byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout){
 		throw new NotSupportedCommandException(ProtocolCommand.BRPOPLPUSH);
+	}
+
+	@Override
+	default String rPoplPush(final String source, final String destKey){
+		throw new NotSupportedCommandException(ProtocolCommand.RPOPLPUSH);
+	}
+
+	@Override
+	default byte[] rPoplPush(final byte[] key, final byte[] destKey){
+		throw new NotSupportedCommandException(ProtocolCommand.RPOPLPUSH);
+	}
+
+	/*
+
+	@Override
+	default Status mSet(final Map<String, String> values){
+		throw new NotSupportedCommandException(ProtocolCommand.MGET);
+	}
+
+	@Override
+	default Status mSetNx(final Map<String, String> values){
+		throw new NotSupportedCommandException(ProtocolCommand.MGET);
+	}
+
+	@Override
+	default List<String> mGet(final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.MGET);
+	}
+
+	@Override
+	default List<byte[]> mGet(final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.MGET);
 	}
 
 	@Override
