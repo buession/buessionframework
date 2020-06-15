@@ -32,6 +32,7 @@ import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.JedisScanParams;
+import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
@@ -73,20 +74,424 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
+	public byte[] echo(final byte[] str){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().echo(str).get());
+		}else{
+			return execute((cmd)->cmd.echo(str));
+		}
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geoadd(key, longitude, latitude, member).get());
+		}else{
+			return execute((cmd)->cmd.geoadd(key, longitude, latitude, member));
+		}
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
+		final Map<byte[], GeoCoordinate> memberCoordinateMap = JedisClientUtils.geoMapConvert(memberCoordinates);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geoadd(key, memberCoordinateMap).get());
+		}else{
+			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap));
+		}
+	}
+
+	@Override
+	public List<byte[]> geoHash(final byte[] key, final byte[]... members){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geohash(key, members).get());
+		}else{
+			return execute((cmd)->cmd.geohash(key, members));
+		}
+	}
+
+	@Override
+	public List<Geo> geoPos(final byte[] key, final byte[]... members){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.geoListDeconvert(getTransaction().geopos(key, members).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.geoListDeconvert(cmd.geopos(key, members)));
+		}
+	}
+
+	@Override
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geodist(key, member1, member2).get());
+		}else{
+			return execute((cmd)->cmd.geodist(key, member1, member2));
+		}
+	}
+
+	@Override
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geodist(key, member1, member2, geoUnit).get());
+		}else{
+			return execute((cmd)->cmd.geodist(key, member1, member2, geoUnit));
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+			final double radius, final GeoUnit unit){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
+					latitude, radius, geoUnit).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
+					radius, geoUnit)));
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+			final double radius, final GeoUnit unit, final GeoArgument geoArgument){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
+					latitude, radius, geoUnit, geoRadiusParam).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
+					radius, geoUnit, geoRadiusParam)));
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+			final GeoUnit unit){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
+					member, radius, geoUnit).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
+					geoUnit)));
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+			final GeoUnit unit, final GeoArgument geoArgument){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
+					member, radius, geoUnit, geoRadiusParam).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
+					geoUnit, geoRadiusParam)));
+		}
+	}
+
+	@Override
+	public Long hDel(final byte[] key, final byte[]... fields){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hdel(key, fields).get());
+		}else{
+			return execute((cmd)->cmd.hdel(key, fields));
+		}
+	}
+
+	@Override
+	public boolean hExists(final byte[] key, final byte[] field){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hexists(key, field).get());
+		}else{
+			return execute((cmd)->cmd.hexists(key, field));
+		}
+	}
+
+	@Override
+	public byte[] hGet(final byte[] key, final byte[] field){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hget(key, field).get());
+		}else{
+			return execute((cmd)->cmd.hget(key, field));
+		}
+	}
+
+	@Override
+	public Map<byte[], byte[]> hGetAll(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hgetAll(key).get());
+		}else{
+			return execute((cmd)->cmd.hgetAll(key));
+		}
+	}
+
+	@Override
+	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hincrBy(key, field, value).get());
+		}else{
+			return execute((cmd)->cmd.hincrBy(key, field, value));
+		}
+	}
+
+	@Override
+	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hincrByFloat(key, field, value).get());
+		}else{
+			return execute((cmd)->cmd.hincrByFloat(key, field, value));
+		}
+	}
+
+	@Override
+	public Set<byte[]> hKeys(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hkeys(key).get());
+		}else{
+			return execute((cmd)->cmd.hkeys(key));
+		}
+	}
+
+	@Override
+	public Long hLen(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hlen(key).get());
+		}else{
+			return execute((cmd)->cmd.hlen(key));
+		}
+	}
+
+	@Override
+	public List<byte[]> hMGet(final byte[] key, final byte[]... fields){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hmget(key, fields).get());
+		}else{
+			return execute((cmd)->cmd.hmget(key, fields));
+		}
+	}
+
+	@Override
+	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().hmset(key, data).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)));
+		}
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor)));
+		}
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
+					new JedisScanParams(pattern))));
+		}
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
+					new JedisScanParams(count))));
+		}
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+			final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
+					new JedisScanParams(pattern, count))));
+		}
+	}
+
+	@Override
+	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hset(key, field, value).get() > 0));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.hset(key, field, value) > 0));
+		}
+	}
+
+	@Override
+	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hsetnx(key, field, value).get() > 0));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.hsetnx(key, field, value) > 0));
+		}
+	}
+
+	@Override
+	public Long hStrLen(final byte[] key, final byte[] field){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hstrlen(key, field).get());
+		}else{
+			return execute((cmd)->cmd.hstrlen(key, field));
+		}
+	}
+
+	@Override
+	public List<byte[]> hVals(final byte[] key){
+		return execute(new Executor<ShardedJedis, List<byte[]>>() {
+
+			@Override
+			public List<byte[]> execute(ShardedJedis cmd){
+				if(isTransaction()){
+					return getTransaction().hvals(key).get();
+				}else{
+					Collection<byte[]> result = cmd.hvals(key);
+					return result == null ? null : new ArrayList<>(result);
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Status pfAdd(final byte[] key, final byte[]... elements){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pfadd(key, elements).get() > 0));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0));
+		}
+	}
+
+	@Override
+	public Long pfCount(final String... keys){
+		return execute(new Executor<ShardedJedis, Long>() {
+
+			@Override
+			public Long execute(ShardedJedis cmd){
+				if(isTransaction()){
+					return getTransaction().pfcount(keys).get();
+				}else{
+					long result = 0;
+
+					for(String key : keys){
+						result += cmd.pfcount(key);
+					}
+
+					return result;
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Long pfCount(final byte[]... keys){
+		return execute(new Executor<ShardedJedis, Long>() {
+
+			@Override
+			public Long execute(ShardedJedis cmd){
+				if(isTransaction()){
+					return getTransaction().pfcount(keys).get();
+				}else{
+					long result = 0;
+
+					for(byte[] key : keys){
+						result += cmd.pfcount(key);
+					}
+
+					return result;
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Long del(final String... keys){
+		return execute(new Executor<ShardedJedis, Long>() {
+
+			@Override
+			public Long execute(ShardedJedis cmd){
+				if(isTransaction()){
+					return getTransaction().del(keys).get();
+				}else{
+					if(keys != null){
+						long result = 0;
+
+						for(String key : keys){
+							result += cmd.del(key);
+						}
+
+						return result;
+					}
+
+					return 0L;
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Long del(final byte[]... keys){
+		return execute(new Executor<ShardedJedis, Long>() {
+
+			@Override
+			public Long execute(ShardedJedis cmd){
+				if(isTransaction()){
+					return getTransaction().del(keys).get();
+				}else{
+					if(keys != null){
+						long result = 0;
+
+						for(byte[] key : keys){
+							result += cmd.del(key);
+						}
+
+						return result;
+					}
+
+					return 0L;
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public byte[] dump(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().dump(key).get());
+		}else{
+			return execute((cmd)->cmd.dump(key));
+		}
+	}
+
+	@Override
 	public boolean exists(final byte[] key){
 		if(isTransaction()){
 			return execute((ShardedJedis cmd)->getTransaction().exists(key).get());
 		}else{
 			return execute((ShardedJedis cmd)->cmd.exists(key));
-		}
-	}
-
-	@Override
-	public Type type(final byte[] key){
-		if(isTransaction()){
-			return execute((ShardedJedis cmd)->ReturnUtils.enumValueOf(getTransaction().type(key).get(), Type.class));
-		}else{
-			return execute((cmd)->ReturnUtils.enumValueOf(cmd.type(key), Type.class));
 		}
 	}
 
@@ -109,6 +514,71 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, key, db, timeout).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(getShard(cmd, key).migrate(host, port, key, db, timeout)));
+		}
+	}
+
+	@Override
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, key, db, timeout).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(getShard(cmd, key).migrate(host, port, key, db, timeout)));
+		}
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
+			final MigrateOperation migrateOperation){
+		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(migrateOperation);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
+					migrateParams, key).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(getShard(cmd, key).migrate(host, port, db, timeout,
+					migrateParams, key)));
+		}
+	}
+
+	@Override
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
+			final MigrateOperation migrateOperation){
+		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(migrateOperation);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
+					migrateParams, key).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(getShard(cmd, key).migrate(host, port, db, timeout,
+					migrateParams, key)));
+		}
+	}
+
+	@Override
+	public Status move(final byte[] key, final int db){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().move(key, db).get() > 0));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.move(key, db) > 0));
+		}
+	}
+/*
+
+	@Override
+	public Type type(final byte[] key){
+		if(isTransaction()){
+			return execute((ShardedJedis cmd)->ReturnUtils.enumValueOf(getTransaction().type(key).get(), Type.class));
+		}else{
+			return execute((cmd)->ReturnUtils.enumValueOf(cmd.type(key), Type.class));
+		}
+	}
+
+	@Override
 	public Status pExpire(final byte[] key, final int lifetime){
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpire(key, lifetime).get() == 1));
@@ -120,7 +590,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp){
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() == 1));
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() ==
+			1));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.pexpireAt(key, unixTimestamp) == 1));
 		}
@@ -174,66 +645,11 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
-	public byte[] dump(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().dump(key).get());
-		}else{
-			return execute((cmd)->cmd.dump(key));
-		}
-	}
-
-	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().restore(key, ttl, serializedValue).get()));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.restore(key, ttl, serializedValue)));
-		}
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, key, db, timeout).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(getShard(cmd, key).migrate(host, port, key, db, timeout)));
-		}
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, key, db, timeout).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(getShard(cmd, key).migrate(host, port, key, db, timeout)));
-		}
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
-			final MigrateOperation migrateOperation){
-		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(migrateOperation);
-
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
-					migrateParams, key).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(getShard(cmd, key).migrate(host, port, db, timeout,
-					migrateParams, key)));
-		}
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
-			final MigrateOperation migrateOperation){
-		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(migrateOperation);
-
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
-					migrateParams, key).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(getShard(cmd, key).migrate(host, port, db, timeout,
-					migrateParams, key)));
 		}
 	}
 
@@ -339,67 +755,6 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 			}
 
 		});
-	}
-
-	@Override
-	public Long del(final String... keys){
-		return execute(new Executor<ShardedJedis, Long>() {
-
-			@Override
-			public Long execute(ShardedJedis cmd){
-				if(isTransaction()){
-					return getTransaction().del(keys).get();
-				}else{
-					if(keys != null){
-						long result = 0;
-
-						for(String key : keys){
-							result += cmd.del(key);
-						}
-
-						return result;
-					}
-
-					return 0L;
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public Long del(final byte[]... keys){
-		return execute(new Executor<ShardedJedis, Long>() {
-
-			@Override
-			public Long execute(ShardedJedis cmd){
-				if(isTransaction()){
-					return getTransaction().del(keys).get();
-				}else{
-					if(keys != null){
-						long result = 0;
-
-						for(byte[] key : keys){
-							result += cmd.del(key);
-						}
-
-						return result;
-					}
-
-					return 0L;
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public Status move(final byte[] key, final int db){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().move(key, db).get() > 0));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.move(key, db) > 0));
-		}
 	}
 
 	@Override
@@ -554,180 +909,6 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 			return execute((cmd)->getTransaction().strlen(key).get());
 		}else{
 			return execute((cmd)->cmd.strlen(key));
-		}
-	}
-
-	@Override
-	public boolean hExists(final byte[] key, final byte[] field){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hexists(key, field).get());
-		}else{
-			return execute((cmd)->cmd.hexists(key, field));
-		}
-	}
-
-	@Override
-	public Set<byte[]> hKeys(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hkeys(key).get());
-		}else{
-			return execute((cmd)->cmd.hkeys(key));
-		}
-	}
-
-	@Override
-	public List<byte[]> hVals(final byte[] key){
-		return execute(new Executor<ShardedJedis, List<byte[]>>() {
-
-			@Override
-			public List<byte[]> execute(ShardedJedis cmd){
-				if(isTransaction()){
-					return getTransaction().hvals(key).get();
-				}else{
-					Collection<byte[]> result = cmd.hvals(key);
-					return result == null ? null : new ArrayList<>(result);
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hset(key, field, value).get() > 0));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.hset(key, field, value) > 0));
-		}
-	}
-
-	@Override
-	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hsetnx(key, field, value).get() > 0));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.hsetnx(key, field, value) > 0));
-		}
-	}
-
-	@Override
-	public byte[] hGet(final byte[] key, final byte[] field){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hget(key, field).get());
-		}else{
-			return execute((cmd)->cmd.hget(key, field));
-		}
-	}
-
-	@Override
-	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().hmset(key, data).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)));
-		}
-	}
-
-	@Override
-	public List<byte[]> hMGet(final byte[] key, final byte[]... fields){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hmget(key, fields).get());
-		}else{
-			return execute((cmd)->cmd.hmget(key, fields));
-		}
-	}
-
-	@Override
-	public Map<byte[], byte[]> hGetAll(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hgetAll(key).get());
-		}else{
-			return execute((cmd)->cmd.hgetAll(key));
-		}
-	}
-
-	@Override
-	public Long hStrLen(final byte[] key, final byte[] field){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hstrlen(key, field).get());
-		}else{
-			return execute((cmd)->cmd.hstrlen(key, field));
-		}
-	}
-
-	@Override
-	public Long hLen(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hlen(key).get());
-		}else{
-			return execute((cmd)->cmd.hlen(key));
-		}
-	}
-
-	@Override
-	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hincrBy(key, field, value).get());
-		}else{
-			return execute((cmd)->cmd.hincrBy(key, field, value));
-		}
-	}
-
-	@Override
-	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hincrByFloat(key, field, value).get());
-		}else{
-			return execute((cmd)->cmd.hincrByFloat(key, field, value));
-		}
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor)));
-		}
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
-					new JedisScanParams(pattern))));
-		}
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
-					new JedisScanParams(count))));
-		}
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-			final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
-					new JedisScanParams(pattern, count))));
-		}
-	}
-
-	@Override
-	public Long hDel(final byte[] key, final byte[]... fields){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hdel(key, fields).get());
-		}else{
-			return execute((cmd)->cmd.hdel(key, fields));
 		}
 	}
 
@@ -1373,131 +1554,6 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
-	public Status pfAdd(final byte[] key, final byte[]... elements){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pfadd(key, elements).get() > 0));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0));
-		}
-	}
-
-	@Override
-	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().geoadd(key, longitude, latitude, member).get());
-		}else{
-			return execute((cmd)->cmd.geoadd(key, longitude, latitude, member));
-		}
-	}
-
-	@Override
-	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
-		final Map<byte[], GeoCoordinate> memberCoordinateMap = JedisClientUtils.geoMapConvert(memberCoordinates);
-
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().geoadd(key, memberCoordinateMap).get());
-		}else{
-			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap));
-		}
-	}
-
-	@Override
-	public List<Geo> geoPos(final byte[] key, final byte[]... members){
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.geoListDeconvert(getTransaction().geopos(key, members).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.geoListDeconvert(cmd.geopos(key, members)));
-		}
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius, final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
-
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
-					latitude, radius, geoUnit).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
-					radius, geoUnit)));
-		}
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius, final GeoUnit unit, final GeoArgument geoArgument){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
-
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
-					latitude, radius, geoUnit, geoRadiusParam).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
-					radius, geoUnit, geoRadiusParam)));
-		}
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
-
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
-					member, radius, geoUnit).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
-					geoUnit)));
-		}
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoUnit unit, final GeoArgument geoArgument){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
-
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
-					member, radius, geoUnit, geoRadiusParam).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
-					geoUnit, geoRadiusParam)));
-		}
-	}
-
-	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().geodist(key, member1, member2).get());
-		}else{
-			return execute((cmd)->cmd.geodist(key, member1, member2));
-		}
-	}
-
-	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
-
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().geodist(key, member1, member2, geoUnit).get());
-		}else{
-			return execute((cmd)->cmd.geodist(key, member1, member2, geoUnit));
-		}
-	}
-
-	@Override
-	public List<byte[]> geoHash(final byte[] key, final byte[]... members){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().geohash(key, members).get());
-		}else{
-			return execute((cmd)->cmd.geohash(key, members));
-		}
-	}
-
-	@Override
 	public Status setBit(final byte[] key, final long offset, final byte[] value){
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setbit(key, offset, value).get()));
@@ -1571,15 +1627,6 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
-	public byte[] echo(final byte[] str){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().echo(str).get());
-		}else{
-			return execute((cmd)->cmd.echo(str));
-		}
-	}
-
-	@Override
 	public Object object(final ObjectCommand command, final String key){
 		return execute(new Executor<ShardedJedis, Object>() {
 
@@ -1627,7 +1674,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 			}
 
 		});
-	}
+	}*/
 
 	protected final static Jedis getShard(final ShardedJedis shardedJedis, final String key){
 		return shardedJedis.getShard(key);

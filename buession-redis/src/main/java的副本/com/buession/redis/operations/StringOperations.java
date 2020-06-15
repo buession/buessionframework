@@ -27,7 +27,6 @@ package com.buession.redis.core.operations;
 import com.buession.core.serializer.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
-import com.buession.redis.core.command.BinaryStringCommands;
 import com.buession.redis.core.command.StringCommands;
 
 import java.util.LinkedHashMap;
@@ -41,7 +40,7 @@ import java.util.Map;
  *
  * @author Yong.Teng
  */
-public interface StringOperations extends StringCommands, BinaryStringCommands, RedisOperations {
+public interface StringOperations extends StringCommands, RedisOperations {
 
 	/**
 	 * 将对象 value 序列化后关联到 key；
@@ -534,5 +533,39 @@ public interface StringOperations extends StringCommands, BinaryStringCommands, 
 	 * @see com.buession.core.serializer.type.TypeReference
 	 */
 	<V> List<V> mGetObject(final byte[][] keys, final TypeReference<V> type);
+
+	/**
+	 * 对一个二进制位的字符串 key 进行位元操作，并将结果保存到 destKey 上，
+	 * 除了 Operation.NOT 操作之外，其他操作都可以接受一个或多个 key 作为输入
+	 *
+	 * @param operation
+	 * 		运算操作
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 保存到 destKey 的字符串的长度
+	 */
+	default Long bitOp(final StringCommands.BitOperation operation, final String destKey, final String key){
+		return bitOp(operation, destKey, new String[]{key});
+	}
+
+	/**
+	 * 对一个二进制位的字符串 key 进行位元操作，并将结果保存到 destKey 上，
+	 * 除了 Operation.NOT 操作之外，其他操作都可以接受一个或多个 key 作为输入
+	 *
+	 * @param operation
+	 * 		运算操作
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 保存到 destKey 的字符串的长度
+	 */
+	default Long bitOp(final StringCommands.BitOperation operation, final byte[] destKey, final byte[] key){
+		return bitOp(operation, destKey, new byte[][]{key});
+	}
 
 }

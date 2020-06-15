@@ -22,19 +22,21 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
-
-import com.buession.redis.core.command.BinaryInternalCommands;
-import com.buession.redis.core.command.InternalCommands;
+package com.buession.redis.core;
 
 /**
- * 内部命令运算
- *
- * <p>详情说明 <a href="http://redisdoc.com/internal/index.html" target="_blank">http://redisdoc.com/internal/index.html</a>
- * </p>
- *
  * @author Yong.Teng
  */
-public interface InternalOperations extends InternalCommands, BinaryInternalCommands, RedisOperations {
+public enum MigrateOperation {
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，不移除源实例上的 key
+	 */
+	COPY,
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，替换目标实例上已存在的 key
+	 */
+	REPLACE
 
 }

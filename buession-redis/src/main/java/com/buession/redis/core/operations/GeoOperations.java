@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -76,6 +76,66 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 */
 	default Long geoAdd(final byte[] key, final byte[] member, final Geo geo){
 		return geoAdd(key, member, geo.getLongitude(), geo.getLatitude());
+	}
+
+	/**
+	 * 获取位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 *
+	 * @return Geohash 数组
+	 */
+	default String geoHash(final String key, final String member){
+		List<String> result = geoHash(key, new String[]{member});
+		return result == null ? null : result.get(0);
+	}
+
+	/**
+	 * 获取位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 *
+	 * @return Geohash 数组
+	 */
+	default byte[] geoHash(final byte[] key, final byte[] member){
+		List<byte[]> result = geoHash(key, new byte[][]{member});
+		return result == null ? null : result.get(0);
+	}
+
+	/**
+	 * 从键里面返回所有给定位置元素的位置（经度和纬度）
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		名字
+	 *
+	 * @return 经纬度
+	 */
+	default Geo geoPos(final String key, final String member){
+		List<Geo> result = geoPos(key, new String[]{member});
+		return result == null ? null : result.get(0);
+	}
+
+	/**
+	 * 从键里面返回所有给定位置元素的位置（经度和纬度）
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		名字
+	 *
+	 * @return 经纬度
+	 */
+	default Geo geoPos(final byte[] key, final byte[] member){
+		List<Geo> result = geoPos(key, new byte[][]{member});
+		return result == null ? null : result.get(0);
 	}
 
 	/**
@@ -249,66 +309,6 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
 			final GeoCommands.GeoArgument geoArgument){
 		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, geoArgument);
-	}
-
-	/**
-	 * 从键里面返回所有给定位置元素的位置（经度和纬度）
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		名字
-	 *
-	 * @return 经纬度
-	 */
-	default Geo geoPos(final String key, final String member){
-		List<Geo> result = geoPos(key, new String[]{member});
-		return result == null ? null : result.get(0);
-	}
-
-	/**
-	 * 从键里面返回所有给定位置元素的位置（经度和纬度）
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		名字
-	 *
-	 * @return 经纬度
-	 */
-	default Geo geoPos(final byte[] key, final byte[] member){
-		List<Geo> result = geoPos(key, new byte[][]{member});
-		return result == null ? null : result.get(0);
-	}
-
-	/**
-	 * 获取位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 *
-	 * @return Geohash 数组
-	 */
-	default String geoHash(final String key, final String member){
-		List<String> result = geoHash(key, new String[]{member});
-		return result == null ? null : result.get(0);
-	}
-
-	/**
-	 * 获取位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 *
-	 * @return Geohash 数组
-	 */
-	default byte[] geoHash(final byte[] key, final byte[] member){
-		List<byte[]> result = geoHash(key, new byte[][]{member});
-		return result == null ? null : result.get(0);
 	}
 
 }

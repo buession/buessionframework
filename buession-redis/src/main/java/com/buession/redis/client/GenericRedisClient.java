@@ -34,7 +34,7 @@ import java.util.List;
  */
 public interface GenericRedisClient extends RedisClient {
 
-	@Override
+	/*@Override
 	default ScanResult<List<String>> scan(final int cursor){
 		return scan(Integer.toString(cursor));
 	}
@@ -92,6 +92,6 @@ public interface GenericRedisClient extends RedisClient {
 	@Override
 	default ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count){
 		return scan(NumberUtils.long2bytes(cursor), pattern, count);
-	}
+	}*/
 
 }

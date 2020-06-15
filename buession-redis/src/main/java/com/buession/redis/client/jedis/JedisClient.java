@@ -35,6 +35,7 @@ import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.Info;
 import com.buession.redis.core.JedisScanParams;
 import com.buession.redis.core.JedisZParams;
+import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
@@ -42,7 +43,6 @@ import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
-import com.buession.redis.core.command.BitMapCommands;
 import com.buession.redis.core.command.DebugCommands;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.ListCommands;
@@ -94,6 +94,419 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
+	public Status auth(final String password){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.AUTH);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.auth(password)));
+		}
+	}
+
+	@Override
+	public Status auth(final byte[] password){
+		return auth(SafeEncoder.encode(password));
+	}
+
+	@Override
+	public byte[] echo(final byte[] str){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().echo(str).get());
+		}else{
+			return execute((cmd)->cmd.echo(str));
+		}
+	}
+
+	@Override
+	public Status ping(){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.pingResult(getTransaction().ping().get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.pingResult(cmd.ping()));
+		}
+	}
+
+	@Override
+	public Status quit(){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.QUIT);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.quit()));
+		}
+	}
+
+	@Override
+	public Status select(final int db){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().select(db).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.select(db)));
+		}
+	}
+
+	@Override
+	public Status swapdb(final int db1, final int db2){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().swapDB(db1, db2).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.swapDB(db1, db2)));
+		}
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geoadd(key, longitude, latitude, member).get());
+		}else{
+			return execute((cmd)->cmd.geoadd(key, longitude, latitude, member));
+		}
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
+		final Map<byte[], GeoCoordinate> memberCoordinateMap = JedisClientUtils.geoMapConvert(memberCoordinates);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geoadd(key, memberCoordinateMap).get());
+		}else{
+			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap));
+		}
+	}
+
+	@Override
+	public List<byte[]> geoHash(final byte[] key, final byte[]... members){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geohash(key, members).get());
+		}else{
+			return execute((cmd)->cmd.geohash(key, members));
+		}
+	}
+
+	@Override
+	public List<Geo> geoPos(final byte[] key, final byte[]... members){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.geoListDeconvert(getTransaction().geopos(key, members).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.geoListDeconvert(cmd.geopos(key, members)));
+		}
+	}
+
+	@Override
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geodist(key, member1, member2).get());
+		}else{
+			return execute((cmd)->cmd.geodist(key, member1, member2));
+		}
+	}
+
+	@Override
+	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().geodist(key, member1, member2, geoUnit).get());
+		}else{
+			return execute((cmd)->cmd.geodist(key, member1, member2, geoUnit));
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+			final double radius, final GeoUnit unit){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
+					latitude, radius, geoUnit).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
+					radius, geoUnit)));
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+			final double radius, final GeoUnit unit, final GeoArgument geoArgument){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
+					latitude, radius, geoUnit, geoRadiusParam).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
+					radius, geoUnit, geoRadiusParam)));
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+			final GeoUnit unit){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
+					member, radius, geoUnit).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
+					geoUnit)));
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+			final GeoUnit unit, final GeoArgument geoArgument){
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
+
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
+					member, radius, geoUnit, geoRadiusParam).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
+					geoUnit, geoRadiusParam)));
+		}
+	}
+
+	@Override
+	public Long hDel(final byte[] key, final byte[]... fields){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hdel(key, fields).get());
+		}else{
+			return execute((cmd)->cmd.hdel(key, fields));
+		}
+	}
+
+	@Override
+	public boolean hExists(final byte[] key, final byte[] field){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hexists(key, field).get());
+		}else{
+			return execute((cmd)->cmd.hexists(key, field));
+		}
+	}
+
+	@Override
+	public byte[] hGet(final byte[] key, final byte[] field){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hget(key, field).get());
+		}else{
+			return execute((cmd)->cmd.hget(key, field));
+		}
+	}
+
+	@Override
+	public Map<byte[], byte[]> hGetAll(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hgetAll(key).get());
+		}else{
+			return execute((cmd)->cmd.hgetAll(key));
+		}
+	}
+
+	@Override
+	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hincrBy(key, field, value).get());
+		}else{
+			return execute((cmd)->cmd.hincrBy(key, field, value));
+		}
+	}
+
+	@Override
+	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hincrByFloat(key, field, value).get());
+		}else{
+			return execute((cmd)->cmd.hincrByFloat(key, field, value));
+		}
+	}
+
+	@Override
+	public Set<byte[]> hKeys(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hkeys(key).get());
+		}else{
+			return execute((cmd)->cmd.hkeys(key));
+		}
+	}
+
+	@Override
+	public Long hLen(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hlen(key).get());
+		}else{
+			return execute((cmd)->cmd.hlen(key));
+		}
+	}
+
+	@Override
+	public List<byte[]> hMGet(final byte[] key, final byte[]... fields){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hmget(key, fields).get());
+		}else{
+			return execute((cmd)->cmd.hmget(key, fields));
+		}
+	}
+
+	@Override
+	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().hmset(key, data).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)));
+		}
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor)));
+		}
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
+					new JedisScanParams(pattern))));
+		}
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
+					new JedisScanParams(count))));
+		}
+	}
+
+	@Override
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+			final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
+					new JedisScanParams(pattern, count))));
+		}
+	}
+
+	@Override
+	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hset(key, field, value).get() > 0));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.hset(key, field, value) > 0));
+		}
+	}
+
+	@Override
+	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hsetnx(key, field, value).get() > 0));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.hsetnx(key, field, value) > 0));
+		}
+	}
+
+	@Override
+	public Long hStrLen(final byte[] key, final byte[] field){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hstrlen(key, field).get());
+		}else{
+			return execute((cmd)->cmd.hstrlen(key, field));
+		}
+	}
+
+	@Override
+	public List<byte[]> hVals(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().hvals(key).get());
+		}else{
+			return execute((cmd)->cmd.hvals(key));
+		}
+	}
+
+	@Override
+	public Status pfAdd(final byte[] key, final byte[]... elements){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pfadd(key, elements).get() > 0));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0));
+		}
+	}
+
+	@Override
+	public Status pfMerge(final String destKey, final String... keys){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().pfmerge(destKey, keys).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.pfmerge(destKey, keys)));
+		}
+	}
+
+	@Override
+	public Status pfMerge(final byte[] destKey, final byte[]... keys){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().pfmerge(destKey, keys).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.pfmerge(destKey, keys)));
+		}
+	}
+
+	@Override
+	public Long pfCount(final String... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().pfcount(keys).get());
+		}else{
+			return execute((cmd)->cmd.pfcount(keys));
+		}
+	}
+
+	@Override
+	public Long pfCount(final byte[]... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().pfcount(keys).get());
+		}else{
+			return execute((cmd)->cmd.pfcount(keys));
+		}
+	}
+
+	@Override
+	public Long del(final String... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().del(keys).get());
+		}else{
+			return execute((cmd)->cmd.del(keys));
+		}
+	}
+
+	@Override
+	public Long del(final byte[]... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().del(keys).get());
+		}else{
+			return execute((cmd)->cmd.del(keys));
+		}
+	}
+
+	@Override
+	public byte[] dump(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().dump(key).get());
+		}else{
+			return execute((cmd)->cmd.dump(key));
+		}
+	}
+
+	@Override
 	public boolean exists(final byte[] key){
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().exists(key).get());
@@ -101,6 +514,79 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 			return execute((cmd)->cmd.exists(key));
 		}
 	}
+
+	@Override
+	public Status expire(final byte[] key, final int lifetime){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expire(key, lifetime).get() == 1));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.expire(key, lifetime) == 1));
+		}
+	}
+
+	@Override
+	public Status expireAt(final byte[] key, final long unixTimestamp){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expireAt(key, unixTimestamp).get() == 1));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.expireAt(key, unixTimestamp) == 1));
+		}
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, key, db, timeout).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, key, db, timeout)));
+		}
+	}
+
+	@Override
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, key, db, timeout).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, key, db, timeout)));
+		}
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
+			final MigrateOperation migrateOperation){
+		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(migrateOperation);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
+					migrateParams, key).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, db, timeout, migrateParams, key)));
+		}
+	}
+
+	@Override
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
+			final MigrateOperation migrateOperation){
+		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(migrateOperation);
+
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
+					migrateParams, key).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, db, timeout, migrateParams, key)));
+		}
+	}
+
+	@Override
+	public Status move(final byte[] key, final int db){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().move(key, db).get() > 0));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.move(key, db) > 0));
+		}
+	}
+
+	/*
 
 	@Override
 	public Type type(final byte[] key){
@@ -175,24 +661,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
-	public Status expire(final byte[] key, final int lifetime){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expire(key, lifetime).get() == 1));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.expire(key, lifetime) == 1));
-		}
-	}
-
-	@Override
-	public Status expireAt(final byte[] key, final long unixTimestamp){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().expireAt(key, unixTimestamp).get() == 1));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.expireAt(key, unixTimestamp) == 1));
-		}
-	}
-
-	@Override
 	public Status pExpire(final byte[] key, final int lifetime){
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpire(key, lifetime).get() == 1));
@@ -204,7 +672,8 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp){
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() == 1));
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pexpireAt(key, unixTimestamp).get() ==
+			1));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.pexpireAt(key, unixTimestamp) == 1));
 		}
@@ -376,64 +845,11 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
-	public byte[] dump(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().dump(key).get());
-		}else{
-			return execute((cmd)->cmd.dump(key));
-		}
-	}
-
-	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().restore(key, ttl, serializedValue).get()));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.restore(key, ttl, serializedValue)));
-		}
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, key, db, timeout).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, key, db, timeout)));
-		}
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, key, db, timeout).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, key, db, timeout)));
-		}
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
-			final MigrateOperation migrateOperation){
-		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(migrateOperation);
-
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
-					migrateParams, key).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, db, timeout, migrateParams, key)));
-		}
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
-			final MigrateOperation migrateOperation){
-		final MigrateParams migrateParams = JedisClientUtils.migrateOperationConvert(migrateOperation);
-
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().migrate(host, port, db, timeout,
-					migrateParams, key).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, db, timeout, migrateParams, key)));
 		}
 	}
 
@@ -470,33 +886,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 			return execute((cmd)->getTransaction().unlink(keys).get());
 		}else{
 			return execute((cmd)->cmd.unlink(keys));
-		}
-	}
-
-	@Override
-	public Long del(final String... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().del(keys).get());
-		}else{
-			return execute((cmd)->cmd.del(keys));
-		}
-	}
-
-	@Override
-	public Long del(final byte[]... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().del(keys).get());
-		}else{
-			return execute((cmd)->cmd.del(keys));
-		}
-	}
-
-	@Override
-	public Status move(final byte[] key, final int db){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().move(key, db).get() > 0));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.move(key, db) > 0));
 		}
 	}
 
@@ -712,168 +1101,97 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
-	public boolean hExists(final byte[] key, final byte[] field){
+	public Status setBit(final byte[] key, final long offset, final byte[] value){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hexists(key, field).get());
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setbit(key, offset, value).get()));
 		}else{
-			return execute((cmd)->cmd.hexists(key, field));
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)));
 		}
 	}
 
 	@Override
-	public Set<byte[]> hKeys(final byte[] key){
+	public Status setBit(final byte[] key, final long offset, final boolean value){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hkeys(key).get());
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setbit(SafeEncoder.encode(key), offset,
+					value).get()));
 		}else{
-			return execute((cmd)->cmd.hkeys(key));
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)));
 		}
 	}
 
 	@Override
-	public List<byte[]> hVals(final byte[] key){
+	public Status getBit(final byte[] key, final long offset){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hvals(key).get());
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().getbit(key, offset).get()));
 		}else{
-			return execute((cmd)->cmd.hvals(key));
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.getbit(key, offset)));
 		}
 	}
 
 	@Override
-	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
+	public Long bitPos(final byte[] key, final boolean value){
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hset(key, field, value).get() > 0));
+			return execute((cmd)->getTransaction().bitpos(key, value).get());
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.hset(key, field, value) > 0));
+			return execute((cmd)->cmd.bitpos(key, value));
 		}
 	}
 
 	@Override
-	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
+	public Long bitPos(final byte[] key, final boolean value, final int start, final int end){
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().hsetnx(key, field, value).get() > 0));
+			return execute((cmd)->getTransaction().bitpos(key, value, new BitPosParams(start, end)).get());
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.hsetnx(key, field, value) > 0));
+			return execute((cmd)->cmd.bitpos(key, value, new BitPosParams(start, end)));
 		}
 	}
 
 	@Override
-	public byte[] hGet(final byte[] key, final byte[] field){
+	public Long bitOp(final StringCommands.BitOperation operation, final String destKey, final String... keys){
+		final BitOP bitOP = JedisClientUtils.bitOperationConvert(operation);
+
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hget(key, field).get());
+			return execute((cmd)->getTransaction().bitop(bitOP, destKey, keys).get());
 		}else{
-			return execute((cmd)->cmd.hget(key, field));
+			return execute((cmd)->cmd.bitop(bitOP, destKey, keys));
 		}
 	}
 
 	@Override
-	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
+	public Long bitOp(final StringCommands.BitOperation operation, final byte[] destKey, final byte[]... keys){
+		final BitOP bitOP = JedisClientUtils.bitOperationConvert(operation);
+
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().hmset(key, data).get()));
+			return execute((cmd)->getTransaction().bitop(bitOP, destKey, keys).get());
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)));
+			return execute((cmd)->cmd.bitop(bitOP, destKey, keys));
 		}
 	}
 
 	@Override
-	public List<byte[]> hMGet(final byte[] key, final byte[]... fields){
+	public List<Long> bitField(final byte[] key, final byte[]... arguments){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hmget(key, fields).get());
+			return execute((cmd)->getTransaction().bitfield(key, arguments).get());
 		}else{
-			return execute((cmd)->cmd.hmget(key, fields));
+			return execute((cmd)->cmd.bitfield(key, arguments));
 		}
 	}
 
 	@Override
-	public Map<byte[], byte[]> hGetAll(final byte[] key){
+	public Long bitCount(final byte[] key){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hgetAll(key).get());
+			return execute((cmd)->getTransaction().bitcount(key).get());
 		}else{
-			return execute((cmd)->cmd.hgetAll(key));
+			return execute((cmd)->cmd.bitcount(key));
 		}
 	}
 
 	@Override
-	public Long hStrLen(final byte[] key, final byte[] field){
+	public Long bitCount(final byte[] key, final long start, final long end){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().hstrlen(key, field).get());
+			return execute((cmd)->getTransaction().bitcount(key, start, end).get());
 		}else{
-			return execute((cmd)->cmd.hstrlen(key, field));
-		}
-	}
-
-	@Override
-	public Long hLen(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hlen(key).get());
-		}else{
-			return execute((cmd)->cmd.hlen(key));
-		}
-	}
-
-	@Override
-	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hincrBy(key, field, value).get());
-		}else{
-			return execute((cmd)->cmd.hincrBy(key, field, value));
-		}
-	}
-
-	@Override
-	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hincrByFloat(key, field, value).get());
-		}else{
-			return execute((cmd)->cmd.hincrByFloat(key, field, value));
-		}
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor)));
-		}
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
-					new JedisScanParams(pattern))));
-		}
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
-					new JedisScanParams(count))));
-		}
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-			final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
-					new JedisScanParams(pattern, count))));
-		}
-	}
-
-	@Override
-	public Long hDel(final byte[] key, final byte[]... fields){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().hdel(key, fields).get());
-		}else{
-			return execute((cmd)->cmd.hdel(key, fields));
+			return execute((cmd)->cmd.bitcount(key, start, end));
 		}
 	}
 
@@ -1376,8 +1694,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 
 	@Override
 	public Long zCount(final byte[] key, final byte[] min, final byte[] max){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
-
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().zcount(key, min, max).get());
 		}else{
@@ -1905,262 +2221,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
-	public Status pfAdd(final byte[] key, final byte[]... elements){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().pfadd(key, elements).get() > 0));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0));
-		}
-	}
-
-	@Override
-	public Status pfMerge(final String destKey, final String... keys){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().pfmerge(destKey, keys).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.pfmerge(destKey, keys)));
-		}
-	}
-
-	@Override
-	public Status pfMerge(final byte[] destKey, final byte[]... keys){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().pfmerge(destKey, keys).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.pfmerge(destKey, keys)));
-		}
-	}
-
-	@Override
-	public Long pfCount(final String... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().pfcount(keys).get());
-		}else{
-			return execute((cmd)->cmd.pfcount(keys));
-		}
-	}
-
-	@Override
-	public Long pfCount(final byte[]... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().pfcount(keys).get());
-		}else{
-			return execute((cmd)->cmd.pfcount(keys));
-		}
-	}
-
-	@Override
-	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().geoadd(key, longitude, latitude, member).get());
-		}else{
-			return execute((cmd)->cmd.geoadd(key, longitude, latitude, member));
-		}
-	}
-
-	@Override
-	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
-		final Map<byte[], GeoCoordinate> memberCoordinateMap = JedisClientUtils.geoMapConvert(memberCoordinates);
-
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().geoadd(key, memberCoordinateMap).get());
-		}else{
-			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap));
-		}
-	}
-
-	@Override
-	public List<Geo> geoPos(final byte[] key, final byte[]... members){
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.geoListDeconvert(getTransaction().geopos(key, members).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.geoListDeconvert(cmd.geopos(key, members)));
-		}
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius, final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
-
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
-					latitude, radius, geoUnit).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
-					radius, geoUnit)));
-		}
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius, final GeoUnit unit, final GeoArgument geoArgument){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
-
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
-					latitude, radius, geoUnit, geoRadiusParam).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
-					radius, geoUnit, geoRadiusParam)));
-		}
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
-
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
-					member, radius, geoUnit).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
-					geoUnit)));
-		}
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoUnit unit, final GeoArgument geoArgument){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
-
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
-					member, radius, geoUnit, geoRadiusParam).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
-					geoUnit, geoRadiusParam)));
-		}
-	}
-
-	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().geodist(key, member1, member2).get());
-		}else{
-			return execute((cmd)->cmd.geodist(key, member1, member2));
-		}
-	}
-
-	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
-
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().geodist(key, member1, member2, geoUnit).get());
-		}else{
-			return execute((cmd)->cmd.geodist(key, member1, member2, geoUnit));
-		}
-	}
-
-	@Override
-	public List<byte[]> geoHash(final byte[] key, final byte[]... members){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().geohash(key, members).get());
-		}else{
-			return execute((cmd)->cmd.geohash(key, members));
-		}
-	}
-
-	@Override
-	public Status setBit(final byte[] key, final long offset, final byte[] value){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setbit(key, offset, value).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)));
-		}
-	}
-
-	@Override
-	public Status setBit(final byte[] key, final long offset, final boolean value){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setbit(SafeEncoder.encode(key), offset,
-					value).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)));
-		}
-	}
-
-	@Override
-	public Status getBit(final byte[] key, final long offset){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().getbit(key, offset).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.getbit(key, offset)));
-		}
-	}
-
-	@Override
-	public Long bitPos(final byte[] key, final boolean value){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitpos(key, value).get());
-		}else{
-			return execute((cmd)->cmd.bitpos(key, value));
-		}
-	}
-
-	@Override
-	public Long bitPos(final byte[] key, final boolean value, final int start, final int end){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitpos(key, value, new BitPosParams(start, end)).get());
-		}else{
-			return execute((cmd)->cmd.bitpos(key, value, new BitPosParams(start, end)));
-		}
-	}
-
-	@Override
-	public Long bitOp(final BitMapCommands.Operation operation, final String destKey, final String... keys){
-		final BitOP bitOP = JedisClientUtils.bitOperationConvert(operation);
-
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitop(bitOP, destKey, keys).get());
-		}else{
-			return execute((cmd)->cmd.bitop(bitOP, destKey, keys));
-		}
-	}
-
-	@Override
-	public Long bitOp(final BitMapCommands.Operation operation, final byte[] destKey, final byte[]... keys){
-		final BitOP bitOP = JedisClientUtils.bitOperationConvert(operation);
-
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitop(bitOP, destKey, keys).get());
-		}else{
-			return execute((cmd)->cmd.bitop(bitOP, destKey, keys));
-		}
-	}
-
-	@Override
-	public List<Long> bitField(final byte[] key, final byte[]... arguments){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitfield(key, arguments).get());
-		}else{
-			return execute((cmd)->cmd.bitfield(key, arguments));
-		}
-	}
-
-	@Override
-	public Long bitCount(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitcount(key).get());
-		}else{
-			return execute((cmd)->cmd.bitcount(key));
-		}
-	}
-
-	@Override
-	public Long bitCount(final byte[] key, final long start, final long end){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitcount(key, start, end).get());
-		}else{
-			return execute((cmd)->cmd.bitcount(key, start, end));
-		}
-	}
-
-	@Override
 	public Transaction multi(){
 		return execute((cmd)->new JedisTransaction(cmd.multi()));
 	}
@@ -2323,101 +2383,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
-	public Status auth(final String password){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.AUTH);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.auth(password)));
-		}
-	}
-
-	@Override
-	public Status auth(final byte[] password){
-		return auth(SafeEncoder.encode(password));
-	}
-
-	@Override
-	public String echo(final String str){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().echo(str).get());
-		}else{
-			return execute((cmd)->cmd.echo(str));
-		}
-	}
-
-	@Override
-	public byte[] echo(final byte[] str){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().echo(str).get());
-		}else{
-			return execute((cmd)->cmd.echo(str));
-		}
-	}
-
-	@Override
-	public Status ping(){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool("PONG".equalsIgnoreCase(getTransaction().ping().get())));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool("PONG".equalsIgnoreCase(cmd.ping())));
-		}
-	}
-
-	@Override
-	public Status quit(){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.QUIT);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.quit()));
-		}
-	}
-
-	@Override
-	public Status select(final int db){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().select(db).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.select(db)));
-		}
-	}
-
-	@Override
-	public Status swapdb(final int db1, final int db2){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().swapDB(db1, db2).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.swapDB(db1, db2)));
-		}
-	}
-
-	@Override
-	public Long dbSize(){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().dbSize().get());
-		}else{
-			return execute((cmd)->cmd.dbSize());
-		}
-	}
-
-	@Override
-	public Status flushDb(){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().flushDB().get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.flushDB()));
-		}
-	}
-
-	@Override
-	public Status flushAll(){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().flushDB().get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.flushDB()));
-		}
-	}
-
-	@Override
 	public Object eval(final String script){
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().eval(script).get());
@@ -2518,7 +2483,8 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)).get());
+			return execute((cmd)->getTransaction().evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)).get
+			());
 		}else{
 			return execute((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
 		}
@@ -2527,7 +2493,8 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)).get());
+			return execute((cmd)->getTransaction().evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)).get
+			());
 		}else{
 			return execute((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
 		}
@@ -2607,56 +2574,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
-	public Status save(){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().save().get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.save()));
-		}
-	}
-
-	@Override
-	public String bgSave(){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().bgsave().get());
-		}else{
-			return execute((cmd)->cmd.bgsave());
-		}
-	}
-
-	@Override
-	public String bgRewriteAof(){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().bgrewriteaof().get());
-		}else{
-			return execute((cmd)->cmd.bgrewriteaof());
-		}
-	}
-
-	@Override
-	public Long lastSave(){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lastsave().get());
-		}else{
-			return execute((cmd)->cmd.lastsave());
-		}
-	}
-
-	@Override
-	public Status slaveOf(final String host, final int port){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SLAVEOF);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.slaveof(host, port)));
-		}
-	}
-
-	@Override
-	public Role role(){
-		throw new NotSupportedCommandException(ProtocolCommand.ROLE);
-	}
-
-	@Override
 	public Info info(final InfoSection section){
 		if(isTransaction()){
 			return execute((cmd)->InfoUtil.convert(getTransaction().info(section.name().toLowerCase()).get()));
@@ -2679,11 +2596,81 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
+	public Role role(){
+		throw new NotSupportedCommandException(ProtocolCommand.ROLE);
+	}
+
+	@Override
 	public RedisServerTime time(){
 		if(isTransaction()){
 			return execute((cmd)->ReturnUtils.redisServerTime(getTransaction().time().get()));
 		}else{
 			return execute((cmd)->ReturnUtils.redisServerTime(cmd.time()));
+		}
+	}
+
+	@Override
+	public Status configSet(final String parameter, final String value){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().configSet(parameter, value).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.configSet(parameter, value)));
+		}
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final byte[] value){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().configSet(SafeEncoder.encode(parameter),
+					SafeEncoder.encode(value)).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.configSet(parameter, value)));
+		}
+	}
+
+	@Override
+	public List<String> configGet(final String parameter){
+		if(isTransaction()){
+			return execute((cmd)->Collections.unmodifiableList(getTransaction().configGet(parameter).get()));
+		}else{
+			return execute((cmd)->Collections.unmodifiableList(cmd.configGet(parameter)));
+		}
+	}
+
+	@Override
+	public List<byte[]> configGet(final byte[] parameter){
+		return execute(new Executor<Jedis, List<byte[]>>() {
+
+			@Override
+			public List<byte[]> execute(Jedis cmd){
+				if(isTransaction()){
+					List<String> result = getTransaction().configGet(SafeEncoder.encode(parameter)).get();
+					return result == null ? null :
+							Collections.unmodifiableList(result.stream().map(SafeEncoder::encode).collect(Collectors
+							.toList()));
+				}else{
+					return Collections.unmodifiableList(cmd.configGet(parameter));
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Status configResetStat(){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().configResetStat().get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.configResetStat()));
+		}
+	}
+
+	@Override
+	public Status configRewrite(){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.CONFIG_REWRITE);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.configRewrite()));
 		}
 	}
 
@@ -2729,12 +2716,236 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	}
 
 	@Override
+	public Status clientPause(final long timeout){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_PAUSE);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.clientPause(timeout)));
+		}
+	}
+
+	@Override
+	public Status clientReply(final ClientReply option){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_REPLY);
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_UNBLOCK);
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId, final ClientUnblockType type){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_UNBLOCK);
+	}
+
+	@Override
 	public Status clientKill(final String host, final int port){
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_KILL);
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.clientKill(host + ":" + port)));
 		}
+	}
+
+	@Override
+	public Long dbSize(){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().dbSize().get());
+		}else{
+			return execute((cmd)->cmd.dbSize());
+		}
+	}
+
+	@Override
+	public Status flushDb(){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().flushDB().get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.flushDB()));
+		}
+	}
+
+	@Override
+	public Status flushAll(){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().flushDB().get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.flushDB()));
+		}
+	}
+
+	@Override
+	public String debugObject(final String key){
+		return execute(new Executor<Jedis, String>() {
+
+			@Override
+			public String execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.DEBUG_OBJECT);
+				}else{
+					return cmd.debug(DebugParams.OBJECT(key));
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public String debugSegfault(){
+		return execute(new Executor<Jedis, String>() {
+
+			@Override
+			public String execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.DEBUG_SEGFAULT);
+				}else{
+					return cmd.debug(DebugParams.SEGFAULT());
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Object sync(){
+		return execute(new Executor<Jedis, Object>() {
+
+			@Override
+			public Object execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SYNC);
+				}else{
+					cmd.sync();
+					return null;
+				}
+
+			}
+		});
+	}
+
+	@Override
+	public Status save(){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().save().get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.save()));
+		}
+	}
+
+	@Override
+	public String bgSave(){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bgsave().get());
+		}else{
+			return execute((cmd)->cmd.bgsave());
+		}
+	}
+
+	@Override
+	public String bgRewriteAof(){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bgrewriteaof().get());
+		}else{
+			return execute((cmd)->cmd.bgrewriteaof());
+		}
+	}
+
+	@Override
+	public Long lastSave(){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lastsave().get());
+		}else{
+			return execute((cmd)->cmd.lastsave());
+		}
+	}
+
+	@Override
+	public Status slaveOf(final String host, final int port){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SLAVEOF);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.slaveof(host, port)));
+		}
+	}
+
+	@Override
+	public Status replicaOf(final String host, final int port){
+		throw new NotSupportedCommandException(ProtocolCommand.REPLICAOF);
+	}
+
+	@Override
+	public Object slowLog(final SlowLogCommand command, final String... arguments){
+		return execute(new Executor<Jedis, Object>() {
+
+			@Override
+			public Object execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SLOWLOG);
+				}else{
+					switch(command){
+						case GET:
+							return cmd.slowlogGet();
+						case LEN:
+							return cmd.slowlogLen();
+						case RESET:
+							return cmd.slowlogReset();
+						default:
+							return null;
+					}
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Object slowLog(final SlowLogCommand command, final byte[]... arguments){
+		return execute(new Executor<Jedis, Object>() {
+
+			@Override
+			public Object execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SLOWLOG);
+				}else{
+					switch(command){
+						case GET:
+							return cmd.slowlogGet();
+						case LEN:
+							return cmd.slowlogLen();
+						case RESET:
+							return cmd.slowlogReset();
+						default:
+							return null;
+					}
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public void monitor(final RedisMonitor redisMonitor){
+		execute(new Executor<Jedis, Void>() {
+
+			@Override
+			public Void execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.MONITOR);
+				}else{
+					cmd.monitor(new JedisMonitor() {
+
+						@Override
+						public void onCommand(final String command){
+							redisMonitor.onCommand(command);
+						}
+					});
+
+					return null;
+				}
+			}
+
+		});
 	}
 
 	@Override
@@ -2757,87 +2968,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	@Override
 	public void shutdown(final boolean save){
 		shutdown();
-	}
-
-	@Override
-	public Status configSet(final String parameter, final String value){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().configSet(parameter, value).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.configSet(parameter, value)));
-		}
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final byte[] value){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().configSet(SafeEncoder.encode(parameter),
-					SafeEncoder.encode(value)).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.configSet(parameter, value)));
-		}
-	}
-
-	@Override
-	public List<String> configGet(final String parameter){
-		if(isTransaction()){
-			return execute((cmd)->Collections.unmodifiableList(getTransaction().configGet(parameter).get()));
-		}else{
-			return execute((cmd)->Collections.unmodifiableList(cmd.configGet(parameter)));
-		}
-	}
-
-	@Override
-	public List<byte[]> configGet(final byte[] parameter){
-		return execute(new Executor<Jedis, List<byte[]>>() {
-
-			@Override
-			public List<byte[]> execute(Jedis cmd){
-				if(isTransaction()){
-					List<String> result = getTransaction().configGet(SafeEncoder.encode(parameter)).get();
-					return result == null ? null :
-							Collections.unmodifiableList(result.stream().map(SafeEncoder::encode).collect(Collectors.toList()));
-				}else{
-					return Collections.unmodifiableList(cmd.configGet(parameter));
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public Status configResetStat(){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().configResetStat().get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.configResetStat()));
-		}
-	}
-
-	@Override
-	public Status configRewrite(){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.CONFIG_REWRITE);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.configRewrite()));
-		}
-	}
-
-	@Override
-	public Object sync(){
-		return execute(new Executor<Jedis, Object>() {
-
-			@Override
-			public Object execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.SYNC);
-				}else{
-					cmd.sync();
-					return null;
-				}
-
-			}
-		});
 	}
 
 	@Override
@@ -2888,112 +3018,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 			}
 
 		});
-	}
-
-	@Override
-	public Object slowLog(final SlowLogCommand command, final String... arguments){
-		return execute(new Executor<Jedis, Object>() {
-
-			@Override
-			public Object execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.SLOWLOG);
-				}else{
-					switch(command){
-						case GET:
-							return cmd.slowlogGet();
-						case LEN:
-							return cmd.slowlogLen();
-						case RESET:
-							return cmd.slowlogReset();
-						default:
-							return null;
-					}
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public Object slowLog(final DebugCommands.SlowLogCommand command, final byte[]... arguments){
-		return execute(new Executor<Jedis, Object>() {
-
-			@Override
-			public Object execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.SLOWLOG);
-				}else{
-					switch(command){
-						case GET:
-							return cmd.slowlogGet();
-						case LEN:
-							return cmd.slowlogLen();
-						case RESET:
-							return cmd.slowlogReset();
-						default:
-							return null;
-					}
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public void monitor(final RedisMonitor redisMonitor){
-		execute(new Executor<Jedis, Void>() {
-
-			@Override
-			public Void execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.MONITOR);
-				}else{
-					cmd.monitor(new JedisMonitor() {
-
-						@Override
-						public void onCommand(final String command){
-							redisMonitor.onCommand(command);
-						}
-					});
-
-					return null;
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public String debugObject(final String key){
-		return execute(new Executor<Jedis, String>() {
-
-			@Override
-			public String execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.DEBUG_OBJECT);
-				}else{
-					return cmd.debug(DebugParams.OBJECT(key));
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public String debugSegfault(){
-		return execute(new Executor<Jedis, String>() {
-
-			@Override
-			public String execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.DEBUG_SEGFAULT);
-				}else{
-					return cmd.debug(DebugParams.SEGFAULT());
-				}
-			}
-
-		});
-	}
+	}*/
 
 }

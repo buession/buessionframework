@@ -46,6 +46,46 @@ import java.util.Set;
 public interface ShardedRedisClient extends RedisClient {
 
 	@Override
+	default Status auth(final String password){
+		throw new NotSupportedCommandException(ProtocolCommand.AUTH);
+	}
+
+	@Override
+	default Status auth(final byte[] password){
+		throw new NotSupportedCommandException(ProtocolCommand.AUTH);
+	}
+
+	@Override
+	default Status ping(){
+		throw new NotSupportedCommandException(ProtocolCommand.PING);
+	}
+
+	@Override
+	default Status quit(){
+		throw new NotSupportedCommandException(ProtocolCommand.QUIT);
+	}
+
+	@Override
+	default Status select(final int db){
+		throw new NotSupportedCommandException(ProtocolCommand.SELECT);
+	}
+
+	@Override
+	default Status swapdb(final int db1, final int db2){
+		throw new NotSupportedCommandException(ProtocolCommand.SWAPDB);
+	}
+
+	@Override
+	default Status pfMerge(final String destKey, final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.PFMERGE);
+	}
+
+	@Override
+	default Status pfMerge(final byte[] destKey, final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.PFMERGE);
+	}
+
+	/*@Override
 	default Status rename(final String key, final String newKey){
 		throw new NotSupportedCommandException(ProtocolCommand.RENAME);
 	}
@@ -415,26 +455,6 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
-	default Status pfMerge(final String destKey, final String... keys){
-		throw new NotSupportedCommandException(ProtocolCommand.PFMERGE);
-	}
-
-	@Override
-	default Status pfMerge(final byte[] destKey, final byte[]... keys){
-		throw new NotSupportedCommandException(ProtocolCommand.PFMERGE);
-	}
-
-	@Override
-	default Long pfCount(final String... keys){
-		throw new NotSupportedCommandException(ProtocolCommand.PFCOUNT);
-	}
-
-	@Override
-	default Long pfCount(final byte[]... keys){
-		throw new NotSupportedCommandException(ProtocolCommand.PFCOUNT);
-	}
-
-	@Override
 	default Long bitOp(final Operation operation, final String destKey, final String... keys){
 		throw new NotSupportedCommandException(ProtocolCommand.BITOP);
 	}
@@ -535,51 +555,6 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
-	default Status auth(final String password){
-		throw new NotSupportedCommandException(ProtocolCommand.AUTH);
-	}
-
-	@Override
-	default Status auth(final byte[] password){
-		throw new NotSupportedCommandException(ProtocolCommand.AUTH);
-	}
-
-	@Override
-	default Status ping(){
-		throw new NotSupportedCommandException(ProtocolCommand.PING);
-	}
-
-	@Override
-	default Status quit(){
-		throw new NotSupportedCommandException(ProtocolCommand.QUIT);
-	}
-
-	@Override
-	default Status select(final int db){
-		throw new NotSupportedCommandException(ProtocolCommand.SELECT);
-	}
-
-	@Override
-	default Status swapdb(final int db1, final int db2){
-		throw new NotSupportedCommandException(ProtocolCommand.SWAPDB);
-	}
-
-	@Override
-	default Long dbSize(){
-		throw new NotSupportedCommandException(ProtocolCommand.DBSIZE);
-	}
-
-	@Override
-	default Status flushDb(){
-		throw new NotSupportedCommandException(ProtocolCommand.FLUSHDB);
-	}
-
-	@Override
-	default Status flushAll(){
-		throw new NotSupportedCommandException(ProtocolCommand.FLUSHALL);
-	}
-
-	@Override
 	default Object eval(final String script){
 		throw new NotSupportedCommandException(ProtocolCommand.EVAL);
 	}
@@ -670,36 +645,6 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
-	default Status save(){
-		throw new NotSupportedCommandException(ProtocolCommand.SAVE);
-	}
-
-	@Override
-	default String bgSave(){
-		throw new NotSupportedCommandException(ProtocolCommand.BGSAVE);
-	}
-
-	@Override
-	default String bgRewriteAof(){
-		throw new NotSupportedCommandException(ProtocolCommand.BGREWRITEAOF);
-	}
-
-	@Override
-	default Long lastSave(){
-		throw new NotSupportedCommandException(ProtocolCommand.LASTSAVE);
-	}
-
-	@Override
-	default Status slaveOf(final String host, final int port){
-		throw new NotSupportedCommandException(ProtocolCommand.SLAVEOF);
-	}
-
-	@Override
-	default Role role(){
-		throw new NotSupportedCommandException(ProtocolCommand.ROLE);
-	}
-
-	@Override
 	default Info info(final InfoSection section){
 		throw new NotSupportedCommandException(ProtocolCommand.INFO);
 	}
@@ -710,43 +655,13 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
+	default Role role(){
+		throw new NotSupportedCommandException(ProtocolCommand.ROLE);
+	}
+
+	@Override
 	default RedisServerTime time(){
 		throw new NotSupportedCommandException(ProtocolCommand.TIME);
-	}
-
-	@Override
-	default Status clientSetName(final String name){
-		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_SETNAME);
-	}
-
-	@Override
-	default Status clientSetName(final byte[] name){
-		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_SETNAME);
-	}
-
-	@Override
-	default String clientGetName(){
-		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_GETNAME);
-	}
-
-	@Override
-	default List<Client> clientList(){
-		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_LIST);
-	}
-
-	@Override
-	default Status clientKill(final String host, final int port){
-		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_KILL);
-	}
-
-	@Override
-	default void shutdown(){
-		throw new NotSupportedCommandException(ProtocolCommand.SHUTDOWN);
-	}
-
-	@Override
-	default void shutdown(final boolean save){
-		throw new NotSupportedCommandException(ProtocolCommand.SHUTDOWN);
 	}
 
 	@Override
@@ -820,6 +735,81 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
+	default Status clientSetName(final String name){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_SETNAME);
+	}
+
+	@Override
+	default Status clientSetName(final byte[] name){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_SETNAME);
+	}
+
+	@Override
+	default String clientGetName(){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_GETNAME);
+	}
+
+	@Override
+	default String clientId(){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_ID);
+	}
+
+	@Override
+	default List<Client> clientList(){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_LIST);
+	}
+
+	@Override
+	default Status clientPause(final long timeout){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_PAUSE);
+	}
+
+	@Override
+	default Status clientReply(final ClientReply option){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_REPLY);
+	}
+
+	@Override
+	default Status clientUnblock(final int clientId){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_UNBLOCK);
+	}
+
+	@Override
+	default Status clientUnblock(final int clientId, final ClientUnblockType type){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_UNBLOCK);
+	}
+
+	@Override
+	default Status clientKill(final String host, final int port){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_KILL);
+	}
+
+	@Override
+	default Long dbSize(){
+		throw new NotSupportedCommandException(ProtocolCommand.DBSIZE);
+	}
+
+	@Override
+	default Status flushDb(){
+		throw new NotSupportedCommandException(ProtocolCommand.FLUSHDB);
+	}
+
+	@Override
+	default Status flushAll(){
+		throw new NotSupportedCommandException(ProtocolCommand.FLUSHALL);
+	}
+
+	@Override
+	default String debugObject(final String key){
+		throw new NotSupportedCommandException(ProtocolCommand.DEBUG_OBJECT);
+	}
+
+	@Override
+	default String debugSegfault(){
+		throw new NotSupportedCommandException(ProtocolCommand.DEBUG_SEGFAULT);
+	}
+
+	@Override
 	default Object sync(){
 		throw new NotSupportedCommandException(ProtocolCommand.SYNC);
 	}
@@ -845,6 +835,36 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
+	default Status save(){
+		throw new NotSupportedCommandException(ProtocolCommand.SAVE);
+	}
+
+	@Override
+	default String bgSave(){
+		throw new NotSupportedCommandException(ProtocolCommand.BGSAVE);
+	}
+
+	@Override
+	default String bgRewriteAof(){
+		throw new NotSupportedCommandException(ProtocolCommand.BGREWRITEAOF);
+	}
+
+	@Override
+	default Long lastSave(){
+		throw new NotSupportedCommandException(ProtocolCommand.LASTSAVE);
+	}
+
+	@Override
+	default Status replicaOf(final String host, final int port){
+		throw new NotSupportedCommandException(ProtocolCommand.REPLICAOF);
+	}
+
+	@Override
+	default Status slaveOf(final String host, final int port){
+		throw new NotSupportedCommandException(ProtocolCommand.SLAVEOF);
+	}
+
+	@Override
 	default Object slowLog(final SlowLogCommand command, final String... args){
 		throw new NotSupportedCommandException(ProtocolCommand.SLOWLOG);
 	}
@@ -860,13 +880,13 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
-	default String debugObject(final String key){
-		throw new NotSupportedCommandException(ProtocolCommand.DEBUG_OBJECT);
+	default void shutdown(){
+		throw new NotSupportedCommandException(ProtocolCommand.SHUTDOWN);
 	}
 
 	@Override
-	default String debugSegfault(){
-		throw new NotSupportedCommandException(ProtocolCommand.DEBUG_SEGFAULT);
-	}
+	default void shutdown(final boolean save){
+		throw new NotSupportedCommandException(ProtocolCommand.SHUTDOWN);
+	}*/
 
 }

@@ -26,12 +26,12 @@ package com.buession.redis.client.jedis;
 
 import com.buession.core.utils.ReflectUtils;
 import com.buession.lang.Geo;
+import com.buession.lang.Status;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.core.Tuple;
-import com.buession.redis.core.command.BitMapCommands;
 import com.buession.redis.core.command.DebugCommands;
 import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.command.KeyCommands;
@@ -48,6 +48,7 @@ import com.buession.redis.core.convert.jedis.ScanResultConvert;
 import com.buession.redis.core.convert.jedis.SetArgumentConvert;
 import com.buession.redis.core.convert.jedis.SortArgumentConvert;
 import com.buession.redis.core.convert.jedis.TupleConvert;
+import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.BitOP;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;
@@ -181,7 +182,7 @@ public class JedisClientUtils {
 		return geoArgumentConvert.convert(geoArgument);
 	}
 
-	public final static BitOP bitOperationConvert(final BitMapCommands.Operation bitMapOperation){
+	public final static BitOP bitOperationConvert(final StringCommands.BitOperation bitMapOperation){
 		final BitOperationConvert bitOperationConvert = new BitOperationConvert();
 		return bitOperationConvert.convert(bitMapOperation);
 	}
@@ -212,6 +213,10 @@ public class JedisClientUtils {
 			default:
 				return null;
 		}
+	}
+
+	public final static Status pingResult(final String result){
+		return ReturnUtils.statusForBool("PONG".equalsIgnoreCase(result));
 	}
 
 }

@@ -25,7 +25,6 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.KeyValue;
-import com.buession.redis.core.command.BinarySortedSetCommands;
 import com.buession.redis.core.command.SortedSetCommands;
 
 import java.util.Arrays;
@@ -40,7 +39,7 @@ import java.util.Map;
  *
  * @author Yong.Teng
  */
-public interface SortedSetOperations extends SortedSetCommands, BinarySortedSetCommands, RedisOperations {
+public interface SortedSetOperations extends SortedSetCommands, RedisOperations {
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中

@@ -110,6 +110,36 @@ public interface GeoCommands extends RedisCommands {
 	Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates);
 
 	/**
+	 * 获取一个或多个位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geohash.html" target="_blank">http://redisdoc.com/geo/geohash.html</a>
+	 * </p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个位置元素
+	 *
+	 * @return Geohash 数组
+	 */
+	List<String> geoHash(final String key, final String... members);
+
+	/**
+	 * 获取一个或多个位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geohash.html" target="_blank">http://redisdoc.com/geo/geohash
+	 * .html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个位置元素
+	 *
+	 * @return Geohash 数组
+	 */
+	List<byte[]> geoHash(final byte[] key, final byte[]... members);
+
+	/**
 	 * 批量从键里面返回所有给定位置元素的位置（经度和纬度）
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/geo/geopos.html" target="_blank">http://redisdoc.com/geo/geopos.html</a>
@@ -551,36 +581,6 @@ public interface GeoCommands extends RedisCommands {
 	 */
 	List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
 			final GeoArgument geoArgument);
-
-	/**
-	 * 获取一个或多个位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geohash.html" target="_blank">http://redisdoc.com/geo/geohash.html</a>
-	 * </p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param members
-	 * 		一个或多个位置元素
-	 *
-	 * @return Geohash 数组
-	 */
-	List<String> geoHash(final String key, final String... members);
-
-	/**
-	 * 获取一个或多个位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geohash.html" target="_blank">http://redisdoc.com/geo/geohash
-	 * .html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param members
-	 * 		一个或多个位置元素
-	 *
-	 * @return Geohash 数组
-	 */
-	List<byte[]> geoHash(final byte[] key, final byte[]... members);
 
 	/**
 	 * GEO 参数

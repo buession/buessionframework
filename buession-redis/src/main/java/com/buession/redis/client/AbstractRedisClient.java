@@ -92,63 +92,49 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
-	public Long incrBy(final String key, final int value){
-		return incrBy(key, (long) value);
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+			final double radius){
+		return geoRadius(key, longitude, longitude, radius, GeoUnit.M);
 	}
 
 	@Override
-	public Long incrBy(final byte[] key, final int value){
-		return incrBy(key, (long) value);
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+			final double radius){
+		return geoRadius(key, longitude, longitude, radius, GeoUnit.M);
 	}
 
 	@Override
-	public Double incrByFloat(final String key, final float value){
-		return incrByFloat(key, (double) value);
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+			final double radius, final GeoArgument geoArgument){
+		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoArgument);
 	}
 
 	@Override
-	public Double incrByFloat(final byte[] key, final float value){
-		return incrByFloat(key, (double) value);
+	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
+			final double radius, final GeoCommands.GeoArgument geoArgument){
+		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoArgument);
 	}
 
 	@Override
-	public Long decrBy(final String key, final int value){
-		return decrBy(key, (long) value);
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius){
+		return geoRadiusByMember(key, member, radius, GeoUnit.M);
 	}
 
 	@Override
-	public Long decrBy(final byte[] key, final int value){
-		return decrBy(key, (long) value);
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius){
+		return geoRadiusByMember(key, member, radius, GeoUnit.M);
 	}
 
 	@Override
-	public Long setRange(final String key, final int offset, final String value){
-		return setRange(key, (long) offset, value);
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+			final GeoArgument geoArgument){
+		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoArgument);
 	}
 
 	@Override
-	public Long setRange(final byte[] key, final int offset, final byte[] value){
-		return setRange(key, (long) offset, value);
-	}
-
-	@Override
-	public String getRange(final String key, final int start, final int end){
-		return getRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public byte[] getRange(final byte[] key, final int start, final int end){
-		return getRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public String substr(final String key, final long start, final long end){
-		return substr(key, (int) start, (int) end);
-	}
-
-	@Override
-	public byte[] substr(final byte[] key, final long start, final long end){
-		return substr(key, (int) start, (int) end);
+	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
+			final GeoCommands.GeoArgument geoArgument){
+		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoArgument);
 	}
 
 	@Override
@@ -273,6 +259,66 @@ public abstract class AbstractRedisClient implements RedisClient {
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
 			final int count){
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
+	}
+
+	/*@Override
+	public Long incrBy(final String key, final int value){
+		return incrBy(key, (long) value);
+	}
+
+	@Override
+	public Long incrBy(final byte[] key, final int value){
+		return incrBy(key, (long) value);
+	}
+
+	@Override
+	public Double incrByFloat(final String key, final float value){
+		return incrByFloat(key, (double) value);
+	}
+
+	@Override
+	public Double incrByFloat(final byte[] key, final float value){
+		return incrByFloat(key, (double) value);
+	}
+
+	@Override
+	public Long decrBy(final String key, final int value){
+		return decrBy(key, (long) value);
+	}
+
+	@Override
+	public Long decrBy(final byte[] key, final int value){
+		return decrBy(key, (long) value);
+	}
+
+	@Override
+	public Long setRange(final String key, final int offset, final String value){
+		return setRange(key, (long) offset, value);
+	}
+
+	@Override
+	public Long setRange(final byte[] key, final int offset, final byte[] value){
+		return setRange(key, (long) offset, value);
+	}
+
+	@Override
+	public String getRange(final String key, final int start, final int end){
+		return getRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public byte[] getRange(final byte[] key, final int start, final int end){
+		return getRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public String substr(final String key, final long start, final long end){
+		return substr(key, (int) start, (int) end);
+	}
+
+	@Override
+	public byte[] substr(final byte[] key, final long start, final long end){
+		return substr(key, (int) start, (int) end);
 	}
 
 	@Override
@@ -1168,52 +1214,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
-	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-			final double radius){
-		return geoRadius(key, longitude, longitude, radius, GeoUnit.M);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius){
-		return geoRadius(key, longitude, longitude, radius, GeoUnit.M);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-			final double radius, final GeoArgument geoArgument){
-		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoArgument);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius, final GeoCommands.GeoArgument geoArgument){
-		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoArgument);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius){
-		return geoRadiusByMember(key, member, radius, GeoUnit.M);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius){
-		return geoRadiusByMember(key, member, radius, GeoUnit.M);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-			final GeoArgument geoArgument){
-		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoArgument);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoCommands.GeoArgument geoArgument){
-		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoArgument);
-	}
-
-	@Override
 	public Status setBit(final String key, final int offset, final String value){
 		return setBit(key, (long) offset, value);
 	}
@@ -1301,7 +1301,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public Status configSet(final byte[] parameter, final int value){
 		return configSet(parameter, NumberUtils.int2bytes(value));
-	}
+	}*/
 
 	protected <C, R> R doExecute(final Executor<C, R> executor){
 		RedisConnection connection;

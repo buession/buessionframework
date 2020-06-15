@@ -32,9 +32,106 @@ import com.buession.core.validator.Validate;
 public enum ProtocolCommand {
 
 	/**
+	 * connection command start
+	 */
+	AUTH(ProtocolCommandGroup.CONNECTION, "rw"),
+
+	ECHO(ProtocolCommandGroup.CONNECTION, "r"),
+
+	PING(ProtocolCommandGroup.CONNECTION, "r"),
+
+	QUIT(ProtocolCommandGroup.CONNECTION, "rw"),
+
+	SELECT(ProtocolCommandGroup.CONNECTION, "rw"),
+
+	SWAPDB(ProtocolCommandGroup.CONNECTION, "w"),
+	/**
+	 * connection command end
+	 */
+
+	/**
+	 * geo command start
+	 **/
+	GEOADD(ProtocolCommandGroup.GEO, "w"),
+
+	GEOHASH(ProtocolCommandGroup.GEO, "r"),
+
+	GEOPOS(ProtocolCommandGroup.GEO, "r"),
+
+	GEODIST(ProtocolCommandGroup.GEO, "r"),
+
+	GEORADIUS(ProtocolCommandGroup.GEO, "r"),
+
+	GEORADIUSBYMEMBER(ProtocolCommandGroup.GEO, "r"),
+	/**
+	 * geo command end
+	 **/
+
+	/**
+	 * hash command start
+	 **/
+	HDEL(ProtocolCommandGroup.HASH, "rw"),
+
+	HEXISTS(ProtocolCommandGroup.HASH, "r"),
+
+	HGET(ProtocolCommandGroup.HASH, "r"),
+
+	HGETALL(ProtocolCommandGroup.HASH, "r"),
+
+	HINCRBY(ProtocolCommandGroup.HASH, "rw"),
+
+	HINCRBYFLOAT(ProtocolCommandGroup.HASH, "rw"),
+
+	HKEYS(ProtocolCommandGroup.HASH, "r"),
+
+	HLEN(ProtocolCommandGroup.HASH, "r"),
+
+	HMGET(ProtocolCommandGroup.HASH, "r"),
+
+	HMSET(ProtocolCommandGroup.HASH, "w"),
+
+	HSCAN(ProtocolCommandGroup.HASH, "r"),
+
+	HSET(ProtocolCommandGroup.HASH, "w"),
+
+	HSETNX(ProtocolCommandGroup.HASH, "w"),
+
+	HSTRLEN(ProtocolCommandGroup.HASH, "r"),
+
+	HVALS(ProtocolCommandGroup.HASH, "r"),
+	/**
+	 * hash command end
+	 **/
+
+	/**
+	 * hyperloglog command start
+	 **/
+	PFADD(ProtocolCommandGroup.HYPERLOGLOG, "w"),
+
+	PFCOUNT(ProtocolCommandGroup.HYPERLOGLOG, "r"),
+
+	PFMERGE(ProtocolCommandGroup.HYPERLOGLOG, "w"),
+	/**
+	 * hyperloglog command end
+	 **/
+
+	/**
 	 * key command start
 	 **/
+	DEL(ProtocolCommandGroup.KEY, "rw"),
+
+	DUMP(ProtocolCommandGroup.KEY, "r"),
+
 	EXISTS(ProtocolCommandGroup.KEY, "r"),
+
+	EXPIRE(ProtocolCommandGroup.KEY, "rw"),
+
+	EXPIREAT(ProtocolCommandGroup.KEY, "rw"),
+
+	MIGRATE(ProtocolCommandGroup.KEY, "rw"),
+
+	MOVE(ProtocolCommandGroup.KEY, "rw"),
+	...
 
 	TYPE(ProtocolCommandGroup.KEY, "r"),
 
@@ -43,10 +140,6 @@ public enum ProtocolCommand {
 	RENAMENX(ProtocolCommandGroup.KEY, "w"),
 
 	KEYS(ProtocolCommandGroup.KEY, "r"),
-
-	EXPIRE(ProtocolCommandGroup.KEY, "rw"),
-
-	EXPIREAT(ProtocolCommandGroup.KEY, "rw"),
 
 	PEXPIRE(ProtocolCommandGroup.KEY, "rw"),
 
@@ -64,20 +157,13 @@ public enum ProtocolCommand {
 
 	SORT(ProtocolCommandGroup.KEY, "rw"),
 
-	DUMP(ProtocolCommandGroup.KEY, "r"),
-
 	RESTORE(ProtocolCommandGroup.KEY, "w"),
-
-	MIGRATE(ProtocolCommandGroup.KEY, "rw"),
 
 	TOUCH(ProtocolCommandGroup.KEY, "rw"),
 
 	UNLINK(ProtocolCommandGroup.KEY, "rw"),
-
-	DEL(ProtocolCommandGroup.KEY, "rw"),
-
-	MOVE(ProtocolCommandGroup.KEY, "rw"),
 	/** key command end **/
+---
 
 	/**
 	 * string command start
@@ -120,42 +206,6 @@ public enum ProtocolCommand {
 
 	STRLEN(ProtocolCommandGroup.STRING, "r"),
 	/** string command end **/
-
-	/**
-	 * hash command start
-	 **/
-	HEXISTS(ProtocolCommandGroup.HASH, "r"),
-
-	HKEYS(ProtocolCommandGroup.HASH, "r"),
-
-	HVALS(ProtocolCommandGroup.HASH, "r"),
-
-	HSET(ProtocolCommandGroup.HASH, "w"),
-
-	HSETNX(ProtocolCommandGroup.HASH, "w"),
-
-	HGET(ProtocolCommandGroup.HASH, "r"),
-
-	HMSET(ProtocolCommandGroup.HASH, "w"),
-
-	HMGET(ProtocolCommandGroup.HASH, "r"),
-
-	HGETALL(ProtocolCommandGroup.HASH, "r"),
-
-	HDEL(ProtocolCommandGroup.HASH, "rw"),
-
-	HSTRLEN(ProtocolCommandGroup.HASH, "r"),
-
-	HLEN(ProtocolCommandGroup.HASH, "r"),
-
-	HINCRBY(ProtocolCommandGroup.HASH, "rw"),
-
-	HINCRBYFLOAT(ProtocolCommandGroup.HASH, "rw"),
-
-	HSCAN(ProtocolCommandGroup.HASH, "r"),
-	/**
-	 * hash command end
-	 **/
 
 	/**
 	 * list command start
@@ -282,36 +332,6 @@ public enum ProtocolCommand {
 	 **/
 
 	/**
-	 * hyperloglog command start
-	 **/
-	PFADD(ProtocolCommandGroup.HYPERLOGLOG, "w"),
-
-	PFCOUNT(ProtocolCommandGroup.HYPERLOGLOG, "r"),
-
-	PFMERGE(ProtocolCommandGroup.HYPERLOGLOG, "w"),
-	/**
-	 * hyperloglog command end
-	 **/
-
-	/**
-	 * geo command start
-	 **/
-	GEOADD(ProtocolCommandGroup.GEO, "w"),
-
-	GEOPOS(ProtocolCommandGroup.GEO, "r"),
-
-	GEODIST(ProtocolCommandGroup.GEO, "r"),
-
-	GEORADIUS(ProtocolCommandGroup.GEO, "r"),
-
-	GEORADIUSBYMEMBER(ProtocolCommandGroup.GEO, "r"),
-
-	GEOHASH(ProtocolCommandGroup.GEO, "r"),
-	/**
-	 * geo command end
-	 **/
-
-	/**
 	 * bitmap command start
 	 **/
 	SETBIT("rw"),
@@ -327,18 +347,6 @@ public enum ProtocolCommand {
 	BITFIELD("rw"),
 	/**
 	 * bitmap command end
-	 **/
-
-	/**
-	 * database command start
-	 **/
-	DBSIZE("r"),
-
-	FLUSHDB("w"),
-
-	FLUSHALL("w"),
-	/**
-	 * database command end
 	 **/
 
 	/**
@@ -408,29 +416,9 @@ public enum ProtocolCommand {
 	 **/
 
 	/**
-	 * connection command start
-	 */
-	AUTH(ProtocolCommandGroup.CONNECTION, "rw"),
-
-	ECHO(ProtocolCommandGroup.CONNECTION, "r"),
-
-	PING(ProtocolCommandGroup.CONNECTION, "r"),
-
-	QUIT(ProtocolCommandGroup.CONNECTION, "rw"),
-
-	SELECT(ProtocolCommandGroup.CONNECTION, "rw"),
-
-	SWAPDB(ProtocolCommandGroup.CONNECTION, "w"),
-	/**
-	 * connection command end
-	 */
-
-	/**
 	 * replication command start
 	 **/
 	SLAVEOF("w"),
-
-	ROLE("r"),
 	/**
 	 * replication command end
 	 **/
@@ -440,35 +428,57 @@ public enum ProtocolCommand {
 	 **/
 	INFO(ProtocolCommandGroup.SERVER, "r"),
 
+	ROLE(ProtocolCommandGroup.SERVER, "r"),
+
 	SHUTDOWN(ProtocolCommandGroup.SERVER, "rw"),
 
 	TIME(ProtocolCommandGroup.SERVER, "r"),
+
+	CONFIG_SET(ProtocolCommandGroup.SERVER, "w"),
+
+	CONFIG_GET(ProtocolCommandGroup.SERVER, "r"),
+
+	CONFIG_RESETSTAT(ProtocolCommandGroup.SERVER, "w"),
+
+	CONFIG_REWRITE(ProtocolCommandGroup.SERVER, "rw"),
+
+	CLIENT_SETNAME(ProtocolCommandGroup.SERVER, "w"),
 
 	CLIENT_GETNAME(ProtocolCommandGroup.SERVER, "r"),
 
 	CLIENT_ID(ProtocolCommandGroup.SERVER, "r"),
 
+	CLIENT_PAUSE(ProtocolCommandGroup.SERVER, "rw"),
+
+	CLIENT_REPLY(ProtocolCommandGroup.SERVER, "rw"),
+
+	CLIENT_UNBLOCK(ProtocolCommandGroup.SERVER, "rw"),
+
 	CLIENT_KILL(ProtocolCommandGroup.SERVER, "rw"),
 
 	CLIENT_LIST(ProtocolCommandGroup.SERVER, "r"),
 
-	CLIENT_SETNAME(ProtocolCommandGroup.SERVER, "w"),
+	DBSIZE(ProtocolCommandGroup.SERVER, "r"),
+
+	FLUSHDB(ProtocolCommandGroup.SERVER, "w"),
+
+	FLUSHALL(ProtocolCommandGroup.SERVER, "w"),
+
+	DEBUG_OBJECT(ProtocolCommandGroup.SERVER, "rw"),
+
+	DEBUG_SEGFAULT(ProtocolCommandGroup.SERVER, "rw"),
+
+	SYNC(ProtocolCommandGroup.SERVER, "rw"),
+
+	PSYNC(ProtocolCommandGroup.SERVER, "rw"),
+
+	SLOWLOG(ProtocolCommandGroup.SERVER, "rw"),
+
+	REPLICAOF(ProtocolCommandGroup.SERVER, "rw"),
+
+	MONITOR(ProtocolCommandGroup.SERVER, "rw"),
 	/**
 	 * server command end
-	 **/
-
-	/**
-	 * config command start
-	 **/
-	CONFIG_SET("w"),
-
-	CONFIG_GET("r"),
-
-	CONFIG_RESETSTAT("w"),
-
-	CONFIG_REWRITE("rw"),
-	/**
-	 * config command end
 	 **/
 
 	/**
@@ -484,28 +494,10 @@ public enum ProtocolCommand {
 	/**
 	 * debug command start
 	 **/
-	OBJECT("r"),
+	OBJECT("r")；
 
-	SLOWLOG("rw"),
-
-	MONITOR("rw"),
-
-	DEBUG_OBJECT("rw"),
-
-	DEBUG_SEGFAULT("rw"),
 	/**
 	 * debug command end
-	 **/
-
-	/**
-	 * internal command start
-	 **/
-	SYNC("rw"),
-
-	PSYNC("rw");
-
-	/**
-	 * internal command end
 	 **/
 
 	private ProtocolCommandGroup group;

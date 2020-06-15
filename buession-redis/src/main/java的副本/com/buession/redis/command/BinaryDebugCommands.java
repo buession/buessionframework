@@ -22,19 +22,35 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
-
-import com.buession.redis.core.command.PersistenceCommand;
+package com.buession.redis.core.command;
 
 /**
- * 持久化运算
+ * 调试命令
  *
- * <p>详情说明
- * <a href="http://redisdoc.com/persistence/index.html" target="_blank">http://redisdoc.com/persistence/index.html</a>
- * </p>
+ * <p>详情说明 <a href="http://redisdoc.com/debug/index.html" target="_blank">http://redisdoc.com/debug/index.html</a></p>
  *
  * @author Yong.Teng
  */
-public interface PersistenceOperations extends PersistenceCommand, RedisOperations {
+public interface BinaryDebugCommands extends BinaryRedisCommands {
+
+	/**
+	 * 命令允许从内部察看给定 key 的 Redis 对象，它通常用在除错(debugging)
+	 * 或者了解为了节省空间而对 key 使用特殊编码的情况；
+	 * 当将Redis用作缓存程序时，你也可以通过 OBJECT 命令中的信息，决定 key 的驱逐策略(eviction policies)
+	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/debug/object.html" target="_blank">http://redisdoc.com/debug/object.html</a>
+	 * </p>
+	 *
+	 * @param command
+	 * 		子命令
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 当 objectCommand 为 ObjectCommand.REFCOUNT 时，返回给定 key 引用所储存的值的次数
+	 * 当 objectCommand 为 ObjectCommand.ENCODING 时，返回给定 key 锁储存的值所使用的内部表示
+	 * 当 objectCommand 为 ObjectCommand.IDLETIME 时，自储存以来的空闲时间（单位：秒）
+	 */
+	Object object(final DebugCommands.ObjectCommand command, final byte[] key);
 
 }
