@@ -35,7 +35,7 @@ import java.util.List;
  *
  * @author Yong.Teng
  */
-public interface ScriptCommands extends RedisCommands {
+public interface ScriptingCommands extends RedisCommands {
 
 	/**
 	 * 对 Lua 脚本进行求值
@@ -113,8 +113,8 @@ public interface ScriptCommands extends RedisCommands {
 	/**
 	 * 对 Lua 脚本进行求值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a
-	 * ></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a>
+	 * </p>
 	 *
 	 * @param script
 	 * 		脚本程序
@@ -240,7 +240,8 @@ public interface ScriptCommands extends RedisCommands {
 	 * 根据一个或多个脚本的 SHA1 校验和，检测校验和所指定的脚本是否已经被保存在缓存当中
 	 *
 	 * <p>详情说明
-	 * <a href="http://redisdoc.com/script/script_exists.html" target="_blank">http://redisdoc.com/script/script_exists.html</a></p>
+	 * <a href="http://redisdoc.com/script/script_exists.html" target="_blank">http://redisdoc
+	 * .com/script/script_exists.html</a></p>
 	 *
 	 * @param sha1
 	 * 		一个或多个 SHA1 校验和
@@ -250,10 +251,31 @@ public interface ScriptCommands extends RedisCommands {
 	List<Boolean> scriptExists(final byte[]... sha1);
 
 	/**
+	 * 清除所有 Lua 脚本缓存
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/script/script_flush.html" target="_blank">http://redisdoc
+	 * .com/script/script_flush.html</a></p>
+	 *
+	 * @return 操作成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status scriptFlush();
+
+	/**
+	 * 杀死当前正在运行的 Lua 脚本，当且仅当这个脚本没有执行过任何写操作时，这个命令才生效
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/script/script_kill.html" target="_blank">http://redisdoc
+	 * .com/script/script_kill.html</a></p>
+	 *
+	 * @return 操作成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status scriptKill();
+
+	/**
 	 * 将脚本 script 添加到脚本缓存中
 	 *
 	 * <p>详情说明
-	 * <a href="http://redisdoc.com/script/script_load.html" target="_blank">http://redisdoc.com/script/script_load.html</a></p>
+	 * <a href="http://redisdoc.com/script/script_load.html" target="_blank">http://redisdoc.com/script/script_load
+	 * .html</a></p>
 	 *
 	 * @param script
 	 * 		脚本
@@ -274,25 +296,5 @@ public interface ScriptCommands extends RedisCommands {
 	 * @return script 的 SHA1 校验和
 	 */
 	byte[] scriptLoad(final byte[] script);
-
-	/**
-	 * 杀死当前正在运行的 Lua 脚本，当且仅当这个脚本没有执行过任何写操作时，这个命令才生效
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/script_kill.html" target="_blank">http://redisdoc
-	 * .com/script/script_kill.html</a></p>
-	 *
-	 * @return 操作成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status scriptKill();
-
-	/**
-	 * 清除所有 Lua 脚本缓存
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/script_flush.html" target="_blank">http://redisdoc.com/script
-	 * /script_flush.html</a></p>
-	 *
-	 * @return 操作成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status scriptFlush();
 
 }

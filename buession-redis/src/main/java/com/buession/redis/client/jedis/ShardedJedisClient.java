@@ -34,6 +34,7 @@ import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.JedisScanParams;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.MigrateOperation;
+import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.Tuple;
@@ -875,6 +876,150 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 			return execute((cmd)->cmd.rpushx(key, values));
 		}
 	}
+
+	@Override
+	public Object object(final ObjectCommand command, final String key){
+		return execute(new Executor<ShardedJedis, Object>() {
+
+			@Override
+			public Object execute(ShardedJedis cmd){
+				if(isTransaction()){
+					switch(command){
+						case ENCODING:
+							return getTransaction().objectEncoding(key).get();
+						case IDLETIME:
+							return getTransaction().objectIdletime(key).get();
+						case REFCOUNT:
+							return getTransaction().objectRefcount(key).get();
+						default:
+							return null;
+					}
+				}else{
+					return JedisClientUtils.objectDebug(command, getShard(cmd, key), key);
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Object object(final ObjectCommand command, final byte[] key){
+		return execute(new Executor<ShardedJedis, Object>() {
+
+			@Override
+			public Object execute(ShardedJedis cmd){
+				if(isTransaction()){
+					switch(command){
+						case ENCODING:
+							return getTransaction().objectEncoding(key).get();
+						case IDLETIME:
+							return getTransaction().objectIdletime(key).get();
+						case REFCOUNT:
+							return getTransaction().objectRefcount(key).get();
+						default:
+							return null;
+					}
+				}else{
+					return JedisClientUtils.objectDebug(command, getShard(cmd, key), key);
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public boolean sisMember(final byte[] key, final byte[] member){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sismember(key, member).get());
+		}else{
+			return execute((cmd)->cmd.sismember(key, member));
+		}
+	}
+
+	@Override
+	public Set<byte[]> sMembers(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().smembers(key).get());
+		}else{
+			return execute((cmd)->cmd.smembers(key));
+		}
+	}
+
+	@Override
+	public byte[] sPop(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().spop(key).get());
+		}else{
+			return execute((cmd)->cmd.spop(key));
+		}
+	}
+
+	@Override
+	public byte[] sRandMember(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().srandmember(key).get());
+		}else{
+			return execute((cmd)->cmd.srandmember(key));
+		}
+	}
+
+	@Override
+	public List<byte[]> sRandMember(final byte[] key, final int count){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().srandmember(key, count).get());
+		}else{
+			return execute((cmd)->cmd.srandmember(key, count));
+		}
+	}
+
+	@Override
+	public Long sRem(final byte[] key, final byte[]... members){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().srem(key, members).get());
+		}else{
+			return execute((cmd)->cmd.srem(key, members));
+		}
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor)));
+		}
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+					new JedisScanParams(pattern))));
+		}
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+					new JedisScanParams(count))));
+		}
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+			final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+					new JedisScanParams(pattern, count))));
+		}
+	}
 /*
 
 	@Override
@@ -1047,100 +1192,6 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 			return execute((cmd)->getTransaction().scard(key).get());
 		}else{
 			return execute((cmd)->cmd.scard(key));
-		}
-	}
-
-	@Override
-	public boolean sisMember(final byte[] key, final byte[] member){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sismember(key, member).get());
-		}else{
-			return execute((cmd)->cmd.sismember(key, member));
-		}
-	}
-
-	@Override
-	public Set<byte[]> sMembers(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().smembers(key).get());
-		}else{
-			return execute((cmd)->cmd.smembers(key));
-		}
-	}
-
-	@Override
-	public byte[] sPop(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().spop(key).get());
-		}else{
-			return execute((cmd)->cmd.spop(key));
-		}
-	}
-
-	@Override
-	public byte[] sRandMember(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().srandmember(key).get());
-		}else{
-			return execute((cmd)->cmd.srandmember(key));
-		}
-	}
-
-	@Override
-	public List<byte[]> sRandMember(final byte[] key, final int count){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().srandmember(key, count).get());
-		}else{
-			return execute((cmd)->cmd.srandmember(key, count));
-		}
-	}
-
-	@Override
-	public Long sRem(final byte[] key, final byte[]... members){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().srem(key, members).get());
-		}else{
-			return execute((cmd)->cmd.srem(key, members));
-		}
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor)));
-		}
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
-					new JedisScanParams(pattern))));
-		}
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
-					new JedisScanParams(count))));
-		}
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-			final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
-					new JedisScanParams(pattern, count))));
 		}
 	}
 
@@ -1624,56 +1675,6 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 		}else{
 			return execute((cmd)->cmd.bitcount(key, start, end));
 		}
-	}
-
-	@Override
-	public Object object(final ObjectCommand command, final String key){
-		return execute(new Executor<ShardedJedis, Object>() {
-
-			@Override
-			public Object execute(ShardedJedis cmd){
-				if(isTransaction()){
-					switch(command){
-						case ENCODING:
-							return getTransaction().objectEncoding(key).get();
-						case IDLETIME:
-							return getTransaction().objectIdletime(key).get();
-						case REFCOUNT:
-							return getTransaction().objectRefcount(key).get();
-						default:
-							return null;
-					}
-				}else{
-					return JedisClientUtils.objectDebug(command, getShard(cmd, key), key);
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public Object object(final DebugCommands.ObjectCommand command, final byte[] key){
-		return execute(new Executor<ShardedJedis, Object>() {
-
-			@Override
-			public Object execute(ShardedJedis cmd){
-				if(isTransaction()){
-					switch(command){
-						case ENCODING:
-							return getTransaction().objectEncoding(key).get();
-						case IDLETIME:
-							return getTransaction().objectIdletime(key).get();
-						case REFCOUNT:
-							return getTransaction().objectRefcount(key).get();
-						default:
-							return null;
-					}
-				}else{
-					return JedisClientUtils.objectDebug(command, getShard(cmd, key), key);
-				}
-			}
-
-		});
 	}*/
 
 	protected final static Jedis getShard(final ShardedJedis shardedJedis, final String key){

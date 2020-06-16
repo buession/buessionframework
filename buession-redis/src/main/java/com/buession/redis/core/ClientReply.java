@@ -22,20 +22,15 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client;
-
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.command.*;
+package com.buession.redis.core;
 
 /**
  * @author Yong.Teng
  */
-public interface RedisClient extends ConnectionCommands, GeoCommands, HashCommands, HyperLogLogCommands, KeyCommands,
-		ListCommands, PubSubCommands, ScriptingCommands, ServerCommands, SetCommands, StringCommands,
-		SortedSetCommands, TransactionCommands, DebugCommands {
+public enum ClientReply {
+	ON,
 
-	RedisConnection getConnection();
+	OFF,
 
-	void setConnection(RedisConnection connection);
-
+	SKIP
 }

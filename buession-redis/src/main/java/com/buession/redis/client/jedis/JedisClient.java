@@ -30,18 +30,23 @@ import com.buession.lang.Status;
 import com.buession.redis.client.GenericRedisClient;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.Client;
+import com.buession.redis.core.ClientReply;
+import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.Info;
+import com.buession.redis.core.InfoSection;
 import com.buession.redis.core.JedisScanParams;
 import com.buession.redis.core.JedisZParams;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.MigrateOperation;
+import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
@@ -1095,6 +1100,1063 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		}
 	}
 
+	@Override
+	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
+		execute(new Executor<Jedis, Void>() {
+
+			@Override
+			public Void execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.PSUBSCRIBE);
+				}else{
+					cmd.psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
+					return null;
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
+		execute(new Executor<Jedis, Void>() {
+
+			@Override
+			public Void execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.PSUBSCRIBE);
+				}else{
+					cmd.psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
+					return null;
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public List<String> pubsubChannels(final String pattern){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.PUBSUB);
+		}else{
+			return execute((cmd)->cmd.pubsubChannels(pattern));
+		}
+	}
+
+	@Override
+	public List<byte[]> pubsubChannels(final byte[] pattern){
+		List<String> result = pubsubChannels(SafeEncoder.encode(pattern));
+		return result == null ? null : result.stream().map(SafeEncoder::encode).collect(Collectors.toList());
+	}
+
+	@Override
+	public Long pubsubNumPat(){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.PUBSUB);
+		}else{
+			return execute((cmd)->cmd.pubsubNumPat());
+		}
+	}
+
+	@Override
+	public Map<String, String> pubsubNumSub(final String... channels){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.PUBSUB);
+		}else{
+			return execute((cmd)->cmd.pubsubNumSub(channels));
+		}
+	}
+
+	@Override
+	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
+		return execute(new Executor<Jedis, Map<byte[], byte[]>>() {
+
+			@Override
+			public Map<byte[], byte[]> execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.PSUBSCRIBE);
+				}else{
+					String[] sChannels = new String[channels.length];
+
+					for(int i = 0; i < channels.length; i++){
+						sChannels[i] = SafeEncoder.encode(channels[i]);
+					}
+
+					Map<String, String> data = cmd.pubsubNumSub(sChannels);
+					if(data == null){
+						return null;
+					}else{
+						Map<byte[], byte[]> result = new LinkedHashMap<>(data.size());
+
+						data.forEach((k, v)->{
+							result.put(SafeEncoder.encode(k), SafeEncoder.encode(v));
+						});
+
+						return result;
+					}
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Long publish(final String channel, final String message){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().publish(channel, message).get());
+		}else{
+			return execute((cmd)->cmd.publish(channel, message));
+		}
+	}
+
+	@Override
+	public Long publish(final byte[] channel, final byte[] message){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().publish(channel, message).get());
+		}else{
+			return execute((cmd)->cmd.publish(channel, message));
+		}
+	}
+
+	@Override
+	public Object pUnSubscribe(){
+		throw new NotSupportedCommandException(ProtocolCommand.PUNSUBSCRIBE);
+	}
+
+	@Override
+	public Object pUnSubscribe(final String... patterns){
+		throw new NotSupportedCommandException(ProtocolCommand.PUNSUBSCRIBE);
+	}
+
+	@Override
+	public Object pUnSubscribe(final byte[]... patterns){
+		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+	}
+
+	@Override
+	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
+		execute(new Executor<Jedis, Void>() {
+
+			@Override
+			public Void execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SUBSCRIBE);
+				}else{
+					cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
+					return null;
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
+		execute(new Executor<Jedis, Void>() {
+
+			@Override
+			public Void execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SUBSCRIBE);
+				}else{
+					cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
+					return null;
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Object unSubscribe(){
+		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+	}
+
+	@Override
+	public Object unSubscribe(final String... channels){
+		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+	}
+
+	@Override
+	public Object unSubscribe(final byte[]... channels){
+		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+	}
+
+	@Override
+	public Object eval(final String script){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().eval(script).get());
+		}else{
+			return execute((cmd)->cmd.eval(script));
+		}
+	}
+
+	@Override
+	public Object eval(final byte[] script){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().eval(script).get());
+		}else{
+			return execute((cmd)->cmd.eval(script));
+		}
+	}
+
+	@Override
+	public Object eval(final String script, final String... params){
+		final int paramsSize = params == null ? 0 : params.length;
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().eval(script, paramsSize, params).get());
+		}else{
+			return execute((cmd)->cmd.eval(script, paramsSize, params));
+		}
+	}
+
+	@Override
+	public Object eval(final byte[] script, final byte[]... params){
+		final int paramsSize = params == null ? 0 : params.length;
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().eval(script, paramsSize, params).get());
+		}else{
+			return execute((cmd)->cmd.eval(script, paramsSize, params));
+		}
+	}
+
+	@Override
+	public Object eval(final String script, final String[] keys, final String[] arguments){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().eval(script, Arrays.asList(keys), Arrays.asList(arguments)).get());
+		}else{
+			return execute((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
+		}
+	}
+
+	@Override
+	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().eval(script, Arrays.asList(keys), Arrays.asList(arguments)).get());
+		}else{
+			return execute((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
+		}
+	}
+
+	@Override
+	public Object evalSha(final String digest){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().evalsha(digest).get());
+		}else{
+			return execute((cmd)->cmd.evalsha(digest));
+		}
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().evalsha(digest).get());
+		}else{
+			return execute((cmd)->cmd.evalsha(digest));
+		}
+	}
+
+	@Override
+	public Object evalSha(final String digest, final String... params){
+		final int paramsSize = params == null ? 0 : params.length;
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().evalsha(digest, paramsSize, params).get());
+		}else{
+			return execute((cmd)->cmd.evalsha(digest, paramsSize, params));
+		}
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest, final byte[]... params){
+		final int paramsSize = params == null ? 0 : params.length;
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().evalsha(digest, paramsSize, params).get());
+		}else{
+			return execute((cmd)->cmd.evalsha(digest, paramsSize, params));
+		}
+	}
+
+	@Override
+	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)).get());
+		}else{
+			return execute((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
+		}
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)).get());
+		}else{
+			return execute((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
+		}
+	}
+
+	@Override
+	public List<Boolean> scriptExists(final String... sha1){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_EXISTS);
+		}else{
+			return execute((cmd)->cmd.scriptExists(sha1));
+		}
+	}
+
+	@Override
+	public List<Boolean> scriptExists(final byte[]... sha1){
+		return execute(new Executor<Jedis, List<Boolean>>() {
+
+			@Override
+			public List<Boolean> execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_EXISTS);
+				}else{
+					List<Long> result = cmd.scriptExists(sha1);
+					return result == null ? null : result.stream().map((v)->v == 1).collect(Collectors.toList());
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Status scriptFlush(){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_FLUSH);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.scriptFlush()));
+		}
+	}
+
+	@Override
+	public Status scriptKill(){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_KILL);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.scriptKill()));
+		}
+	}
+
+	@Override
+	public String scriptLoad(final String script){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_LOAD);
+		}else{
+			return execute((cmd)->cmd.scriptLoad(script));
+		}
+	}
+
+	@Override
+	public byte[] scriptLoad(final byte[] script){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_LOAD);
+		}else{
+			return execute((cmd)->cmd.scriptLoad(script));
+		}
+	}
+
+	@Override
+	public String bgRewriteAof(){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bgrewriteaof().get());
+		}else{
+			return execute((cmd)->cmd.bgrewriteaof());
+		}
+	}
+
+	@Override
+	public String bgSave(){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bgsave().get());
+		}else{
+			return execute((cmd)->cmd.bgsave());
+		}
+	}
+
+	@Override
+	public Status clientKill(final String host, final int port){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_KILL);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.clientKill(host + ":" + port)));
+		}
+	}
+
+	@Override
+	public String clientGetName(){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_GETNAME);
+		}else{
+			return execute((cmd)->cmd.clientGetname());
+		}
+	}
+
+	@Override
+	public String clientId(){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_ID);
+	}
+
+	@Override
+	public List<Client> clientList(){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_LIST);
+		}else{
+			return execute((cmd)->ClientUtil.parse(cmd.clientList()));
+		}
+	}
+
+	@Override
+	public Status clientPause(final long timeout){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_PAUSE);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.clientPause(timeout)));
+		}
+	}
+
+	@Override
+	public Status clientReply(final ClientReply option){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_REPLY);
+	}
+
+	@Override
+	public Status clientSetName(final String name){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_SETNAME);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.clientSetname(name)));
+		}
+	}
+
+	@Override
+	public Status clientSetName(final byte[] name){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_SETNAME);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.clientSetname(name)));
+		}
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_UNBLOCK);
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId, final ClientUnblockType type){
+		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_UNBLOCK);
+	}
+
+	@Override
+	public List<String> configGet(final String parameter){
+		if(isTransaction()){
+			return execute((cmd)->Collections.unmodifiableList(getTransaction().configGet(parameter).get()));
+		}else{
+			return execute((cmd)->Collections.unmodifiableList(cmd.configGet(parameter)));
+		}
+	}
+
+	@Override
+	public List<byte[]> configGet(final byte[] parameter){
+		return execute(new Executor<Jedis, List<byte[]>>() {
+
+			@Override
+			public List<byte[]> execute(Jedis cmd){
+				if(isTransaction()){
+					List<String> result = getTransaction().configGet(SafeEncoder.encode(parameter)).get();
+					return result == null ? null :
+							Collections.unmodifiableList(result.stream().map(SafeEncoder::encode).collect(Collectors.toList()));
+				}else{
+					return Collections.unmodifiableList(cmd.configGet(parameter));
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Status configResetStat(){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().configResetStat().get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.configResetStat()));
+		}
+	}
+
+	@Override
+	public Status configRewrite(){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.CONFIG_REWRITE);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.configRewrite()));
+		}
+	}
+
+	@Override
+	public Status configSet(final String parameter, final String value){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().configSet(parameter, value).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.configSet(parameter, value)));
+		}
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final byte[] value){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().configSet(SafeEncoder.encode(parameter),
+					SafeEncoder.encode(value)).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.configSet(parameter, value)));
+		}
+	}
+
+	@Override
+	public Long dbSize(){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().dbSize().get());
+		}else{
+			return execute((cmd)->cmd.dbSize());
+		}
+	}
+
+	@Override
+	public String debugObject(final String key){
+		return execute(new Executor<Jedis, String>() {
+
+			@Override
+			public String execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.DEBUG_OBJECT);
+				}else{
+					return cmd.debug(DebugParams.OBJECT(key));
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public String debugSegfault(){
+		return execute(new Executor<Jedis, String>() {
+
+			@Override
+			public String execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.DEBUG_SEGFAULT);
+				}else{
+					return cmd.debug(DebugParams.SEGFAULT());
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Status flushAll(){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().flushDB().get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.flushDB()));
+		}
+	}
+
+	@Override
+	public Status flushDb(){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().flushDB().get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.flushDB()));
+		}
+	}
+
+	@Override
+	public Info info(final InfoSection section){
+		if(isTransaction()){
+			return execute((cmd)->InfoUtil.convert(getTransaction().info(section.name().toLowerCase()).get()));
+		}else{
+			return execute((cmd)->InfoUtil.convert(cmd.info(section.name().toLowerCase())));
+		}
+	}
+
+	@Override
+	public Info info(){
+		Info info;
+
+		if(isTransaction()){
+			info = execute((cmd)->InfoUtil.convert(getTransaction().info().get()));
+		}else{
+			info = execute((cmd)->InfoUtil.convert(cmd.info()));
+		}
+
+		return info;
+	}
+
+	@Override
+	public Long lastSave(){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().lastsave().get());
+		}else{
+			return execute((cmd)->cmd.lastsave());
+		}
+	}
+
+	@Override
+	public String memoryDoctor(){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.MEMORY_DOCTOR);
+		}else{
+			return execute((cmd)->cmd.memoryDoctor());
+		}
+	}
+
+	@Override
+	public void monitor(final RedisMonitor redisMonitor){
+		execute(new Executor<Jedis, Void>() {
+
+			@Override
+			public Void execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.MONITOR);
+				}else{
+					cmd.monitor(new JedisMonitor() {
+
+						@Override
+						public void onCommand(final String command){
+							redisMonitor.onCommand(command);
+						}
+					});
+
+					return null;
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Object object(final ObjectCommand command, final String key){
+		return execute(new Executor<Jedis, Object>() {
+
+			@Override
+			public Object execute(Jedis cmd){
+				if(isTransaction()){
+					switch(command){
+						case ENCODING:
+							return getTransaction().objectEncoding(key).get();
+						case IDLETIME:
+							return getTransaction().objectIdletime(key).get();
+						case REFCOUNT:
+							return getTransaction().objectRefcount(key).get();
+						default:
+							return null;
+					}
+				}else{
+					return JedisClientUtils.objectDebug(command, cmd, key);
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Object object(final ObjectCommand command, final byte[] key){
+		return execute(new Executor<Jedis, Object>() {
+
+			@Override
+			public Object execute(Jedis cmd){
+				if(isTransaction()){
+					switch(command){
+						case ENCODING:
+							return getTransaction().objectEncoding(key).get();
+						case IDLETIME:
+							return getTransaction().objectIdletime(key).get();
+						case REFCOUNT:
+							return getTransaction().objectRefcount(key).get();
+						default:
+							return null;
+					}
+				}else{
+					return JedisClientUtils.objectDebug(command, cmd, key);
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Object pSync(final String masterRunId, final int offset){
+		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
+	}
+
+	@Override
+	public Object pSync(final byte[] masterRunId, final int offset){
+		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
+	}
+
+	@Override
+	public Object pSync(final String masterRunId, final long offset){
+		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
+	}
+
+	@Override
+	public Object pSync(final byte[] masterRunId, final long offset){
+		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
+	}
+
+	@Override
+	public Status replicaOf(final String host, final int port){
+		throw new NotSupportedCommandException(ProtocolCommand.REPLICAOF);
+	}
+
+	@Override
+	public Role role(){
+		throw new NotSupportedCommandException(ProtocolCommand.ROLE);
+	}
+
+	@Override
+	public Status save(){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().save().get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.save()));
+		}
+	}
+
+	@Override
+	public void shutdown(){
+		execute(new Executor<Jedis, Void>() {
+
+			@Override
+			public Void execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SHUTDOWN);
+				}else{
+					cmd.shutdown();
+					return null;
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public void shutdown(final boolean save){
+		shutdown();
+	}
+
+	@Override
+	public Status slaveOf(final String host, final int port){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SLAVEOF);
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.slaveof(host, port)));
+		}
+	}
+
+	@Override
+	public Object slowLog(final SlowLogCommand command, final String... arguments){
+		return execute(new Executor<Jedis, Object>() {
+
+			@Override
+			public Object execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SLOWLOG);
+				}else{
+					switch(command){
+						case GET:
+							return cmd.slowlogGet();
+						case LEN:
+							return cmd.slowlogLen();
+						case RESET:
+							return cmd.slowlogReset();
+						default:
+							return null;
+					}
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Object slowLog(final SlowLogCommand command, final byte[]... arguments){
+		return execute(new Executor<Jedis, Object>() {
+
+			@Override
+			public Object execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SLOWLOG);
+				}else{
+					switch(command){
+						case GET:
+							return cmd.slowlogGet();
+						case LEN:
+							return cmd.slowlogLen();
+						case RESET:
+							return cmd.slowlogReset();
+						default:
+							return null;
+					}
+				}
+			}
+
+		});
+	}
+
+	@Override
+	public Object sync(){
+		return execute(new Executor<Jedis, Object>() {
+
+			@Override
+			public Object execute(Jedis cmd){
+				if(isTransaction()){
+					throw new NotSupportedTransactionCommandException(ProtocolCommand.SYNC);
+				}else{
+					cmd.sync();
+					return null;
+				}
+
+			}
+		});
+	}
+
+	@Override
+	public RedisServerTime time(){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.redisServerTime(getTransaction().time().get()));
+		}else{
+			return execute((cmd)->ReturnUtils.redisServerTime(cmd.time()));
+		}
+	}
+
+	@Override
+	public Set<String> sDiff(final String... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sdiff(keys).get());
+		}else{
+			return execute((cmd)->cmd.sdiff(keys));
+		}
+	}
+
+	@Override
+	public Set<byte[]> sDiff(final byte[]... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sdiff(keys).get());
+		}else{
+			return execute((cmd)->cmd.sdiff(keys));
+		}
+	}
+
+	@Override
+	public Long sDiffStore(final String destKey, final String... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sdiffstore(destKey, keys).get());
+		}else{
+			return execute((cmd)->cmd.sdiffstore(destKey, keys));
+		}
+	}
+
+	@Override
+	public Long sDiffStore(final byte[] destKey, final byte[]... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sdiffstore(destKey, keys).get());
+		}else{
+			return execute((cmd)->cmd.sdiffstore(destKey, keys));
+		}
+	}
+
+	@Override
+	public Set<String> sInter(final String... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sinter(keys).get());
+		}else{
+			return execute((cmd)->cmd.sinter(keys));
+		}
+	}
+
+	@Override
+	public Set<byte[]> sInter(final byte[]... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sinter(keys).get());
+		}else{
+			return execute((cmd)->cmd.sinter(keys));
+		}
+	}
+
+	@Override
+	public Long sInterStore(final String destKey, final String... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sinterstore(destKey, keys).get());
+		}else{
+			return execute((cmd)->cmd.sinterstore(destKey, keys));
+		}
+	}
+
+	@Override
+	public Long sInterStore(final byte[] destKey, final byte[]... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sinterstore(destKey, keys).get());
+		}else{
+			return execute((cmd)->cmd.sinterstore(destKey, keys));
+		}
+	}
+
+	@Override
+	public boolean sisMember(final byte[] key, final byte[] member){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sismember(key, member).get());
+		}else{
+			return execute((cmd)->cmd.sismember(key, member));
+		}
+	}
+
+	@Override
+	public Set<byte[]> sMembers(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().smembers(key).get());
+		}else{
+			return execute((cmd)->cmd.smembers(key));
+		}
+	}
+
+	@Override
+	public Status sMove(final String key, final String destKey, final String member){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().smove(key, destKey, member).get() > 0));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.smove(key, destKey, member) > 0));
+		}
+	}
+
+	@Override
+	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().smove(key, destKey, member).get() > 0));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.smove(key, destKey, member) > 0));
+		}
+	}
+
+	@Override
+	public byte[] sPop(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().spop(key).get());
+		}else{
+			return execute((cmd)->cmd.spop(key));
+		}
+	}
+
+	@Override
+	public byte[] sRandMember(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().srandmember(key).get());
+		}else{
+			return execute((cmd)->cmd.srandmember(key));
+		}
+	}
+
+	@Override
+	public List<byte[]> sRandMember(final byte[] key, final int count){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().srandmember(key, count).get());
+		}else{
+			return execute((cmd)->cmd.srandmember(key, count));
+		}
+	}
+
+	@Override
+	public Long sRem(final byte[] key, final byte[]... members){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().srem(key, members).get());
+		}else{
+			return execute((cmd)->cmd.srem(key, members));
+		}
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor)));
+		}
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+					new JedisScanParams(pattern))));
+		}
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+					new JedisScanParams(count))));
+		}
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
+			final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+					new JedisScanParams(pattern, count))));
+		}
+	}
+
+	@Override
+	public Set<String> sUnion(final String... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sunion(keys).get());
+		}else{
+			return execute((cmd)->cmd.sunion(keys));
+		}
+	}
+
+	@Override
+	public Set<byte[]> sUnion(final byte[]... keys){
+		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sunion(keys).get());
+		}else{
+			return execute((cmd)->cmd.sunion(keys));
+		}
+	}
+
+	@Override
+	public Long sUnionStore(final String destKey, final String... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sunionstore(destKey, keys).get());
+		}else{
+			return execute((cmd)->cmd.sunionstore(destKey, keys));
+		}
+	}
+
+	@Override
+	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sunionstore(destKey, keys).get());
+		}else{
+			return execute((cmd)->cmd.sunionstore(destKey, keys));
+		}
+	}
+
 	/*
 
 	@Override
@@ -1418,228 +2480,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 			return execute((cmd)->getTransaction().scard(key).get());
 		}else{
 			return execute((cmd)->cmd.scard(key));
-		}
-	}
-
-	@Override
-	public boolean sisMember(final byte[] key, final byte[] member){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sismember(key, member).get());
-		}else{
-			return execute((cmd)->cmd.sismember(key, member));
-		}
-	}
-
-	@Override
-	public Set<byte[]> sMembers(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().smembers(key).get());
-		}else{
-			return execute((cmd)->cmd.smembers(key));
-		}
-	}
-
-	@Override
-	public byte[] sPop(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().spop(key).get());
-		}else{
-			return execute((cmd)->cmd.spop(key));
-		}
-	}
-
-	@Override
-	public byte[] sRandMember(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().srandmember(key).get());
-		}else{
-			return execute((cmd)->cmd.srandmember(key));
-		}
-	}
-
-	@Override
-	public List<byte[]> sRandMember(final byte[] key, final int count){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().srandmember(key, count).get());
-		}else{
-			return execute((cmd)->cmd.srandmember(key, count));
-		}
-	}
-
-	@Override
-	public Long sRem(final byte[] key, final byte[]... members){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().srem(key, members).get());
-		}else{
-			return execute((cmd)->cmd.srem(key, members));
-		}
-	}
-
-	@Override
-	public Set<String> sDiff(final String... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sdiff(keys).get());
-		}else{
-			return execute((cmd)->cmd.sdiff(keys));
-		}
-	}
-
-	@Override
-	public Set<byte[]> sDiff(final byte[]... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sdiff(keys).get());
-		}else{
-			return execute((cmd)->cmd.sdiff(keys));
-		}
-	}
-
-	@Override
-	public Long sDiffStore(final String destKey, final String... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sdiffstore(destKey, keys).get());
-		}else{
-			return execute((cmd)->cmd.sdiffstore(destKey, keys));
-		}
-	}
-
-	@Override
-	public Long sDiffStore(final byte[] destKey, final byte[]... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sdiffstore(destKey, keys).get());
-		}else{
-			return execute((cmd)->cmd.sdiffstore(destKey, keys));
-		}
-	}
-
-	@Override
-	public Set<String> sInter(final String... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sinter(keys).get());
-		}else{
-			return execute((cmd)->cmd.sinter(keys));
-		}
-	}
-
-	@Override
-	public Set<byte[]> sInter(final byte[]... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sinter(keys).get());
-		}else{
-			return execute((cmd)->cmd.sinter(keys));
-		}
-	}
-
-	@Override
-	public Long sInterStore(final String destKey, final String... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sinterstore(destKey, keys).get());
-		}else{
-			return execute((cmd)->cmd.sinterstore(destKey, keys));
-		}
-	}
-
-	@Override
-	public Long sInterStore(final byte[] destKey, final byte[]... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sinterstore(destKey, keys).get());
-		}else{
-			return execute((cmd)->cmd.sinterstore(destKey, keys));
-		}
-	}
-
-	@Override
-	public Set<String> sUnion(final String... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sunion(keys).get());
-		}else{
-			return execute((cmd)->cmd.sunion(keys));
-		}
-	}
-
-	@Override
-	public Set<byte[]> sUnion(final byte[]... keys){
-		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
-
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sunion(keys).get());
-		}else{
-			return execute((cmd)->cmd.sunion(keys));
-		}
-	}
-
-	@Override
-	public Long sUnionStore(final String destKey, final String... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sunionstore(destKey, keys).get());
-		}else{
-			return execute((cmd)->cmd.sunionstore(destKey, keys));
-		}
-	}
-
-	@Override
-	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sunionstore(destKey, keys).get());
-		}else{
-			return execute((cmd)->cmd.sunionstore(destKey, keys));
-		}
-	}
-
-	@Override
-	public Status sMove(final String key, final String destKey, final String member){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().smove(key, destKey, member).get() > 0));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.smove(key, destKey, member) > 0));
-		}
-	}
-
-	@Override
-	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().smove(key, destKey, member).get() > 0));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.smove(key, destKey, member) > 0));
-		}
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor)));
-		}
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
-					new JedisScanParams(pattern))));
-		}
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
-					new JedisScanParams(count))));
-		}
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-			final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
-					new JedisScanParams(pattern, count))));
 		}
 	}
 
@@ -2264,760 +3104,6 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 	@Override
 	public Status unwatch(){
 		return execute((cmd)->ReturnUtils.statusForOK(cmd.unwatch()));
-	}
-
-	@Override
-	public Long publish(final String channel, final String message){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().publish(channel, message).get());
-		}else{
-			return execute((cmd)->cmd.publish(channel, message));
-		}
-	}
-
-	@Override
-	public Long publish(final byte[] channel, final byte[] message){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().publish(channel, message).get());
-		}else{
-			return execute((cmd)->cmd.publish(channel, message));
-		}
-	}
-
-	@Override
-	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
-		execute(new Executor<Jedis, Void>() {
-
-			@Override
-			public Void execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.SUBSCRIBE);
-				}else{
-					cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
-					return null;
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
-		execute(new Executor<Jedis, Void>() {
-
-			@Override
-			public Void execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.SUBSCRIBE);
-				}else{
-					cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
-					return null;
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
-		execute(new Executor<Jedis, Void>() {
-
-			@Override
-			public Void execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.PSUBSCRIBE);
-				}else{
-					cmd.psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
-					return null;
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
-		execute(new Executor<Jedis, Void>() {
-
-			@Override
-			public Void execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.PSUBSCRIBE);
-				}else{
-					cmd.psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
-					return null;
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public Object unSubscribe(){
-		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
-	}
-
-	@Override
-	public Object unSubscribe(final String... channels){
-		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
-	}
-
-	@Override
-	public Object unSubscribe(final byte[]... channels){
-		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
-	}
-
-	@Override
-	public Object pUnSubscribe(){
-		throw new NotSupportedCommandException(ProtocolCommand.PUNSUBSCRIBE);
-	}
-
-	@Override
-	public Object pUnSubscribe(final String... patterns){
-		throw new NotSupportedCommandException(ProtocolCommand.PUNSUBSCRIBE);
-	}
-
-	@Override
-	public Object pUnSubscribe(final byte[]... patterns){
-		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
-	}
-
-	@Override
-	public Object eval(final String script){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().eval(script).get());
-		}else{
-			return execute((cmd)->cmd.eval(script));
-		}
-	}
-
-	@Override
-	public Object eval(final byte[] script){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().eval(script).get());
-		}else{
-			return execute((cmd)->cmd.eval(script));
-		}
-	}
-
-	@Override
-	public Object eval(final String script, final String... params){
-		final int paramsSize = params == null ? 0 : params.length;
-
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().eval(script, paramsSize, params).get());
-		}else{
-			return execute((cmd)->cmd.eval(script, paramsSize, params));
-		}
-	}
-
-	@Override
-	public Object eval(final byte[] script, final byte[]... params){
-		final int paramsSize = params == null ? 0 : params.length;
-
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().eval(script, paramsSize, params).get());
-		}else{
-			return execute((cmd)->cmd.eval(script, paramsSize, params));
-		}
-	}
-
-	@Override
-	public Object eval(final String script, final String[] keys, final String[] arguments){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().eval(script, Arrays.asList(keys), Arrays.asList(arguments)).get());
-		}else{
-			return execute((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
-		}
-	}
-
-	@Override
-	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().eval(script, Arrays.asList(keys), Arrays.asList(arguments)).get());
-		}else{
-			return execute((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
-		}
-	}
-
-	@Override
-	public Object evalSha(final String digest){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().evalsha(digest).get());
-		}else{
-			return execute((cmd)->cmd.evalsha(digest));
-		}
-	}
-
-	@Override
-	public Object evalSha(final byte[] digest){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().evalsha(digest).get());
-		}else{
-			return execute((cmd)->cmd.evalsha(digest));
-		}
-	}
-
-	@Override
-	public Object evalSha(final String digest, final String... params){
-		final int paramsSize = params == null ? 0 : params.length;
-
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().evalsha(digest, paramsSize, params).get());
-		}else{
-			return execute((cmd)->cmd.evalsha(digest, paramsSize, params));
-		}
-	}
-
-	@Override
-	public Object evalSha(final byte[] digest, final byte[]... params){
-		final int paramsSize = params == null ? 0 : params.length;
-
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().evalsha(digest, paramsSize, params).get());
-		}else{
-			return execute((cmd)->cmd.evalsha(digest, paramsSize, params));
-		}
-	}
-
-	@Override
-	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)).get
-			());
-		}else{
-			return execute((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
-		}
-	}
-
-	@Override
-	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)).get
-			());
-		}else{
-			return execute((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
-		}
-	}
-
-	@Override
-	public List<Boolean> scriptExists(final String... sha1){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_EXISTS);
-		}else{
-			return execute((cmd)->cmd.scriptExists(sha1));
-		}
-	}
-
-	@Override
-	public List<Boolean> scriptExists(final byte[]... sha1){
-		return execute(new Executor<Jedis, List<Boolean>>() {
-
-			@Override
-			public List<Boolean> execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_EXISTS);
-				}else{
-					List<Long> ret = cmd.scriptExists(sha1);
-
-					if(ret == null){
-						return null;
-					}else{
-						List<Boolean> result = new ArrayList<>();
-
-						for(Long v : ret){
-							result.add(v == 1);
-						}
-
-						return result;
-					}
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public String scriptLoad(final String script){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_LOAD);
-		}else{
-			return execute((cmd)->cmd.scriptLoad(script));
-		}
-	}
-
-	@Override
-	public byte[] scriptLoad(final byte[] script){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_LOAD);
-		}else{
-			return execute((cmd)->cmd.scriptLoad(script));
-		}
-	}
-
-	@Override
-	public Status scriptKill(){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_KILL);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.scriptKill()));
-		}
-	}
-
-	@Override
-	public Status scriptFlush(){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCRIPT_FLUSH);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.scriptFlush()));
-		}
-	}
-
-	@Override
-	public Info info(final InfoSection section){
-		if(isTransaction()){
-			return execute((cmd)->InfoUtil.convert(getTransaction().info(section.name().toLowerCase()).get()));
-		}else{
-			return execute((cmd)->InfoUtil.convert(cmd.info(section.name().toLowerCase())));
-		}
-	}
-
-	@Override
-	public Info info(){
-		Info info;
-
-		if(isTransaction()){
-			info = execute((cmd)->InfoUtil.convert(getTransaction().info().get()));
-		}else{
-			info = execute((cmd)->InfoUtil.convert(cmd.info()));
-		}
-
-		return info;
-	}
-
-	@Override
-	public Role role(){
-		throw new NotSupportedCommandException(ProtocolCommand.ROLE);
-	}
-
-	@Override
-	public RedisServerTime time(){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.redisServerTime(getTransaction().time().get()));
-		}else{
-			return execute((cmd)->ReturnUtils.redisServerTime(cmd.time()));
-		}
-	}
-
-	@Override
-	public Status configSet(final String parameter, final String value){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().configSet(parameter, value).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.configSet(parameter, value)));
-		}
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final byte[] value){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().configSet(SafeEncoder.encode(parameter),
-					SafeEncoder.encode(value)).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.configSet(parameter, value)));
-		}
-	}
-
-	@Override
-	public List<String> configGet(final String parameter){
-		if(isTransaction()){
-			return execute((cmd)->Collections.unmodifiableList(getTransaction().configGet(parameter).get()));
-		}else{
-			return execute((cmd)->Collections.unmodifiableList(cmd.configGet(parameter)));
-		}
-	}
-
-	@Override
-	public List<byte[]> configGet(final byte[] parameter){
-		return execute(new Executor<Jedis, List<byte[]>>() {
-
-			@Override
-			public List<byte[]> execute(Jedis cmd){
-				if(isTransaction()){
-					List<String> result = getTransaction().configGet(SafeEncoder.encode(parameter)).get();
-					return result == null ? null :
-							Collections.unmodifiableList(result.stream().map(SafeEncoder::encode).collect(Collectors
-							.toList()));
-				}else{
-					return Collections.unmodifiableList(cmd.configGet(parameter));
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public Status configResetStat(){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().configResetStat().get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.configResetStat()));
-		}
-	}
-
-	@Override
-	public Status configRewrite(){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.CONFIG_REWRITE);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.configRewrite()));
-		}
-	}
-
-	@Override
-	public Status clientSetName(final String name){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_SETNAME);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.clientSetname(name)));
-		}
-	}
-
-	@Override
-	public Status clientSetName(final byte[] name){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_SETNAME);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.clientSetname(name)));
-		}
-	}
-
-	@Override
-	public String clientGetName(){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_GETNAME);
-		}else{
-			return execute((cmd)->cmd.clientGetname());
-		}
-	}
-
-	@Override
-	public String clientId(){
-		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_ID);
-	}
-
-	@Override
-	public List<Client> clientList(){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_LIST);
-		}else{
-			return execute((cmd)->ClientUtil.parse(cmd.clientList()));
-		}
-	}
-
-	@Override
-	public Status clientPause(final long timeout){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_PAUSE);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.clientPause(timeout)));
-		}
-	}
-
-	@Override
-	public Status clientReply(final ClientReply option){
-		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_REPLY);
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId){
-		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_UNBLOCK);
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId, final ClientUnblockType type){
-		throw new NotSupportedCommandException(ProtocolCommand.CLIENT_UNBLOCK);
-	}
-
-	@Override
-	public Status clientKill(final String host, final int port){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.CLIENT_KILL);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.clientKill(host + ":" + port)));
-		}
-	}
-
-	@Override
-	public Long dbSize(){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().dbSize().get());
-		}else{
-			return execute((cmd)->cmd.dbSize());
-		}
-	}
-
-	@Override
-	public Status flushDb(){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().flushDB().get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.flushDB()));
-		}
-	}
-
-	@Override
-	public Status flushAll(){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().flushDB().get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.flushDB()));
-		}
-	}
-
-	@Override
-	public String debugObject(final String key){
-		return execute(new Executor<Jedis, String>() {
-
-			@Override
-			public String execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.DEBUG_OBJECT);
-				}else{
-					return cmd.debug(DebugParams.OBJECT(key));
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public String debugSegfault(){
-		return execute(new Executor<Jedis, String>() {
-
-			@Override
-			public String execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.DEBUG_SEGFAULT);
-				}else{
-					return cmd.debug(DebugParams.SEGFAULT());
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public Object sync(){
-		return execute(new Executor<Jedis, Object>() {
-
-			@Override
-			public Object execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.SYNC);
-				}else{
-					cmd.sync();
-					return null;
-				}
-
-			}
-		});
-	}
-
-	@Override
-	public Status save(){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().save().get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.save()));
-		}
-	}
-
-	@Override
-	public String bgSave(){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().bgsave().get());
-		}else{
-			return execute((cmd)->cmd.bgsave());
-		}
-	}
-
-	@Override
-	public String bgRewriteAof(){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().bgrewriteaof().get());
-		}else{
-			return execute((cmd)->cmd.bgrewriteaof());
-		}
-	}
-
-	@Override
-	public Long lastSave(){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().lastsave().get());
-		}else{
-			return execute((cmd)->cmd.lastsave());
-		}
-	}
-
-	@Override
-	public Status slaveOf(final String host, final int port){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SLAVEOF);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.slaveof(host, port)));
-		}
-	}
-
-	@Override
-	public Status replicaOf(final String host, final int port){
-		throw new NotSupportedCommandException(ProtocolCommand.REPLICAOF);
-	}
-
-	@Override
-	public Object slowLog(final SlowLogCommand command, final String... arguments){
-		return execute(new Executor<Jedis, Object>() {
-
-			@Override
-			public Object execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.SLOWLOG);
-				}else{
-					switch(command){
-						case GET:
-							return cmd.slowlogGet();
-						case LEN:
-							return cmd.slowlogLen();
-						case RESET:
-							return cmd.slowlogReset();
-						default:
-							return null;
-					}
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public Object slowLog(final SlowLogCommand command, final byte[]... arguments){
-		return execute(new Executor<Jedis, Object>() {
-
-			@Override
-			public Object execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.SLOWLOG);
-				}else{
-					switch(command){
-						case GET:
-							return cmd.slowlogGet();
-						case LEN:
-							return cmd.slowlogLen();
-						case RESET:
-							return cmd.slowlogReset();
-						default:
-							return null;
-					}
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public void monitor(final RedisMonitor redisMonitor){
-		execute(new Executor<Jedis, Void>() {
-
-			@Override
-			public Void execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.MONITOR);
-				}else{
-					cmd.monitor(new JedisMonitor() {
-
-						@Override
-						public void onCommand(final String command){
-							redisMonitor.onCommand(command);
-						}
-					});
-
-					return null;
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public void shutdown(){
-		execute(new Executor<Jedis, Void>() {
-
-			@Override
-			public Void execute(Jedis cmd){
-				if(isTransaction()){
-					throw new NotSupportedTransactionCommandException(ProtocolCommand.SHUTDOWN);
-				}else{
-					cmd.shutdown();
-					return null;
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public void shutdown(final boolean save){
-		shutdown();
-	}
-
-	@Override
-	public Object object(final ObjectCommand command, final String key){
-		return execute(new Executor<Jedis, Object>() {
-
-			@Override
-			public Object execute(Jedis cmd){
-				if(isTransaction()){
-					switch(command){
-						case ENCODING:
-							return getTransaction().objectEncoding(key).get();
-						case IDLETIME:
-							return getTransaction().objectIdletime(key).get();
-						case REFCOUNT:
-							return getTransaction().objectRefcount(key).get();
-						default:
-							return null;
-					}
-				}else{
-					return JedisClientUtils.objectDebug(command, cmd, key);
-				}
-			}
-
-		});
-	}
-
-	@Override
-	public Object object(final DebugCommands.ObjectCommand command, final byte[] key){
-		return execute(new Executor<Jedis, Object>() {
-
-			@Override
-			public Object execute(Jedis cmd){
-				if(isTransaction()){
-					switch(command){
-						case ENCODING:
-							return getTransaction().objectEncoding(key).get();
-						case IDLETIME:
-							return getTransaction().objectIdletime(key).get();
-						case REFCOUNT:
-							return getTransaction().objectRefcount(key).get();
-						default:
-							return null;
-					}
-				}else{
-					return JedisClientUtils.objectDebug(command, cmd, key);
-				}
-			}
-
-		});
 	}*/
 
 }

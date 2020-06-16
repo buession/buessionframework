@@ -124,6 +124,198 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	<V> Long sAdd(final byte[] key, final V... members);
 
 	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 一个包含差集成员的列表
+	 */
+	default Set<String> sDiff(final String key){
+		return sDiff(new String[]{key});
+	}
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
+	 *
+	 * @param key
+	 * 		一Key
+	 *
+	 * @return 一个包含差集成员的列表
+	 */
+	default Set<byte[]> sDiff(final byte[] key){
+		return sDiff(new byte[][]{key});
+	}
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 一个包含差集成员反序列化为对象的列表
+	 */
+	<V> Set<V> sDiffObject(final String key);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
+	 *
+	 * @param key
+	 * 		一Key
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 一个包含差集成员反序列化为对象的列表
+	 */
+	<V> Set<V> sDiffObject(final byte[] key);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 一个包含差集成员反序列化为对象的列表
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> Set<V> sDiffObject(final String key, final Class<V> clazz);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 clazz 指定的对象
+	 *
+	 * @param key
+	 * 		一Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 一个包含差集成员反序列化为对象的列表
+	 *
+	 * @see java.lang.Class
+	 */
+	<V> Set<V> sDiffObject(final byte[] key, final Class<V> clazz);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 type 指定的对象
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 一个包含差集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> sDiffObject(final String key, final TypeReference<V> type);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 type 指定的对象
+	 *
+	 * @param key
+	 * 		一Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 一个包含差集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> sDiffObject(final byte[] key, final TypeReference<V> type);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	default Long sDiffStore(final String destKey, final String key){
+		return sDiffStore(destKey, new String[]{key});
+	}
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	default Long sDiffStore(final byte[] destKey, final byte[] key){
+		return sDiffStore(destKey, new byte[][]{key});
+	}
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 交集成员的列表
+	 */
+	default Set<String> sInter(final String key){
+		return sInter(new String[]{key});
+	}
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 交集成员的列表
+	 */
+	default Set<byte[]> sInter(final byte[] key){
+		return sInter(new byte[][]{key});
+	}
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	default Long sInterStore(final String destKey, final String key){
+		return sInterStore(destKey, new String[]{key});
+	}
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	default Long sInterStore(final byte[] destKey, final byte[] key){
+		return sInterStore(destKey, new byte[][]{key});
+	}
+
+	/**
 	 * 获取集合 key 中的所有成员反序列化后的对象
 	 *
 	 * @param key
@@ -670,198 +862,6 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
 	<V> Long sRem(final byte[] key, final V... members);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 一个包含差集成员的列表
-	 */
-	default Set<String> sDiff(final String key){
-		return sDiff(new String[]{key});
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
-	 *
-	 * @param key
-	 * 		一Key
-	 *
-	 * @return 一个包含差集成员的列表
-	 */
-	default Set<byte[]> sDiff(final byte[] key){
-		return sDiff(new byte[][]{key});
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
-	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 */
-	<V> Set<V> sDiffObject(final String key);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
-	 *
-	 * @param key
-	 * 		一Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 */
-	<V> Set<V> sDiffObject(final byte[] key);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 clazz 指定的对象
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 *
-	 * @see java.lang.Class
-	 */
-	<V> Set<V> sDiffObject(final String key, final Class<V> clazz);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 clazz 指定的对象
-	 *
-	 * @param key
-	 * 		一Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 *
-	 * @see java.lang.Class
-	 */
-	<V> Set<V> sDiffObject(final byte[] key, final Class<V> clazz);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 type 指定的对象
-	 *
-	 * @param key
-	 * 		Key
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 *
-	 * @see com.buession.core.serializer.type.TypeReference
-	 */
-	<V> Set<V> sDiffObject(final String key, final TypeReference<V> type);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 type 指定的对象
-	 *
-	 * @param key
-	 * 		一Key
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 *
-	 * @see com.buession.core.serializer.type.TypeReference
-	 */
-	<V> Set<V> sDiffObject(final byte[] key, final TypeReference<V> type);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	default Long sDiffStore(final String destKey, final String key){
-		return sDiffStore(destKey, new String[]{key});
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	default Long sDiffStore(final byte[] destKey, final byte[] key){
-		return sDiffStore(destKey, new byte[][]{key});
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 交集成员的列表
-	 */
-	default Set<String> sInter(final String key){
-		return sInter(new String[]{key});
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 交集成员的列表
-	 */
-	default Set<byte[]> sInter(final byte[] key){
-		return sInter(new byte[][]{key});
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	default Long sInterStore(final String destKey, final String key){
-		return sInterStore(destKey, new String[]{key});
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	default Long sInterStore(final byte[] destKey, final byte[] key){
-		return sInterStore(destKey, new byte[][]{key});
-	}
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集

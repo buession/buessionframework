@@ -24,16 +24,44 @@
  */
 package com.buession.redis.core.operations;
 
-import com.buession.redis.core.command.BinaryDebugCommands;
-import com.buession.redis.core.command.DebugCommands;
+import com.buession.lang.Status;
+import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.command.ServerCommands;
 
 /**
- * 调试运算
+ * 服务端运算
  *
- * <p>详情说明 <a href="http://redisdoc.com/debug/index.html" target="_blank">http://redisdoc.com/debug/index.html</a></p>
+ * <p>详情说明
+ * <a href="http://www.redis.cn/commands.html#server" target="_blank">http://www.redis.cn/commands.html#server</a></p>
  *
  * @author Yong.Teng
  */
-public interface DebugOperations extends DebugCommands, BinaryDebugCommands, RedisOperations {
+public interface ServerOperations extends ServerCommands, RedisOperations {
+
+	/**
+	 * 用于在 Redis 运行时动态地修改复制(replication)功能的行为；
+	 * 可以将当前服务器转变为指定服务器的从属服务器(slave server)
+	 *
+	 * @param host
+	 * 		Redis Slave Server 主机地址
+	 *
+	 * @return 总是返回 Status.SUCCESS
+	 */
+	default Status replicaOf(final String host){
+		return replicaOf(host, RedisNode.DEFAULT_PORT);
+	}
+
+	/**
+	 * 用于在 Redis 运行时动态地修改复制(replication)功能的行为；
+	 * 可以将当前服务器转变为指定服务器的从属服务器(slave server)
+	 *
+	 * @param host
+	 * 		Redis Slave Server 主机地址
+	 *
+	 * @return 总是返回 Status.SUCCESS
+	 */
+	default Status slaveOf(final String host){
+		return slaveOf(host, RedisNode.DEFAULT_PORT);
+	}
 
 }

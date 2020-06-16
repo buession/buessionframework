@@ -31,11 +31,11 @@ import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.MigrateOperation;
+import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.Tuple;
-import com.buession.redis.core.command.DebugCommands;
 import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.ListCommands;
@@ -189,8 +189,7 @@ public class JedisClientUtils {
 		return bitOperationConvert.convert(bitMapOperation);
 	}
 
-	public final static Object objectDebug(final DebugCommands.ObjectCommand command, final Jedis jedis,
-			final String key){
+	public final static Object objectDebug(final ObjectCommand command, final Jedis jedis, final String key){
 		switch(command){
 			case ENCODING:
 				return jedis.objectEncoding(key);
@@ -203,8 +202,7 @@ public class JedisClientUtils {
 		}
 	}
 
-	public final static Object objectDebug(final DebugCommands.ObjectCommand command, final Jedis jedis,
-			final byte[] key){
+	public final static Object objectDebug(final ObjectCommand command, final Jedis jedis, final byte[] key){
 		switch(command){
 			case ENCODING:
 				return jedis.objectEncoding(key);

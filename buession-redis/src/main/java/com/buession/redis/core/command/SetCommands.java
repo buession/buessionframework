@@ -68,28 +68,114 @@ public interface SetCommands extends RedisCommands {
 	Long sAdd(final byte[] key, final byte[]... members);
 
 	/**
-	 * 获取集合 key 的基数(集合中元素的数量)
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/scard.html" target="_blank">http://redisdoc.com/set/scard.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
 	 *
-	 * @return 集合的基数
+	 * @return 一个包含差集成员的列表
 	 */
-	Long sCard(final String key);
+	Set<String> sDiff(final String... keys);
 
 	/**
-	 * 获取集合 key 的基数(集合中元素的数量)
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/scard.html" target="_blank">http://redisdoc.com/set/scard.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
 	 *
-	 * @return 集合的基数
+	 * @return 一个包含差集成员的列表
 	 */
-	Long sCard(final byte[] key);
+	Set<byte[]> sDiff(final byte[]... keys);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiffstore.html" target="_blank">http://redisdoc.com/set/sdiffstore
+	 * .html</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long sDiffStore(final String destKey, final String... keys);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiffstore.html" target="_blank">http://redisdoc.com/set/sdiffstore
+	 * .html</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long sDiffStore(final byte[] destKey, final byte[]... keys);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a>
+	 * </p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 交集成员的列表
+	 */
+	Set<String> sInter(final String... keys);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a>
+	 * </p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 交集成员的列表
+	 */
+	Set<byte[]> sInter(final byte[]... keys);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sinterstore.html" target="_blank">http://redisdoc.com/set/sinterstore
+	 * .html</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long sInterStore(final String destKey, final String... keys);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sinterstore.html" target="_blank">http://redisdoc.com/set/sinterstore
+	 * .html</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long sInterStore(final byte[] destKey, final byte[]... keys);
 
 	/**
 	 * 检测 member 元素是否集合 key 的成员
@@ -146,6 +232,38 @@ public interface SetCommands extends RedisCommands {
 	 * @return 集合中的所有成员
 	 */
 	Set<byte[]> sMembers(final byte[] key);
+
+	/**
+	 * 将 member 元素从 source 集合移动到 destKey 集合 中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/smove.html" target="_blank">http://redisdoc.com/set/smove.html</a></p>
+	 *
+	 * @param source
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		member 元素
+	 *
+	 * @return 如果 member 元素被成功移除，则返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status sMove(final String source, final String destKey, final String member);
+
+	/**
+	 * 将 member 元素从 source 集合移动到 destKey 集合 中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/smove.html" target="_blank">http://redisdoc.com/set/smove.html</a></p>
+	 *
+	 * @param source
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param member
+	 * 		member 元素
+	 *
+	 * @return 如果 member 元素被成功移除，则返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status sMove(final byte[] source, final byte[] destKey, final byte[] member);
 
 	/**
 	 * 移除并返回集合 key 中的一个随机元素
@@ -284,204 +402,6 @@ public interface SetCommands extends RedisCommands {
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
 	Long sRem(final byte[] key, final byte[]... members);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 一个包含差集成员的列表
-	 */
-	Set<String> sDiff(final String... keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 一个包含差集成员的列表
-	 */
-	Set<byte[]> sDiff(final byte[]... keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiffstore.html" target="_blank">http://redisdoc.com/set/sdiffstore
-	 * .html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	Long sDiffStore(final String destKey, final String... keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiffstore.html" target="_blank">http://redisdoc.com/set/sdiffstore
-	 * .html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	Long sDiffStore(final byte[] destKey, final byte[]... keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a>
-	 * </p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 交集成员的列表
-	 */
-	Set<String> sInter(final String... keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a>
-	 * </p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 交集成员的列表
-	 */
-	Set<byte[]> sInter(final byte[]... keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sinterstore.html" target="_blank">http://redisdoc.com/set/sinterstore
-	 * .html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	Long sInterStore(final String destKey, final String... keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sinterstore.html" target="_blank">http://redisdoc.com/set/sinterstore
-	 * .html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	Long sInterStore(final byte[] destKey, final byte[]... keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a>
-	 * </p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 并集成员的列表
-	 */
-	Set<String> sUnion(final String... keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a>
-	 * </p>
-	 *
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 并集成员的列表
-	 */
-	Set<byte[]> sUnion(final byte[]... keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sunionstore.html" target="_blank">http://redisdoc.com/set/sunionstore
-	 * .html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	Long sUnionStore(final String destKey, final String... keys);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sunionstore.html" target="_blank">http://redisdoc.com/set/sunionstore
-	 * .html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	Long sUnionStore(final byte[] destKey, final byte[]... keys);
-
-	/**
-	 * 将 member 元素从 source 集合移动到 destKey 集合 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/smove.html" target="_blank">http://redisdoc.com/set/smove.html</a></p>
-	 *
-	 * @param source
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param member
-	 * 		member 元素
-	 *
-	 * @return 如果 member 元素被成功移除，则返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status sMove(final String source, final String destKey, final String member);
-
-	/**
-	 * 将 member 元素从 source 集合移动到 destKey 集合 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/smove.html" target="_blank">http://redisdoc.com/set/smove.html</a></p>
-	 *
-	 * @param source
-	 * 		Key
-	 * @param destKey
-	 * 		目标 Key
-	 * @param member
-	 * 		member 元素
-	 *
-	 * @return 如果 member 元素被成功移除，则返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status sMove(final byte[] source, final byte[] destKey, final byte[] member);
 
 	/**
 	 * 迭代集合键中的元素
@@ -866,5 +786,63 @@ public interface SetCommands extends RedisCommands {
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
 	ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a>
+	 * </p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 并集成员的列表
+	 */
+	Set<String> sUnion(final String... keys);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a>
+	 * </p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 并集成员的列表
+	 */
+	Set<byte[]> sUnion(final byte[]... keys);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
+	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/set/sunionstore.html" target="_blank">http://redisdoc.com/set/sunionstorehtml</a>
+	 * </p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long sUnionStore(final String destKey, final String... keys);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
+	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/set/sunionstore.html" target="_blank">http://redisdoc.com/set/sunionstore.html</a>
+	 * </p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long sUnionStore(final byte[] destKey, final byte[]... keys);
 
 }

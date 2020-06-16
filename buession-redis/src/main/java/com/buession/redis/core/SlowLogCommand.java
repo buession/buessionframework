@@ -19,49 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
-
-import com.buession.lang.Status;
-import com.buession.redis.core.RedisNode;
-import com.buession.redis.core.command.ServerCommands;
+package com.buession.redis.core;
 
 /**
- * 服务端运算
- *
- * <p>详情说明
- * <a href="http://www.redis.cn/commands.html#server" target="_blank">http://www.redis.cn/commands.html#server</a></p>
- *
  * @author Yong.Teng
  */
-public interface ServerOperations extends ServerCommands, RedisOperations {
+public enum SlowLogCommand {
+	GET,
 
-	/**
-	 * 用于在 Redis 运行时动态地修改复制(replication)功能的行为；
-	 * 可以将当前服务器转变为指定服务器的从属服务器(slave server)
-	 *
-	 * @param host
-	 * 		Redis Slave Server 主机地址
-	 *
-	 * @return 总是返回 Status.SUCCESS
-	 */
-	default Status slaveOf(final String host){
-		return slaveOf(host, RedisNode.DEFAULT_PORT);
-	}
+	LEN,
 
-	/**
-	 * 用于在 Redis 运行时动态地修改复制(replication)功能的行为；
-	 * 可以将当前服务器转变为指定服务器的从属服务器(slave server)
-	 *
-	 * @param host
-	 * 		Redis Slave Server 主机地址
-	 *
-	 * @return 总是返回 Status.SUCCESS
-	 */
-	default Status replicaOf(final String host){
-		return replicaOf(host, RedisNode.DEFAULT_PORT);
-	}
-
+	RESET;
 }

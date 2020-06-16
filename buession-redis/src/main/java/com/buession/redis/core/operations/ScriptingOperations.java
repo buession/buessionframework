@@ -24,7 +24,8 @@
  */
 package com.buession.redis.core.operations;
 
-import com.buession.redis.core.command.ScriptCommands;
+import com.buession.core.validator.Validate;
+import com.buession.redis.core.command.ScriptingCommands;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ import java.util.List;
  *
  * @author Yong.Teng
  */
-public interface ScriptOperations extends ScriptCommands, RedisOperations {
+public interface ScriptingOperations extends ScriptingCommands, RedisOperations {
 
 	/**
 	 * 对 Lua 脚本进行求值
@@ -103,7 +104,7 @@ public interface ScriptOperations extends ScriptCommands, RedisOperations {
 	 */
 	default Boolean scriptExists(final String sha1){
 		List<Boolean> result = scriptExists(new String[]{sha1});
-		return result == null ? null : result.get(0);
+		return Validate.isEmpty(result) ? null : result.get(0);
 	}
 
 	/**
@@ -116,7 +117,7 @@ public interface ScriptOperations extends ScriptCommands, RedisOperations {
 	 */
 	default Boolean scriptExists(final byte[] sha1){
 		List<Boolean> result = scriptExists(new byte[][]{sha1});
-		return result == null ? null : result.get(0);
+		return Validate.isEmpty(result) ? null : result.get(0);
 	}
 
 }

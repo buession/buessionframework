@@ -202,7 +202,151 @@ public enum ProtocolCommand {
 	/**
 	 * list command end
 	 **/
----
+
+	/**
+	 * pubsub command start
+	 **/
+	PSUBSCRIBE(ProtocolCommandGroup.PUBSUB, "r"),
+
+	PUBSUB(ProtocolCommandGroup.PUBSUB, "rw"),
+
+	PUBLISH(ProtocolCommandGroup.PUBSUB, "rw"),
+
+	PUNSUBSCRIBE(ProtocolCommandGroup.PUBSUB, "rw"),
+
+	SUBSCRIBE(ProtocolCommandGroup.PUBSUB, "rw"),
+
+	UNSUBSCRIBE(ProtocolCommandGroup.PUBSUB, "rw"),
+	/**
+	 * pubsub command end
+	 **/
+
+	/**
+	 * scripting command start
+	 **/
+	EVAL(ProtocolCommandGroup.SCRIPTING, "rw"),
+
+	EVALSHA(ProtocolCommandGroup.SCRIPTING, "rw"),
+
+	SCRIPT_EXISTS(ProtocolCommandGroup.SCRIPTING, "r"),
+
+	SCRIPT_FLUSH(ProtocolCommandGroup.SCRIPTING, "rw"),
+
+	SCRIPT_KILL(ProtocolCommandGroup.SCRIPTING, "rw"),
+
+	SCRIPT_LOAD(ProtocolCommandGroup.SCRIPTING, "rw"),
+	/**
+	 * scripting command end
+	 **/
+
+	/**
+	 * server command start
+	 **/
+	BGREWRITEAOF(ProtocolCommandGroup.SERVER, "r"),
+
+	BGSAVE(ProtocolCommandGroup.SERVER, "r"),
+
+	CLIENT_KILL(ProtocolCommandGroup.SERVER, "rw"),
+
+	CLIENT_GETNAME(ProtocolCommandGroup.SERVER, "r"),
+
+	CLIENT_ID(ProtocolCommandGroup.SERVER, "r"),
+
+	CLIENT_LIST(ProtocolCommandGroup.SERVER, "r"),
+
+	CLIENT_PAUSE(ProtocolCommandGroup.SERVER, "rw"),
+
+	CLIENT_REPLY(ProtocolCommandGroup.SERVER, "rw"),
+
+	CLIENT_SETNAME(ProtocolCommandGroup.SERVER, "w"),
+
+	CLIENT_UNBLOCK(ProtocolCommandGroup.SERVER, "rw"),
+
+	CONFIG_GET(ProtocolCommandGroup.SERVER, "r"),
+
+	CONFIG_RESETSTAT(ProtocolCommandGroup.SERVER, "w"),
+
+	CONFIG_REWRITE(ProtocolCommandGroup.SERVER, "rw"),
+
+	CONFIG_SET(ProtocolCommandGroup.SERVER, "w"),
+
+	DBSIZE(ProtocolCommandGroup.SERVER, "r"),
+
+	DEBUG_OBJECT(ProtocolCommandGroup.SERVER, "rw"),
+
+	DEBUG_SEGFAULT(ProtocolCommandGroup.SERVER, "rw"),
+
+	FLUSHALL(ProtocolCommandGroup.SERVER, "w"),
+
+	FLUSHDB(ProtocolCommandGroup.SERVER, "w"),
+
+	INFO(ProtocolCommandGroup.SERVER, "r"),
+
+	LASTSAVE(ProtocolCommandGroup.SERVER, "r"),
+
+	MEMORY_DOCTOR(ProtocolCommandGroup.SERVER, "r"),
+
+	MONITOR(ProtocolCommandGroup.SERVER, "rw"),
+
+	OBJECT(ProtocolCommandGroup.SERVER, "r"),
+
+	REPLICAOF(ProtocolCommandGroup.SERVER, "rw"),
+
+	ROLE(ProtocolCommandGroup.SERVER, "r"),
+
+	SAVE(ProtocolCommandGroup.SERVER, "rw"),
+
+	SHUTDOWN(ProtocolCommandGroup.SERVER, "rw"),
+
+	SLAVEOF(ProtocolCommandGroup.SERVER, "rw"),
+
+	SLOWLOG(ProtocolCommandGroup.SERVER, "rw"),
+
+	SYNC(ProtocolCommandGroup.SERVER, "rw"),
+
+	PSYNC(ProtocolCommandGroup.SERVER, "rw"),
+
+	TIME(ProtocolCommandGroup.SERVER, "r"),
+	/**
+	 * server command end
+	 **/
+
+	/**
+	 * set command start
+	 **/
+	SADD(ProtocolCommandGroup.SET, "rw"),
+
+	SCARD(ProtocolCommandGroup.SET, "r"),
+
+	SDIFF(ProtocolCommandGroup.SET, "r"),
+
+	SDIFFSTORE(ProtocolCommandGroup.SET, "rw"),
+
+	SINTER(ProtocolCommandGroup.SET, "r"),
+
+	SINTERSTORE(ProtocolCommandGroup.SET, "rw"),
+
+	SISMEMBER(ProtocolCommandGroup.SET, "r"),
+
+	SMEMBERS(ProtocolCommandGroup.SET, "r"),
+
+	SMOVE(ProtocolCommandGroup.SET, "rw"),
+
+	SPOP(ProtocolCommandGroup.SET, "rw"),
+
+	SRANDMEMBER(ProtocolCommandGroup.SET, "r"),
+
+	SREM(ProtocolCommandGroup.SET, "rw"),
+
+	SSCAN(ProtocolCommandGroup.SET, "r"),
+
+	SUNION(ProtocolCommandGroup.SET, "r"),
+
+	SUNIONSTORE(ProtocolCommandGroup.SET, "rw"),
+	/**
+	 * set command end
+	 **/
+		---
 
 	/**
 	 * string command start
@@ -245,42 +389,6 @@ public enum ProtocolCommand {
 
 	STRLEN(ProtocolCommandGroup.STRING, "r"),
 	/** string command end **/
-
-	/**
-	 * set command start
-	 **/
-	SADD(ProtocolCommandGroup.SET, "rw"),
-
-	SISMEMBER(ProtocolCommandGroup.SET, "r"),
-
-	SPOP(ProtocolCommandGroup.SET, "rw"),
-
-	SRANDMEMBER(ProtocolCommandGroup.SET, "r"),
-
-	SREM(ProtocolCommandGroup.SET, "rw"),
-
-	SMOVE(ProtocolCommandGroup.SET, "rw"),
-
-	SCARD(ProtocolCommandGroup.SET, "r"),
-
-	SMEMBERS(ProtocolCommandGroup.SET, "r"),
-
-	SSCAN(ProtocolCommandGroup.SET, "r"),
-
-	SINTER(ProtocolCommandGroup.SET, "r"),
-
-	SINTERSTORE(ProtocolCommandGroup.SET, "rw"),
-
-	SUNION(ProtocolCommandGroup.SET, "r"),
-
-	SUNIONSTORE(ProtocolCommandGroup.SET, "rw"),
-
-	SDIFF(ProtocolCommandGroup.SET, "r"),
-
-	SDIFFSTORE(ProtocolCommandGroup.SET, "rw"),
-	/**
-	 * set command end
-	 **/
 
 	/**
 	 * sorted set command start
@@ -365,56 +473,6 @@ public enum ProtocolCommand {
 	 **/
 
 	/**
-	 * script command start
-	 **/
-	EVAL(ProtocolCommandGroup.SCRIPTING, "rw"),
-
-	EVALSHA(ProtocolCommandGroup.SCRIPTING, "rw"),
-
-	SCRIPT_LOAD(ProtocolCommandGroup.SCRIPTING, "rw"),
-
-	SCRIPT_EXISTS(ProtocolCommandGroup.SCRIPTING, "r"),
-
-	SCRIPT_FLUSH(ProtocolCommandGroup.SCRIPTING, "rw"),
-
-	SCRIPT_KILL(ProtocolCommandGroup.SCRIPTING, "rw"),
-	/**
-	 * script command end
-	 **/
-
-	/**
-	 * persistence command start
-	 **/
-	SAVE("rw"),
-
-	BGSAVE("r"),
-
-	BGREWRITEAOF("r"),
-
-	LASTSAVE("r"),
-	/**
-	 * persistence command end
-	 **/
-
-	/**
-	 * pubsub command start
-	 **/
-	PUBLISH(ProtocolCommandGroup.PUBSUB, "rw"),
-
-	SUBSCRIBE(ProtocolCommandGroup.PUBSUB, "rw"),
-
-	PSUBSCRIBE(ProtocolCommandGroup.PUBSUB, "r"),
-
-	UNSUBSCRIBE(ProtocolCommandGroup.PUBSUB, "rw"),
-
-	PUNSUBSCRIBE(ProtocolCommandGroup.PUBSUB, "rw"),
-
-	PUBSUB(ProtocolCommandGroup.PUBSUB, "rw"),
-	/**
-	 * pubsub command end
-	 **/
-
-	/**
 	 * replication command start
 	 **/
 	SLAVEOF("w"),
@@ -423,81 +481,15 @@ public enum ProtocolCommand {
 	 **/
 
 	/**
-	 * server command start
-	 **/
-	INFO(ProtocolCommandGroup.SERVER, "r"),
-
-	ROLE(ProtocolCommandGroup.SERVER, "r"),
-
-	SHUTDOWN(ProtocolCommandGroup.SERVER, "rw"),
-
-	TIME(ProtocolCommandGroup.SERVER, "r"),
-
-	CONFIG_SET(ProtocolCommandGroup.SERVER, "w"),
-
-	CONFIG_GET(ProtocolCommandGroup.SERVER, "r"),
-
-	CONFIG_RESETSTAT(ProtocolCommandGroup.SERVER, "w"),
-
-	CONFIG_REWRITE(ProtocolCommandGroup.SERVER, "rw"),
-
-	CLIENT_SETNAME(ProtocolCommandGroup.SERVER, "w"),
-
-	CLIENT_GETNAME(ProtocolCommandGroup.SERVER, "r"),
-
-	CLIENT_ID(ProtocolCommandGroup.SERVER, "r"),
-
-	CLIENT_PAUSE(ProtocolCommandGroup.SERVER, "rw"),
-
-	CLIENT_REPLY(ProtocolCommandGroup.SERVER, "rw"),
-
-	CLIENT_UNBLOCK(ProtocolCommandGroup.SERVER, "rw"),
-
-	CLIENT_KILL(ProtocolCommandGroup.SERVER, "rw"),
-
-	CLIENT_LIST(ProtocolCommandGroup.SERVER, "r"),
-
-	DBSIZE(ProtocolCommandGroup.SERVER, "r"),
-
-	FLUSHDB(ProtocolCommandGroup.SERVER, "w"),
-
-	FLUSHALL(ProtocolCommandGroup.SERVER, "w"),
-
-	DEBUG_OBJECT(ProtocolCommandGroup.SERVER, "rw"),
-
-	DEBUG_SEGFAULT(ProtocolCommandGroup.SERVER, "rw"),
-
-	SYNC(ProtocolCommandGroup.SERVER, "rw"),
-
-	PSYNC(ProtocolCommandGroup.SERVER, "rw"),
-
-	SLOWLOG(ProtocolCommandGroup.SERVER, "rw"),
-
-	REPLICAOF(ProtocolCommandGroup.SERVER, "rw"),
-
-	MONITOR(ProtocolCommandGroup.SERVER, "rw"),
-	/**
-	 * server command end
-	 **/
-
-	/**
 	 * cluster command start
 	 */
 	CLUSTER_ADDSLOTS(ProtocolCommandGroup.CLUSTER, "rw"),
 
-	CLUSTER_COUNTKEYSINSLOT(ProtocolCommandGroup.CLUSTER, "r"),
+	CLUSTER_COUNTKEYSINSLOT(ProtocolCommandGroup.CLUSTER, "r");
+
 	/**
 	 * cluster command start
 	 */
-
-	/**
-	 * debug command start
-	 **/
-	OBJECT("r")；
-
-	/**
-	 * debug command end
-	 **/
 
 	private ProtocolCommandGroup group;
 

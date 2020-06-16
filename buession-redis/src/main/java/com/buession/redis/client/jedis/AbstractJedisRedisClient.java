@@ -579,6 +579,100 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		}
 	}
 
+	@Override
+	public boolean sisMember(final String key, final String member){
+		if(isTransaction()){
+			return execute((cmd)->cmd.sismember(key, member));
+		}else{
+			return execute((cmd)->cmd.sismember(key, member));
+		}
+	}
+
+	@Override
+	public Set<String> sMembers(final String key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().smembers(key).get());
+		}else{
+			return execute((cmd)->cmd.smembers(key));
+		}
+	}
+
+	@Override
+	public String sPop(final String key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().spop(key).get());
+		}else{
+			return execute((cmd)->cmd.spop(key));
+		}
+	}
+
+	@Override
+	public String sRandMember(final String key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().srandmember(key).get());
+		}else{
+			return execute((cmd)->cmd.srandmember(key));
+		}
+	}
+
+	@Override
+	public List<String> sRandMember(final String key, final int count){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().srandmember(key, count).get());
+		}else{
+			return execute((cmd)->cmd.srandmember(key, count));
+		}
+	}
+
+	@Override
+	public Long sRem(final String key, final String... members){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().srem(key, members).get());
+		}else{
+			return execute((cmd)->cmd.srem(key, members));
+		}
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final String cursor){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor)));
+		}
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+					new JedisScanParams(pattern))));
+		}
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+					new JedisScanParams(count))));
+		}
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
+			final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+					new JedisScanParams(pattern, count))));
+		}
+	}
+
 /*
 
 	@Override
@@ -801,100 +895,6 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 			return execute((cmd)->getTransaction().scard(key).get());
 		}else{
 			return execute((cmd)->cmd.scard(key));
-		}
-	}
-
-	@Override
-	public boolean sisMember(final String key, final String member){
-		if(isTransaction()){
-			return execute((cmd)->cmd.sismember(key, member));
-		}else{
-			return execute((cmd)->cmd.sismember(key, member));
-		}
-	}
-
-	@Override
-	public Set<String> sMembers(final String key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().smembers(key).get());
-		}else{
-			return execute((cmd)->cmd.smembers(key));
-		}
-	}
-
-	@Override
-	public String sPop(final String key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().spop(key).get());
-		}else{
-			return execute((cmd)->cmd.spop(key));
-		}
-	}
-
-	@Override
-	public String sRandMember(final String key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().srandmember(key).get());
-		}else{
-			return execute((cmd)->cmd.srandmember(key));
-		}
-	}
-
-	@Override
-	public List<String> sRandMember(final String key, final int count){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().srandmember(key, count).get());
-		}else{
-			return execute((cmd)->cmd.srandmember(key, count));
-		}
-	}
-
-	@Override
-	public Long sRem(final String key, final String... members){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().srem(key, members).get());
-		}else{
-			return execute((cmd)->cmd.srem(key, members));
-		}
-	}
-
-	@Override
-	public ScanResult<List<String>> sScan(final String key, final String cursor){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor)));
-		}
-	}
-
-	@Override
-	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
-					new JedisScanParams(pattern))));
-		}
-	}
-
-	@Override
-	public ScanResult<List<String>> sScan(final String key, final String cursor, final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
-					new JedisScanParams(count))));
-		}
-	}
-
-	@Override
-	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
-			final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
-					new JedisScanParams(pattern, count))));
 		}
 	}
 

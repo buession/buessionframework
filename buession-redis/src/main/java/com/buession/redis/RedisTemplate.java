@@ -44,8 +44,9 @@ import java.util.Set;
  * @author Yong.Teng
  */
 public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperations, GeoOperations, HashOperations,
-		HyperLogLogOperations, KeyOperations, ListOperations, StringOperations, SetOperations, SortedSetOperations,
-		TransactionOperations, PubSubOperations, ScriptOperations, ServerOperations, DebugOperations {
+		HyperLogLogOperations, KeyOperations, ListOperations, PubSubOperations, ScriptingOperations, ServerOperations,
+		SetOperations
+		StringOperations,SortedSetOperations,TransactionOperations {
 
 	/**
 	 * 构造函数
@@ -636,6 +637,226 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 	@Override
 	public <V> Long rPushX(final byte[] key, final V... values){
 		return rPushX(key, serializeAsBytes(values));
+	}
+
+	@Override
+	public <V> Long sAdd(final String key, final V member){
+		return sAdd(key, serialize(member));
+	}
+
+	@Override
+	public <V> Long sAdd(final byte[] key, final V member){
+		return sAdd(key, serializeAsBytes(member));
+	}
+
+	@Override
+	public <V> Long sAdd(final String key, final V... members){
+		return sAdd(key, serialize(members));
+	}
+
+	@Override
+	public <V> Long sAdd(final byte[] key, final V... members){
+		return sAdd(key, serializeAsBytes(members));
+	}
+
+	@Override
+	public <V> Set<V> sDiffObject(final String key){
+		return deserialize(sDiff(key));
+	}
+
+	@Override
+	public <V> Set<V> sDiffObject(final byte[] key){
+		return deserializeBytes(sDiff(key));
+	}
+
+	@Override
+	public <V> Set<V> sDiffObject(final String key, final Class<V> clazz){
+		return deserialize(sDiff(key), clazz);
+	}
+
+	@Override
+	public <V> Set<V> sDiffObject(final byte[] key, final Class<V> clazz){
+		return deserializeBytes(sDiff(key), clazz);
+	}
+
+	@Override
+	public <V> Set<V> sDiffObject(final String key, final TypeReference<V> type){
+		return deserialize(sDiff(key), type);
+	}
+
+	@Override
+	public <V> Set<V> sDiffObject(final byte[] key, final TypeReference<V> type){
+		return deserializeBytes(sDiff(key), type);
+	}
+
+	@Override
+	public <V> Set<V> sMembersObject(final String key){
+		return deserialize(sMembers(key));
+	}
+
+	@Override
+	public <V> Set<V> sMembersObject(final byte[] key){
+		return deserializeBytes(sMembers(key));
+	}
+
+	@Override
+	public <V> Set<V> sMembersObject(final String key, final Class<V> clazz){
+		return deserialize(sMembers(key), clazz);
+	}
+
+	@Override
+	public <V> Set<V> sMembersObject(final byte[] key, final Class<V> clazz){
+		return deserializeBytes(sMembers(key), clazz);
+	}
+
+	@Override
+	public <V> Set<V> sMembersObject(final String key, final TypeReference<V> type){
+		return deserialize(sMembers(key), type);
+	}
+
+	@Override
+	public <V> Set<V> sMembersObject(final byte[] key, final TypeReference<V> type){
+		return deserializeBytes(sMembers(key), type);
+	}
+
+	@Override
+	public <V> V sPopObject(final String key){
+		return deserialize(sPop(key));
+	}
+
+	@Override
+	public <V> V sPopObject(final byte[] key){
+		return deserializeBytes(sPop(key));
+	}
+
+	@Override
+	public <V> V sPopObject(final String key, final Class<V> clazz){
+		return deserialize(sPop(key), clazz);
+	}
+
+	@Override
+	public <V> V sPopObject(final byte[] key, final Class<V> clazz){
+		return deserializeBytes(sPop(key), clazz);
+	}
+
+	@Override
+	public <V> V sPopObject(final String key, final TypeReference<V> type){
+		return deserialize(sPop(key), type);
+	}
+
+	@Override
+	public <V> V sPopObject(final byte[] key, final TypeReference<V> type){
+		return deserializeBytes(sPop(key), type);
+	}
+
+	@Override
+	public <V> V sRandMemberObject(final String key){
+		return deserialize(sRandMember(key));
+	}
+
+	@Override
+	public <V> V sRandMemberObject(final byte[] key){
+		return deserializeBytes(sRandMember(key));
+	}
+
+	@Override
+	public <V> V sRandMemberObject(final String key, final Class<V> clazz){
+		return deserialize(sRandMember(key), clazz);
+	}
+
+	@Override
+	public <V> V sRandMemberObject(final byte[] key, final Class<V> clazz){
+		return deserializeBytes(sRandMember(key), clazz);
+	}
+
+	@Override
+	public <V> V sRandMemberObject(final String key, final TypeReference<V> type){
+		return deserialize(sRandMember(key), type);
+	}
+
+	@Override
+	public <V> V sRandMemberObject(final byte[] key, final TypeReference<V> type){
+		return deserializeBytes(sRandMember(key), type);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final String key, final int count){
+		return deserialize(sRandMember(key, count));
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final byte[] key, final int count){
+		return deserializeBytes(sRandMember(key, count));
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final String key, final long count){
+		return deserialize(sRandMember(key, count));
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final byte[] key, final long count){
+		return deserializeBytes(sRandMember(key, count));
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final String key, final int count, final Class<V> clazz){
+		return deserialize(sRandMember(key, count), clazz);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final byte[] key, final int count, final Class<V> clazz){
+		return deserializeBytes(sRandMember(key, count), clazz);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final String key, final long count, final Class<V> clazz){
+		return deserialize(sRandMember(key, count), clazz);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final byte[] key, final long count, final Class<V> clazz){
+		return deserializeBytes(sRandMember(key, count), clazz);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final String key, final int count, final TypeReference<V> type){
+		return deserialize(sRandMember(key, count), type);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final byte[] key, final int count, final TypeReference<V> type){
+		return deserializeBytes(sRandMember(key, count), type);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final String key, final long count, final TypeReference<V> type){
+		return deserialize(sRandMember(key, count), type);
+	}
+
+	@Override
+	public <V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type){
+		return deserializeBytes(sRandMember(key, count), type);
+	}
+
+	@Override
+	public <V> Long sRem(final String key, final V member){
+		return sRem(key, serialize(member));
+	}
+
+	@Override
+	public <V> Long sRem(final byte[] key, final V member){
+		return sRem(key, serializeAsBytes(member));
+	}
+
+	@Override
+	public <V> Long sRem(final String key, final V... members){
+		return sRem(key, serialize(members));
+	}
+
+	@Override
+	public <V> Long sRem(final byte[] key, final V... members){
+		return sRem(key, serializeAsBytes(members));
 	}
 
 }

@@ -311,64 +311,49 @@ public abstract class AbstractRedisClient implements RedisClient {
 		return lTrim(key, (long) start, (long) end);
 	}
 
-	/*@Override
-	public Long incrBy(final String key, final int value){
-		return incrBy(key, (long) value);
+	@Override
+	public Status clientPause(final int timeout){
+		return clientPause((long) timeout);
 	}
 
 	@Override
-	public Long incrBy(final byte[] key, final int value){
-		return incrBy(key, (long) value);
+	public Status configSet(final String parameter, final float value){
+		return configSet(parameter, Float.toString(value));
 	}
 
 	@Override
-	public Double incrByFloat(final String key, final float value){
-		return incrByFloat(key, (double) value);
+	public Status configSet(final byte[] parameter, final float value){
+		return configSet(parameter, NumberUtils.float2bytes(value));
 	}
 
 	@Override
-	public Double incrByFloat(final byte[] key, final float value){
-		return incrByFloat(key, (double) value);
+	public Status configSet(final String parameter, final double value){
+		return configSet(parameter, Double.toString(value));
 	}
 
 	@Override
-	public Long decrBy(final String key, final int value){
-		return decrBy(key, (long) value);
+	public Status configSet(final byte[] parameter, final double value){
+		return configSet(parameter, NumberUtils.double2bytes(value));
 	}
 
 	@Override
-	public Long decrBy(final byte[] key, final int value){
-		return decrBy(key, (long) value);
+	public Status configSet(final String parameter, final int value){
+		return configSet(parameter, Integer.toString(value));
 	}
 
 	@Override
-	public Long setRange(final String key, final int offset, final String value){
-		return setRange(key, (long) offset, value);
+	public Status configSet(final byte[] parameter, final long value){
+		return configSet(parameter, NumberUtils.long2bytes(value));
 	}
 
 	@Override
-	public Long setRange(final byte[] key, final int offset, final byte[] value){
-		return setRange(key, (long) offset, value);
+	public Status configSet(final String parameter, final long value){
+		return configSet(parameter, Long.toString(value));
 	}
 
 	@Override
-	public String getRange(final String key, final int start, final int end){
-		return getRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public byte[] getRange(final byte[] key, final int start, final int end){
-		return getRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public String substr(final String key, final long start, final long end){
-		return substr(key, (int) start, (int) end);
-	}
-
-	@Override
-	public byte[] substr(final byte[] key, final long start, final long end){
-		return substr(key, (int) start, (int) end);
+	public Status configSet(final byte[] parameter, final int value){
+		return configSet(parameter, NumberUtils.int2bytes(value));
 	}
 
 	@Override
@@ -459,6 +444,66 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count){
 		return sScan(key, NumberUtils.long2bytes(cursor), pattern, count);
+	}
+
+	/*@Override
+	public Long incrBy(final String key, final int value){
+		return incrBy(key, (long) value);
+	}
+
+	@Override
+	public Long incrBy(final byte[] key, final int value){
+		return incrBy(key, (long) value);
+	}
+
+	@Override
+	public Double incrByFloat(final String key, final float value){
+		return incrByFloat(key, (double) value);
+	}
+
+	@Override
+	public Double incrByFloat(final byte[] key, final float value){
+		return incrByFloat(key, (double) value);
+	}
+
+	@Override
+	public Long decrBy(final String key, final int value){
+		return decrBy(key, (long) value);
+	}
+
+	@Override
+	public Long decrBy(final byte[] key, final int value){
+		return decrBy(key, (long) value);
+	}
+
+	@Override
+	public Long setRange(final String key, final int offset, final String value){
+		return setRange(key, (long) offset, value);
+	}
+
+	@Override
+	public Long setRange(final byte[] key, final int offset, final byte[] value){
+		return setRange(key, (long) offset, value);
+	}
+
+	@Override
+	public String getRange(final String key, final int start, final int end){
+		return getRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public byte[] getRange(final byte[] key, final int start, final int end){
+		return getRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public String substr(final String key, final long start, final long end){
+		return substr(key, (int) start, (int) end);
+	}
+
+	@Override
+	public byte[] substr(final byte[] key, final long start, final long end){
+		return substr(key, (int) start, (int) end);
 	}
 
 	@Override
@@ -1261,46 +1306,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public Long bitCount(final byte[] key, final int start, final int end){
 		return bitCount(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Status configSet(final String parameter, final float value){
-		return configSet(parameter, Float.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final float value){
-		return configSet(parameter, NumberUtils.float2bytes(value));
-	}
-
-	@Override
-	public Status configSet(final String parameter, final double value){
-		return configSet(parameter, Double.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final double value){
-		return configSet(parameter, NumberUtils.double2bytes(value));
-	}
-
-	@Override
-	public Status configSet(final String parameter, final int value){
-		return configSet(parameter, Integer.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final long value){
-		return configSet(parameter, NumberUtils.long2bytes(value));
-	}
-
-	@Override
-	public Status configSet(final String parameter, final long value){
-		return configSet(parameter, Long.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final int value){
-		return configSet(parameter, NumberUtils.int2bytes(value));
 	}*/
 
 	protected <C, R> R doExecute(final Executor<C, R> executor){
