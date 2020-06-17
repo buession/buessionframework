@@ -39,11 +39,11 @@ public class TransactionUtils {
 	}
 
 	public final static boolean isActualNonReadonlyTransactionActive(){
-		return TransactionSynchronizationManager.isActualTransactionActive() && TransactionSynchronizationManager.isCurrentTransactionReadOnly() == false;
+		return TransactionSynchronizationManager.isActualTransactionActive() && !TransactionSynchronizationManager.isCurrentTransactionReadOnly();
 	}
 
 	public final static void bindResource(final RedisConnectionFactory factory,
-										  final RedisConnectionHolder connectionHolder){
+			final RedisConnectionHolder connectionHolder){
 		TransactionSynchronizationManager.bindResource(factory, connectionHolder);
 	}
 
@@ -56,8 +56,7 @@ public class TransactionUtils {
 	}
 
 	public final static void registerSynchronization(final RedisConnectionFactory factory,
-													 final RedisConnectionHolder connectionHolder,
-													 final RedisConnection connection){
+			final RedisConnectionHolder connectionHolder, final RedisConnection connection){
 		TransactionSynchronizationManager.registerSynchronization(new RedisTransactionSynchronizationAdapter(factory,
 				connectionHolder, connection));
 	}

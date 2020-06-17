@@ -27,10 +27,6 @@ package com.buession.redis.core;
 /**
  * @author Yong.Teng
  */
-public enum ClientUnblockType {
-
-	TIMEOUT,
-
-	ERROR
+public interface SessionCallback<R> extends Executor<R> {
 
 }

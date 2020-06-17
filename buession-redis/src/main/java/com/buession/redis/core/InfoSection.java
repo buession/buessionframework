@@ -28,6 +28,7 @@ package com.buession.redis.core;
  * @author Yong.Teng
  */
 public enum InfoSection {
+
 	SERVER,
 
 	CLIENTS,
@@ -47,4 +48,5 @@ public enum InfoSection {
 	COMMAND_STATS,
 
 	KEYSPACE
+
 }

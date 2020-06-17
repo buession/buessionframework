@@ -25,6 +25,7 @@
 package com.buession.redis;
 
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.Options;
 import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
 
 /**
@@ -46,6 +47,12 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 
 	protected RedisTemplate getRedisTemplate(){
 		RedisTemplate redisTemplate = new RedisTemplate(createRedisConnection());
+
+		Options options = new Options();
+
+		options.setEnableTransactionSupport(true);
+
+		redisTemplate.setOptions(options);
 
 		redisTemplate.afterPropertiesSet();
 

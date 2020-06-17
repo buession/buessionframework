@@ -28,7 +28,9 @@ package com.buession.redis.core;
  * @author Yong.Teng
  */
 public enum NxXx {
+
 	NX,
 
 	XX
+
 }

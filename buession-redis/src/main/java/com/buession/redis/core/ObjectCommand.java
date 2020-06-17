@@ -28,9 +28,11 @@ package com.buession.redis.core;
  * @author Yong.Teng
  */
 public enum ObjectCommand {
+
 	REFCOUNT,
 
 	ENCODING,
 
 	IDLETIME
+
 }

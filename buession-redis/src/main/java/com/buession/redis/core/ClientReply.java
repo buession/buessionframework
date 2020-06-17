@@ -28,9 +28,11 @@ package com.buession.redis.core;
  * @author Yong.Teng
  */
 public enum ClientReply {
+
 	ON,
 
 	OFF,
 
 	SKIP
+
 }

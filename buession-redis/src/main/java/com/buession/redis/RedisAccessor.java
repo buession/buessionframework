@@ -34,6 +34,7 @@ import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.client.jedis.ShardedJedisClient;
 import com.buession.redis.core.Executor;
 import com.buession.redis.core.Options;
+import com.buession.redis.core.SessionCallback;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
@@ -123,6 +124,16 @@ public abstract class RedisAccessor {
 		enableTransactionSupport = options.isEnableTransactionSupport();
 
 		client = doGetRedisClient(connection);
+	}
+
+	public <V> V execute(SessionCallback<V> callback) throws RedisException{
+		Assert.isNull(callback, "callback cloud not be null.");
+
+		try{
+			return execute(callback, null, null);
+		}catch(Exception e){
+			throw new RedisException(e.getMessage(), e);
+		}
 	}
 
 	protected <R> R execute(final Executor<R> executor, final ProtocolCommand command){

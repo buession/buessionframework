@@ -28,6 +28,7 @@ package com.buession.redis.core;
  * @author Yong.Teng
  */
 public enum BitOperation {
+
 	AND,
 
 	OR,
@@ -35,4 +36,5 @@ public enum BitOperation {
 	NOT,
 
 	XOR
+
 }
