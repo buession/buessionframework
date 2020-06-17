@@ -139,23 +139,3 @@
     public <V> List<V> mGetObject(final byte[][] keys, final TypeReference<V> type){
         return ReturnUtils.objectFromListByte(serializer, mGet(keys), type);
     }
-
-    @Override
-    public <V> Long sRem(final String key, final V member){
-        return sRem(key, serializer.serialize(member));
-    }
-
-    @Override
-    public <V> Long sRem(final byte[] key, final V member){
-        return sRem(key, serializer.serializeAsBytes(member));
-    }
-
-    @Override
-    public <V> Long sRem(final String key, final V... members){
-        return sRem(key, serializer(members));
-    }
-
-    @Override
-    public <V> Long sRem(final byte[] key, final V... members){
-        return sRem(key, serializerAsByte(members));
-    }

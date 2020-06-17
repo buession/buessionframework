@@ -27,6 +27,7 @@ package com.buession.redis.client.jedis;
 import com.buession.core.utils.ReflectUtils;
 import com.buession.lang.Geo;
 import com.buession.lang.Status;
+import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.ListPosition;
@@ -37,10 +38,6 @@ import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.command.GeoCommands;
-import com.buession.redis.core.command.KeyCommands;
-import com.buession.redis.core.command.ListCommands;
-import com.buession.redis.core.command.SortedSetCommands;
-import com.buession.redis.core.command.StringCommands;
 import com.buession.redis.core.convert.jedis.AggregateConvert;
 import com.buession.redis.core.convert.jedis.BitOperationConvert;
 import com.buession.redis.core.convert.jedis.GeoArgumentConvert;
@@ -148,12 +145,17 @@ public class JedisClientUtils {
 		return listPositionConvert.convert(position);
 	}
 
+	public final static Tuple tupleDeconvert(final redis.clients.jedis.Tuple tuples){
+		final TupleConvert tupleConvert = new TupleConvert();
+		return tupleConvert.deconvert(tuples);
+	}
+
 	public final static Set<Tuple> setTupleDeconvert(final Set<redis.clients.jedis.Tuple> tuples){
 		final TupleConvert.SetTupleConvert setTupleConvert = new TupleConvert.SetTupleConvert();
 		return setTupleConvert.deconvert(tuples);
 	}
 
-	public final static ZParams.Aggregate aggregateConvert(final SortedSetCommands.Aggregate aggregate){
+	public final static ZParams.Aggregate aggregateConvert(final Aggregate aggregate){
 		final AggregateConvert aggregateConvert = new AggregateConvert();
 		return aggregateConvert.convert(aggregate);
 	}

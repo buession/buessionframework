@@ -25,6 +25,7 @@
 package com.buession.redis.client;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientUnblockType;
@@ -734,27 +735,6 @@ public interface ShardedRedisClient extends RedisClient {
 	default Long sUnionStore(final byte[] destKey, final byte[]... keys){
 		throw new NotSupportedCommandException(ProtocolCommand.SUNIONSTORE);
 	}
-	/*
-
-	@Override
-	default Status mSet(final Map<String, String> values){
-		throw new NotSupportedCommandException(ProtocolCommand.MGET);
-	}
-
-	@Override
-	default Status mSetNx(final Map<String, String> values){
-		throw new NotSupportedCommandException(ProtocolCommand.MGET);
-	}
-
-	@Override
-	default List<String> mGet(final String... keys){
-		throw new NotSupportedCommandException(ProtocolCommand.MGET);
-	}
-
-	@Override
-	default List<byte[]> mGet(final byte[]... keys){
-		throw new NotSupportedCommandException(ProtocolCommand.MGET);
-	}
 
 	@Override
 	default Long zInterStore(final String destKey, final String... keys){
@@ -838,6 +818,27 @@ public interface ShardedRedisClient extends RedisClient {
 	default Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double[] weights,
 			final byte[]... keys){
 		throw new NotSupportedCommandException(ProtocolCommand.ZUNIONSTORE);
+	}
+	/*
+
+	@Override
+	default Status mSet(final Map<String, String> values){
+		throw new NotSupportedCommandException(ProtocolCommand.MGET);
+	}
+
+	@Override
+	default Status mSetNx(final Map<String, String> values){
+		throw new NotSupportedCommandException(ProtocolCommand.MGET);
+	}
+
+	@Override
+	default List<String> mGet(final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.MGET);
+	}
+
+	@Override
+	default List<byte[]> mGet(final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.MGET);
 	}
 
 	@Override

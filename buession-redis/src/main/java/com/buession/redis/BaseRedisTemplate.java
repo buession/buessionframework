@@ -2299,4 +2299,1529 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
         return execute ((client)->client.sScan(makeByteKey(key), cursor, pattern, count), ProtocolCommand.SSCAN, args);
     }
 
+	@Override
+	public Long zAdd(final String key, final Map<String, Number> members){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
+		return execute((client)->client.zAdd(makeRawKey(key), members), ProtocolCommand.ZADD, args);
+	}
+
+	@Override
+	public Long zAdd(final byte[] key, final Map<byte[], Number> members){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
+		return execute((client)->client.zAdd(makeByteKey(key), members), ProtocolCommand.ZADD, args);
+	}
+
+	@Override
+	public Long zCard(final String key){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
+		return execute((client)->client.zCard(makeRawKey(key)), ProtocolCommand.ZCARD, args);
+	}
+
+	@Override
+	public Long zCard(final byte[] key){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
+		return execute((client)->client.zCard(makeByteKey(key)), ProtocolCommand.ZCARD, args);
+	}
+
+	@Override
+	public Long zCount(final String key, final float min, final float max){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max"
+		, max);
+		return execute((client)->client.zCount(makeRawKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final float min, final float max){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max"
+		, max);
+		return execute((client)->client.zCount(makeByteKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+	}
+
+	@Override
+	public Long zCount(final String key, final double min, final double max){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max"
+		, max);
+		return execute((client)->client.zCount(makeRawKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final double min, final double max){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max"
+		, max);
+		return execute((client)->client.zCount(makeByteKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+	}
+
+	@Override
+	public Long zCount(final String key, final int min, final int max){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max"
+		, max);
+		return execute((client)->client.zCount(makeRawKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final int min, final int max){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max"
+		, max);
+		return execute((cl)->client.zCount(makeByteKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+	}
+
+	@Override
+	public Long zCount(final String key, final long min, final long max){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max"
+		, max);
+		return execute((client)->client.zCount(makeRawKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final long min, final long max){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max"
+		, max);
+		return execute((client)->client.zCount(makeByteKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+	}
+
+	@Override
+	public Long zCount(final String key, final String min, final String max){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max"
+		, max);
+		return execute((client)->client.zCount(makeRawKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final byte[] min, final byte[] max){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max"
+		, max);
+		return execute((client)->client.zCount(makeByteKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final float increment){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("increment", increment);
+		return execute((client)->client.zIncrBy(makeRawKey(key), member, increment), ProtocolCommand.ZINCRBY, args);
+	}
+
+	@Override
+	public Double zIncrBy(final byte[] key, final byte[] member, final float increment){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("increment", increment);
+		return execute((client)->client.zIncrBy(makeByteKey(key), member, increment), ProtocolCommand.ZINCRBY, args);
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final double increment){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("increment", increment);
+		return execute((client)->client.zIncrBy(makeRawKey(key), member, increment), ProtocolCommand.ZINCRBY, args);
+	}
+
+	@Override
+	public Double zIncrBy(final byte[] key, final byte[] member, final double increment){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("increment", increment);
+		return execute((client)->client.zIncrBy(makeByteKey(key), member, increment), ProtocolCommand.ZINCRBY, args);
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final int increment){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("increment", increment);
+		return execute((client)->client.zIncrBy(makeRawKey(key), member, increment), ProtocolCommand.ZINCRBY, args);
+	}
+
+	@Override
+	public Double zIncrBy(final byte[] key, final byte[] member, final int increment){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("increment", increment);
+		return execute((client)->client.zIncrBy(makeByteKey(key), member, increment), ProtocolCommand.ZINCRBY, args);
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final long increment){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("increment", increment);
+		return execute((client)->client.zIncrBy(makeRawKey(key), member, increment), ProtocolCommand.ZINCRBY, args);
+	}
+
+	@Override
+	public Double zIncrBy(final byte[] key, final byte[] member, final long increment){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("increment", increment);
+		return execute((client)->client.zIncrBy(makeByteKey(key), member, increment), ProtocolCommand.ZINCRBY, args);
+	}
+
+    @Override
+    public Long zInterStore(final String destKey, final String... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("keys", keys);
+        return execute((client)->client.zInterStore(makeRawKey(destKey), makeRawKeys(keys)), ProtocolCommand.ZINTERSTORE, args);
+    }
+
+    @Override
+    public Long zInterStore(final byte[] destKey, final byte[]... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("keys", keys);
+        return execute((client)->client.zInterStore(makeByteKey(destKey), makeByteKeys(keys)), ProtocolCommand.ZINTERSTORE, args);
+    }
+
+    @Override
+    public Long zInterStore(final String destKey, final Aggregate aggregate, final String... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("aggregate", aggregate).put("keys", keys);
+        return execute((client)->client.zInterStore(makeRawKey(destKey), aggregate, makeRawKeys(keys)), ProtocolCommand.ZINTERSTORE, args);
+    }
+
+    @Override
+    public Long zInterStore(final byte[]destKey,final Aggregate aggregate,final byte[]...keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("aggregate", aggregate).put("keys", keys);
+        return execute((client)->client.zInterStore(makeByteKey(destKey), aggregate, makeByteKeys(keys)), ProtocolCommand.ZINTERSTORE, args);
+    }
+
+    @Override
+    public Long zInterStore(final String destKey,final double[] weights,final String... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("weights", weights).put("keys", keys);
+        return execute((client)->client.zInterStore(makeRawKey(destKey), weights, makeRawKeys(keys)), ProtocolCommand.ZINTERSTORE, args);
+    }
+
+    @Override
+    public Long zInterStore(final byte[]destKey,final double[]weights,final byte[]...keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("weights", weights).put("keys", keys);
+        return execute((client)->client.zInterStore(makeByteKey(destKey), weights, makeByteKeys(keys)), ProtocolCommand.ZINTERSTORE, args);
+    }
+
+    @Override
+    public Long zInterStore(final String destKey, final Aggregate aggregate, final double[] weights, final String...keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("aggregate", aggregate).put("weights", weights).put("keys", keys);
+        return execute((client)->client.zInterStore(makeRawKey(destKey), aggregate, weights, makeRawKeys(keys)), ProtocolCommand.ZINTERSTORE, args);
+    }
+
+    @Override
+    public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double[] weights, final byte[]... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("aggregate", aggregate).put("weights", weights).put("keys", keys);
+        return execute((client)->client.zInterStore(makeByteKey(destKey), aggregate, weights, makeByteKeys(keys)), ProtocolCommand.ZINTERSTORE, args);
+    }
+
+    @Override
+    public Long zLexCount(final String key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zLexCount(makeRawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+    }
+
+    @Override
+    public Long zLexCount(final byte[]key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zLexCount(makeByteKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+    }
+
+    @Override
+    public Long zLexCount(final String key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zLexCount(makeRawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+    }
+
+    @Override
+    public Long zLexCount(final byte[] key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zLexCount(makeByteKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+    }
+
+    @Override
+    public Long zLexCount(final String key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zLexCount(makeRawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+    }
+
+    @Override
+    public Long zLexCount(final byte[] key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zLexCount(makeByteKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+    }
+
+    @Override
+    public Long zLexCount(final String key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zLexCount(makeRawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+    }
+
+    @Override
+    public Long zLexCount(final byte[] key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zLexCount(makeByteKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+    }
+
+    @Override
+    public Long zLexCount(final String key, final String min, final String max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zLexCount(makeRawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+    }
+
+    @Override
+    public Long zLexCount(final byte[] key, final byte[] min, final byte[] max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zLexCount(makeByteKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+    }
+
+    @Override
+    public Set<String> zRange(final String key, final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRange(makeRawKey(key), start, end), ProtocolCommand.ZRANGE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRange(final byte[] key, final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRange(makeByteKey(key), start, end), ProtocolCommand.ZRANGE, args);
+    }
+
+    @Override
+    public Set<String> zRange(final String key, final long start, final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRange(makeRawKey(key), start, end), ProtocolCommand.ZRANGE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRange(final byte[] key, final long start, final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRange(makeByteKey(key), start, end), ProtocolCommand.ZRANGE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeWithScores(final String key, final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRangeWithScores(makeRawKey(key), start, end), ProtocolCommand.ZRANGE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeWithScores(final byte[] key, final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRangeWithScores(makeByteKey(key), start, end), ProtocolCommand.ZRANGE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeWithScores(final String key, final long start, final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRangeWithScores(makeRawKey(key), start, end), ProtocolCommand.ZRANGE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeWithScores(final byte[] key, final long start, final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRangeWithScores(makeByteKey(key), start, end), ProtocolCommand.ZRANGE, args);
+    }
+
+    @Override
+    public Set<String> zRangeByLex(final String key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]>zRangeByLex(final byte[] key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRangeByLex(final String key,final double min,final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]>zRangeByLex(final byte[] key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRangeByLex(final String key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]>zRangeByLex(final byte[] key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRangeByLex(final String key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]>zRangeByLex(final byte[] key,final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRangeByLex(final String key, final String min, final String max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override 
+    public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRangeByLex(final String key, final float min, final float max, final int offset,final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max, final int offset,final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByLex(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRangeByLex(final String key, final double min, final double max, final int offset,final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final int offset,final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByLex(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRangeByLex(final String key, final int min, final int max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByLex(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRangeByLex(final String key, final long min, final long max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByLex(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRangeByLex(final String key, final String min, final String max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max,final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByLex(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRangeByScore(final String key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRangeByScore(final byte[] key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRangeByScore(final String key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRangeByScore(final String key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRangeByScore(final byte[] key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRangeByScore(final String key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRangeByScore(final String key, final String min, final String max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRangeByScore(final String key, final float min, final float max, final int offset,
+     final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScore(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRangeByScore(final byte[] key, final float min, final float max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScore(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRangeByScore(final String key, final double min, final double max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScore(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]>zRangeByScore(final byte[] key, final double min, final double max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScore(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRangeByScore(final String key, final int min, final int max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScore(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]>zRangeByScore(final byte[] key, final int min, final int max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScore(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRangeByScore(final String key, final long min, final long max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScore(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max ,final int offset,final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScore(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRangeByScore(final String key, final String min, final String max, final int offset,
+        final int count){
+            final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScore(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScore(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final byte[]key,final long min,final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final String key,final String min,final String max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final byte[] key,final long min, final long max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min,final byte[] max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Long zRank(final String key, final String member){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
+        return execute((client)->client.zRank(makeRawKey(key), member), ProtocolCommand.ZRANK, args);
+    }
+
+    @Override
+    public Long zRank(final byte[] key, final byte[] member){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
+        return execute((client)->client.zRank(makeByteKey(key), member), ProtocolCommand.ZRANK, args);
+    }
+
+	@Override
+	public Tuple zPopMax(final String key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.zPopMin(makeRawKey(key)), ProtocolCommand.ZPOPMAX, args);
+	}
+
+	@Override
+	public Tuple zPopMax(final byte[] key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.zPopMin(makeByteKey(key)), ProtocolCommand.ZPOPMAX, args);
+	}
+
+	@Override
+	public Set<Tuple> zPopMax(final String key, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("count", count);
+        return execute((client)->client.zPopMin(makeRawKey(key), count), ProtocolCommand.ZPOPMAX, args);
+	}
+
+	@Override
+	public Set<Tuple> zPopMax(final byte[] key, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("count", count);
+        return execute((client)->client.zPopMax(makeByteKey(key), count), ProtocolCommand.ZPOPMAX, args);
+	}
+
+	@Override
+	public Set<Tuple> zPopMax(final String key, final long count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("count", count);
+        return execute((client)->client.zPopMax(makeRawKey(key), count), ProtocolCommand.ZPOPMAX, args);
+	}
+
+	@Override
+	public Set<Tuple> zPopMax(final byte[] key, final long count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("count", count);
+        return execute((client)->client.zPopMax(makeByteKey(key), count), ProtocolCommand.ZPOPMAX, args);
+	}
+
+	@Override
+	public Set<Tuple> zPopMin(final String key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.zPopMin(makeRawKey(key), count), ProtocolCommand.ZPOPMIN, args);
+	}
+
+	@Override
+	public Set<Tuple> zPopMin(final byte[] key){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key);
+        return execute((client)->client.zPopMin(makeByteKey(key), count), ProtocolCommand.ZPOPMIN, args);
+	}
+
+	@Override
+	public Set<Tuple> zPopMin(final String key, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("count", count);
+        return execute((client)->client.zPopMin(makeRawKey(key), count), ProtocolCommand.ZPOPMIN, args);
+	}
+
+	@Override
+	public Set<Tuple> zPopMin(final byte[] key, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("count", count);
+        return execute((client)->client.zPopMin(makeByteKey(key), count), ProtocolCommand.ZPOPMIN, args);
+	}
+
+	@Override
+	public Set<Tuple> zPopMin(final String key, final long count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("count", count);
+        return execute((client)->client.zPopMin(makeRawKey(key), count), ProtocolCommand.ZPOPMIN, args);
+	}
+
+	@Override
+	public Set<Tuple> zPopMin(final byte[] key, final long count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("count", count);
+        return execute((client)->client.zPopMin(makeByteKey(key), count), ProtocolCommand.ZPOPMIN, args);
+	}
+
+    @Override
+    public Long zRem(final String key, final String... members){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
+        return execute((client)->client.zRem(makeRawKey(key), members), ProtocolCommand.ZREM, args);
+    }
+
+    @Override
+    public Long zRem(final byte[] key, final byte[]... members){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("members", members);
+        return execute((client)->client.zRem(makeByteKey(key), members), ProtocolCommand.ZREM, args);
+    }
+
+    @Override
+    public Long zRemRangeByLex(final String key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX, args);
+    }
+
+    @Override
+    public Long zRemRangeByLex(final byte[] key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX, args);
+    }
+
+    @Override
+    public Long zRemRangeByLex(final String key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX, args);
+    }
+
+    @Override
+    public Long zRemRangeByLex(final byte[] key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX, args);
+    }
+
+    @Override
+    public Long zRemRangeByLex(final String key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX, args);
+    }
+
+    @Override
+    public Long zRemRangeByLex(final byte[] key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX, args);
+    }
+
+    @Override
+    public Long zRemRangeByLex(final String key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX, args);
+    }
+
+    @Override
+    public Long zRemRangeByLex(final byte[] key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX, args);
+    }
+
+    @Override
+    public Long zRemRangeByLex(final String key, final String min, final String max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX, args);
+    }
+
+    @Override
+    public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX, args);
+    }
+
+    @Override
+    public Long zRemRangeByScore(final String key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Long zRemRangeByScore(final byte[] key,final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Long zRemRangeByScore(final String key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Long zRemRangeByScore(final byte[] key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Long zRemRangeByScore(final String key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Long zRemRangeByScore(final byte[] key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Long zRemRangeByScore(final String key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Long zRemRangeByScore(final byte[] key,final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Long zRemRangeByScore(final String key, final String min, final String max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRemRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Long zRemRangeByRank(final String key, final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRemRangeByRank(makeRawKey(key), start, end), ProtocolCommand.ZREMRANGEBYRANK, args);
+    }
+
+    @Override
+    public Long zRemRangeByRank(final byte[] key, final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRemRangeByRank(makeByteKey(key), start, end), ProtocolCommand.ZREMRANGEBYRANK, args);
+    }
+
+    @Override
+    public Long zRemRangeByRank(final String key,final long start,final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRemRangeByRank(makeRawKey(key), start, end), ProtocolCommand.ZREMRANGEBYRANK, args);
+    }
+
+    @Override
+    public Long zRemRangeByRank(final byte[]key,final long start,final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRemRangeByRank(makeByteKey(key), start, end), ProtocolCommand.ZREMRANGEBYRANK, args);
+    }
+
+    @Override
+    public Set<String> zRevRange(final String key,final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRevRange(makeRawKey(key), start, end), ProtocolCommand.ZREVRANGE, args);
+    }
+
+    @Override
+    public Set<byte[]>zRevRange(final byte[] key, final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRevRange(makeByteKey(key), start, end), ProtocolCommand.ZREVRANGE, args);
+    }
+
+    @Override
+    public Set<String> zRevRange(final String key, final long start, final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRevRange(makeRawKey(key), start, end), ProtocolCommand.ZREVRANGE, args);
+    }
+
+    @Override
+    public Set<byte[]>zRevRange(final byte[]key, final long start, final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRevRange(makeByteKey(key), start, end), ProtocolCommand.ZREVRANGE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeWithScores(final String key, final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRevRangeWithScores(makeRawKey(key), start, end), ProtocolCommand.ZREVRANGE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeWithScores(final byte[] key, final int start, final int end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRevRangeWithScores(makeByteKey(key), start, end), ProtocolCommand.ZREVRANGE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeWithScores(final String key, final long start, final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRevRangeWithScores(makeRawKey(key), start, end), ProtocolCommand.ZREVRANGE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("start", start).put("end", end);
+        return execute((client)->client.zRevRangeWithScores(makeByteKey(key), start, end), ProtocolCommand.ZREVRANGE, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByLex(final String key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]>zRevRangeByLex(final byte[] key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByLex(makeByteKey(key),min,max), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByLex(final String key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]>zRevRangeByLex(final byte[] key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByLex(final String key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]>zRevRangeByLex(final byte[] key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByLex(final String key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]>zRevRangeByLex(final byte[] key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByLex(final String key, final String min, final String max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByLex(final String key, final float min, final float max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByLex(final String key, final double min, final double max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset,
+        final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByLex(final String key, final int min, final int max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((cliet)->client.zRevRangeByLex(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByLex(final String key, final long min, final long max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByLex(final String key, final String min, final String max, final int offset,final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYLEX, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByScore(final String key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]>zRevRangeByScore(final byte[] key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByScore(final String key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]>zRevRangeByScore(final byte[] key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByScore(final String key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]>zRevRangeByScore(final byte[] key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByScore(final String key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]>zRevRangeByScore(final byte[] key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByScore(final String key, final String min, final String max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByScore(final String key, final float min, final float max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRevRangeByScore(final byte[] key, final float min, final float max, final int offset, final int count){
+    final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByScore(final String key, final double min, final double max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByScore(final String key, final int min, final int max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRevRangeByScore(final byte[] key, final int min, final int max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByScore(final String key, final long min, final long max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRevRangeByScore(final byte[] key, final long min, final long max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<String> zRevRangeByScore(final String key, final String min, final String max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final String key,final float min,final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key,final byte[] min,final byte[] max){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final String key,final float max,final float min,final int offset, final int count){
+    final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final String key,final String min, final String max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int offset, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("min", min).put("max", max).put("offset", offset).put("count", count);
+        return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max, offset, count), ProtocolCommand.ZREVRANGEBYSCORE, args);
+    }
+
+    @Override
+    public Long zRevRank(final String key,final String member){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
+        return execute((client)->client.zRevRank(makeRawKey(key), member), ProtocolCommand.ZREVRANK, args);
+    }
+
+    @Override
+    public Long zRevRank(final byte[] key,final byte[] member){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
+        return execute((client)->client.zRevRank(makeByteKey(key), member), ProtocolCommand.ZREVRANK, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final String key, final int cursor){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
+        return execute((client)->client.zScan(makeRawKey(key), cursor), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
+        return execute((client)->client.zScan(makeByteKey(key), cursor), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final String key, final long cursor){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
+        return execute((client)->client.zScan(makeRawKey(key), cursor), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
+        return execute((client)->client.zScan(makeByteKey(key), cursor), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final String key, final String cursor){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
+        return execute((client)->client.zScan(makeRawKey(key), cursor), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor);
+        return execute((client)->client.zScan(makeByteKey(key), cursor), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern);
+        return execute((client)->client.zScan(makeRawKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final byte[] pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern);
+        return execute((client)->client.zScan(makeByteKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern);
+        return execute((client)->client.zScan(makeRawKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final byte[] key,final long cursor, final byte[] pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern);
+        return execute((client)->client.zScan(makeByteKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern);
+        return execute((client)->client.zScan(makeRawKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern);
+        return execute((client)->client.zScan(makeByteKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count", count);
+        return execute((client)->client.zScan(makeRawKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count", count);
+        return execute((client)->client.zScan(makeByteKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count", count);
+        return execute((client)->client.zScan(makeRawKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count", count);
+        return execute((client)->client.zScan(makeByteKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final String key,final String cursor,final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count", count);
+        return execute((client)->client.zScan(makeRawKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("count", count);
+        return execute((client)->client.zScan(makeByteKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern).put("count", count);
+        return execute((client)->client.zScan(makeRawKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final byte[] pattern, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern).put("count", count);
+        return execute((client)->client.zScan(makeByteKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern).put("count", count);
+        return execute((client)->client.zScan(makeRawKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern).put("count", count);
+        return execute((client)->client.zScan(makeByteKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern).put("count", count);
+        return execute((client)->client.zScan(makeRawKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[]cursor, final byte[] pattern, final int count){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("cursor", cursor).put("pattern", pattern).put("count", count);
+        return execute((client)->client.zScan(makeByteKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
+    }
+
+    @Override
+    public Double zScore(final String key, final String member){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
+        return execute((client)->client.zScore(makeRawKey(key), member), ProtocolCommand.ZSCORE, args);
+    }
+
+    @Override
+    public Double zScore(final byte[] key, final byte[] member){
+        final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member);
+        return execute((client)->client.zScore(makeByteKey(key), member), ProtocolCommand.ZSCORE, args);
+    }
+
+    @Override
+    public Long zUnionStore(final String destKey, final String... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("keys", keys);
+        return execute((client)->client.zUnionStore(makeRawKey(destKey), makeRawKeys(keys)), ProtocolCommand.ZUNIONSTORE, args);
+    }
+
+    @Override
+    public Long zUnionStore(final byte[] destKey, final byte[]... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("keys", keys);
+        return execute((client)->client.zUnionStore(makeByteKey(destKey), makeByteKeys(keys)), ProtocolCommand.ZUNIONSTORE, args);
+    }
+
+    @Override
+    public Long zUnionStore(final String destKey, final Aggregate aggregate, final String... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("aggregate", aggregate).put("keys", keys);
+        return execute((client)->client.zUnionStore(makeRawKey(destKey), aggregate, makeRawKeys(keys)), ProtocolCommand.ZUNIONSTORE, args);
+    }
+
+    @Override
+    public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("aggregate", aggregate).put("keys", keys);
+        return execute((client)->client.zUnionStore(makeByteKey(destKey), aggregate, makeByteKeys(keys)), ProtocolCommand.ZUNIONSTORE, args);
+    }
+
+    @Override
+    public Long zUnionStore(final String destKey, final double[] weights, final String... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("keys", keys);
+        return execute((client)->client.zUnionStore(makeRawKey(destKey), weights, makeRawKeys(keys)), ProtocolCommand.ZUNIONSTORE, args);
+    }
+
+    @Override
+    public Long zUnionStore(final byte[] destKey, final double[] weights, final byte[]... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("keys", keys);
+        return execute((client)->client.zUnionStore(makeByteKey(destKey), weights, makeByteKeys(keys)), ProtocolCommand.ZUNIONSTORE, args);
+    }
+
+    @Override
+    public Long zUnionStore(final String destKey, final Aggregate aggregate, final double[] weights, final String... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("aggregate", aggregate).put("keys", keys);
+        return execute((client)->client.zUnionStore(makeRawKey(destKey), aggregate, weights, makeRawKeys(keys)), ProtocolCommand.ZUNIONSTORE, args);
+    }
+
+    @Override
+    public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double[] weights, final byte[]... keys){
+        final CommandArguments args = CommandArguments.getInstance().put("destKey", destKey).put("aggregate", aggregate).put("keys", keys);
+        return execute((client)->client.zUnionStore(makeByteKey(destKey), aggregate, weights, makeByteKeys(keys)), ProtocolCommand.ZUNIONSTORE, args);
+    }
+
 }

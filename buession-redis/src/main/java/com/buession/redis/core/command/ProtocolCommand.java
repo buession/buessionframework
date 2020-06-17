@@ -346,6 +346,58 @@ public enum ProtocolCommand {
 	/**
 	 * set command end
 	 **/
+
+	/**
+	 * sorted set command start
+	 **/
+	ZADD(ProtocolCommandGroup.SORTEDSET, "rw"),
+
+	ZCARD(ProtocolCommandGroup.SORTEDSET, "r"),
+
+	ZCOUNT(ProtocolCommandGroup.SORTEDSET, "r"),
+
+	ZINCRBY(ProtocolCommandGroup.SORTEDSET, "rw"),
+
+	ZINTERSTORE(ProtocolCommandGroup.SORTEDSET, "rw"),
+
+	ZLEXCOUNT(ProtocolCommandGroup.SORTEDSET, "rw"),
+
+	ZRANGE(ProtocolCommandGroup.SORTEDSET, "r"),
+
+	ZRANGEBYLEX(ProtocolCommandGroup.SORTEDSET, "rw"),
+
+	ZRANGEBYSCORE(ProtocolCommandGroup.SORTEDSET, "r"),
+
+	ZRANK(ProtocolCommandGroup.SORTEDSET, "r"),
+
+	ZPOPMAX(ProtocolCommandGroup.SORTEDSET, "r"),
+
+	ZPOPMIN(ProtocolCommandGroup.SORTEDSET, "r"),
+
+	ZREM(ProtocolCommandGroup.SORTEDSET, "rw"),
+
+	ZREMRANGEBYLEX(ProtocolCommandGroup.SORTEDSET, "rw"),
+
+	ZREMRANGEBYSCORE(ProtocolCommandGroup.SORTEDSET, "rw"),
+
+	ZREMRANGEBYRANK(ProtocolCommandGroup.SORTEDSET, "rw"),
+
+	ZREVRANGE(ProtocolCommandGroup.SORTEDSET, "r"),
+
+	ZREVRANGEBYLEX(ProtocolCommandGroup.SORTEDSET, "rw"),
+
+	ZREVRANGEBYSCORE(ProtocolCommandGroup.SORTEDSET, "r"),
+
+	ZREVRANK(ProtocolCommandGroup.SORTEDSET, "r"),
+
+	ZSCAN(ProtocolCommandGroup.SORTEDSET, "r"),
+
+	ZSCORE(ProtocolCommandGroup.SORTEDSET, "r"),
+
+	ZUNIONSTORE(ProtocolCommandGroup.SORTEDSET, "rw"),
+	/**
+	 * sorted set command end
+	 **/
 		---
 
 	/**
@@ -389,54 +441,6 @@ public enum ProtocolCommand {
 
 	STRLEN(ProtocolCommandGroup.STRING, "r"),
 	/** string command end **/
-
-	/**
-	 * sorted set command start
-	 **/
-	ZADD(ProtocolCommandGroup.SORTEDSET, "rw"),
-
-	ZSCORE(ProtocolCommandGroup.SORTEDSET, "r"),
-
-	ZINCRBY(ProtocolCommandGroup.SORTEDSET, "rw"),
-
-	ZCARD(ProtocolCommandGroup.SORTEDSET, "r"),
-
-	ZCOUNT(ProtocolCommandGroup.SORTEDSET, "r"),
-
-	ZRANGE(ProtocolCommandGroup.SORTEDSET, "r"),
-
-	ZREVRANGE(ProtocolCommandGroup.SORTEDSET, "r"),
-
-	ZRANGEBYSCORE(ProtocolCommandGroup.SORTEDSET, "r"),
-
-	ZREVRANGEBYSCORE(ProtocolCommandGroup.SORTEDSET, "r"),
-
-	ZRANK(ProtocolCommandGroup.SORTEDSET, "r"),
-
-	ZREVRANK(ProtocolCommandGroup.SORTEDSET, "r"),
-
-	ZREM(ProtocolCommandGroup.SORTEDSET, "rw"),
-
-	ZREMRANGEBYRANK(ProtocolCommandGroup.SORTEDSET, "rw"),
-
-	ZREMRANGEBYSCORE(ProtocolCommandGroup.SORTEDSET, "rw"),
-
-	ZRANGEBYLEX(ProtocolCommandGroup.SORTEDSET, "rw"),
-
-	ZLEXCOUNT(ProtocolCommandGroup.SORTEDSET, "rw"),
-
-	ZREMRANGEBYLEX(ProtocolCommandGroup.SORTEDSET, "rw"),
-
-	ZREVRANGEBYLEX(ProtocolCommandGroup.SORTEDSET, "rw"),
-
-	ZSCAN(ProtocolCommandGroup.SORTEDSET, "r"),
-
-	ZINTERSTORE(ProtocolCommandGroup.SORTEDSET, "rw"),
-
-	ZUNIONSTORE(ProtocolCommandGroup.SORTEDSET, "rw"),
-	/**
-	 * sorted set command end
-	 **/
 
 	/**
 	 * bitmap command start

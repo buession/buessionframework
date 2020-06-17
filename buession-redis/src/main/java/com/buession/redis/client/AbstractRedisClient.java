@@ -446,78 +446,34 @@ public abstract class AbstractRedisClient implements RedisClient {
 		return sScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
-	/*@Override
-	public Long incrBy(final String key, final int value){
-		return incrBy(key, (long) value);
+	@Override
+	public Long zCount(final String key, final float min, final float max){
+		return zCount(key, (double) min, (double) max);
 	}
 
 	@Override
-	public Long incrBy(final byte[] key, final int value){
-		return incrBy(key, (long) value);
+	public Long zCount(final byte[] key, final float min, final float max){
+		return zCount(key, (double) min, (double) max);
 	}
 
 	@Override
-	public Double incrByFloat(final String key, final float value){
-		return incrByFloat(key, (double) value);
+	public Long zCount(final String key, final int min, final int max){
+		return zCount(key, (double) min, (double) max);
 	}
 
 	@Override
-	public Double incrByFloat(final byte[] key, final float value){
-		return incrByFloat(key, (double) value);
+	public Long zCount(final byte[] key, final int min, final int max){
+		return zCount(key, (double) min, (double) max);
 	}
 
 	@Override
-	public Long decrBy(final String key, final int value){
-		return decrBy(key, (long) value);
+	public Long zCount(final String key, final long min, final long max){
+		return zCount(key, (double) min, (double) max);
 	}
 
 	@Override
-	public Long decrBy(final byte[] key, final int value){
-		return decrBy(key, (long) value);
-	}
-
-	@Override
-	public Long setRange(final String key, final int offset, final String value){
-		return setRange(key, (long) offset, value);
-	}
-
-	@Override
-	public Long setRange(final byte[] key, final int offset, final byte[] value){
-		return setRange(key, (long) offset, value);
-	}
-
-	@Override
-	public String getRange(final String key, final int start, final int end){
-		return getRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public byte[] getRange(final byte[] key, final int start, final int end){
-		return getRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public String substr(final String key, final long start, final long end){
-		return substr(key, (int) start, (int) end);
-	}
-
-	@Override
-	public byte[] substr(final byte[] key, final long start, final long end){
-		return substr(key, (int) start, (int) end);
-	}
-
-	@Override
-	public Long zAdd(final String key, final List<KeyValue<String, Number>> members){
-		final Map<String, Number> data = members.stream().collect(Collectors.toMap(KeyValue::getKey,
-				KeyValue::getValue, (oldVal, currVal)->currVal, LinkedHashMap::new));
-		return zAdd(key, data);
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final List<KeyValue<byte[], Number>> members){
-		final Map<byte[], Number> data = members.stream().collect(Collectors.toMap(KeyValue::getKey,
-				KeyValue::getValue, (oldVal, currVal)->currVal, LinkedHashMap::new));
-		return zAdd(key, data);
+	public Long zCount(final byte[] key, final long min, final long max){
+		return zCount(key, (double) min, (double) max);
 	}
 
 	@Override
@@ -551,33 +507,43 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
-	public Long zCount(final String key, final float min, final float max){
-		return zCount(key, (double) min, (double) max);
+	public Long zLexCount(final String key, final float min, final float max){
+		return zLexCount(key, Float.toString(min), Float.toString(max));
 	}
 
 	@Override
-	public Long zCount(final byte[] key, final float min, final float max){
-		return zCount(key, (double) min, (double) max);
+	public Long zLexCount(final byte[] key, final float min, final float max){
+		return zLexCount(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
 	}
 
 	@Override
-	public Long zCount(final String key, final int min, final int max){
-		return zCount(key, (double) min, (double) max);
+	public Long zLexCount(final String key, final double min, final double max){
+		return zLexCount(key, Double.toString(min), Double.toString(max));
 	}
 
 	@Override
-	public Long zCount(final byte[] key, final int min, final int max){
-		return zCount(key, (double) min, (double) max);
+	public Long zLexCount(final byte[] key, final double min, final double max){
+		return zLexCount(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
 	}
 
 	@Override
-	public Long zCount(final String key, final long min, final long max){
-		return zCount(key, (double) min, (double) max);
+	public Long zLexCount(final String key, final int min, final int max){
+		return zLexCount(key, Integer.toString(min), Integer.toString(max));
 	}
 
 	@Override
-	public Long zCount(final byte[] key, final long min, final long max){
-		return zCount(key, (double) min, (double) max);
+	public Long zLexCount(final byte[] key, final int min, final int max){
+		return zLexCount(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
+	}
+
+	@Override
+	public Long zLexCount(final String key, final long min, final long max){
+		return zLexCount(key, Long.toString(min), Long.toString(max));
+	}
+
+	@Override
+	public Long zLexCount(final byte[] key, final long min, final long max){
+		return zLexCount(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
 	}
 
 	@Override
@@ -598,6 +564,92 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public Set<Tuple> zRangeWithScores(final byte[] key, final int start, final int end){
 		return zRangeWithScores(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final float min, final float max){
+		return zRangeByLex(key, Float.toString(min), Float.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max){
+		return zRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final double min, final double max){
+		return zRangeByLex(key, Double.toString(min), Double.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max){
+		return zRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final int min, final int max){
+		return zRangeByLex(key, Integer.toString(min), Integer.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max){
+		return zRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final long min, final long max){
+		return zRangeByLex(key, Long.toString(min), Long.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max){
+		return zRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final float min, final float max, final int offset,
+			final int count){
+		return zRangeByLex(key, Float.toString(min), Float.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return zRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final double min, final double max, final int offset,
+			final int count){
+		return zRangeByLex(key, Double.toString(min), Double.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final int offset,
+			final int count){
+		return zRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final int min, final int max, final int offset, final int count){
+		return zRangeByLex(key, Integer.toString(min), Integer.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max, final int offset, final int count){
+		return zRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final long min, final long max, final int offset,
+			final int count){
+		return zRangeByLex(key, Long.toString(min), Long.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return zRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max), offset, count);
 	}
 
 	@Override
@@ -733,129 +785,23 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
-	public Set<String> zRangeByLex(final String key, final float min, final float max){
-		return zRangeByLex(key, Float.toString(min), Float.toString(max));
+	public Set<Tuple> zPopMax(final String key, final long count){
+		return zPopMax(key, (int) count);
 	}
 
 	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max){
-		return zRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
+	public Set<Tuple> zPopMax(final byte[] key, final long count){
+		return zPopMax(key, (int) count);
 	}
 
 	@Override
-	public Set<String> zRangeByLex(final String key, final double min, final double max){
-		return zRangeByLex(key, Double.toString(min), Double.toString(max));
+	public Set<Tuple> zPopMin(final String key, final long count){
+		return zPopMin(key, (int) count);
 	}
 
 	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max){
-		return zRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final int min, final int max){
-		return zRangeByLex(key, Integer.toString(min), Integer.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max){
-		return zRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final long min, final long max){
-		return zRangeByLex(key, Long.toString(min), Long.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max){
-		return zRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final float min, final float max, final int offset,
-			final int count){
-		return zRangeByLex(key, Float.toString(min), Float.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max, final int offset,
-			final int count){
-		return zRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final double min, final double max, final int offset,
-			final int count){
-		return zRangeByLex(key, Double.toString(min), Double.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final int offset,
-			final int count){
-		return zRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final int min, final int max, final int offset, final int count){
-		return zRangeByLex(key, Integer.toString(min), Integer.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max, final int offset, final int count){
-		return zRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final long min, final long max, final int offset,
-			final int count){
-		return zRangeByLex(key, Long.toString(min), Long.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max, final int offset,
-			final int count){
-		return zRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max), offset, count);
-	}
-
-	@Override
-	public Long zRemRangeByRank(final String key, final int start, final int end){
-		return zRemRangeByRank(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Long zRemRangeByRank(final byte[] key, final int start, final int end){
-		return zRemRangeByRank(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final String key, final float min, final float max){
-		return zRemRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final float min, final float max){
-		return zRemRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final String key, final int min, final int max){
-		return zRemRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final int min, final int max){
-		return zRemRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final String key, final long min, final long max){
-		return zRemRangeByScore(key, (double) min, (double) max);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final long min, final long max){
-		return zRemRangeByScore(key, (double) min, (double) max);
+	public Set<Tuple> zPopMin(final byte[] key, final long count){
+		return zPopMin(key, (int) count);
 	}
 
 	@Override
@@ -899,6 +845,46 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
+	public Long zRemRangeByScore(final String key, final float min, final float max){
+		return zRemRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final float min, final float max){
+		return zRemRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final int min, final int max){
+		return zRemRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final int min, final int max){
+		return zRemRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final long min, final long max){
+		return zRemRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final long min, final long max){
+		return zRemRangeByScore(key, (double) min, (double) max);
+	}
+
+	@Override
+	public Long zRemRangeByRank(final String key, final int start, final int end){
+		return zRemRangeByRank(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Long zRemRangeByRank(final byte[] key, final int start, final int end){
+		return zRemRangeByRank(key, (long) start, (long) end);
+	}
+
+	@Override
 	public Set<String> zRevRange(final String key, final int start, final int end){
 		return zRevRange(key, (long) start, (long) end);
 	}
@@ -916,6 +902,94 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public Set<Tuple> zRevRangeWithScores(final byte[] key, final int start, final int end){
 		return zRevRangeWithScores(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final float min, final float max){
+		return zRevRangeByLex(key, Float.toString(min), Float.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max){
+		return zRevRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final double min, final double max){
+		return zRevRangeByLex(key, Double.toString(min), Double.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max){
+		return zRevRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final int min, final int max){
+		return zRevRangeByLex(key, Integer.toString(min), Integer.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max){
+		return zRevRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final long min, final long max){
+		return zRevRangeByLex(key, Long.toString(min), Long.toString(max));
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max){
+		return zRevRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final float min, final float max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, Float.toString(min), Float.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final double min, final double max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, Double.toString(min), Double.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final int min, final int max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, Integer.toString(min), Integer.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(final String key, final long min, final long max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, Long.toString(min), Long.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max, final int offset,
+			final int count){
+		return zRevRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max), offset, count);
 	}
 
 	@Override
@@ -1051,134 +1125,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
-	public Set<String> zRevRangeByLex(final String key, final float min, final float max){
-		return zRevRangeByLex(key, Float.toString(min), Float.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max){
-		return zRevRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final double min, final double max){
-		return zRevRangeByLex(key, Double.toString(min), Double.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max){
-		return zRevRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final int min, final int max){
-		return zRevRangeByLex(key, Integer.toString(min), Integer.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max){
-		return zRevRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final long min, final long max){
-		return zRevRangeByLex(key, Long.toString(min), Long.toString(max));
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max){
-		return zRevRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final float min, final float max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, Float.toString(min), Float.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final float min, final float max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final double min, final double max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, Double.toString(min), Double.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final int min, final int max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, Integer.toString(min), Integer.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final int min, final int max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final long min, final long max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, Long.toString(min), Long.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max, final int offset,
-			final int count){
-		return zRevRangeByLex(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max), offset, count);
-	}
-
-	@Override
-	public Long zLexCount(final String key, final float min, final float max){
-		return zLexCount(key, Float.toString(min), Float.toString(max));
-	}
-
-	@Override
-	public Long zLexCount(final byte[] key, final float min, final float max){
-		return zLexCount(key, NumberUtils.float2bytes(min), NumberUtils.float2bytes(max));
-	}
-
-	@Override
-	public Long zLexCount(final String key, final double min, final double max){
-		return zLexCount(key, Double.toString(min), Double.toString(max));
-	}
-
-	@Override
-	public Long zLexCount(final byte[] key, final double min, final double max){
-		return zLexCount(key, NumberUtils.double2bytes(min), NumberUtils.double2bytes(max));
-	}
-
-	@Override
-	public Long zLexCount(final String key, final int min, final int max){
-		return zLexCount(key, Integer.toString(min), Integer.toString(max));
-	}
-
-	@Override
-	public Long zLexCount(final byte[] key, final int min, final int max){
-		return zLexCount(key, NumberUtils.int2bytes(min), NumberUtils.int2bytes(max));
-	}
-
-	@Override
-	public Long zLexCount(final String key, final long min, final long max){
-		return zLexCount(key, Long.toString(min), Long.toString(max));
-	}
-
-	@Override
-	public Long zLexCount(final byte[] key, final long min, final long max){
-		return zLexCount(key, NumberUtils.long2bytes(min), NumberUtils.long2bytes(max));
-	}
-
-	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final int cursor){
 		return zScan(key, Integer.toString(cursor));
 	}
@@ -1256,6 +1202,66 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public ScanResult<List<Tuple>> zScan(byte[] key, long cursor, byte[] pattern, int count){
 		return zScan(key, NumberUtils.long2bytes(cursor), pattern, count);
+	}
+
+	/*@Override
+	public Long incrBy(final String key, final int value){
+		return incrBy(key, (long) value);
+	}
+
+	@Override
+	public Long incrBy(final byte[] key, final int value){
+		return incrBy(key, (long) value);
+	}
+
+	@Override
+	public Double incrByFloat(final String key, final float value){
+		return incrByFloat(key, (double) value);
+	}
+
+	@Override
+	public Double incrByFloat(final byte[] key, final float value){
+		return incrByFloat(key, (double) value);
+	}
+
+	@Override
+	public Long decrBy(final String key, final int value){
+		return decrBy(key, (long) value);
+	}
+
+	@Override
+	public Long decrBy(final byte[] key, final int value){
+		return decrBy(key, (long) value);
+	}
+
+	@Override
+	public Long setRange(final String key, final int offset, final String value){
+		return setRange(key, (long) offset, value);
+	}
+
+	@Override
+	public Long setRange(final byte[] key, final int offset, final byte[] value){
+		return setRange(key, (long) offset, value);
+	}
+
+	@Override
+	public String getRange(final String key, final int start, final int end){
+		return getRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public byte[] getRange(final byte[] key, final int start, final int end){
+		return getRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public String substr(final String key, final long start, final long end){
+		return substr(key, (int) start, (int) end);
+	}
+
+	@Override
+	public byte[] substr(final byte[] key, final long start, final long end){
+		return substr(key, (int) start, (int) end);
 	}
 
 	@Override

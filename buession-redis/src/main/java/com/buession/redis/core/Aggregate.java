@@ -22,45 +22,15 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
-
-import com.buession.redis.core.Aggregate;
-import com.buession.redis.core.convert.Convert;
-import redis.clients.jedis.ZParams;
+package com.buession.redis.core;
 
 /**
  * @author Yong.Teng
  */
-public class AggregateConvert implements Convert<Aggregate, ZParams.Aggregate> {
+public enum Aggregate {
+	SUM,
 
-	@Override
-	public ZParams.Aggregate convert(final Aggregate source){
-		switch(source){
-			case MIN:
-				return ZParams.Aggregate.MIN;
-			case MAX:
-				return ZParams.Aggregate.MAX;
-			case SUM:
-				return ZParams.Aggregate.SUM;
-			default:
-				return null;
+	MIN,
 
-		}
-	}
-
-	@Override
-	public Aggregate deconvert(final ZParams.Aggregate target){
-		switch(target){
-			case MIN:
-				return Aggregate.MIN;
-			case MAX:
-				return Aggregate.MAX;
-			case SUM:
-				return Aggregate.SUM;
-			default:
-				return null;
-
-		}
-	}
-
+	MAX
 }

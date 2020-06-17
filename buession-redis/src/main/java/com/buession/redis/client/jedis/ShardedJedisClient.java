@@ -1020,6 +1020,451 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 					new JedisScanParams(pattern, count))));
 		}
 	}
+
+	@Override
+	public Long zAdd(final byte[] key, final Map<byte[], Number> members){
+		final Map<byte[], Double> data = new LinkedHashMap<>(members.size());
+
+		members.forEach((k, v)->data.put(k, v.doubleValue()));
+
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zadd(key, data).get());
+		}else{
+			return execute((cmd)->cmd.zadd(key, data));
+		}
+	}
+
+	@Override
+	public Long zCard(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zcard(key).get());
+		}else{
+			return execute((cmd)->cmd.zcard(key));
+		}
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final double min, final double max){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zcount(key, min, max).get());
+		}else{
+			return execute((cmd)->cmd.zcount(key, min, max));
+		}
+	}
+
+	@Override
+	public Long zCount(final byte[] key, final byte[] min, final byte[] max){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zcount(key, min, max).get());
+		}else{
+			return execute((cmd)->cmd.zcount(key, min, max));
+		}
+	}
+
+	@Override
+	public Double zIncrBy(final byte[] key, final byte[] member, final double increment){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zincrby(key, increment, member).get());
+		}else{
+			return execute((cmd)->cmd.zincrby(key, increment, member));
+		}
+	}
+
+	@Override
+	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zlexcount(key, min, max).get());
+		}else{
+			return execute((cmd)->cmd.zlexcount(key, min, max));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRange(final byte[] key, final long start, final long end){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrange(key, start, end).get());
+		}else{
+			return execute((cmd)->cmd.zrange(key, start, end));
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRangeWithScores(final byte[] key, final long start, final long end){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeWithScores(key, start,
+					end).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeWithScores(key, start, end)));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrangeByLex(key, min, max).get());
+		}else{
+			return execute((cmd)->cmd.zrangeByLex(key, min, max));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
+			final int count){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrangeByLex(key, min, max, offset, count).get());
+		}else{
+			return execute((cmd)->cmd.zrangeByLex(key, min, max, offset, count));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get());
+		}else{
+			return execute((cmd)->cmd.zrangeByScore(key, min, max));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get());
+		}else{
+			return execute((cmd)->cmd.zrangeByScore(key, min, max));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final int offset,
+			final int count){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get());
+		}else{
+			return execute((cmd)->cmd.zrangeByScore(key, min, max));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
+			final int count){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrangeByScore(key, min, max, offset, count).get());
+		}else{
+			return execute((cmd)->cmd.zrangeByScore(key, min, max, offset, count));
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
+					, max).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)));
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
+					, max).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)));
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
+			final int count){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
+					, max, offset, count).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max, offset
+					, count)));
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int offset,
+			final int count){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
+					, max, offset, count).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max, offset
+					, count)));
+		}
+	}
+
+	@Override
+	public Long zRank(final byte[] key, final byte[] member){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrank(key, member).get());
+		}else{
+			return execute((cmd)->cmd.zrank(key, member));
+		}
+	}
+
+	@Override
+	public Tuple zPopMax(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.tupleDeconvert(getTransaction().zpopmax(key).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.tupleDeconvert(cmd.zpopmax(key)));
+		}
+	}
+
+	@Override
+	public Set<Tuple> zPopMax(final byte[] key, final int count){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zpopmax(key, count).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zpopmax(key, count)));
+		}
+	}
+
+	@Override
+	public Tuple zPopMin(final byte[] key){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.tupleDeconvert(getTransaction().zpopmin(key).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.tupleDeconvert(cmd.zpopmin(key)));
+		}
+	}
+
+	@Override
+	public Set<Tuple> zPopMin(final byte[] key, final int count){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zpopmin(key, count).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zpopmin(key, count)));
+		}
+	}
+
+	@Override
+	public Long zRem(final byte[] key, final byte[]... members){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrem(key, members).get());
+		}else{
+			return execute((cmd)->cmd.zrem(key, members));
+		}
+	}
+
+	@Override
+	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zremrangeByLex(key, min, max).get());
+		}else{
+			return execute((cmd)->getTransaction().zremrangeByLex(key, min, max).get());
+		}
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final double min, final double max){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get());
+		}else{
+			return execute((cmd)->cmd.zremrangeByScore(key, min, max));
+		}
+	}
+
+	@Override
+	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get());
+		}else{
+			return execute((cmd)->cmd.zremrangeByScore(key, min, max));
+		}
+	}
+
+	@Override
+	public Long zRemRangeByRank(final byte[] key, final long start, final long end){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zremrangeByRank(key, start, end).get());
+		}else{
+			return execute((cmd)->cmd.zremrangeByRank(key, start, end));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRevRange(final byte[] key, final long start, final long end){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrange(key, start, end).get());
+		}else{
+			return execute((cmd)->cmd.zrevrange(key, start, end));
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeWithScores(key, start,
+					end).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeWithScores(key, start, end)));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max).get());
+		}else{
+			return execute((cmd)->cmd.zrevrangeByLex(key, min, max));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
+			final int count){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max, offset, count).get());
+		}else{
+			return execute((cmd)->cmd.zrevrangeByLex(key, min, max, offset, count));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get());
+		}else{
+			return execute((cmd)->cmd.zrevrangeByScore(key, min, max));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get());
+		}else{
+			return execute((cmd)->cmd.zrevrangeByScore(key, min, max));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset,
+			final int count){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get());
+		}else{
+			return execute((cmd)->cmd.zrevrangeByScore(key, min, max, offset, count));
+		}
+	}
+
+	@Override
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
+			final int count){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get());
+		}else{
+			return execute((cmd)->cmd.zrevrangeByScore(key, min, max, offset, count));
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
+					min, max).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)));
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
+					min, max).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)));
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
+			final int offset, final int count){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
+					min, max, offset, count).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max,
+					offset, count)));
+		}
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
+			final int offset, final int count){
+		if(isTransaction()){
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
+					min, max, offset, count).get()));
+		}else{
+			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max,
+					offset, count)));
+		}
+	}
+
+	@Override
+	public Long zRevRank(final byte[] key, final byte[] member){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zrevrank(key, member).get());
+		}else{
+			return execute((cmd)->cmd.zrevrank(key, member));
+		}
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor)));
+		}
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
+					new JedisScanParams(pattern))));
+		}
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
+					new JedisScanParams(count))));
+		}
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
+					new JedisScanParams(pattern, count))));
+		}
+	}
+
+	@Override
+	public Double zScore(final byte[] key, final byte[] member){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().zscore(key, member).get());
+		}else{
+			return execute((cmd)->cmd.zscore(key, member));
+		}
+	}
 /*
 
 	@Override
@@ -1192,415 +1637,6 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 			return execute((cmd)->getTransaction().scard(key).get());
 		}else{
 			return execute((cmd)->cmd.scard(key));
-		}
-	}
-
-	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Number> members){
-		final Map<byte[], Double> data = new LinkedHashMap<>(members.size());
-
-		members.forEach((k, v)->data.put(k, v.doubleValue()));
-
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zadd(key, data).get());
-		}else{
-			return execute((cmd)->cmd.zadd(key, data));
-		}
-	}
-
-	@Override
-	public Double zScore(final byte[] key, final byte[] member){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zscore(key, member).get());
-		}else{
-			return execute((cmd)->cmd.zscore(key, member));
-		}
-	}
-
-	@Override
-	public Long zCard(final byte[] key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zcard(key).get());
-		}else{
-			return execute((cmd)->cmd.zcard(key));
-		}
-	}
-
-	@Override
-	public Double zIncrBy(final byte[] key, final byte[] member, final double increment){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zincrby(key, increment, member).get());
-		}else{
-			return execute((cmd)->cmd.zincrby(key, increment, member));
-		}
-	}
-
-	@Override
-	public Long zCount(final byte[] key, final double min, final double max){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zcount(key, min, max).get());
-		}else{
-			return execute((cmd)->cmd.zcount(key, min, max));
-		}
-	}
-
-	@Override
-	public Long zCount(final byte[] key, final byte[] min, final byte[] max){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zcount(key, min, max).get());
-		}else{
-			return execute((cmd)->cmd.zcount(key, min, max));
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRange(final byte[] key, final long start, final long end){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrange(key, start, end).get());
-		}else{
-			return execute((cmd)->cmd.zrange(key, start, end));
-		}
-	}
-
-	@Override
-	public Set<Tuple> zRangeWithScores(final byte[] key, final long start, final long end){
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeWithScores(key, start,
-					end).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeWithScores(key, start, end)));
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get());
-		}else{
-			return execute((cmd)->cmd.zrangeByScore(key, min, max));
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get());
-		}else{
-			return execute((cmd)->cmd.zrangeByScore(key, min, max));
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final int offset,
-			final int count){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrangeByScore(key, min, max).get());
-		}else{
-			return execute((cmd)->cmd.zrangeByScore(key, min, max));
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
-			final int count){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrangeByScore(key, min, max, offset, count).get());
-		}else{
-			return execute((cmd)->cmd.zrangeByScore(key, min, max, offset, count));
-		}
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max){
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
-					, max).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)));
-		}
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
-					, max).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)));
-		}
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
-			final int count){
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
-					, max, offset, count).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max, offset
-					, count)));
-		}
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int offset,
-			final int count){
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
-					, max, offset, count).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max, offset
-					, count)));
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrangeByLex(key, min, max).get());
-		}else{
-			return execute((cmd)->cmd.zrangeByLex(key, min, max));
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
-			final int count){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrangeByLex(key, min, max, offset, count).get());
-		}else{
-			return execute((cmd)->cmd.zrangeByLex(key, min, max, offset, count));
-		}
-	}
-
-	@Override
-	public Long zRank(final byte[] key, final byte[] member){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrank(key, member).get());
-		}else{
-			return execute((cmd)->cmd.zrank(key, member));
-		}
-	}
-
-	@Override
-	public Long zRevRank(final byte[] key, final byte[] member){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrank(key, member).get());
-		}else{
-			return execute((cmd)->cmd.zrevrank(key, member));
-		}
-	}
-
-	@Override
-	public Long zRem(final byte[] key, final byte[]... members){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrem(key, members).get());
-		}else{
-			return execute((cmd)->cmd.zrem(key, members));
-		}
-	}
-
-	@Override
-	public Long zRemRangeByRank(final byte[] key, final long start, final long end){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zremrangeByRank(key, start, end).get());
-		}else{
-			return execute((cmd)->cmd.zremrangeByRank(key, start, end));
-		}
-	}
-
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final double min, final double max){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get());
-		}else{
-			return execute((cmd)->cmd.zremrangeByScore(key, min, max));
-		}
-	}
-
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zremrangeByScore(key, min, max).get());
-		}else{
-			return execute((cmd)->cmd.zremrangeByScore(key, min, max));
-		}
-	}
-
-	@Override
-	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zremrangeByLex(key, min, max).get());
-		}else{
-			return execute((cmd)->getTransaction().zremrangeByLex(key, min, max).get());
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRevRange(final byte[] key, final long start, final long end){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrange(key, start, end).get());
-		}else{
-			return execute((cmd)->cmd.zrevrange(key, start, end));
-		}
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end){
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeWithScores(key, start,
-					end).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeWithScores(key, start, end)));
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get());
-		}else{
-			return execute((cmd)->cmd.zrevrangeByScore(key, min, max));
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max).get());
-		}else{
-			return execute((cmd)->cmd.zrevrangeByScore(key, min, max));
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset,
-			final int count){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get());
-		}else{
-			return execute((cmd)->cmd.zrevrangeByScore(key, min, max, offset, count));
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
-			final int count){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrangeByScore(key, min, max, offset, count).get());
-		}else{
-			return execute((cmd)->cmd.zrevrangeByScore(key, min, max, offset, count));
-		}
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max){
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
-					min, max).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)));
-		}
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
-					min, max).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)));
-		}
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
-			final int offset, final int count){
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
-					min, max, offset, count).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max,
-					offset, count)));
-		}
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
-			final int offset, final int count){
-		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
-					min, max, offset, count).get()));
-		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max,
-					offset, count)));
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max).get());
-		}else{
-			return execute((cmd)->cmd.zrevrangeByLex(key, min, max));
-		}
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
-			final int count){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zrevrangeByLex(key, min, max, offset, count).get());
-		}else{
-			return execute((cmd)->cmd.zrevrangeByLex(key, min, max, offset, count));
-		}
-	}
-
-	@Override
-	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().zlexcount(key, min, max).get());
-		}else{
-			return execute((cmd)->cmd.zlexcount(key, min, max));
-		}
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor)));
-		}
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
-					new JedisScanParams(pattern))));
-		}
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
-					new JedisScanParams(count))));
-		}
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
-					new JedisScanParams(pattern, count))));
 		}
 	}
 

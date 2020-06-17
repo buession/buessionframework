@@ -25,11 +25,15 @@
 package com.buession.redis.core.operations;
 
 import com.buession.lang.KeyValue;
+import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.command.SortedSetCommands;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 有序集合运算
@@ -238,6 +242,44 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	}
 
 	/**
+	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd
+	 * .html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个 member 元素及其 score
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default Long zAdd(final String key, final List<KeyValue<String, Number>> members){
+		final Map<String, Number> data = members.stream().collect(Collectors.toMap(KeyValue::getKey,
+				KeyValue::getValue, (oldVal, currVal)->currVal, LinkedHashMap::new));
+		return zAdd(key, data);
+	}
+
+	/**
+	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd
+	 * .html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个 member 元素及其 score
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default Long zAdd(final byte[] key, final List<KeyValue<byte[], Number>> members){
+		final Map<byte[], Number> data = members.stream().collect(Collectors.toMap(KeyValue::getKey,
+				KeyValue::getValue, (oldVal, currVal)->currVal, LinkedHashMap::new));
+		return zAdd(key, data);
+	}
+
+	/**
 	 * 为有序集 key 的成员 member 的 score 值加上增量一
 	 *
 	 * @param key
@@ -263,34 +305,6 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 */
 	default Double zIncr(final byte[] key, final byte[] member){
 		return zIncrBy(key, member, 1);
-	}
-
-	/**
-	 * 移除有序集 key 中的成员，不存在的成员将被忽略
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		成员
-	 *
-	 * @return 被成功移除的成员的数量，不包括被忽略的成员
-	 */
-	default Long zRem(final String key, final String member){
-		return zRem(key, new String[]{member});
-	}
-
-	/**
-	 * 移除有序集 key 中的成员，不存在的成员将被忽略
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		成员
-	 *
-	 * @return 被成功移除的成员的数量，不包括被忽略的成员
-	 */
-	default Long zRem(final byte[] key, final byte[] member){
-		return zRem(key, new byte[][]{member});
 	}
 
 	/**
@@ -419,6 +433,34 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 */
 	default Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double weight, final byte[] key){
 		return zInterStore(destKey, aggregate, new double[]{weight}, new byte[][]{key});
+	}
+
+	/**
+	 * 移除有序集 key 中的成员，不存在的成员将被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 *
+	 * @return 被成功移除的成员的数量，不包括被忽略的成员
+	 */
+	default Long zRem(final String key, final String member){
+		return zRem(key, new String[]{member});
+	}
+
+	/**
+	 * 移除有序集 key 中的成员，不存在的成员将被忽略
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 *
+	 * @return 被成功移除的成员的数量，不包括被忽略的成员
+	 */
+	default Long zRem(final byte[] key, final byte[] member){
+		return zRem(key, new byte[][]{member});
 	}
 
 	/**
