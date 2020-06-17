@@ -24,8 +24,9 @@
  */
 package com.buession.redis.core.convert.jedis;
 
+import com.buession.core.convert.Convert;
+import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.StringCommands;
-import com.buession.redis.core.convert.Convert;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.params.SetParams;
 
@@ -34,55 +35,55 @@ import redis.clients.jedis.params.SetParams;
  */
 public class SetArgumentConvert implements Convert<StringCommands.SetArgument, SetParams> {
 
-    @Override
-    public SetParams convert(final StringCommands.SetArgument source){
-        if(source == null){
-            return null;
-        }
+	@Override
+	public SetParams encode(final StringCommands.SetArgument source){
+		if(source == null){
+			return null;
+		}
 
-        final SetParams setParams = new SetParams();
+		final SetParams setParams = new SetParams();
 
-        if(source.getEx() != null){
-            setParams.ex(source.getEx().intValue());
-        }
+		if(source.getEx() != null){
+			setParams.ex(source.getEx().intValue());
+		}
 
-        if(source.getPx() != null){
-            setParams.px(source.getPx().intValue());
-        }
+		if(source.getPx() != null){
+			setParams.px(source.getPx().intValue());
+		}
 
-        if(source.getNxXx() == StringCommands.NxXx.NX){
-            setParams.nx();
-        }else if(source.getNxXx() == StringCommands.NxXx.XX){
-            setParams.xx();
-        }
+		if(source.getNxXx() == NxXx.NX){
+			setParams.nx();
+		}else if(source.getNxXx() == NxXx.XX){
+			setParams.xx();
+		}
 
-        return setParams;
-    }
+		return setParams;
+	}
 
-    @Override
-    public StringCommands.SetArgument deconvert(final SetParams target){
-        if(target == null){
-            return null;
-        }
+	@Override
+	public StringCommands.SetArgument decode(final SetParams target){
+		if(target == null){
+			return null;
+		}
 
-        final StringCommands.SetArgument.Builder setArgumentBuilder = StringCommands.SetArgument.Builder.create();
-        byte[][] params = target.getByteParams();
+		final StringCommands.SetArgument.Builder setArgumentBuilder = StringCommands.SetArgument.Builder.create();
+		byte[][] params = target.getByteParams();
 
-        for(int i = 0; i < params.length; i++){
-            String s = SafeEncoder.encode(params[i]);
+		for(int i = 0; i < params.length; i++){
+			String s = SafeEncoder.encode(params[i]);
 
-            if("ex".equals(s)){
-                setArgumentBuilder.ex(Integer.valueOf(SafeEncoder.encode(params[++i])));
-            }else if("px".equals(s)){
-                setArgumentBuilder.px(Integer.valueOf(SafeEncoder.encode(params[++i])));
-            }else if("nx".equals(s)){
-                setArgumentBuilder.nxXX(StringCommands.NxXx.NX);
-            }else if("xx".equals(s)){
-                setArgumentBuilder.nxXX(StringCommands.NxXx.XX);
-            }
-        }
+			if("ex".equals(s)){
+				setArgumentBuilder.ex(Integer.valueOf(SafeEncoder.encode(params[++i])));
+			}else if("px".equals(s)){
+				setArgumentBuilder.px(Integer.valueOf(SafeEncoder.encode(params[++i])));
+			}else if("nx".equals(s)){
+				setArgumentBuilder.nxXX(NxXx.NX);
+			}else if("xx".equals(s)){
+				setArgumentBuilder.nxXX(NxXx.XX);
+			}
+		}
 
-        return setArgumentBuilder.build();
-    }
+		return setArgumentBuilder.build();
+	}
 
 }

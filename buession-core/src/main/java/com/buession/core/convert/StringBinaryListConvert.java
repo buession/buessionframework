@@ -22,11 +22,27 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command;
+package com.buession.core.convert;
+
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
  */
-public interface BinaryRedisCommands extends RedisCommands {
+public class StringBinaryListConvert implements Convert<List<String>, List<byte[]>> {
+
+	@Override
+	public List<byte[]> encode(final List<String> source){
+		return source == null ? null :
+				source.stream().map((value)->value.getBytes(StandardCharsets.UTF_8)).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<String> decode(final List<byte[]> target){
+		return target == null ? null :
+				target.stream().map((value)->new String(value, StandardCharsets.UTF_8)).collect(Collectors.toList());
+	}
 
 }

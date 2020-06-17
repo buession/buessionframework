@@ -26,6 +26,7 @@ package com.buession.redis.client;
 
 import com.buession.lang.Status;
 import com.buession.redis.core.Aggregate;
+import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientUnblockType;
@@ -294,6 +295,11 @@ public interface ShardedRedisClient extends RedisClient {
 	@Override
 	default void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
 		throw new NotSupportedCommandException(ProtocolCommand.PSUBSCRIBE);
+	}
+
+	@Override
+	default List<String> pubsubChannels(){
+		throw new NotSupportedCommandException(ProtocolCommand.PUBSUB);
 	}
 
 	@Override
@@ -662,6 +668,11 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
+	default Object sync(){
+		throw new NotSupportedCommandException(ProtocolCommand.SYNC);
+	}
+
+	@Override
 	default RedisServerTime time(){
 		throw new NotSupportedCommandException(ProtocolCommand.TIME);
 	}
@@ -819,16 +830,15 @@ public interface ShardedRedisClient extends RedisClient {
 			final byte[]... keys){
 		throw new NotSupportedCommandException(ProtocolCommand.ZUNIONSTORE);
 	}
-	/*
 
 	@Override
-	default Status mSet(final Map<String, String> values){
-		throw new NotSupportedCommandException(ProtocolCommand.MGET);
+	default Long bitOp(final BitOperation operation, final String destKey, final String... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.BITOP);
 	}
 
 	@Override
-	default Status mSetNx(final Map<String, String> values){
-		throw new NotSupportedCommandException(ProtocolCommand.MGET);
+	default Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys){
+		throw new NotSupportedCommandException(ProtocolCommand.BITOP);
 	}
 
 	@Override
@@ -842,18 +852,18 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
-	default Long bitOp(final Operation operation, final String destKey, final String... keys){
-		throw new NotSupportedCommandException(ProtocolCommand.BITOP);
+	default Status mSet(final Map<String, String> values){
+		throw new NotSupportedCommandException(ProtocolCommand.MGET);
 	}
 
 	@Override
-	default Long bitOp(final Operation operation, final byte[] destKey, final byte[]... keys){
-		throw new NotSupportedCommandException(ProtocolCommand.BITOP);
+	default Status mSetNx(final Map<String, String> values){
+		throw new NotSupportedCommandException(ProtocolCommand.MGET);
 	}
 
 	@Override
-	default Transaction multi(){
-		throw new NotSupportedCommandException(ProtocolCommand.MULTI);
+	default void discard(final Transaction transaction){
+		throw new NotSupportedCommandException(ProtocolCommand.DISCARD);
 	}
 
 	@Override
@@ -862,8 +872,13 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
-	default void discard(final Transaction transaction){
-		throw new NotSupportedCommandException(ProtocolCommand.DISCARD);
+	default Transaction multi(){
+		throw new NotSupportedCommandException(ProtocolCommand.MULTI);
+	}
+
+	@Override
+	default Status unwatch(){
+		throw new NotSupportedCommandException(ProtocolCommand.UNWATCH);
 	}
 
 	@Override
@@ -875,15 +890,5 @@ public interface ShardedRedisClient extends RedisClient {
 	default Status watch(final byte[]... keys){
 		throw new NotSupportedCommandException(ProtocolCommand.WATCH);
 	}
-
-	@Override
-	default Status unwatch(){
-		throw new NotSupportedCommandException(ProtocolCommand.UNWATCH);
-	}
-
-	@Override
-	default Object sync(){
-		throw new NotSupportedCommandException(ProtocolCommand.SYNC);
-	}*/
 
 }

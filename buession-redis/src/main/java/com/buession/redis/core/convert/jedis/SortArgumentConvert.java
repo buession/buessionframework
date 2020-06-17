@@ -24,9 +24,9 @@
  */
 package com.buession.redis.core.convert.jedis;
 
+import com.buession.core.convert.Convert;
 import com.buession.lang.Order;
 import com.buession.redis.core.SortArgument;
-import com.buession.redis.core.convert.Convert;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Protocol;
 import redis.clients.jedis.SortingParams;
@@ -40,7 +40,7 @@ import java.util.Iterator;
 public class SortArgumentConvert implements Convert<SortArgument, SortingParams> {
 
 	@Override
-	public SortingParams convert(final SortArgument source){
+	public SortingParams encode(final SortArgument source){
 		if(source == null){
 			return null;
 		}
@@ -69,7 +69,7 @@ public class SortArgumentConvert implements Convert<SortArgument, SortingParams>
 	}
 
 	@Override
-	public SortArgument deconvert(final SortingParams target){
+	public SortArgument decode(final SortingParams target){
 		if(target == null){
 			return null;
 		}

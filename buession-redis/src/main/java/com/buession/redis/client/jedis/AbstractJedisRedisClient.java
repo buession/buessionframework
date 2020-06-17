@@ -37,9 +37,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
-import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.transaction.jedis.JedisTransaction;
@@ -90,7 +88,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
-		final Map<String, GeoCoordinate> memberCoordinateMap = JedisClientUtils.geoMapConvert(memberCoordinates);
+		final Map<String, GeoCoordinate> memberCoordinateMap = JedisClientUtils.geoMapEncode(memberCoordinates);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().geoadd(key, memberCoordinateMap).get());
@@ -111,9 +109,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public List<Geo> geoPos(final String key, final String... members){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.geoListDeconvert(getTransaction().geopos(key, members).get()));
+			return execute((cmd)->JedisClientUtils.geoListDecode(getTransaction().geopos(key, members).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.geoListDeconvert(cmd.geopos(key, members)));
+			return execute((cmd)->JedisClientUtils.geoListDecode(cmd.geopos(key, members)));
 		}
 	}
 
@@ -128,7 +126,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitEncode(unit);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().geodist(key, member1, member2, geoUnit).get());
@@ -140,42 +138,42 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 			final double radius, final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitEncode(unit);
 
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDecode(getTransaction().georadius(key, longitude,
 					latitude, radius, geoUnit).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
-					radius, geoUnit)));
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDecode(cmd.georadius(key, longitude, latitude, radius,
+					geoUnit)));
 		}
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 			final double radius, final GeoUnit unit, final GeoArgument geoArgument){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitEncode(unit);
+		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentEncode(geoArgument);
 
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadius(key, longitude,
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDecode(getTransaction().georadius(key, longitude,
 					latitude, radius, geoUnit, geoRadiusParam).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadius(key, longitude, latitude,
-					radius, geoUnit, geoRadiusParam)));
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDecode(cmd.georadius(key, longitude, latitude, radius,
+					geoUnit, geoRadiusParam)));
 		}
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 			final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitEncode(unit);
 
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
-					member, radius, geoUnit).get()));
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDecode(getTransaction().georadiusByMember(key, member,
+					radius, geoUnit).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDecode(cmd.georadiusByMember(key, member, radius,
 					geoUnit)));
 		}
 	}
@@ -183,14 +181,14 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 			final GeoUnit unit, final GeoArgument geoArgument){
-		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitConvert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentConvert(geoArgument);
+		final redis.clients.jedis.GeoUnit geoUnit = JedisClientUtils.geoUnitEncode(unit);
+		final GeoRadiusParam geoRadiusParam = JedisClientUtils.geoArgumentEncode(geoArgument);
 
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(getTransaction().georadiusByMember(key,
-					member, radius, geoUnit, geoRadiusParam).get()));
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDecode(getTransaction().georadiusByMember(key, member,
+					radius, geoUnit, geoRadiusParam).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.listGeoRadiusDeconvert(cmd.georadiusByMember(key, member, radius,
+			return execute((cmd)->JedisClientUtils.listGeoRadiusDecode(cmd.georadiusByMember(key, member, radius,
 					geoUnit, geoRadiusParam)));
 		}
 	}
@@ -282,6 +280,46 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().hmset(key, data).get()));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)));
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultEncode(cmd.hscan(key, cursor)));
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultEncode(cmd.hscan(key, cursor,
+					new JedisScanParams(pattern))));
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultEncode(cmd.hscan(key, cursor,
+					new JedisScanParams(count))));
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
+			final int count){
+		if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
+		}else{
+			return execute((cmd)->JedisClientUtils.mapScanResultEncode(cmd.hscan(key, cursor,
+					new JedisScanParams(pattern, count))));
 		}
 	}
 
@@ -433,7 +471,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public List<String> sort(final String key, final SortArgument sortArgument){
-		final SortingParams soringParams = JedisClientUtils.sortArgumentConvert(sortArgument);
+		final SortingParams soringParams = JedisClientUtils.sortArgumentEncode(sortArgument);
 
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().sort(key, soringParams).get());
@@ -580,6 +618,24 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
+	public Long sAdd(final String key, final String... members){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().sadd(key, members).get());
+		}else{
+			return execute((cmd)->cmd.sadd(key, members));
+		}
+	}
+
+	@Override
+	public Long sCard(final String key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().scard(key).get());
+		}else{
+			return execute((cmd)->cmd.scard(key));
+		}
+	}
+
+	@Override
 	public boolean sisMember(final String key, final String member){
 		if(isTransaction()){
 			return execute((cmd)->cmd.sismember(key, member));
@@ -638,7 +694,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
 		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor)));
+			return execute((cmd)->JedisClientUtils.listScanResultDecode(cmd.sscan(key, cursor)));
 		}
 	}
 
@@ -647,7 +703,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
 		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+			return execute((cmd)->JedisClientUtils.listScanResultDecode(cmd.sscan(key, cursor,
 					new JedisScanParams(pattern))));
 		}
 	}
@@ -657,7 +713,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
 		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+			return execute((cmd)->JedisClientUtils.listScanResultDecode(cmd.sscan(key, cursor,
 					new JedisScanParams(count))));
 		}
 	}
@@ -668,7 +724,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
 		}else{
-			return execute((cmd)->JedisClientUtils.listScanResultDeconvert(cmd.sscan(key, cursor,
+			return execute((cmd)->JedisClientUtils.listScanResultDecode(cmd.sscan(key, cursor,
 					new JedisScanParams(pattern, count))));
 		}
 	}
@@ -743,10 +799,9 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public Set<Tuple> zRangeWithScores(final String key, final long start, final long end){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeWithScores(key, start,
-					end).get()));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(getTransaction().zrangeWithScores(key, start, end).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeWithScores(key, start, end)));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(cmd.zrangeWithScores(key, start, end)));
 		}
 	}
 
@@ -810,20 +865,20 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
-					, max).get()));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(getTransaction().zrangeByScoreWithScores(key, min,
+					max).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(cmd.zrangeByScoreWithScores(key, min, max)));
 		}
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
-					, max).get()));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(getTransaction().zrangeByScoreWithScores(key, min,
+					max).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max)));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(cmd.zrangeByScoreWithScores(key, min, max)));
 		}
 	}
 
@@ -831,11 +886,11 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
 			final int count){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
-					, max, offset, count).get()));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(getTransaction().zrangeByScoreWithScores(key, min,
+					max, offset, count).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max, offset
-					, count)));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(cmd.zrangeByScoreWithScores(key, min, max, offset,
+					count)));
 		}
 	}
 
@@ -843,11 +898,11 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final int offset,
 			final int count){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrangeByScoreWithScores(key, min
-					, max, offset, count).get()));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(getTransaction().zrangeByScoreWithScores(key, min,
+					max, offset, count).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrangeByScoreWithScores(key, min, max, offset
-					, count)));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(cmd.zrangeByScoreWithScores(key, min, max, offset,
+					count)));
 		}
 	}
 
@@ -863,36 +918,36 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public Tuple zPopMax(final String key){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.tupleDeconvert(getTransaction().zpopmax(key).get()));
+			return execute((cmd)->JedisClientUtils.tupleDecode(getTransaction().zpopmax(key).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.tupleDeconvert(cmd.zpopmax(key)));
+			return execute((cmd)->JedisClientUtils.tupleDecode(cmd.zpopmax(key)));
 		}
 	}
 
 	@Override
 	public Set<Tuple> zPopMax(final String key, final int count){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zpopmax(key, count).get()));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(getTransaction().zpopmax(key, count).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zpopmax(key, count)));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(cmd.zpopmax(key, count)));
 		}
 	}
 
 	@Override
 	public Tuple zPopMin(final String key){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.tupleDeconvert(getTransaction().zpopmin(key).get()));
+			return execute((cmd)->JedisClientUtils.tupleDecode(getTransaction().zpopmin(key).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.tupleDeconvert(cmd.zpopmin(key)));
+			return execute((cmd)->JedisClientUtils.tupleDecode(cmd.zpopmin(key)));
 		}
 	}
 
 	@Override
 	public Set<Tuple> zPopMin(final String key, final int count){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zpopmin(key, count).get()));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(getTransaction().zpopmin(key, count).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zpopmin(key, count)));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(cmd.zpopmin(key, count)));
 		}
 	}
 
@@ -953,10 +1008,10 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public Set<Tuple> zRevRangeWithScores(final String key, final long start, final long end){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeWithScores(key, start,
+			return execute((cmd)->JedisClientUtils.setTupleDecode(getTransaction().zrevrangeWithScores(key, start,
 					end).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeWithScores(key, start, end)));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(cmd.zrevrangeWithScores(key, start, end)));
 		}
 	}
 
@@ -1020,20 +1075,20 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
-					min, max).get()));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(getTransaction().zrevrangeByScoreWithScores(key, min
+					, max).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(cmd.zrevrangeByScoreWithScores(key, min, max)));
 		}
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
-					min, max).get()));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(getTransaction().zrevrangeByScoreWithScores(key, min
+					, max).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max)));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(cmd.zrevrangeByScoreWithScores(key, min, max)));
 		}
 	}
 
@@ -1041,11 +1096,11 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
 			final int offset, final int count){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
-					min, max, offset, count).get()));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(getTransaction().zrevrangeByScoreWithScores(key, min
+					, max, offset, count).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max,
-					offset, count)));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(cmd.zrevrangeByScoreWithScores(key, min, max, offset
+					, count)));
 		}
 	}
 
@@ -1053,11 +1108,11 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
 			final int offset, final int count){
 		if(isTransaction()){
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(getTransaction().zrevrangeByScoreWithScores(key,
-					min, max, offset, count).get()));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(getTransaction().zrevrangeByScoreWithScores(key, min
+					, max, offset, count).get()));
 		}else{
-			return execute((cmd)->JedisClientUtils.setTupleDeconvert(cmd.zrevrangeByScoreWithScores(key, min, max,
-					offset, count)));
+			return execute((cmd)->JedisClientUtils.setTupleDecode(cmd.zrevrangeByScoreWithScores(key, min, max, offset
+					, count)));
 		}
 	}
 
@@ -1075,7 +1130,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
 		}else{
-			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor)));
+			return execute((cmd)->JedisClientUtils.listTupleScanResultDecode(cmd.zscan(key, cursor)));
 		}
 	}
 
@@ -1084,7 +1139,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
 		}else{
-			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
+			return execute((cmd)->JedisClientUtils.listTupleScanResultDecode(cmd.zscan(key, cursor,
 					new JedisScanParams(pattern))));
 		}
 	}
@@ -1094,7 +1149,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
 		}else{
-			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
+			return execute((cmd)->JedisClientUtils.listTupleScanResultDecode(cmd.zscan(key, cursor,
 					new JedisScanParams(count))));
 		}
 	}
@@ -1104,7 +1159,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		if(isTransaction()){
 			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
 		}else{
-			return execute((cmd)->JedisClientUtils.listTupleScanResultDeconvert(cmd.zscan(key, cursor,
+			return execute((cmd)->JedisClientUtils.listTupleScanResultDecode(cmd.zscan(key, cursor,
 					new JedisScanParams(pattern, count))));
 		}
 	}
@@ -1118,56 +1173,6 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 		}
 	}
 
-/*
-
-	@Override
-	public Status set(final String key, final String value){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value)));
-		}
-	}
-
-	@Override
-	public Status set(final String key, final String value, final SetArgument setArgument){
-		final SetParams setParams = JedisClientUtils.setArgumentConvert(setArgument);
-
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value, setParams).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value, setParams)));
-		}
-	}
-
-	@Override
-	public Status setEx(final String key, final String value, final int lifetime){
-
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().setex(key, lifetime, value).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.setex(key, lifetime, value)));
-		}
-	}
-
-	@Override
-	public Status pSetEx(final String key, final String value, final int lifetime){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().psetex(key, lifetime, value).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.psetex(key, lifetime, value)));
-		}
-	}
-
-	@Override
-	public Status setNx(final String key, final String value){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setnx(key, value).get() > 0));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.setnx(key, value) > 0));
-		}
-	}
-
 	@Override
 	public Long append(final String key, final String value){
 		if(isTransaction()){
@@ -1178,11 +1183,92 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
+	public Long bitCount(final String key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitcount(key).get());
+		}else{
+			return execute((cmd)->cmd.bitcount(key));
+		}
+	}
+
+	@Override
+	public Long bitCount(final String key, final long start, final long end){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitcount(key, start, end).get());
+		}else{
+			return execute((cmd)->cmd.bitcount(key, start, end));
+		}
+	}
+
+	@Override
+	public List<Long> bitField(final String key, final String... arguments){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitfield(key, arguments).get());
+		}else{
+			return execute((cmd)->cmd.bitfield(key, arguments));
+		}
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitpos(key, value).get());
+		}else{
+			return execute((cmd)->cmd.bitpos(key, value));
+		}
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final int start, final int end){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().bitpos(key, value, new BitPosParams(start, end)).get());
+		}else{
+			return execute((cmd)->cmd.bitpos(key, value, new BitPosParams(start, end)));
+		}
+	}
+
+	@Override
+	public Long decr(final String key){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().decr(key).get());
+		}else{
+			return execute((cmd)->cmd.decr(key));
+		}
+	}
+
+	@Override
+	public Long decrBy(final String key, final long value){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().decrBy(key, value).get());
+		}else{
+			return execute((cmd)->cmd.decrBy(key, value));
+		}
+	}
+
+	@Override
 	public String get(final String key){
 		if(isTransaction()){
 			return execute((cmd)->getTransaction().get(key).get());
 		}else{
 			return execute((cmd)->cmd.get(key));
+		}
+	}
+
+	@Override
+	public Status getBit(final String key, final long offset){
+		if(isTransaction()){
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().getbit(key, offset).get()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.getbit(key, offset)));
+		}
+	}
+
+	@Override
+	public String getRange(final String key, final long start, final long end){
+		if(isTransaction()){
+			return execute((cmd)->getTransaction().getrange(key, start, end).get());
+		}else{
+			return execute((cmd)->cmd.getrange(key, start, end));
 		}
 	}
 
@@ -1223,123 +1309,31 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Long decr(final String key){
+	public Status pSetEx(final String key, final String value, final int lifetime){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().decr(key).get());
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().psetex(key, lifetime, value).get()));
 		}else{
-			return execute((cmd)->cmd.decr(key));
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.psetex(key, lifetime, value)));
 		}
 	}
 
 	@Override
-	public Long decrBy(final String key, final long value){
+	public Status set(final String key, final String value){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().decrBy(key, value).get());
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value).get()));
 		}else{
-			return execute((cmd)->cmd.decrBy(key, value));
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value)));
 		}
 	}
 
 	@Override
-	public Long setRange(final String key, final long offset, final String value){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().setrange(key, offset, value).get());
-		}else{
-			return execute((cmd)->cmd.setrange(key, offset, value));
-		}
-	}
+	public Status set(final String key, final String value, final SetArgument setArgument){
+		final SetParams setParams = JedisClientUtils.setArgumentEncode(setArgument);
 
-	@Override
-	public String getRange(final String key, final long start, final long end){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().getrange(key, start, end).get());
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().set(key, value, setParams).get()));
 		}else{
-			return execute((cmd)->cmd.getrange(key, start, end));
-		}
-	}
-
-	@Override
-	public String substr(final String key, final int start, final int end){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().substr(key, start, end).get());
-		}else{
-			return execute((cmd)->cmd.substr(key, start, end));
-		}
-	}
-
-	@Override
-	public Long strlen(final String key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().strlen(key).get());
-		}else{
-			return execute((cmd)->cmd.strlen(key));
-		}
-	}
-
-	@Override
-	public Status hMSet(final String key, final Map<String, String> data){
-		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().hmset(key, data).get()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)));
-		}
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor)));
-		}
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
-					new JedisScanParams(pattern))));
-		}
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
-					new JedisScanParams(count))));
-		}
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-			final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->JedisClientUtils.mapScanResultConvert(cmd.hscan(key, cursor,
-					new JedisScanParams(pattern, count))));
-		}
-	}
-
-	@Override
-	public Long sAdd(final String key, final String... members){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().sadd(key, members).get());
-		}else{
-			return execute((cmd)->cmd.sadd(key, members));
-		}
-	}
-
-	@Override
-	public Long sCard(final String key){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().scard(key).get());
-		}else{
-			return execute((cmd)->cmd.scard(key));
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value, setParams)));
 		}
 	}
 
@@ -1363,78 +1357,50 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Status getBit(final String key, final long offset){
+	public Status setEx(final String key, final String value, final int lifetime){
+
 		if(isTransaction()){
-			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().getbit(key, offset).get()));
+			return execute((cmd)->ReturnUtils.statusForOK(getTransaction().setex(key, lifetime, value).get()));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.getbit(key, offset)));
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.setex(key, lifetime, value)));
 		}
 	}
 
 	@Override
-	public Long bitPos(final String key, final boolean value){
+	public Status setNx(final String key, final String value){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitpos(key, value).get());
+			return execute((cmd)->ReturnUtils.statusForBool(getTransaction().setnx(key, value).get() > 0));
 		}else{
-			return execute((cmd)->cmd.bitpos(key, value));
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setnx(key, value) > 0));
 		}
 	}
 
 	@Override
-	public Long bitPos(final String key, final boolean value, final int start, final int end){
+	public Long setRange(final String key, final long offset, final String value){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitpos(key, value, new BitPosParams(start, end)).get());
+			return execute((cmd)->getTransaction().setrange(key, offset, value).get());
 		}else{
-			return execute((cmd)->cmd.bitpos(key, value, new BitPosParams(start, end)));
+			return execute((cmd)->cmd.setrange(key, offset, value));
 		}
 	}
 
 	@Override
-	public List<Long> bitField(final String key, final String... arguments){
+	public Long strlen(final String key){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitfield(key, arguments).get());
+			return execute((cmd)->getTransaction().strlen(key).get());
 		}else{
-			return execute((cmd)->cmd.bitfield(key, arguments));
+			return execute((cmd)->cmd.strlen(key));
 		}
 	}
 
 	@Override
-	public Long bitCount(final String key){
+	public String substr(final String key, final int start, final int end){
 		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitcount(key).get());
+			return execute((cmd)->getTransaction().substr(key, start, end).get());
 		}else{
-			return execute((cmd)->cmd.bitcount(key));
+			return execute((cmd)->cmd.substr(key, start, end));
 		}
 	}
-
-	@Override
-	public Long bitCount(final String key, final long start, final long end){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitcount(key, start, end).get());
-		}else{
-			return execute((cmd)->cmd.bitcount(key, start, end));
-		}
-	}
-
-	@Override
-	public Object pSync(final String masterRunId, final int offset){
-		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
-	}
-
-	@Override
-	public Object pSync(final byte[] masterRunId, final int offset){
-		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
-	}
-
-	@Override
-	public Object pSync(final String masterRunId, final long offset){
-		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
-	}
-
-	@Override
-	public Object pSync(final byte[] masterRunId, final long offset){
-		throw new NotSupportedCommandException(ProtocolCommand.PSYNC);
-	}*/
 
 	protected redis.clients.jedis.Transaction getTransaction(){
 		JedisTransaction jedisTransaction = (JedisTransaction) getConnection().getTransaction();

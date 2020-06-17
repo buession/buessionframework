@@ -28,6 +28,7 @@ import com.buession.core.utils.ReflectUtils;
 import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.core.Aggregate;
+import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.ListPosition;
@@ -38,6 +39,7 @@ import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.command.GeoCommands;
+import com.buession.redis.core.command.StringCommands;
 import com.buession.redis.core.convert.jedis.AggregateConvert;
 import com.buession.redis.core.convert.jedis.BitOperationConvert;
 import com.buession.redis.core.convert.jedis.GeoArgumentConvert;
@@ -107,88 +109,89 @@ public class JedisClientUtils {
 		return false;
 	}
 
-	public final static <V> ScanResult<List<V>> listScanResultDeconvert(final redis.clients.jedis.ScanResult<V> scanResult){
+	public final static <V> ScanResult<List<V>> listScanResultDecode(final redis.clients.jedis.ScanResult<V> scanResult){
 		final ScanResultConvert.ListScanResultConvert<V> scanResultConvert =
 				new ScanResultConvert.ListScanResultConvert<>();
-		return scanResultConvert.deconvert(scanResult);
+		return scanResultConvert.decode(scanResult);
 	}
 
-	public final static ScanResult<List<Tuple>> listTupleScanResultDeconvert(final redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple> scanResult){
+	public final static ScanResult<List<Tuple>> listTupleScanResultDecode(final redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple> scanResult){
 		final ScanResultConvert.ListTupleScanResultConvert scanResultConvert =
 				new ScanResultConvert.ListTupleScanResultConvert();
-		return scanResultConvert.deconvert(scanResult);
+		return scanResultConvert.decode(scanResult);
 	}
 
-	public final static <V> ScanResult<Map<V, V>> mapScanResultConvert(final redis.clients.jedis.ScanResult<Map.Entry<V, V>> scanResult){
+	public final static <V> ScanResult<Map<V, V>> mapScanResultEncode(final redis.clients.jedis.ScanResult<Map.Entry<V
+			, V>> scanResult){
 		final ScanResultConvert.MapScanResultConvert<V, V> scanResultConvert =
 				new ScanResultConvert.MapScanResultConvert<>();
-		return scanResultConvert.deconvert(scanResult);
+		return scanResultConvert.decode(scanResult);
 	}
 
-	public final static SortingParams sortArgumentConvert(final SortArgument sortArgument){
+	public final static SortingParams sortArgumentEncode(final SortArgument sortArgument){
 		final SortArgumentConvert sortArgumentConvert = new SortArgumentConvert();
-		return sortArgumentConvert.convert(sortArgument);
+		return sortArgumentConvert.encode(sortArgument);
 	}
 
-	public final static MigrateParams migrateOperationConvert(final MigrateOperation migrateOperation){
+	public final static MigrateParams migrateOperationEncode(final MigrateOperation migrateOperation){
 		final MigrateOperationConvert migrateOperationConvert = new MigrateOperationConvert();
-		return migrateOperationConvert.convert(migrateOperation);
+		return migrateOperationConvert.encode(migrateOperation);
 	}
 
-	public final static SetParams setArgumentConvert(final StringCommands.SetArgument setArgument){
+	public final static SetParams setArgumentEncode(final StringCommands.SetArgument setArgument){
 		final SetArgumentConvert setArgumentConvert = new SetArgumentConvert();
-		return setArgumentConvert.convert(setArgument);
+		return setArgumentConvert.encode(setArgument);
 	}
 
 	public final static redis.clients.jedis.ListPosition listPositionConvert(final ListPosition position){
 		final ListPositionConvert listPositionConvert = new ListPositionConvert();
-		return listPositionConvert.convert(position);
+		return listPositionConvert.encode(position);
 	}
 
-	public final static Tuple tupleDeconvert(final redis.clients.jedis.Tuple tuples){
+	public final static Tuple tupleDecode(final redis.clients.jedis.Tuple tuples){
 		final TupleConvert tupleConvert = new TupleConvert();
-		return tupleConvert.deconvert(tuples);
+		return tupleConvert.decode(tuples);
 	}
 
-	public final static Set<Tuple> setTupleDeconvert(final Set<redis.clients.jedis.Tuple> tuples){
+	public final static Set<Tuple> setTupleDecode(final Set<redis.clients.jedis.Tuple> tuples){
 		final TupleConvert.SetTupleConvert setTupleConvert = new TupleConvert.SetTupleConvert();
-		return setTupleConvert.deconvert(tuples);
+		return setTupleConvert.decode(tuples);
 	}
 
-	public final static ZParams.Aggregate aggregateConvert(final Aggregate aggregate){
+	public final static ZParams.Aggregate aggregateEncode(final Aggregate aggregate){
 		final AggregateConvert aggregateConvert = new AggregateConvert();
-		return aggregateConvert.convert(aggregate);
+		return aggregateConvert.encode(aggregate);
 	}
 
-	public final static <V> Map<V, GeoCoordinate> geoMapConvert(final Map<V, Geo> geoMap){
+	public final static <V> Map<V, GeoCoordinate> geoMapEncode(final Map<V, Geo> geoMap){
 		final GeoConvert.GeoMapConvert<V> geoMapConvert = new GeoConvert.GeoMapConvert<>();
-		return geoMapConvert.convert(geoMap);
+		return geoMapConvert.encode(geoMap);
 	}
 
-	public final static List<Geo> geoListDeconvert(final List<GeoCoordinate> geoCoordinates){
+	public final static List<Geo> geoListDecode(final List<GeoCoordinate> geoCoordinates){
 		final GeoConvert.GeoListConvert geoMapConvert = new GeoConvert.GeoListConvert();
-		return geoMapConvert.deconvert(geoCoordinates);
+		return geoMapConvert.decode(geoCoordinates);
 	}
 
-	public final static redis.clients.jedis.GeoUnit geoUnitConvert(final GeoUnit source){
+	public final static redis.clients.jedis.GeoUnit geoUnitEncode(final GeoUnit source){
 		final GeoConvert.GeoUnitConvert geoUnitConvert = new GeoConvert.GeoUnitConvert();
-		return geoUnitConvert.convert(source);
+		return geoUnitConvert.encode(source);
 	}
 
-	public final static List<GeoRadius> listGeoRadiusDeconvert(final List<GeoRadiusResponse> geoRadiusResponses){
+	public final static List<GeoRadius> listGeoRadiusDecode(final List<GeoRadiusResponse> geoRadiusResponses){
 		final GeoConvert.GeoRadiusConvert.ListGeoRadiusConvert listGeoRadiusConvert =
 				new GeoConvert.GeoRadiusConvert.ListGeoRadiusConvert();
-		return listGeoRadiusConvert.deconvert(geoRadiusResponses);
+		return listGeoRadiusConvert.decode(geoRadiusResponses);
 	}
 
-	public final static GeoRadiusParam geoArgumentConvert(final GeoCommands.GeoArgument geoArgument){
+	public final static GeoRadiusParam geoArgumentEncode(final GeoCommands.GeoArgument geoArgument){
 		final GeoArgumentConvert geoArgumentConvert = new GeoArgumentConvert();
-		return geoArgumentConvert.convert(geoArgument);
+		return geoArgumentConvert.encode(geoArgument);
 	}
 
-	public final static BitOP bitOperationConvert(final StringCommands.BitOperation bitMapOperation){
+	public final static BitOP bitOperationEncode(final BitOperation bitMapOperation){
 		final BitOperationConvert bitOperationConvert = new BitOperationConvert();
-		return bitOperationConvert.convert(bitMapOperation);
+		return bitOperationConvert.encode(bitMapOperation);
 	}
 
 	public final static Object objectDebug(final ObjectCommand command, final Jedis jedis, final String key){
@@ -212,6 +215,34 @@ public class JedisClientUtils {
 				return jedis.objectIdletime(key);
 			case REFCOUNT:
 				return jedis.objectRefcount(key);
+			default:
+				return null;
+		}
+	}
+
+	public final static Object objectDebug(final ObjectCommand command,
+			final redis.clients.jedis.Transaction transaction, final byte[] key){
+		switch(command){
+			case ENCODING:
+				return transaction.objectEncoding(key).get();
+			case IDLETIME:
+				return transaction.objectIdletime(key).get();
+			case REFCOUNT:
+				return transaction.objectRefcount(key).get();
+			default:
+				return null;
+		}
+	}
+
+	public final static Object objectDebug(final ObjectCommand command,
+			final redis.clients.jedis.Transaction transaction, final String key){
+		switch(command){
+			case ENCODING:
+				return transaction.objectEncoding(key).get();
+			case IDLETIME:
+				return transaction.objectIdletime(key).get();
+			case REFCOUNT:
+				return transaction.objectRefcount(key).get();
 			default:
 				return null;
 		}

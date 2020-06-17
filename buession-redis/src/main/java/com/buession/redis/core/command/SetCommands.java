@@ -68,6 +68,30 @@ public interface SetCommands extends RedisCommands {
 	Long sAdd(final byte[] key, final byte[]... members);
 
 	/**
+	 * 获取集合存储的key的基数 (集合元素的数量)
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/scard.html" target="_blank">http://redisdoc.com/set/scard.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 集合的基数
+	 */
+	Long sCard(final String key);
+
+	/**
+	 * 获取集合存储的key的基数 (集合元素的数量)
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/scard.html" target="_blank">http://redisdoc.com/set/scard.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 集合的基数
+	 */
+	Long sCard(final byte[] key);
+
+	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>

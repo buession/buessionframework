@@ -24,11 +24,10 @@
  */
 package com.buession.redis.core.convert.jedis;
 
+import com.buession.core.convert.Convert;
 import com.buession.lang.Geo;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
-import com.buession.redis.core.command.GeoCommands;
-import com.buession.redis.core.convert.Convert;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;
 
@@ -43,40 +42,43 @@ import java.util.Map;
 public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 
 	@Override
-	public GeoCoordinate convert(final Geo source){
+	public GeoCoordinate encode(final Geo source){
 		return source == null ? null : new GeoCoordinate(source.getLongitude(), source.getLatitude());
 	}
 
 	@Override
-	public Geo deconvert(final GeoCoordinate target){
+	public Geo decode(final GeoCoordinate target){
 		return target == null ? null : new Geo(target.getLongitude(), target.getLatitude());
 	}
 
 	public static class GeoMapConvert<K> implements Convert<Map<K, Geo>, Map<K, GeoCoordinate>> {
 
 		@Override
-		public Map<K, GeoCoordinate> convert(final Map<K, Geo> source){
+		public Map<K, GeoCoordinate> encode(final Map<K, Geo> source){
 			if(source == null){
 				return null;
 			}
 
 			final Map<K, GeoCoordinate> result = new LinkedHashMap<>(source.size());
 
-			source.forEach((key, value)->result.put(key, new GeoCoordinate(value.getLongitude(),
-					value.getLatitude())));
+			source.forEach((key, value)->{
+				result.put(key, new GeoCoordinate(value.getLongitude(), value.getLatitude()));
+			});
 
 			return result;
 		}
 
 		@Override
-		public Map<K, Geo> deconvert(final Map<K, GeoCoordinate> target){
+		public Map<K, Geo> decode(final Map<K, GeoCoordinate> target){
 			if(target == null){
 				return null;
 			}
 
 			final Map<K, Geo> result = new LinkedHashMap<>();
 
-			target.forEach((key, value)->result.put(key, new Geo(value.getLongitude(), value.getLatitude())));
+			target.forEach((key, value)->{
+				result.put(key, new Geo(value.getLongitude(), value.getLatitude()));
+			});
 
 			return result;
 		}
@@ -86,7 +88,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 	public static class GeoListConvert implements Convert<List<Geo>, List<GeoCoordinate>> {
 
 		@Override
-		public List<GeoCoordinate> convert(final List<Geo> source){
+		public List<GeoCoordinate> encode(final List<Geo> source){
 			if(source == null){
 				return null;
 			}
@@ -101,7 +103,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 		}
 
 		@Override
-		public List<Geo> deconvert(final List<GeoCoordinate> target){
+		public List<Geo> decode(final List<GeoCoordinate> target){
 			if(target == null){
 				return null;
 			}
@@ -120,7 +122,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 	public static class GeoUnitConvert implements Convert<GeoUnit, redis.clients.jedis.GeoUnit> {
 
 		@Override
-		public redis.clients.jedis.GeoUnit convert(final GeoUnit source){
+		public redis.clients.jedis.GeoUnit encode(final GeoUnit source){
 			switch(source){
 				case M:
 					return redis.clients.jedis.GeoUnit.M;
@@ -136,7 +138,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 		}
 
 		@Override
-		public GeoUnit deconvert(final redis.clients.jedis.GeoUnit target){
+		public GeoUnit decode(final redis.clients.jedis.GeoUnit target){
 			switch(target){
 				case M:
 					return GeoUnit.M;
@@ -156,7 +158,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 	public static class GeoRadiusConvert implements Convert<GeoRadius, GeoRadiusResponse> {
 
 		@Override
-		public GeoRadiusResponse convert(final GeoRadius source){
+		public GeoRadiusResponse encode(final GeoRadius source){
 			if(source == null){
 				return null;
 			}
@@ -164,13 +166,13 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 			final GeoRadiusResponse geoRadiusResponse = new GeoRadiusResponse(source.getMember());
 
 			geoRadiusResponse.setDistance(source.getDistance());
-			geoRadiusResponse.setCoordinate((new GeoConvert()).convert(source.getGeo()));
+			geoRadiusResponse.setCoordinate((new GeoConvert()).encode(source.getGeo()));
 
 			return geoRadiusResponse;
 		}
 
 		@Override
-		public GeoRadius deconvert(final GeoRadiusResponse target){
+		public GeoRadius decode(final GeoRadiusResponse target){
 			if(target == null){
 				return null;
 			}
@@ -179,7 +181,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 
 			geoRadius.setMember(target.getMember());
 			geoRadius.setDistance(target.getDistance());
-			geoRadius.setGeo((new GeoConvert()).deconvert(target.getCoordinate()));
+			geoRadius.setGeo((new GeoConvert()).decode(target.getCoordinate()));
 
 			return geoRadius;
 		}
@@ -187,7 +189,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 		public static class ListGeoRadiusConvert implements Convert<List<GeoRadius>, List<GeoRadiusResponse>> {
 
 			@Override
-			public List<GeoRadiusResponse> convert(final List<GeoRadius> source){
+			public List<GeoRadiusResponse> encode(final List<GeoRadius> source){
 				if(source == null){
 					return null;
 				}
@@ -199,7 +201,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 					GeoRadiusResponse geoRadiusResponse = new GeoRadiusResponse(geoRadius.getMember());
 
 					geoRadiusResponse.setDistance(geoRadius.getDistance());
-					geoRadiusResponse.setCoordinate(geoConvert.convert(geoRadius.getGeo()));
+					geoRadiusResponse.setCoordinate(geoConvert.encode(geoRadius.getGeo()));
 
 					geoRadiusResponses.add(geoRadiusResponse);
 				}
@@ -208,7 +210,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 			}
 
 			@Override
-			public List<GeoRadius> deconvert(final List<GeoRadiusResponse> target){
+			public List<GeoRadius> decode(final List<GeoRadiusResponse> target){
 				if(target == null){
 					return null;
 				}
@@ -221,7 +223,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 
 					geoRadius.setMember(geoRadiusResponse.getMember());
 					geoRadius.setDistance(geoRadiusResponse.getDistance());
-					geoRadius.setGeo(geoConvert.deconvert(geoRadiusResponse.getCoordinate()));
+					geoRadius.setGeo(geoConvert.decode(geoRadiusResponse.getCoordinate()));
 
 					result.add(geoRadius);
 				}

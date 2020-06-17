@@ -24,8 +24,8 @@
  */
 package com.buession.redis.core.convert.jedis;
 
+import com.buession.core.convert.Convert;
 import com.buession.redis.core.Tuple;
-import com.buession.redis.core.convert.Convert;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -37,36 +37,35 @@ import java.util.stream.Collectors;
 public class TupleConvert implements Convert<Tuple, redis.clients.jedis.Tuple> {
 
 	@Override
-	public redis.clients.jedis.Tuple convert(final Tuple source){
+	public redis.clients.jedis.Tuple encode(final Tuple source){
 		return source == null ? null : new redis.clients.jedis.Tuple(source.getBinaryElement(), source.getScore());
 	}
 
 	@Override
-	public Tuple deconvert(final redis.clients.jedis.Tuple target){
+	public Tuple decode(final redis.clients.jedis.Tuple target){
 		return target == null ? null : new Tuple(target.getBinaryElement(), target.getScore());
 	}
 
 	public static class SetTupleConvert implements Convert<Set<Tuple>, Set<redis.clients.jedis.Tuple>> {
 
 		@Override
-		public Set<redis.clients.jedis.Tuple> convert(final Set<Tuple> source){
+		public Set<redis.clients.jedis.Tuple> encode(final Set<Tuple> source){
 			if(source == null){
 				return null;
 			}
 
-			return source.stream().map(tuple->new redis.clients.jedis.Tuple(tuple.getElement(), tuple.getScore()))
-					.collect(Collectors.toCollection(LinkedHashSet::new));
+			return source.stream().map(tuple->new redis.clients.jedis.Tuple(tuple.getElement(), tuple.getScore())).collect(Collectors.toCollection(LinkedHashSet::new));
 		}
 
 		@Override
-		public Set<Tuple> deconvert(final Set<redis.clients.jedis.Tuple> target){
+		public Set<Tuple> decode(final Set<redis.clients.jedis.Tuple> target){
 			if(target == null){
 				return null;
 			}
 
-			return target.stream().map(tuple->new Tuple(tuple.getElement(), tuple.getScore())).collect(Collectors
-					.toCollection(LinkedHashSet::new));
+			return target.stream().map(tuple->new Tuple(tuple.getElement(), tuple.getScore())).collect(Collectors.toCollection(LinkedHashSet::new));
 		}
+
 	}
 
 }

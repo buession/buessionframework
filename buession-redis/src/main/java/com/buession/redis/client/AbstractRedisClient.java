@@ -26,7 +26,6 @@ package com.buession.redis.client;
 
 import com.buession.core.Executor;
 import com.buession.core.utils.NumberUtils;
-import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
@@ -41,11 +40,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
@@ -1204,7 +1201,57 @@ public abstract class AbstractRedisClient implements RedisClient {
 		return zScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
-	/*@Override
+	@Override
+	public Long bitCount(final String key, final int start, final int end){
+		return bitCount(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Long bitCount(final byte[] key, final int start, final int end){
+		return bitCount(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final long start, final long end){
+		return bitPos(key, value, (int) start, (int) end);
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final long start, final long end){
+		return bitPos(key, value, (int) start, (int) end);
+	}
+
+	@Override
+	public Long decrBy(final String key, final int value){
+		return decrBy(key, (long) value);
+	}
+
+	@Override
+	public Long decrBy(final byte[] key, final int value){
+		return decrBy(key, (long) value);
+	}
+
+	@Override
+	public Status getBit(final String key, final int offset){
+		return getBit(key, (long) offset);
+	}
+
+	@Override
+	public Status getBit(final byte[] key, final int offset){
+		return getBit(key, (long) offset);
+	}
+
+	@Override
+	public String getRange(final String key, final int start, final int end){
+		return getRange(key, (long) start, (long) end);
+	}
+
+	@Override
+	public byte[] getRange(final byte[] key, final int start, final int end){
+		return getRange(key, (long) start, (long) end);
+	}
+
+	@Override
 	public Long incrBy(final String key, final int value){
 		return incrBy(key, (long) value);
 	}
@@ -1222,46 +1269,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public Double incrByFloat(final byte[] key, final float value){
 		return incrByFloat(key, (double) value);
-	}
-
-	@Override
-	public Long decrBy(final String key, final int value){
-		return decrBy(key, (long) value);
-	}
-
-	@Override
-	public Long decrBy(final byte[] key, final int value){
-		return decrBy(key, (long) value);
-	}
-
-	@Override
-	public Long setRange(final String key, final int offset, final String value){
-		return setRange(key, (long) offset, value);
-	}
-
-	@Override
-	public Long setRange(final byte[] key, final int offset, final byte[] value){
-		return setRange(key, (long) offset, value);
-	}
-
-	@Override
-	public String getRange(final String key, final int start, final int end){
-		return getRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public byte[] getRange(final byte[] key, final int start, final int end){
-		return getRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public String substr(final String key, final long start, final long end){
-		return substr(key, (int) start, (int) end);
-	}
-
-	@Override
-	public byte[] substr(final byte[] key, final long start, final long end){
-		return substr(key, (int) start, (int) end);
 	}
 
 	@Override
@@ -1285,34 +1292,24 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
-	public Status getBit(final String key, final int offset){
-		return getBit(key, (long) offset);
+	public Long setRange(final String key, final int offset, final String value){
+		return setRange(key, (long) offset, value);
 	}
 
 	@Override
-	public Status getBit(final byte[] key, final int offset){
-		return getBit(key, (long) offset);
+	public Long setRange(final byte[] key, final int offset, final byte[] value){
+		return setRange(key, (long) offset, value);
 	}
 
 	@Override
-	public Long bitPos(final String key, final boolean value, final long start, final long end){
-		return bitPos(key, value, (int) start, (int) end);
+	public String substr(final String key, final long start, final long end){
+		return substr(key, (int) start, (int) end);
 	}
 
 	@Override
-	public Long bitPos(final byte[] key, final boolean value, final long start, final long end){
-		return bitPos(key, value, (int) start, (int) end);
+	public byte[] substr(final byte[] key, final long start, final long end){
+		return substr(key, (int) start, (int) end);
 	}
-
-	@Override
-	public Long bitCount(final String key, final int start, final int end){
-		return bitCount(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Long bitCount(final byte[] key, final int start, final int end){
-		return bitCount(key, (long) start, (long) end);
-	}*/
 
 	protected <C, R> R doExecute(final Executor<C, R> executor){
 		RedisConnection connection;

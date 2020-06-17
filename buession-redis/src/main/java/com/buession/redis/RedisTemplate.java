@@ -29,8 +29,6 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.operations.*;
-import com.buession.redis.utils.ReturnUtils;
-import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.ListPosition;
 
 import java.util.LinkedHashMap;
@@ -856,6 +854,146 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 	@Override
 	public <V> Long sRem(final byte[] key, final V... members){
 		return sRem(key, serializeAsBytes(members));
+	}
+
+	@Override
+	public <V> V getObject(final String key){
+		return deserialize(get(key));
+	}
+
+	@Override
+	public <V> V getObject(final byte[] key){
+		return deserializeBytes(get(key));
+	}
+
+	@Override
+	public <V> V getObject(final String key, final Class<V> clazz){
+		return deserialize(get(key), clazz);
+	}
+
+	@Override
+	public <V> V getObject(final byte[] key, final Class<V> clazz){
+		return deserializeBytes(get(key), clazz);
+	}
+
+	@Override
+	public <V> V getObject(final String key, final TypeReference<V> type){
+		return deserialize(get(key), type);
+	}
+
+	@Override
+	public <V> V getObject(final byte[] key, final TypeReference<V> type){
+		return deserializeBytes(get(key), type);
+	}
+
+	@Override
+	public <V> V getSet(final String key, final V value){
+		return deserialize(getSet(key, serialize(value)));
+	}
+
+	@Override
+	public <V> V getSet(final byte[] key, final V value){
+		return deserializeBytes(getSet(key, serializeAsBytes(value)));
+	}
+
+	@Override
+	public <V> V getSet(final String key, final V value, final Class<V> clazz){
+		return deserialize(getSet(key, serialize(value)), clazz);
+	}
+
+	@Override
+	public <V> V getSet(final byte[] key, final V value, final Class<V> clazz){
+		return deserializeBytes(getSet(key, serializeAsBytes(value)), clazz);
+	}
+
+	@Override
+	public <V> V getSet(final String key, final V value, final TypeReference<V> type){
+		return deserialize(getSet(key, serialize(value)), type);
+	}
+
+	@Override
+	public <V> V getSet(final byte[] key, final V value, final TypeReference<V> type){
+		return deserializeBytes(getSet(key, serializeAsBytes(value)), type);
+	}
+
+	@Override
+	public <V> List<V> mGetObject(final String... keys){
+		return deserialize(mGet(keys));
+	}
+
+	@Override
+	public <V> List<V> mGetObject(final byte[]... keys){
+		return deserializeBytes(mGet(keys));
+	}
+
+	@Override
+	public <V> List<V> mGetObject(final String[] keys, final Class<V> clazz){
+		return deserialize(mGet(keys), clazz);
+	}
+
+	@Override
+	public <V> List<V> mGetObject(final byte[][] keys, final Class<V> clazz){
+		return deserializeBytes(mGet(keys), clazz);
+	}
+
+	@Override
+	public <V> List<V> mGetObject(final String[] keys, final TypeReference<V> type){
+		return deserialize(mGet(keys), type);
+	}
+
+	@Override
+	public <V> List<V> mGetObject(final byte[][] keys, final TypeReference<V> type){
+		return deserializeBytes(mGet(keys), type);
+	}
+
+	@Override
+	public <V> Status pSetEx(final String key, final V value, final int lifetime){
+		return pSetEx(key, serialize(value), lifetime);
+	}
+
+	@Override
+	public <V> Status pSetEx(final byte[] key, final V value, final int lifetime){
+		return pSetEx(key, serializeAsBytes(value), lifetime);
+	}
+
+	@Override
+	public <V> Status set(final String key, final V value){
+		return set(key, serialize(value));
+	}
+
+	@Override
+	public <V> Status set(final byte[] key, final V value){
+		return set(key, serializeAsBytes(value));
+	}
+
+	@Override
+	public <V> Status set(final String key, final V value, final SetArgument setArgument){
+		return set(key, serialize(value), setArgument);
+	}
+
+	@Override
+	public <V> Status set(final byte[] key, final V value, final SetArgument setArgument){
+		return set(key, serializeAsBytes(value), setArgument);
+	}
+
+	@Override
+	public <V> Status setEx(final String key, final V value, final int lifetime){
+		return setEx(key, serialize(value), lifetime);
+	}
+
+	@Override
+	public <V> Status setEx(final byte[] key, final V value, final int lifetime){
+		return setEx(key, serializeAsBytes(value), lifetime);
+	}
+
+	@Override
+	public <V> Status setNx(final String key, final V value){
+		return setNx(key, serialize(value));
+	}
+
+	@Override
+	public <V> Status setNx(final byte[] key, final V value){
+		return setNx(key, serializeAsBytes(value));
 	}
 
 }

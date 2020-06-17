@@ -32,8 +32,7 @@ import com.buession.redis.core.command.*;
  */
 public abstract class AbstractRedisTemplate extends RedisAccessor implements ConnectionCommands, GeoCommands,
 		HashCommands, HyperLogLogCommands, KeyCommands, ListCommands, PubSubCommands, ScriptingCommands,
-		ServerCommands, SetCommands, SortedSetCommands, TransactionCommands, BinaryTransactionCommands, ScriptCommands
-		, DebugCommands, BinaryRedisCommands {
+		ServerCommands, SetCommands, SortedSetCommands, StringCommands, TransactionCommands {
 
 	/**
 	 * 构造函数

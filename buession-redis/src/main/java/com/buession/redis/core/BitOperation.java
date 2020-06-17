@@ -22,32 +22,17 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command;
-
-import com.buession.lang.Status;
+package com.buession.redis.core;
 
 /**
- * 事务命令
- *
- * <p>详情说明
- * <a href="http://redisdoc.com/transaction/index.html" target="_blank">http://redisdoc.com/transaction/index.html</a>
- * </p>
- *
  * @author Yong.Teng
  */
-public interface BinaryTransactionCommands extends BinaryRedisCommands {
+public enum BitOperation {
+	AND,
 
-	/**
-	 * 监视一个或多个 key ，如果在事务执行之前这个或这些 key 被其他命令所改动，那么事务将被打断
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/transaction/watch.html" target="_blank">http://redisdoc
-	 * .com/transaction/watch.html</a></p>
-	 *
-	 * @param keys
-	 * 		一个或多个 key
-	 *
-	 * @return 总是返回 Status.SUCCESS
-	 */
-	Status watch(final byte[]... keys);
+	OR,
 
+	NOT,
+
+	XOR
 }

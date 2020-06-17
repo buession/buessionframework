@@ -22,45 +22,45 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
+package com.buession.core.convert;
 
-import com.buession.lang.Status;
-import com.buession.redis.core.command.BinaryTransactionCommands;
-import com.buession.redis.core.command.TransactionCommands;
+import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
- * 事务运算
- *
- * <p>详情说明
- * <a href="http://redisdoc.com/transaction/index.html" target="_blank">http://redisdoc.com/transaction/index.html</a>
- * </p>
- *
  * @author Yong.Teng
  */
-public interface TransactionOperations extends TransactionCommands, BinaryTransactionCommands, RedisOperations {
+public class StringBinaryHashConvert implements Convert<Map<String, String>, Map<byte[], byte[]>> {
 
-	/**
-	 * 监视一 key ，如果在事务执行之前这个 key 被其他命令所改动，那么事务将被打断
-	 *
-	 * @param key
-	 * 		key
-	 *
-	 * @return 总是返回 Status.SUCCESS
-	 */
-	default Status watch(final String key){
-		return watch(new String[]{key});
+	@Override
+	public Map<byte[], byte[]> encode(final Map<String, String> source){
+		if(source == null){
+			return null;
+		}else{
+			Map<byte[], byte[]> result = new LinkedHashMap<>(source.size());
+
+			source.forEach((key, value)->{
+				result.put(key.getBytes(StandardCharsets.UTF_8), value.getBytes(StandardCharsets.UTF_8));
+			});
+
+			return result;
+		}
 	}
 
-	/**
-	 * 监视一 key ，如果在事务执行之前这个 key 被其他命令所改动，那么事务将被打断
-	 *
-	 * @param key
-	 * 		key
-	 *
-	 * @return 总是返回 Status.SUCCESS
-	 */
-	default Status watch(final byte[] key){
-		return watch(new byte[][]{key});
+	@Override
+	public Map<String, String> decode(final Map<byte[], byte[]> target){
+		if(target == null){
+			return null;
+		}else{
+			Map<String, String> result = new LinkedHashMap<>(target.size());
+
+			target.forEach((key, value)->{
+				result.put(new String(key, StandardCharsets.UTF_8), new String(value, StandardCharsets.UTF_8));
+			});
+
+			return result;
+		}
 	}
 
 }

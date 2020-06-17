@@ -29,8 +29,8 @@ package com.buession.redis.core.convert;
  */
 public interface Convert<S, T> {
 
-    T convert(S source);
+	T encode(S source);
 
-    S deconvert(T target);
+	S decode(T target);
 
 }

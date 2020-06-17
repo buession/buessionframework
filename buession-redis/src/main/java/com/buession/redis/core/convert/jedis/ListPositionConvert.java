@@ -24,8 +24,8 @@
  */
 package com.buession.redis.core.convert.jedis;
 
+import com.buession.core.convert.Convert;
 import com.buession.redis.core.ListPosition;
-import com.buession.redis.core.convert.Convert;
 
 /**
  * @author Yong.Teng
@@ -33,7 +33,7 @@ import com.buession.redis.core.convert.Convert;
 public class ListPositionConvert implements Convert<ListPosition, redis.clients.jedis.ListPosition> {
 
 	@Override
-	public redis.clients.jedis.ListPosition convert(final ListPosition source){
+	public redis.clients.jedis.ListPosition encode(final ListPosition source){
 		switch(source){
 			case BEFORE:
 				return redis.clients.jedis.ListPosition.BEFORE;
@@ -45,7 +45,7 @@ public class ListPositionConvert implements Convert<ListPosition, redis.clients.
 	}
 
 	@Override
-	public ListPosition deconvert(final redis.clients.jedis.ListPosition target){
+	public ListPosition decode(final redis.clients.jedis.ListPosition target){
 		switch(target){
 			case BEFORE:
 				return ListPosition.BEFORE;

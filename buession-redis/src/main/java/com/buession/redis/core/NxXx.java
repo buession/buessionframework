@@ -22,38 +22,13 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
-
-import com.buession.core.convert.Convert;
-import com.buession.redis.core.MigrateOperation;
-import redis.clients.jedis.params.MigrateParams;
+package com.buession.redis.core;
 
 /**
  * @author Yong.Teng
  */
-public class MigrateOperationConvert implements Convert<MigrateOperation, MigrateParams> {
+public enum NxXx {
+	NX,
 
-	@Override
-	public MigrateParams encode(final MigrateOperation source){
-		switch(source){
-			case COPY:
-				return MigrateParams.migrateParams().copy();
-			case REPLACE:
-				return MigrateParams.migrateParams().replace();
-			default:
-				return null;
-		}
-	}
-
-	@Override
-	public MigrateOperation decode(final MigrateParams target){
-		if(target.getParam(MigrateOperation.COPY.name())){
-			return MigrateOperation.COPY;
-		}else if(target.getParam(MigrateOperation.REPLACE.name())){
-			return MigrateOperation.REPLACE;
-		}else{
-			return null;
-		}
-	}
-
+	XX
 }

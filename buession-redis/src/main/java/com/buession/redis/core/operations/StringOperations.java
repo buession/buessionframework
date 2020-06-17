@@ -27,6 +27,7 @@ package com.buession.redis.core.operations;
 import com.buession.core.serializer.type.TypeReference;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
+import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.StringCommands;
 
 import java.util.LinkedHashMap;
@@ -43,164 +44,38 @@ import java.util.Map;
 public interface StringOperations extends StringCommands, RedisOperations {
 
 	/**
-	 * 将对象 value 序列化后关联到 key；
-	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型；
+	 * 对一个二进制位的字符串 key 进行位元操作，并将结果保存到 destKey 上，
+	 * 除了 Operation.NOT 操作之外，其他操作都可以接受一个或多个 key 作为输入
 	 *
+	 * @param operation
+	 * 		运算操作
+	 * @param destKey
+	 * 		目标 Key
 	 * @param key
 	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param <V>
-	 * 		值类型
 	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 * @return 保存到 destKey 的字符串的长度
 	 */
-	<V> Status set(final String key, final V value);
+	default Long bitOp(final BitOperation operation, final String destKey, final String key){
+		return bitOp(operation, destKey, new String[]{key});
+	}
 
 	/**
-	 * 将对象 value 序列化后关联到 key；
-	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型；
+	 * 对一个二进制位的字符串 key 进行位元操作，并将结果保存到 destKey 上，
+	 * 除了 Operation.NOT 操作之外，其他操作都可以接受一个或多个 key 作为输入
 	 *
+	 * @param operation
+	 * 		运算操作
+	 * @param destKey
+	 * 		目标 Key
 	 * @param key
 	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param <V>
-	 * 		值类型
 	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 * @return 保存到 destKey 的字符串的长度
 	 */
-	<V> Status set(final byte[] key, final V value);
-
-	/**
-	 * 将字符串值 value 关联到 key；
-	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型；
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param setArgument
-	 * 		参数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	<V> Status set(final String key, final V value, final SetArgument setArgument);
-
-	/**
-	 * 将字符串值 value 关联到 key；
-	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型；
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param setArgument
-	 * 		参数
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	<V> Status set(final byte[] key, final V value, final SetArgument setArgument);
-
-	/**
-	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
-	 * 如果键 key 已经存在，那么将覆盖已有的值
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param lifetime
-	 * 		生存时间（单秒：秒）
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	<V> Status setEx(final String key, final V value, final int lifetime);
-
-	/**
-	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
-	 * 如果键 key 已经存在，那么将覆盖已有的值
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param lifetime
-	 * 		生存时间（单秒：秒）
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	<V> Status setEx(final byte[] key, final V value, final int lifetime);
-
-	/**
-	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
-	 * 如果键 key 已经存在，那么将覆盖已有的值
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param lifetime
-	 * 		生存时间（单秒：毫秒）
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	<V> Status pSetEx(final String key, final V value, final int lifetime);
-
-	/**
-	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
-	 * 如果键 key 已经存在，那么将覆盖已有的值
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param lifetime
-	 * 		生存时间（单秒：毫秒）
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	<V> Status pSetEx(final byte[] key, final V value, final int lifetime);
-
-	/**
-	 * 当键 key 不存在的情况下，将键 key 的值设置为 value
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	<V> Status setNx(final String key, final V value);
-
-	/**
-	 * 当键 key 不存在的情况下，将键 key 的值设置为 value
-	 *
-	 * @param key
-	 * 		Key
-	 * @param value
-	 * 		值
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	<V> Status setNx(final byte[] key, final V value);
+	default Long bitOp(final BitOperation operation, final byte[] destKey, final byte[] key){
+		return bitOp(operation, destKey, new byte[][]{key});
+	}
 
 	/**
 	 * 获取键 key 相关联的字符串值，并将值反序列化为对象
@@ -397,50 +272,6 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	<V> V getSet(final byte[] key, final V value, final TypeReference<V> type);
 
 	/**
-	 * 同时为多个键设置值，如果某个给定键已经存在 那么将使用新值去覆盖旧值
-	 *
-	 * @param values
-	 * 		键值对
-	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	default Status mSet(final List<KeyValue<String, String>> values){
-		if(values == null){
-			return Status.FAILURE;
-		}else{
-			Map<String, String> data = new LinkedHashMap<>(values.size());
-
-			for(KeyValue<String, String> v : values){
-				data.put(v.getKey(), v.getValue());
-			}
-
-			return mSet(data);
-		}
-	}
-
-	/**
-	 * 当且仅当所有给定键都不存在时， 为所有给定键设置值
-	 *
-	 * @param values
-	 * 		键值对
-	 *
-	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	default Status mSetNx(final List<KeyValue<String, String>> values){
-		if(values == null){
-			return Status.FAILURE;
-		}else{
-			Map<String, String> data = new LinkedHashMap<>(values.size());
-
-			for(KeyValue<String, String> v : values){
-				data.put(v.getKey(), v.getValue());
-			}
-
-			return mSetNx(data);
-		}
-	}
-
-	/**
 	 * 获取给定的一个或多个字符串键的值，并反序列化为对象
 	 *
 	 * @param keys
@@ -535,37 +366,207 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	<V> List<V> mGetObject(final byte[][] keys, final TypeReference<V> type);
 
 	/**
-	 * 对一个二进制位的字符串 key 进行位元操作，并将结果保存到 destKey 上，
-	 * 除了 Operation.NOT 操作之外，其他操作都可以接受一个或多个 key 作为输入
+	 * 同时为多个键设置值，如果某个给定键已经存在 那么将使用新值去覆盖旧值
 	 *
-	 * @param operation
-	 * 		运算操作
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
+	 * @param values
+	 * 		键值对
 	 *
-	 * @return 保存到 destKey 的字符串的长度
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	default Long bitOp(final StringCommands.BitOperation operation, final String destKey, final String key){
-		return bitOp(operation, destKey, new String[]{key});
+	default Status mSet(final List<KeyValue<String, String>> values){
+		if(values == null){
+			return Status.FAILURE;
+		}else{
+			Map<String, String> data = new LinkedHashMap<>(values.size());
+
+			for(KeyValue<String, String> v : values){
+				data.put(v.getKey(), v.getValue());
+			}
+
+			return mSet(data);
+		}
 	}
 
 	/**
-	 * 对一个二进制位的字符串 key 进行位元操作，并将结果保存到 destKey 上，
-	 * 除了 Operation.NOT 操作之外，其他操作都可以接受一个或多个 key 作为输入
+	 * 当且仅当所有给定键都不存在时， 为所有给定键设置值
 	 *
-	 * @param operation
-	 * 		运算操作
-	 * @param destKey
-	 * 		目标 Key
+	 * @param values
+	 * 		键值对
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status mSetNx(final List<KeyValue<String, String>> values){
+		if(values == null){
+			return Status.FAILURE;
+		}else{
+			Map<String, String> data = new LinkedHashMap<>(values.size());
+
+			for(KeyValue<String, String> v : values){
+				data.put(v.getKey(), v.getValue());
+			}
+
+			return mSetNx(data);
+		}
+	}
+
+	/**
+	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
+	 * 如果键 key 已经存在，那么将覆盖已有的值
+	 *
 	 * @param key
 	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param lifetime
+	 * 		生存时间（单秒：毫秒）
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 保存到 destKey 的字符串的长度
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	default Long bitOp(final StringCommands.BitOperation operation, final byte[] destKey, final byte[] key){
-		return bitOp(operation, destKey, new byte[][]{key});
-	}
+	<V> Status pSetEx(final String key, final V value, final int lifetime);
+
+	/**
+	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
+	 * 如果键 key 已经存在，那么将覆盖已有的值
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param lifetime
+	 * 		生存时间（单秒：毫秒）
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	<V> Status pSetEx(final byte[] key, final V value, final int lifetime);
+
+	/**
+	 * 将对象 value 序列化后关联到 key；
+	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型；
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	<V> Status set(final String key, final V value);
+
+	/**
+	 * 将对象 value 序列化后关联到 key；
+	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型；
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	<V> Status set(final byte[] key, final V value);
+
+	/**
+	 * 将字符串值 value 关联到 key；
+	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型；
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param setArgument
+	 * 		参数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	<V> Status set(final String key, final V value, final SetArgument setArgument);
+
+	/**
+	 * 将字符串值 value 关联到 key；
+	 * 如果 key 已经持有其他值，SET 就覆写旧值，忽略类型；
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param setArgument
+	 * 		参数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	<V> Status set(final byte[] key, final V value, final SetArgument setArgument);
+
+	/**
+	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
+	 * 如果键 key 已经存在，那么将覆盖已有的值
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param lifetime
+	 * 		生存时间（单秒：秒）
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	<V> Status setEx(final String key, final V value, final int lifetime);
+
+	/**
+	 * 将键 key 的值设置为 value ，并将键 key 的生存时间设置为 lifetime；
+	 * 如果键 key 已经存在，那么将覆盖已有的值
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param lifetime
+	 * 		生存时间（单秒：秒）
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	<V> Status setEx(final byte[] key, final V value, final int lifetime);
+
+	/**
+	 * 当键 key 不存在的情况下，将键 key 的值设置为 value
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	<V> Status setNx(final String key, final V value);
+
+	/**
+	 * 当键 key 不存在的情况下，将键 key 的值设置为 value
+	 *
+	 * @param key
+	 * 		Key
+	 * @param value
+	 * 		值
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 如果设置操作成功，返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	<V> Status setNx(final byte[] key, final V value);
 
 }

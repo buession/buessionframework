@@ -24,9 +24,9 @@
  */
 package com.buession.redis.core.convert.jedis;
 
+import com.buession.core.convert.Convert;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
-import com.buession.redis.core.convert.Convert;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,109 +42,112 @@ import java.util.stream.Collectors;
  */
 public interface ScanResultConvert<S, T> extends Convert<S, T> {
 
-    class MapScanResultConvert<K, V> implements ScanResultConvert<ScanResult<Map<K, V>>, redis.clients.jedis
-            .ScanResult<Map.Entry<K, V>>> {
+	class MapScanResultConvert<K, V> implements ScanResultConvert<ScanResult<Map<K, V>>,
+			redis.clients.jedis.ScanResult<Map.Entry<K, V>>> {
 
-        @Override
-        public redis.clients.jedis.ScanResult<Map.Entry<K, V>> convert(final ScanResult<Map<K, V>> source){
-            if(source == null){
-                return null;
-            }
+		@Override
+		public redis.clients.jedis.ScanResult<Map.Entry<K, V>> encode(final ScanResult<Map<K, V>> source){
+			if(source == null){
+				return null;
+			}
 
-            final List<Map.Entry<K, V>> results = new ArrayList<>(source.getResults().entrySet());
-            return new redis.clients.jedis.ScanResult<>(source.getCursor(), results);
-        }
+			final List<Map.Entry<K, V>> results = new ArrayList<>(source.getResults().entrySet());
+			return new redis.clients.jedis.ScanResult<>(source.getCursor(), results);
+		}
 
-        @Override
-        public ScanResult<Map<K, V>> deconvert(final redis.clients.jedis.ScanResult<Map.Entry<K, V>> target){
-            if(target == null){
-                return null;
-            }
+		@Override
+		public ScanResult<Map<K, V>> decode(final redis.clients.jedis.ScanResult<Map.Entry<K, V>> target){
+			if(target == null){
+				return null;
+			}
 
-            Iterator<Map.Entry<K, V>> iterator = target.getResult().iterator();
-            Map<K, V> data = new LinkedHashMap<>(target.getResult().size());
+			Iterator<Map.Entry<K, V>> iterator = target.getResult().iterator();
+			Map<K, V> data = new LinkedHashMap<>(target.getResult().size());
 
-            while(iterator.hasNext()){
-                Map.Entry<K, V> entry = iterator.next();
-                data.put(entry.getKey(), entry.getValue());
-            }
+			while(iterator.hasNext()){
+				Map.Entry<K, V> entry = iterator.next();
+				data.put(entry.getKey(), entry.getValue());
+			}
 
-            return new ScanResult<>(target.getCursorAsBytes(), data);
-        }
-    }
+			return new ScanResult<>(target.getCursorAsBytes(), data);
+		}
 
-    class ListScanResultConvert<V> implements ScanResultConvert<ScanResult<List<V>>, redis.clients.jedis
-            .ScanResult<V>> {
+	}
 
-        @Override
-        public redis.clients.jedis.ScanResult<V> convert(final ScanResult<List<V>> source){
-            return source == null ? null : new redis.clients.jedis.ScanResult<>(source.getCursor(), source.getResults
-                    ());
-        }
+	class ListScanResultConvert<V> implements ScanResultConvert<ScanResult<List<V>>,
+			redis.clients.jedis.ScanResult<V>> {
 
-        @Override
-        public ScanResult<List<V>> deconvert(redis.clients.jedis.ScanResult<V> target){
-            return target == null ? null : new ScanResult<>(target.getCursorAsBytes(), target.getResult());
-        }
-    }
+		@Override
+		public redis.clients.jedis.ScanResult<V> encode(final ScanResult<List<V>> source){
+			return source == null ? null : new redis.clients.jedis.ScanResult<>(source.getCursor(),
+					source.getResults());
+		}
 
-    class ListTupleScanResultConvert implements ScanResultConvert<ScanResult<List<Tuple>>, redis.clients.jedis
-            .ScanResult<redis.clients.jedis.Tuple>> {
+		@Override
+		public ScanResult<List<V>> decode(redis.clients.jedis.ScanResult<V> target){
+			return target == null ? null : new ScanResult<>(target.getCursorAsBytes(), target.getResult());
+		}
 
-        @Override
-        public redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple> convert(final ScanResult<List<Tuple>> source){
-            if(source == null){
-                return null;
-            }
+	}
 
-            List<redis.clients.jedis.Tuple> tuples = source.getResults() == null ? null : source.getResults().stream
-                    ().map(tuple->new redis.clients.jedis.Tuple(tuple.getBinaryElement(), tuple.getScore())).collect
-                    (Collectors.toList());
+	class ListTupleScanResultConvert implements ScanResultConvert<ScanResult<List<Tuple>>,
+			redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple>> {
 
-            return new redis.clients.jedis.ScanResult<>(source.getCursor(), tuples);
-        }
+		@Override
+		public redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple> encode(final ScanResult<List<Tuple>> source){
+			if(source == null){
+				return null;
+			}
 
-        @Override
-        public ScanResult<List<Tuple>> deconvert(final redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple>
-                                                                 target){
-            if(target == null){
-                return null;
-            }
+			List<redis.clients.jedis.Tuple> tuples = source.getResults() == null ? null :
+					source.getResults().stream().map(tuple->new redis.clients.jedis.Tuple(tuple.getBinaryElement(),
+							tuple.getScore())).collect(Collectors.toList());
 
-            List<Tuple> tuples = target.getResult() == null ? null : target.getResult().stream().map(tuple->new Tuple
-                    (tuple.getBinaryElement(), tuple.getScore())).collect(Collectors.toList());
+			return new redis.clients.jedis.ScanResult<>(source.getCursor(), tuples);
+		}
 
-            return new ScanResult<>(target.getCursor(), tuples);
-        }
-    }
+		@Override
+		public ScanResult<List<Tuple>> decode(final redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple> target){
+			if(target == null){
+				return null;
+			}
 
-    class SetTupleScanResultConvert implements ScanResultConvert<ScanResult<Set<Tuple>>, redis.clients.jedis
-            .ScanResult<redis.clients.jedis.Tuple>> {
+			List<Tuple> tuples = target.getResult() == null ? null :
+					target.getResult().stream().map(tuple->new Tuple(tuple.getBinaryElement(), tuple.getScore())).collect(Collectors.toList());
 
-        @Override
-        public redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple> convert(final ScanResult<Set<Tuple>> source){
-            if(source == null){
-                return null;
-            }
+			return new ScanResult<>(target.getCursor(), tuples);
+		}
 
-            List<redis.clients.jedis.Tuple> tuples = source.getResults() == null ? null : source.getResults().stream
-                    ().map(tuple->new redis.clients.jedis.Tuple(tuple.getBinaryElement(), tuple.getScore())).collect
-                    (Collectors.toList());
+	}
 
-            return new redis.clients.jedis.ScanResult<>(source.getCursor(), tuples);
-        }
+	class SetTupleScanResultConvert implements ScanResultConvert<ScanResult<Set<Tuple>>,
+			redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple>> {
 
-        @Override
-        public ScanResult<Set<Tuple>> deconvert(final redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple> target){
-            if(target == null){
-                return null;
-            }
+		@Override
+		public redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple> encode(final ScanResult<Set<Tuple>> source){
+			if(source == null){
+				return null;
+			}
 
-            Set<Tuple> tuples = target.getResult() == null ? null : target.getResult().stream().map(tuple->new Tuple
-                    (tuple.getBinaryElement(), tuple.getScore())).collect(Collectors.toCollection(LinkedHashSet::new));
+			List<redis.clients.jedis.Tuple> tuples = source.getResults() == null ? null :
+					source.getResults().stream().map(tuple->new redis.clients.jedis.Tuple(tuple.getBinaryElement(),
+							tuple.getScore())).collect(Collectors.toList());
 
-            return new ScanResult<>(target.getCursor(), tuples);
-        }
-    }
+			return new redis.clients.jedis.ScanResult<>(source.getCursor(), tuples);
+		}
+
+		@Override
+		public ScanResult<Set<Tuple>> decode(final redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple> target){
+			if(target == null){
+				return null;
+			}
+
+			Set<Tuple> tuples = target.getResult() == null ? null :
+					target.getResult().stream().map(tuple->new Tuple(tuple.getBinaryElement(), tuple.getScore())).collect(Collectors.toCollection(LinkedHashSet::new));
+
+			return new ScanResult<>(target.getCursor(), tuples);
+		}
+
+	}
 
 }

@@ -24,8 +24,8 @@
  */
 package com.buession.redis.core.convert.jedis;
 
+import com.buession.core.convert.Convert;
 import com.buession.redis.core.Aggregate;
-import com.buession.redis.core.convert.Convert;
 import redis.clients.jedis.ZParams;
 
 /**
@@ -34,7 +34,7 @@ import redis.clients.jedis.ZParams;
 public class AggregateConvert implements Convert<Aggregate, ZParams.Aggregate> {
 
 	@Override
-	public ZParams.Aggregate convert(final Aggregate source){
+	public ZParams.Aggregate encode(final Aggregate source){
 		switch(source){
 			case MIN:
 				return ZParams.Aggregate.MIN;
@@ -49,7 +49,7 @@ public class AggregateConvert implements Convert<Aggregate, ZParams.Aggregate> {
 	}
 
 	@Override
-	public Aggregate deconvert(final ZParams.Aggregate target){
+	public Aggregate decode(final ZParams.Aggregate target){
 		switch(target){
 			case MIN:
 				return Aggregate.MIN;

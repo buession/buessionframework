@@ -24,17 +24,17 @@
  */
 package com.buession.redis.core.convert.jedis;
 
-import com.buession.redis.core.command.StringCommands;
-import com.buession.redis.core.convert.Convert;
+import com.buession.core.convert.Convert;
+import com.buession.redis.core.BitOperation;
 import redis.clients.jedis.BitOP;
 
 /**
  * @author Yong.Teng
  */
-public class BitOperationConvert implements Convert<StringCommands.BitOperation, BitOP> {
+public class BitOperationConvert implements Convert<BitOperation, BitOP> {
 
 	@Override
-	public BitOP convert(final StringCommands.BitOperation source){
+	public BitOP encode(final BitOperation source){
 		switch(source){
 			case AND:
 				return BitOP.AND;
@@ -50,16 +50,16 @@ public class BitOperationConvert implements Convert<StringCommands.BitOperation,
 	}
 
 	@Override
-	public StringCommands.BitOperation deconvert(final BitOP target){
+	public BitOperation decode(final BitOP target){
 		switch(target){
 			case AND:
-				return StringCommands.BitOperation.AND;
+				return BitOperation.AND;
 			case OR:
-				return StringCommands.BitOperation.OR;
+				return BitOperation.OR;
 			case NOT:
-				return StringCommands.BitOperation.NOT;
+				return BitOperation.NOT;
 			case XOR:
-				return StringCommands.BitOperation.XOR;
+				return BitOperation.XOR;
 			default:
 				return null;
 		}

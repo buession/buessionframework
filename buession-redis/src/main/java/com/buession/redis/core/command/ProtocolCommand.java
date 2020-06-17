@@ -398,30 +398,31 @@ public enum ProtocolCommand {
 	/**
 	 * sorted set command end
 	 **/
-		---
 
 	/**
 	 * string command start
 	 **/
-	SET(ProtocolCommandGroup.STRING, "w"),
-
-	SETEX(ProtocolCommandGroup.STRING, "w"),
-
-	PSETEX(ProtocolCommandGroup.STRING, "w"),
-
-	SETNX(ProtocolCommandGroup.STRING, "w"),
-
 	APPEND(ProtocolCommandGroup.STRING, "rw"),
+
+	BITCOUNT(ProtocolCommandGroup.STRING, "r"),
+
+	BITFIELD(ProtocolCommandGroup.STRING, "rw"),
+
+	BITOP(ProtocolCommandGroup.STRING, "rw"),
+
+	BITPOS(ProtocolCommandGroup.STRING, "r"),
+
+	DECR(ProtocolCommandGroup.STRING, "w"),
+
+	DECRBY(ProtocolCommandGroup.STRING, "w"),
 
 	GET(ProtocolCommandGroup.STRING, "r"),
 
+	GETBIT(ProtocolCommandGroup.STRING, "r"),
+
+	GETRANGE(ProtocolCommandGroup.STRING, "r"),
+
 	GETSET(ProtocolCommandGroup.STRING, "rw"),
-
-	MSET(ProtocolCommandGroup.STRING, "w"),
-
-	MSETNX(ProtocolCommandGroup.STRING, "w"),
-
-	MGET(ProtocolCommandGroup.STRING, "r"),
 
 	INCR(ProtocolCommandGroup.STRING, "rw"),
 
@@ -429,71 +430,45 @@ public enum ProtocolCommand {
 
 	INCRBYFLOAT(ProtocolCommandGroup.STRING, "rw"),
 
-	DECR(ProtocolCommandGroup.STRING, "w"),
+	MGET(ProtocolCommandGroup.STRING, "r"),
 
-	DECRBY(ProtocolCommandGroup.STRING, "w"),
+	MSET(ProtocolCommandGroup.STRING, "w"),
+
+	MSETNX(ProtocolCommandGroup.STRING, "w"),
+
+	PSETEX(ProtocolCommandGroup.STRING, "w"),
+
+	SET(ProtocolCommandGroup.STRING, "w"),
+
+	SETBIT(ProtocolCommandGroup.STRING, "rw"),
+
+	SETEX(ProtocolCommandGroup.STRING, "w"),
+
+	SETNX(ProtocolCommandGroup.STRING, "w"),
 
 	SETRANGE(ProtocolCommandGroup.STRING, "rw"),
 
-	GETRANGE(ProtocolCommandGroup.STRING, "r"),
+	STRLEN(ProtocolCommandGroup.STRING, "r"),
 
 	SUBSTR(ProtocolCommandGroup.STRING, "r"),
-
-	STRLEN(ProtocolCommandGroup.STRING, "r"),
 	/** string command end **/
-
-	/**
-	 * bitmap command start
-	 **/
-	SETBIT("rw"),
-
-	GETBIT("r"),
-
-	BITPOS("r"),
-
-	BITCOUNT("r"),
-
-	BITOP("rw"),
-
-	BITFIELD("rw"),
-	/**
-	 * bitmap command end
-	 **/
 
 	/**
 	 * transaction command start
 	 **/
-	MULTI("rw"),
+	DISCARD(ProtocolCommandGroup.TRANSACTION, "rw"),
 
-	EXEC("rw"),
+	EXEC(ProtocolCommandGroup.TRANSACTION, "rw"),
 
-	DISCARD("rw"),
+	MULTI(ProtocolCommandGroup.TRANSACTION, "rw"),
 
-	WATCH("rw"),
+	UNWATCH(ProtocolCommandGroup.TRANSACTION, "rw"),
 
-	UNWATCH("rw"),
+	WATCH(ProtocolCommandGroup.TRANSACTION, "rw");
+
 	/**
 	 * transaction command end
 	 **/
-
-	/**
-	 * replication command start
-	 **/
-	SLAVEOF("w"),
-	/**
-	 * replication command end
-	 **/
-
-	/**
-	 * cluster command start
-	 */
-	CLUSTER_ADDSLOTS(ProtocolCommandGroup.CLUSTER, "rw"),
-
-	CLUSTER_COUNTKEYSINSLOT(ProtocolCommandGroup.CLUSTER, "r");
-
-	/**
-	 * cluster command start
-	 */
 
 	private ProtocolCommandGroup group;
 
