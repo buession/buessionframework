@@ -66,24 +66,24 @@ public class SetArgumentConvert implements Convert<StringCommands.SetArgument, S
 			return null;
 		}
 
-		final StringCommands.SetArgument.Builder setArgumentBuilder = StringCommands.SetArgument.Builder.create();
+		final StringCommands.SetArgument.Builder builder = StringCommands.SetArgument.Builder.create();
 		byte[][] params = target.getByteParams();
 
 		for(int i = 0; i < params.length; i++){
 			String s = SafeEncoder.encode(params[i]);
 
 			if("ex".equals(s)){
-				setArgumentBuilder.ex(Integer.valueOf(SafeEncoder.encode(params[++i])));
+				builder.ex(Integer.valueOf(SafeEncoder.encode(params[++i])));
 			}else if("px".equals(s)){
-				setArgumentBuilder.px(Integer.valueOf(SafeEncoder.encode(params[++i])));
+				builder.px(Integer.valueOf(SafeEncoder.encode(params[++i])));
 			}else if("nx".equals(s)){
-				setArgumentBuilder.nxXX(NxXx.NX);
+				builder.nxXX(NxXx.NX);
 			}else if("xx".equals(s)){
-				setArgumentBuilder.nxXX(NxXx.XX);
+				builder.nxXX(NxXx.XX);
 			}
 		}
 
-		return setArgumentBuilder.build();
+		return builder.build();
 	}
 
 }

@@ -25,6 +25,8 @@
 package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.convert.Convert;
+import com.buession.core.convert.HashConvert;
+import com.buession.core.convert.ListConvert;
 import com.buession.lang.Geo;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
@@ -51,7 +54,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 		return target == null ? null : new Geo(target.getLongitude(), target.getLatitude());
 	}
 
-	public static class GeoMapConvert<K> implements Convert<Map<K, Geo>, Map<K, GeoCoordinate>> {
+	public static class GeoMapConvert<K> implements HashConvert<K, Geo, K, GeoCoordinate> {
 
 		@Override
 		public Map<K, GeoCoordinate> encode(final Map<K, Geo> source){
@@ -85,7 +88,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 
 	}
 
-	public static class GeoListConvert implements Convert<List<Geo>, List<GeoCoordinate>> {
+	public static class GeoListConvert implements ListConvert<Geo, GeoCoordinate> {
 
 		@Override
 		public List<GeoCoordinate> encode(final List<Geo> source){
@@ -93,13 +96,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 				return null;
 			}
 
-			final List<GeoCoordinate> result = new ArrayList<>(source.size());
-
-			for(Geo geo : source){
-				result.add(new GeoCoordinate(geo.getLongitude(), geo.getLatitude()));
-			}
-
-			return result;
+			return source.stream().map((geo)->new GeoCoordinate(geo.getLongitude(), geo.getLatitude())).collect(Collectors.toList());
 		}
 
 		@Override
@@ -108,13 +105,8 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 				return null;
 			}
 
-			final List<Geo> result = new ArrayList<>(target.size());
-
-			for(GeoCoordinate geoCoordinate : target){
-				result.add(new Geo(geoCoordinate.getLongitude(), geoCoordinate.getLatitude()));
-			}
-
-			return result;
+			return target.stream().map((geoCoordinate)->new Geo(geoCoordinate.getLongitude(),
+					geoCoordinate.getLatitude())).collect(Collectors.toList());
 		}
 
 	}
@@ -186,7 +178,7 @@ public class GeoConvert implements Convert<Geo, GeoCoordinate> {
 			return geoRadius;
 		}
 
-		public static class ListGeoRadiusConvert implements Convert<List<GeoRadius>, List<GeoRadiusResponse>> {
+		public static class ListGeoRadiusConvert implements ListConvert<GeoRadius, GeoRadiusResponse> {
 
 			@Override
 			public List<GeoRadiusResponse> encode(final List<GeoRadius> source){

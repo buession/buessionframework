@@ -50,6 +50,7 @@ import com.buession.redis.core.convert.jedis.ScanResultConvert;
 import com.buession.redis.core.convert.jedis.SetArgumentConvert;
 import com.buession.redis.core.convert.jedis.SortArgumentConvert;
 import com.buession.redis.core.convert.jedis.TupleConvert;
+import com.buession.redis.utils.RedisClientUtils;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.BitOP;
 import redis.clients.jedis.GeoCoordinate;
@@ -74,7 +75,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class JedisClientUtils {
+public class JedisClientUtils extends RedisClientUtils {
 
 	private JedisClientUtils(){
 	}
@@ -246,10 +247,6 @@ public class JedisClientUtils {
 			default:
 				return null;
 		}
-	}
-
-	public final static Status pingResult(final String result){
-		return ReturnUtils.statusForBool("PONG".equalsIgnoreCase(result));
 	}
 
 }

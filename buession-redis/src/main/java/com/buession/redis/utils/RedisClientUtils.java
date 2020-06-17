@@ -22,73 +22,21 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
+package com.buession.redis.utils;
 
-import com.buession.core.convert.Convert;
-import com.buession.lang.Order;
-import com.buession.redis.core.command.GeoCommands;
-import redis.clients.jedis.params.GeoRadiusParam;
-import redis.clients.jedis.util.SafeEncoder;
+import com.buession.lang.Status;
 
 /**
  * @author Yong.Teng
  */
-public class GeoArgumentConvert implements Convert<GeoCommands.GeoArgument, GeoRadiusParam> {
+public class RedisClientUtils {
 
-	@Override
-	public GeoRadiusParam encode(final GeoCommands.GeoArgument source){
-		if(source == null){
-			return null;
-		}
+	protected RedisClientUtils(){
 
-		final GeoRadiusParam geoRadiusParam = new GeoRadiusParam();
-
-		if(source.isWithCoord()){
-			geoRadiusParam.withCoord();
-		}
-
-		if(source.isWithDist()){
-			geoRadiusParam.withDist();
-		}
-
-		if(source.getOrder() == Order.ASC){
-			geoRadiusParam.sortAscending();
-		}else if(source.getOrder() == Order.DESC){
-			geoRadiusParam.sortDescending();
-		}
-
-		if(source.getCount() != null){
-			geoRadiusParam.count(source.getCount());
-		}
-
-		return geoRadiusParam;
 	}
 
-	@Override
-	public GeoCommands.GeoArgument decode(final GeoRadiusParam target){
-		if(target == null){
-			return null;
-		}
-
-		final GeoCommands.GeoArgument.Builder builder = GeoCommands.GeoArgument.Builder.create();
-
-		for(byte[] v : target.getByteParams()){
-			String s = SafeEncoder.encode(v);
-
-			if("withcoord".equals(s)){
-				builder.withCoord();
-			}else if("withdist".equals(s)){
-				builder.withDist();
-			}else if("asc".equals(s)){
-				builder.order(Order.ASC);
-			}else if("desc".equals(s)){
-				builder.order(Order.DESC);
-			}else if("count".equals(s)){
-				builder.count(target.getParam("count"));
-			}
-		}
-
-		return builder.build();
+	public final static Status pingResult(final String result){
+		return ReturnUtils.statusForBool("PONG".equalsIgnoreCase(result));
 	}
 
 }

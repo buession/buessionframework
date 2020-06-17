@@ -25,6 +25,7 @@
 package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.convert.Convert;
+import com.buession.core.convert.SetConvert;
 import com.buession.redis.core.Tuple;
 
 import java.util.LinkedHashSet;
@@ -46,7 +47,7 @@ public class TupleConvert implements Convert<Tuple, redis.clients.jedis.Tuple> {
 		return target == null ? null : new Tuple(target.getBinaryElement(), target.getScore());
 	}
 
-	public static class SetTupleConvert implements Convert<Set<Tuple>, Set<redis.clients.jedis.Tuple>> {
+	public static class SetTupleConvert implements SetConvert<Tuple, redis.clients.jedis.Tuple> {
 
 		@Override
 		public Set<redis.clients.jedis.Tuple> encode(final Set<Tuple> source){

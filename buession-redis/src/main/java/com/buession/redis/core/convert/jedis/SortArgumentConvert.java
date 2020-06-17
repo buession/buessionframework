@@ -25,7 +25,9 @@
 package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.convert.Convert;
+import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Order;
+import com.buession.redis.core.Limit;
 import com.buession.redis.core.SortArgument;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Protocol;
@@ -58,7 +60,8 @@ public class SortArgumentConvert implements Convert<SortArgument, SortingParams>
 		}
 
 		if(source.getLimit() != null){
-			sortingParams.limit((int) source.getLimit().getOffset(), (int) source.getLimit().getCount());
+			Limit limit = source.getLimit();
+			sortingParams.limit((int) limit.getOffset(), (int) limit.getCount());
 		}
 
 		if(source.getAlpha() != null){
@@ -74,7 +77,7 @@ public class SortArgumentConvert implements Convert<SortArgument, SortingParams>
 			return null;
 		}
 
-		final SortArgument.Builder sortArgumentBuilder = SortArgument.Builder.create();
+		final SortArgument.Builder builder = SortArgument.Builder.create();
 
 		Collection<byte[]> collections = target.getParams();
 		Iterator<byte[]> iterator = collections.iterator();
@@ -84,22 +87,22 @@ public class SortArgumentConvert implements Convert<SortArgument, SortingParams>
 
 			if(v == Protocol.Keyword.BY.raw){
 				v = iterator.next();
-				sortArgumentBuilder.by(SafeEncoder.encode(v));
+				builder.by(SafeEncoder.encode(v));
 			}else if(v == Protocol.Keyword.ASC.raw){
-				sortArgumentBuilder.asc();
+				builder.asc();
 			}else if(v == Protocol.Keyword.DESC.raw){
-				sortArgumentBuilder.desc();
+				builder.desc();
 			}else if(v == Protocol.Keyword.LIMIT.raw){
 				byte[] start = iterator.next();
 				byte[] end = iterator.next();
-				sortArgumentBuilder.limit(Long.valueOf(SafeEncoder.encode(start)),
-						Long.valueOf(SafeEncoder.encode(end)));
+
+				builder.limit(NumberUtils.bytes2long(start), NumberUtils.bytes2long(end));
 			}else if(v == Protocol.Keyword.ALPHA.raw){
-				sortArgumentBuilder.alpha();
+				builder.alpha();
 			}
 		}
 
-		return sortArgumentBuilder.build();
+		return builder.build();
 	}
 
 }
