@@ -22,41 +22,34 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.redis.core;
 
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.Options;
-import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
+import com.buession.core.converter.Converter;
+import redis.clients.jedis.Response;
+
+import java.util.function.Supplier;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
+public class JedisResult<V> extends FutureResult<Response<V>> {
 
-	protected RedisConnection createRedisConnection(){
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("redis.host", 6379, "tQP" +
-				"!Vf7JxL-nrH-x", 10);
-
-		try{
-			factoryBean.afterPropertiesSet();
-			return factoryBean.getObject();
-		}catch(Exception e){
-			return null;
-		}
+	public JedisResult(final Response<V> resultHolder){
+		super(resultHolder);
 	}
 
-	protected RedisTemplate getRedisTemplate(){
-		RedisTemplate redisTemplate = new RedisTemplate(createRedisConnection());
+	public JedisResult(final Response<V> resultHolder, final Converter converter){
+		super(resultHolder, converter);
+	}
 
-		Options options = new Options();
+	public JedisResult(final Response<V> resultHolder, final Converter converter,
+			final Supplier<?> defaultConversionResult){
+		super(resultHolder, converter, defaultConversionResult);
+	}
 
-		options.setEnableTransactionSupport(true);
-
-		redisTemplate.setOptions(options);
-
-		redisTemplate.afterPropertiesSet();
-
-		return redisTemplate;
+	@Override
+	public V get(){
+		return getResultHolder().get();
 	}
 
 }

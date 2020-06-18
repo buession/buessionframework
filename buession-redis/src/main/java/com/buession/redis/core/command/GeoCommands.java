@@ -337,13 +337,13 @@ public interface GeoCommands extends RedisCommands {
 	 * 		纬度
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoArgument
+	 * @param geoRadiusArgument
 	 * 		GEO 参数
 	 *
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
-			final GeoArgument geoArgument);
+			final GeoRadiusArgument geoRadiusArgument);
 
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
@@ -359,13 +359,13 @@ public interface GeoCommands extends RedisCommands {
 	 * 		纬度
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoArgument
+	 * @param geoRadiusArgument
 	 * 		GEO 参数
 	 *
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
-			final GeoArgument geoArgument);
+			final GeoRadiusArgument geoRadiusArgument);
 
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
@@ -383,13 +383,13 @@ public interface GeoCommands extends RedisCommands {
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
-	 * @param geoArgument
+	 * @param geoRadiusArgument
 	 * 		GEO 参数
 	 *
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
-			final GeoUnit unit, final GeoArgument geoArgument);
+			final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument);
 
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
@@ -407,13 +407,13 @@ public interface GeoCommands extends RedisCommands {
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
-	 * @param geoArgument
+	 * @param geoRadiusArgument
 	 * 		GEO 参数
 	 *
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
-			final GeoUnit unit, final GeoArgument geoArgument);
+			final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument);
 
 	/**
 	 * 找出位于指定范围内的元素，
@@ -507,13 +507,13 @@ public interface GeoCommands extends RedisCommands {
 	 * 		位置元素
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoArgument
+	 * @param geoRadiusArgument
 	 * 		GEO 参数
 	 *
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-			final GeoArgument geoArgument);
+			final GeoRadiusArgument geoRadiusArgument);
 
 	/**
 	 * 找出位于指定范围内的元素，
@@ -528,13 +528,13 @@ public interface GeoCommands extends RedisCommands {
 	 * 		位置元素
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoArgument
+	 * @param geoRadiusArgument
 	 * 		GEO 参数
 	 *
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoArgument geoArgument);
+			final GeoRadiusArgument geoRadiusArgument);
 
 	/**
 	 * 找出位于指定范围内的元素，
@@ -551,13 +551,13 @@ public interface GeoCommands extends RedisCommands {
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
-	 * @param geoArgument
+	 * @param geoRadiusArgument
 	 * 		GEO 参数
 	 *
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius, final GeoUnit unit,
-			final GeoArgument geoArgument);
+			final GeoRadiusArgument geoRadiusArgument);
 
 	/**
 	 * 找出位于指定范围内的元素，
@@ -574,18 +574,18 @@ public interface GeoCommands extends RedisCommands {
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
-	 * @param geoArgument
+	 * @param geoRadiusArgument
 	 * 		GEO 参数
 	 *
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
-			final GeoArgument geoArgument);
+			final GeoRadiusArgument geoRadiusArgument);
 
 	/**
 	 * GEO 参数
 	 */
-	class GeoArgument {
+	class GeoRadiusArgument {
 
 		private Boolean withCoord;
 
@@ -597,7 +597,7 @@ public interface GeoCommands extends RedisCommands {
 
 		private Integer count;
 
-		private GeoArgument(){
+		private GeoRadiusArgument(){
 
 		}
 
@@ -648,7 +648,7 @@ public interface GeoCommands extends RedisCommands {
 
 		public static class Builder {
 
-			private GeoArgument geoArgument = new GeoArgument();
+			private GeoRadiusArgument geoRadiusArgument = new GeoRadiusArgument();
 
 			private Builder(){
 			}
@@ -663,7 +663,7 @@ public interface GeoCommands extends RedisCommands {
 			 * @return Builder
 			 */
 			public Builder withCoord(){
-				geoArgument.withCoord = true;
+				geoRadiusArgument.withCoord = true;
 				return this;
 			}
 
@@ -673,7 +673,7 @@ public interface GeoCommands extends RedisCommands {
 			 * @return Builder
 			 */
 			public Builder withDist(){
-				geoArgument.withDist = true;
+				geoRadiusArgument.withDist = true;
 				return this;
 			}
 
@@ -683,7 +683,7 @@ public interface GeoCommands extends RedisCommands {
 			 * @return Builder
 			 */
 			public Builder withHash(){
-				geoArgument.withHash = true;
+				geoRadiusArgument.withHash = true;
 				return this;
 			}
 
@@ -696,7 +696,7 @@ public interface GeoCommands extends RedisCommands {
 			 * @return Builder
 			 */
 			public Builder order(Order order){
-				geoArgument.order = order;
+				geoRadiusArgument.order = order;
 				return this;
 			}
 
@@ -709,12 +709,12 @@ public interface GeoCommands extends RedisCommands {
 			 * @return Builder
 			 */
 			public Builder count(Integer count){
-				geoArgument.count = count;
+				geoRadiusArgument.count = count;
 				return this;
 			}
 
-			public GeoArgument build(){
-				return geoArgument;
+			public GeoRadiusArgument build(){
+				return geoRadiusArgument;
 			}
 
 		}

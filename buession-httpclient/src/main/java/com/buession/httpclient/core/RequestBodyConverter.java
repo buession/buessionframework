@@ -19,44 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.httpclient.core;
 
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.Options;
-import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
+import com.buession.core.converter.Converter;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
-
-	protected RedisConnection createRedisConnection(){
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("redis.host", 6379, "tQP" +
-				"!Vf7JxL-nrH-x", 10);
-
-		try{
-			factoryBean.afterPropertiesSet();
-			return factoryBean.getObject();
-		}catch(Exception e){
-			return null;
-		}
-	}
-
-	protected RedisTemplate getRedisTemplate(){
-		RedisTemplate redisTemplate = new RedisTemplate(createRedisConnection());
-
-		Options options = new Options();
-
-		options.setEnableTransactionSupport(true);
-
-		redisTemplate.setOptions(options);
-
-		redisTemplate.afterPropertiesSet();
-
-		return redisTemplate;
-	}
+public interface RequestBodyConverter<S, T> extends Converter<S, T> {
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
@@ -35,48 +35,43 @@ import java.lang.reflect.Method;
 /**
  * @author Yong.Teng
  */
-class ConnectionSplittingInterceptor implements org.aopalliance.intercept.MethodInterceptor, org.springframework
-        .cglib.proxy.MethodInterceptor {
+class ConnectionSplittingInterceptor implements org.aopalliance.intercept.MethodInterceptor,
+		org.springframework.cglib.proxy.MethodInterceptor {
 
-    private final RedisConnectionFactory factory;
+	private final RedisConnectionFactory factory;
 
-    private final static Logger logger = LoggerFactory.getLogger(ConnectionSplittingInterceptor.class);
+	private final static Logger logger = LoggerFactory.getLogger(ConnectionSplittingInterceptor.class);
 
-    public ConnectionSplittingInterceptor(RedisConnectionFactory factory){
-        this.factory = factory;
-    }
+	public ConnectionSplittingInterceptor(RedisConnectionFactory factory){
+		this.factory = factory;
+	}
 
-    @Override
-    public Object intercept(Object instance, Method method, Object[] args, MethodProxy proxy) throws Throwable{
-        //RedisCommand commandToExecute = RedisCommand.failsafeCommandLookup(method.getName());
+	@Override
+	public Object intercept(Object instance, Method method, Object[] args, MethodProxy proxy) throws Throwable{
+		logger.debug("Invoke '{}' on unbound connection.", method.getName());
 
-        //logger.debug("Invoke '{}' on bound connection.", method.getName());
-        // return invoke(method, instance, args);
+		RedisConnection connection = factory.getConnection();
 
-        logger.debug("Invoke '{}' on unbound connection.", method.getName());
+		try{
+			return invoke(method, connection, args);
+		}finally{
+			if(connection.isClosed() == false){
+				connection.close();
+			}
+		}
+	}
 
-        RedisConnection connection = factory.getConnection();
+	private Object invoke(Method method, Object target, Object[] args) throws Throwable{
+		try{
+			return method.invoke(target, args);
+		}catch(InvocationTargetException e){
+			throw e.getCause();
+		}
+	}
 
-        try{
-            return invoke(method, connection, args);
-        }finally{
-            if(connection.isClosed() == false){
-                connection.close();
-            }
-        }
-    }
-
-    private Object invoke(Method method, Object target, Object[] args) throws Throwable{
-        try{
-            return method.invoke(target, args);
-        }catch(InvocationTargetException e){
-            throw e.getCause();
-        }
-    }
-
-    @Override
-    public Object invoke(MethodInvocation invocation) throws Throwable{
-        return intercept(invocation.getThis(), invocation.getMethod(), invocation.getArguments(), null);
-    }
+	@Override
+	public Object invoke(MethodInvocation invocation) throws Throwable{
+		return intercept(invocation.getThis(), invocation.getMethod(), invocation.getArguments(), null);
+	}
 
 }

@@ -22,41 +22,45 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.httpclient.okhttp.convert;
 
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.Options;
-import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
+import com.buession.httpclient.core.MultipartFormRequestBody;
+import com.buession.httpclient.core.MultipartRequestBodyElement;
+import com.buession.io.MimeType;
+import com.buession.io.file.File;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
+public class MultipartFormRequestBodyConverter implements OkHttpRequestBodyConverter<MultipartFormRequestBody> {
 
-	protected RedisConnection createRedisConnection(){
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("redis.host", 6379, "tQP" +
-				"!Vf7JxL-nrH-x", 10);
-
-		try{
-			factoryBean.afterPropertiesSet();
-			return factoryBean.getObject();
-		}catch(Exception e){
+	@Override
+	public RequestBody convert(MultipartFormRequestBody source){
+		if(source == null || source.getContent() == null){
 			return null;
 		}
-	}
 
-	protected RedisTemplate getRedisTemplate(){
-		RedisTemplate redisTemplate = new RedisTemplate(createRedisConnection());
+		final MultipartBody.Builder builder = new okhttp3.MultipartBody.Builder();
 
-		Options options = new Options();
+		builder.setType(MultipartBody.FORM);
 
-		options.setEnableTransactionSupport(true);
+		for(MultipartRequestBodyElement element : source.getContent()){
+			if(element.getFile() != null){
+				File file = new File(element.getFile());
+				MimeType mimeType = file.getMimeType();
+				MediaType mediaType = mimeType == null ? MediaType.parse("application/octet-stream") :
+						MediaType.parse(mimeType.toString());
 
-		redisTemplate.setOptions(options);
+				builder.addFormDataPart(element.getName(), file.getName(), RequestBody.create(file, mediaType));
+			}else{
+				builder.addFormDataPart(element.getName(), element.getOptionalValue());
+			}
+		}
 
-		redisTemplate.afterPropertiesSet();
-
-		return redisTemplate;
+		return builder.build();
 	}
 
 }

@@ -32,6 +32,7 @@ import com.buession.redis.exception.RedisException;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Redis 链接对象
@@ -54,7 +55,7 @@ public interface RedisConnection extends Closeable {
 
 	void multi();
 
-	void exec();
+	List<Object> exec();
 
 	void discard();
 

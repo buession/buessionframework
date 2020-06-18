@@ -24,10 +24,11 @@
  */
 package com.buession.redis.core.command;
 
+import com.buession.lang.Order;
 import com.buession.lang.Status;
+import com.buession.redis.core.Limit;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.Type;
 
 import java.util.List;
@@ -1119,5 +1120,150 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 被删除 key 的数量
 	 */
 	Long unlink(final byte[]... keys);
+
+	/**
+	 * 排序参数
+	 *
+	 * @author Yong.Teng
+	 */
+	class SortArgument {
+
+		private String by;
+
+		private Order order;
+
+		private Limit limit;
+
+		private String alpha;
+
+		private SortArgument(){
+
+		}
+
+		/**
+		 * 获取可以让 uid 按其他键的元素来排序模式
+		 *
+		 * @return 可以让 uid 按其他键的元素来排序模式
+		 */
+		public String getBy(){
+			return by;
+		}
+
+		/**
+		 * 获取排序方式
+		 *
+		 * @return 排序方式
+		 */
+		public Order getOrder(){
+			return order;
+		}
+
+		/**
+		 * 获取返回结果限制
+		 *
+		 * @return 返回结果限制
+		 */
+		public Limit getLimit(){
+			return limit;
+		}
+
+		/**
+		 * 使用对字符串进行排序
+		 *
+		 * @return 使用对字符串进行排序
+		 */
+		public String getAlpha(){
+			return alpha;
+		}
+
+		public static class Builder {
+
+			private SortArgument sortArgument = new SortArgument();
+
+			private Builder(){
+			}
+
+			public final static SortArgument.Builder create(){
+				return new SortArgument.Builder();
+			}
+
+			/**
+			 * 设置可以让 uid 按其他键的元素来排序
+			 *
+			 * @param pattern
+			 * 		模式
+			 *
+			 * @return Builder
+			 */
+			public SortArgument.Builder by(String pattern){
+				sortArgument.by = pattern;
+				return this;
+			}
+
+			/**
+			 * 设置升序排序
+			 *
+			 * @return Builder
+			 */
+			public SortArgument.Builder asc(){
+				sortArgument.order = Order.ASC;
+				return this;
+			}
+
+			/**
+			 * 设置降序排序
+			 *
+			 * @return Builder
+			 */
+			public SortArgument.Builder desc(){
+				sortArgument.order = Order.DESC;
+				return this;
+			}
+
+			/**
+			 * 设置排序方式
+			 *
+			 * @param order
+			 * 		排序方式
+			 *
+			 * @return Builder
+			 */
+			public SortArgument.Builder order(Order order){
+				sortArgument.order = order;
+				return this;
+			}
+
+			/**
+			 * 设置返回偏移量为 offset 的 count 条数据
+			 *
+			 * @param offset
+			 * 		偏移量
+			 * @param count
+			 * 		返回数量
+			 *
+			 * @return Builder
+			 */
+			public SortArgument.Builder limit(long offset, long count){
+				sortArgument.limit = new Limit(offset, count);
+				return this;
+			}
+
+			/**
+			 * SORT 命令默认排序对象为数字，当需要对字符串进行排序时，需要显式地在 SORT 命令之后添加 ALPHA 修饰符
+			 *
+			 * @return 使用对字符串进行排序
+			 */
+			public SortArgument.Builder alpha(){
+				sortArgument.alpha = "ALPHA";
+				return this;
+			}
+
+			public SortArgument build(){
+				return sortArgument;
+			}
+
+		}
+
+	}
 
 }

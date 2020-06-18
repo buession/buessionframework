@@ -22,41 +22,29 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.redis.core.convert;
 
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.Options;
-import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
+import com.buession.core.converter.HashConverter;
+import com.buession.core.converter.ListConverter;
+import com.buession.lang.Status;
+import com.buession.redis.utils.ReturnUtils;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
+public abstract class Converters {
 
-	protected RedisConnection createRedisConnection(){
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("redis.host", 6379, "tQP" +
-				"!Vf7JxL-nrH-x", 10);
-
-		try{
-			factoryBean.afterPropertiesSet();
-			return factoryBean.getObject();
-		}catch(Exception e){
-			return null;
-		}
+	public final static HashConverter<String, String, byte[], byte[]> stringToBinaryHashConverter(){
+		return new HashConverter<>((key)->SafeEncoder.encode(key), (value)->SafeEncoder.encode(value));
 	}
 
-	protected RedisTemplate getRedisTemplate(){
-		RedisTemplate redisTemplate = new RedisTemplate(createRedisConnection());
+	public final static ListConverter<String, byte[]> stringToBinaryListConverter(){
+		return new ListConverter<>((value)->SafeEncoder.encode(value));
+	}
 
-		Options options = new Options();
-
-		options.setEnableTransactionSupport(true);
-
-		redisTemplate.setOptions(options);
-
-		redisTemplate.afterPropertiesSet();
-
-		return redisTemplate;
+	public final static Status pingResult(final String result){
+		return ReturnUtils.statusForBool("PONG".equalsIgnoreCase(result));
 	}
 
 }

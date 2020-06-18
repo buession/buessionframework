@@ -26,6 +26,7 @@ package com.buession.session;
 
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.junit.Test;
+import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -61,7 +62,8 @@ public class SpringDataRedisTest {
 	}
 
 	private JedisConnectionFactory createJedisConnectionFactory(){
-		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration("10.101.0.45", 6379);
+		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration("redis.host", 6379);
+		configuration.setPassword(RedisPassword.of("tQP!Vf7JxL-nrH-x"));
 		configuration.setDatabase(10);
 
 		JedisClientConfiguration jedisClientConfiguration =
@@ -85,10 +87,13 @@ public class SpringDataRedisTest {
 	}
 
 	@Test
-	public void get(){
+	public void transaction(){
 		RedisTemplate redisTemplate = redisTemplate();
-		System.out.println(redisTemplate.hasKey("user"));
-		System.out.println(redisTemplate.hasKey("user"));
+
+		redisTemplate.setEnableTransactionSupport(true);
+		redisTemplate.multi();
+		redisTemplate.opsForValue().set("test_tx1", "A");
+		redisTemplate.exec();
 	}
 
 }

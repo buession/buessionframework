@@ -42,6 +42,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.util.Pool;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author Yong.Teng
@@ -108,10 +109,8 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	}
 
 	@Override
-	public void exec(){
-		if(transaction != null){
-			transaction.exec();
-		}
+	public List<Object> exec(){
+		return transaction != null ? transaction.exec() : null;
 	}
 
 	@Override
@@ -171,8 +170,8 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	}
 
 	@Override
-	protected <C, R> R doExecute(Executor<C, R> executor) throws RedisException{
-		return executor.execute((C) jedis);
+	protected <R> R doExecute(Executor<Jedis, R> executor) throws RedisException{
+		return executor.execute(jedis);
 	}
 
 	@Override

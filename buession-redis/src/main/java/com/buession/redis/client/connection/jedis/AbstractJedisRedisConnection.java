@@ -34,7 +34,7 @@ import java.io.IOException;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisConnection<T extends JedisCommands> extends AbstractRedisConnection implements JedisRedisConnection<T> {
+public abstract class AbstractJedisRedisConnection<T extends JedisCommands> extends AbstractRedisConnection<T> implements JedisRedisConnection<T> {
 
 	public AbstractJedisRedisConnection(){
 		super();

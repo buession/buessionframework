@@ -58,8 +58,8 @@ public class JedisClientTest extends AbstractJedisRedisTest {
 		RedisTemplate redisTemplate = getRedisTemplate();
 
 		Transaction transaction = redisTemplate.multi();
-		redisTemplate.set("t1", "T1");
-		transaction.exec();
+		redisTemplate.set("t1", "T1222333");
+		//redisTemplate.exec();
 	}
 
 }

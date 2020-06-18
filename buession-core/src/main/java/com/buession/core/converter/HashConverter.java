@@ -22,41 +22,38 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.core.converter;
 
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.Options;
-import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
+import org.apache.commons.collections4.map.HashedMap;
+import org.springframework.core.convert.converter.Converter;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
+public class HashConverter<SK, SV, TK, TV> implements Converter<Map<SK, SV>, Map<TK, TV>> {
 
-	protected RedisConnection createRedisConnection(){
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("redis.host", 6379, "tQP" +
-				"!Vf7JxL-nrH-x", 10);
+	private Converter<SK, TK> keyConverter;
 
-		try{
-			factoryBean.afterPropertiesSet();
-			return factoryBean.getObject();
-		}catch(Exception e){
-			return null;
-		}
+	private Converter<SV, TV> valueConverter;
+
+	public HashConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter){
+		this.keyConverter = keyConverter;
+		this.valueConverter = valueConverter;
 	}
 
-	protected RedisTemplate getRedisTemplate(){
-		RedisTemplate redisTemplate = new RedisTemplate(createRedisConnection());
-
-		Options options = new Options();
-
-		options.setEnableTransactionSupport(true);
-
-		redisTemplate.setOptions(options);
-
-		redisTemplate.afterPropertiesSet();
-
-		return redisTemplate;
+	@Override
+	public Map<TK, TV> convert(final Map<SK, SV> source){
+		if(source == null){
+			return null;
+		}else{
+			return source.entrySet().stream().collect(Collectors.toMap(e->keyConverter.convert(e.getKey()),
+					e->valueConverter.convert(e.getValue()), (a, b)->a, source instanceof LinkedHashMap ?
+							LinkedHashMap::new : HashedMap::new));
+		}
 	}
 
 }

@@ -29,6 +29,7 @@ import com.buession.redis.client.RedisClient;
 /**
  * @author Yong.Teng
  */
+@FunctionalInterface
 public interface Executor<R> extends com.buession.core.Executor<RedisClient, R> {
 
 }

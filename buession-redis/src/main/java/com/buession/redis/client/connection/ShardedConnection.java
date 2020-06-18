@@ -26,6 +26,8 @@ package com.buession.redis.client.connection;
 
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 
+import java.util.List;
+
 /**
  * @author Yong.Teng
  */
@@ -37,7 +39,7 @@ public interface ShardedConnection extends RedisConnection {
 	}
 
 	@Override
-	default void exec(){
+	default List<Object> exec(){
 		throw new NotSupportedTransactionCommandException("ShardedJedis cloud not suppported transaction.");
 	}
 

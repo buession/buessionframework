@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -36,12 +36,12 @@ import java.util.Locale;
  */
 public interface Converter<M, S extends AbstractRecord, R extends AbstractResponse> {
 
-    M converter(S s);
+	M converter(S s);
 
-    M converter(S s, Locale locale);
+	M converter(S s, Locale locale);
 
-    M converter(S s, R response);
+	M converter(S s, R response);
 
-    M converter(S s, R response, Locale locale);
+	M converter(S s, R response, Locale locale);
 
 }

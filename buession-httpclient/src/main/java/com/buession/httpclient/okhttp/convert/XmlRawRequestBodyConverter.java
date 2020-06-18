@@ -22,41 +22,24 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.httpclient.okhttp.convert;
 
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.Options;
-import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
+import com.buession.httpclient.core.XmlRawRequestBody;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
+public class XmlRawRequestBodyConverter implements OkHttpRequestBodyConverter<XmlRawRequestBody> {
 
-	protected RedisConnection createRedisConnection(){
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("redis.host", 6379, "tQP" +
-				"!Vf7JxL-nrH-x", 10);
-
-		try{
-			factoryBean.afterPropertiesSet();
-			return factoryBean.getObject();
-		}catch(Exception e){
+	@Override
+	public RequestBody convert(XmlRawRequestBody source){
+		if(source == null || source.getContent() == null){
 			return null;
 		}
-	}
 
-	protected RedisTemplate getRedisTemplate(){
-		RedisTemplate redisTemplate = new RedisTemplate(createRedisConnection());
-
-		Options options = new Options();
-
-		options.setEnableTransactionSupport(true);
-
-		redisTemplate.setOptions(options);
-
-		redisTemplate.afterPropertiesSet();
-
-		return redisTemplate;
+		return RequestBody.create(source.getContent().asXML(), MediaType.parse(source.getContentType().valueOf()));
 	}
 
 }

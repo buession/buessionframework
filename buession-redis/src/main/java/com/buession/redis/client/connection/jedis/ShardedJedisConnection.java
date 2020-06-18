@@ -147,8 +147,8 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	}
 
 	@Override
-	protected <C, R> R doExecute(Executor<C, R> executor) throws RedisException{
-		return executor.execute((C) shardedJedis);
+	protected <R> R doExecute(Executor<ShardedJedis, R> executor) throws RedisException{
+		return executor.execute(shardedJedis);
 	}
 
 	@Override

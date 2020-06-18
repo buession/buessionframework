@@ -38,7 +38,6 @@ import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.SlowLogCommand;
-import com.buession.redis.core.SortArgument;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.transaction.Transaction;
@@ -862,12 +861,12 @@ public interface ShardedRedisClient extends RedisClient {
 	}
 
 	@Override
-	default void discard(final Transaction transaction){
+	default void discard(){
 		throw new NotSupportedCommandException(ProtocolCommand.DISCARD);
 	}
 
 	@Override
-	default void exec(final Transaction transaction){
+	default List<Object> exec(){
 		throw new NotSupportedCommandException(ProtocolCommand.EXEC);
 	}
 

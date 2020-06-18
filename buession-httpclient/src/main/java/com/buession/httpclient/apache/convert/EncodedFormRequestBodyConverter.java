@@ -22,41 +22,35 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.httpclient.apache.convert;
 
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.Options;
-import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
+import com.buession.httpclient.core.EncodedFormRequestBody;
+import com.buession.httpclient.core.RequestBodyElement;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
+public class EncodedFormRequestBodyConverter implements ApacheRequestBodyConverter<EncodedFormRequestBody> {
 
-	protected RedisConnection createRedisConnection(){
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("redis.host", 6379, "tQP" +
-				"!Vf7JxL-nrH-x", 10);
-
-		try{
-			factoryBean.afterPropertiesSet();
-			return factoryBean.getObject();
-		}catch(Exception e){
+	@Override
+	public UrlEncodedFormEntity convert(EncodedFormRequestBody source){
+		if(source == null || source.getContent() == null){
 			return null;
 		}
-	}
 
-	protected RedisTemplate getRedisTemplate(){
-		RedisTemplate redisTemplate = new RedisTemplate(createRedisConnection());
+		List<NameValuePair> data = new ArrayList<>(source.getContent().size());
 
-		Options options = new Options();
+		for(RequestBodyElement element : source.getContent()){
+			data.add(new BasicNameValuePair(element.getName(), element.getOptionalValue()));
+		}
 
-		options.setEnableTransactionSupport(true);
-
-		redisTemplate.setOptions(options);
-
-		redisTemplate.afterPropertiesSet();
-
-		return redisTemplate;
+		return new UrlEncodedFormEntity(data, source.getContentType().getCharset());
 	}
 
 }

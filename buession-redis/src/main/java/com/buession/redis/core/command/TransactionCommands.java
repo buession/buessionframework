@@ -27,6 +27,8 @@ package com.buession.redis.core.command;
 import com.buession.lang.Status;
 import com.buession.redis.transaction.Transaction;
 
+import java.util.List;
+
 /**
  * 事务命令
  *
@@ -43,11 +45,8 @@ public interface TransactionCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/transaction/discard.html" target="_blank">http://redisdoc
 	 * .com/transaction/discard.html</a></p>
-	 *
-	 * @param transaction
-	 * 		事务
 	 */
-	void discard(final Transaction transaction);
+	void discard();
 
 	/**
 	 * 执行所有事务块内的命令
@@ -55,10 +54,9 @@ public interface TransactionCommands extends RedisCommands {
 	 * <p>详情说明 <a href="http://redisdoc.com/transaction/exec.html" target="_blank">http://redisdoc
 	 * .com/transaction/exec.html</a></p>
 	 *
-	 * @param transaction
-	 * 		事务
+	 * @return 事务块内所有命令的返回值
 	 */
-	void exec(final Transaction transaction);
+	List<Object> exec();
 
 	/**
 	 * 标记事务开始

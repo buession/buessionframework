@@ -25,7 +25,7 @@
 package com.buession.httpclient.apache;
 
 import com.buession.core.utils.EnumUtils;
-import com.buession.httpclient.apache.convert.MultipartFormRequestBodyConvert;
+import com.buession.httpclient.apache.convert.MultipartFormRequestBodyConverter;
 import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.HtmlRawRequestBody;
@@ -40,14 +40,14 @@ import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.TextRawRequestBody;
 import com.buession.httpclient.core.XmlRawRequestBody;
 import com.buession.httpclient.helper.AbstractRequestBuilder;
-import com.buession.httpclient.apache.convert.EncodedFormRequestBodyConvert;
-import com.buession.httpclient.apache.convert.HtmlRawRequestBodyConvert;
-import com.buession.httpclient.apache.convert.ApacheRequestBodyConvert;
-import com.buession.httpclient.apache.convert.JavaScriptRawRequestBodyConvert;
-import com.buession.httpclient.apache.convert.JsonRawRequestBodyConvert;
-import com.buession.httpclient.apache.convert.ObjectRequestBodyConvert;
-import com.buession.httpclient.apache.convert.TextRawRequestBodyConvert;
-import com.buession.httpclient.apache.convert.XmlRawRequestBodyConvert;
+import com.buession.httpclient.apache.convert.EncodedFormRequestBodyConverter;
+import com.buession.httpclient.apache.convert.HtmlRawRequestBodyConverter;
+import com.buession.httpclient.apache.convert.ApacheRequestBodyConverter;
+import com.buession.httpclient.apache.convert.JavaScriptRawRequestBodyConverter;
+import com.buession.httpclient.apache.convert.JsonRawRequestBodyConverter;
+import com.buession.httpclient.apache.convert.ObjectRequestBodyConverter;
+import com.buession.httpclient.apache.convert.TextRawRequestBodyConverter;
+import com.buession.httpclient.apache.convert.XmlRawRequestBodyConverter;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -68,18 +68,18 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 	private final static HttpEntity DEFAULT_HTTP_ENTITY = new UrlEncodedFormEntity(new ArrayList<>(),
 			EncodedFormRequestBody.CONTENT_TYPE.getCharset());
 
-	private final static Map<Class<? extends RequestBody>, ApacheRequestBodyConvert> REQUEST_BODY_CONVERTS =
+	private final static Map<Class<? extends RequestBody>, ApacheRequestBodyConverter> REQUEST_BODY_CONVERTS =
 			new HashMap<>(16, 0.8F);
 
 	static{
-		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new EncodedFormRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new HtmlRawRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new JavaScriptRawRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new JsonRawRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConvert());
-		REQUEST_BODY_CONVERTS.put(ObjectFormRequestBody.class, new ObjectRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new EncodedFormRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new HtmlRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new JavaScriptRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new JsonRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(ObjectFormRequestBody.class, new ObjectRequestBodyConverter());
 	}
 
 	private ApacheRequestBuilder(){
@@ -355,7 +355,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 			return null;
 		}
 
-		ApacheRequestBodyConvert convert = REQUEST_BODY_CONVERTS.get(data.getClass());
+		ApacheRequestBodyConverter convert = REQUEST_BODY_CONVERTS.get(data.getClass());
 		return convert == null ? DEFAULT_HTTP_ENTITY : convert.convert(data);
 	}
 

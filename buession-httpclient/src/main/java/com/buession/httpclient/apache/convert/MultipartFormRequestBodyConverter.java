@@ -22,41 +22,48 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.httpclient.apache.convert;
 
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.Options;
-import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
+import com.buession.httpclient.core.MultipartFormRequestBody;
+import com.buession.httpclient.core.MultipartRequestBodyElement;
+import com.buession.io.MimeType;
+import com.buession.io.file.File;
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
+public class MultipartFormRequestBodyConverter implements ApacheRequestBodyConverter<MultipartFormRequestBody> {
 
-	protected RedisConnection createRedisConnection(){
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("redis.host", 6379, "tQP" +
-				"!Vf7JxL-nrH-x", 10);
-
-		try{
-			factoryBean.afterPropertiesSet();
-			return factoryBean.getObject();
-		}catch(Exception e){
+	@Override
+	public HttpEntity convert(MultipartFormRequestBody source){
+		if(source == null || source.getContent() == null){
 			return null;
 		}
-	}
 
-	protected RedisTemplate getRedisTemplate(){
-		RedisTemplate redisTemplate = new RedisTemplate(createRedisConnection());
+		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
-		Options options = new Options();
+		builder.setContentType(ContentType.MULTIPART_FORM_DATA);
+		builder.setCharset(source.getContentType().getCharset());
+		builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
-		options.setEnableTransactionSupport(true);
+		for(MultipartRequestBodyElement element : source.getContent()){
+			if(element.getFile() != null){
+				File file = new File(element.getFile());
+				MimeType mimeType = file.getMimeType();
+				ContentType contentType = mimeType == null ? ContentType.APPLICATION_OCTET_STREAM :
+						ContentType.create(mimeType.toString(), source.getContentType().getCharset());
 
-		redisTemplate.setOptions(options);
+				builder.addBinaryBody(element.getName(), file, contentType, file.getName());
+			}else{
+				builder.addTextBody(element.getName(), element.getOptionalValue());
+			}
+		}
 
-		redisTemplate.afterPropertiesSet();
-
-		return redisTemplate;
+		return builder.build();
 	}
 
 }

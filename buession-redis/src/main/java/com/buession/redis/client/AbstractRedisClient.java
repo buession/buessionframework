@@ -25,6 +25,8 @@
 package com.buession.redis.client;
 
 import com.buession.core.Executor;
+import com.buession.core.converter.HashConverter;
+import com.buession.core.converter.ListConverter;
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
@@ -34,7 +36,8 @@ import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
-import com.buession.redis.core.command.GeoCommands;
+import com.buession.redis.core.convert.Converters;
+import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.RedisException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,6 +57,12 @@ public abstract class AbstractRedisClient implements RedisClient {
 	private RedisConnection connection;
 
 	private boolean enableTransactionSupport = false;
+
+	protected final static ListConverter<String, byte[]> STRING_TO_BINARY_LIST_CONVERTER =
+			Converters.stringToBinaryListConverter();
+
+	protected final static HashConverter<String, String, byte[], byte[]> STRING_TO_BINARY_HASH_CONVERTER =
+			Converters.stringToBinaryHashConverter();
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractRedisClient.class);
 
@@ -102,14 +111,14 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-			final double radius, final GeoArgument geoArgument){
-		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoArgument);
+			final double radius, final GeoRadiusArgument geoRadiusArgument){
+		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoRadiusArgument);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius, final GeoCommands.GeoArgument geoArgument){
-		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoArgument);
+			final double radius, final GeoRadiusArgument geoRadiusArgument){
+		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoRadiusArgument);
 	}
 
 	@Override
@@ -124,14 +133,14 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-			final GeoArgument geoArgument){
-		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoArgument);
+			final GeoRadiusArgument geoRadiusArgument){
+		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoRadiusArgument);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoCommands.GeoArgument geoArgument){
-		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoArgument);
+			final GeoRadiusArgument geoRadiusArgument){
+		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoRadiusArgument);
 	}
 
 	@Override
@@ -1325,6 +1334,10 @@ public abstract class AbstractRedisClient implements RedisClient {
 			return connection.execute(executor);
 		}catch(RedisException e){
 			throw e;
+		}catch(NotSupportedCommandException e){
+			throw e;
+		}catch(Exception e){
+			throw new RedisException(e.getMessage(), e);
 		}finally{
 			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}

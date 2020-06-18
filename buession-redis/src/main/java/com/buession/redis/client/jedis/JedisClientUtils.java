@@ -25,51 +25,18 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.core.utils.ReflectUtils;
-import com.buession.lang.Geo;
-import com.buession.lang.Status;
-import com.buession.redis.core.Aggregate;
-import com.buession.redis.core.BitOperation;
-import com.buession.redis.core.GeoRadius;
-import com.buession.redis.core.GeoUnit;
-import com.buession.redis.core.ListPosition;
-import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ObjectCommand;
-import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.ShardedRedisNode;
-import com.buession.redis.core.SortArgument;
-import com.buession.redis.core.Tuple;
-import com.buession.redis.core.command.GeoCommands;
-import com.buession.redis.core.command.StringCommands;
-import com.buession.redis.core.convert.jedis.AggregateConvert;
-import com.buession.redis.core.convert.jedis.BitOperationConvert;
-import com.buession.redis.core.convert.jedis.GeoArgumentConvert;
-import com.buession.redis.core.convert.jedis.GeoConvert;
-import com.buession.redis.core.convert.jedis.ListPositionConvert;
-import com.buession.redis.core.convert.jedis.MigrateOperationConvert;
-import com.buession.redis.core.convert.jedis.ScanResultConvert;
-import com.buession.redis.core.convert.jedis.SetArgumentConvert;
-import com.buession.redis.core.convert.jedis.SortArgumentConvert;
-import com.buession.redis.core.convert.jedis.TupleConvert;
 import com.buession.redis.utils.RedisClientUtils;
-import com.buession.redis.utils.ReturnUtils;
-import redis.clients.jedis.BitOP;
-import redis.clients.jedis.GeoCoordinate;
-import redis.clients.jedis.GeoRadiusResponse;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
-import redis.clients.jedis.SortingParams;
-import redis.clients.jedis.ZParams;
-import redis.clients.jedis.params.GeoRadiusParam;
-import redis.clients.jedis.params.MigrateParams;
-import redis.clients.jedis.params.SetParams;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -108,91 +75,6 @@ public class JedisClientUtils extends RedisClientUtils {
 
 	public static boolean isInMulti(final ShardedJedis shardedJedis){
 		return false;
-	}
-
-	public final static <V> ScanResult<List<V>> listScanResultDecode(final redis.clients.jedis.ScanResult<V> scanResult){
-		final ScanResultConvert.ListScanResultConvert<V> scanResultConvert =
-				new ScanResultConvert.ListScanResultConvert<>();
-		return scanResultConvert.decode(scanResult);
-	}
-
-	public final static ScanResult<List<Tuple>> listTupleScanResultDecode(final redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple> scanResult){
-		final ScanResultConvert.ListTupleScanResultConvert scanResultConvert =
-				new ScanResultConvert.ListTupleScanResultConvert();
-		return scanResultConvert.decode(scanResult);
-	}
-
-	public final static <V> ScanResult<Map<V, V>> mapScanResultEncode(final redis.clients.jedis.ScanResult<Map.Entry<V
-			, V>> scanResult){
-		final ScanResultConvert.MapScanResultConvert<V, V> scanResultConvert =
-				new ScanResultConvert.MapScanResultConvert<>();
-		return scanResultConvert.decode(scanResult);
-	}
-
-	public final static SortingParams sortArgumentEncode(final SortArgument sortArgument){
-		final SortArgumentConvert sortArgumentConvert = new SortArgumentConvert();
-		return sortArgumentConvert.encode(sortArgument);
-	}
-
-	public final static MigrateParams migrateOperationEncode(final MigrateOperation migrateOperation){
-		final MigrateOperationConvert migrateOperationConvert = new MigrateOperationConvert();
-		return migrateOperationConvert.encode(migrateOperation);
-	}
-
-	public final static SetParams setArgumentEncode(final StringCommands.SetArgument setArgument){
-		final SetArgumentConvert setArgumentConvert = new SetArgumentConvert();
-		return setArgumentConvert.encode(setArgument);
-	}
-
-	public final static redis.clients.jedis.ListPosition listPositionConvert(final ListPosition position){
-		final ListPositionConvert listPositionConvert = new ListPositionConvert();
-		return listPositionConvert.encode(position);
-	}
-
-	public final static Tuple tupleDecode(final redis.clients.jedis.Tuple tuples){
-		final TupleConvert tupleConvert = new TupleConvert();
-		return tupleConvert.decode(tuples);
-	}
-
-	public final static Set<Tuple> setTupleDecode(final Set<redis.clients.jedis.Tuple> tuples){
-		final TupleConvert.SetTupleConvert setTupleConvert = new TupleConvert.SetTupleConvert();
-		return setTupleConvert.decode(tuples);
-	}
-
-	public final static ZParams.Aggregate aggregateEncode(final Aggregate aggregate){
-		final AggregateConvert aggregateConvert = new AggregateConvert();
-		return aggregateConvert.encode(aggregate);
-	}
-
-	public final static <V> Map<V, GeoCoordinate> geoMapEncode(final Map<V, Geo> geoMap){
-		final GeoConvert.GeoMapConvert<V> geoMapConvert = new GeoConvert.GeoMapConvert<>();
-		return geoMapConvert.encode(geoMap);
-	}
-
-	public final static List<Geo> geoListDecode(final List<GeoCoordinate> geoCoordinates){
-		final GeoConvert.GeoListConvert geoMapConvert = new GeoConvert.GeoListConvert();
-		return geoMapConvert.decode(geoCoordinates);
-	}
-
-	public final static redis.clients.jedis.GeoUnit geoUnitEncode(final GeoUnit source){
-		final GeoConvert.GeoUnitConvert geoUnitConvert = new GeoConvert.GeoUnitConvert();
-		return geoUnitConvert.encode(source);
-	}
-
-	public final static List<GeoRadius> listGeoRadiusDecode(final List<GeoRadiusResponse> geoRadiusResponses){
-		final GeoConvert.GeoRadiusConvert.ListGeoRadiusConvert listGeoRadiusConvert =
-				new GeoConvert.GeoRadiusConvert.ListGeoRadiusConvert();
-		return listGeoRadiusConvert.decode(geoRadiusResponses);
-	}
-
-	public final static GeoRadiusParam geoArgumentEncode(final GeoCommands.GeoArgument geoArgument){
-		final GeoArgumentConvert geoArgumentConvert = new GeoArgumentConvert();
-		return geoArgumentConvert.encode(geoArgument);
-	}
-
-	public final static BitOP bitOperationEncode(final BitOperation bitMapOperation){
-		final BitOperationConvert bitOperationConvert = new BitOperationConvert();
-		return bitOperationConvert.encode(bitMapOperation);
 	}
 
 	public final static Object objectDebug(final ObjectCommand command, final Jedis jedis, final String key){

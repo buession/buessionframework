@@ -22,41 +22,42 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.redis.core;
 
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.Options;
-import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
+import com.buession.core.converter.Converter;
+
+import java.util.function.Supplier;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
+public abstract class FutureResult<V> {
 
-	protected RedisConnection createRedisConnection(){
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("redis.host", 6379, "tQP" +
-				"!Vf7JxL-nrH-x", 10);
+	private V resultHolder;
 
-		try{
-			factoryBean.afterPropertiesSet();
-			return factoryBean.getObject();
-		}catch(Exception e){
-			return null;
-		}
+	@SuppressWarnings("rawtypes")
+	private Converter converter;
+
+	private final Supplier<?> defaultConversionResult;
+
+	public FutureResult(final V resultHolder){
+		this(resultHolder, val->val);
 	}
 
-	protected RedisTemplate getRedisTemplate(){
-		RedisTemplate redisTemplate = new RedisTemplate(createRedisConnection());
-
-		Options options = new Options();
-
-		options.setEnableTransactionSupport(true);
-
-		redisTemplate.setOptions(options);
-
-		redisTemplate.afterPropertiesSet();
-
-		return redisTemplate;
+	public FutureResult(final V resultHolder, final Converter converter){
+		this(resultHolder, converter, ()->null);
 	}
+
+	public FutureResult(final V resultHolder, final Converter converter, Supplier<?> defaultConversionResult){
+		this.resultHolder = resultHolder;
+		this.converter = converter != null ? converter : val->val;
+		this.defaultConversionResult = defaultConversionResult;
+	}
+
+	public V getResultHolder(){
+		return resultHolder;
+	}
+
+	public abstract Object get();
 
 }

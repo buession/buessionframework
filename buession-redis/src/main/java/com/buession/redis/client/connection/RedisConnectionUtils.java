@@ -65,7 +65,6 @@ public final class RedisConnectionUtils {
 	public final static boolean isConnectionTransactional(final RedisConnectionFactory factory,
 			final RedisConnection connection){
 		Assert.isNull(factory, "No RedisConnectionFactory specified");
-
 		RedisConnectionHolder connHolder = TransactionUtils.getResource(factory);
 		return (connHolder != null && connection == connHolder.getConnection());
 	}

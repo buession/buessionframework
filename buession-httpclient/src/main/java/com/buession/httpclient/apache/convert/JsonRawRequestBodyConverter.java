@@ -22,41 +22,41 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.httpclient.apache.convert;
 
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.core.Options;
-import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
+import com.buession.httpclient.core.JsonRawRequestBody;
+import com.buession.httpclient.core.RequestBody;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.entity.StringEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
+public class JsonRawRequestBodyConverter implements ApacheRequestBodyConverter<JsonRawRequestBody> {
 
-	protected RedisConnection createRedisConnection(){
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("redis.host", 6379, "tQP" +
-				"!Vf7JxL-nrH-x", 10);
+	protected final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-		try{
-			factoryBean.afterPropertiesSet();
-			return factoryBean.getObject();
-		}catch(Exception e){
+	private final static Logger logger = LoggerFactory.getLogger(JsonRawRequestBodyConverter.class);
+
+	@Override
+	public StringEntity convert(JsonRawRequestBody source){
+		if(source == null || source.getContent() == null){
 			return null;
 		}
-	}
 
-	protected RedisTemplate getRedisTemplate(){
-		RedisTemplate redisTemplate = new RedisTemplate(createRedisConnection());
+		try{
+			String str = OBJECT_MAPPER.writeValueAsString(source.getContent());
+			return new StringEntity(str,
+					org.apache.http.entity.ContentType.create(source.getContentType().getMimeType(),
+							source.getContentType().getCharset()));
+		}catch(JsonProcessingException e){
+			logger.error("{} convert to JSON String error.", RequestBody.class.getName(), e);
+		}
 
-		Options options = new Options();
-
-		options.setEnableTransactionSupport(true);
-
-		redisTemplate.setOptions(options);
-
-		redisTemplate.afterPropertiesSet();
-
-		return redisTemplate;
+		return null;
 	}
 
 }

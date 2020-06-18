@@ -39,7 +39,7 @@ import java.io.IOException;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisConnection implements RedisConnection {
+public abstract class AbstractRedisConnection<T> implements RedisConnection {
 
 	private DataSource dataSource;
 
@@ -140,7 +140,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	@Override
 	public <C, R> R execute(final Executor<C, R> executor) throws RedisException{
 		try{
-			return doExecute(executor);
+			return doExecute((Executor<T, R>) executor);
 		}catch(JedisConnectionException e){
 			throw new RedisConnectionFailureException(e.getMessage(), e);
 		}
@@ -177,7 +177,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 
 	protected abstract void doConnect() throws IOException;
 
-	protected abstract <C, R> R doExecute(final Executor<C, R> executor) throws RedisException;
+	protected abstract <R> R doExecute(final Executor<T, R> executor) throws RedisException;
 
 	protected abstract boolean checkConnect();
 
