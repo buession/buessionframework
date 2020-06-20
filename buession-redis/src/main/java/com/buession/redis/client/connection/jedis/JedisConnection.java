@@ -32,14 +32,15 @@ import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisPoolDataSource;
 import com.buession.redis.client.jedis.JedisClientUtils;
-import com.buession.redis.exception.RedisException;
+import com.buession.redis.core.convert.JedisConverters;
+import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.jedis.JedisTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Client;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.util.Pool;
 
 import java.io.IOException;
 import java.util.List;
@@ -104,6 +105,15 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	}
 
 	@Override
+	public Pipeline getPipeline(){
+		if(pipeline == null){
+			pipeline = new JedisPipeline(jedis.pipelined());
+		}
+
+		return pipeline;
+	}
+
+	@Override
 	public void multi(){
 		transaction = new JedisTransaction(jedis.multi());
 	}
@@ -117,6 +127,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	public void discard(){
 		if(transaction != null){
 			transaction.discard();
+			transaction = null;
 		}
 	}
 
@@ -140,7 +151,12 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 		if(dataSource instanceof JedisPoolDataSource){
 			JedisPoolDataSource jedisPoolDataSource = ((JedisPoolDataSource) dataSource);
 			pool = createPool(jedisPoolDataSource);
-			jedis = pool.getResource();
+
+			try{
+				jedis = pool.getResource();
+			}catch(Exception e){
+				throw JedisConverters.exceptionConvert(e);
+			}
 
 			logger.info("Jedis initialize with pool success.");
 		}else{
@@ -159,7 +175,11 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 			}
 			client.setDb(jedisDataSource.getDatabase());
 
-			jedis.connect();
+			try{
+				jedis.connect();
+			}catch(Exception e){
+				throw JedisConverters.exceptionConvert(e);
+			}
 
 			if(Validate.hasText(getClientName())){
 				client.clientSetname(getClientName());
@@ -170,7 +190,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	}
 
 	@Override
-	protected <R> R doExecute(Executor<Jedis, R> executor) throws RedisException{
+	protected <R> R doExecute(Executor<Jedis, R> executor) throws Exception{
 		return executor.execute(jedis);
 	}
 

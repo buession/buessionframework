@@ -32,19 +32,18 @@ import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
 import com.buession.redis.client.connection.RedisConnectionUtils;
-import com.buession.redis.core.GeoRadius;
-import com.buession.redis.core.GeoUnit;
+import com.buession.redis.client.operations.*;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.convert.Converters;
-import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -57,6 +56,20 @@ public abstract class AbstractRedisClient implements RedisClient {
 	private RedisConnection connection;
 
 	private boolean enableTransactionSupport = false;
+
+	protected ConnectionOperations connectionOperations = createConnectionOperations();
+
+	protected GeoOperations geoOperations = createGeoOperations();
+
+	protected HashOperations hashOperations = createHashOperations();
+
+	protected HyperLogLogOperations hyperLogLogOperations = createHyperLogLogOperations();
+
+	protected KeyOperations keyOperations = createKeyOperations();
+
+	protected ListOperations listOperations = createListOperations();
+
+	protected PubSubOperations pubSubOperations = createPubSubOperations();
 
 	protected final static ListConverter<String, byte[]> STRING_TO_BINARY_LIST_CONVERTER =
 			Converters.stringToBinaryListConverter();
@@ -95,226 +108,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	public void setEnableTransactionSupport(boolean enableTransactionSupport){
 		this.enableTransactionSupport = enableTransactionSupport;
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-			final double radius){
-		return geoRadius(key, longitude, longitude, radius, GeoUnit.M);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius){
-		return geoRadius(key, longitude, longitude, radius, GeoUnit.M);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-			final double radius, final GeoRadiusArgument geoRadiusArgument){
-		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoRadiusArgument);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius, final GeoRadiusArgument geoRadiusArgument){
-		return geoRadius(key, longitude, latitude, radius, GeoUnit.M, geoRadiusArgument);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius){
-		return geoRadiusByMember(key, member, radius, GeoUnit.M);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius){
-		return geoRadiusByMember(key, member, radius, GeoUnit.M);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-			final GeoRadiusArgument geoRadiusArgument){
-		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoRadiusArgument);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoRadiusArgument geoRadiusArgument){
-		return geoRadiusByMember(key, member, radius, GeoUnit.M, geoRadiusArgument);
-	}
-
-	@Override
-	public Long hIncrBy(final String key, final String field, final int value){
-		return hIncrBy(key, field, (long) value);
-	}
-
-	@Override
-	public Long hIncrBy(final byte[] key, final byte[] field, final int value){
-		return hIncrBy(key, field, (long) value);
-	}
-
-	@Override
-	public Double hIncrByFloat(final String key, final String field, final float value){
-		return hIncrByFloat(key, field, (double) value);
-	}
-
-	@Override
-	public Double hIncrByFloat(final byte[] key, final byte[] field, final float value){
-		return hIncrByFloat(key, field, (double) value);
-	}
-
-	@Override
-	public Long hDecrBy(final String key, final String field, final int value){
-		return hDecrBy(key, field, (long) value);
-	}
-
-	@Override
-	public Long hDecrBy(final byte[] key, final byte[] field, final int value){
-		return hDecrBy(key, field, (long) value);
-	}
-
-	@Override
-	public Long hDecrBy(final String key, final String field, final long value){
-		return hIncrBy(key, field, value > 0 ? value * -1 : value);
-	}
-
-	@Override
-	public Long hDecrBy(final byte[] key, final byte[] field, final long value){
-		return hIncrBy(key, field, value > 0 ? value * -1 : value);
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor){
-		return hScan(key, Integer.toString(cursor));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor){
-		return hScan(key, NumberUtils.int2bytes(cursor));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor){
-		return hScan(key, Long.toString(cursor));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor){
-		return hScan(key, NumberUtils.long2bytes(cursor));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern){
-		return hScan(key, Integer.toString(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern){
-		return hScan(key, NumberUtils.int2bytes(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
-		return hScan(key, Long.toString(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern){
-		return hScan(key, NumberUtils.long2bytes(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final int count){
-		return hScan(key, Integer.toString(cursor), count);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final int count){
-		return hScan(key, NumberUtils.int2bytes(cursor), count);
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count){
-		return hScan(key, Long.toString(cursor), count);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count){
-		return hScan(key, NumberUtils.long2bytes(cursor), count);
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern,
-			final int count){
-		return hScan(key, Integer.toString(cursor), pattern, count);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern,
-			final int count){
-		return hScan(key, NumberUtils.int2bytes(cursor), pattern, count);
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-			final int count){
-		return hScan(key, Long.toString(cursor), pattern, count);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-			final int count){
-		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
-	}
-
-	@Override
-	public String lIndex(final String key, final int index){
-		return lIndex(key, (long) index);
-	}
-
-	@Override
-	public byte[] lIndex(final byte[] key, final int index){
-		return lIndex(key, (long) index);
-	}
-
-	@Override
-	public List<String> lRange(final String key, final int start, final int end){
-		return lRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public List<byte[]> lRange(final byte[] key, final int start, final int end){
-		return lRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Long lRem(final String key, final String value, final int count){
-		return lRem(key, value, (long) count);
-	}
-
-	@Override
-	public Long lRem(final byte[] key, final byte[] value, final int count){
-		return lRem(key, value, (long) count);
-	}
-
-	@Override
-	public Status lSet(final String key, final int index, final String value){
-		return lSet(key, (long) index, value);
-	}
-
-	@Override
-	public Status lSet(final byte[] key, final int index, final byte[] value){
-		return lSet(key, (long) index, value);
-	}
-
-	@Override
-	public Status lTrim(final String key, final int start, final int end){
-		return lTrim(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Status lTrim(final byte[] key, final int start, final int end){
-		return lTrim(key, (long) start, (long) end);
 	}
 
 	@Override
@@ -1320,7 +1113,13 @@ public abstract class AbstractRedisClient implements RedisClient {
 		return substr(key, (int) start, (int) end);
 	}
 
-	protected <C, R> R doExecute(final Executor<C, R> executor){
+	@Override
+	public Pipeline pipeline(){
+		return connection.getPipeline();
+	}
+
+	@Override
+	public <C, R> R execute(final Executor<C, R> executor){
 		RedisConnection connection;
 
 		if(enableTransactionSupport){
@@ -1333,18 +1132,32 @@ public abstract class AbstractRedisClient implements RedisClient {
 		try{
 			return connection.execute(executor);
 		}catch(RedisException e){
-			throw e;
-		}catch(NotSupportedCommandException e){
-			throw e;
-		}catch(Exception e){
-			throw new RedisException(e.getMessage(), e);
+			throw JedisConverters.exceptionConvert(e);
 		}finally{
 			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
 	}
 
+	protected abstract ConnectionOperations createConnectionOperations();
+
+	protected abstract GeoOperations createGeoOperations();
+
+	protected abstract HashOperations createHashOperations();
+
+	protected abstract HyperLogLogOperations createHyperLogLogOperations();
+
+	protected abstract KeyOperations createKeyOperations();
+
+	protected abstract ListOperations createListOperations();
+
+	protected abstract PubSubOperations createPubSubOperations();
+
 	protected boolean isTransaction(){
 		return getConnection().isTransaction();
+	}
+
+	protected boolean isPipeline(){
+		return getConnection().isPipeline();
 	}
 
 	protected void close(){

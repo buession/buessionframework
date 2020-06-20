@@ -27,7 +27,6 @@ package com.buession.redis;
 import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.Client;
@@ -249,37 +248,37 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-	 final double radius, final GeoArgument geoArgument){
+	 final double radius, final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put(
-				"latitude", latitude).put("radius", radius).put("geoArgument", geoArgument);
-		return execute((client)->client.geoRadius(makeRawKey(key), longitude, latitude, radius, geoArgument),
+				"latitude", latitude).put("radius", radius).put("geoRadiusArgument", geoRadiusArgument);
+		return execute((client)->client.geoRadius(makeRawKey(key), longitude, latitude, radius, geoRadiusArgument),
 		 ProtocolCommand.GEORADIUS, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(byte[] key, final double longitude, final double latitude, final double radius,
-	 final GeoArgument geoArgument){
+	 final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put(
-				"latitude", latitude).put("radius", radius).put("geoArgument", geoArgument);
-		return execute((client)->client.geoRadius(makeByteKey(key), longitude, latitude, radius, geoArgument),
+				"latitude", latitude).put("radius", radius).put("geoRadiusArgument", geoRadiusArgument);
+		return execute((client)->client.geoRadius(makeByteKey(key), longitude, latitude, radius, geoRadiusArgument),
 		 ProtocolCommand.GEORADIUS, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-	 final double radius, final GeoUnit unit, final GeoArgument geoArgument){
+	 final double radius, final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put(
-				"latitude", latitude).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
-		return execute((client)->client.geoRadius(makeRawKey(key), longitude, latitude, radius, unit, geoArgument),
+				"latitude", latitude).put("radius", radius).put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
+		return execute((client)->client.geoRadius(makeRawKey(key), longitude, latitude, radius, unit, geoRadiusArgument),
 		 ProtocolCommand.GEORADIUS, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-	 final double radius, final GeoUnit unit, final GeoArgument geoArgument){
+	 final double radius, final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("longitude", longitude).put(
-				"latitude", latitude).put("radius", radius).put("unit", unit).put("geoArgument", geoArgument);
-		return execute((client)->client.geoRadius(makeByteKey(key), longitude, latitude, radius, unit, geoArgument),
+				"latitude", latitude).put("radius", radius).put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
+		return execute((client)->client.geoRadius(makeByteKey(key), longitude, latitude, radius, unit, geoRadiusArgument),
 		 ProtocolCommand.GEORADIUS, args);
 	}
 
@@ -319,38 +318,66 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-	 final GeoArgument geoArgument){
+	 final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("radius"
-		, radius).put("geoArgument", geoArgument);
-		return execute((client)->client.geoRadiusByMember(makeRawKey(key), member, radius, geoArgument),
+		, radius).put("geoRadiusArgument", geoRadiusArgument);
+		return execute((client)->client.geoRadiusByMember(makeRawKey(key), member, radius, geoRadiusArgument),
 		 ProtocolCommand.GEORADIUSBYMEMBER, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-	 final GeoArgument geoArgument){
+	 final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("radius"
-		, radius).put("geoArgument", geoArgument);
-		return execute((client)->client.geoRadiusByMember(makeByteKey(key), member, radius, geoArgument),
+		, radius).put("geoRadiusArgument", geoRadiusArgument);
+		return execute((client)->client.geoRadiusByMember(makeByteKey(key), member, radius, geoRadiusArgument),
 		 ProtocolCommand.GEORADIUSBYMEMBER, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-	 final GeoUnit unit, final GeoArgument geoArgument){
+	 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("radius"
-		, radius).put("unit", unit).put("geoArgument", geoArgument);
-		return execute((client)->client.geoRadiusByMember(makeRawKey(key), member, radius, unit, geoArgument),
+		, radius).put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
+		return execute((client)->client.geoRadiusByMember(makeRawKey(key), member, radius, unit, geoRadiusArgument),
 		 ProtocolCommand.GEORADIUSBYMEMBER, args);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-	 final GeoUnit unit, final GeoArgument geoArgument){
+	 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("member", member).put("radius"
-		, radius).put("unit", unit).put("geoArgument", geoArgument);
-		return execute((client)->client.geoRadiusByMember(makeByteKey(key), member, radius, unit, geoArgument),
+		, radius).put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
+		return execute((client)->client.geoRadiusByMember(makeByteKey(key), member, radius, unit, geoRadiusArgument),
 		 ProtocolCommand.GEORADIUSBYMEMBER, args);
+	}
+
+	@Override
+	public Long hDecrBy(final String key, final String field, final int value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
+		 value);
+		return execute((client)->client.hDecrBy(makeRawKey(key), field, value), ProtocolCommand.HINCRBY, args);
+	}
+
+	@Override
+	public Long hDecrBy(final byte[] key, final byte[] field, final int value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
+		 value);
+		return execute((client)->client.hDecrBy(makeByteKey(key), field, value), ProtocolCommand.HINCRBY, args);
+	}
+
+	@Override
+	public Long hDecrBy(final String key, final String field, final long value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
+		 value);
+		return execute((client)->client.hDecrBy(makeRawKey(key), field, value), ProtocolCommand.HINCRBY, args);
+	}
+
+	@Override
+	public Long hDecrBy(final byte[] key, final byte[] field, final long value){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
+		 value);
+		return execute((client)->client.hDecrBy(makeByteKey(key), field, value), ProtocolCommand.HINCRBY, args);
 	}
 
 	@Override
@@ -459,34 +486,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		 value);
 		return execute((client)->client.hIncrByFloat(makeByteKey(key), field, value), ProtocolCommand.HINCRBYFLOAT,
 		 args);
-	}
-
-	@Override
-	public Long hDecrBy(final String key, final String field, final int value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
-		 value);
-		return execute((client)->client.hDecrBy(makeRawKey(key), field, value), ProtocolCommand.HINCRBY, args);
-	}
-
-	@Override
-	public Long hDecrBy(final byte[] key, final byte[] field, final int value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
-		 value);
-		return execute((client)->client.hDecrBy(makeByteKey(key), field, value), ProtocolCommand.HINCRBY, args);
-	}
-
-	@Override
-	public Long hDecrBy(final String key, final String field, final long value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
-		 value);
-		return execute((client)->client.hDecrBy(makeRawKey(key), field, value), ProtocolCommand.HINCRBY, args);
-	}
-
-	@Override
-	public Long hDecrBy(final byte[] key, final byte[] field, final long value){
-		final CommandArguments args = CommandArguments.getInstance().put("key", key).put("field", field).put("value",
-		 value);
-		return execute((client)->client.hDecrBy(makeByteKey(key), field, value), ProtocolCommand.HINCRBY, args);
 	}
 
 	@Override
@@ -1530,15 +1529,9 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
 		final CommandArguments args = CommandArguments.getInstance().put("patterns", patterns).put("pubSubListener",
 		 pubSubListener);
-
-		execute(new Executor<Void>() {
-
-			@Override
-			public Void execute(RedisClient client){
-				client.pSubscribe(patterns, pubSubListener);
-				return null;
-			}
-
+		execute((client)->{
+			client.pSubscribe(patterns, pubSubListener);
+			return null;
 		}, ProtocolCommand.PSUBSCRIBE, args);
 	}
 
@@ -1546,15 +1539,9 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
 		final CommandArguments args = CommandArguments.getInstance().put("patterns", patterns).put("pubSubListener",
 		 pubSubListener);
-
-		execute(new Executor<Void>() {
-
-			@Override
-			public Void execute(RedisClient client){
-				client.pSubscribe(patterns, pubSubListener);
-				return null;
-			}
-
+		execute((client)->{
+			client.pSubscribe(patterns, pubSubListener);
+			return null;
 		}, ProtocolCommand.PSUBSCRIBE, args);
 	}
 
@@ -1625,15 +1612,9 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
 		final CommandArguments args = CommandArguments.getInstance().put("channels", channels).put("pubSubListener",
 		 pubSubListener);
-
-		execute(new Executor<Void>() {
-
-			@Override
-			public Void execute(RedisClient client){
-				client.subscribe(channels, pubSubListener);
-				return null;
-			}
-
+		execute((client)->{
+			client.subscribe(channels, pubSubListener);
+			return null;
 		}, ProtocolCommand.SUBSCRIBE, args);
 	}
 
@@ -1641,15 +1622,9 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
 		final CommandArguments args = CommandArguments.getInstance().put("channels", channels).put("pubSubListener",
 		 pubSubListener);
-
-		execute(new Executor<Void>() {
-
-			@Override
-			public Void execute(RedisClient client){
-				client.subscribe(channels, pubSubListener);
-				return null;
-			}
-
+		execute((client)->{
+			client.subscribe(channels, pubSubListener);
+			return null;
 		}, ProtocolCommand.SUBSCRIBE, args);
 	}
 
@@ -1985,16 +1960,10 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public void monitor(final RedisMonitor redisMonitor){
 		final CommandArguments args = CommandArguments.getInstance().put("redisMonitor", redisMonitor);
-
-		execute(new Executor<Void>() {
-
-			@Override
-			public Void execute(RedisClient client){
-				client.monitor(redisMonitor);
-				return null;
-			}
-
-		}, ProtocolCommand.MONITOR, args);
+		execute((client)->{
+			client.monitor(redisMonitor);
+			return null;
+		}, ProtocolCommand.MEMORY_DOCTOR);
 	}
 
 	@Override
@@ -2027,29 +1996,18 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public void shutdown(){
-		execute(new Executor<Void>() {
-
-			@Override
-			public Void execute(RedisClient client){
-				client.shutdown();
-				return null;
-			}
-
+		execute((client)->{
+			client.shutdown();
+			return null;
 		}, ProtocolCommand.SHUTDOWN);
 	}
 
 	@Override
 	public void shutdown(final boolean save){
 		final CommandArguments args = CommandArguments.getInstance().put("save", save);
-
-		execute(new Executor<Void>() {
-
-			@Override
-			public Void execute(RedisClient client){
-				client.shutdown();
-				return null;
-			}
-
+		execute((client)->{
+			client.shutdown(save);
+			return null;
 		}, ProtocolCommand.SHUTDOWN, args);
 	}
 
@@ -4884,14 +4842,9 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public void discard(){
-		execute(new Executor<Void>() {
-
-			@Override
-			public Void execute(RedisClient client){
-				client.discard();
-				return null;
-			}
-
+		execute((client)->{
+			client.discard();
+			return null;
 		}, ProtocolCommand.DISCARD);
 	}
 

@@ -38,6 +38,7 @@ import com.buession.redis.core.SessionCallback;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.serializer.JacksonJsonSerializer;
 import com.buession.redis.serializer.Serializer;
 import com.buession.redis.utils.KeyUtil;
@@ -126,6 +127,11 @@ public abstract class RedisAccessor {
 		client = doGetRedisClient(connection);
 	}
 
+	public Pipeline pipeline(){
+		checkInitialized();
+		return client.pipeline();
+	}
+
 	public <V> V execute(SessionCallback<V> callback) throws RedisException{
 		Assert.isNull(callback, "callback cloud not be null.");
 
@@ -142,6 +148,8 @@ public abstract class RedisAccessor {
 
 	protected <R> R execute(final Executor<R> executor, final ProtocolCommand command,
 			final CommandArguments arguments){
+		checkInitialized();
+
 		String argumentsString = logger.isDebugEnabled() && arguments != null ? arguments.toString() : null;
 
 		if(logger.isDebugEnabled()){
@@ -184,6 +192,12 @@ public abstract class RedisAccessor {
 			return shardedJedisClient;
 		}else{
 			throw new RedisException("Cloud not initialize RedisClient for: " + connection);
+		}
+	}
+
+	protected final void checkInitialized(){
+		if(client == null){
+			throw new RedisException("RedisClient is not initialized. You can call the afterPropertiesSet method for " + "initialization.");
 		}
 	}
 

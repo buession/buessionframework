@@ -24,8 +24,6 @@
  */
 package com.buession.redis.utils;
 
-import com.buession.lang.Status;
-
 /**
  * @author Yong.Teng
  */
@@ -33,10 +31,6 @@ public class RedisClientUtils {
 
 	protected RedisClientUtils(){
 
-	}
-
-	public final static Status pingResult(final String result){
-		return ReturnUtils.statusForBool("PONG".equalsIgnoreCase(result));
 	}
 
 }

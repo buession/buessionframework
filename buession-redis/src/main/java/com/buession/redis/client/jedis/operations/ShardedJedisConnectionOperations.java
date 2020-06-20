@@ -22,17 +22,62 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.converter;
+package com.buession.redis.client.jedis.operations;
 
-import org.springframework.lang.Nullable;
+import com.buession.lang.Status;
+import com.buession.redis.client.RedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.NotSupportedCommandException;
+import redis.clients.jedis.ShardedJedis;
 
 /**
  * @author Yong.Teng
  */
-@FunctionalInterface
-public interface Converter<S, T> {
+public class ShardedJedisConnectionOperations extends AbstractConnectionOperations<ShardedJedis> {
 
-	@Nullable
-	T convert(S source);
+	public ShardedJedisConnectionOperations(final RedisClient client){
+		super(client);
+	}
+
+	@Override
+	public byte[] echo(final byte[] str){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().echo(str)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().echo(str)));
+		}else{
+			return execute((cmd)->cmd.echo(str));
+		}
+	}
+
+	@Override
+	public Status auth(final String password){
+		throw new NotSupportedCommandException(ProtocolCommand.AUTH);
+	}
+
+	@Override
+	public Status auth(final byte[] password){
+		throw new NotSupportedCommandException(ProtocolCommand.AUTH);
+	}
+
+	@Override
+	public Status ping(){
+		throw new NotSupportedCommandException(ProtocolCommand.PING);
+	}
+
+	@Override
+	public Status quit(){
+		throw new NotSupportedCommandException(ProtocolCommand.QUIT);
+	}
+
+	@Override
+	public Status select(final int db){
+		throw new NotSupportedCommandException(ProtocolCommand.SELECT);
+	}
+
+	@Override
+	public Status swapdb(final int db1, final int db2){
+		throw new NotSupportedCommandException(ProtocolCommand.SWAPDB);
+	}
 
 }

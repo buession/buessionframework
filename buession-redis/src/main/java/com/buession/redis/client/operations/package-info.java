@@ -22,29 +22,4 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
-
-import redis.clients.jedis.ZParams;
-
-/**
- * @author Yong.Teng
- */
-public class JedisZParams extends ZParams {
-
-	public JedisZParams(){
-	}
-
-	public JedisZParams(final Aggregate aggregate){
-		aggregate(aggregate);
-	}
-
-	public JedisZParams(final double... weights){
-		weights(weights);
-	}
-
-	public JedisZParams(final Aggregate aggregate, final double... weights){
-		aggregate(aggregate);
-		weights(weights);
-	}
-
-}
+package com.buession.redis.client.operations;

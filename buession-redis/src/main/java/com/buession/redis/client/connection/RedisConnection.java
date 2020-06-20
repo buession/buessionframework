@@ -27,6 +27,7 @@ package com.buession.redis.client.connection;
 import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.exception.RedisException;
 
@@ -52,6 +53,10 @@ public interface RedisConnection extends Closeable {
 	Transaction getTransaction();
 
 	boolean isTransaction();
+
+	Pipeline getPipeline();
+
+	boolean isPipeline();
 
 	void multi();
 

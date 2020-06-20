@@ -29,11 +29,20 @@ import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
+import org.springframework.core.convert.converter.Converter;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
 public abstract class Converters {
+
+	public final static Converter<String, byte[]> stringToBinaryConverter(){
+		return (value)->SafeEncoder.encode(value);
+	}
 
 	public final static HashConverter<String, String, byte[], byte[]> stringToBinaryHashConverter(){
 		return new HashConverter<>((key)->SafeEncoder.encode(key), (value)->SafeEncoder.encode(value));
@@ -43,8 +52,44 @@ public abstract class Converters {
 		return new ListConverter<>((value)->SafeEncoder.encode(value));
 	}
 
+	public final static Status okToStatus(final String result){
+		return ReturnUtils.statusForOK(result);
+	}
+
+	public final static Converter<String, Status> okToStatusConverter(){
+		return (source)->okToStatus(source);
+	}
+
+	public final static <V> List<V> collectionToList(final Collection<V> source){
+		return source == null ? null : new ArrayList<>(source);
+	}
+
 	public final static Status pingResult(final String result){
 		return ReturnUtils.statusForBool("PONG".equalsIgnoreCase(result));
+	}
+
+	public final static Converter<String, Status> pingResultConvert(){
+		return (source)->pingResult(source);
+	}
+
+	public final static Converter<Integer, Status> positiveIntegerNumberToStatusConverter(){
+		return (source)->ReturnUtils.statusForBool(source > 0);
+	}
+
+	public final static Converter<Long, Status> positiveLongNumberToStatusConverter(){
+		return (source)->ReturnUtils.statusForBool(source > 0);
+	}
+
+	public final static Converter<Long, Status> equalOneToStatusConverter(){
+		return (source)->ReturnUtils.statusForBool(source == 0);
+	}
+
+	public final static Converter<Boolean, Status> booleanToStatusConverter(){
+		return (source)->ReturnUtils.statusForBool(source);
+	}
+
+	public final static <E extends Enum<E>> Converter<String, E> enumConverter(final Class<E> clazz){
+		return (source)->ReturnUtils.enumValueOf(source, clazz);
 	}
 
 }

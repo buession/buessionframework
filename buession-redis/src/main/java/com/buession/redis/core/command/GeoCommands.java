@@ -598,7 +598,6 @@ public interface GeoCommands extends RedisCommands {
 		private Integer count;
 
 		private GeoRadiusArgument(){
-
 		}
 
 		/**

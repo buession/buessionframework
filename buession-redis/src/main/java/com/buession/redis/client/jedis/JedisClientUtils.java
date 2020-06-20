@@ -27,9 +27,11 @@ package com.buession.redis.client.jedis;
 import com.buession.core.utils.ReflectUtils;
 import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.ShardedRedisNode;
+import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.utils.RedisClientUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisShardInfo;
+import redis.clients.jedis.Response;
 import redis.clients.jedis.ShardedJedis;
 
 import javax.net.ssl.HostnameVerifier;
@@ -69,6 +71,14 @@ public class JedisClientUtils extends RedisClientUtils {
 		return shardInfos;
 	}
 
+	public final static Jedis getShard(final ShardedJedis shardedJedis, final String key){
+		return shardedJedis.getShard(key);
+	}
+
+	public final static Jedis getShard(final ShardedJedis shardedJedis, final byte[] key){
+		return shardedJedis.getShard(key);
+	}
+
 	public static boolean isInMulti(final Jedis jedis){
 		return jedis.getClient().isInMulti();
 	}
@@ -103,29 +113,55 @@ public class JedisClientUtils extends RedisClientUtils {
 		}
 	}
 
-	public final static Object objectDebug(final ObjectCommand command,
-			final redis.clients.jedis.Transaction transaction, final byte[] key){
+	public final static Response<?> objectDebug(final ObjectCommand command,
+			final redis.clients.jedis.Transaction transaction, final String key){
 		switch(command){
 			case ENCODING:
-				return transaction.objectEncoding(key).get();
+				return transaction.objectEncoding(key);
 			case IDLETIME:
-				return transaction.objectIdletime(key).get();
+				return transaction.objectIdletime(key);
 			case REFCOUNT:
-				return transaction.objectRefcount(key).get();
+				return transaction.objectRefcount(key);
 			default:
 				return null;
 		}
 	}
 
-	public final static Object objectDebug(final ObjectCommand command,
-			final redis.clients.jedis.Transaction transaction, final String key){
+	public final static Response<?> objectDebug(final ObjectCommand command,
+			final redis.clients.jedis.Transaction transaction, final byte[] key){
 		switch(command){
 			case ENCODING:
-				return transaction.objectEncoding(key).get();
+				return transaction.objectEncoding(key);
 			case IDLETIME:
-				return transaction.objectIdletime(key).get();
+				return transaction.objectIdletime(key);
 			case REFCOUNT:
-				return transaction.objectRefcount(key).get();
+				return transaction.objectRefcount(key);
+			default:
+				return null;
+		}
+	}
+
+	public final static Object slowLog(final SlowLogCommand command, final Jedis jedis, final String... arguments){
+		switch(command){
+			case GET:
+				return jedis.slowlogGet();
+			case LEN:
+				return jedis.slowlogLen();
+			case RESET:
+				return jedis.slowlogReset();
+			default:
+				return null;
+		}
+	}
+
+	public final static Object slowLog(final SlowLogCommand command, final Jedis jedis, final byte[]... arguments){
+		switch(command){
+			case GET:
+				return jedis.slowlogGet();
+			case LEN:
+				return jedis.slowlogLen();
+			case RESET:
+				return jedis.slowlogReset();
 			default:
 				return null;
 		}

@@ -28,6 +28,8 @@ import com.buession.redis.core.Info;
 import com.buession.redis.transaction.Transaction;
 import org.junit.Test;
 
+import java.util.List;
+
 /**
  * @author Yong.Teng
  */
@@ -59,7 +61,14 @@ public class JedisClientTest extends AbstractJedisRedisTest {
 
 		Transaction transaction = redisTemplate.multi();
 		redisTemplate.set("t1", "T1222333");
-		//redisTemplate.exec();
+		redisTemplate.type("test");
+		List<Object> result = redisTemplate.exec();
+
+		if(result != null){
+			for(Object value : result){
+				System.out.println(value);
+			}
+		}
 	}
 
 }

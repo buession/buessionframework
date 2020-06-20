@@ -34,15 +34,24 @@ import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.Info;
 import com.buession.redis.core.Limit;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.NxXx;
+import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.StringCommands;
+import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.exception.NotSupportedTransactionCommandException;
+import com.buession.redis.exception.PoolException;
+import com.buession.redis.exception.RedisConnectionFailureException;
+import com.buession.redis.exception.RedisException;
+import com.buession.redis.utils.InfoUtil;
+import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
 import org.springframework.core.convert.converter.Converter;
 import redis.clients.jedis.BitOP;
@@ -51,6 +60,7 @@ import redis.clients.jedis.GeoRadiusResponse;
 import redis.clients.jedis.Protocol;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.ZParams;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.params.GeoRadiusParam;
 import redis.clients.jedis.params.MigrateParams;
 import redis.clients.jedis.params.SetParams;
@@ -489,6 +499,28 @@ public class JedisConverters extends Converters {
 		return (source)->new ScanResult<>(source.getCursor(),
 				new ListConverter<redis.clients.jedis.Tuple, Tuple>((item)->new Tuple(item.getBinaryElement(),
 						item.getScore())).convert(source.getResult()));
+	}
+
+	public final static Converter<String, Info> infoConvert(){
+		return (source)->InfoUtil.convert(source);
+	}
+
+	public final static Converter<List<String>, RedisServerTime> redisServerTimeConvert(){
+		return (source)->ReturnUtils.redisServerTime(source);
+	}
+
+	public final static RedisException exceptionConvert(final Exception e){
+		if(e instanceof JedisConnectionException){
+			if(e.getMessage().contains("pool")){
+				return new PoolException(e.getMessage(), e);
+			}else{
+				return new RedisConnectionFailureException(e.getMessage(), e);
+			}
+		}else if(e instanceof NotSupportedCommandException){
+			return (NotSupportedCommandException) e;
+		}else{
+			return new RedisException(e.getMessage(), e);
+		}
 	}
 
 }

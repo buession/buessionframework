@@ -27,10 +27,10 @@ package com.buession.redis.client.connection;
 import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.datasource.DataSource;
-import com.buession.redis.exception.RedisConnectionFailureException;
+import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
-import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.io.IOException;
 
@@ -50,6 +50,8 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 	private SslConfiguration sslConfiguration;
 
 	protected Transaction transaction;
+
+	protected Pipeline pipeline;
 
 	public AbstractRedisConnection(){
 	}
@@ -137,12 +139,13 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 		return Status.SUCCESS;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <C, R> R execute(final Executor<C, R> executor) throws RedisException{
 		try{
 			return doExecute((Executor<T, R>) executor);
-		}catch(JedisConnectionException e){
-			throw new RedisConnectionFailureException(e.getMessage(), e);
+		}catch(Exception e){
+			throw JedisConverters.exceptionConvert(e);
 		}
 	}
 
@@ -162,6 +165,11 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 	}
 
 	@Override
+	public boolean isPipeline(){
+		return pipeline != null;
+	}
+
+	@Override
 	public void disconnect() throws IOException{
 		if(getDataSource() != null){
 			doDisconnect();
@@ -177,7 +185,7 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 
 	protected abstract void doConnect() throws IOException;
 
-	protected abstract <R> R doExecute(final Executor<T, R> executor) throws RedisException;
+	protected abstract <R> R doExecute(final Executor<T, R> executor) throws Exception;
 
 	protected abstract boolean checkConnect();
 

@@ -24,8 +24,11 @@
  */
 package com.buession.redis.client;
 
+import com.buession.core.Executor;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.command.*;
+import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.Pipeline;
 
 /**
  * @author Yong.Teng
@@ -37,5 +40,9 @@ public interface RedisClient extends ConnectionCommands, GeoCommands, HashComman
 	RedisConnection getConnection();
 
 	void setConnection(RedisConnection connection);
+
+	Pipeline pipeline();
+
+	<C, R> R execute(final Executor<C, R> executor) throws RedisException;
 
 }

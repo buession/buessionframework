@@ -24,7 +24,8 @@
  */
 package com.buession.redis.core;
 
-import com.buession.core.converter.Converter;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.Nullable;
 
 import java.util.function.Supplier;
 
@@ -59,5 +60,11 @@ public abstract class FutureResult<V> {
 	}
 
 	public abstract Object get();
+
+	@SuppressWarnings("unchecked")
+	@Nullable
+	public Object convert(@Nullable Object result){
+		return result == null ? null : converter.convert(result);
+	}
 
 }

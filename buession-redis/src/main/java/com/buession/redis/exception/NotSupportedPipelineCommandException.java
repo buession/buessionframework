@@ -22,34 +22,40 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.exception;
 
-import com.buession.core.converter.Converter;
-import redis.clients.jedis.Response;
-
-import java.util.function.Supplier;
+import com.buession.redis.core.command.ProtocolCommand;
 
 /**
  * @author Yong.Teng
  */
-public class JedisResult<V> extends FutureResult<Response<V>> {
+public class NotSupportedPipelineCommandException extends NotSupportedCommandException {
 
-	public JedisResult(final Response<V> resultHolder){
-		super(resultHolder);
+	private static final long serialVersionUID = -3574152755807717655L;
+
+	public NotSupportedPipelineCommandException(){
+		super();
 	}
 
-	public JedisResult(final Response<V> resultHolder, final Converter converter){
-		super(resultHolder, converter);
+	public NotSupportedPipelineCommandException(ProtocolCommand command){
+		super("Not supported command: " + command + " in pipeline.");
 	}
 
-	public JedisResult(final Response<V> resultHolder, final Converter converter,
-			final Supplier<?> defaultConversionResult){
-		super(resultHolder, converter, defaultConversionResult);
+	public NotSupportedPipelineCommandException(String message){
+		super(message);
 	}
 
-	@Override
-	public V get(){
-		return getResultHolder().get();
+	public NotSupportedPipelineCommandException(String message, Throwable cause){
+		super(message, cause);
+	}
+
+	public NotSupportedPipelineCommandException(Throwable cause){
+		super(cause);
+	}
+
+	public NotSupportedPipelineCommandException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace){
+		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
 }

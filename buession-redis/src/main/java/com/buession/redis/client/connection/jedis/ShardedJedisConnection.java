@@ -32,7 +32,9 @@ import com.buession.redis.client.connection.datasource.jedis.ShardedJedisDataSou
 import com.buession.redis.client.connection.datasource.jedis.ShardedJedisPoolDataSource;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.core.ShardedRedisNode;
-import com.buession.redis.exception.RedisException;
+import com.buession.redis.core.convert.JedisConverters;
+import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.pipeline.jedis.JedisPipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
@@ -104,6 +106,15 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 		return JedisClientUtils.isInMulti(shardedJedis);
 	}
 
+	@Override
+	public Pipeline getPipeline(){
+		if(pipeline == null){
+			pipeline = new JedisPipeline(shardedJedis.pipelined());
+		}
+
+		return pipeline;
+	}
+
 	protected ShardedJedisPool createPool(final ShardedJedisPoolDataSource dataSource){
 		final SslConfiguration sslConfiguration = getSslConfiguration();
 		final List<JedisShardInfo> shardInfos = JedisClientUtils.createJedisShardInfo(dataSource.getRedisNodes(),
@@ -125,7 +136,12 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 		if(dataSource instanceof ShardedJedisPoolDataSource){
 			ShardedJedisPoolDataSource shardedJedisPoolDataSource = (ShardedJedisPoolDataSource) dataSource;
 			pool = createPool(shardedJedisPoolDataSource);
-			shardedJedis = pool.getResource();
+
+			try{
+				shardedJedis = pool.getResource();
+			}catch(Exception e){
+				throw JedisConverters.exceptionConvert(e);
+			}
 
 			if(logger.isInfoEnabled()){
 				logger.info("ShardedJedis initialize with pool success, size: {}.",
@@ -140,14 +156,18 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 					sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
 					sslConfiguration.getHostnameVerifier());
 
-			shardedJedis = new ShardedJedis(shardInfos);
+			try{
+				shardedJedis = new ShardedJedis(shardInfos);
+			}catch(Exception e){
+				throw JedisConverters.exceptionConvert(e);
+			}
 
 			logger.info("ShardedJedis initialize success, size: {}.", shardInfos.size());
 		}
 	}
 
 	@Override
-	protected <R> R doExecute(Executor<ShardedJedis, R> executor) throws RedisException{
+	protected <R> R doExecute(Executor<ShardedJedis, R> executor) throws Exception{
 		return executor.execute(shardedJedis);
 	}
 

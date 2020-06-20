@@ -231,14 +231,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		经纬度对象
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoArgument
+	 * @param geoRadiusArgument
 	 * 		GEO 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius,
-			final GeoArgument geoArgument){
-		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, GeoUnit.M, geoArgument);
+			final GeoRadiusArgument geoRadiusArgument){
+		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, GeoUnit.M, geoRadiusArgument);
 	}
 
 	/**
@@ -253,14 +253,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		经纬度对象
 	 * @param radius
 	 * 		范围（单位：米）
-	 * @param geoArgument
+	 * @param geoRadiusArgument
 	 * 		GEO 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius,
-			final GeoCommands.GeoArgument geoArgument){
-		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, GeoUnit.M, geoArgument);
+			final GeoRadiusArgument geoRadiusArgument){
+		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, GeoUnit.M, geoRadiusArgument);
 	}
 
 	/**
@@ -277,14 +277,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
-	 * @param geoArgument
+	 * @param geoRadiusArgument
 	 * 		GEO 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final String key, final Geo geo, final double radius, final GeoUnit unit,
-			final GeoArgument geoArgument){
-		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, geoArgument);
+			final GeoRadiusArgument geoRadiusArgument){
+		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, geoRadiusArgument);
 	}
 
 	/**
@@ -294,21 +294,21 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
 	 *
 	 * @param key
-	 * 		Key
+	 * 		KeyG
 	 * @param geo
 	 * 		经纬度对象
 	 * @param radius
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
-	 * @param geoArgument
+	 * @param geoRadiusArgument
 	 * 		GEO 参数
 	 *
 	 * @return 位置元素
 	 */
 	default List<GeoRadius> geoRadius(final byte[] key, final Geo geo, final double radius, final GeoUnit unit,
-			final GeoCommands.GeoArgument geoArgument){
-		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, geoArgument);
+			final GeoRadiusArgument geoRadiusArgument){
+		return geoRadius(key, geo.getLongitude(), geo.getLatitude(), radius, unit, geoRadiusArgument);
 	}
 
 }

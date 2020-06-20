@@ -41,6 +41,74 @@ import java.util.Set;
 public interface HashCommands extends RedisCommands {
 
 	/**
+	 * 为哈希表 key 中的域 field 的值加上减量 increment
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
+	 * .html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param field
+	 * 		域
+	 * @param value
+	 * 		值
+	 *
+	 * @return 哈希表 key 中域 field 减量 increment 后的值
+	 */
+	Long hDecrBy(final String key, final String field, final int value);
+
+	/**
+	 * 为哈希表 key 中的域 field 的值加上减量 increment
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
+	 * .html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param field
+	 * 		域
+	 * @param value
+	 * 		值
+	 *
+	 * @return 哈希表 key 中域 field 减量 increment 后的值
+	 */
+	Long hDecrBy(final byte[] key, final byte[] field, final int value);
+
+	/**
+	 * 为哈希表 key 中的域 field 的值加上减量 increment
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
+	 * .html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param field
+	 * 		域
+	 * @param value
+	 * 		值
+	 *
+	 * @return 哈希表 key 中域 field 减量 increment 后的值
+	 */
+	Long hDecrBy(final String key, final String field, final long value);
+
+	/**
+	 * 为哈希表 key 中的域 field 的值加上减量 increment
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
+	 * .html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param field
+	 * 		域
+	 * @param value
+	 * 		值
+	 *
+	 * @return 哈希表 key 中域 field 减量 increment 后的值
+	 */
+	Long hDecrBy(final byte[] key, final byte[] field, final long value);
+
+	/**
 	 * 删除哈希表 key 中的一个或多个指定域
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/hash/hdel.html" target="_blank">http://redisdoc.com/hash/hdel.html</a></p>
@@ -287,74 +355,6 @@ public interface HashCommands extends RedisCommands {
 	 * @return 哈希表 key 中域 field 增量 increment 后的值
 	 */
 	Double hIncrByFloat(final byte[] key, final byte[] field, final double value);
-
-	/**
-	 * 为哈希表 key 中的域 field 的值加上减量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 减量 increment 后的值
-	 */
-	Long hDecrBy(final String key, final String field, final int value);
-
-	/**
-	 * 为哈希表 key 中的域 field 的值加上减量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 减量 increment 后的值
-	 */
-	Long hDecrBy(final byte[] key, final byte[] field, final int value);
-
-	/**
-	 * 为哈希表 key 中的域 field 的值加上减量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 减量 increment 后的值
-	 */
-	Long hDecrBy(final String key, final String field, final long value);
-
-	/**
-	 * 为哈希表 key 中的域 field 的值加上减量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 减量 increment 后的值
-	 */
-	Long hDecrBy(final byte[] key, final byte[] field, final long value);
 
 	/**
 	 * 获取哈希表 key 中的所有域

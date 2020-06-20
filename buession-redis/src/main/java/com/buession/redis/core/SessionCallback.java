@@ -27,6 +27,7 @@ package com.buession.redis.core;
 /**
  * @author Yong.Teng
  */
+@FunctionalInterface
 public interface SessionCallback<R> extends Executor<R> {
 
 }

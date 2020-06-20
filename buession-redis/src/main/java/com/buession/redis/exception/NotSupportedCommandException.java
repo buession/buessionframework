@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.exception;
@@ -29,30 +29,33 @@ import com.buession.redis.core.command.ProtocolCommand;
 /**
  * @author Yong.Teng
  */
-public class NotSupportedCommandException extends RuntimeException {
+public class NotSupportedCommandException extends RedisException {
 
-    public NotSupportedCommandException(){
-        super();
-    }
+	private static final long serialVersionUID = -3098408677930013922L;
 
-    public NotSupportedCommandException(ProtocolCommand command){
-        super("Not supported command: " + command);
-    }
+	public NotSupportedCommandException(){
+		super();
+	}
 
-    public NotSupportedCommandException(String message){
-        super(message);
-    }
+	public NotSupportedCommandException(ProtocolCommand command){
+		super("Not supported command: " + command);
+	}
 
-    public NotSupportedCommandException(String message, Throwable cause){
-        super(message, cause);
-    }
+	public NotSupportedCommandException(String message){
+		super(message);
+	}
 
-    public NotSupportedCommandException(Throwable cause){
-        super(cause);
-    }
+	public NotSupportedCommandException(String message, Throwable cause){
+		super(message, cause);
+	}
 
-    public NotSupportedCommandException(String message, Throwable cause, boolean enableSuppression, boolean
-            writableStackTrace){
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+	public NotSupportedCommandException(Throwable cause){
+		super(cause);
+	}
+
+	public NotSupportedCommandException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace){
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
 }

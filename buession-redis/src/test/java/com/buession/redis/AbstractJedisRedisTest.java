@@ -35,7 +35,7 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 
 	protected RedisConnection createRedisConnection(){
 		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("redis.host", 6379, "tQP" +
-				"!Vf7JxL-nrH-x", 10);
+				"!Vf7JxL-nrH-x", 10, true);
 
 		try{
 			factoryBean.afterPropertiesSet();
