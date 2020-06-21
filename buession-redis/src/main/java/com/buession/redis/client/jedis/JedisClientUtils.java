@@ -29,10 +29,13 @@ import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.utils.RedisClientUtils;
+import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.commands.BinaryRedisPipeline;
+import redis.clients.jedis.commands.RedisPipeline;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
@@ -113,29 +116,57 @@ public class JedisClientUtils extends RedisClientUtils {
 		}
 	}
 
-	public final static Response<?> objectDebug(final ObjectCommand command,
-			final redis.clients.jedis.Transaction transaction, final String key){
+	public final static Object objectDebug(final ObjectCommand command, final ShardedJedis shardedJedis,
+			final String key){
 		switch(command){
 			case ENCODING:
-				return transaction.objectEncoding(key);
+				return SafeEncoder.encode(shardedJedis.objectEncoding(SafeEncoder.encode(key)));
 			case IDLETIME:
-				return transaction.objectIdletime(key);
+				return shardedJedis.objectIdletime(SafeEncoder.encode(key));
 			case REFCOUNT:
-				return transaction.objectRefcount(key);
+				return shardedJedis.objectRefcount(SafeEncoder.encode(key));
 			default:
 				return null;
 		}
 	}
 
-	public final static Response<?> objectDebug(final ObjectCommand command,
-			final redis.clients.jedis.Transaction transaction, final byte[] key){
+	public final static Object objectDebug(final ObjectCommand command, final ShardedJedis shardedJedis,
+			final byte[] key){
 		switch(command){
 			case ENCODING:
-				return transaction.objectEncoding(key);
+				return shardedJedis.objectEncoding(key);
 			case IDLETIME:
-				return transaction.objectIdletime(key);
+				return shardedJedis.objectIdletime(key);
 			case REFCOUNT:
-				return transaction.objectRefcount(key);
+				return shardedJedis.objectRefcount(key);
+			default:
+				return null;
+		}
+	}
+
+	public final static Response<?> objectDebug(final ObjectCommand command, final RedisPipeline pipeline,
+			final String key){
+		switch(command){
+			case ENCODING:
+				return pipeline.objectEncoding(key);
+			case IDLETIME:
+				return pipeline.objectIdletime(key);
+			case REFCOUNT:
+				return pipeline.objectRefcount(key);
+			default:
+				return null;
+		}
+	}
+
+	public final static Response<?> objectDebug(final ObjectCommand command, final BinaryRedisPipeline binaryPipeline,
+			final byte[] key){
+		switch(command){
+			case ENCODING:
+				return binaryPipeline.objectEncoding(key);
+			case IDLETIME:
+				return binaryPipeline.objectIdletime(key);
+			case REFCOUNT:
+				return binaryPipeline.objectRefcount(key);
 			default:
 				return null;
 		}

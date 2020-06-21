@@ -41,6 +41,7 @@ import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.jedis.JedisTransaction;
 import org.springframework.core.convert.converter.Converter;
 import redis.clients.jedis.BitOP;
+import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.ZParams;
 import redis.clients.jedis.commands.JedisCommands;
@@ -54,7 +55,7 @@ import java.util.Queue;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisOperations<C extends JedisCommands> extends AbstractRedisOperations implements JedisRedisOperations<C> {
+public abstract class AbstractJedisRedisOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractRedisOperations implements JedisRedisOperations<C, P> {
 
 	protected final static Converter<Aggregate, ZParams.Aggregate> AGGREGATE_JEDIS_CONVERTER =
 			JedisConverters.aggregateJedisConverter();
@@ -96,8 +97,8 @@ public abstract class AbstractJedisRedisOperations<C extends JedisCommands> exte
 		return jedisTransaction.primitive();
 	}
 
-	protected <T extends redis.clients.jedis.PipelineBase> T getPipeline(){
-		JedisPipeline<T> jedisPipeline = (JedisPipeline) client.getConnection().getPipeline();
+	protected P getPipeline(){
+		JedisPipeline<P> jedisPipeline = (JedisPipeline) client.getConnection().getPipeline();
 		return jedisPipeline.primitive();
 	}
 

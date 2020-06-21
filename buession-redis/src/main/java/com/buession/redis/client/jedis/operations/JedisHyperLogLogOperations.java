@@ -26,16 +26,15 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.RedisClient;
-import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.JedisConverters;
-import com.buession.redis.exception.NotSupportedPipelineCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Pipeline;
 
 /**
  * @author Yong.Teng
  */
-public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Jedis> {
+public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Jedis, Pipeline> {
 
 	public JedisHyperLogLogOperations(final RedisClient client){
 		super(client);
@@ -57,7 +56,9 @@ public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Je
 	@Override
 	public Status pfMerge(final String destKey, final String... keys){
 		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.PFMERGE);
+			Pipeline pipeline = getPipeline();
+			return pipelineExecute((cmd)->newJedisResult(pipeline.pfmerge(destKey, keys),
+					JedisConverters.okToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().pfmerge(destKey, keys),
 					JedisConverters.okToStatusConverter()));
@@ -69,7 +70,9 @@ public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Je
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
 		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.PFMERGE);
+			Pipeline pipeline = getPipeline();
+			return pipelineExecute((cmd)->newJedisResult(pipeline.pfmerge(destKey, keys),
+					JedisConverters.okToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().pfmerge(destKey, keys),
 					JedisConverters.okToStatusConverter()));

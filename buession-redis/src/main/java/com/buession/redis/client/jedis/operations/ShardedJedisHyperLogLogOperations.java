@@ -28,14 +28,15 @@ import com.buession.lang.Status;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.JedisConverters;
-import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPipeline;
 
 /**
  * @author Yong.Teng
  */
-public class ShardedJedisHyperLogLogOperations extends AbstractHyperLogLogOperations<ShardedJedis> {
+public class ShardedJedisHyperLogLogOperations extends AbstractHyperLogLogOperations<ShardedJedis,
+		ShardedJedisPipeline> {
 
 	public ShardedJedisHyperLogLogOperations(final RedisClient client){
 		super(client);
@@ -56,12 +57,14 @@ public class ShardedJedisHyperLogLogOperations extends AbstractHyperLogLogOperat
 
 	@Override
 	public Status pfMerge(final String destKey, final String... keys){
-		throw new NotSupportedCommandException(ProtocolCommand.PFMERGE);
+		commandAllNotSupportedException(ProtocolCommand.PFMERGE);
+		return null;
 	}
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
-		throw new NotSupportedCommandException(ProtocolCommand.PFMERGE);
+		commandAllNotSupportedException(ProtocolCommand.PFMERGE);
+		return null;
 	}
 
 	@Override

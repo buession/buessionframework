@@ -35,6 +35,7 @@ import com.buession.redis.core.jedis.JedisScanParams;
 import com.buession.redis.exception.NotSupportedPipelineCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.utils.ReturnUtils;
+import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 
 import java.util.List;
@@ -44,7 +45,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractHashOperations<C extends JedisCommands> extends AbstractJedisRedisOperations<C> implements HashOperations {
+public abstract class AbstractHashOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisOperations<C, P> implements HashOperations {
 
 	public AbstractHashOperations(final RedisClient client){
 		super(client);
@@ -255,14 +256,9 @@ public abstract class AbstractHashOperations<C extends JedisCommands> extends Ab
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.HSCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->STRING_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
-					new JedisScanParams(pattern))));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
+		return execute((cmd)->STRING_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
+				new JedisScanParams(pattern))));
 	}
 
 	@Override
@@ -287,14 +283,9 @@ public abstract class AbstractHashOperations<C extends JedisCommands> extends Ab
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.HSCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->STRING_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
-					new JedisScanParams(count))));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
+		return execute((cmd)->STRING_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
+				new JedisScanParams(count))));
 	}
 
 	@Override
@@ -324,14 +315,9 @@ public abstract class AbstractHashOperations<C extends JedisCommands> extends Ab
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
 			final int count){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.HSCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->STRING_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
-					new JedisScanParams(pattern, count))));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
+		return execute((cmd)->STRING_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
+				new JedisScanParams(pattern, count))));
 	}
 
 	@Override

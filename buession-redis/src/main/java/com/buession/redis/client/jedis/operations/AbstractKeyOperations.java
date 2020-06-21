@@ -29,11 +29,11 @@ import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.operations.KeyOperations;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.Type;
-import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
 import org.springframework.core.convert.converter.Converter;
+import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.commands.JedisCommands;
 import redis.clients.jedis.params.MigrateParams;
@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractKeyOperations<C extends JedisCommands> extends AbstractJedisRedisOperations<C> implements KeyOperations {
+public abstract class AbstractKeyOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisOperations<C, P> implements KeyOperations {
 
 	protected final static Converter<SortArgument, SortingParams> SORT_ARGUMENT_JEDIS_CONVERTER =
 			JedisConverters.sortArgumentJedisConverter();

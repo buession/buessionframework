@@ -32,9 +32,9 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.JedisConverters;
-import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPipeline;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.params.MigrateParams;
 
@@ -44,7 +44,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedis> {
+public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisKeyOperations(final RedisClient client){
 		super(client);
@@ -213,12 +213,14 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 	@Override
 	public Set<String> keys(final String pattern){
-		throw new NotSupportedCommandException(ProtocolCommand.KEYS);
+		commandAllNotSupportedException(ProtocolCommand.KEYS);
+		return null;
 	}
 
 	@Override
 	public Set<byte[]> keys(final byte[] pattern){
-		throw new NotSupportedCommandException(ProtocolCommand.KEYS);
+		commandAllNotSupportedException(ProtocolCommand.KEYS);
+		return null;
 	}
 
 	@Override
@@ -273,27 +275,32 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 	@Override
 	public String randomKey(){
-		throw new NotSupportedCommandException(ProtocolCommand.PTTL);
+		commandAllNotSupportedException(ProtocolCommand.PTTL);
+		return null;
 	}
 
 	@Override
 	public Status rename(final String key, final String newKey){
-		throw new NotSupportedCommandException(ProtocolCommand.RENAME);
+		commandAllNotSupportedException(ProtocolCommand.RENAME);
+		return null;
 	}
 
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey){
-		throw new NotSupportedCommandException(ProtocolCommand.RENAME);
+		commandAllNotSupportedException(ProtocolCommand.RENAME);
+		return null;
 	}
 
 	@Override
 	public Status renameNx(final String key, final String newKey){
-		throw new NotSupportedCommandException(ProtocolCommand.RENAMENX);
+		commandAllNotSupportedException(ProtocolCommand.RENAMENX);
+		return null;
 	}
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey){
-		throw new NotSupportedCommandException(ProtocolCommand.RENAMENX);
+		commandAllNotSupportedException(ProtocolCommand.RENAMENX);
+		return null;
 	}
 
 	@Override
@@ -311,102 +318,122 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 	@Override
 	public ScanResult<List<String>> scan(final int cursor){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final long cursor){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final int cursor, final String pattern){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final long cursor, final String pattern){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final int cursor, final int count){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final long cursor, final int count){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final int count){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final int cursor, final String pattern, final int count){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern, final int count){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final long cursor, final String pattern, final int count){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count){
-		throw new NotSupportedCommandException(ProtocolCommand.SCAN);
+		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		return null;
 	}
 
 	@Override
@@ -435,46 +462,26 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 	@Override
 	public Long sort(final String key, final String destKey){
-		throw new NotSupportedCommandException(ProtocolCommand.SORT);
+		commandAllNotSupportedException(ProtocolCommand.SORT);
+		return null;
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey){
-		throw new NotSupportedCommandException(ProtocolCommand.SORT);
+		commandAllNotSupportedException(ProtocolCommand.SORT);
+		return null;
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey, final SortArgument sortArgument){
-		throw new NotSupportedCommandException(ProtocolCommand.SORT);
+		commandAllNotSupportedException(ProtocolCommand.SORT);
+		return null;
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
-		throw new NotSupportedCommandException(ProtocolCommand.SORT);
-	}
-
-	@Override
-	public Long ttl(final byte[] key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().ttl(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().ttl(key)));
-		}else{
-			return execute((cmd)->cmd.ttl(key));
-		}
-	}
-
-	@Override
-	public Type type(final byte[] key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().type(key),
-					JedisConverters.enumConverter(Type.class)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().type(key),
-					JedisConverters.enumConverter(Type.class)));
-		}else{
-			return execute((cmd)->ReturnUtils.enumValueOf(cmd.type(key), Type.class));
-		}
+		commandAllNotSupportedException(ProtocolCommand.SORT);
+		return null;
 	}
 
 	@Override
@@ -512,6 +519,30 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 				return result;
 			});
+		}
+	}
+
+	@Override
+	public Long ttl(final byte[] key){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().ttl(key)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().ttl(key)));
+		}else{
+			return execute((cmd)->cmd.ttl(key));
+		}
+	}
+
+	@Override
+	public Type type(final byte[] key){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().type(key),
+					JedisConverters.enumConverter(Type.class)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().type(key),
+					JedisConverters.enumConverter(Type.class)));
+		}else{
+			return execute((cmd)->ReturnUtils.enumValueOf(cmd.type(key), Type.class));
 		}
 	}
 

@@ -28,8 +28,6 @@ import com.buession.lang.Status;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.JedisConverters;
-import com.buession.redis.exception.NotSupportedPipelineCommandException;
-import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
@@ -38,7 +36,7 @@ import redis.clients.jedis.Pipeline;
 /**
  * @author Yong.Teng
  */
-public class JedisConnectionOperations extends AbstractConnectionOperations<Jedis> {
+public class JedisConnectionOperations extends AbstractConnectionOperations<Jedis, Pipeline> {
 
 	public JedisConnectionOperations(final RedisClient client){
 		super(client);
@@ -46,13 +44,8 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 
 	@Override
 	public Status auth(final String password){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.AUTH);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.AUTH);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.auth(password)));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.AUTH);
+		return execute((cmd)->ReturnUtils.statusForOK(cmd.auth(password)));
 	}
 
 	@Override
@@ -86,13 +79,8 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 
 	@Override
 	public Status quit(){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.QUIT);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.QUIT);
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.quit()));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.QUIT);
+		return execute((cmd)->ReturnUtils.statusForOK(cmd.quit()));
 	}
 
 	@Override

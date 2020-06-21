@@ -1008,6 +1008,34 @@ public interface KeyCommands extends RedisCommands {
 	Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument);
 
 	/**
+	 * 修改指定一个或多个 key 最后访问时间
+	 *
+	 * <p>详情说明
+	 * <a href="http://www.redis.cn/commands/touch.html" target="_blank">http://www.redis.cn/commands/touch.html</a>
+	 * </p>
+	 *
+	 * @param keys
+	 * 		一个或多个 key
+	 *
+	 * @return 操作的 key 的数量
+	 */
+	Long touch(final String... keys);
+
+	/**
+	 * 修改指定一个或多个 key 最后访问时间
+	 *
+	 * <p>详情说明
+	 * <a href="http://www.redis.cn/commands/touch.html" target="_blank">http://www.redis.cn/commands/touch.html</a>
+	 * </p>
+	 *
+	 * @param keys
+	 * 		一个或多个 key
+	 *
+	 * @return 操作的 key 的数量
+	 */
+	Long touch(final byte[]... keys);
+
+	/**
 	 * 获取给定 key 的剩余生存时间
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/expire/ttl.html" target="_blank">http://redisdoc.com/expire/ttl.html</a>
@@ -1062,34 +1090,6 @@ public interface KeyCommands extends RedisCommands {
 	 * @return key 所储存的值的类型
 	 */
 	Type type(final byte[] key);
-
-	/**
-	 * 修改指定一个或多个 key 最后访问时间
-	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/touch.html" target="_blank">http://www.redis.cn/commands/touch.html</a>
-	 * </p>
-	 *
-	 * @param keys
-	 * 		一个或多个 key
-	 *
-	 * @return 操作的 key 的数量
-	 */
-	Long touch(final String... keys);
-
-	/**
-	 * 修改指定一个或多个 key 最后访问时间
-	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/touch.html" target="_blank">http://www.redis.cn/commands/touch.html</a>
-	 * </p>
-	 *
-	 * @param keys
-	 * 		一个或多个 key
-	 *
-	 * @return 操作的 key 的数量
-	 */
-	Long touch(final byte[]... keys);
 
 	/**
 	 * 删除给定的一个或多个 key，该命令会在另一个线程中回收内存，因此它是非阻塞的。

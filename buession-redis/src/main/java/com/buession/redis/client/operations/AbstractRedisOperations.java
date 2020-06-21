@@ -27,7 +27,11 @@ package com.buession.redis.client.operations;
 import com.buession.core.converter.HashConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.client.RedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.Converters;
+import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.exception.NotSupportedPipelineCommandException;
+import com.buession.redis.exception.NotSupportedTransactionCommandException;
 
 /**
  * @author Yong.Teng
@@ -52,6 +56,26 @@ public abstract class AbstractRedisOperations implements RedisOperations {
 
 	protected boolean isPipeline(){
 		return client.getConnection().isPipeline();
+	}
+
+	protected void pipelineAndTransactionNotSupportedException(final ProtocolCommand command){
+		if(isPipeline()){
+			throw new NotSupportedPipelineCommandException(command);
+		}else if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(command);
+		}else{
+			throw new NotSupportedCommandException(command);
+		}
+	}
+
+	protected void commandAllNotSupportedException(final ProtocolCommand command){
+		if(isPipeline()){
+			throw new NotSupportedPipelineCommandException(command);
+		}else if(isTransaction()){
+			throw new NotSupportedTransactionCommandException(command);
+		}else{
+			throw new NotSupportedCommandException(command);
+		}
 	}
 
 }

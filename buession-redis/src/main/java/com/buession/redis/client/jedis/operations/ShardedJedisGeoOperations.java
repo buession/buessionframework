@@ -30,6 +30,7 @@ import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPipeline;
 import redis.clients.jedis.params.GeoRadiusParam;
 
 import java.util.List;
@@ -38,7 +39,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class ShardedJedisGeoOperations extends AbstractGeoOperations<ShardedJedis> {
+public class ShardedJedisGeoOperations extends AbstractGeoOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisGeoOperations(final RedisClient client){
 		super(client);

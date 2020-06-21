@@ -26,12 +26,13 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.operations.ConnectionOperations;
+import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractConnectionOperations<C extends JedisCommands> extends AbstractJedisRedisOperations<C> implements ConnectionOperations {
+public abstract class AbstractConnectionOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisOperations<C, P> implements ConnectionOperations {
 
 	public AbstractConnectionOperations(final RedisClient client){
 		super(client);

@@ -27,13 +27,13 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.NotSupportedCommandException;
 import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPipeline;
 
 /**
  * @author Yong.Teng
  */
-public class ShardedJedisConnectionOperations extends AbstractConnectionOperations<ShardedJedis> {
+public class ShardedJedisConnectionOperations extends AbstractConnectionOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisConnectionOperations(final RedisClient client){
 		super(client);
@@ -52,32 +52,38 @@ public class ShardedJedisConnectionOperations extends AbstractConnectionOperatio
 
 	@Override
 	public Status auth(final String password){
-		throw new NotSupportedCommandException(ProtocolCommand.AUTH);
+		commandAllNotSupportedException(ProtocolCommand.AUTH);
+		return null;
 	}
 
 	@Override
 	public Status auth(final byte[] password){
-		throw new NotSupportedCommandException(ProtocolCommand.AUTH);
+		commandAllNotSupportedException(ProtocolCommand.AUTH);
+		return null;
 	}
 
 	@Override
 	public Status ping(){
-		throw new NotSupportedCommandException(ProtocolCommand.PING);
+		commandAllNotSupportedException(ProtocolCommand.PING);
+		return null;
 	}
 
 	@Override
 	public Status quit(){
-		throw new NotSupportedCommandException(ProtocolCommand.QUIT);
+		commandAllNotSupportedException(ProtocolCommand.QUIT);
+		return null;
 	}
 
 	@Override
 	public Status select(final int db){
-		throw new NotSupportedCommandException(ProtocolCommand.SELECT);
+		commandAllNotSupportedException(ProtocolCommand.SELECT);
+		return null;
 	}
 
 	@Override
 	public Status swapdb(final int db1, final int db2){
-		throw new NotSupportedCommandException(ProtocolCommand.SWAPDB);
+		commandAllNotSupportedException(ProtocolCommand.SWAPDB);
+		return null;
 	}
 
 }

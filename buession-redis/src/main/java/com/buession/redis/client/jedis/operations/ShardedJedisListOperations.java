@@ -29,16 +29,16 @@ import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.JedisConverters;
-import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPipeline;
 
 import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public class ShardedJedisListOperations extends AbstractListOperations<ShardedJedis> {
+public class ShardedJedisListOperations extends AbstractListOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisListOperations(final RedisClient client){
 		super(client);
@@ -46,32 +46,38 @@ public class ShardedJedisListOperations extends AbstractListOperations<ShardedJe
 
 	@Override
 	public List<String> blPop(final String[] keys, final int timeout){
-		throw new NotSupportedCommandException(ProtocolCommand.BLPOP);
+		commandAllNotSupportedException(ProtocolCommand.BLPOP);
+		return null;
 	}
 
 	@Override
 	public List<byte[]> blPop(final byte[][] keys, final int timeout){
-		throw new NotSupportedCommandException(ProtocolCommand.BLPOP);
+		commandAllNotSupportedException(ProtocolCommand.BLPOP);
+		return null;
 	}
 
 	@Override
 	public List<String> brPop(final String[] keys, final int timeout){
-		throw new NotSupportedCommandException(ProtocolCommand.BRPOP);
+		commandAllNotSupportedException(ProtocolCommand.BRPOP);
+		return null;
 	}
 
 	@Override
 	public List<byte[]> brPop(final byte[][] keys, final int timeout){
-		throw new NotSupportedCommandException(ProtocolCommand.BRPOP);
+		commandAllNotSupportedException(ProtocolCommand.BRPOP);
+		return null;
 	}
 
 	@Override
 	public String brPoplPush(final String source, final String destKey, final int timeout){
-		throw new NotSupportedCommandException(ProtocolCommand.BRPOPLPUSH);
+		commandAllNotSupportedException(ProtocolCommand.BRPOPLPUSH);
+		return null;
 	}
 
 	@Override
 	public byte[] brPoplPush(final byte[] source, final byte[] destKey, final int timeout){
-		throw new NotSupportedCommandException(ProtocolCommand.BRPOPLPUSH);
+		commandAllNotSupportedException(ProtocolCommand.BRPOPLPUSH);
+		return null;
 	}
 
 	@Override
@@ -228,12 +234,14 @@ public class ShardedJedisListOperations extends AbstractListOperations<ShardedJe
 
 	@Override
 	public String rPoplPush(final String source, final String destKey){
-		throw new NotSupportedCommandException(ProtocolCommand.RPOPLPUSH);
+		commandAllNotSupportedException(ProtocolCommand.RPOPLPUSH);
+		return null;
 	}
 
 	@Override
 	public byte[] rPoplPush(final byte[] source, final byte[] destKey){
-		throw new NotSupportedCommandException(ProtocolCommand.RPOPLPUSH);
+		commandAllNotSupportedException(ProtocolCommand.RPOPLPUSH);
+		return null;
 	}
 
 	@Override

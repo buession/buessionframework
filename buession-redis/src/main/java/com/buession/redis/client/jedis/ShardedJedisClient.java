@@ -35,6 +35,8 @@ import com.buession.redis.client.jedis.operations.ShardedJedisHyperLogLogOperati
 import com.buession.redis.client.jedis.operations.ShardedJedisKeyOperations;
 import com.buession.redis.client.jedis.operations.ShardedJedisListOperations;
 import com.buession.redis.client.jedis.operations.ShardedJedisPubSubOperations;
+import com.buession.redis.client.jedis.operations.ShardedJedisScriptingOperations;
+import com.buession.redis.client.jedis.operations.ShardedJedisServerOperations;
 import com.buession.redis.client.operations.ConnectionOperations;
 import com.buession.redis.client.operations.GeoOperations;
 import com.buession.redis.client.operations.HashOperations;
@@ -42,8 +44,12 @@ import com.buession.redis.client.operations.HyperLogLogOperations;
 import com.buession.redis.client.operations.KeyOperations;
 import com.buession.redis.client.operations.ListOperations;
 import com.buession.redis.client.operations.PubSubOperations;
+import com.buession.redis.client.operations.ScriptingOperations;
+import com.buession.redis.client.operations.ServerOperations;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.PubSubListener;
+import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.jedis.JedisScanParams;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.MigrateOperation;
@@ -77,6 +83,11 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 
 	public ShardedJedisClient(RedisConnection connection){
 		super(connection);
+	}
+
+	@Override
+	public Status auth(final byte[] password){
+		return connectionOperations.auth(password);
 	}
 
 	@Override
@@ -320,8 +331,8 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
-	public Long pfCount(final String... keys){
-		return hyperLogLogOperations.pfCount(keys);
+	public Status pfMerge(final byte[] destKey, final byte[]... keys){
+		return hyperLogLogOperations.pfMerge(destKey, keys);
 	}
 
 	@Override
@@ -387,6 +398,11 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
+	public Set<byte[]> keys(final byte[] pattern){
+		return keyOperations.keys(pattern);
+	}
+
+	@Override
 	public Status persist(final byte[] key){
 		return keyOperations.persist(key);
 	}
@@ -407,8 +423,58 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
+	public Status rename(final byte[] key, final byte[] newKey){
+		return keyOperations.rename(key, newKey);
+	}
+
+	@Override
+	public Status renameNx(final byte[] key, final byte[] newKey){
+		return keyOperations.renameNx(key, newKey);
+	}
+
+	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
 		return keyOperations.restore(key, serializedValue, ttl);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final byte[] cursor){
+		return keyOperations.scan(cursor);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern){
+		return keyOperations.scan(cursor, pattern);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
+		return keyOperations.scan(cursor, pattern);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
+		return keyOperations.scan(cursor, pattern);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count){
+		return keyOperations.scan(cursor, count);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern, final int count){
+		return keyOperations.scan(cursor, pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count){
+		return keyOperations.scan(cursor, pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count){
+		return keyOperations.scan(cursor, pattern, count);
 	}
 
 	@Override
@@ -422,18 +488,18 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
+	public Long sort(final byte[] key, final byte[] destKey){
+		return keyOperations.sort(key, destKey);
+	}
+
+	@Override
+	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
+		return keyOperations.sort(key, destKey, sortArgument);
+	}
+
+	@Override
 	public Long ttl(final byte[] key){
 		return keyOperations.ttl(key);
-	}
-
-	@Override
-	public Type type(final byte[] key){
-		return keyOperations.type(key);
-	}
-
-	@Override
-	public Long touch(final String... keys){
-		return keyOperations.touch(keys);
 	}
 
 	@Override
@@ -442,13 +508,28 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
-	public Long unlink(final String... keys){
-		return keyOperations.unlink(keys);
+	public Type type(final byte[] key){
+		return keyOperations.type(key);
 	}
 
 	@Override
 	public Long unlink(final byte[]... keys){
 		return keyOperations.unlink(keys);
+	}
+
+	@Override
+	public List<byte[]> blPop(final byte[][] keys, final int timeout){
+		return listOperations.blPop(keys, timeout);
+	}
+
+	@Override
+	public List<byte[]> brPop(final byte[][] keys, final int timeout){
+		return listOperations.brPop(keys, timeout);
+	}
+
+	@Override
+	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout){
+		return listOperations.brPoplPush(key, destKey, timeout);
 	}
 
 	@Override
@@ -532,6 +613,11 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
+	public byte[] rPoplPush(final byte[] key, final byte[] destKey){
+		return listOperations.rPoplPush(key, destKey);
+	}
+
+	@Override
 	public Long rPush(final byte[] key, final byte[]... values){
 		return listOperations.rPush(key, values);
 	}
@@ -542,23 +628,138 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	}
 
 	@Override
-	public Object object(final ObjectCommand command, final String key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(JedisClientUtils.objectDebug(command, getTransaction(),
-					key)));
-		}else{
-			return execute((cmd)->JedisClientUtils.objectDebug(command, getShard(cmd, key), key));
-		}
+	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
+		pubSubOperations.pSubscribe(patterns, pubSubListener);
+	}
+
+	@Override
+	public List<byte[]> pubsubChannels(final byte[] pattern){
+		return pubSubOperations.pubsubChannels(pattern);
+	}
+
+	@Override
+	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
+		return pubSubOperations.pubsubNumSub(channels);
+	}
+
+	@Override
+	public Long publish(final byte[] channel, final byte[] message){
+		return pubSubOperations.publish(channel, message);
+	}
+
+	@Override
+	public Object pUnSubscribe(final byte[]... patterns){
+		return pubSubOperations.pUnSubscribe(patterns);
+	}
+
+	@Override
+	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
+		pubSubOperations.subscribe(channels, pubSubListener);
+	}
+
+	@Override
+	public Object unSubscribe(final byte[]... channels){
+		return pubSubOperations.unSubscribe(channels);
+	}
+
+	@Override
+	public Object eval(final byte[] script){
+		return scriptingOperations.eval(script);
+	}
+
+	@Override
+	public Object eval(final byte[] script, final byte[]... params){
+		return scriptingOperations.eval(script, params);
+	}
+
+	@Override
+	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments){
+		return scriptingOperations.eval(script, keys, arguments);
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest){
+		return scriptingOperations.evalSha(digest);
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest, final byte[]... params){
+		return scriptingOperations.evalSha(digest, params);
+	}
+
+	@Override
+	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments){
+		return scriptingOperations.evalSha(digest, keys, arguments);
+	}
+
+	@Override
+	public List<Boolean> scriptExists(final byte[]... sha1){
+		return scriptingOperations.scriptExists(sha1);
+	}
+
+	@Override
+	public byte[] scriptLoad(final byte[] script){
+		return scriptingOperations.scriptLoad(script);
+	}
+
+	@Override
+	public Status clientSetName(final byte[] name){
+		return serverOperations.clientSetName(name);
+	}
+
+	@Override
+	public List<byte[]> configGet(final byte[] parameter){
+		return serverOperations.configGet(parameter);
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final float value){
+		return serverOperations.configSet(parameter, value);
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final double value){
+		return serverOperations.configSet(parameter, value);
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final int value){
+		return serverOperations.configSet(parameter, value);
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final long value){
+		return serverOperations.configSet(parameter, value);
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final byte[] value){
+		return serverOperations.configSet(parameter, value);
+	}
+
+	@Override
+	public byte[] debugObject(final byte[] key){
+		return serverOperations.debugObject(key);
 	}
 
 	@Override
 	public Object object(final ObjectCommand command, final byte[] key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(JedisClientUtils.objectDebug(command, getTransaction(),
-					key)));
-		}else{
-			return execute((cmd)->JedisClientUtils.objectDebug(command, getShard(cmd, key), key));
-		}
+		return serverOperations.debugObject(key);
+	}
+
+	@Override
+	public Object pSync(final byte[] masterRunId, final int offset){
+		return serverOperations.pSync(masterRunId, offset);
+	}
+
+	@Override
+	public Object pSync(final byte[] masterRunId, final long offset){
+		return serverOperations.pSync(masterRunId, offset);
+	}
+
+	@Override
+	public Object slowLog(final SlowLogCommand command, final byte[]... arguments){
+		return serverOperations.slowLog(command, arguments);
 	}
 
 	@Override
@@ -1395,6 +1596,16 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 	@Override
 	protected PubSubOperations createPubSubOperations(){
 		return new ShardedJedisPubSubOperations(this);
+	}
+
+	@Override
+	protected ScriptingOperations createScriptingOperations(){
+		return new ShardedJedisScriptingOperations(this);
+	}
+
+	@Override
+	protected ServerOperations createServerOperations(){
+		return new ShardedJedisServerOperations(this);
 	}
 
 	protected final static Jedis getShard(final ShardedJedis shardedJedis, final String key){

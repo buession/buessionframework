@@ -26,12 +26,13 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.operations.PubSubOperations;
+import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractPubSubOperations<C extends JedisCommands> extends AbstractJedisRedisOperations<C> implements PubSubOperations {
+public abstract class AbstractPubSubOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisOperations<C, P> implements PubSubOperations {
 
 	public AbstractPubSubOperations(final RedisClient client){
 		super(client);

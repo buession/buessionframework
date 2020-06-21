@@ -27,8 +27,8 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.NotSupportedCommandException;
 import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPipeline;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class ShardedJedisPubSubOperations extends AbstractPubSubOperations<ShardedJedis> {
+public class ShardedJedisPubSubOperations extends AbstractPubSubOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisPubSubOperations(final RedisClient client){
 		super(client);
@@ -44,92 +44,106 @@ public class ShardedJedisPubSubOperations extends AbstractPubSubOperations<Shard
 
 	@Override
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
-		throw new NotSupportedCommandException(ProtocolCommand.PSUBSCRIBE);
+		commandAllNotSupportedException(ProtocolCommand.PSUBSCRIBE);
 	}
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
-		throw new NotSupportedCommandException(ProtocolCommand.PSUBSCRIBE);
+		commandAllNotSupportedException(ProtocolCommand.PSUBSCRIBE);
 	}
 
 	@Override
 	public List<String> pubsubChannels(){
-		throw new NotSupportedCommandException(ProtocolCommand.PUBSUB);
+		commandAllNotSupportedException(ProtocolCommand.PUBSUB);
+		return null;
 	}
 
 	@Override
 	public List<String> pubsubChannels(final String pattern){
-		throw new NotSupportedCommandException(ProtocolCommand.PUBSUB);
+		commandAllNotSupportedException(ProtocolCommand.PUBSUB);
+		return null;
 	}
 
 	@Override
 	public List<byte[]> pubsubChannels(final byte[] pattern){
-		throw new NotSupportedCommandException(ProtocolCommand.PUBSUB);
+		commandAllNotSupportedException(ProtocolCommand.PUBSUB);
+		return null;
 	}
 
 	@Override
 	public Long pubsubNumPat(){
-		throw new NotSupportedCommandException(ProtocolCommand.PUBSUB);
+		commandAllNotSupportedException(ProtocolCommand.PUBSUB);
+		return null;
 	}
 
 	@Override
 	public Map<String, String> pubsubNumSub(final String... channels){
-		throw new NotSupportedCommandException(ProtocolCommand.PUBSUB);
+		commandAllNotSupportedException(ProtocolCommand.PUBSUB);
+		return null;
 	}
 
 	@Override
 	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
-		throw new NotSupportedCommandException(ProtocolCommand.PUBSUB);
+		commandAllNotSupportedException(ProtocolCommand.PUBSUB);
+		return null;
 	}
 
 	@Override
 	public Long publish(final String channel, final String message){
-		throw new NotSupportedCommandException(ProtocolCommand.PUBLISH);
+		commandAllNotSupportedException(ProtocolCommand.PUBLISH);
+		return null;
 	}
 
 	@Override
 	public Long publish(final byte[] channel, final byte[] message){
-		throw new NotSupportedCommandException(ProtocolCommand.PUBLISH);
+		commandAllNotSupportedException(ProtocolCommand.PUBLISH);
+		return null;
 	}
 
 	@Override
 	public Object pUnSubscribe(){
-		throw new NotSupportedCommandException(ProtocolCommand.PUNSUBSCRIBE);
+		commandAllNotSupportedException(ProtocolCommand.PUNSUBSCRIBE);
+		return null;
 	}
 
 	@Override
 	public Object pUnSubscribe(final String... patterns){
-		throw new NotSupportedCommandException(ProtocolCommand.PUNSUBSCRIBE);
+		commandAllNotSupportedException(ProtocolCommand.PUNSUBSCRIBE);
+		return null;
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns){
-		throw new NotSupportedCommandException(ProtocolCommand.PUNSUBSCRIBE);
+		commandAllNotSupportedException(ProtocolCommand.PUNSUBSCRIBE);
+		return null;
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
-		throw new NotSupportedCommandException(ProtocolCommand.SUBSCRIBE);
+		commandAllNotSupportedException(ProtocolCommand.SUBSCRIBE);
 	}
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
-		throw new NotSupportedCommandException(ProtocolCommand.SUBSCRIBE);
+		commandAllNotSupportedException(ProtocolCommand.SUBSCRIBE);
 	}
 
 	@Override
 	public Object unSubscribe(){
-		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+		commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE);
+		return null;
 	}
 
 	@Override
 	public Object unSubscribe(final String... channels){
-		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+		commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE);
+		return null;
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels){
-		throw new NotSupportedCommandException(ProtocolCommand.UNSUBSCRIBE);
+		commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE);
+		return null;
 	}
 
 }

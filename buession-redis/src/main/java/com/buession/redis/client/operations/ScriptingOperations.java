@@ -22,36 +22,13 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.operations;
 
-import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
-import com.buession.redis.client.operations.HyperLogLogOperations;
-import com.buession.redis.core.convert.JedisConverters;
-import com.buession.redis.utils.ReturnUtils;
-import redis.clients.jedis.PipelineBase;
-import redis.clients.jedis.commands.JedisCommands;
+import com.buession.redis.core.command.ScriptingCommands;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractHyperLogLogOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisOperations<C, P> implements HyperLogLogOperations {
-
-	public AbstractHyperLogLogOperations(final RedisClient client){
-		super(client);
-	}
-
-	@Override
-	public Status pfAdd(final String key, final String... elements){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfadd(key, elements),
-					JedisConverters.positiveLongNumberToStatusConverter()));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pfadd(key, elements),
-					JedisConverters.positiveLongNumberToStatusConverter()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0));
-		}
-	}
+public interface ScriptingOperations extends ScriptingCommands, RedisOperations {
 
 }

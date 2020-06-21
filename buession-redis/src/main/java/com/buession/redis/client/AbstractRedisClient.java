@@ -25,7 +25,6 @@
 package com.buession.redis.client;
 
 import com.buession.core.Executor;
-import com.buession.core.converter.HashConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
@@ -71,11 +70,12 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	protected PubSubOperations pubSubOperations = createPubSubOperations();
 
+	protected ScriptingOperations scriptingOperations = createScriptingOperations();
+
+	protected ServerOperations serverOperations = createServerOperations();
+
 	protected final static ListConverter<String, byte[]> STRING_TO_BINARY_LIST_CONVERTER =
 			Converters.stringToBinaryListConverter();
-
-	protected final static HashConverter<String, String, byte[], byte[]> STRING_TO_BINARY_HASH_CONVERTER =
-			Converters.stringToBinaryHashConverter();
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractRedisClient.class);
 
@@ -108,51 +108,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	public void setEnableTransactionSupport(boolean enableTransactionSupport){
 		this.enableTransactionSupport = enableTransactionSupport;
-	}
-
-	@Override
-	public Status clientPause(final int timeout){
-		return clientPause((long) timeout);
-	}
-
-	@Override
-	public Status configSet(final String parameter, final float value){
-		return configSet(parameter, Float.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final float value){
-		return configSet(parameter, NumberUtils.float2bytes(value));
-	}
-
-	@Override
-	public Status configSet(final String parameter, final double value){
-		return configSet(parameter, Double.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final double value){
-		return configSet(parameter, NumberUtils.double2bytes(value));
-	}
-
-	@Override
-	public Status configSet(final String parameter, final int value){
-		return configSet(parameter, Integer.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final long value){
-		return configSet(parameter, NumberUtils.long2bytes(value));
-	}
-
-	@Override
-	public Status configSet(final String parameter, final long value){
-		return configSet(parameter, Long.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final int value){
-		return configSet(parameter, NumberUtils.int2bytes(value));
 	}
 
 	@Override
@@ -1151,6 +1106,10 @@ public abstract class AbstractRedisClient implements RedisClient {
 	protected abstract ListOperations createListOperations();
 
 	protected abstract PubSubOperations createPubSubOperations();
+
+	protected abstract ScriptingOperations createScriptingOperations();
+
+	protected abstract ServerOperations createServerOperations();
 
 	protected boolean isTransaction(){
 		return getConnection().isTransaction();

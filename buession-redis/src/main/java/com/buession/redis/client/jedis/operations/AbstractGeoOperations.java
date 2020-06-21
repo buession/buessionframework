@@ -36,6 +36,7 @@ import com.buession.redis.core.convert.JedisConverters;
 import org.springframework.core.convert.converter.Converter;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;
+import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 import redis.clients.jedis.params.GeoRadiusParam;
 
@@ -45,7 +46,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractGeoOperations<C extends JedisCommands> extends AbstractJedisRedisOperations<C> implements GeoOperations {
+public abstract class AbstractGeoOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisOperations<C, P> implements GeoOperations {
 
 	protected final static HashConverter<String, Geo, String, GeoCoordinate> STRING_MAP_GEOMAP_JEDIS_CONVERTER =
 			JedisConverters.mapGeoMapJedisConverter();

@@ -1188,6 +1188,18 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public Long touch(final String... keys){
+		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
+		return execute((client)->client.touch(makeRawKeys(keys)), ProtocolCommand.TOUCH, args);
+	}
+
+	@Override
+	public Long touch(final byte[]... keys){
+		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
+		return execute((client)->client.touch(makeByteKeys(keys)), ProtocolCommand.TOUCH, args);
+	}
+
+	@Override
 	public Long ttl(final String key){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 		return execute((client)->client.ttl(makeRawKey(key)), ProtocolCommand.TTL, args);
@@ -1209,18 +1221,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Type type(final byte[] key){
 		final CommandArguments args = CommandArguments.getInstance().put("key", key);
 		return execute((client)->client.type(makeByteKey(key)), ProtocolCommand.TYPE, args);
-	}
-
-	@Override
-	public Long touch(final String... keys){
-		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
-		return execute((client)->client.touch(makeRawKeys(keys)), ProtocolCommand.TOUCH, args);
-	}
-
-	@Override
-	public Long touch(final byte[]... keys){
-		final CommandArguments args = CommandArguments.getInstance().put("keys", keys);
-		return execute((client)->client.touch(makeByteKeys(keys)), ProtocolCommand.TOUCH, args);
 	}
 
 	@Override

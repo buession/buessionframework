@@ -31,6 +31,7 @@ import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.utils.ReturnUtils;
 import org.springframework.core.convert.converter.Converter;
+import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 
 import java.util.List;
@@ -38,7 +39,7 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractListOperations<C extends JedisCommands> extends AbstractJedisRedisOperations<C> implements ListOperations {
+public abstract class AbstractListOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisOperations<C, P> implements ListOperations {
 
 	protected final static Converter<ListPosition, redis.clients.jedis.ListPosition> LISTPOSITION_JEDIS_CONVERTER =
 			JedisConverters.listPositionJedisConverter();

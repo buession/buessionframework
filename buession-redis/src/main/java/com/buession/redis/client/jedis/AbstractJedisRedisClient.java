@@ -33,9 +33,20 @@ import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.jedis.operations.JedisExecutor;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.Client;
+import com.buession.redis.core.ClientReply;
+import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.FutureResult;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.Info;
+import com.buession.redis.core.InfoSection;
+import com.buession.redis.core.ObjectCommand;
+import com.buession.redis.core.PubSubListener;
+import com.buession.redis.core.RedisMonitor;
+import com.buession.redis.core.RedisServerTime;
+import com.buession.redis.core.Role;
+import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.jedis.JedisResult;
 import com.buession.redis.core.jedis.JedisScanParams;
 import com.buession.redis.core.ListPosition;
@@ -104,8 +115,33 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
+	public Status auth(final String password){
+		return connectionOperations.auth(password);
+	}
+
+	@Override
 	public String echo(final String str){
 		return connectionOperations.echo(str);
+	}
+
+	@Override
+	public Status ping(){
+		return connectionOperations.ping();
+	}
+
+	@Override
+	public Status quit(){
+		return connectionOperations.quit();
+	}
+
+	@Override
+	public Status select(final int db){
+		return connectionOperations.select(db);
+	}
+
+	@Override
+	public Status swapdb(final int db1, final int db2){
+		return connectionOperations.swapdb(db1, db2);
 	}
 
 	@Override
@@ -344,6 +380,16 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
+	public Status pfMerge(final String destKey, final String... keys){
+		return hyperLogLogOperations.pfMerge(destKey, keys);
+	}
+
+	@Override
+	public Long pfCount(final String... keys){
+		return hyperLogLogOperations.pfCount(keys);
+	}
+
+	@Override
 	public byte[] dump(final String key){
 		return keyOperations.dump(key);
 	}
@@ -369,6 +415,11 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
+	public Set<String> keys(final String pattern){
+		return keyOperations.keys(pattern);
+	}
+
+	@Override
 	public Status persist(final String key){
 		return keyOperations.persist(key);
 	}
@@ -389,8 +440,83 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
+	public String randomKey(){
+		return keyOperations.randomKey();
+	}
+
+	@Override
+	public Status rename(final String key, final String newKey){
+		return keyOperations.rename(key, newKey);
+	}
+
+	@Override
+	public Status renameNx(final String key, final String newKey){
+		return keyOperations.renameNx(key, newKey);
+	}
+
+	@Override
 	public Status restore(final String key, final String serializedValue, final int ttl){
 		return keyOperations.restore(key, serializedValue, ttl);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final int cursor){
+		return keyOperations.scan(cursor);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final long cursor){
+		return keyOperations.scan(cursor);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final String cursor){
+		return keyOperations.scan(cursor);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final int cursor, final String pattern){
+		return keyOperations.scan(cursor, pattern);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final long cursor, final String pattern){
+		return keyOperations.scan(cursor, pattern);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final String cursor, final String pattern){
+		return keyOperations.scan(cursor, pattern);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final int cursor, final int count){
+		return keyOperations.scan(cursor, count);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final long cursor, final int count){
+		return keyOperations.scan(cursor, count);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final String cursor, final int count){
+		return keyOperations.scan(cursor, count);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final int cursor, final String pattern, final int count){
+		return keyOperations.scan(cursor, pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final long cursor, final String pattern, final int count){
+		return keyOperations.scan(cursor, pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count){
+		return keyOperations.scan(cursor, pattern, count);
 	}
 
 	@Override
@@ -404,6 +530,21 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
+	public Long sort(final String key, final String destKey){
+		return keyOperations.sort(key, destKey);
+	}
+
+	@Override
+	public Long sort(final String key, final String destKey, final SortArgument sortArgument){
+		return keyOperations.sort(key, destKey, sortArgument);
+	}
+
+	@Override
+	public Long touch(final String... keys){
+		return keyOperations.touch(keys);
+	}
+
+	@Override
 	public Long ttl(final String key){
 		return keyOperations.ttl(key);
 	}
@@ -411,6 +552,26 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public Type type(final String key){
 		return keyOperations.type(key);
+	}
+
+	@Override
+	public Long unlink(final String... keys){
+		return keyOperations.unlink(keys);
+	}
+
+	@Override
+	public List<String> blPop(final String[] keys, final int timeout){
+		return listOperations.blPop(keys, timeout);
+	}
+
+	@Override
+	public List<String> brPop(final String[] keys, final int timeout){
+		return listOperations.brPop(keys, timeout);
+	}
+
+	@Override
+	public String brPoplPush(final String key, final String destKey, final int timeout){
+		return listOperations.brPoplPush(key, destKey, timeout);
 	}
 
 	@Override
@@ -494,6 +655,11 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
+	public String rPoplPush(final String key, final String destKey){
+		return listOperations.rPoplPush(key, destKey);
+	}
+
+	@Override
 	public Long rPush(final String key, final String... values){
 		return listOperations.rPush(key, values);
 	}
@@ -501,6 +667,321 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public Long rPushX(final String key, final String... values){
 		return listOperations.rPushX(key, values);
+	}
+
+	@Override
+	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
+		pubSubOperations.pSubscribe(patterns, pubSubListener);
+	}
+
+	@Override
+	public List<String> pubsubChannels(){
+		return pubSubOperations.pubsubChannels();
+	}
+
+	@Override
+	public List<String> pubsubChannels(final String pattern){
+		return pubSubOperations.pubsubChannels(pattern);
+	}
+
+	@Override
+	public Long pubsubNumPat(){
+		return pubSubOperations.pubsubNumPat();
+	}
+
+	@Override
+	public Map<String, String> pubsubNumSub(final String... channels){
+		return pubSubOperations.pubsubNumSub(channels);
+	}
+
+	@Override
+	public Long publish(final String channel, final String message){
+		return pubSubOperations.publish(channel, message);
+	}
+
+	@Override
+	public Object pUnSubscribe(){
+		return pubSubOperations.pUnSubscribe();
+	}
+
+	@Override
+	public Object pUnSubscribe(final String... patterns){
+		return pubSubOperations.pUnSubscribe(patterns);
+	}
+
+	@Override
+	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
+		pubSubOperations.subscribe(channels, pubSubListener);
+	}
+
+	@Override
+	public Object unSubscribe(){
+		return pubSubOperations.unSubscribe();
+	}
+
+	@Override
+	public Object unSubscribe(final String... channels){
+		return pubSubOperations.unSubscribe(channels);
+	}
+
+	@Override
+	public Object eval(final String script){
+		return scriptingOperations.eval(script);
+	}
+
+	@Override
+	public Object eval(final String script, final String... params){
+		return scriptingOperations.eval(script, params);
+	}
+
+	@Override
+	public Object eval(final String script, final String[] keys, final String[] arguments){
+		return scriptingOperations.eval(script, keys, arguments);
+	}
+
+	@Override
+	public Object evalSha(final String digest){
+		return scriptingOperations.evalSha(digest);
+	}
+
+	@Override
+	public Object evalSha(final String digest, final String... params){
+		return scriptingOperations.evalSha(digest, params);
+	}
+
+	@Override
+	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
+		return scriptingOperations.evalSha(digest, keys, arguments);
+	}
+
+	@Override
+	public List<Boolean> scriptExists(final String... sha1){
+		return scriptingOperations.scriptExists(sha1);
+	}
+
+	@Override
+	public Status scriptFlush(){
+		return scriptingOperations.scriptFlush();
+	}
+
+	@Override
+	public Status scriptKill(){
+		return scriptingOperations.scriptKill();
+	}
+
+	@Override
+	public String scriptLoad(final String script){
+		return scriptingOperations.scriptLoad(script);
+	}
+
+	@Override
+	public String bgRewriteAof(){
+		return serverOperations.bgRewriteAof();
+	}
+
+	@Override
+	public String bgSave(){
+		return serverOperations.bgSave();
+	}
+
+	@Override
+	public Status clientKill(final String host, final int port){
+		return serverOperations.clientKill(host, port);
+	}
+
+	@Override
+	public String clientGetName(){
+		return serverOperations.clientGetName();
+	}
+
+	@Override
+	public String clientId(){
+		return serverOperations.clientId();
+	}
+
+	@Override
+	public List<Client> clientList(){
+		return serverOperations.clientList();
+	}
+
+	@Override
+	public Status clientPause(final int timeout){
+		return serverOperations.clientPause(timeout);
+	}
+
+	@Override
+	public Status clientPause(final long timeout){
+		return serverOperations.clientPause(timeout);
+	}
+
+	@Override
+	public Status clientReply(final ClientReply option){
+		return serverOperations.clientReply(option);
+	}
+
+	@Override
+	public Status clientSetName(final String name){
+		return serverOperations.clientSetName(name);
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId){
+		return serverOperations.clientUnblock(clientId);
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId, final ClientUnblockType type){
+		return serverOperations.clientUnblock(clientId, type);
+	}
+
+	@Override
+	public List<String> configGet(final String parameter){
+		return serverOperations.configGet(parameter);
+	}
+
+	@Override
+	public Status configResetStat(){
+		return serverOperations.configResetStat();
+	}
+
+	@Override
+	public Status configRewrite(){
+		return serverOperations.configRewrite();
+	}
+
+	@Override
+	public Status configSet(final String parameter, final float value){
+		return serverOperations.configSet(parameter, value);
+	}
+
+	@Override
+	public Status configSet(final String parameter, final double value){
+		return serverOperations.configSet(parameter, value);
+	}
+
+	@Override
+	public Status configSet(final String parameter, final int value){
+		return serverOperations.configSet(parameter, value);
+	}
+
+	@Override
+	public Status configSet(final String parameter, final long value){
+		return serverOperations.configSet(parameter, value);
+	}
+
+	@Override
+	public Status configSet(final String parameter, final String value){
+		return serverOperations.configSet(parameter, value);
+	}
+
+	@Override
+	public Long dbSize(){
+		return serverOperations.dbSize();
+	}
+
+	@Override
+	public String debugObject(final String key){
+		return serverOperations.debugObject(key);
+	}
+
+	@Override
+	public String debugSegfault(){
+		return serverOperations.debugSegfault();
+	}
+
+	@Override
+	public Status flushAll(){
+		return serverOperations.flushAll();
+	}
+
+	@Override
+	public Status flushDb(){
+		return serverOperations.flushDb();
+	}
+
+	@Override
+	public Info info(final InfoSection section){
+		return serverOperations.info(section);
+	}
+
+	@Override
+	public Info info(){
+		return serverOperations.info();
+	}
+
+	@Override
+	public Long lastSave(){
+		return serverOperations.lastSave();
+	}
+
+	@Override
+	public String memoryDoctor(){
+		return serverOperations.memoryDoctor();
+	}
+
+	@Override
+	public void monitor(final RedisMonitor redisMonitor){
+		serverOperations.monitor(redisMonitor);
+	}
+
+	@Override
+	public Object object(final ObjectCommand command, final String key){
+		return serverOperations.object(command, key);
+	}
+
+	@Override
+	public Object pSync(final String masterRunId, final int offset){
+		return serverOperations.pSync(masterRunId, offset);
+	}
+
+	@Override
+	public Object pSync(final String masterRunId, final long offset){
+		return serverOperations.pSync(masterRunId, offset);
+	}
+
+	@Override
+	public Status replicaOf(final String host, final int port){
+		return serverOperations.replicaOf(host, port);
+	}
+
+	@Override
+	public Role role(){
+		return serverOperations.role();
+	}
+
+	@Override
+	public Status save(){
+		return serverOperations.save();
+	}
+
+	@Override
+	public void shutdown(){
+		serverOperations.shutdown();
+	}
+
+	@Override
+	public void shutdown(final boolean save){
+		serverOperations.shutdown(save);
+	}
+
+	@Override
+	public Status slaveOf(final String host, final int port){
+		return serverOperations.slaveOf(host, port);
+	}
+
+	@Override
+	public Object slowLog(final SlowLogCommand command, final String... arguments){
+		return serverOperations.slowLog(command, arguments);
+	}
+
+	@Override
+	public Object sync(){
+		return serverOperations.sync();
+	}
+
+	@Override
+	public RedisServerTime time(){
+		return serverOperations.time();
 	}
 
 	@Override

@@ -30,10 +30,9 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.core.jedis.JedisScanParams;
-import com.buession.redis.exception.NotSupportedPipelineCommandException;
-import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPipeline;
 
 import java.util.List;
 import java.util.Map;
@@ -42,7 +41,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class ShardedJedisHashOperations extends AbstractHashOperations<ShardedJedis> {
+public class ShardedJedisHashOperations extends AbstractHashOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisHashOperations(final RedisClient client){
 		super(client);
@@ -162,50 +161,30 @@ public class ShardedJedisHashOperations extends AbstractHashOperations<ShardedJe
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.HSCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor)));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
+		return execute((cmd)->BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor)));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.HSCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
-					new JedisScanParams(pattern))));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
+		return execute((cmd)->BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
+				new JedisScanParams(pattern))));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.HSCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
-					new JedisScanParams(count))));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
+		return execute((cmd)->BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
+				new JedisScanParams(count))));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 			final int count){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.HSCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
-					new JedisScanParams(pattern, count))));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
+		return execute((cmd)->BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
+				new JedisScanParams(pattern, count))));
 	}
 
 	@Override

@@ -453,6 +453,19 @@ public interface ServerCommands extends RedisCommands {
 	String debugObject(final String key);
 
 	/**
+	 * 是一个调试命令，它不应被客户端所使用
+	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/debug/debug_object.html" target="_blank">http://redisdoc.com/debug/debug_object.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 有关信息
+	 */
+	byte[] debugObject(final byte[] key);
+
+	/**
 	 * 执行一个不合法的内存访问从而让 Redis 崩溃，仅在开发时用于 BUG 模拟
 	 *
 	 * <p>详情说明

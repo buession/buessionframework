@@ -33,10 +33,9 @@ import com.buession.redis.core.Type;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.core.jedis.JedisScanParams;
-import com.buession.redis.exception.NotSupportedPipelineCommandException;
-import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.params.MigrateParams;
 
@@ -46,7 +45,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
+public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 
 	public JedisKeyOperations(final RedisClient client){
 		super(client);
@@ -196,7 +195,8 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 	@Override
 	public Set<String> keys(final String pattern){
 		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.KEYS);
+			Pipeline pipeline = getPipeline();
+			return pipelineExecute((cmd)->newJedisResult(pipeline.keys(pattern)));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().keys(pattern)));
 		}else{
@@ -207,7 +207,8 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 	@Override
 	public Set<byte[]> keys(final byte[] pattern){
 		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.KEYS);
+			Pipeline pipeline = getPipeline();
+			return pipelineExecute((cmd)->newJedisResult(pipeline.keys(pattern)));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().keys(pattern)));
 		}else{
@@ -268,7 +269,8 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 	@Override
 	public String randomKey(){
 		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.RANDOMKEY);
+			Pipeline pipeline = getPipeline();
+			return pipelineExecute((cmd)->newJedisResult(pipeline.randomKey()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().randomKey()));
 		}else{
@@ -279,7 +281,9 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 	@Override
 	public Status rename(final String key, final String newKey){
 		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.RENAME);
+			Pipeline pipeline = getPipeline();
+			return pipelineExecute((cmd)->newJedisResult(pipeline.rename(key, newKey),
+					JedisConverters.okToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().rename(key, newKey),
 					JedisConverters.okToStatusConverter()));
@@ -291,7 +295,9 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey){
 		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.RENAME);
+			Pipeline pipeline = getPipeline();
+			return pipelineExecute((cmd)->newJedisResult(pipeline.rename(key, newKey),
+					JedisConverters.okToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().rename(key, newKey),
 					JedisConverters.okToStatusConverter()));
@@ -303,7 +309,9 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 	@Override
 	public Status renameNx(final String key, final String newKey){
 		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.RENAMENX);
+			Pipeline pipeline = getPipeline();
+			return pipelineExecute((cmd)->newJedisResult(pipeline.renamenx(key, newKey),
+					JedisConverters.positiveLongNumberToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().renamenx(key, newKey),
 					JedisConverters.positiveLongNumberToStatusConverter()));
@@ -315,7 +323,9 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey){
 		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.RENAMENX);
+			Pipeline pipeline = getPipeline();
+			return pipelineExecute((cmd)->newJedisResult(pipeline.renamenx(key, newKey),
+					JedisConverters.positiveLongNumberToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().renamenx(key, newKey),
 					JedisConverters.positiveLongNumberToStatusConverter()));
@@ -349,24 +359,14 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.SCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
-		}else{
-			return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor)));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCAN);
+		return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor)));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.SCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
-		}else{
-			return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor)));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCAN);
+		return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor)));
 	}
 
 	@Override
@@ -391,26 +391,16 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.SCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
-		}else{
-			return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor,
-					new JedisScanParams(pattern))));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCAN);
+		return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor,
+				new JedisScanParams(pattern))));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.SCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
-		}else{
-			return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor,
-					new JedisScanParams(pattern))));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCAN);
+		return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor,
+				new JedisScanParams(pattern))));
 	}
 
 	@Override
@@ -425,26 +415,16 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final int count){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.SCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
-		}else{
-			return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor,
-					new JedisScanParams(count))));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCAN);
+		return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor,
+				new JedisScanParams(count))));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.SCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
-		}else{
-			return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor,
-					new JedisScanParams(count))));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCAN);
+		return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor,
+				new JedisScanParams(count))));
 	}
 
 	@Override
@@ -469,26 +449,16 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.SCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
-		}else{
-			return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor,
-					new JedisScanParams(pattern, count))));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCAN);
+		return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor,
+				new JedisScanParams(pattern, count))));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count){
-		if(isPipeline()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SCAN);
-		}else{
-			return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor,
-					new JedisScanParams(pattern, count))));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCAN);
+		return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.scan(cursor,
+				new JedisScanParams(pattern, count))));
 	}
 
 	@Override
@@ -518,7 +488,7 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 	@Override
 	public Long sort(final String key, final String destKey){
 		if(isPipeline()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SORT);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, destKey)));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, destKey)));
 		}else{
@@ -529,7 +499,7 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey){
 		if(isPipeline()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SORT);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, destKey)));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, destKey)));
 		}else{
@@ -542,7 +512,7 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 		final SortingParams soringParams = SORT_ARGUMENT_JEDIS_CONVERTER.convert(sortArgument);
 
 		if(isPipeline()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SORT);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, soringParams, destKey)));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, soringParams, destKey)));
 		}else{
@@ -555,11 +525,33 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 		final SortingParams soringParams = SORT_ARGUMENT_JEDIS_CONVERTER.convert(sortArgument);
 
 		if(isPipeline()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SORT);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, soringParams, destKey)));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, soringParams, destKey)));
 		}else{
 			return execute((cmd)->cmd.sort(key, soringParams, destKey));
+		}
+	}
+
+	@Override
+	public Long touch(final String... keys){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().touch(keys[0])));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().touch(keys)));
+		}else{
+			return execute((cmd)->cmd.touch(keys));
+		}
+	}
+
+	@Override
+	public Long touch(final byte[]... keys){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().touch(keys[0])));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().touch(keys)));
+		}else{
+			return execute((cmd)->cmd.touch(keys));
 		}
 	}
 
@@ -584,28 +576,6 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis> {
 					JedisConverters.enumConverter(Type.class)));
 		}else{
 			return execute((cmd)->ReturnUtils.enumValueOf(cmd.type(key), Type.class));
-		}
-	}
-
-	@Override
-	public Long touch(final String... keys){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().touch(keys[0])));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().touch(keys)));
-		}else{
-			return execute((cmd)->cmd.touch(keys));
-		}
-	}
-
-	@Override
-	public Long touch(final byte[]... keys){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().touch(keys[0])));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().touch(keys)));
-		}else{
-			return execute((cmd)->cmd.touch(keys));
 		}
 	}
 

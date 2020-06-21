@@ -27,18 +27,17 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.ListPosition;
-import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.JedisConverters;
-import com.buession.redis.exception.NotSupportedPipelineCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Pipeline;
 
 import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public class JedisListOperations extends AbstractListOperations<Jedis> {
+public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline> {
 
 	public JedisListOperations(final RedisClient client){
 		super(client);
@@ -93,7 +92,7 @@ public class JedisListOperations extends AbstractListOperations<Jedis> {
 	@Override
 	public String brPoplPush(final String key, final String destKey, final int timeout){
 		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.BRPOPLPUSH);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpoplpush(key, destKey, timeout)));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().brpoplpush(key, destKey, timeout)));
 		}else{
@@ -104,7 +103,7 @@ public class JedisListOperations extends AbstractListOperations<Jedis> {
 	@Override
 	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout){
 		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.BRPOPLPUSH);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpoplpush(key, destKey, timeout)));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().brpoplpush(key, destKey, timeout)));
 		}else{
@@ -267,7 +266,7 @@ public class JedisListOperations extends AbstractListOperations<Jedis> {
 	@Override
 	public String rPoplPush(final String key, final String destKey){
 		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.RPOPLPUSH);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().rpoplpush(key, destKey)));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().rpoplpush(key, destKey)));
 		}else{
@@ -278,7 +277,7 @@ public class JedisListOperations extends AbstractListOperations<Jedis> {
 	@Override
 	public byte[] rPoplPush(final byte[] key, final byte[] destKey){
 		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.RPOPLPUSH);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().rpoplpush(key, destKey)));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().rpoplpush(key, destKey)));
 		}else{
