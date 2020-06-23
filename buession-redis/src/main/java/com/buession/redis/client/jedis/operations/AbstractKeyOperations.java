@@ -43,7 +43,7 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractKeyOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisOperations<C, P> implements KeyOperations {
+public abstract class AbstractKeyOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements KeyOperations {
 
 	protected final static Converter<SortArgument, SortingParams> SORT_ARGUMENT_JEDIS_CONVERTER =
 			JedisConverters.sortArgumentJedisConverter();

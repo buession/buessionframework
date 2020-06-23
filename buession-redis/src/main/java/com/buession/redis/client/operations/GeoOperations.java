@@ -29,6 +29,6 @@ import com.buession.redis.core.command.GeoCommands;
 /**
  * @author Yong.Teng
  */
-public interface GeoOperations extends GeoCommands, RedisOperations {
+public interface GeoOperations extends GeoCommands, RedisClientOperations {
 
 }

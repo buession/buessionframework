@@ -24,19 +24,15 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.core.Client;
-import com.buession.redis.core.ClientReply;
-import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.Info;
 import com.buession.redis.core.InfoSection;
 import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
-import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.NotSupportedCommandException;
@@ -80,31 +76,14 @@ public class ShardedJedisServerOperations extends AbstractServerOperations<Shard
 	}
 
 	@Override
-	public String clientId(){
-		commandAllNotSupportedException(ProtocolCommand.CLIENT_ID);
-		return null;
-	}
-
-	@Override
 	public List<Client> clientList(){
 		commandAllNotSupportedException(ProtocolCommand.CLIENT_LIST);
 		return null;
 	}
 
 	@Override
-	public Status clientPause(final int timeout){
-		return clientPause((long) timeout);
-	}
-
-	@Override
 	public Status clientPause(final long timeout){
 		commandAllNotSupportedException(ProtocolCommand.CLIENT_PAUSE);
-		return null;
-	}
-
-	@Override
-	public Status clientReply(final ClientReply option){
-		commandAllNotSupportedException(ProtocolCommand.CLIENT_REPLY);
 		return null;
 	}
 
@@ -117,18 +96,6 @@ public class ShardedJedisServerOperations extends AbstractServerOperations<Shard
 	@Override
 	public Status clientSetName(final byte[] name){
 		commandAllNotSupportedException(ProtocolCommand.CLIENT_SETNAME);
-		return null;
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId){
-		commandAllNotSupportedException(ProtocolCommand.CLIENT_UNBLOCK);
-		return null;
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId, final ClientUnblockType type){
-		commandAllNotSupportedException(ProtocolCommand.CLIENT_UNBLOCK);
 		return null;
 	}
 
@@ -154,46 +121,6 @@ public class ShardedJedisServerOperations extends AbstractServerOperations<Shard
 	public Status configRewrite(){
 		commandAllNotSupportedException(ProtocolCommand.CONFIG_REWRITE);
 		return null;
-	}
-
-	@Override
-	public Status configSet(final String parameter, final float value){
-		return configSet(parameter, Float.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final float value){
-		return configSet(parameter, NumberUtils.float2bytes(value));
-	}
-
-	@Override
-	public Status configSet(final String parameter, final double value){
-		return configSet(parameter, Double.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final double value){
-		return configSet(parameter, NumberUtils.double2bytes(value));
-	}
-
-	@Override
-	public Status configSet(final String parameter, final int value){
-		return configSet(parameter, Integer.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final long value){
-		return configSet(parameter, NumberUtils.long2bytes(value));
-	}
-
-	@Override
-	public Status configSet(final String parameter, final long value){
-		return configSet(parameter, Long.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final int value){
-		return configSet(parameter, NumberUtils.int2bytes(value));
 	}
 
 	@Override
@@ -298,42 +225,6 @@ public class ShardedJedisServerOperations extends AbstractServerOperations<Shard
 	}
 
 	@Override
-	public Object pSync(final String masterRunId, final int offset){
-		commandAllNotSupportedException(ProtocolCommand.PSYNC);
-		return null;
-	}
-
-	@Override
-	public Object pSync(final byte[] masterRunId, final int offset){
-		commandAllNotSupportedException(ProtocolCommand.PSYNC);
-		return null;
-	}
-
-	@Override
-	public Object pSync(final String masterRunId, final long offset){
-		commandAllNotSupportedException(ProtocolCommand.PSYNC);
-		return null;
-	}
-
-	@Override
-	public Object pSync(final byte[] masterRunId, final long offset){
-		commandAllNotSupportedException(ProtocolCommand.PSYNC);
-		return null;
-	}
-
-	@Override
-	public Status replicaOf(final String host, final int port){
-		commandAllNotSupportedException(ProtocolCommand.REPLICAOF);
-		return null;
-	}
-
-	@Override
-	public Role role(){
-		commandAllNotSupportedException(ProtocolCommand.ROLE);
-		return null;
-	}
-
-	@Override
 	public Status save(){
 		commandAllNotSupportedException(ProtocolCommand.SAVE);
 		return null;
@@ -342,11 +233,6 @@ public class ShardedJedisServerOperations extends AbstractServerOperations<Shard
 	@Override
 	public void shutdown(){
 		commandAllNotSupportedException(ProtocolCommand.SHUTDOWN);
-	}
-
-	@Override
-	public void shutdown(final boolean save){
-		shutdown();
 	}
 
 	@Override

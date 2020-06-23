@@ -22,13 +22,20 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.operations;
+package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.core.command.ConnectionCommands;
+import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.operations.TransactionOperations;
+import redis.clients.jedis.PipelineBase;
+import redis.clients.jedis.commands.JedisCommands;
 
 /**
  * @author Yong.Teng
  */
-public interface ConnectionOperations extends ConnectionCommands, RedisClientOperations {
+public abstract class AbstractTransactionOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements TransactionOperations {
+
+	public AbstractTransactionOperations(final RedisClient client){
+		super(client);
+	}
 
 }

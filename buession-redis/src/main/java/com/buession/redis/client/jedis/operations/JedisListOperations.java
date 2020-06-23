@@ -112,11 +112,6 @@ public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline>
 	}
 
 	@Override
-	public byte[] lIndex(final byte[] key, final int index){
-		return lIndex(key, (long) index);
-	}
-
-	@Override
 	public byte[] lIndex(final byte[] key, final long index){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().lindex(key, index)));
@@ -185,11 +180,6 @@ public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline>
 	}
 
 	@Override
-	public List<byte[]> lRange(final byte[] key, final int start, final int end){
-		return lRange(key, (long) start, (long) end);
-	}
-
-	@Override
 	public List<byte[]> lRange(final byte[] key, final long start, final long end){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().lrange(key, start, end)));
@@ -198,11 +188,6 @@ public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline>
 		}else{
 			return execute((cmd)->cmd.lrange(key, start, end));
 		}
-	}
-
-	@Override
-	public Long lRem(final byte[] key, final byte[] value, final int count){
-		return lRem(key, value, (long) count);
 	}
 
 	@Override
@@ -217,11 +202,6 @@ public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline>
 	}
 
 	@Override
-	public Status lSet(final byte[] key, final int index, final byte[] value){
-		return lSet(key, (long) index, value);
-	}
-
-	@Override
 	public Status lSet(final byte[] key, final long index, final byte[] value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().lset(key, index, value),
@@ -232,11 +212,6 @@ public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline>
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.lset(key, index, value)));
 		}
-	}
-
-	@Override
-	public Status lTrim(final byte[] key, final int start, final int end){
-		return lTrim(key, (long) start, (long) end);
 	}
 
 	@Override

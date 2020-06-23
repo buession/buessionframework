@@ -1922,6 +1922,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public byte[] debugObject(final byte[] key){
+		final CommandArguments args = CommandArguments.getInstance().put("key", key);
+		return execute((client)->client.debugObject(makeByteKey(key)), ProtocolCommand.DEBUG_OBJECT, args);
+	}
+
+	@Override
 	public String debugSegfault(){
 		return execute((client)->client.debugSegfault(), ProtocolCommand.DEBUG_SEGFAULT);
 	}

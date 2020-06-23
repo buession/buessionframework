@@ -67,8 +67,7 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 	@Override
 	public Status ping(){
 		if(isPipeline()){
-			Pipeline pipeline = getPipeline();
-			return pipelineExecute((cmd)->newJedisResult(pipeline.ping(), JedisConverters.pingResultConvert()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().ping(), JedisConverters.pingResultConvert()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().ping(),
 					JedisConverters.pingResultConvert()));
@@ -86,8 +85,8 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 	@Override
 	public Status select(final int db){
 		if(isPipeline()){
-			Pipeline pipeline = getPipeline();
-			return pipelineExecute((cmd)->newJedisResult(pipeline.select(db), JedisConverters.okToStatusConverter()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().select(db),
+					JedisConverters.okToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().select(db),
 					JedisConverters.okToStatusConverter()));
@@ -99,8 +98,7 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 	@Override
 	public Status swapdb(final int db1, final int db2){
 		if(isPipeline()){
-			Pipeline pipeline = getPipeline();
-			return pipelineExecute((cmd)->newJedisResult(pipeline.swapDB(db1, db2),
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().swapDB(db1, db2),
 					JedisConverters.okToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().swapDB(db1, db2),

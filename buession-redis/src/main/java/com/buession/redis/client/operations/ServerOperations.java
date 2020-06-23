@@ -29,6 +29,6 @@ import com.buession.redis.core.command.ServerCommands;
 /**
  * @author Yong.Teng
  */
-public interface ServerOperations extends ServerCommands, RedisOperations {
+public interface ServerOperations extends ServerCommands, RedisClientOperations {
 
 }

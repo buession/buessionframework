@@ -24,11 +24,11 @@
  */
 package com.buession.redis.client.operations;
 
-import com.buession.redis.core.command.ConnectionCommands;
+import com.buession.redis.core.command.StringCommands;
 
 /**
  * @author Yong.Teng
  */
-public interface ConnectionOperations extends ConnectionCommands, RedisClientOperations {
+public interface StringOperations extends StringCommands, RedisClientOperations {
 
 }

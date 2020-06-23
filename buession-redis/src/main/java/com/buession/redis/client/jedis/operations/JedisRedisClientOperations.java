@@ -24,12 +24,13 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.Executor;
+import com.buession.redis.client.operations.RedisClientOperations;
+import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 
 /**
  * @author Yong.Teng
  */
-public interface JedisExecutor<C extends JedisCommands, R> extends Executor<C, R> {
+public interface JedisRedisClientOperations<C extends JedisCommands, P extends PipelineBase> extends RedisClientOperations {
 
 }

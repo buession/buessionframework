@@ -24,34 +24,80 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.RedisClient;
-import com.buession.redis.client.operations.HyperLogLogOperations;
-import com.buession.redis.core.convert.JedisConverters;
+import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.convert.TransactionResultConverter;
+import com.buession.redis.exception.RedisException;
+import com.buession.redis.transaction.Transaction;
 import com.buession.redis.utils.ReturnUtils;
-import redis.clients.jedis.PipelineBase;
-import redis.clients.jedis.commands.JedisCommands;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Pipeline;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractHyperLogLogOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements HyperLogLogOperations {
+public class JedisTransactionOperations extends AbstractTransactionOperations<Jedis, Pipeline> {
 
-	public AbstractHyperLogLogOperations(final RedisClient client){
+	public JedisTransactionOperations(final RedisClient client){
 		super(client);
 	}
 
 	@Override
-	public Status pfAdd(final String key, final String... elements){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfadd(key, elements),
-					JedisConverters.positiveLongNumberToStatusConverter()));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pfadd(key, elements),
-					JedisConverters.positiveLongNumberToStatusConverter()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0));
+	public void discard(){
+		try{
+			execute((cmd)->{
+				client.getConnection().discard();
+				return null;
+			});
+		}catch(Exception e){
+			throw e;
+		}finally{
+			txResults.clear();
 		}
+	}
+
+	@Override
+	public List<Object> exec(){
+		try{
+			if(isTransaction() == false){
+				throw new RedisException("No ongoing transaction. Did you forget to call multi?");
+			}
+
+			List<Object> results = execute((cmd)->client.getConnection().exec());
+			return Validate.isEmpty(results) ? results : new TransactionResultConverter(txResults).convert(results);
+		}catch(Exception e){
+			throw e;
+		}finally{
+			txResults.clear();
+		}
+	}
+
+	@Override
+	public Transaction multi(){
+		return execute((cmd)->{
+			RedisConnection connection = client.getConnection();
+			connection.multi();
+			return connection.getTransaction();
+		});
+	}
+
+	@Override
+	public Status watch(final String... keys){
+		return execute((cmd)->ReturnUtils.statusForOK(cmd.watch(keys)));
+	}
+
+	@Override
+	public Status watch(final byte[]... keys){
+		return execute((cmd)->ReturnUtils.statusForOK(cmd.watch(keys)));
+	}
+
+	@Override
+	public Status unwatch(){
+		return execute((cmd)->ReturnUtils.statusForOK(cmd.unwatch()));
 	}
 
 }

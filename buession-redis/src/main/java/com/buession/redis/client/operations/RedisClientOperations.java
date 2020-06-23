@@ -27,6 +27,6 @@ package com.buession.redis.client.operations;
 /**
  * @author Yong.Teng
  */
-public interface RedisOperations {
+public interface RedisClientOperations {
 
 }

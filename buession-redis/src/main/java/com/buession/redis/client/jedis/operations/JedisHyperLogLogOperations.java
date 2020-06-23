@@ -56,8 +56,7 @@ public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Je
 	@Override
 	public Status pfMerge(final String destKey, final String... keys){
 		if(isPipeline()){
-			Pipeline pipeline = getPipeline();
-			return pipelineExecute((cmd)->newJedisResult(pipeline.pfmerge(destKey, keys),
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfmerge(destKey, keys),
 					JedisConverters.okToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().pfmerge(destKey, keys),
@@ -70,8 +69,7 @@ public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Je
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
 		if(isPipeline()){
-			Pipeline pipeline = getPipeline();
-			return pipelineExecute((cmd)->newJedisResult(pipeline.pfmerge(destKey, keys),
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfmerge(destKey, keys),
 					JedisConverters.okToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().pfmerge(destKey, keys),

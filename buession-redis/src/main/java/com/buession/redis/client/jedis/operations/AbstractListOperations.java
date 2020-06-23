@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractListOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisOperations<C, P> implements ListOperations {
+public abstract class AbstractListOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements ListOperations {
 
 	protected final static Converter<ListPosition, redis.clients.jedis.ListPosition> LISTPOSITION_JEDIS_CONVERTER =
 			JedisConverters.listPositionJedisConverter();
@@ -50,6 +50,11 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 
 	@Override
 	public String lIndex(final String key, final int index){
+		return lIndex(key, (long) index);
+	}
+
+	@Override
+	public byte[] lIndex(final byte[] key, final int index){
 		return lIndex(key, (long) index);
 	}
 
@@ -127,6 +132,11 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 	}
 
 	@Override
+	public List<byte[]> lRange(final byte[] key, final int start, final int end){
+		return lRange(key, (long) start, (long) end);
+	}
+
+	@Override
 	public List<String> lRange(final String key, final long start, final long end){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().lrange(key, start, end)));
@@ -139,6 +149,11 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 
 	@Override
 	public Long lRem(final String key, final String value, final int count){
+		return lRem(key, value, (long) count);
+	}
+
+	@Override
+	public Long lRem(final byte[] key, final byte[] value, final int count){
 		return lRem(key, value, (long) count);
 	}
 
@@ -159,6 +174,11 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 	}
 
 	@Override
+	public Status lSet(final byte[] key, final int index, final byte[] value){
+		return lSet(key, (long) index, value);
+	}
+
+	@Override
 	public Status lSet(final String key, final long index, final String value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().lset(key, index, value),
@@ -173,6 +193,11 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 
 	@Override
 	public Status lTrim(final String key, final int start, final int end){
+		return lTrim(key, (long) start, (long) end);
+	}
+
+	@Override
+	public Status lTrim(final byte[] key, final int start, final int end){
 		return lTrim(key, (long) start, (long) end);
 	}
 

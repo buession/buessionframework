@@ -25,18 +25,15 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.core.Executor;
-import com.buession.core.converter.SetConverter;
 import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.client.AbstractRedisClient;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.jedis.operations.JedisExecutor;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientUnblockType;
-import com.buession.redis.core.FutureResult;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.Info;
@@ -47,64 +44,24 @@ import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLogCommand;
-import com.buession.redis.core.jedis.JedisResult;
-import com.buession.redis.core.jedis.JedisScanParams;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.JedisConverters;
-import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
+import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.jedis.JedisTransaction;
-import com.buession.redis.utils.ReturnUtils;
-import com.buession.redis.utils.SafeEncoder;
-import org.springframework.core.convert.converter.Converter;
-import redis.clients.jedis.BitOP;
-import redis.clients.jedis.BitPosParams;
-import redis.clients.jedis.Response;
-import redis.clients.jedis.ZParams;
 import redis.clients.jedis.commands.JedisCommands;
-import redis.clients.jedis.params.SetParams;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 
 /**
  * @author Yong.Teng
  */
 public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends AbstractRedisClient implements JedisRedisClient<C> {
-
-	protected final static Converter<Aggregate, ZParams.Aggregate> AGGREGATE_JEDIS_CONVERTER =
-			JedisConverters.aggregateJedisConverter();
-
-	protected final static Converter<BitOperation, BitOP> BIT_OPERATION_JEDIS_CONVERTER =
-			JedisConverters.bitOperationJedisConverter();
-
-	protected final static Converter<redis.clients.jedis.Tuple, Tuple> TUPLE_EXPOSE_CONVERTER =
-			JedisConverters.tupleExposeConverter();
-
-	protected final static SetConverter<redis.clients.jedis.Tuple, Tuple> SET_TUPLE_EXPOSE_CONVERTER =
-			JedisConverters.setTupleExposeConverter();
-
-	protected final static Converter<SetArgument, SetParams> SET_ARGUMENT_JEDIS_CONVERTER =
-			JedisConverters.setArgumentJedisConverter();
-
-	protected final static Converter<redis.clients.jedis.ScanResult<String>, ScanResult<List<String>>> STRING_LIST_SCANRESULT_EXPOSE_CONVERTER = JedisConverters.listScanResultExposeConverter();
-
-	protected final static Converter<redis.clients.jedis.ScanResult<byte[]>, ScanResult<List<byte[]>>> BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER = JedisConverters.listScanResultExposeConverter();
-
-	protected final static Converter<redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple>,
-			ScanResult<List<Tuple>>> LIST_TUPLE_SCANRESULT_EXPOSE_CONVERTER =
-			JedisConverters.listTupleScanResultExposeConverter();
-
-	protected Queue<FutureResult<Response<?>>> txResults = new LinkedList<>();
 
 	public AbstractJedisRedisClient(){
 		super();
@@ -986,804 +943,1030 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long sAdd(final String key, final String... members){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().sadd(key, members)));
-		}else{
-			return execute((cmd)->cmd.sadd(key, members));
-		}
+		return setOperations.sAdd(key, members);
 	}
 
 	@Override
 	public Long sCard(final String key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().scard(key)));
-		}else{
-			return execute((cmd)->cmd.scard(key));
-		}
+		return setOperations.sCard(key);
+	}
+
+	@Override
+	public Set<String> sDiff(final String... keys){
+		return setOperations.sDiff(keys);
+	}
+
+	@Override
+	public Long sDiffStore(final String destKey, final String... keys){
+		return setOperations.sDiffStore(destKey, keys);
+	}
+
+	@Override
+	public Set<String> sInter(final String... keys){
+		return setOperations.sInter(keys);
+	}
+
+	@Override
+	public Long sInterStore(final String destKey, final String... keys){
+		return setOperations.sInterStore(destKey, keys);
 	}
 
 	@Override
 	public boolean sisMember(final String key, final String member){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().sismember(key, member)));
-		}else{
-			return execute((cmd)->cmd.sismember(key, member));
-		}
+		return setOperations.sisMember(key, member);
 	}
 
 	@Override
 	public Set<String> sMembers(final String key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().smembers(key)));
-		}else{
-			return execute((cmd)->cmd.smembers(key));
-		}
+		return setOperations.sMembers(key);
+	}
+
+	@Override
+	public Status sMove(final String key, final String destKey, final String member){
+		return setOperations.sMove(key, destKey, member);
 	}
 
 	@Override
 	public String sPop(final String key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().spop(key)));
-		}else{
-			return execute((cmd)->cmd.spop(key));
-		}
+		return setOperations.sPop(key);
 	}
 
 	@Override
 	public String sRandMember(final String key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().srandmember(key)));
-		}else{
-			return execute((cmd)->cmd.srandmember(key));
-		}
+		return setOperations.sRandMember(key);
 	}
 
 	@Override
 	public List<String> sRandMember(final String key, final int count){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().srandmember(key, count)));
-		}else{
-			return execute((cmd)->cmd.srandmember(key, count));
-		}
+		return setOperations.sRandMember(key, count);
+	}
+
+	@Override
+	public List<String> sRandMember(final String key, final long count){
+		return setOperations.sRandMember(key, count);
 	}
 
 	@Override
 	public Long sRem(final String key, final String... members){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().srem(key, members)));
-		}else{
-			return execute((cmd)->cmd.srem(key, members));
-		}
+		return setOperations.sRem(key, members);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final int cursor){
+		return setOperations.sScan(key, cursor);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final long cursor){
+		return setOperations.sScan(key, cursor);
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor)));
-		}
+		return setOperations.sScan(key, cursor);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern){
+		return setOperations.sScan(key, cursor, pattern);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern){
+		return setOperations.sScan(key, cursor, pattern);
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor,
-					new JedisScanParams(pattern))));
-		}
+		return setOperations.sScan(key, cursor, pattern);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final int cursor, final int count){
+		return setOperations.sScan(key, cursor, count);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final int count){
+		return setOperations.sScan(key, cursor, count);
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor,
-					new JedisScanParams(count))));
-		}
+		return setOperations.sScan(key, cursor, count);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern, final int count){
+		return setOperations.sScan(key, cursor, pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final int count){
+		return setOperations.sScan(key, cursor, pattern, count);
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
 			final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SSCAN);
-		}else{
-			return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor,
-					new JedisScanParams(pattern, count))));
-		}
+		return setOperations.sScan(key, cursor, pattern, count);
+	}
+
+	@Override
+	public Set<String> sUnion(final String... keys){
+		return setOperations.sUnion(keys);
+	}
+
+	@Override
+	public Long sUnionStore(final String destKey, final String... keys){
+		return setOperations.sUnionStore(destKey, keys);
 	}
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Number> members){
-		final Map<String, Double> data = new LinkedHashMap<>(members.size());
-
-		members.forEach((k, v)->data.put(k, v.doubleValue()));
-
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zadd(key, data)));
-		}else{
-			return execute((cmd)->cmd.zadd(key, data));
-		}
+		return sortedSetOperations.zAdd(key, members);
 	}
 
 	@Override
 	public Long zCard(final String key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zcard(key)));
-		}else{
-			return execute((C cmd)->cmd.zcard(key));
-		}
+		return sortedSetOperations.zCard(key);
+	}
+
+	@Override
+	public Long zCount(final String key, final float min, final float max){
+		return sortedSetOperations.zCount(key, min, max);
 	}
 
 	@Override
 	public Long zCount(final String key, final double min, final double max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zcount(key, min, max)));
-		}else{
-			return execute((cmd)->cmd.zcount(key, min, max));
-		}
+		return sortedSetOperations.zCount(key, min, max);
+	}
+
+	@Override
+	public Long zCount(final String key, final int min, final int max){
+		return sortedSetOperations.zCount(key, min, max);
+	}
+
+	@Override
+	public Long zCount(final String key, final long min, final long max){
+		return sortedSetOperations.zCount(key, min, max);
 	}
 
 	@Override
 	public Long zCount(final String key, final String min, final String max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zcount(key, min, max)));
-		}else{
-			return execute((cmd)->cmd.zcount(key, min, max));
-		}
+		return sortedSetOperations.zCount(key, min, max);
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final float increment){
+		return sortedSetOperations.zIncrBy(key, member, increment);
 	}
 
 	@Override
 	public Double zIncrBy(final String key, final String member, final double increment){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zincrby(key, increment, member)));
-		}else{
-			return execute((cmd)->cmd.zincrby(key, increment, member));
-		}
+		return sortedSetOperations.zIncrBy(key, member, increment);
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final int increment){
+		return sortedSetOperations.zIncrBy(key, member, increment);
+	}
+
+	@Override
+	public Double zIncrBy(final String key, final String member, final long increment){
+		return sortedSetOperations.zIncrBy(key, member, increment);
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final String... keys){
+		return sortedSetOperations.zInterStore(destKey, keys);
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final Aggregate aggregate, final String... keys){
+		return sortedSetOperations.zInterStore(destKey, aggregate, keys);
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final double[] weights, final String... keys){
+		return sortedSetOperations.zInterStore(destKey, weights, keys);
+	}
+
+	@Override
+	public Long zInterStore(final String destKey, final Aggregate aggregate, final double[] weights,
+			final String... keys){
+		return sortedSetOperations.zInterStore(destKey, aggregate, weights, keys);
+	}
+
+	@Override
+	public Long zLexCount(final String key, final float min, final float max){
+		return sortedSetOperations.zLexCount(key, min, max);
+	}
+
+	@Override
+	public Long zLexCount(final String key, final double min, final double max){
+		return sortedSetOperations.zLexCount(key, min, max);
+	}
+
+	@Override
+	public Long zLexCount(final String key, final int min, final int max){
+		return sortedSetOperations.zLexCount(key, min, max);
+	}
+
+	@Override
+	public Long zLexCount(final String key, final long min, final long max){
+		return sortedSetOperations.zLexCount(key, min, max);
 	}
 
 	@Override
 	public Long zLexCount(final String key, final String min, final String max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zlexcount(key, min, max)));
-		}else{
-			return execute((cmd)->cmd.zlexcount(key, min, max));
-		}
+		return sortedSetOperations.zLexCount(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRange(final String key, final int start, final int end){
+		return sortedSetOperations.zRange(key, start, end);
 	}
 
 	@Override
 	public Set<String> zRange(final String key, final long start, final long end){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrange(key, start, end)));
-		}else{
-			return execute((cmd)->cmd.zrange(key, start, end));
-		}
+		return sortedSetOperations.zRange(key, start, end);
+	}
+
+	@Override
+	public Set<Tuple> zRangeWithScores(final String key, final int start, final int end){
+		return sortedSetOperations.zRangeWithScores(key, start, end);
 	}
 
 	@Override
 	public Set<Tuple> zRangeWithScores(final String key, final long start, final long end){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrangeWithScores(key, start, end),
-					SET_TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->SET_TUPLE_EXPOSE_CONVERTER.convert(cmd.zrangeWithScores(key, start, end)));
-		}
+		return sortedSetOperations.zRangeWithScores(key, start, end);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final float min, final float max){
+		return sortedSetOperations.zRangeByLex(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final double min, final double max){
+		return sortedSetOperations.zRangeByLex(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final int min, final int max){
+		return sortedSetOperations.zRangeByLex(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final long min, final long max){
+		return sortedSetOperations.zRangeByLex(key, min, max);
 	}
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final String min, final String max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrangeByLex(key, min, max)));
-		}else{
-			return execute((cmd)->cmd.zrangeByLex(key, min, max));
-		}
+		return sortedSetOperations.zRangeByLex(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final float min, final float max, final int offset,
+			final int count){
+		return zRangeByLex(key, Float.toString(min), Float.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final double min, final double max, final int offset,
+			final int count){
+		return zRangeByLex(key, Double.toString(min), Double.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final int min, final int max, final int offset, final int count){
+		return zRangeByLex(key, Integer.toString(min), Integer.toString(max), offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByLex(final String key, final long min, final long max, final int offset,
+			final int count){
+		return zRangeByLex(key, Long.toString(min), Long.toString(max), offset, count);
 	}
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final String min, final String max, final int offset,
 			final int count){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrangeByLex(key, min, max, offset,
-					count)));
-		}else{
-			return execute((cmd)->cmd.zrangeByLex(key, min, max, offset, count));
-		}
+		return sortedSetOperations.zRangeByLex(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final float min, final float max){
+		return sortedSetOperations.zRangeByScore(key, min, max);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final double min, final double max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrangeByScore(key, min, max)));
-		}else{
-			return execute((cmd)->cmd.zrangeByScore(key, min, max));
-		}
+		return sortedSetOperations.zRangeByScore(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final int min, final int max){
+		return sortedSetOperations.zRangeByScore(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final long min, final long max){
+		return sortedSetOperations.zRangeByScore(key, min, max);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final String min, final String max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrangeByScore(key, min, max)));
-		}else{
-			return execute((cmd)->cmd.zrangeByScore(key, min, max));
-		}
+		return sortedSetOperations.zRangeByScore(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final float min, final float max, final int offset,
+			final int count){
+		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final double min, final double max, final int offset,
 			final int count){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrangeByScore(key, min, max, offset,
-					count)));
-		}else{
-			return execute((cmd)->cmd.zrangeByScore(key, min, max, offset, count));
-		}
+		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final int min, final int max, final int offset,
+			final int count){
+		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRangeByScore(final String key, final long min, final long max, final int offset,
+			final int count){
+		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final String min, final String max, final int offset,
 			final int count){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrangeByScore(key, min, max, offset,
-					count)));
-		}else{
-			return execute((cmd)->cmd.zrangeByScore(key, min, max, offset, count));
-		}
+		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max){
+		return sortedSetOperations.zRangeByScoreWithScores(key, min, max);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrangeByScoreWithScores(key, min, max),
-					SET_TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->SET_TUPLE_EXPOSE_CONVERTER.convert(cmd.zrangeByScoreWithScores(key, min, max)));
-		}
+		return sortedSetOperations.zRangeByScoreWithScores(key, min, max);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max){
+		return sortedSetOperations.zRangeByScoreWithScores(key, min, max);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max){
+		return sortedSetOperations.zRangeByScoreWithScores(key, min, max);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrangeByScoreWithScores(key, min, max),
-					SET_TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->SET_TUPLE_EXPOSE_CONVERTER.convert(cmd.zrangeByScoreWithScores(key, min, max)));
-		}
+		return sortedSetOperations.zRangeByScoreWithScores(key, min, max);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
+			final int count){
+		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
 			final int count){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrangeByScoreWithScores(key, min, max,
-					offset, count), SET_TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->SET_TUPLE_EXPOSE_CONVERTER.convert(cmd.zrangeByScoreWithScores(key, min, max, offset
-					, count)));
-		}
+		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
+			final int count){
+		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
+			final int count){
+		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final int offset,
 			final int count){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrangeByScoreWithScores(key, min, max,
-					offset, count), SET_TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->SET_TUPLE_EXPOSE_CONVERTER.convert(cmd.zrangeByScoreWithScores(key, min, max, offset
-					, count)));
-		}
+		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Long zRank(final String key, final String member){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrank(key, member)));
-		}else{
-			return execute((cmd)->cmd.zrank(key, member));
-		}
+		return sortedSetOperations.zRank(key, member);
 	}
 
 	@Override
 	public Tuple zPopMax(final String key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zpopmax(key), TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->TUPLE_EXPOSE_CONVERTER.convert(cmd.zpopmax(key)));
-		}
+		return sortedSetOperations.zPopMax(key);
 	}
 
 	@Override
 	public Set<Tuple> zPopMax(final String key, final int count){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zpopmax(key, count),
-					SET_TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->SET_TUPLE_EXPOSE_CONVERTER.convert(cmd.zpopmax(key, count)));
-		}
+		return sortedSetOperations.zPopMax(key, count);
+	}
+
+	@Override
+	public Set<Tuple> zPopMax(final String key, final long count){
+		return sortedSetOperations.zPopMax(key, count);
 	}
 
 	@Override
 	public Tuple zPopMin(final String key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zpopmin(key), TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->TUPLE_EXPOSE_CONVERTER.convert(cmd.zpopmin(key)));
-		}
+		return sortedSetOperations.zPopMin(key);
 	}
 
 	@Override
 	public Set<Tuple> zPopMin(final String key, final int count){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zpopmin(key, count),
-					SET_TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->SET_TUPLE_EXPOSE_CONVERTER.convert(cmd.zpopmin(key, count)));
-		}
+		return sortedSetOperations.zPopMin(key, count);
+	}
+
+	@Override
+	public Set<Tuple> zPopMin(final String key, final long count){
+		return sortedSetOperations.zPopMin(key, count);
 	}
 
 	@Override
 	public Long zRem(final String key, final String... members){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrem(key, members)));
-		}else{
-			return execute((cmd)->cmd.zrem(key, members));
-		}
+		return sortedSetOperations.zRem(key, members);
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final float min, final float max){
+		return sortedSetOperations.zRemRangeByLex(key, min, max);
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final double min, final double max){
+		return sortedSetOperations.zRemRangeByLex(key, min, max);
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final int min, final int max){
+		return sortedSetOperations.zRemRangeByLex(key, min, max);
+	}
+
+	@Override
+	public Long zRemRangeByLex(final String key, final long min, final long max){
+		return sortedSetOperations.zRemRangeByLex(key, min, max);
 	}
 
 	@Override
 	public Long zRemRangeByLex(final String key, final String min, final String max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zremrangeByLex(key, min, max)));
-		}else{
-			return execute((cmd)->cmd.zremrangeByLex(key, min, max));
-		}
+		return sortedSetOperations.zRemRangeByLex(key, min, max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final float min, final float max){
+		return sortedSetOperations.zRemRangeByScore(key, min, max);
 	}
 
 	@Override
 	public Long zRemRangeByScore(final String key, final double min, final double max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zremrangeByScore(key, min, max)));
-		}else{
-			return execute((cmd)->cmd.zremrangeByScore(key, min, max));
-		}
+		return sortedSetOperations.zRemRangeByScore(key, min, max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final int min, final int max){
+		return sortedSetOperations.zRemRangeByScore(key, min, max);
+	}
+
+	@Override
+	public Long zRemRangeByScore(final String key, final long min, final long max){
+		return sortedSetOperations.zRemRangeByScore(key, min, max);
 	}
 
 	@Override
 	public Long zRemRangeByScore(final String key, final String min, final String max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zremrangeByScore(key, min, max)));
-		}else{
-			return execute((cmd)->cmd.zremrangeByScore(key, min, max));
-		}
+		return sortedSetOperations.zRemRangeByScore(key, min, max);
+	}
+
+	@Override
+	public Long zRemRangeByRank(final String key, final int start, final int end){
+		return sortedSetOperations.zRemRangeByRank(key, start, end);
 	}
 
 	@Override
 	public Long zRemRangeByRank(final String key, final long start, final long end){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zremrangeByRank(key, start, end)));
-		}else{
-			return execute((cmd)->cmd.zremrangeByRank(key, start, end));
-		}
+		return sortedSetOperations.zRemRangeByRank(key, start, end);
+	}
+
+	@Override
+	public Set<String> zRevRange(final String key, final int start, final int end){
+		return sortedSetOperations.zRevRange(key, start, end);
 	}
 
 	@Override
 	public Set<String> zRevRange(final String key, final long start, final long end){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrange(key, start, end)));
-		}else{
-			return execute((cmd)->cmd.zrevrange(key, start, end));
-		}
+		return sortedSetOperations.zRevRange(key, start, end);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeWithScores(final String key, final int start, final int end){
+		return sortedSetOperations.zRevRangeWithScores(key, start, end);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeWithScores(final String key, final long start, final long end){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrangeWithScores(key, start, end),
-					SET_TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->SET_TUPLE_EXPOSE_CONVERTER.convert(cmd.zrevrangeWithScores(key, start, end)));
-		}
+		return sortedSetOperations.zRevRangeWithScores(key, start, end);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(String key, float min, float max){
+		return sortedSetOperations.zRevRangeByLex(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(String key, double min, double max){
+		return sortedSetOperations.zRevRangeByLex(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(String key, int min, int max){
+		return sortedSetOperations.zRevRangeByLex(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(String key, long min, long max){
+		return sortedSetOperations.zRevRangeByLex(key, min, max);
 	}
 
 	@Override
 	public Set<String> zRevRangeByLex(final String key, final String min, final String max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrangeByLex(key, min, max)));
-		}else{
-			return execute((cmd)->cmd.zrevrangeByLex(key, min, max));
-		}
+		return sortedSetOperations.zRevRangeByLex(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(String key, float min, float max, int offset, int count){
+		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(String key, double min, double max, int offset, int count){
+		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(String key, int min, int max, int offset, int count){
+		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByLex(String key, long min, long max, int offset, int count){
+		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRevRangeByLex(final String key, final String min, final String max, final int offset,
 			final int count){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrangeByLex(key, min, max, offset,
-					count)));
-		}else{
-			return execute((cmd)->cmd.zrevrangeByLex(key, min, max, offset, count));
-		}
+		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final float min, final float max){
+		return sortedSetOperations.zRevRangeByScore(key, min, max);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final double min, final double max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrangeByScore(key, min, max)));
-		}else{
-			return execute((cmd)->cmd.zrevrangeByScore(key, min, max));
-		}
+		return sortedSetOperations.zRevRangeByScore(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final int min, final int max){
+		return sortedSetOperations.zRevRangeByScore(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final long min, final long max){
+		return sortedSetOperations.zRevRangeByScore(key, min, max);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final String min, final String max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrangeByScore(key, min, max)));
-		}else{
-			return execute((cmd)->cmd.zrevrangeByScore(key, min, max));
-		}
+		return sortedSetOperations.zRevRangeByScore(key, min, max);
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final float min, final float max, final int offset,
+			final int count){
+		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final double min, final double max, final int offset,
 			final int count){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrangeByScore(key, min, max, offset,
-					count)));
-		}else{
-			return execute((cmd)->cmd.zrevrangeByScore(key, min, max, offset, count));
-		}
+		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final int min, final int max, final int offset,
+			final int count){
+		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<String> zRevRangeByScore(final String key, final long min, final long max, final int offset,
+			final int count){
+		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final String min, final String max, final int offset,
 			final int count){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrangeByScore(key, min, max, offset,
-					count)));
-		}else{
-			return execute((cmd)->cmd.zrevrangeByScore(key, min, max, offset, count));
-		}
+		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float min, final float max){
+		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrangeByScoreWithScores(key, min, max)
-					, SET_TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->SET_TUPLE_EXPOSE_CONVERTER.convert(cmd.zrevrangeByScoreWithScores(key, min, max)));
-		}
+		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max){
+		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max){
+		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrangeByScoreWithScores(key, min, max)
-					, SET_TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->SET_TUPLE_EXPOSE_CONVERTER.convert(cmd.zrevrangeByScoreWithScores(key, min, max)));
-		}
+		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
+			final int count){
+		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
 			final int offset, final int count){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrangeByScoreWithScores(key, min, max,
-					offset, count), SET_TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->SET_TUPLE_EXPOSE_CONVERTER.convert(cmd.zrevrangeByScoreWithScores(key, min, max,
-					offset, count)));
-		}
+		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
+			final int count){
+		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
+	}
+
+	@Override
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
+			final int count){
+		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
 			final int offset, final int count){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrangeByScoreWithScores(key, min, max,
-					offset, count), SET_TUPLE_EXPOSE_CONVERTER));
-		}else{
-			return execute((cmd)->SET_TUPLE_EXPOSE_CONVERTER.convert(cmd.zrevrangeByScoreWithScores(key, min, max,
-					offset, count)));
-		}
+		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Long zRevRank(final String key, final String member){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrank(key, member)));
-		}else{
-			return execute((cmd)->cmd.zrevrank(key, member));
-		}
+		return sortedSetOperations.zRevRank(key, member);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final int cursor){
+		return sortedSetOperations.zScan(key, cursor);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor){
+		return sortedSetOperations.zScan(key, cursor);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
-		}else{
-			return execute((cmd)->LIST_TUPLE_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.zscan(key, cursor)));
-		}
+		return sortedSetOperations.zScan(key, cursor);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern){
+		return sortedSetOperations.zScan(key, cursor, pattern);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern){
+		return sortedSetOperations.zScan(key, cursor, pattern);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
-		}else{
-			return execute((cmd)->LIST_TUPLE_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.zscan(key, cursor,
-					new JedisScanParams(pattern))));
-		}
+		return sortedSetOperations.zScan(key, cursor, pattern);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final int count){
+		return sortedSetOperations.zScan(key, cursor, count);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final int count){
+		return sortedSetOperations.zScan(key, cursor, count);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
-		}else{
-			return execute((cmd)->LIST_TUPLE_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.zscan(key, cursor,
-					new JedisScanParams(count))));
-		}
+		return sortedSetOperations.zScan(key, cursor, count);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern, final int count){
+		return sortedSetOperations.zScan(key, cursor, pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final int count){
+		return sortedSetOperations.zScan(key, cursor, pattern, count);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final int count){
-		if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.ZSCAN);
-		}else{
-			return execute((cmd)->LIST_TUPLE_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.zscan(key, cursor,
-					new JedisScanParams(pattern, count))));
-		}
+		return sortedSetOperations.zScan(key, cursor, pattern, count);
 	}
 
 	@Override
 	public Double zScore(final String key, final String member){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zscore(key, member)));
-		}else{
-			return execute((cmd)->cmd.zscore(key, member));
-		}
+		return sortedSetOperations.zScore(key, member);
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final String... keys){
+		return sortedSetOperations.zUnionStore(destKey, keys);
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final Aggregate aggregate, final String... keys){
+		return sortedSetOperations.zUnionStore(destKey, aggregate, keys);
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final double[] weights, final String... keys){
+		return sortedSetOperations.zUnionStore(destKey, weights, keys);
+	}
+
+	@Override
+	public Long zUnionStore(final String destKey, final Aggregate aggregate, final double[] weights,
+			final String... keys){
+		return sortedSetOperations.zUnionStore(destKey, aggregate, weights, keys);
 	}
 
 	@Override
 	public Long append(final String key, final String value){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().append(key, value)));
-		}else{
-			return execute((cmd)->cmd.append(key, value));
-		}
+		return stringOperations.append(key, value);
 	}
 
 	@Override
 	public Long bitCount(final String key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().bitcount(key)));
-		}else{
-			return execute((cmd)->cmd.bitcount(key));
-		}
+		return stringOperations.bitCount(key);
+	}
+
+	@Override
+	public Long bitCount(final String key, final int start, final int end){
+		return stringOperations.bitCount(key, start, end);
 	}
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().bitcount(key, start, end)));
-		}else{
-			return execute((cmd)->cmd.bitcount(key, start, end));
-		}
+		return stringOperations.bitCount(key, start, end);
 	}
 
 	@Override
 	public List<Long> bitField(final String key, final String... arguments){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().bitfield(key, arguments)));
-		}else{
-			return execute((cmd)->cmd.bitfield(key, arguments));
-		}
+		return stringOperations.bitField(key, arguments);
+	}
+
+	@Override
+	public Long bitOp(final BitOperation operation, final String destKey, final String... keys){
+		return stringOperations.bitOp(operation, destKey, keys);
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value){
-		if(isTransaction()){
-			return execute((cmd)->getTransaction().bitpos(key, value).get());
-		}else{
-			return execute((cmd)->cmd.bitpos(key, value));
-		}
+		return stringOperations.bitPos(key, value);
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final int start, final int end){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().bitpos(key, value, new BitPosParams(start
-					, end))));
-		}else{
-			return execute((cmd)->cmd.bitpos(key, value, new BitPosParams(start, end)));
-		}
+		return stringOperations.bitPos(key, value, start, end);
+	}
+
+	@Override
+	public Long bitPos(final String key, final boolean value, final long start, final long end){
+		return stringOperations.bitPos(key, value, start, end);
 	}
 
 	@Override
 	public Long decr(final String key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().decr(key)));
-		}else{
-			return execute((cmd)->cmd.decr(key));
-		}
+		return stringOperations.decr(key);
+	}
+
+	@Override
+	public Long decrBy(final String key, final int value){
+		return stringOperations.decrBy(key, value);
 	}
 
 	@Override
 	public Long decrBy(final String key, final long value){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().decrBy(key, value)));
-		}else{
-			return execute((cmd)->cmd.decrBy(key, value));
-		}
+		return stringOperations.decrBy(key, value);
 	}
 
 	@Override
 	public String get(final String key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().get(key)));
-		}else{
-			return execute((cmd)->cmd.get(key));
-		}
+		return stringOperations.get(key);
+	}
+
+	@Override
+	public Status getBit(final String key, final int offset){
+		return stringOperations.getBit(key, offset);
 	}
 
 	@Override
 	public Status getBit(final String key, final long offset){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().getbit(key, offset),
-					JedisConverters.booleanToStatusConverter()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.getbit(key, offset)));
-		}
+		return stringOperations.getBit(key, offset);
+	}
+
+	@Override
+	public String getRange(final String key, final int start, final int end){
+		return stringOperations.getRange(key, start, end);
 	}
 
 	@Override
 	public String getRange(final String key, final long start, final long end){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().getrange(key, start, end)));
-		}else{
-			return execute((cmd)->cmd.getrange(key, start, end));
-		}
+		return stringOperations.getRange(key, start, end);
 	}
 
 	@Override
 	public String getSet(final String key, final String value){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().getSet(key, value)));
-		}else{
-			return execute((cmd)->cmd.getSet(key, value));
-		}
+		return stringOperations.getSet(key, value);
 	}
 
 	@Override
 	public Long incr(final String key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().incr(key)));
-		}else{
-			return execute((cmd)->cmd.incr(key));
-		}
+		return stringOperations.incr(key);
+	}
+
+	@Override
+	public Long incrBy(final String key, final int value){
+		return stringOperations.incrBy(key, value);
 	}
 
 	@Override
 	public Long incrBy(final String key, final long value){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().incrBy(key, value)));
-		}else{
-			return execute((cmd)->cmd.incrBy(key, value));
-		}
+		return stringOperations.incrBy(key, value);
+	}
+
+	@Override
+	public Double incrByFloat(final String key, final float value){
+		return stringOperations.incrByFloat(key, value);
 	}
 
 	@Override
 	public Double incrByFloat(final String key, final double value){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().incrByFloat(key, value)));
-		}else{
-			return execute((cmd)->cmd.incrByFloat(key, value));
-		}
+		return stringOperations.incrByFloat(key, value);
+	}
+
+	@Override
+	public List<String> mGet(final String... keys){
+		return stringOperations.mGet(keys);
+	}
+
+	@Override
+	public Status mSet(final Map<String, String> values){
+		return stringOperations.mSet(values);
+	}
+
+	@Override
+	public Status mSetNx(final Map<String, String> values){
+		return stringOperations.mSetNx(values);
 	}
 
 	@Override
 	public Status pSetEx(final String key, final String value, final int lifetime){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().psetex(key, lifetime, value),
-					JedisConverters.okToStatusConverter()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.psetex(key, lifetime, value)));
-		}
+		return stringOperations.pSetEx(key, value, lifetime);
 	}
 
 	@Override
 	public Status set(final String key, final String value){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().set(key, value),
-					JedisConverters.okToStatusConverter()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value)));
-		}
+		return stringOperations.set(key, value);
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetArgument setArgument){
-		final SetParams setParams = SET_ARGUMENT_JEDIS_CONVERTER.convert(setArgument);
+		return stringOperations.set(key, value, setArgument);
+	}
 
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().set(key, value, setParams),
-					JedisConverters.okToStatusConverter()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value, setParams)));
-		}
+	@Override
+	public Status setBit(final String key, final int offset, final String value){
+		return stringOperations.setBit(key, offset, value);
 	}
 
 	@Override
 	public Status setBit(final String key, final long offset, final String value){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().setbit(SafeEncoder.encode(key), offset,
-					SafeEncoder.encode(value)), JedisConverters.booleanToStatusConverter()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)));
-		}
+		return stringOperations.setBit(key, offset, value);
+	}
+
+	@Override
+	public Status setBit(final String key, final int offset, final boolean value){
+		return stringOperations.setBit(key, offset, value);
 	}
 
 	@Override
 	public Status setBit(final String key, final long offset, final boolean value){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().setbit(key, offset, value),
-					JedisConverters.booleanToStatusConverter()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)));
-		}
+		return stringOperations.setBit(key, offset, value);
 	}
 
 	@Override
 	public Status setEx(final String key, final String value, final int lifetime){
-
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().setex(key, lifetime, value),
-					JedisConverters.okToStatusConverter()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.setex(key, lifetime, value)));
-		}
+		return stringOperations.setEx(key, value, lifetime);
 	}
 
 	@Override
 	public Status setNx(final String key, final String value){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().setnx(key, value),
-					JedisConverters.positiveLongNumberToStatusConverter()));
-		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.setnx(key, value) > 0));
-		}
+		return stringOperations.setNx(key, value);
+	}
+
+	@Override
+	public Long setRange(final String key, final int offset, final String value){
+		return stringOperations.setRange(key, offset, value);
 	}
 
 	@Override
 	public Long setRange(final String key, final long offset, final String value){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().setrange(key, offset, value)));
-		}else{
-			return execute((cmd)->cmd.setrange(key, offset, value));
-		}
+		return stringOperations.setRange(key, offset, value);
 	}
 
 	@Override
 	public Long strlen(final String key){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().strlen(key)));
-		}else{
-			return execute((cmd)->cmd.strlen(key));
-		}
+		return stringOperations.strlen(key);
 	}
 
 	@Override
 	public String substr(final String key, final int start, final int end){
-		if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().substr(key, start, end)));
-		}else{
-			return execute((cmd)->cmd.substr(key, start, end));
-		}
+		return stringOperations.substr(key, start, end);
+	}
+
+	@Override
+	public String substr(final String key, final long start, final long end){
+		return stringOperations.substr(key, start, end);
+	}
+
+	@Override
+	public void discard(){
+		transactionOperations.discard();
+	}
+
+	@Override
+	public List<Object> exec(){
+		return transactionOperations.exec();
+	}
+
+	@Override
+	public Transaction multi(){
+		return transactionOperations.multi();
+	}
+
+	@Override
+	public Status watch(final String... keys){
+		return transactionOperations.watch(keys);
+	}
+
+	@Override
+	public Status unwatch(){
+		return transactionOperations.unwatch();
+	}
+
+	@Override
+	public <C, R> R execute(final Executor<C, R> executor) throws RedisException{
+		return super.execute(executor);
 	}
 
 	protected redis.clients.jedis.Transaction getTransaction(){
@@ -1794,29 +1977,6 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	protected redis.clients.jedis.PipelineBase getPipeline(){
 		JedisPipeline jedisPipeline = (JedisPipeline) getConnection().getPipeline();
 		return jedisPipeline.primitive();
-	}
-
-	@Override
-	public <R> R execute(final JedisExecutor<C, R> executor) throws RedisException{
-		return super.execute(executor);
-	}
-
-	protected <R> R transactionExecute(final Executor<C, JedisResult> executor) throws RedisException{
-		txResults.add(super.execute(executor));
-		return null;
-	}
-
-	protected <R> R pipelineExecute(final Executor<C, JedisResult> executor) throws RedisException{
-		txResults.add(super.execute(executor));
-		return null;
-	}
-
-	protected JedisResult newJedisResult(final Response<?> response){
-		return JedisResult.JedisResultBuilder.forResponse(response).build();
-	}
-
-	protected <T, R> JedisResult newJedisResult(final Response<T> response, final Converter<T, R> converter){
-		return JedisResult.JedisResultBuilder.<T, R>forResponse(response).mappedWith(converter).build();
 	}
 
 }

@@ -32,7 +32,7 @@ import redis.clients.jedis.commands.JedisCommands;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractScriptingOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisOperations<C, P> implements ScriptingOperations {
+public abstract class AbstractScriptingOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements ScriptingOperations {
 
 	public AbstractScriptingOperations(final RedisClient client){
 		super(client);

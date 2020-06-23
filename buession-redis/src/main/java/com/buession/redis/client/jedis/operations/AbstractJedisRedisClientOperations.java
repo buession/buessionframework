@@ -25,58 +25,29 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.Executor;
-import com.buession.core.converter.SetConverter;
 import com.buession.redis.client.RedisClient;
-import com.buession.redis.client.operations.AbstractRedisOperations;
-import com.buession.redis.core.Aggregate;
-import com.buession.redis.core.BitOperation;
+import com.buession.redis.client.operations.AbstractRedisClientOperations;
 import com.buession.redis.core.FutureResult;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
-import com.buession.redis.core.command.StringCommands;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.core.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.jedis.JedisTransaction;
 import org.springframework.core.convert.converter.Converter;
-import redis.clients.jedis.BitOP;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.Response;
-import redis.clients.jedis.ZParams;
 import redis.clients.jedis.commands.JedisCommands;
-import redis.clients.jedis.params.SetParams;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractRedisOperations implements JedisRedisOperations<C, P> {
-
-	protected final static Converter<Aggregate, ZParams.Aggregate> AGGREGATE_JEDIS_CONVERTER =
-			JedisConverters.aggregateJedisConverter();
-
-	protected final static Converter<BitOperation, BitOP> BIT_OPERATION_JEDIS_CONVERTER =
-			JedisConverters.bitOperationJedisConverter();
-
-	protected final static Converter<redis.clients.jedis.Tuple, Tuple> TUPLE_EXPOSE_CONVERTER =
-			JedisConverters.tupleExposeConverter();
-
-	protected final static SetConverter<redis.clients.jedis.Tuple, Tuple> SET_TUPLE_EXPOSE_CONVERTER =
-			JedisConverters.setTupleExposeConverter();
-
-	protected final static Converter<StringCommands.SetArgument, SetParams> SET_ARGUMENT_JEDIS_CONVERTER =
-			JedisConverters.setArgumentJedisConverter();
-
-	protected final static Converter<redis.clients.jedis.ScanResult<Map.Entry<String, String>>, ScanResult<Map<String,
-			String>>> STRING_MAP_SCANRESULT_EXPOSE_CONVERTER = JedisConverters.mapScanResultExposeConverter();
-
-	protected final static Converter<redis.clients.jedis.ScanResult<Map.Entry<byte[], byte[]>>, ScanResult<Map<byte[],
-			byte[]>>> BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER = JedisConverters.mapScanResultExposeConverter();
+public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractRedisClientOperations implements JedisRedisClientOperations<C, P> {
 
 	protected final static Converter<redis.clients.jedis.ScanResult<String>, ScanResult<List<String>>> STRING_LIST_SCANRESULT_EXPOSE_CONVERTER = JedisConverters.listScanResultExposeConverter();
 
@@ -88,7 +59,7 @@ public abstract class AbstractJedisRedisOperations<C extends JedisCommands, P ex
 
 	protected Queue<FutureResult<Response<?>>> txResults = new LinkedList<>();
 
-	public AbstractJedisRedisOperations(final RedisClient client){
+	public AbstractJedisRedisClientOperations(final RedisClient client){
 		super(client);
 	}
 

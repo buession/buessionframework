@@ -22,15 +22,13 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.client.operations;
 
-import com.buession.redis.client.operations.RedisOperations;
-import redis.clients.jedis.PipelineBase;
-import redis.clients.jedis.commands.JedisCommands;
+import com.buession.redis.core.command.SortedSetCommands;
 
 /**
  * @author Yong.Teng
  */
-public interface JedisRedisOperations<C extends JedisCommands, P extends PipelineBase> extends RedisOperations {
+public interface SortedSetOperations extends SortedSetCommands, RedisClientOperations {
 
 }

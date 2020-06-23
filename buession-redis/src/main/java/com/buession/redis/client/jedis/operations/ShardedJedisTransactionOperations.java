@@ -22,13 +22,60 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.operations;
+package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.core.command.ConnectionCommands;
+import com.buession.lang.Status;
+import com.buession.redis.client.RedisClient;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.transaction.Transaction;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPipeline;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public interface ConnectionOperations extends ConnectionCommands, RedisClientOperations {
+public class ShardedJedisTransactionOperations extends AbstractTransactionOperations<ShardedJedis,
+		ShardedJedisPipeline> {
+
+	public ShardedJedisTransactionOperations(final RedisClient client){
+		super(client);
+	}
+
+	@Override
+	public void discard(){
+		commandAllNotSupportedException(ProtocolCommand.DISCARD);
+	}
+
+	@Override
+	public List<Object> exec(){
+		commandAllNotSupportedException(ProtocolCommand.EXEC);
+		return null;
+	}
+
+	@Override
+	public Transaction multi(){
+		commandAllNotSupportedException(ProtocolCommand.MULTI);
+		return null;
+	}
+
+	@Override
+	public Status unwatch(){
+		commandAllNotSupportedException(ProtocolCommand.UNWATCH);
+		return null;
+	}
+
+	@Override
+	public Status watch(final String... keys){
+		commandAllNotSupportedException(ProtocolCommand.WATCH);
+		return null;
+	}
+
+	@Override
+	public Status watch(final byte[]... keys){
+		commandAllNotSupportedException(ProtocolCommand.WATCH);
+		return null;
+	}
 
 }

@@ -46,7 +46,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractGeoOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisOperations<C, P> implements GeoOperations {
+public abstract class AbstractGeoOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements GeoOperations {
 
 	protected final static HashConverter<String, Geo, String, GeoCoordinate> STRING_MAP_GEOMAP_JEDIS_CONVERTER =
 			JedisConverters.mapGeoMapJedisConverter();

@@ -24,18 +24,134 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.utils.NumberUtils;
+import com.buession.lang.Status;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.operations.ServerOperations;
+import com.buession.redis.core.ClientReply;
+import com.buession.redis.core.ClientUnblockType;
+import com.buession.redis.core.Role;
+import com.buession.redis.core.command.ProtocolCommand;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractServerOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisOperations<C, P> implements ServerOperations {
+public abstract class AbstractServerOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements ServerOperations {
 
 	public AbstractServerOperations(final RedisClient client){
 		super(client);
+	}
+
+	@Override
+	public String clientId(){
+		commandAllNotSupportedException(ProtocolCommand.CLIENT_ID);
+		return null;
+	}
+
+	@Override
+	public Status clientPause(final int timeout){
+		return clientPause((long) timeout);
+	}
+
+	@Override
+	public Status clientReply(final ClientReply option){
+		commandAllNotSupportedException(ProtocolCommand.CLIENT_REPLY);
+		return null;
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId){
+		commandAllNotSupportedException(ProtocolCommand.CLIENT_UNBLOCK);
+		return null;
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId, final ClientUnblockType type){
+		commandAllNotSupportedException(ProtocolCommand.CLIENT_UNBLOCK);
+		return null;
+	}
+
+	@Override
+	public Status configSet(final String parameter, final float value){
+		return configSet(parameter, Float.toString(value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final float value){
+		return configSet(parameter, NumberUtils.float2bytes(value));
+	}
+
+	@Override
+	public Status configSet(final String parameter, final double value){
+		return configSet(parameter, Double.toString(value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final double value){
+		return configSet(parameter, NumberUtils.double2bytes(value));
+	}
+
+	@Override
+	public Status configSet(final String parameter, final int value){
+		return configSet(parameter, Integer.toString(value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final int value){
+		return configSet(parameter, NumberUtils.int2bytes(value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final long value){
+		return configSet(parameter, NumberUtils.long2bytes(value));
+	}
+
+	@Override
+	public Status configSet(final String parameter, final long value){
+		return configSet(parameter, Long.toString(value));
+	}
+
+	@Override
+	public Object pSync(final String masterRunId, final int offset){
+		commandAllNotSupportedException(ProtocolCommand.PSYNC);
+		return null;
+	}
+
+	@Override
+	public Object pSync(final byte[] masterRunId, final int offset){
+		commandAllNotSupportedException(ProtocolCommand.PSYNC);
+		return null;
+	}
+
+	@Override
+	public Object pSync(final String masterRunId, final long offset){
+		commandAllNotSupportedException(ProtocolCommand.PSYNC);
+		return null;
+	}
+
+	@Override
+	public Object pSync(final byte[] masterRunId, final long offset){
+		commandAllNotSupportedException(ProtocolCommand.PSYNC);
+		return null;
+	}
+
+	@Override
+	public Status replicaOf(final String host, final int port){
+		commandAllNotSupportedException(ProtocolCommand.REPLICAOF);
+		return null;
+	}
+
+	@Override
+	public Role role(){
+		commandAllNotSupportedException(ProtocolCommand.ROLE);
+		return null;
+	}
+
+	@Override
+	public void shutdown(final boolean save){
+		shutdown();
 	}
 
 }

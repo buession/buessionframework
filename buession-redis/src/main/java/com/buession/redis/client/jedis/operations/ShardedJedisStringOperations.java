@@ -1,0 +1,382 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.
+ * See the NOTICE file distributed with this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is
+ * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ *
+ * =========================================================================================================
+ *
+ * This software consists of voluntary contributions made by many individuals on behalf of the
+ * Apache Software Foundation. For more information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
+ *
+ * +-------------------------------------------------------------------------------------------------------+
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
+ * | Author: Yong.Teng <webmaster@buession.com> 													       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * +-------------------------------------------------------------------------------------------------------+
+ */
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.lang.Status;
+import com.buession.redis.client.RedisClient;
+import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.JedisConverters;
+import com.buession.redis.utils.ReturnUtils;
+import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.BitPosParams;
+import redis.clients.jedis.ShardedJedis;
+import redis.clients.jedis.ShardedJedisPipeline;
+import redis.clients.jedis.params.SetParams;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author Yong.Teng
+ */
+public class ShardedJedisStringOperations extends AbstractStringOperations<ShardedJedis, ShardedJedisPipeline> {
+
+	public ShardedJedisStringOperations(RedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Long append(final byte[] key, final byte[] value){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().append(key, value)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().append(key, value)));
+		}else{
+			return execute((cmd)->cmd.append(key, value));
+		}
+	}
+
+	@Override
+	public Long bitCount(final byte[] key){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().bitcount(key)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().bitcount(key)));
+		}else{
+			return execute((cmd)->cmd.bitcount(key));
+		}
+	}
+
+	@Override
+	public Long bitCount(final byte[] key, final long start, final long end){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().bitcount(key, start, end)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().bitcount(key, start, end)));
+		}else{
+			return execute((cmd)->cmd.bitcount(key, start, end));
+		}
+	}
+
+	@Override
+	public List<Long> bitField(final byte[] key, final byte[]... arguments){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().bitfield(key, arguments)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().bitfield(key, arguments)));
+		}else{
+			return execute((cmd)->cmd.bitfield(key, arguments));
+		}
+	}
+
+	@Override
+	public Long bitOp(BitOperation operation, String destKey, String... keys){
+		commandAllNotSupportedException(ProtocolCommand.BITOP);
+		return null;
+	}
+
+	@Override
+	public Long bitOp(BitOperation operation, byte[] destKey, byte[]... keys){
+		commandAllNotSupportedException(ProtocolCommand.BITOP);
+		return null;
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().bitpos(key, value)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().bitpos(key, value)));
+		}else{
+			return execute((cmd)->cmd.bitpos(SafeEncoder.encode(key), value));
+		}
+	}
+
+	@Override
+	public Long bitPos(final byte[] key, final boolean value, final int start, final int end){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().bitpos(key, value,
+					new BitPosParams(start, end))));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().bitpos(key, value, new BitPosParams(start
+					, end))));
+		}else{
+			return execute((cmd)->cmd.bitpos(SafeEncoder.encode(key), value, new BitPosParams(start, end)));
+		}
+	}
+
+	@Override
+	public Long decr(final byte[] key){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().decr(key)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().decr(key)));
+		}else{
+			return execute((cmd)->cmd.decr(key));
+		}
+	}
+
+	@Override
+	public Long decrBy(final byte[] key, final long value){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().decrBy(key, value)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().decrBy(key, value)));
+		}else{
+			return execute((cmd)->cmd.decrBy(key, value));
+		}
+	}
+
+	@Override
+	public byte[] get(final byte[] key){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().get(key)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().get(key)));
+		}else{
+			return execute((cmd)->cmd.get(key));
+		}
+	}
+
+	@Override
+	public Status getBit(final byte[] key, final long offset){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().getbit(key, offset),
+					JedisConverters.booleanToStatusConverter()));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().getbit(key, offset),
+					JedisConverters.booleanToStatusConverter()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.getbit(key, offset)));
+		}
+	}
+
+	@Override
+	public byte[] getRange(final byte[] key, final long start, final long end){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().getrange(key, start, end)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().getrange(key, start, end)));
+		}else{
+			return execute((cmd)->cmd.getrange(key, start, end));
+		}
+	}
+
+	@Override
+	public byte[] getSet(final byte[] key, final byte[] value){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().getSet(key, value)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().getSet(key, value)));
+		}else{
+			return execute((cmd)->cmd.getSet(key, value));
+		}
+	}
+
+	@Override
+	public Long incr(final byte[] key){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().incr(key)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().incr(key)));
+		}else{
+			return execute((cmd)->cmd.incr(key));
+		}
+	}
+
+	@Override
+	public Long incrBy(final byte[] key, final long value){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().incrBy(key, value)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().incrBy(key, value)));
+		}else{
+			return execute((cmd)->cmd.incrBy(key, value));
+		}
+	}
+
+	@Override
+	public Double incrByFloat(final byte[] key, final double value){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().incrByFloat(key, value)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().incrByFloat(key, value)));
+		}else{
+			return execute((cmd)->cmd.incrByFloat(key, value));
+		}
+	}
+
+	@Override
+	public List<String> mGet(String... keys){
+		commandAllNotSupportedException(ProtocolCommand.MGET);
+		return null;
+	}
+
+	@Override
+	public List<byte[]> mGet(byte[]... keys){
+		commandAllNotSupportedException(ProtocolCommand.MGET);
+		return null;
+	}
+
+	@Override
+	public Status mSet(Map<String, String> values){
+		commandAllNotSupportedException(ProtocolCommand.MSET);
+		return null;
+	}
+
+	@Override
+	public Status mSetNx(Map<String, String> values){
+		commandAllNotSupportedException(ProtocolCommand.MSETNX);
+		return null;
+	}
+
+	@Override
+	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().psetex(key, lifetime, value),
+					JedisConverters.okToStatusConverter()));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().psetex(key, lifetime, value),
+					JedisConverters.okToStatusConverter()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.psetex(key, lifetime, value)));
+		}
+	}
+
+	@Override
+	public Status set(final byte[] key, final byte[] value){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().set(key, value)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().set(key, value)));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value)));
+		}
+	}
+
+	@Override
+	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
+		final SetParams setParams = SET_ARGUMENT_JEDIS_CONVERTER.convert(setArgument);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().set(key, value, setParams),
+					JedisConverters.okToStatusConverter()));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().set(key, value, setParams),
+					JedisConverters.okToStatusConverter()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value, setParams)));
+		}
+	}
+
+	@Override
+	public Status setBit(final byte[] key, final long offset, final byte[] value){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().setbit(key, offset, value),
+					JedisConverters.booleanToStatusConverter()));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().setbit(key, offset, value),
+					JedisConverters.booleanToStatusConverter()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)));
+		}
+	}
+
+	@Override
+	public Status setBit(final byte[] key, final long offset, final boolean value){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().setbit(SafeEncoder.encode(key), offset, value),
+					JedisConverters.booleanToStatusConverter()));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().setbit(SafeEncoder.encode(key), offset,
+					value), JedisConverters.booleanToStatusConverter()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)));
+		}
+	}
+
+	@Override
+	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().setex(key, lifetime, value),
+					JedisConverters.okToStatusConverter()));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().setex(key, lifetime, value),
+					JedisConverters.okToStatusConverter()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForOK(cmd.setex(key, lifetime, value)));
+		}
+	}
+
+	@Override
+	public Status setNx(final byte[] key, final byte[] value){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().setnx(key, value),
+					JedisConverters.positiveLongNumberToStatusConverter()));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().setnx(key, value),
+					JedisConverters.positiveLongNumberToStatusConverter()));
+		}else{
+			return execute((cmd)->ReturnUtils.statusForBool(cmd.setnx(key, value) > 0));
+		}
+	}
+
+	@Override
+	public Long setRange(final byte[] key, final long offset, final byte[] value){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().setrange(key, offset, value)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().setrange(key, offset, value)));
+		}else{
+			return execute((cmd)->cmd.setrange(key, offset, value));
+		}
+	}
+
+	@Override
+	public Long strlen(final byte[] key){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().strlen(key)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().strlen(key)));
+		}else{
+			return execute((cmd)->cmd.strlen(key));
+		}
+	}
+
+	@Override
+	public byte[] substr(final byte[] key, final int start, final int end){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().substr(key, start, end),
+					JedisConverters.stringToBinaryConverter()));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().substr(key, start, end),
+					JedisConverters.stringToBinaryConverter()));
+		}else{
+			return execute((cmd)->cmd.substr(key, start, end));
+		}
+	}
+
+}

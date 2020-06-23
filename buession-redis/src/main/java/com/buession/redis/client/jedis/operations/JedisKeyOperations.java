@@ -195,8 +195,7 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	@Override
 	public Set<String> keys(final String pattern){
 		if(isPipeline()){
-			Pipeline pipeline = getPipeline();
-			return pipelineExecute((cmd)->newJedisResult(pipeline.keys(pattern)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().keys(pattern)));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().keys(pattern)));
 		}else{
@@ -207,8 +206,7 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	@Override
 	public Set<byte[]> keys(final byte[] pattern){
 		if(isPipeline()){
-			Pipeline pipeline = getPipeline();
-			return pipelineExecute((cmd)->newJedisResult(pipeline.keys(pattern)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().keys(pattern)));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().keys(pattern)));
 		}else{
@@ -269,8 +267,7 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	@Override
 	public String randomKey(){
 		if(isPipeline()){
-			Pipeline pipeline = getPipeline();
-			return pipelineExecute((cmd)->newJedisResult(pipeline.randomKey()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().randomKey()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().randomKey()));
 		}else{
@@ -281,8 +278,7 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	@Override
 	public Status rename(final String key, final String newKey){
 		if(isPipeline()){
-			Pipeline pipeline = getPipeline();
-			return pipelineExecute((cmd)->newJedisResult(pipeline.rename(key, newKey),
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().rename(key, newKey),
 					JedisConverters.okToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().rename(key, newKey),
@@ -295,8 +291,7 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey){
 		if(isPipeline()){
-			Pipeline pipeline = getPipeline();
-			return pipelineExecute((cmd)->newJedisResult(pipeline.rename(key, newKey),
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().rename(key, newKey),
 					JedisConverters.okToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().rename(key, newKey),
@@ -309,8 +304,7 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	@Override
 	public Status renameNx(final String key, final String newKey){
 		if(isPipeline()){
-			Pipeline pipeline = getPipeline();
-			return pipelineExecute((cmd)->newJedisResult(pipeline.renamenx(key, newKey),
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().renamenx(key, newKey),
 					JedisConverters.positiveLongNumberToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().renamenx(key, newKey),
@@ -323,8 +317,7 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey){
 		if(isPipeline()){
-			Pipeline pipeline = getPipeline();
-			return pipelineExecute((cmd)->newJedisResult(pipeline.renamenx(key, newKey),
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().renamenx(key, newKey),
 					JedisConverters.positiveLongNumberToStatusConverter()));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().renamenx(key, newKey),

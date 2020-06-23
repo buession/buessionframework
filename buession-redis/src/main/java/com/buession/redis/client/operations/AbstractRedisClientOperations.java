@@ -36,7 +36,7 @@ import com.buession.redis.exception.NotSupportedTransactionCommandException;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRedisOperations implements RedisOperations {
+public abstract class AbstractRedisClientOperations implements RedisClientOperations {
 
 	protected final static ListConverter<String, byte[]> STRING_TO_BINARY_LIST_CONVERTER =
 			Converters.stringToBinaryListConverter();
@@ -46,7 +46,7 @@ public abstract class AbstractRedisOperations implements RedisOperations {
 
 	protected RedisClient client;
 
-	public AbstractRedisOperations(final RedisClient client){
+	public AbstractRedisClientOperations(final RedisClient client){
 		this.client = client;
 	}
 
