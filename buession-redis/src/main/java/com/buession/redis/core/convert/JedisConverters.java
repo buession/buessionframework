@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.convert;
 
-import com.buession.core.converter.HashConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.SetConverter;
 import com.buession.core.utils.NumberUtils;
@@ -46,7 +46,6 @@ import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.command.KeyCommands;
 import com.buession.redis.core.command.StringCommands;
 import com.buession.redis.exception.NotSupportedCommandException;
-import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.PoolException;
 import com.buession.redis.exception.RedisConnectionFailureException;
 import com.buession.redis.exception.RedisException;
@@ -293,12 +292,12 @@ public class JedisConverters extends Converters {
 		};
 	}
 
-	public final static <K> HashConverter<K, Geo, K, GeoCoordinate> mapGeoMapJedisConverter(){
-		return new HashConverter<>((key)->key, (value)->new GeoCoordinate(value.getLongitude(), value.getLatitude()));
+	public final static <K> MapConverter<K, Geo, K, GeoCoordinate> mapGeoMapJedisConverter(){
+		return new MapConverter<>((key)->key, (value)->new GeoCoordinate(value.getLongitude(), value.getLatitude()));
 	}
 
-	public final static <K> HashConverter<K, GeoCoordinate, K, Geo> mapGeoMapExposeConverter(){
-		return new HashConverter<>((key)->key, (value)->new Geo(value.getLongitude(), value.getLatitude()));
+	public final static <K> MapConverter<K, GeoCoordinate, K, Geo> mapGeoMapExposeConverter(){
+		return new MapConverter<>((key)->key, (value)->new Geo(value.getLongitude(), value.getLatitude()));
 	}
 
 	public final static Converter<GeoRadius, GeoRadiusResponse> geoRadiusJedisConverter(){

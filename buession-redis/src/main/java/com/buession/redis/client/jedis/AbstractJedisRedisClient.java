@@ -34,6 +34,7 @@ import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientUnblockType;
+import com.buession.redis.core.FutureResult;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.Info;
@@ -52,16 +53,21 @@ import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.jedis.JedisTransaction;
+import redis.clients.jedis.Response;
 import redis.clients.jedis.commands.JedisCommands;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 /**
  * @author Yong.Teng
  */
 public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends AbstractRedisClient implements JedisRedisClient<C> {
+
+	private Queue<FutureResult<Response<?>>> txResults = new LinkedList<>();
 
 	public AbstractJedisRedisClient(){
 		super();
@@ -1941,12 +1947,24 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public void discard(){
-		transactionOperations.discard();
+		try{
+			transactionOperations.discard();
+		}catch(Exception e){
+			throw e;
+		}finally{
+			txResults.clear();
+		}
 	}
 
 	@Override
 	public List<Object> exec(){
-		return transactionOperations.exec();
+		try{
+			return transactionOperations.exec();
+		}catch(Exception e){
+			throw e;
+		}finally{
+			txResults.clear();
+		}
 	}
 
 	@Override
@@ -1962,6 +1980,16 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public Status unwatch(){
 		return transactionOperations.unwatch();
+	}
+
+	@Override
+	public Queue<FutureResult<Response<?>>> getTxResults(){
+		return txResults;
+	}
+
+	@Override
+	public void setTxResults(Queue<FutureResult<Response<?>>> txResults){
+		this.txResults = txResults;
 	}
 
 	@Override

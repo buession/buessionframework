@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ListOperations;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.convert.JedisConverters;
@@ -44,7 +44,7 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 	protected final static Converter<ListPosition, redis.clients.jedis.ListPosition> LISTPOSITION_JEDIS_CONVERTER =
 			JedisConverters.listPositionJedisConverter();
 
-	public AbstractListOperations(final RedisClient client){
+	public AbstractListOperations(final JedisRedisClient<C> client){
 		super(client);
 	}
 
@@ -182,10 +182,10 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 	public Status lSet(final String key, final long index, final String value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().lset(key, index, value),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().lset(key, index, value),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.lset(key, index, value)));
 		}
@@ -205,10 +205,10 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 	public Status lTrim(final String key, final long start, final long end){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().ltrim(key, start, end),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().ltrim(key, start, end),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.ltrim(key, start, end)));
 		}

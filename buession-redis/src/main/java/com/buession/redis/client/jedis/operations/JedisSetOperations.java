@@ -24,12 +24,10 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.core.jedis.JedisScanParams;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
@@ -43,7 +41,7 @@ import java.util.Set;
  */
 public class JedisSetOperations extends AbstractSetOperations<Jedis, Pipeline> {
 
-	public JedisSetOperations(final RedisClient client){
+	public JedisSetOperations(final JedisRedisClient<Jedis> client){
 		super(client);
 	}
 
@@ -183,10 +181,10 @@ public class JedisSetOperations extends AbstractSetOperations<Jedis, Pipeline> {
 	public Status sMove(final String key, final String destKey, final String member){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().smove(key, destKey, member),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().smove(key, destKey, member),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.smove(key, destKey, member) > 0));
 		}
@@ -196,10 +194,10 @@ public class JedisSetOperations extends AbstractSetOperations<Jedis, Pipeline> {
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().smove(key, destKey, member),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().smove(key, destKey, member),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.smove(key, destKey, member) > 0));
 		}

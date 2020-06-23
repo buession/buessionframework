@@ -25,10 +25,9 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.core.jedis.JedisScanParams;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
@@ -43,7 +42,7 @@ import java.util.Set;
  */
 public class JedisHashOperations extends AbstractHashOperations<Jedis, Pipeline> {
 
-	public JedisHashOperations(final RedisClient client){
+	public JedisHashOperations(final JedisRedisClient<Jedis> client){
 		super(client);
 	}
 
@@ -149,11 +148,10 @@ public class JedisHashOperations extends AbstractHashOperations<Jedis, Pipeline>
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmset(key, data),
-					JedisConverters.okToStatusConverter()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmset(key, data), OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().hmset(key, data),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)));
 		}
@@ -191,10 +189,10 @@ public class JedisHashOperations extends AbstractHashOperations<Jedis, Pipeline>
 	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.hset(key, field, value) > 0));
 		}
@@ -204,10 +202,10 @@ public class JedisHashOperations extends AbstractHashOperations<Jedis, Pipeline>
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.hsetnx(key, field, value) > 0));
 		}

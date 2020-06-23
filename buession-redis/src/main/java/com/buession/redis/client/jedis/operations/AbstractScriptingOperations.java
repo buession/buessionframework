@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ScriptingOperations;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
@@ -34,7 +34,7 @@ import redis.clients.jedis.commands.JedisCommands;
  */
 public abstract class AbstractScriptingOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements ScriptingOperations {
 
-	public AbstractScriptingOperations(final RedisClient client){
+	public AbstractScriptingOperations(final JedisRedisClient<C> client){
 		super(client);
 	}
 

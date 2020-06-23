@@ -26,8 +26,8 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.convert.TransactionResultConverter;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.transaction.Transaction;
@@ -42,38 +42,27 @@ import java.util.List;
  */
 public class JedisTransactionOperations extends AbstractTransactionOperations<Jedis, Pipeline> {
 
-	public JedisTransactionOperations(final RedisClient client){
+	public JedisTransactionOperations(final JedisRedisClient<Jedis> client){
 		super(client);
 	}
 
 	@Override
 	public void discard(){
-		try{
-			execute((cmd)->{
-				client.getConnection().discard();
-				return null;
-			});
-		}catch(Exception e){
-			throw e;
-		}finally{
-			txResults.clear();
-		}
+		execute((cmd)->{
+			client.getConnection().discard();
+			return null;
+		});
 	}
 
 	@Override
 	public List<Object> exec(){
-		try{
-			if(isTransaction() == false){
-				throw new RedisException("No ongoing transaction. Did you forget to call multi?");
-			}
-
-			List<Object> results = execute((cmd)->client.getConnection().exec());
-			return Validate.isEmpty(results) ? results : new TransactionResultConverter(txResults).convert(results);
-		}catch(Exception e){
-			throw e;
-		}finally{
-			txResults.clear();
+		if(isTransaction() == false){
+			throw new RedisException("No ongoing transaction. Did you forget to call multi?");
 		}
+
+		List<Object> results = execute((cmd)->client.getConnection().exec());
+		return Validate.isEmpty(results) ? results :
+				new TransactionResultConverter(client.getTxResults()).convert(results);
 	}
 
 	@Override

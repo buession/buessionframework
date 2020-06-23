@@ -26,7 +26,7 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
@@ -47,7 +47,7 @@ import java.util.Set;
  */
 public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 
-	public JedisKeyOperations(final RedisClient client){
+	public JedisKeyOperations(final JedisRedisClient<Jedis> client){
 		super(client);
 	}
 
@@ -125,10 +125,10 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().migrate(host, port, key, db, timeout),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, key, db, timeout)));
 		}
@@ -138,10 +138,10 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().migrate(host, port, key, db, timeout),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, key, db, timeout)));
 		}
@@ -154,10 +154,10 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().migrate(host, port, db, timeout,
-					migrateParams, key), JedisConverters.okToStatusConverter()));
+					migrateParams, key), OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, db, timeout, migrateParams, key)));
 		}
@@ -170,10 +170,10 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().migrate(host, port, db, timeout,
-					migrateParams, key), JedisConverters.okToStatusConverter()));
+					migrateParams, key), OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.migrate(host, port, db, timeout, migrateParams, key)));
 		}
@@ -183,10 +183,10 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	public Status move(final byte[] key, final int db){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().move(key, db),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().move(key, db),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.move(key, db) > 0));
 		}
@@ -218,10 +218,10 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	public Status persist(final byte[] key){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().persist(key),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().persist(key),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.persist(key) > 0));
 		}
@@ -278,11 +278,10 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	@Override
 	public Status rename(final String key, final String newKey){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().rename(key, newKey),
-					JedisConverters.okToStatusConverter()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().rename(key, newKey), OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().rename(key, newKey),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.rename(key, newKey)));
 		}
@@ -291,11 +290,10 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().rename(key, newKey),
-					JedisConverters.okToStatusConverter()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().rename(key, newKey), OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().rename(key, newKey),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.rename(key, newKey)));
 		}
@@ -305,10 +303,10 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	public Status renameNx(final String key, final String newKey){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().renamenx(key, newKey),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().renamenx(key, newKey),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.renamenx(key, newKey) > 0));
 		}
@@ -318,10 +316,10 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	public Status renameNx(final byte[] key, final byte[] newKey){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().renamenx(key, newKey),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().renamenx(key, newKey),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.renamenx(key, newKey) > 0));
 		}
@@ -331,10 +329,10 @@ public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().restore(key, ttl, serializedValue),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().restore(key, ttl, serializedValue),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.restore(key, ttl, serializedValue)));
 		}

@@ -25,12 +25,15 @@
 package com.buession.redis;
 
 import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.utils.ReflectUtils;
+import com.buession.core.validator.Validate;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.operations.*;
 import redis.clients.jedis.ListPosition;
 
+import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +47,8 @@ import java.util.Set;
 public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperations, GeoOperations, HashOperations,
 		HyperLogLogOperations, KeyOperations, ListOperations, PubSubOperations, ScriptingOperations, ServerOperations,
 		SetOperations, SortedSetOperations, StringOperations, TransactionOperations {
+
+	private Map<Integer, TxResult> txResults = new LinkedHashMap<>(16, 0.8F);
 
 	/**
 	 * 构造函数
@@ -64,92 +69,92 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> V hGetObject(final String key, final String field){
-		return deserialize(hGet(key, field));
+		return simpleStringCall(hGet(key, field));
 	}
 
 	@Override
 	public <V> V hGetObject(final byte[] key, final byte[] field){
-		return deserializeBytes(hGet(key, field));
+		return simpleBinaryCall(hGet(key, field));
 	}
 
 	@Override
 	public <V> V hGetObject(final String key, final String field, final Class<V> clazz){
-		return deserialize(hGet(key, field), clazz);
+		return simpleStringCall(hGet(key, field), clazz);
 	}
 
 	@Override
 	public <V> V hGetObject(final byte[] key, final byte[] field, final Class<V> clazz){
-		return deserializeBytes(hGet(key, field), clazz);
+		return simpleBinaryCall(hGet(key, field), clazz);
 	}
 
 	@Override
 	public <V> V hGetObject(final String key, final String field, final TypeReference<V> type){
-		return deserialize(hGet(key, field), type);
+		return simpleStringCall(hGet(key, field), type);
 	}
 
 	@Override
 	public <V> V hGetObject(final byte[] key, final byte[] field, final TypeReference<V> type){
-		return deserializeBytes(hGet(key, field), type);
+		return simpleBinaryCall(hGet(key, field), type);
 	}
 
 	@Override
 	public <V> Map<String, V> hGetAllObject(final String key){
-		return deserialize(hGetAll(key));
+		return mapStringCall(hGetAll(key));
 	}
 
 	@Override
 	public <V> Map<byte[], V> hGetAllObject(final byte[] key){
-		return deserializeBytes(hGetAll(key));
+		return mapBinaryCall(hGetAll(key));
 	}
 
 	@Override
 	public <V> Map<String, V> hGetAllObject(final String key, final Class<V> clazz){
-		return deserialize(hGetAll(key), clazz);
+		return mapStringCall(hGetAll(key), clazz);
 	}
 
 	@Override
 	public <V> Map<byte[], V> hGetAllObject(final byte[] key, final Class<V> clazz){
-		return deserializeBytes(hGetAll(key), clazz);
+		return mapBinaryCall(hGetAll(key), clazz);
 	}
 
 	@Override
 	public <V> Map<String, V> hGetAllObject(final String key, final TypeReference<V> type){
-		return deserialize(hGetAll(key), type);
+		return mapStringCall(hGetAll(key), type);
 	}
 
 	@Override
 	public <V> Map<byte[], V> hGetAllObject(final byte[] key, final TypeReference<V> type){
-		return deserializeBytes(hGetAll(key), type);
+		return mapBinaryCall(hGetAll(key), type);
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final String key, final String... fields){
-		return deserialize(hMGet(key, fields));
+		return listStringCall(hMGet(key, fields));
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final byte[] key, final byte[]... fields){
-		return deserializeBytes(hMGet(key, fields));
+		return listBinaryCall(hMGet(key, fields));
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final String key, final String[] fields, final Class<V> clazz){
-		return deserialize(hMGet(key, fields), clazz);
+		return listStringCall(hMGet(key, fields), clazz);
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final Class<V> clazz){
-		return deserializeBytes(hMGet(key, fields), clazz);
+		return listBinaryCall(hMGet(key, fields), clazz);
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final String key, final String[] fields, final TypeReference<V> type){
-		return deserialize(hMGet(key, fields), type);
+		return listStringCall(hMGet(key, fields), type);
 	}
 
 	@Override
 	public <V> List<V> hMGetObject(final byte[] key, final byte[][] fields, final TypeReference<V> type){
-		return deserializeBytes(hMGet(key, fields), type);
+		return listBinaryCall(hMGet(key, fields), type);
 	}
 
 	@Override
@@ -196,184 +201,184 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> List<V> hValsObject(final String key){
-		return deserialize(hVals(key));
+		return listStringCall(hVals(key));
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final byte[] key){
-		return deserializeBytes(hVals(key));
+		return listBinaryCall(hVals(key));
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final String key, final Class<V> clazz){
-		return deserialize(hVals(key), clazz);
+		return listStringCall(hVals(key), clazz);
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final byte[] key, final Class<V> clazz){
-		return deserializeBytes(hVals(key), clazz);
+		return listBinaryCall(hVals(key), clazz);
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final String key, final TypeReference<V> type){
-		return deserialize(hVals(key), type);
+		return listStringCall(hVals(key), type);
 	}
 
 	@Override
 	public <V> List<V> hValsObject(final byte[] key, final TypeReference<V> type){
-		return deserializeBytes(hVals(key), type);
+		return listBinaryCall(hVals(key), type);
 	}
 
 	@Override
 	public <V> List<V> blPopObject(final String key, final int timeout){
-		return deserialize(blPop(key, timeout));
+		return listStringCall(blPop(key, timeout));
 	}
 
 	@Override
 	public <V> List<V> blPopObject(final byte[] key, final int timeout){
-		return deserializeBytes(blPop(key, timeout));
+		return listBinaryCall(blPop(key, timeout));
 	}
 
 	@Override
 	public <V> List<V> blPopObject(final String key, final int timeout, final Class<V> clazz){
-		return deserialize(blPop(key, timeout), clazz);
+		return listStringCall(blPop(key, timeout), clazz);
 	}
 
 	@Override
 	public <V> List<V> blPopObject(final byte[] key, final int timeout, final Class<V> clazz){
-		return deserializeBytes(blPop(key, timeout), clazz);
+		return listBinaryCall(blPop(key, timeout), clazz);
 	}
 
 	@Override
 	public <V> List<V> blPopObject(final String key, final int timeout, final TypeReference<V> type){
-		return deserialize(blPop(key, timeout), type);
+		return listStringCall(blPop(key, timeout), type);
 	}
 
 	@Override
 	public <V> List<V> blPopObject(final byte[] key, final int timeout, final TypeReference<V> type){
-		return deserializeBytes(blPop(key, timeout), type);
+		return listBinaryCall(blPop(key, timeout), type);
 	}
 
 	@Override
 	public <V> List<V> brPopObject(final String key, final int timeout){
-		return deserialize(brPop(key, timeout));
+		return listStringCall(brPop(key, timeout));
 	}
 
 	@Override
 	public <V> List<V> brPopObject(final byte[] key, final int timeout){
-		return deserializeBytes(brPop(key, timeout));
+		return listBinaryCall(brPop(key, timeout));
 	}
 
 	@Override
 	public <V> List<V> brPopObject(final String key, final int timeout, final Class<V> clazz){
-		return deserialize(brPop(key, timeout), clazz);
+		return listStringCall(brPop(key, timeout), clazz);
 	}
 
 	@Override
 	public <V> List<V> brPopObject(final byte[] key, final int timeout, final Class<V> clazz){
-		return deserializeBytes(brPop(key, timeout), clazz);
+		return listBinaryCall(brPop(key, timeout), clazz);
 	}
 
 	@Override
 	public <V> List<V> brPopObject(final String key, final int timeout, final TypeReference<V> type){
-		return deserialize(brPop(key, timeout), type);
+		return listStringCall(brPop(key, timeout), type);
 	}
 
 	@Override
 	public <V> List<V> brPopObject(final byte[] key, final int timeout, final TypeReference<V> type){
-		return deserializeBytes(brPop(key, timeout), type);
+		return listBinaryCall(brPop(key, timeout), type);
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout){
-		return deserialize(brPoplPush(key, destKey, timeout));
+		return simpleStringCall(brPoplPush(key, destKey, timeout));
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout){
-		return deserializeBytes(brPoplPush(key, destKey, timeout));
+		return simpleBinaryCall(brPoplPush(key, destKey, timeout));
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout, final Class<V> clazz){
-		return deserialize(brPoplPush(key, destKey, timeout), clazz);
+		return simpleStringCall(brPoplPush(key, destKey, timeout), clazz);
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout, final Class<V> clazz){
-		return deserializeBytes(brPoplPush(key, destKey, timeout), clazz);
+		return simpleBinaryCall(brPoplPush(key, destKey, timeout), clazz);
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final String key, final String destKey, final int timeout,
 			final TypeReference<V> type){
-		return deserialize(brPoplPush(key, destKey, timeout), type);
+		return simpleStringCall(brPoplPush(key, destKey, timeout), type);
 	}
 
 	@Override
 	public <V> V brPoplPushObject(final byte[] key, final byte[] destKey, final int timeout,
 			final TypeReference<V> type){
-		return deserializeBytes(brPoplPush(key, destKey, timeout), type);
+		return simpleBinaryCall(brPoplPush(key, destKey, timeout), type);
 	}
 
 	@Override
 	public <V> V lIndexObject(final String key, final int index){
-		return deserialize(lIndex(key, index));
+		return simpleStringCall(lIndex(key, index));
 	}
 
 	@Override
 	public <V> V lIndexObject(final byte[] key, final int index){
-		return deserializeBytes(lIndex(key, index));
+		return simpleBinaryCall(lIndex(key, index));
 	}
 
 	@Override
 	public <V> V lIndexObject(final String key, final int index, final Class<V> clazz){
-		return deserialize(lIndex(key, index), clazz);
+		return simpleStringCall(lIndex(key, index), clazz);
 	}
 
 	@Override
 	public <V> V lIndexObject(final byte[] key, final int index, final Class<V> clazz){
-		return deserializeBytes(lIndex(key, index), clazz);
+		return simpleBinaryCall(lIndex(key, index), clazz);
 	}
 
 	@Override
 	public <V> V lIndexObject(final String key, final int index, final TypeReference<V> type){
-		return deserialize(lIndex(key, index), type);
+		return simpleStringCall(lIndex(key, index), type);
 	}
 
 	@Override
 	public <V> V lIndexObject(final byte[] key, final int index, final TypeReference<V> type){
-		return deserializeBytes(lIndex(key, index), type);
+		return simpleBinaryCall(lIndex(key, index), type);
 	}
 
 	@Override
 	public <V> V lIndexObject(final String key, final long index){
-		return deserialize(lIndex(key, index));
+		return simpleStringCall(lIndex(key, index));
 	}
 
 	@Override
 	public <V> V lIndexObject(final byte[] key, final long index){
-		return deserializeBytes(lIndex(key, index));
+		return simpleBinaryCall(lIndex(key, index));
 	}
 
 	@Override
 	public <V> V lIndexObject(final String key, final long index, final Class<V> clazz){
-		return deserialize(lIndex(key, index), clazz);
+		return simpleStringCall(lIndex(key, index), clazz);
 	}
 
 	@Override
 	public <V> V lIndexObject(final byte[] key, final long index, final Class<V> clazz){
-		return deserializeBytes(lIndex(key, index), clazz);
+		return simpleBinaryCall(lIndex(key, index), clazz);
 	}
 
 	@Override
 	public <V> V lIndexObject(final String key, final long index, final TypeReference<V> type){
-		return deserialize(lIndex(key, index), type);
+		return simpleStringCall(lIndex(key, index), type);
 	}
 
 	@Override
 	public <V> V lIndexObject(final byte[] key, final long index, final TypeReference<V> type){
-		return deserializeBytes(lIndex(key, index), type);
+		return simpleBinaryCall(lIndex(key, index), type);
 	}
 
 	@Override
@@ -388,32 +393,32 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> V lPopObject(final String key){
-		return deserialize(lPop(key));
+		return simpleStringCall(lPop(key));
 	}
 
 	@Override
 	public <V> V lPopObject(final byte[] key){
-		return deserializeBytes(lPop(key));
+		return simpleBinaryCall(lPop(key));
 	}
 
 	@Override
 	public <V> V lPopObject(final String key, final Class<V> clazz){
-		return deserialize(lPop(key), clazz);
+		return simpleStringCall(lPop(key), clazz);
 	}
 
 	@Override
 	public <V> V lPopObject(final byte[] key, final Class<V> clazz){
-		return deserializeBytes(lPop(key), clazz);
+		return simpleBinaryCall(lPop(key), clazz);
 	}
 
 	@Override
 	public <V> V lPopObject(final String key, final TypeReference<V> type){
-		return deserialize(lPop(key), type);
+		return simpleStringCall(lPop(key), type);
 	}
 
 	@Override
 	public <V> V lPopObject(final byte[] key, final TypeReference<V> type){
-		return deserializeBytes(lPop(key), type);
+		return simpleBinaryCall(lPop(key), type);
 	}
 
 	@Override
@@ -458,62 +463,62 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> List<V> lRangeObject(final String key, final int start, final int end){
-		return deserialize(lRange(key, start, end));
+		return listStringCall(lRange(key, start, end));
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final byte[] key, final int start, final int end){
-		return deserializeBytes(lRange(key, start, end));
+		return listBinaryCall(lRange(key, start, end));
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final String key, final long start, final long end){
-		return deserialize(lRange(key, start, end));
+		return listStringCall(lRange(key, start, end));
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end){
-		return deserializeBytes(lRange(key, start, end));
+		return listBinaryCall(lRange(key, start, end));
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final String key, final int start, final int end, final Class<V> clazz){
-		return deserialize(lRange(key, start, end), clazz);
+		return listStringCall(lRange(key, start, end), clazz);
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final byte[] key, final int start, final int end, final Class<V> clazz){
-		return deserializeBytes(lRange(key, start, end), clazz);
+		return listBinaryCall(lRange(key, start, end), clazz);
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final String key, final long start, final long end, final Class<V> clazz){
-		return deserialize(lRange(key, start, end), clazz);
+		return listStringCall(lRange(key, start, end), clazz);
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz){
-		return deserializeBytes(lRange(key, start, end), clazz);
+		return listBinaryCall(lRange(key, start, end), clazz);
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final String key, final int start, final int end, final TypeReference<V> type){
-		return deserialize(lRange(key, start, end), type);
+		return listStringCall(lRange(key, start, end), type);
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final byte[] key, final int start, final int end, final TypeReference<V> type){
-		return deserializeBytes(lRange(key, start, end), type);
+		return listBinaryCall(lRange(key, start, end), type);
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final String key, final long start, final long end, final TypeReference<V> type){
-		return deserialize(lRange(key, start, end), type);
+		return listStringCall(lRange(key, start, end), type);
 	}
 
 	@Override
 	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type){
-		return deserializeBytes(lRange(key, start, end), type);
+		return listBinaryCall(lRange(key, start, end), type);
 	}
 
 	@Override
@@ -538,62 +543,62 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> V rPopObject(final String key){
-		return deserialize(rPop(key));
+		return simpleStringCall(rPop(key));
 	}
 
 	@Override
 	public <V> V rPopObject(final byte[] key){
-		return deserializeBytes(rPop(key));
+		return simpleBinaryCall(rPop(key));
 	}
 
 	@Override
 	public <V> V rPopObject(final String key, final Class<V> clazz){
-		return deserialize(rPop(key), clazz);
+		return simpleStringCall(rPop(key), clazz);
 	}
 
 	@Override
 	public <V> V rPopObject(final byte[] key, final Class<V> clazz){
-		return deserializeBytes(rPop(key), clazz);
+		return simpleBinaryCall(rPop(key), clazz);
 	}
 
 	@Override
 	public <V> V rPopObject(final String key, final TypeReference<V> type){
-		return deserialize(rPop(key), type);
+		return simpleStringCall(rPop(key), type);
 	}
 
 	@Override
 	public <V> V rPopObject(final byte[] key, final TypeReference<V> type){
-		return deserializeBytes(rPop(key), type);
+		return simpleBinaryCall(rPop(key), type);
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final String key, final String destKey){
-		return deserialize(rPoplPush(key, destKey));
+		return simpleStringCall(rPoplPush(key, destKey));
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey){
-		return deserializeBytes(rPoplPush(key, destKey));
+		return simpleBinaryCall(rPoplPush(key, destKey));
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final String key, final String destKey, final Class<V> clazz){
-		return deserialize(rPoplPush(key, destKey), clazz);
+		return simpleStringCall(rPoplPush(key, destKey), clazz);
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey, final Class<V> clazz){
-		return deserializeBytes(rPoplPush(key, destKey), clazz);
+		return simpleBinaryCall(rPoplPush(key, destKey), clazz);
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final String key, final String destKey, final TypeReference<V> type){
-		return deserialize(rPoplPush(key, destKey), type);
+		return simpleStringCall(rPoplPush(key, destKey), type);
 	}
 
 	@Override
 	public <V> V rPoplPushObject(final byte[] key, final byte[] destKey, final TypeReference<V> type){
-		return deserializeBytes(rPoplPush(key, destKey), type);
+		return simpleBinaryCall(rPoplPush(key, destKey), type);
 	}
 
 	@Override
@@ -658,182 +663,182 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> Set<V> sDiffObject(final String key){
-		return deserialize(sDiff(key));
+		return setStringCall(sDiff(key));
 	}
 
 	@Override
 	public <V> Set<V> sDiffObject(final byte[] key){
-		return deserializeBytes(sDiff(key));
+		return setBinaryCall(sDiff(key));
 	}
 
 	@Override
 	public <V> Set<V> sDiffObject(final String key, final Class<V> clazz){
-		return deserialize(sDiff(key), clazz);
+		return setStringCall(sDiff(key), clazz);
 	}
 
 	@Override
 	public <V> Set<V> sDiffObject(final byte[] key, final Class<V> clazz){
-		return deserializeBytes(sDiff(key), clazz);
+		return setBinaryCall(sDiff(key), clazz);
 	}
 
 	@Override
 	public <V> Set<V> sDiffObject(final String key, final TypeReference<V> type){
-		return deserialize(sDiff(key), type);
+		return setStringCall(sDiff(key), type);
 	}
 
 	@Override
 	public <V> Set<V> sDiffObject(final byte[] key, final TypeReference<V> type){
-		return deserializeBytes(sDiff(key), type);
+		return setBinaryCall(sDiff(key), type);
 	}
 
 	@Override
 	public <V> Set<V> sMembersObject(final String key){
-		return deserialize(sMembers(key));
+		return setStringCall(sMembers(key));
 	}
 
 	@Override
 	public <V> Set<V> sMembersObject(final byte[] key){
-		return deserializeBytes(sMembers(key));
+		return setBinaryCall(sMembers(key));
 	}
 
 	@Override
 	public <V> Set<V> sMembersObject(final String key, final Class<V> clazz){
-		return deserialize(sMembers(key), clazz);
+		return setStringCall(sMembers(key), clazz);
 	}
 
 	@Override
 	public <V> Set<V> sMembersObject(final byte[] key, final Class<V> clazz){
-		return deserializeBytes(sMembers(key), clazz);
+		return setBinaryCall(sMembers(key), clazz);
 	}
 
 	@Override
 	public <V> Set<V> sMembersObject(final String key, final TypeReference<V> type){
-		return deserialize(sMembers(key), type);
+		return setStringCall(sMembers(key), type);
 	}
 
 	@Override
 	public <V> Set<V> sMembersObject(final byte[] key, final TypeReference<V> type){
-		return deserializeBytes(sMembers(key), type);
+		return setBinaryCall(sMembers(key), type);
 	}
 
 	@Override
 	public <V> V sPopObject(final String key){
-		return deserialize(sPop(key));
+		return simpleStringCall(sPop(key));
 	}
 
 	@Override
 	public <V> V sPopObject(final byte[] key){
-		return deserializeBytes(sPop(key));
+		return simpleBinaryCall(sPop(key));
 	}
 
 	@Override
 	public <V> V sPopObject(final String key, final Class<V> clazz){
-		return deserialize(sPop(key), clazz);
+		return simpleStringCall(sPop(key), clazz);
 	}
 
 	@Override
 	public <V> V sPopObject(final byte[] key, final Class<V> clazz){
-		return deserializeBytes(sPop(key), clazz);
+		return simpleBinaryCall(sPop(key), clazz);
 	}
 
 	@Override
 	public <V> V sPopObject(final String key, final TypeReference<V> type){
-		return deserialize(sPop(key), type);
+		return simpleStringCall(sPop(key), type);
 	}
 
 	@Override
 	public <V> V sPopObject(final byte[] key, final TypeReference<V> type){
-		return deserializeBytes(sPop(key), type);
+		return simpleBinaryCall(sPop(key), type);
 	}
 
 	@Override
 	public <V> V sRandMemberObject(final String key){
-		return deserialize(sRandMember(key));
+		return simpleStringCall(sRandMember(key));
 	}
 
 	@Override
 	public <V> V sRandMemberObject(final byte[] key){
-		return deserializeBytes(sRandMember(key));
+		return simpleBinaryCall(sRandMember(key));
 	}
 
 	@Override
 	public <V> V sRandMemberObject(final String key, final Class<V> clazz){
-		return deserialize(sRandMember(key), clazz);
+		return simpleStringCall(sRandMember(key), clazz);
 	}
 
 	@Override
 	public <V> V sRandMemberObject(final byte[] key, final Class<V> clazz){
-		return deserializeBytes(sRandMember(key), clazz);
+		return simpleBinaryCall(sRandMember(key), clazz);
 	}
 
 	@Override
 	public <V> V sRandMemberObject(final String key, final TypeReference<V> type){
-		return deserialize(sRandMember(key), type);
+		return simpleStringCall(sRandMember(key), type);
 	}
 
 	@Override
 	public <V> V sRandMemberObject(final byte[] key, final TypeReference<V> type){
-		return deserializeBytes(sRandMember(key), type);
+		return simpleBinaryCall(sRandMember(key), type);
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final String key, final int count){
-		return deserialize(sRandMember(key, count));
+		return listStringCall(sRandMember(key, count));
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final byte[] key, final int count){
-		return deserializeBytes(sRandMember(key, count));
+		return listBinaryCall(sRandMember(key, count));
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final String key, final long count){
-		return deserialize(sRandMember(key, count));
+		return listStringCall(sRandMember(key, count));
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final byte[] key, final long count){
-		return deserializeBytes(sRandMember(key, count));
+		return listBinaryCall(sRandMember(key, count));
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final String key, final int count, final Class<V> clazz){
-		return deserialize(sRandMember(key, count), clazz);
+		return listStringCall(sRandMember(key, count), clazz);
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final byte[] key, final int count, final Class<V> clazz){
-		return deserializeBytes(sRandMember(key, count), clazz);
+		return listBinaryCall(sRandMember(key, count), clazz);
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final String key, final long count, final Class<V> clazz){
-		return deserialize(sRandMember(key, count), clazz);
+		return listStringCall(sRandMember(key, count), clazz);
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final byte[] key, final long count, final Class<V> clazz){
-		return deserializeBytes(sRandMember(key, count), clazz);
+		return listBinaryCall(sRandMember(key, count), clazz);
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final String key, final int count, final TypeReference<V> type){
-		return deserialize(sRandMember(key, count), type);
+		return listStringCall(sRandMember(key, count), type);
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final byte[] key, final int count, final TypeReference<V> type){
-		return deserializeBytes(sRandMember(key, count), type);
+		return listBinaryCall(sRandMember(key, count), type);
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final String key, final long count, final TypeReference<V> type){
-		return deserialize(sRandMember(key, count), type);
+		return listStringCall(sRandMember(key, count), type);
 	}
 
 	@Override
 	public <V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type){
-		return deserializeBytes(sRandMember(key, count), type);
+		return listBinaryCall(sRandMember(key, count), type);
 	}
 
 	@Override
@@ -858,92 +863,92 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> V getObject(final String key){
-		return deserialize(get(key));
+		return simpleStringCall(get(key));
 	}
 
 	@Override
 	public <V> V getObject(final byte[] key){
-		return deserializeBytes(get(key));
+		return simpleBinaryCall(get(key));
 	}
 
 	@Override
 	public <V> V getObject(final String key, final Class<V> clazz){
-		return deserialize(get(key), clazz);
+		return simpleStringCall(get(key), clazz);
 	}
 
 	@Override
 	public <V> V getObject(final byte[] key, final Class<V> clazz){
-		return deserializeBytes(get(key), clazz);
+		return simpleBinaryCall(get(key), clazz);
 	}
 
 	@Override
 	public <V> V getObject(final String key, final TypeReference<V> type){
-		return deserialize(get(key), type);
+		return simpleStringCall(get(key), type);
 	}
 
 	@Override
 	public <V> V getObject(final byte[] key, final TypeReference<V> type){
-		return deserializeBytes(get(key), type);
+		return simpleBinaryCall(get(key), type);
 	}
 
 	@Override
 	public <V> V getSet(final String key, final V value){
-		return deserialize(getSet(key, serialize(value)));
+		return simpleStringCall(getSet(key, serialize(value)));
 	}
 
 	@Override
 	public <V> V getSet(final byte[] key, final V value){
-		return deserializeBytes(getSet(key, serializeAsBytes(value)));
+		return simpleBinaryCall(getSet(key, serializeAsBytes(value)));
 	}
 
 	@Override
 	public <V> V getSet(final String key, final V value, final Class<V> clazz){
-		return deserialize(getSet(key, serialize(value)), clazz);
+		return simpleStringCall(getSet(key, serialize(value)), clazz);
 	}
 
 	@Override
 	public <V> V getSet(final byte[] key, final V value, final Class<V> clazz){
-		return deserializeBytes(getSet(key, serializeAsBytes(value)), clazz);
+		return simpleBinaryCall(getSet(key, serializeAsBytes(value)), clazz);
 	}
 
 	@Override
 	public <V> V getSet(final String key, final V value, final TypeReference<V> type){
-		return deserialize(getSet(key, serialize(value)), type);
+		return simpleStringCall(getSet(key, serialize(value)), type);
 	}
 
 	@Override
 	public <V> V getSet(final byte[] key, final V value, final TypeReference<V> type){
-		return deserializeBytes(getSet(key, serializeAsBytes(value)), type);
+		return simpleBinaryCall(getSet(key, serializeAsBytes(value)), type);
 	}
 
 	@Override
 	public <V> List<V> mGetObject(final String... keys){
-		return deserialize(mGet(keys));
+		return listStringCall(mGet(keys));
 	}
 
 	@Override
 	public <V> List<V> mGetObject(final byte[]... keys){
-		return deserializeBytes(mGet(keys));
+		return listBinaryCall(mGet(keys));
 	}
 
 	@Override
 	public <V> List<V> mGetObject(final String[] keys, final Class<V> clazz){
-		return deserialize(mGet(keys), clazz);
+		return listStringCall(mGet(keys), clazz);
 	}
 
 	@Override
 	public <V> List<V> mGetObject(final byte[][] keys, final Class<V> clazz){
-		return deserializeBytes(mGet(keys), clazz);
+		return listBinaryCall(mGet(keys), clazz);
 	}
 
 	@Override
 	public <V> List<V> mGetObject(final String[] keys, final TypeReference<V> type){
-		return deserialize(mGet(keys), type);
+		return listStringCall(mGet(keys), type);
 	}
 
 	@Override
 	public <V> List<V> mGetObject(final byte[][] keys, final TypeReference<V> type){
-		return deserializeBytes(mGet(keys), type);
+		return listBinaryCall(mGet(keys), type);
 	}
 
 	@Override
@@ -994,6 +999,258 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 	@Override
 	public <V> Status setNx(final byte[] key, final V value){
 		return setNx(key, serializeAsBytes(value));
+	}
+
+	@Override
+	public List<Object> exec(){
+		List<Object> result = super.exec();
+		return Validate.isEmpty(result) ? result : deserializeMixedResults(result);
+	}
+
+	protected boolean isTransaction(){
+		return getConnection().isTransaction();
+	}
+
+	protected boolean isPipeline(){
+		return getConnection().isPipeline();
+	}
+
+	protected <V> V simpleStringCall(final String result){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringDeserialize<>(serializer), String.class));
+			return null;
+		}else{
+			return deserialize(result);
+		}
+	}
+
+	protected <V> V simpleBinaryCall(final byte[] result){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new BinaryDeserialize<>(serializer), byte[].class));
+			return null;
+		}else{
+			return deserializeBytes(result);
+		}
+	}
+
+	protected <V> V simpleStringCall(final String result, final Class<V> clazz){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringDeserialize<>(serializer, clazz), String.class));
+			return null;
+		}else{
+			return deserialize(result, clazz);
+		}
+	}
+
+	protected <V> V simpleBinaryCall(final byte[] result, final Class<V> clazz){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new BinaryDeserialize<>(serializer, clazz), byte[].class));
+			return null;
+		}else{
+			return deserializeBytes(result, clazz);
+		}
+	}
+
+	protected <V> V simpleStringCall(final String result, final TypeReference<V> type){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringDeserialize<>(serializer, type), String.class));
+			return null;
+		}else{
+			return deserialize(result, type);
+		}
+	}
+
+	protected <V> V simpleBinaryCall(final byte[] result, final TypeReference<V> type){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new BinaryDeserialize<>(serializer, type), byte[].class));
+			return null;
+		}else{
+			return deserializeBytes(result, type);
+		}
+	}
+
+	protected <V> Map<String, V> mapStringCall(final Map<String, String> result){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringMapDeserialize<>(serializer), Map.class));
+			return null;
+		}else{
+			return deserialize(result);
+		}
+	}
+
+	protected <V> Map<byte[], V> mapBinaryCall(final Map<byte[], byte[]> result){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new BinaryMapDeserialize<>(serializer), Map.class));
+			return null;
+		}else{
+			return deserializeBytes(result);
+		}
+	}
+
+	protected <V> Map<String, V> mapStringCall(final Map<String, String> result, final Class<V> clazz){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringMapDeserialize<>(serializer, clazz), Map.class));
+			return null;
+		}else{
+			return deserialize(result, clazz);
+		}
+	}
+
+	protected <V> Map<byte[], V> mapBinaryCall(final Map<byte[], byte[]> result, final Class<V> clazz){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new BinaryMapDeserialize<>(serializer, clazz), Map.class));
+			return null;
+		}else{
+			return deserializeBytes(result, clazz);
+		}
+	}
+
+	protected <V> Map<String, V> mapStringCall(final Map<String, String> result, final TypeReference<V> type){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringMapDeserialize<>(serializer, type), Map.class));
+			return null;
+		}else{
+			return deserialize(result, type);
+		}
+	}
+
+	protected <V> Map<byte[], V> mapBinaryCall(final Map<byte[], byte[]> result, final TypeReference<V> type){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new BinaryMapDeserialize<>(serializer, type), Map.class));
+			return null;
+		}else{
+			return deserializeBytes(result, type);
+		}
+	}
+
+	protected <V> List<V> listStringCall(final List<String> result){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringListDeserialize<>(serializer), List.class));
+			return null;
+		}else{
+			return deserialize(result);
+		}
+	}
+
+	protected <V> List<V> listBinaryCall(final List<byte[]> result){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new BinaryListDeserialize<>(serializer), List.class));
+			return null;
+		}else{
+			return deserializeBytes(result);
+		}
+	}
+
+	protected <V> List<V> listStringCall(final List<String> result, final Class<V> clazz){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringListDeserialize<>(serializer, clazz), List.class));
+			return null;
+		}else{
+			return deserialize(result, clazz);
+		}
+	}
+
+	protected <V> List<V> listBinaryCall(final List<byte[]> result, final Class<V> clazz){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringListDeserialize<>(serializer, clazz), List.class));
+			return null;
+		}else{
+			return deserializeBytes(result, clazz);
+		}
+	}
+
+	protected <V> List<V> listStringCall(final List<String> result, final TypeReference<V> type){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringListDeserialize<>(serializer, type), List.class));
+			return null;
+		}else{
+			return deserialize(result, type);
+		}
+	}
+
+	protected <V> List<V> listBinaryCall(final List<byte[]> result, final TypeReference<V> type){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new BinaryMapDeserialize<>(serializer, type), List.class));
+			return null;
+		}else{
+			return deserializeBytes(result, type);
+		}
+	}
+
+	protected <V> Set<V> setStringCall(final Set<String> result){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringSetDeserialize<>(serializer), Set.class));
+			return null;
+		}else{
+			return deserialize(result);
+		}
+	}
+
+	protected <V> Set<V> setBinaryCall(final Set<byte[]> result){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new BinarySetDeserialize<>(serializer), Set.class));
+			return null;
+		}else{
+			return deserializeBytes(result);
+		}
+	}
+
+	protected <V> Set<V> setStringCall(final Set<String> result, final Class<V> clazz){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringSetDeserialize<>(serializer, clazz), Set.class));
+			return null;
+		}else{
+			return deserialize(result, clazz);
+		}
+	}
+
+	protected <V> Set<V> setBinaryCall(final Set<byte[]> result, final Class<V> clazz){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringSetDeserialize<>(serializer, clazz), Set.class));
+			return null;
+		}else{
+			return deserializeBytes(result, clazz);
+		}
+	}
+
+	protected <V> Set<V> setStringCall(final Set<String> result, final TypeReference<V> type){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new StringSetDeserialize<>(serializer, type), Set.class));
+			return null;
+		}else{
+			return deserialize(result, type);
+		}
+	}
+
+	protected <V> Set<V> setBinaryCall(final Set<byte[]> result, final TypeReference<V> type){
+		if(isPipeline() || isTransaction()){
+			txResults.put(index - 1, new TxResult<>(new BinaryMapDeserialize<>(serializer, type), Set.class));
+			return null;
+		}else{
+			return deserializeBytes(result, type);
+		}
+	}
+
+	protected List<Object> deserializeMixedResults(List<Object> result){
+		for(int i = 0; i < result.size(); i++){
+			TxResult<?, ?> txResult = txResults.get(i + 1);
+
+			if(txResult == null){
+				continue;
+			}
+
+			Method method = ReflectUtils.findMethod(txResult.getConverter().getClass(), "convert",
+					txResult.getParamTypes());
+
+			if(method != null){
+				Object value = result.get(i);
+				Object ret = ReflectUtils.invokeMethod(method, txResult.getConverter(), value);
+
+				result.set(i, ret);
+			}
+		}
+
+		return result;
 	}
 
 }

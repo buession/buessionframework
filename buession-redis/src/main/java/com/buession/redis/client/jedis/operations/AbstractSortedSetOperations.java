@@ -26,7 +26,7 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.converter.SetConverter;
 import com.buession.core.utils.NumberUtils;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.SortedSetOperations;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.ScanResult;
@@ -58,7 +58,7 @@ public abstract class AbstractSortedSetOperations<C extends JedisCommands, P ext
 	protected final static Converter<redis.clients.jedis.Tuple, Tuple> TUPLE_EXPOSE_CONVERTER =
 			JedisConverters.tupleExposeConverter();
 
-	public AbstractSortedSetOperations(final RedisClient client){
+	public AbstractSortedSetOperations(final JedisRedisClient<C> client){
 		super(client);
 	}
 

@@ -24,14 +24,15 @@
  */
 package com.buession.redis.client.operations;
 
-import com.buession.core.converter.HashConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.ListConverter;
-import com.buession.redis.client.RedisClient;
+import com.buession.lang.Status;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.Converters;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedPipelineCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
+import org.springframework.core.convert.converter.Converter;
 
 /**
  * @author Yong.Teng
@@ -41,22 +42,20 @@ public abstract class AbstractRedisClientOperations implements RedisClientOperat
 	protected final static ListConverter<String, byte[]> STRING_TO_BINARY_LIST_CONVERTER =
 			Converters.stringToBinaryListConverter();
 
-	protected final static HashConverter<String, String, byte[], byte[]> STRING_TO_BINARY_HASH_CONVERTER =
+	protected final static MapConverter<String, String, byte[], byte[]> STRING_TO_BINARY_HASH_CONVERTER =
 			Converters.stringToBinaryHashConverter();
 
-	protected RedisClient client;
+	protected final static Converter<Long, Status> POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER =
+			Converters.positiveLongNumberToStatusConverter();
 
-	public AbstractRedisClientOperations(final RedisClient client){
-		this.client = client;
-	}
+	protected final static Converter<Boolean, Status> BOOLEAN_TO_STATUS_CONVERTER =
+			Converters.booleanToStatusConverter();
 
-	protected boolean isTransaction(){
-		return client.getConnection().isTransaction();
-	}
+	protected final static Converter<String, Status> OK_TO_STATUS_CONVERTER = Converters.okToStatusConverter();
 
-	protected boolean isPipeline(){
-		return client.getConnection().isPipeline();
-	}
+	protected abstract boolean isTransaction();
+
+	protected abstract boolean isPipeline();
 
 	protected void pipelineAndTransactionNotSupportedException(final ProtocolCommand command){
 		if(isPipeline()){

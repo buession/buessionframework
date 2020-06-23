@@ -25,8 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
-import com.buession.redis.core.convert.JedisConverters;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
@@ -36,7 +35,7 @@ import redis.clients.jedis.Pipeline;
  */
 public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Jedis, Pipeline> {
 
-	public JedisHyperLogLogOperations(final RedisClient client){
+	public JedisHyperLogLogOperations(final JedisRedisClient<Jedis> client){
 		super(client);
 	}
 
@@ -44,10 +43,10 @@ public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Je
 	public Status pfAdd(final byte[] key, final byte[]... elements){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfadd(key, elements),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().pfadd(key, elements),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0));
 		}
@@ -57,10 +56,10 @@ public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Je
 	public Status pfMerge(final String destKey, final String... keys){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfmerge(destKey, keys),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().pfmerge(destKey, keys),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.pfmerge(destKey, keys)));
 		}
@@ -70,10 +69,10 @@ public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Je
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfmerge(destKey, keys),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().pfmerge(destKey, keys),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.pfmerge(destKey, keys)));
 		}

@@ -24,10 +24,10 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.HashConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Geo;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.GeoOperations;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
@@ -48,10 +48,10 @@ import java.util.Map;
  */
 public abstract class AbstractGeoOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements GeoOperations {
 
-	protected final static HashConverter<String, Geo, String, GeoCoordinate> STRING_MAP_GEOMAP_JEDIS_CONVERTER =
+	protected final static MapConverter<String, Geo, String, GeoCoordinate> STRING_MAP_GEOMAP_JEDIS_CONVERTER =
 			JedisConverters.mapGeoMapJedisConverter();
 
-	protected final static HashConverter<byte[], Geo, byte[], GeoCoordinate> BINARY_MAP_GEOMAP_JEDIS_CONVERTER =
+	protected final static MapConverter<byte[], Geo, byte[], GeoCoordinate> BINARY_MAP_GEOMAP_JEDIS_CONVERTER =
 			JedisConverters.mapGeoMapJedisConverter();
 
 	protected final static Converter<GeoCommands.GeoRadiusArgument, GeoRadiusParam> GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER = JedisConverters.geoRadiusArgumentJedisConverter();
@@ -65,7 +65,7 @@ public abstract class AbstractGeoOperations<C extends JedisCommands, P extends P
 	protected final static Converter<GeoUnit, redis.clients.jedis.GeoUnit> GEO_UNIT_JEDIS_CONVERTER =
 			JedisConverters.geoUnitJedisConverter();
 
-	public AbstractGeoOperations(final RedisClient client){
+	public AbstractGeoOperations(final JedisRedisClient<C> client){
 		super(client);
 	}
 

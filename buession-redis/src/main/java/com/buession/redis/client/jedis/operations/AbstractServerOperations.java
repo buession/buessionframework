@@ -26,7 +26,7 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ServerOperations;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientUnblockType;
@@ -40,7 +40,7 @@ import redis.clients.jedis.commands.JedisCommands;
  */
 public abstract class AbstractServerOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements ServerOperations {
 
-	public AbstractServerOperations(final RedisClient client){
+	public AbstractServerOperations(final JedisRedisClient<C> client){
 		super(client);
 	}
 
@@ -69,8 +69,7 @@ public abstract class AbstractServerOperations<C extends JedisCommands, P extend
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type){
-		commandAllNotSupportedException(ProtocolCommand.CLIENT_UNBLOCK);
-		return null;
+		return clientUnblock(clientId);
 	}
 
 	@Override
@@ -115,14 +114,12 @@ public abstract class AbstractServerOperations<C extends JedisCommands, P extend
 
 	@Override
 	public Object pSync(final String masterRunId, final int offset){
-		commandAllNotSupportedException(ProtocolCommand.PSYNC);
-		return null;
+		return pSync(masterRunId, 1L);
 	}
 
 	@Override
 	public Object pSync(final byte[] masterRunId, final int offset){
-		commandAllNotSupportedException(ProtocolCommand.PSYNC);
-		return null;
+		return pSync(masterRunId, 1L);
 	}
 
 	@Override

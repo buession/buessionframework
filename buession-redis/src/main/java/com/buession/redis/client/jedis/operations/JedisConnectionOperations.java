@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.utils.ReturnUtils;
@@ -38,7 +38,7 @@ import redis.clients.jedis.Pipeline;
  */
 public class JedisConnectionOperations extends AbstractConnectionOperations<Jedis, Pipeline> {
 
-	public JedisConnectionOperations(final RedisClient client){
+	public JedisConnectionOperations(final JedisRedisClient<Jedis> client){
 		super(client);
 	}
 
@@ -85,11 +85,9 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 	@Override
 	public Status select(final int db){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().select(db),
-					JedisConverters.okToStatusConverter()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().select(db), OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().select(db),
-					JedisConverters.okToStatusConverter()));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().select(db), OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.select(db)));
 		}
@@ -98,11 +96,10 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 	@Override
 	public Status swapdb(final int db1, final int db2){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().swapDB(db1, db2),
-					JedisConverters.okToStatusConverter()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().swapDB(db1, db2), OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().swapDB(db1, db2),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.swapDB(db1, db2)));
 		}

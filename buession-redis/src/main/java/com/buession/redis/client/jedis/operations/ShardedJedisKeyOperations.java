@@ -25,8 +25,8 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.jedis.JedisClientUtils;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
@@ -46,7 +46,7 @@ import java.util.Set;
  */
 public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedis, ShardedJedisPipeline> {
 
-	public ShardedJedisKeyOperations(final RedisClient client){
+	public ShardedJedisKeyOperations(final JedisRedisClient<ShardedJedis> client){
 		super(client);
 	}
 
@@ -140,10 +140,10 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().migrate(host, port, key, db, timeout),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(JedisClientUtils.getShard(cmd, key).migrate(host, port, key,
 					db, timeout)));
@@ -154,10 +154,10 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().migrate(host, port, key, db, timeout),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(JedisClientUtils.getShard(cmd, key).migrate(host, port, key,
 					db, timeout)));
@@ -171,10 +171,10 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().migrate(host, port, db, timeout,
-					migrateParams, key), JedisConverters.okToStatusConverter()));
+					migrateParams, key), OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(JedisClientUtils.getShard(cmd, key).migrate(host, port, db,
 					timeout, migrateParams, key)));
@@ -188,10 +188,10 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().migrate(host, port, db, timeout,
-					migrateParams, key), JedisConverters.okToStatusConverter()));
+					migrateParams, key), OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(JedisClientUtils.getShard(cmd, key).migrate(host, port, db,
 					timeout, migrateParams, key)));
@@ -202,10 +202,10 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 	public Status move(final byte[] key, final int db){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().move(key, db),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().move(key, db),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.move(key, db) > 0));
 		}
@@ -227,10 +227,10 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 	public Status persist(final byte[] key){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().persist(key),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().persist(key),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.persist(key) > 0));
 		}
@@ -307,10 +307,10 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().restore(key, ttl, serializedValue),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().restore(key, ttl, serializedValue),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.restore(key, ttl, serializedValue)));
 		}

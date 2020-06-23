@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.pubsub.jedis.DefaultBinaryJedisPubSub;
@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class JedisPubSubOperations extends AbstractPubSubOperations<Jedis, Pipeline> {
 
-	public JedisPubSubOperations(final RedisClient client){
+	public JedisPubSubOperations(final JedisRedisClient<Jedis> client){
 		super(client);
 	}
 

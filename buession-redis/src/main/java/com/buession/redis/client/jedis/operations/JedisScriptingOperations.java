@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  */
 public class JedisScriptingOperations extends AbstractScriptingOperations<Jedis, Pipeline> {
 
-	public JedisScriptingOperations(final RedisClient client){
+	public JedisScriptingOperations(final JedisRedisClient<Jedis> client){
 		super(client);
 	}
 

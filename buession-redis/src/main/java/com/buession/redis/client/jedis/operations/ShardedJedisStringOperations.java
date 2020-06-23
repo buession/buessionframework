@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.JedisConverters;
@@ -44,7 +44,7 @@ import java.util.Map;
  */
 public class ShardedJedisStringOperations extends AbstractStringOperations<ShardedJedis, ShardedJedisPipeline> {
 
-	public ShardedJedisStringOperations(RedisClient client){
+	public ShardedJedisStringOperations(final JedisRedisClient<ShardedJedis> client){
 		super(client);
 	}
 
@@ -165,10 +165,10 @@ public class ShardedJedisStringOperations extends AbstractStringOperations<Shard
 	public Status getBit(final byte[] key, final long offset){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().getbit(key, offset),
-					JedisConverters.booleanToStatusConverter()));
+					BOOLEAN_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().getbit(key, offset),
-					JedisConverters.booleanToStatusConverter()));
+					BOOLEAN_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.getbit(key, offset)));
 		}
@@ -257,10 +257,10 @@ public class ShardedJedisStringOperations extends AbstractStringOperations<Shard
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().psetex(key, lifetime, value),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().psetex(key, lifetime, value),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.psetex(key, lifetime, value)));
 		}
@@ -283,10 +283,10 @@ public class ShardedJedisStringOperations extends AbstractStringOperations<Shard
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().set(key, value, setParams),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().set(key, value, setParams),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value, setParams)));
 		}
@@ -296,10 +296,10 @@ public class ShardedJedisStringOperations extends AbstractStringOperations<Shard
 	public Status setBit(final byte[] key, final long offset, final byte[] value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().setbit(key, offset, value),
-					JedisConverters.booleanToStatusConverter()));
+					BOOLEAN_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().setbit(key, offset, value),
-					JedisConverters.booleanToStatusConverter()));
+					BOOLEAN_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)));
 		}
@@ -309,10 +309,10 @@ public class ShardedJedisStringOperations extends AbstractStringOperations<Shard
 	public Status setBit(final byte[] key, final long offset, final boolean value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().setbit(SafeEncoder.encode(key), offset, value),
-					JedisConverters.booleanToStatusConverter()));
+					BOOLEAN_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().setbit(SafeEncoder.encode(key), offset,
-					value), JedisConverters.booleanToStatusConverter()));
+					value), BOOLEAN_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.setbit(key, offset, value)));
 		}
@@ -322,10 +322,10 @@ public class ShardedJedisStringOperations extends AbstractStringOperations<Shard
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().setex(key, lifetime, value),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().setex(key, lifetime, value),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.setex(key, lifetime, value)));
 		}
@@ -335,10 +335,10 @@ public class ShardedJedisStringOperations extends AbstractStringOperations<Shard
 	public Status setNx(final byte[] key, final byte[] value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().setnx(key, value),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().setnx(key, value),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.setnx(key, value) > 0));
 		}

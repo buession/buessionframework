@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
@@ -43,7 +43,7 @@ import java.util.Set;
  */
 public class ShardedJedisSortedSetOperations extends AbstractSortedSetOperations<ShardedJedis, ShardedJedisPipeline> {
 
-	public ShardedJedisSortedSetOperations(final RedisClient client){
+	public ShardedJedisSortedSetOperations(final JedisRedisClient<ShardedJedis> client){
 		super(client);
 	}
 

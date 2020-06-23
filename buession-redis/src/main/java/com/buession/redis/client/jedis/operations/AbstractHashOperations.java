@@ -26,14 +26,12 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.HashOperations;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.core.jedis.JedisScanParams;
-import com.buession.redis.exception.NotSupportedPipelineCommandException;
-import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.utils.ReturnUtils;
 import org.springframework.core.convert.converter.Converter;
 import redis.clients.jedis.PipelineBase;
@@ -54,7 +52,7 @@ public abstract class AbstractHashOperations<C extends JedisCommands, P extends 
 	protected final static Converter<redis.clients.jedis.ScanResult<Map.Entry<byte[], byte[]>>, ScanResult<Map<byte[],
 			byte[]>>> BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER = JedisConverters.mapScanResultExposeConverter();
 
-	public AbstractHashOperations(final RedisClient client){
+	public AbstractHashOperations(final JedisRedisClient<C> client){
 		super(client);
 	}
 
@@ -200,11 +198,10 @@ public abstract class AbstractHashOperations<C extends JedisCommands, P extends 
 	@Override
 	public Status hMSet(final String key, final Map<String, String> data){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmset(key, data),
-					JedisConverters.okToStatusConverter()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmset(key, data), OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().hmset(key, data),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)));
 		}
@@ -232,13 +229,8 @@ public abstract class AbstractHashOperations<C extends JedisCommands, P extends 
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(ProtocolCommand.HSCAN);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.HSCAN);
-		}else{
-			return execute((cmd)->STRING_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor)));
-		}
+		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
+		return execute((cmd)->STRING_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor)));
 	}
 
 	@Override
@@ -331,10 +323,10 @@ public abstract class AbstractHashOperations<C extends JedisCommands, P extends 
 	public Status hSet(final String key, final String field, final String value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.hset(key, field, value) > 0));
 		}
@@ -344,10 +336,10 @@ public abstract class AbstractHashOperations<C extends JedisCommands, P extends 
 	public Status hSetNx(final String key, final String field, final String value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.hsetnx(key, field, value) > 0));
 		}

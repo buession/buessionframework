@@ -25,8 +25,8 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.jedis.JedisClientUtils;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.Info;
 import com.buession.redis.core.InfoSection;
@@ -54,7 +54,7 @@ import java.util.List;
  */
 public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipeline> {
 
-	public JedisServerOperations(final RedisClient client){
+	public JedisServerOperations(final JedisRedisClient<Jedis> client){
 		super(client);
 	}
 
@@ -162,10 +162,10 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 	public Status configSet(final String parameter, final String value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().configSet(parameter, value),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().configSet(parameter, value),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.configSet(parameter, value)));
 		}
@@ -175,10 +175,10 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 	public Status configSet(final byte[] parameter, final byte[] value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().configSet(SafeEncoder.encode(parameter),
-					SafeEncoder.encode(value)), JedisConverters.okToStatusConverter()));
+					SafeEncoder.encode(value)), OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().configSet(SafeEncoder.encode(parameter),
-					SafeEncoder.encode(value)), JedisConverters.okToStatusConverter()));
+					SafeEncoder.encode(value)), OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.configSet(parameter, value)));
 		}
@@ -216,11 +216,9 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 	@Override
 	public Status flushAll(){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().flushAll(),
-					JedisConverters.okToStatusConverter()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().flushAll(), OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().flushAll(),
-					JedisConverters.okToStatusConverter()));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().flushAll(), OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.flushAll()));
 		}
@@ -229,11 +227,9 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 	@Override
 	public Status flushDb(){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().flushDB(),
-					JedisConverters.okToStatusConverter()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().flushDB(), OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().flushDB(),
-					JedisConverters.okToStatusConverter()));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().flushDB(), OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.flushDB()));
 		}
@@ -322,10 +318,9 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 	@Override
 	public Status save(){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().save(), JedisConverters.okToStatusConverter()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().save(), OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().save(),
-					JedisConverters.okToStatusConverter()));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().save(), OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.save()));
 		}

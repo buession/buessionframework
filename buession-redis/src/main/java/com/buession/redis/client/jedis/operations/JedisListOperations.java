@@ -25,9 +25,8 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.ListPosition;
-import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
@@ -39,7 +38,7 @@ import java.util.List;
  */
 public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline> {
 
-	public JedisListOperations(final RedisClient client){
+	public JedisListOperations(final JedisRedisClient<Jedis> client){
 		super(client);
 	}
 
@@ -205,10 +204,10 @@ public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline>
 	public Status lSet(final byte[] key, final long index, final byte[] value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().lset(key, index, value),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().lset(key, index, value),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.lset(key, index, value)));
 		}
@@ -218,10 +217,10 @@ public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline>
 	public Status lTrim(final byte[] key, final long start, final long end){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().ltrim(key, start, end),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().ltrim(key, start, end),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.ltrim(key, start, end)));
 		}

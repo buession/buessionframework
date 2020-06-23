@@ -25,11 +25,19 @@
 package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.RedisClient;
+import com.buession.redis.core.FutureResult;
+import redis.clients.jedis.Response;
 import redis.clients.jedis.commands.JedisCommands;
+
+import java.util.Queue;
 
 /**
  * @author Yong.Teng
  */
 public interface JedisRedisClient<C extends JedisCommands> extends RedisClient {
+
+	Queue<FutureResult<Response<?>>> getTxResults();
+
+	void setTxResults(Queue<FutureResult<Response<?>>> txResults);
 
 }

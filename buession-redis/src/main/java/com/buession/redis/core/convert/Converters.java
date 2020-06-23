@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.convert;
 
-import com.buession.core.converter.HashConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.utils.ReturnUtils;
@@ -44,8 +44,8 @@ public abstract class Converters {
 		return (value)->SafeEncoder.encode(value);
 	}
 
-	public final static HashConverter<String, String, byte[], byte[]> stringToBinaryHashConverter(){
-		return new HashConverter<>((key)->SafeEncoder.encode(key), (value)->SafeEncoder.encode(value));
+	public final static MapConverter<String, String, byte[], byte[]> stringToBinaryHashConverter(){
+		return new MapConverter<>((key)->SafeEncoder.encode(key), (value)->SafeEncoder.encode(value));
 	}
 
 	public final static ListConverter<String, byte[]> stringToBinaryListConverter(){

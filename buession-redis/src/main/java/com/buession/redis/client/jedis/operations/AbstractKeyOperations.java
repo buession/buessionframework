@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.KeyOperations;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.Type;
@@ -51,7 +51,7 @@ public abstract class AbstractKeyOperations<C extends JedisCommands, P extends P
 	protected final static Converter<MigrateOperation, MigrateParams> MIGRATE_OPERATION_JEDIS_CONVERTER =
 			JedisConverters.migrateOperationJedisConverter();
 
-	public AbstractKeyOperations(final RedisClient client){
+	public AbstractKeyOperations(final JedisRedisClient<C> client){
 		super(client);
 	}
 
@@ -107,10 +107,10 @@ public abstract class AbstractKeyOperations<C extends JedisCommands, P extends P
 	public Status move(final String key, final int db){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().move(key, db),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().move(key, db),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.move(key, db) > 0));
 		}
@@ -120,10 +120,10 @@ public abstract class AbstractKeyOperations<C extends JedisCommands, P extends P
 	public Status persist(final String key){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().persist(key),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().persist(key),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.persist(key) > 0));
 		}
@@ -172,10 +172,10 @@ public abstract class AbstractKeyOperations<C extends JedisCommands, P extends P
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().restore(key, ttl, serializedEncodeValue),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().restore(key, ttl, serializedEncodeValue),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.restore(key, ttl, serializedEncodeValue)));
 		}

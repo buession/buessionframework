@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.transaction.Transaction;
 import redis.clients.jedis.ShardedJedis;
@@ -39,7 +39,7 @@ import java.util.List;
 public class ShardedJedisTransactionOperations extends AbstractTransactionOperations<ShardedJedis,
 		ShardedJedisPipeline> {
 
-	public ShardedJedisTransactionOperations(final RedisClient client){
+	public ShardedJedisTransactionOperations(final JedisRedisClient<ShardedJedis> client){
 		super(client);
 	}
 

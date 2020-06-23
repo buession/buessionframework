@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.utils.NumberUtils;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.SetOperations;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -41,7 +41,7 @@ import java.util.Set;
  */
 public abstract class AbstractSetOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements SetOperations {
 
-	public AbstractSetOperations(final RedisClient client){
+	public AbstractSetOperations(final JedisRedisClient<C> client){
 		super(client);
 	}
 

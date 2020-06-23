@@ -25,9 +25,8 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.HyperLogLogOperations;
-import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
@@ -37,7 +36,7 @@ import redis.clients.jedis.commands.JedisCommands;
  */
 public abstract class AbstractHyperLogLogOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements HyperLogLogOperations {
 
-	public AbstractHyperLogLogOperations(final RedisClient client){
+	public AbstractHyperLogLogOperations(final JedisRedisClient<C> client){
 		super(client);
 	}
 
@@ -45,10 +44,10 @@ public abstract class AbstractHyperLogLogOperations<C extends JedisCommands, P e
 	public Status pfAdd(final String key, final String... elements){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfadd(key, elements),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().pfadd(key, elements),
-					JedisConverters.positiveLongNumberToStatusConverter()));
+					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0));
 		}

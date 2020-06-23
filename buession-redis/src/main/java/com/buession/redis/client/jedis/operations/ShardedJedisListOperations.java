@@ -25,10 +25,9 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
@@ -40,7 +39,7 @@ import java.util.List;
  */
 public class ShardedJedisListOperations extends AbstractListOperations<ShardedJedis, ShardedJedisPipeline> {
 
-	public ShardedJedisListOperations(final RedisClient client){
+	public ShardedJedisListOperations(final JedisRedisClient<ShardedJedis> client){
 		super(client);
 	}
 
@@ -174,10 +173,10 @@ public class ShardedJedisListOperations extends AbstractListOperations<ShardedJe
 	public Status lSet(final byte[] key, final long index, final byte[] value){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().lset(key, index, value),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().lset(key, index, value),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.lset(key, index, value)));
 		}
@@ -187,10 +186,10 @@ public class ShardedJedisListOperations extends AbstractListOperations<ShardedJe
 	public Status lTrim(final byte[] key, final long start, final long end){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().ltrim(key, start, end),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().ltrim(key, start, end),
-					JedisConverters.okToStatusConverter()));
+					OK_TO_STATUS_CONVERTER));
 		}else{
 			return execute((cmd)->ReturnUtils.statusForOK(cmd.ltrim(key, start, end)));
 		}

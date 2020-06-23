@@ -25,6 +25,7 @@
 package com.buession.redis;
 
 import com.buession.redis.core.Info;
+import com.buession.redis.core.Server;
 import com.buession.redis.transaction.Transaction;
 import org.junit.Test;
 
@@ -60,8 +61,10 @@ public class JedisClientTest extends AbstractJedisRedisTest {
 		RedisTemplate redisTemplate = getRedisTemplate();
 
 		Transaction transaction = redisTemplate.multi();
+		redisTemplate.set("server", new Server());
 		redisTemplate.set("t1", "T1222333");
 		redisTemplate.type("test");
+		redisTemplate.getObject("server", Server.class);
 		List<Object> result = redisTemplate.exec();
 
 		if(result != null){
