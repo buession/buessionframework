@@ -27,6 +27,28 @@ package com.buession.common;
 /**
  * @author Yong.Teng
  */
-public class AbstractUserInfoURI {
+public abstract class AbstractUserInfoURI extends AbstractURI {
+
+	private static final long serialVersionUID = -2088413448847123378L;
+
+	protected String username;
+
+	protected String password;
+
+	public String getUsername(){
+		return username;
+	}
+
+	public void setUsername(String username){
+		this.username = username;
+	}
+
+	public String getPassword(){
+		return password;
+	}
+
+	public void setPassword(String password){
+		this.password = password;
+	}
 
 }

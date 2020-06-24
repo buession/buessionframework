@@ -24,9 +24,27 @@
  */
 package com.buession.common;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * @author Yong.Teng
  */
-public class AbstractUserInfoURIBuilder {
+public abstract class AbstractUserInfoURIBuilder extends AbstractURIBuilder {
+
+	protected String password;
+
+	protected AbstractUserInfoURIBuilder(){
+		super();
+	}
+
+	public AbstractUserInfoURIBuilder password(final String password){
+		this.password = password;
+		return this;
+	}
+
+	public AbstractUserInfoURIBuilder password(final byte[] password){
+		this.password = new String(password, StandardCharsets.UTF_8);
+		return this;
+	}
 
 }

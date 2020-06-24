@@ -24,9 +24,64 @@
  */
 package com.buession.common;
 
+import java.io.Serializable;
+import java.util.Map;
+
 /**
  * @author Yong.Teng
  */
-public class AbstractURI {
+public abstract class AbstractURI implements Serializable {
+
+	private static final long serialVersionUID = -1695251022185424158L;
+
+	protected String host;
+
+	protected int port;
+
+	protected String path;
+
+	protected Map<String, Object> parameters;
+
+	protected boolean isSsl;
+
+	public String getHost(){
+		return host;
+	}
+
+	public void setHost(String host){
+		this.host = host;
+	}
+
+	public int getPort(){
+		return port;
+	}
+
+	public void setPort(int port){
+		this.port = port;
+	}
+
+	public String getPath(){
+		return path;
+	}
+
+	public void setPath(String path){
+		this.path = path;
+	}
+
+	public Map<String, Object> getParameters(){
+		return parameters;
+	}
+
+	public void setParameters(Map<String, Object> parameters){
+		this.parameters = parameters;
+	}
+
+	public boolean isSsl(){
+		return isSsl;
+	}
+
+	public void setSsl(boolean ssl){
+		isSsl = ssl;
+	}
 
 }

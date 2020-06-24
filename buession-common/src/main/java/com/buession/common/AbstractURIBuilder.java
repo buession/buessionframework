@@ -24,9 +24,72 @@
  */
 package com.buession.common;
 
+import com.buession.core.utils.Assert;
+import com.buession.core.validator.Validate;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
+
 /**
  * @author Yong.Teng
  */
-public class AbstractURIBuilder {
+public abstract class AbstractURIBuilder {
+
+	protected String host;
+
+	protected int port;
+
+	protected String queryString;
+
+	protected boolean isSsl;
+
+	protected AbstractURIBuilder(){
+	}
+
+	public AbstractURIBuilder host(final String host){
+		Assert.isBlank(host, "Host must not be null or empty.");
+		this.host = host;
+		return this;
+	}
+
+	public AbstractURIBuilder port(final int port){
+		Assert.isTrue(Validate.isValidPort(port), String.format("Port out of range: %s", port));
+		this.port = port;
+		return this;
+	}
+
+	public AbstractURIBuilder hostAndPort(final String host, final int port){
+		Assert.isBlank(host, "Host must not be null or empty.");
+		Assert.isTrue(Validate.isValidPort(port), String.format("Port out of range: %s", port));
+
+		this.host = host;
+		this.port = port;
+
+		return this;
+	}
+
+	public AbstractURIBuilder queryString(final String queryString){
+		this.queryString = queryString;
+		return this;
+	}
+
+	protected Map<String, String> parseParameters(final String queryString){
+		if(Validate.hasText(queryString) == false){
+			return null;
+		}
+
+		StringTokenizer tokenizer = new StringTokenizer(queryString, "&");
+		Map<String, String> result = new LinkedHashMap<>(16, 0.8F);
+
+		while(tokenizer.hasMoreTokens()){
+			String queryParam = tokenizer.nextToken();
+			int ei = queryParam.indexOf('=');
+
+			result.put(queryParam.substring(0, ei), queryParam.substring(ei));
+		}
+
+		return result;
+	}
 
 }
