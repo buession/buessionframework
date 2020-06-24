@@ -48,7 +48,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 		HyperLogLogOperations, KeyOperations, ListOperations, PubSubOperations, ScriptingOperations, ServerOperations,
 		SetOperations, SortedSetOperations, StringOperations, TransactionOperations {
 
-	private Map<Integer, TxResult> txResults = new LinkedHashMap<>(16, 0.8F);
+	private ThreadLocal<Map<Integer, TxResult>> txResults = new ThreadLocal<>();
 
 	/**
 	 * 构造函数
@@ -1002,22 +1002,32 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 	}
 
 	@Override
+	public void discard(){
+		super.discard();
+
+		if(isPipeline() || isTransaction()){
+			index.remove();
+			txResults.remove();
+		}
+	}
+
+	@Override
 	public List<Object> exec(){
-		List<Object> result = super.exec();
-		return Validate.isEmpty(result) ? result : deserializeMixedResults(result);
-	}
+		List<Object> result = isPipeline() ? getConnection().getPipeline().syncAndReturnAll() : super.exec();
 
-	protected boolean isTransaction(){
-		return getConnection().isTransaction();
-	}
+		result = Validate.isEmpty(result) ? result : deserializeMixedResults(result);
 
-	protected boolean isPipeline(){
-		return getConnection().isPipeline();
+		if(isPipeline() || isTransaction()){
+			index.remove();
+			txResults.remove();
+		}
+
+		return result;
 	}
 
 	protected <V> V simpleStringCall(final String result){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringDeserialize<>(serializer), String.class));
+			getTxResults().put(index.get(), new TxResult<>(new StringDeserialize<>(serializer), String.class));
 			return null;
 		}else{
 			return deserialize(result);
@@ -1026,7 +1036,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> V simpleBinaryCall(final byte[] result){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new BinaryDeserialize<>(serializer), byte[].class));
+			getTxResults().put(index.get(), new TxResult<>(new BinaryDeserialize<>(serializer), byte[].class));
 			return null;
 		}else{
 			return deserializeBytes(result);
@@ -1035,7 +1045,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> V simpleStringCall(final String result, final Class<V> clazz){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringDeserialize<>(serializer, clazz), String.class));
+			getTxResults().put(index.get(), new TxResult<>(new StringDeserialize<>(serializer, clazz), String.class));
 			return null;
 		}else{
 			return deserialize(result, clazz);
@@ -1044,7 +1054,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> V simpleBinaryCall(final byte[] result, final Class<V> clazz){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new BinaryDeserialize<>(serializer, clazz), byte[].class));
+			getTxResults().put(index.get(), new TxResult<>(new BinaryDeserialize<>(serializer, clazz), byte[].class));
 			return null;
 		}else{
 			return deserializeBytes(result, clazz);
@@ -1053,7 +1063,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> V simpleStringCall(final String result, final TypeReference<V> type){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringDeserialize<>(serializer, type), String.class));
+			getTxResults().put(index.get(), new TxResult<>(new StringDeserialize<>(serializer, type), String.class));
 			return null;
 		}else{
 			return deserialize(result, type);
@@ -1062,7 +1072,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> V simpleBinaryCall(final byte[] result, final TypeReference<V> type){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new BinaryDeserialize<>(serializer, type), byte[].class));
+			getTxResults().put(index.get(), new TxResult<>(new BinaryDeserialize<>(serializer, type), byte[].class));
 			return null;
 		}else{
 			return deserializeBytes(result, type);
@@ -1071,7 +1081,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> Map<String, V> mapStringCall(final Map<String, String> result){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringMapDeserialize<>(serializer), Map.class));
+			getTxResults().put(index.get(), new TxResult<>(new StringMapDeserialize<>(serializer), Map.class));
 			return null;
 		}else{
 			return deserialize(result);
@@ -1080,7 +1090,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> Map<byte[], V> mapBinaryCall(final Map<byte[], byte[]> result){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new BinaryMapDeserialize<>(serializer), Map.class));
+			getTxResults().put(index.get(), new TxResult<>(new BinaryMapDeserialize<>(serializer), Map.class));
 			return null;
 		}else{
 			return deserializeBytes(result);
@@ -1089,7 +1099,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> Map<String, V> mapStringCall(final Map<String, String> result, final Class<V> clazz){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringMapDeserialize<>(serializer, clazz), Map.class));
+			getTxResults().put(index.get(), new TxResult<>(new StringMapDeserialize<>(serializer, clazz), Map.class));
 			return null;
 		}else{
 			return deserialize(result, clazz);
@@ -1098,7 +1108,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> Map<byte[], V> mapBinaryCall(final Map<byte[], byte[]> result, final Class<V> clazz){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new BinaryMapDeserialize<>(serializer, clazz), Map.class));
+			getTxResults().put(index.get(), new TxResult<>(new BinaryMapDeserialize<>(serializer, clazz), Map.class));
 			return null;
 		}else{
 			return deserializeBytes(result, clazz);
@@ -1107,7 +1117,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> Map<String, V> mapStringCall(final Map<String, String> result, final TypeReference<V> type){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringMapDeserialize<>(serializer, type), Map.class));
+			getTxResults().put(index.get(), new TxResult<>(new StringMapDeserialize<>(serializer, type), Map.class));
 			return null;
 		}else{
 			return deserialize(result, type);
@@ -1116,7 +1126,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> Map<byte[], V> mapBinaryCall(final Map<byte[], byte[]> result, final TypeReference<V> type){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new BinaryMapDeserialize<>(serializer, type), Map.class));
+			getTxResults().put(index.get(), new TxResult<>(new BinaryMapDeserialize<>(serializer, type), Map.class));
 			return null;
 		}else{
 			return deserializeBytes(result, type);
@@ -1125,7 +1135,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> List<V> listStringCall(final List<String> result){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringListDeserialize<>(serializer), List.class));
+			getTxResults().put(index.get(), new TxResult<>(new StringListDeserialize<>(serializer), List.class));
 			return null;
 		}else{
 			return deserialize(result);
@@ -1134,7 +1144,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> List<V> listBinaryCall(final List<byte[]> result){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new BinaryListDeserialize<>(serializer), List.class));
+			getTxResults().put(index.get(), new TxResult<>(new BinaryListDeserialize<>(serializer), List.class));
 			return null;
 		}else{
 			return deserializeBytes(result);
@@ -1143,7 +1153,8 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> List<V> listStringCall(final List<String> result, final Class<V> clazz){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringListDeserialize<>(serializer, clazz), List.class));
+			getTxResults().put(index.get(), new TxResult<>(new StringListDeserialize<>(serializer, clazz),
+					List.class));
 			return null;
 		}else{
 			return deserialize(result, clazz);
@@ -1152,7 +1163,8 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> List<V> listBinaryCall(final List<byte[]> result, final Class<V> clazz){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringListDeserialize<>(serializer, clazz), List.class));
+			getTxResults().put(index.get(), new TxResult<>(new StringListDeserialize<>(serializer, clazz),
+					List.class));
 			return null;
 		}else{
 			return deserializeBytes(result, clazz);
@@ -1161,7 +1173,8 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> List<V> listStringCall(final List<String> result, final TypeReference<V> type){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringListDeserialize<>(serializer, type), List.class));
+			getTxResults().put(index.get() - 1, new TxResult<>(new StringListDeserialize<>(serializer, type),
+					List.class));
 			return null;
 		}else{
 			return deserialize(result, type);
@@ -1170,7 +1183,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> List<V> listBinaryCall(final List<byte[]> result, final TypeReference<V> type){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new BinaryMapDeserialize<>(serializer, type), List.class));
+			getTxResults().put(index.get(), new TxResult<>(new BinaryMapDeserialize<>(serializer, type), List.class));
 			return null;
 		}else{
 			return deserializeBytes(result, type);
@@ -1179,7 +1192,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> Set<V> setStringCall(final Set<String> result){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringSetDeserialize<>(serializer), Set.class));
+			getTxResults().put(index.get(), new TxResult<>(new StringSetDeserialize<>(serializer), Set.class));
 			return null;
 		}else{
 			return deserialize(result);
@@ -1188,7 +1201,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> Set<V> setBinaryCall(final Set<byte[]> result){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new BinarySetDeserialize<>(serializer), Set.class));
+			getTxResults().put(index.get(), new TxResult<>(new BinarySetDeserialize<>(serializer), Set.class));
 			return null;
 		}else{
 			return deserializeBytes(result);
@@ -1197,7 +1210,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> Set<V> setStringCall(final Set<String> result, final Class<V> clazz){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringSetDeserialize<>(serializer, clazz), Set.class));
+			getTxResults().put(index.get(), new TxResult<>(new StringSetDeserialize<>(serializer, clazz), Set.class));
 			return null;
 		}else{
 			return deserialize(result, clazz);
@@ -1206,7 +1219,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> Set<V> setBinaryCall(final Set<byte[]> result, final Class<V> clazz){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringSetDeserialize<>(serializer, clazz), Set.class));
+			getTxResults().put(index.get(), new TxResult<>(new StringSetDeserialize<>(serializer, clazz), Set.class));
 			return null;
 		}else{
 			return deserializeBytes(result, clazz);
@@ -1215,7 +1228,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> Set<V> setStringCall(final Set<String> result, final TypeReference<V> type){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new StringSetDeserialize<>(serializer, type), Set.class));
+			getTxResults().put(index.get(), new TxResult<>(new StringSetDeserialize<>(serializer, type), Set.class));
 			return null;
 		}else{
 			return deserialize(result, type);
@@ -1224,16 +1237,27 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	protected <V> Set<V> setBinaryCall(final Set<byte[]> result, final TypeReference<V> type){
 		if(isPipeline() || isTransaction()){
-			txResults.put(index - 1, new TxResult<>(new BinaryMapDeserialize<>(serializer, type), Set.class));
+			getTxResults().put(index.get(), new TxResult<>(new BinaryMapDeserialize<>(serializer, type), Set.class));
 			return null;
 		}else{
 			return deserializeBytes(result, type);
 		}
 	}
 
+	protected Map<Integer, TxResult> getTxResults(){
+		Map<Integer, TxResult> txResult = txResults.get();
+
+		if(txResult == null){
+			txResult = new LinkedHashMap<>(16, 0.8F);
+			txResults.set(txResult);
+		}
+
+		return txResult;
+	}
+
 	protected List<Object> deserializeMixedResults(List<Object> result){
 		for(int i = 0; i < result.size(); i++){
-			TxResult<?, ?> txResult = txResults.get(i + 1);
+			TxResult<?, ?> txResult = txResults.get().get(i + 1);
 
 			if(txResult == null){
 				continue;

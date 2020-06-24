@@ -25,6 +25,9 @@
 package com.buession.redis.pipeline.jedis;
 
 import com.buession.redis.pipeline.Pipeline;
+import redis.clients.jedis.ShardedJedisPipeline;
+
+import java.util.List;
 
 /**
  * @author Yong.Teng
@@ -39,6 +42,26 @@ public class JedisPipeline<T extends redis.clients.jedis.PipelineBase> implement
 
 	public T primitive(){
 		return pipeline;
+	}
+
+	@Override
+	public void sync(){
+		if(pipeline instanceof redis.clients.jedis.Pipeline){
+			((redis.clients.jedis.Pipeline) pipeline).sync();
+		}else if(pipeline instanceof ShardedJedisPipeline){
+			((ShardedJedisPipeline) pipeline).sync();
+		}
+	}
+
+	@Override
+	public List<Object> syncAndReturnAll(){
+		if(pipeline instanceof redis.clients.jedis.Pipeline){
+			return ((redis.clients.jedis.Pipeline) pipeline).syncAndReturnAll();
+		}else if(pipeline instanceof ShardedJedisPipeline){
+			return ((ShardedJedisPipeline) pipeline).syncAndReturnAll();
+		}else{
+			return null;
+		}
 	}
 
 }

@@ -38,7 +38,6 @@ public class CommandArguments {
 	private Map<String, Object> parameters = new LinkedHashMap<>();
 
 	private CommandArguments(){
-
 	}
 
 	public final static CommandArguments getInstance(){

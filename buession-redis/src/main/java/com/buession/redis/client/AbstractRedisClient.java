@@ -109,7 +109,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public Pipeline pipeline(){
-		return connection.getPipeline();
+		return execute((cmd)->connection.getPipeline());
 	}
 
 	@Override

@@ -43,6 +43,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.buession</groupId>
+			<artifactId>buession-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.buession</groupId>
 			<artifactId>buession-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>

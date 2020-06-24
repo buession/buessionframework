@@ -26,10 +26,14 @@ package com.buession.redis;
 
 import com.buession.redis.core.Info;
 import com.buession.redis.core.Server;
+import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * @author Yong.Teng
@@ -61,10 +65,12 @@ public class JedisClientTest extends AbstractJedisRedisTest {
 		RedisTemplate redisTemplate = getRedisTemplate();
 
 		Transaction transaction = redisTemplate.multi();
-		redisTemplate.set("server", new Server());
-		redisTemplate.set("t1", "T1222333");
-		redisTemplate.type("test");
+		//redisTemplate.set("server", new Server());
+		//redisTemplate.set("server2", new Server());
+		//redisTemplate.set("t1", "T1222333");
+		//redisTemplate.type("test");
 		redisTemplate.getObject("server", Server.class);
+		redisTemplate.mGetObject(new String[]{"server", "server1"}, Server.class);
 		List<Object> result = redisTemplate.exec();
 
 		if(result != null){
@@ -72,6 +78,50 @@ public class JedisClientTest extends AbstractJedisRedisTest {
 				System.out.println(value);
 			}
 		}
+	}
+
+	@Test
+	public void pipeline(){
+		RedisTemplate redisTemplate = getRedisTemplate();
+
+		Pipeline pipeline = redisTemplate.pipeline();
+		//redisTemplate.set("sg", new Server());
+		//redisTemplate.set("sg2", new Server());
+		//redisTemplate.set("t4", "T4");
+		//redisTemplate.type("test");
+		redisTemplate.getObject("sg", Server.class);
+		redisTemplate.mGetObject(new String[]{"sg", "sg2"}, Server.class);
+		List<Object> result = redisTemplate.exec();
+
+		if(result != null){
+			for(Object value : result){
+				System.out.println(value);
+			}
+		}
+	}
+
+	@Test
+	public void thread(){
+		RedisTemplate redisTemplate = getRedisTemplate();
+
+		Thread threadA = new Thread(new Runnable() {
+
+			@Override
+			public void run(){
+				redisTemplate.index.set(5);
+			}
+		});
+
+		Thread threadB = new Thread(new Runnable() {
+
+			@Override
+			public void run(){
+				System.out.println(redisTemplate.index.get());
+			}
+		});
+
+		threadA.start();
+		threadB.start();
 	}
 
 }

@@ -69,7 +69,7 @@ public abstract class RedisAccessor {
 
 	protected boolean enableTransactionSupport = false;
 
-	protected int index = 0;
+	protected ThreadLocal<Integer> index = new ThreadLocal<>();
 
 	private final static Logger logger = LoggerFactory.getLogger(RedisAccessor.class);
 
@@ -131,8 +131,7 @@ public abstract class RedisAccessor {
 	}
 
 	public Pipeline pipeline(){
-		checkInitialized();
-		return client.pipeline();
+		return execute((cmd)->client.pipeline());
 	}
 
 	public <V> V execute(SessionCallback<V> callback) throws RedisException{
@@ -163,7 +162,10 @@ public abstract class RedisAccessor {
 			}
 		}
 
-		index++;
+		if(isPipeline() || isTransaction()){
+			updateIndex();
+		}
+
 		try{
 			return executor.execute(client);
 		}catch(Exception e){
@@ -202,6 +204,24 @@ public abstract class RedisAccessor {
 	protected final void checkInitialized(){
 		if(client == null){
 			throw new RedisException("RedisClient is not initialized. You can call the afterPropertiesSet method for " + "initialization.");
+		}
+	}
+
+	protected boolean isTransaction(){
+		return getConnection().isTransaction();
+	}
+
+	protected boolean isPipeline(){
+		return getConnection().isPipeline();
+	}
+
+	protected void updateIndex(){
+		Integer currentValue = index.get();
+
+		if(currentValue == null){
+			index.set(1);
+		}else{
+			index.set(currentValue.intValue() + 1);
 		}
 	}
 

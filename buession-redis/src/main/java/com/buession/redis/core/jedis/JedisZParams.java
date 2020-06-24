@@ -32,6 +32,7 @@ import redis.clients.jedis.ZParams;
 public class JedisZParams extends ZParams {
 
 	public JedisZParams(){
+		super();
 	}
 
 	public JedisZParams(final Aggregate aggregate){

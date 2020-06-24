@@ -24,9 +24,294 @@
  */
 package com.buession.redis.core;
 
+import com.buession.common.AbstractUserInfoURI;
+import com.buession.common.AbstractUserInfoURIBuilder;
+import com.buession.core.utils.Assert;
+import com.buession.core.validator.Validate;
+
+import java.net.URI;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @author Yong.Teng
  */
-public class RedisURI {
+public class RedisURI extends AbstractUserInfoURI {
+
+	private static final long serialVersionUID = 7893709100532398408L;
+
+	public final static String REDIS = "redis";
+
+	public final static String REDISS = "rediss";
+
+	public final static String PARAMETER_NAME_DATABASE = "database";
+
+	public final static String PARAMETER_NAME_DATABASE_ALT = "db";
+
+	public final static String PARAMETER_NAME_CLIENT_NAME = "clientName";
+
+	public final static String PARAMETER_NAME_WEIGHT = "weight";
+
+	public final static String PARAMETER_NAME_TIMEOUT = "timeout";
+
+	public final static Set<String> ALLOWED_SCHEMES = new HashSet<>();
+
+	public final static int DEFAULT_TIMEOUT = 60;
+
+	private int database;
+
+	private String clientName;
+
+	private int weight;
+
+	private int timeout = DEFAULT_TIMEOUT;
+
+	static{
+		Collections.addAll(ALLOWED_SCHEMES, REDIS, REDISS);
+	}
+
+	public int getDatabase(){
+		return database;
+	}
+
+	public void setDatabase(int database){
+		this.database = database;
+	}
+
+	public String getClientName(){
+		return clientName;
+	}
+
+	public void setClientName(String clientName){
+		this.clientName = clientName;
+	}
+
+	public int getWeight(){
+		return weight;
+	}
+
+	public void setWeight(int weight){
+		this.weight = weight;
+	}
+
+	public int getTimeout(){
+		return timeout;
+	}
+
+	public void setTimeout(int timeout){
+		this.timeout = timeout;
+	}
+
+	public boolean isUseSsl(){
+		return isSsl();
+	}
+
+	public void setUseSsl(boolean useSsl){
+		setUseSsl(useSsl);
+	}
+
+	public static RedisURI create(String uri){
+		Assert.isBlank(uri, "URI must not be null or empty.");
+		return create(URI.create(uri));
+	}
+
+	public static RedisURI create(URI uri){
+		return buildRedisUriFromUri(uri);
+	}
+
+	@Override
+	public String toString(){
+		final StringBuilder sb = new StringBuilder();
+
+		sb.append(getClass().getSimpleName());
+
+		sb.append(" [");
+
+		sb.append("host='").append(host).append('\'');
+		sb.append(", port=").append(port);
+
+		if(password != null){
+			sb.append(", password='").append(password).append('\'');
+		}
+
+		sb.append(", database=").append(database);
+
+		if(clientName != null){
+			sb.append(", clientName='").append(clientName).append('\'');
+		}
+
+		sb.append(", weight=").append(weight);
+		sb.append(", timeout=").append(timeout);
+		sb.append(", useSsl=").append(isUseSsl());
+
+		sb.append(']');
+
+		return sb.toString();
+	}
+
+	private final static RedisURI buildRedisUriFromUri(URI uri){
+		Assert.isNull(uri, "URI must not be null");
+
+		if(Validate.hasText(uri.getScheme()) && ALLOWED_SCHEMES.contains(uri.getScheme())){
+			throw new IllegalArgumentException("Scheme " + uri.getScheme() + " not supported.");
+		}
+
+		Builder builder = Builder.getInstance();
+
+		builder.useSsl(REDISS.equals(uri.getScheme()));
+
+		String userInfo = uri.getUserInfo();
+
+		if(Validate.hasText(userInfo) == false && Validate.hasText(uri.getAuthority()) && uri.getAuthority().indexOf('@') > 0){
+			userInfo = uri.getAuthority().substring(0, uri.getAuthority().indexOf('@'));
+		}
+
+		if(Validate.hasText(userInfo)){
+			String password = userInfo;
+
+			if(password.startsWith(":")){
+				password = password.substring(1);
+			}else{
+				int index = password.indexOf(':');
+				if(index > 0){
+					password = password.substring(index + 1);
+				}
+			}
+
+			if(Validate.hasText(password)){
+				builder.password(password);
+			}
+		}
+
+		if(Validate.hasText(uri.getPath())){
+			String database = uri.getPath().substring(1);
+
+			if(Validate.hasText(database)){
+				builder.database(Integer.parseInt(database));
+			}
+		}
+
+		if(Validate.hasText(uri.getQuery())){
+			builder.queryString(uri.getQuery());
+		}
+
+		return builder.build();
+	}
+
+	public final static class Builder extends AbstractUserInfoURIBuilder {
+
+		private int database = RedisNode.DEFAULT_DATABASE;
+
+		private String clientName;
+
+		private int weight;
+
+		private int timeout = DEFAULT_TIMEOUT;
+
+		private boolean useSsl = false;
+
+		private Builder(){
+			super();
+			host(RedisNode.DEFAULT_HOST);
+			port(RedisNode.DEFAULT_PORT);
+		}
+
+		public final static Builder getInstance(){
+			return new Builder();
+		}
+
+		public Builder database(final int database){
+			Assert.isNegative(database, "Invalid database number: " + database);
+			this.database = database;
+			return this;
+		}
+
+		public Builder clientName(final String clientName){
+			this.clientName = clientName;
+			return this;
+		}
+
+		public Builder weight(final int weight){
+			this.weight = weight;
+			return this;
+		}
+
+		public Builder timeout(final int timeout){
+			this.timeout = timeout;
+			return this;
+		}
+
+		public Builder useSsl(boolean ssl){
+			this.useSsl = ssl;
+			return this;
+		}
+
+		public RedisURI build(){
+			RedisURI redisURI = new RedisURI();
+
+			redisURI.setHost(host);
+			redisURI.setPort(port);
+
+			if(password != null){
+				redisURI.setPassword(password);
+			}
+
+			redisURI.setDatabase(database);
+			redisURI.setClientName(clientName);
+			redisURI.setUseSsl(useSsl);
+			redisURI.setTimeout(timeout);
+
+			Map<String, String> parameters = parseParameters(queryString);
+
+			if(Validate.isEmpty(parameters) == false){
+				parseDatabase(redisURI, parameters.get(PARAMETER_NAME_DATABASE));
+				parseDatabase(redisURI, parameters.get(PARAMETER_NAME_DATABASE_ALT));
+				parseClientName(redisURI, parameters.get(PARAMETER_NAME_CLIENT_NAME));
+				parseWeight(redisURI, parameters.get(PARAMETER_NAME_WEIGHT));
+				parseTimeout(redisURI, parameters.get(PARAMETER_NAME_TIMEOUT));
+			}
+
+			return redisURI;
+		}
+
+		protected final static void parseDatabase(final RedisURI redisURI, final String paramValue){
+			if(Validate.hasText(paramValue)){
+				int db = Integer.parseInt(paramValue);
+
+				if(db >= 0){
+					redisURI.setDatabase(db);
+				}
+			}
+		}
+
+		protected final static void parseClientName(final RedisURI redisURI, final String paramValue){
+			if(Validate.hasText(paramValue)){
+				redisURI.setClientName(paramValue);
+			}
+		}
+
+		protected final static void parseWeight(final RedisURI redisURI, final String paramValue){
+			if(Validate.hasText(paramValue)){
+				int weight = Integer.parseInt(paramValue);
+
+				if(weight >= 0){
+					redisURI.setWeight(weight);
+				}
+			}
+		}
+
+		protected final static void parseTimeout(final RedisURI redisURI, final String paramValue){
+			if(Validate.hasText(paramValue)){
+				int timeout = Integer.parseInt(paramValue);
+
+				if(timeout >= 0){
+					redisURI.setTimeout(timeout);
+				}
+			}
+		}
+
+	}
 
 }

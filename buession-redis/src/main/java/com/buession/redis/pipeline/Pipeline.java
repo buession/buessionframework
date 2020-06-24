@@ -24,9 +24,15 @@
  */
 package com.buession.redis.pipeline;
 
+import java.util.List;
+
 /**
  * @author Yong.Teng
  */
 public interface Pipeline {
+
+	void sync();
+
+	List<Object> syncAndReturnAll();
 
 }

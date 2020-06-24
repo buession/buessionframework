@@ -33,6 +33,7 @@ import com.buession.redis.client.connection.datasource.jedis.ShardedJedisPoolDat
 import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.connection.jedis.ShardedJedisConnection;
+import com.buession.redis.core.RedisURI;
 import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.exception.PoolException;
 import org.slf4j.Logger;
@@ -55,6 +56,31 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 
 	public JedisRedisConnectionFactoryBean(){
 		super();
+	}
+
+	public JedisRedisConnectionFactoryBean(final RedisURI redisURI){
+		this(redisURI.getHost(), redisURI.getPort(), redisURI.getPassword(), redisURI.getDatabase(),
+				redisURI.getClientName(), redisURI.getTimeout(), redisURI.getTimeout(), redisURI.isUseSsl());
+	}
+
+	public JedisRedisConnectionFactoryBean(final RedisURI redisURI, final boolean usePool){
+		this(redisURI);
+		setUsePool(usePool);
+	}
+
+	public JedisRedisConnectionFactoryBean(final RedisURI redisURI, final SSLSocketFactory sslSocketFactory,
+			final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
+		this(redisURI);
+		setSslSocketFactory(sslSocketFactory);
+		setSslParameters(sslParameters);
+		setHostnameVerifier(hostnameVerifier);
+	}
+
+	public JedisRedisConnectionFactoryBean(final RedisURI redisURI, final boolean usePool,
+			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+			final HostnameVerifier hostnameVerifier){
+		this(redisURI, sslSocketFactory, sslParameters, hostnameVerifier);
+		setUsePool(usePool);
 	}
 
 	public JedisRedisConnectionFactoryBean(final String host){
