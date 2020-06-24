@@ -353,8 +353,8 @@ public class Validate {
 	 *
 	 * @return 在两个值之间时，返回 TRUE；否则，返回 FALSE
 	 */
-	public final static boolean isBetween(final double value, final double min, final double max, final boolean
-			isContain){
+	public final static boolean isBetween(final double value, final double min, final double max,
+			final boolean isContain){
 		return isContain ? (value >= min && value <= max) : (value > min && value < max);
 	}
 
@@ -388,8 +388,8 @@ public class Validate {
 	 *
 	 * @return 在两个值之间时，返回 TRUE；否则，返回 FALSE
 	 */
-	public final static boolean isBetween(final float value, final float min, final float max, final boolean
-			isContain){
+	public final static boolean isBetween(final float value, final float min, final float max,
+			final boolean isContain){
 		return isContain ? (value >= min && value <= max) : (value > min && value < max);
 	}
 
@@ -731,6 +731,18 @@ public class Validate {
 	 */
 	public final static boolean isIp(final CharSequence charSequence){
 		return isIpV4(charSequence) || isIpV6(charSequence);
+	}
+
+	/**
+	 * 验证是否为合法的端口
+	 *
+	 * @param port
+	 * 		端口号
+	 *
+	 * @return Boolean
+	 */
+	public final static boolean isValidPort(final int port){
+		return port >= 0 && port <= 65535;
 	}
 
 }

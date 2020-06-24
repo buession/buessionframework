@@ -22,38 +22,11 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.converter;
-
-import org.apache.commons.collections4.map.HashedMap;
-import org.springframework.core.convert.converter.Converter;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+package com.buession.common;
 
 /**
  * @author Yong.Teng
  */
-public class MapConverter<SK, SV, TK, TV> implements Converter<Map<SK, SV>, Map<TK, TV>> {
-
-	private Converter<SK, TK> keyConverter;
-
-	private Converter<SV, TV> valueConverter;
-
-	public MapConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter){
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
-	}
-
-	@Override
-	public Map<TK, TV> convert(final Map<SK, SV> source){
-		if(source == null){
-			return null;
-		}else{
-			return source.entrySet().stream().collect(Collectors.toMap(e->keyConverter.convert(e.getKey()),
-					e->valueConverter.convert(e.getValue()), (a, b)->a, source instanceof LinkedHashMap ?
-							LinkedHashMap::new : HashedMap::new));
-		}
-	}
+public class AbstractUserInfoURIBuilder {
 
 }
