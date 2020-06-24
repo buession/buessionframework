@@ -24,7 +24,7 @@
  */
 package com.buession.httpclient.core;
 
-import com.buession.core.converter.Converter;
+import org.springframework.core.convert.converter.Converter;
 
 /**
  * @author Yong.Teng
