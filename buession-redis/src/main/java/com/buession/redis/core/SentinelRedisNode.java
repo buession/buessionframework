@@ -22,56 +22,14 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection.datasource.jedis;
-
-import com.buession.redis.core.ShardedRedisNode;
-
-import java.util.Set;
+package com.buession.redis.core;
 
 /**
- * Jedis 分片模式数据源
- *
  * @author Yong.Teng
  */
-public class GenericShardedJedisDataSource extends AbstractShardedJedisDataSource {
+public class SentinelRedisNode extends ClusterRedisNode {
 
-	/**
-	 * 构造函数
-	 *
-	 * @param redisNodes
-	 * 		Redis 分片主机节点
-	 */
-	public GenericShardedJedisDataSource(Set<ShardedRedisNode> redisNodes){
-		super(redisNodes);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param redisNodes
-	 * 		Redis 分片主机节点
-	 * @param database
-	 * 		数据库
-	 */
-	public GenericShardedJedisDataSource(Set<ShardedRedisNode> redisNodes, int database){
-		super(redisNodes, database);
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param redisNodes
-	 * 		Redis 分片主机节点
-	 * @param database
-	 * 		数据库
-	 * @param connectTimeout
-	 * 		连接超时
-	 * @param soTimeout
-	 * 		读取超时
-	 */
-	public GenericShardedJedisDataSource(Set<ShardedRedisNode> redisNodes, int database, final int connectTimeout,
-			final int soTimeout){
-		super(redisNodes, database, connectTimeout, soTimeout);
-	}
+	private int quorum;
+	
 
 }

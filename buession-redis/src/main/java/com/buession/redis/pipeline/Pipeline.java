@@ -35,4 +35,6 @@ public interface Pipeline {
 
 	List<Object> syncAndReturnAll();
 
+	void close();
+
 }

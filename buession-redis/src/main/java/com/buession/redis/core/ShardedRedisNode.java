@@ -27,83 +27,232 @@ package com.buession.redis.core;
 import com.buession.core.utils.Assert;
 
 /**
+ * Redis 分片节点
+ *
  * @author Yong.Teng
  */
 public class ShardedRedisNode extends EnhanceRedisNode {
 
+	/**
+	 * 密码
+	 */
 	private String password;
 
+	/**
+	 * 数据库
+	 */
+	private int database = DEFAULT_DATABASE;
+
+	/**
+	 * 权重
+	 */
 	private int weight;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 */
 	public ShardedRedisNode(String host, int port){
 		super(host, port);
 	}
 
-	public ShardedRedisNode(String host, int port, int weight){
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param name
+	 * 		节点名称
+	 */
+	public ShardedRedisNode(String host, int port, String name){
+		super(host, port, name);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param password
+	 * 		密码
+	 * @param name
+	 * 		节点名称
+	 */
+	public ShardedRedisNode(String host, int port, String password, String name){
+		super(host, port, name);
+		this.password = password;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param database
+	 * 		数据库
+	 */
+	public ShardedRedisNode(String host, int port, int database){
 		super(host, port);
-		setWeight(weight);
+		this.database = database;
 	}
 
-	public ShardedRedisNode(String host, int port, String password){
-		super(host, port);
-		setPassword(password);
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param database
+	 * 		数据库
+	 * @param name
+	 * 		节点名称
+	 */
+	public ShardedRedisNode(String host, int port, int database, String name){
+		super(host, port, name);
+		this.database = database;
 	}
 
-	public ShardedRedisNode(String host, int port, int weight, String password){
-		this(host, port, weight);
-		setPassword(password);
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param database
+	 * 		数据库
+	 * @param weight
+	 * 		权重
+	 */
+	public ShardedRedisNode(String host, int port, int database, int weight){
+		this(host, port, database);
+		this.weight = weight;
 	}
 
-	public ShardedRedisNode(String host, int port, Role role){
-		super(host, port, role);
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 * @param name
+	 * 		节点名称
+	 */
+	public ShardedRedisNode(String host, int port, String password, int database, String name){
+		this(host, port, database, name);
+		this.password = password;
 	}
 
-	public ShardedRedisNode(String host, int port, Role role, int weight){
-		super(host, port, role);
-		setWeight(weight);
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 * @param weight
+	 * 		权重
+	 */
+	public ShardedRedisNode(String host, int port, String password, int database, int weight){
+		this(host, port, password);
+		this.database = database;
+		this.weight = weight;
 	}
 
-	public ShardedRedisNode(String host, int port, Role role, String password){
-		super(host, port, role);
-		setPassword(password);
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 * @param name
+	 * 		节点名称
+	 * @param weight
+	 * 		权重
+	 */
+	public ShardedRedisNode(String host, int port, String password, int database, String name, int weight){
+		this(host, port, password, database, name);
+		this.weight = weight;
 	}
 
-	public ShardedRedisNode(String host, int port, Role role, int weight, String password){
-		this(host, port, role, weight);
-		setPassword(password);
-	}
-
-	public ShardedRedisNode(String host, int port, String id, String name, Role role){
-		super(host, port, id, name, role);
-	}
-
-	public ShardedRedisNode(String host, int port, String id, String name, Role role, int weight){
-		super(host, port, id, name, role);
-		setWeight(weight);
-	}
-
-	public ShardedRedisNode(String host, int port, String password, String id, String name, Role role){
-		super(host, port, id, name, role);
-		setPassword(password);
-	}
-
-	public ShardedRedisNode(String host, int port, String password, String id, String name, Role role, int weight){
-		this(host, port, id, name, role, weight);
-		setPassword(password);
-	}
-
+	/**
+	 * 获取密码
+	 *
+	 * @return 密码
+	 */
 	public String getPassword(){
 		return password;
 	}
 
+	/**
+	 * 设置密码
+	 *
+	 * @param password
+	 * 		密码
+	 */
 	public void setPassword(String password){
 		this.password = password;
 	}
 
+	/**
+	 * 获取数据库
+	 *
+	 * @return 数据库
+	 */
+	public int getDatabase(){
+		return database;
+	}
+
+	/**
+	 * 设置数据库
+	 *
+	 * @param database
+	 * 		数据库
+	 */
+	public void setDatabase(int database){
+		this.database = database;
+	}
+
+	/**
+	 * 获取权重
+	 *
+	 * @return 权重
+	 */
 	public int getWeight(){
 		return weight;
 	}
 
+	/**
+	 * 设置权重
+	 *
+	 * @param weight
+	 * 		权重
+	 */
 	public void setWeight(int weight){
 		Assert.isNegative(weight, "Redis node weight cloud not be negative.");
 		this.weight = weight;

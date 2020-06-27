@@ -48,7 +48,7 @@ import java.util.Set;
 public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 
 	public JedisKeyOperations(final JedisRedisClient<Jedis> client){
-		super(client);
+		super(client, null);
 	}
 
 	@Override

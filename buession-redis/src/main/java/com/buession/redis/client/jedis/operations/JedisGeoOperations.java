@@ -42,7 +42,7 @@ import java.util.Map;
 public class JedisGeoOperations extends AbstractGeoOperations<Jedis, Pipeline> {
 
 	public JedisGeoOperations(final JedisRedisClient<Jedis> client){
-		super(client);
+		super(client, null);
 	}
 
 	@Override

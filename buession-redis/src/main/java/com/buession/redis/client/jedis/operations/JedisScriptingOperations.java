@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 public class JedisScriptingOperations extends AbstractScriptingOperations<Jedis, Pipeline> {
 
 	public JedisScriptingOperations(final JedisRedisClient<Jedis> client){
-		super(client);
+		super(client, null);
 	}
 
 	@Override

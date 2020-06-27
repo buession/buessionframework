@@ -43,7 +43,7 @@ import java.util.Set;
 public class JedisHashOperations extends AbstractHashOperations<Jedis, Pipeline> {
 
 	public JedisHashOperations(final JedisRedisClient<Jedis> client){
-		super(client);
+		super(client, null);
 	}
 
 	@Override

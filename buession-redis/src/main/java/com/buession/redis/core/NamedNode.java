@@ -24,11 +24,14 @@
  */
 package com.buession.redis.core;
 
+import org.springframework.lang.Nullable;
+
 /**
  * @author Yong.Teng
  */
 public interface NamedNode {
 
-    String getName();
+	@Nullable
+	String getName();
 
 }

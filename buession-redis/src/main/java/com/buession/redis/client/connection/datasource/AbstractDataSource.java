@@ -24,59 +24,11 @@
  */
 package com.buession.redis.client.connection.datasource;
 
-import com.buession.redis.Constants;
-import com.buession.redis.core.Server;
-
 /**
  * Redis 数据源抽象类
  *
  * @author Yong.Teng
  */
 public abstract class AbstractDataSource implements DataSource {
-
-	/**
-	 * 数据库
-	 */
-	private int database = Server.DEFAULT_DATABASE;
-
-	/**
-	 * 连接超时（单位：秒）
-	 */
-	private int connectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
-
-	/**
-	 * 读取超时（单位：秒）
-	 */
-	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
-
-	@Override
-	public int getDatabase(){
-		return database;
-	}
-
-	@Override
-	public void setDatabase(int database){
-		this.database = database;
-	}
-
-	@Override
-	public int getConnectTimeout(){
-		return connectTimeout;
-	}
-
-	@Override
-	public void setConnectTimeout(int connectTimeout){
-		this.connectTimeout = connectTimeout;
-	}
-
-	@Override
-	public int getSoTimeout(){
-		return soTimeout;
-	}
-
-	@Override
-	public void setSoTimeout(int soTimeout){
-		this.soTimeout = soTimeout;
-	}
 
 }

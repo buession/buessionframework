@@ -38,7 +38,6 @@ import com.buession.redis.core.FutureResult;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.Info;
-import com.buession.redis.core.InfoSection;
 import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.RedisMonitor;
@@ -863,7 +862,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Info info(final InfoSection section){
+	public Info info(final Info.Section section){
 		return serverOperations.info(section);
 	}
 

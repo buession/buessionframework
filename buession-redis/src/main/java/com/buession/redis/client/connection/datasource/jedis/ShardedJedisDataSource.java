@@ -25,13 +25,48 @@
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.client.connection.datasource.ShardedDataSource;
+import com.buession.redis.core.ShardedRedisNode;
 import redis.clients.jedis.ShardedJedis;
+
+import java.util.Set;
 
 /**
  * Jedis 分片模式数据源
  *
  * @author Yong.Teng
  */
-public interface ShardedJedisDataSource extends JedisRedisDataSource<ShardedJedis>, ShardedDataSource {
+public class ShardedJedisDataSource extends AbstractJedisDataSource<ShardedJedis> implements ShardedDataSource {
+
+	/**
+	 * 分片主机节点
+	 */
+	private Set<ShardedRedisNode> nodes;
+
+	/**
+	 * 构造函数
+	 */
+	public ShardedJedisDataSource(){
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param nodes
+	 * 		分片主机节点
+	 */
+	public ShardedJedisDataSource(final Set<ShardedRedisNode> nodes){
+		this.nodes = nodes;
+	}
+
+	@Override
+	public Set<ShardedRedisNode> getNodes(){
+		return nodes;
+	}
+
+	@Override
+	public void setNodes(Set<ShardedRedisNode> nodes){
+		this.nodes = nodes;
+	}
 
 }

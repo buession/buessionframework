@@ -26,6 +26,7 @@ package com.buession.redis.client.connection;
 
 import com.buession.core.Executor;
 import com.buession.lang.Status;
+import com.buession.redis.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.exception.RedisException;
@@ -35,64 +36,172 @@ import com.buession.redis.transaction.Transaction;
 import java.io.IOException;
 
 /**
- * Redis 链接对象抽象类
+ * Redis 连接对象抽象类
  *
  * @author Yong.Teng
  */
 public abstract class AbstractRedisConnection<T> implements RedisConnection {
 
+	/**
+	 * Redis 数据源
+	 */
 	private DataSource dataSource;
 
-	private String clientName;
+	/**
+	 * 连接超时（单位：秒）
+	 */
+	private int connectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
 
+	/**
+	 * 读取超时（单位：秒）
+	 */
+	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
+
+	/**
+	 * 是否启用 SSL 连接
+	 */
 	private boolean useSsl;
 
+	/**
+	 * SSL 配置
+	 */
 	private SslConfiguration sslConfiguration;
 
+	/**
+	 * 事务
+	 */
 	protected Transaction transaction;
 
+	/**
+	 * 管道
+	 */
 	protected Pipeline pipeline;
 
+	/**
+	 * 构造函数
+	 */
 	public AbstractRedisConnection(){
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 */
 	public AbstractRedisConnection(DataSource dataSource){
 		this.dataSource = dataSource;
 	}
 
-	public AbstractRedisConnection(DataSource dataSource, SslConfiguration sslConfiguration){
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout){
 		this.dataSource = dataSource;
-		this.sslConfiguration = sslConfiguration;
+		this.connectTimeout = connectTimeout;
+		this.soTimeout = soTimeout;
 	}
 
-	public AbstractRedisConnection(DataSource dataSource, String clientName){
-		this.dataSource = dataSource;
-		this.clientName = clientName;
-	}
-
-	public AbstractRedisConnection(DataSource dataSource, String clientName, SslConfiguration sslConfiguration){
-		this(dataSource, clientName);
-		this.sslConfiguration = sslConfiguration;
-	}
-
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 */
 	public AbstractRedisConnection(DataSource dataSource, boolean useSsl){
 		this.dataSource = dataSource;
 		this.useSsl = useSsl;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public AbstractRedisConnection(DataSource dataSource, SslConfiguration sslConfiguration){
+		this.dataSource = dataSource;
+		this.sslConfiguration = sslConfiguration;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
 	public AbstractRedisConnection(DataSource dataSource, boolean useSsl, SslConfiguration sslConfiguration){
 		this(dataSource, useSsl);
 		this.sslConfiguration = sslConfiguration;
 	}
 
-	public AbstractRedisConnection(DataSource dataSource, String clientName, boolean useSsl){
-		this(dataSource, clientName);
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 */
+	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout, boolean useSsl){
+		this(dataSource, connectTimeout, soTimeout);
 		this.useSsl = useSsl;
 	}
 
-	public AbstractRedisConnection(DataSource dataSource, String clientName, boolean useSsl,
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
 			SslConfiguration sslConfiguration){
-		this(dataSource, clientName, useSsl);
+		this(dataSource, connectTimeout, soTimeout);
+		this.sslConfiguration = sslConfiguration;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout, boolean useSsl,
+			SslConfiguration sslConfiguration){
+		this(dataSource, connectTimeout, soTimeout, useSsl);
 		this.sslConfiguration = sslConfiguration;
 	}
 
@@ -106,26 +215,42 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 		this.dataSource = dataSource;
 	}
 
-	public String getClientName(){
-		return clientName;
+	@Override
+	public int getConnectTimeout(){
+		return connectTimeout;
 	}
 
-	public void setClientName(String clientName){
-		this.clientName = clientName;
+	@Override
+	public void setConnectTimeout(int connectTimeout){
+		this.connectTimeout = connectTimeout;
 	}
 
+	@Override
+	public int getSoTimeout(){
+		return soTimeout;
+	}
+
+	@Override
+	public void setSoTimeout(int soTimeout){
+		this.soTimeout = soTimeout;
+	}
+
+	@Override
 	public boolean isUseSsl(){
 		return useSsl;
 	}
 
+	@Override
 	public void setUseSsl(final boolean useSsl){
 		this.useSsl = useSsl;
 	}
 
+	@Override
 	public SslConfiguration getSslConfiguration(){
 		return sslConfiguration;
 	}
 
+	@Override
 	public void setSslConfiguration(SslConfiguration sslConfiguration){
 		this.sslConfiguration = sslConfiguration;
 	}
@@ -150,16 +275,6 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 	}
 
 	@Override
-	public boolean isConnect(){
-		return getDataSource() != null && checkConnect();
-	}
-
-	@Override
-	public boolean isClosed(){
-		return getDataSource() == null || checkClosed();
-	}
-
-	@Override
 	public Transaction getTransaction(){
 		return transaction;
 	}
@@ -170,16 +285,42 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 	}
 
 	@Override
+	public boolean isConnect(){
+		return getDataSource() != null && checkConnect();
+	}
+
+	@Override
+	public boolean isClosed(){
+		return getDataSource() == null || checkClosed();
+	}
+
+	@Override
 	public void disconnect() throws IOException{
-		if(getDataSource() != null){
-			doDisconnect();
+		doDisconnect();
+
+		if(pipeline != null){
+			pipeline.close();
+			pipeline = null;
+		}
+
+		if(transaction != null){
+			transaction.close();
+			transaction = null;
 		}
 	}
 
 	@Override
 	public void close() throws IOException{
-		if(getDataSource() != null){
-			doClose();
+		doClose();
+
+		if(pipeline != null){
+			pipeline.close();
+			pipeline = null;
+		}
+
+		if(transaction != null){
+			transaction.close();
+			transaction = null;
 		}
 	}
 

@@ -36,7 +36,6 @@ import com.buession.redis.core.Executor;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.Info;
-import com.buession.redis.core.InfoSection;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ObjectCommand;
@@ -1943,7 +1942,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Info info(final InfoSection section){
+	public Info info(final Info.Section section){
 		final CommandArguments args = CommandArguments.getInstance().put("section", section);
 		return execute((client)->client.info(), ProtocolCommand.INFO, args);
 	}

@@ -25,6 +25,7 @@
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
+import com.buession.redis.core.Server;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -32,6 +33,257 @@ import redis.clients.jedis.Jedis;
  *
  * @author Yong.Teng
  */
-public interface JedisDataSource extends JedisRedisDataSource<Jedis>, StandaloneDataSource {
+public class JedisDataSource extends AbstractJedisDataSource<Jedis> implements StandaloneDataSource {
+
+	/**
+	 * Redis 主机地址
+	 */
+	private String host = Server.DEFAULT_HOST;
+
+	/**
+	 * Redis 端口
+	 */
+	private int port = Server.DEFAULT_PORT;
+
+	/**
+	 * 密码
+	 */
+	private String password;
+
+	/**
+	 * 数据库
+	 */
+	private int database = Server.DEFAULT_DATABASE;
+
+	/**
+	 * Client Name
+	 */
+	private String clientName;
+
+	/**
+	 * 构造函数
+	 */
+	public JedisDataSource(){
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 */
+	public JedisDataSource(final String host){
+		this();
+		this.host = host;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 */
+	public JedisDataSource(final String host, final int port){
+		this();
+		this.host = host;
+		this.port = port;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param password
+	 * 		密码
+	 */
+	public JedisDataSource(final String host, final int port, final String password){
+		this(host, port);
+		this.password = password;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 */
+	public JedisDataSource(final String host, final int port, final String password, final int database){
+		this(host, port, password);
+		this.database = database;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 * @param clientName
+	 * 		Client Name
+	 */
+	public JedisDataSource(final String host, final int port, final String password, final int database,
+			final String clientName){
+		this(host, port, password, database);
+		this.clientName = clientName;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param database
+	 * 		数据库
+	 */
+	public JedisDataSource(final String host, final int port, final int database){
+		this(host, port);
+		this.database = database;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param database
+	 * 		数据库
+	 * @param clientName
+	 * 		Client Name
+	 */
+	public JedisDataSource(final String host, final int port, final int database, final String clientName){
+		this(host, port, database);
+		this.clientName = clientName;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param password
+	 * 		密码
+	 */
+	public JedisDataSource(final String host, final String password){
+		this(host);
+		this.password = password;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param password
+	 * 		密码
+	 * @param clientName
+	 * 		Client Name
+	 */
+	public JedisDataSource(final String host, final String password, final String clientName){
+		this(host, password);
+		this.clientName = clientName;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 */
+	public JedisDataSource(final String host, final String password, final int database){
+		this(host, password);
+		this.database = database;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
+	 * @param clientName
+	 * 		Client Name
+	 */
+	public JedisDataSource(final String host, final String password, final int database, final String clientName){
+		this(host, password, database);
+		this.clientName = clientName;
+	}
+
+	@Override
+	public String getHost(){
+		return host;
+	}
+
+	@Override
+	public void setHost(String host){
+		this.host = host;
+	}
+
+	@Override
+	public int getPort(){
+		return port;
+	}
+
+	@Override
+	public void setPort(int port){
+		this.port = port;
+	}
+
+	@Override
+	public String getPassword(){
+		return password;
+	}
+
+	@Override
+	public void setPassword(String password){
+		this.password = password;
+	}
+
+	@Override
+	public int getDatabase(){
+		return database;
+	}
+
+	@Override
+	public void setDatabase(int database){
+		this.database = database;
+	}
+
+	@Override
+	public String getClientName(){
+		return clientName;
+	}
+
+	@Override
+	public void setClientName(String clientName){
+		this.clientName = clientName;
+	}
 
 }

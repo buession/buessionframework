@@ -27,6 +27,7 @@ package com.buession.redis.spring;
 import com.buession.core.utils.Assert;
 import com.buession.redis.Constants;
 import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.RedisURI;
 import com.buession.redis.core.ShardedRedisNode;
 
 import javax.net.ssl.HostnameVerifier;
@@ -70,6 +71,31 @@ public class RedisConnectionFactory {
 	private boolean isShardedConnection = false;
 
 	public RedisConnectionFactory(){
+	}
+
+	public RedisConnectionFactory(final RedisURI redisURI){
+		this(redisURI.getHost(), redisURI.getPort(), redisURI.getPassword(), redisURI.getDatabase(),
+				redisURI.getClientName(), redisURI.getTimeout(), redisURI.getTimeout(), redisURI.isUseSsl());
+	}
+
+	public RedisConnectionFactory(final RedisURI redisURI, final boolean usePool){
+		this(redisURI);
+		setUsePool(usePool);
+	}
+
+	public RedisConnectionFactory(final RedisURI redisURI, final SSLSocketFactory sslSocketFactory,
+			final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
+		this(redisURI);
+		setSslSocketFactory(sslSocketFactory);
+		setSslParameters(sslParameters);
+		setHostnameVerifier(hostnameVerifier);
+	}
+
+	public RedisConnectionFactory(final RedisURI redisURI, final boolean usePool,
+			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+			final HostnameVerifier hostnameVerifier){
+		this(redisURI, sslSocketFactory, sslParameters, hostnameVerifier);
+		setUsePool(usePool);
 	}
 
 	public RedisConnectionFactory(final String host){

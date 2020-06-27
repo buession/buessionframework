@@ -28,6 +28,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.StringOperations;
 import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.ClusterMode;
 import com.buession.redis.core.command.StringCommands;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.utils.ReturnUtils;
@@ -52,8 +53,8 @@ public abstract class AbstractStringOperations<C extends JedisCommands, P extend
 	protected final static Converter<StringCommands.SetArgument, SetParams> SET_ARGUMENT_JEDIS_CONVERTER =
 			JedisConverters.setArgumentJedisConverter();
 
-	public AbstractStringOperations(JedisRedisClient<C> client){
-		super(client);
+	public AbstractStringOperations(final JedisRedisClient<C> client, final ClusterMode clusterMode){
+		super(client, clusterMode);
 	}
 
 	@Override

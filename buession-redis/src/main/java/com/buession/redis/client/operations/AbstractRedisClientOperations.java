@@ -27,6 +27,7 @@ package com.buession.redis.client.operations;
 import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
+import com.buession.redis.core.ClusterMode;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.Converters;
 import com.buession.redis.exception.NotSupportedCommandException;
@@ -53,28 +54,73 @@ public abstract class AbstractRedisClientOperations implements RedisClientOperat
 
 	protected final static Converter<String, Status> OK_TO_STATUS_CONVERTER = Converters.okToStatusConverter();
 
+	private ClusterMode clusterMode;
+
+	public ClusterMode getClusterMode(){
+		return clusterMode;
+	}
+
+	public void setClusterMode(ClusterMode clusterMode){
+		this.clusterMode = clusterMode;
+	}
+
 	protected abstract boolean isTransaction();
 
 	protected abstract boolean isPipeline();
 
 	protected void pipelineAndTransactionNotSupportedException(final ProtocolCommand command){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(command);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(command);
+		if(getClusterMode() == null){
+			if(isPipeline()){
+				throw new NotSupportedPipelineCommandException(command);
+			}else if(isTransaction()){
+				throw new NotSupportedTransactionCommandException(command);
+			}
 		}else{
-			throw new NotSupportedCommandException(command);
+			if(isPipeline()){
+				throw new NotSupportedPipelineCommandException(commandNotSupportedMessage(command, getClusterMode(),
+						"pipeline"));
+			}else if(isTransaction()){
+				throw new NotSupportedTransactionCommandException(commandNotSupportedMessage(command, getClusterMode()
+						, "transaction"));
+			}
 		}
 	}
 
 	protected void commandAllNotSupportedException(final ProtocolCommand command){
-		if(isPipeline()){
-			throw new NotSupportedPipelineCommandException(command);
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(command);
+		if(getClusterMode() == null){
+			if(isPipeline()){
+				throw new NotSupportedPipelineCommandException(command);
+			}else if(isTransaction()){
+				throw new NotSupportedTransactionCommandException(command);
+			}else{
+				throw new NotSupportedCommandException(command);
+			}
 		}else{
-			throw new NotSupportedCommandException(command);
+			if(isPipeline()){
+				throw new NotSupportedPipelineCommandException(commandNotSupportedMessage(command, getClusterMode(),
+						"pipeline"));
+			}else if(isTransaction()){
+				throw new NotSupportedTransactionCommandException(commandNotSupportedMessage(command, getClusterMode()
+						, "transaction"));
+			}else{
+				throw new NotSupportedCommandException(commandNotSupportedMessage(command, getClusterMode(), null));
+			}
 		}
+	}
+
+	private final static String commandNotSupportedMessage(final ProtocolCommand command, final ClusterMode mode,
+			final String s){
+		final StringBuilder sb = new StringBuilder(64);
+
+		sb.append("Not supported command: ").append(command);
+
+		if(s != null){
+			sb.append(" in ").append(s);
+		}
+
+		sb.append(" with ").append(mode).append(" mode.");
+
+		return sb.toString();
 	}
 
 }

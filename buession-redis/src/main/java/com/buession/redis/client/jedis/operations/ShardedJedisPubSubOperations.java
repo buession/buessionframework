@@ -25,6 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.ClusterMode;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.ProtocolCommand;
 import redis.clients.jedis.ShardedJedis;
@@ -39,7 +40,7 @@ import java.util.Map;
 public class ShardedJedisPubSubOperations extends AbstractPubSubOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisPubSubOperations(final JedisRedisClient<ShardedJedis> client){
-		super(client);
+		super(client, ClusterMode.SHARDED);
 	}
 
 	@Override

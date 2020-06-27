@@ -257,4 +257,28 @@ public class Info implements Serializable {
 		return "server=" + server + ", clients=" + clients + ", cluster=" + cluster + ", replication=" + replication + ", memory=" + memory + ", cpu=" + cpu + ", persistence=" + persistence + ", keyspace=" + keyspace + ", stats=" + stats;
 	}
 
+	public enum Section {
+
+		SERVER,
+
+		CLIENTS,
+
+		MEMORY,
+
+		CPU,
+
+		PERSISTENCE,
+
+		STATS,
+
+		REPLICATION,
+
+		CLUSTER,
+
+		COMMAND_STATS,
+
+		KEYSPACE
+
+	}
+
 }

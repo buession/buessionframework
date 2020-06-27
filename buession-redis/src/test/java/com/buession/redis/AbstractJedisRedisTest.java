@@ -26,14 +26,18 @@ package com.buession.redis;
 
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.Options;
+import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * @author Yong.Teng
  */
 public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 
-	protected RedisConnection createRedisConnection(){
+	protected RedisConnection createJedisConnection(){
 		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("redis.host", 6379, "tQP" +
 				"!Vf7JxL-nrH-x", 10, true);
 
@@ -45,8 +49,24 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 		}
 	}
 
+	protected RedisConnection createShardedJedisConnection(){
+		Set<ShardedRedisNode> nodes = new LinkedHashSet<>(2);
+
+		nodes.add(new ShardedRedisNode("10.101.0.230", 6379, 10, ""));
+		nodes.add(new ShardedRedisNode("10.101.0.45", 6379, 9, ""));
+
+		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean(nodes, 10, true);
+
+		try{
+			factoryBean.afterPropertiesSet();
+			return factoryBean.getObject();
+		}catch(Exception e){
+			return null;
+		}
+	}
+
 	protected RedisTemplate getRedisTemplate(){
-		RedisTemplate redisTemplate = new RedisTemplate(createRedisConnection());
+		RedisTemplate redisTemplate = new RedisTemplate(createShardedJedisConnection());
 
 		Options options = new Options();
 

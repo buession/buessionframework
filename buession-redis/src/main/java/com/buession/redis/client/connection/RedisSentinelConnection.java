@@ -24,28 +24,79 @@
  */
 package com.buession.redis.client.connection;
 
-import com.buession.redis.exception.NotSupportedTransactionCommandException;
+import com.buession.core.utils.Assert;
+import com.buession.redis.core.ClusterRedisNode;
+import com.buession.redis.core.NamedNode;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author Yong.Teng
  */
-public interface ShardedConnection extends RedisConnection {
+public interface RedisSentinelConnection extends RedisConnection {
 
-	@Override
-	default void multi(){
-		throw new NotSupportedTransactionCommandException("ShardedJedis cloud not suppported transaction.");
+	/**
+	 * 获取 Master 节点
+	 *
+	 * @return Master 节点
+	 */
+	Set<ClusterRedisNode> masters();
+
+	/**
+	 * 获取 Slave 节点
+	 *
+	 * @param master
+	 * 		Master 节点
+	 *
+	 * @return Slave 节点
+	 */
+	default Set<ClusterRedisNode> slaves(NamedNode master){
+		Assert.isNull(master, "Master node cannot be 'null' when loading slaves.");
+		return slaves(master.getName());
 	}
 
-	@Override
-	default List<Object> exec(){
-		throw new NotSupportedTransactionCommandException("ShardedJedis cloud not suppported transaction.");
+	/**
+	 * 获取 Slave 节点
+	 *
+	 * @param masterName
+	 * 		Master 节点名称
+	 *
+	 * @return Slave 节点
+	 */
+	Set<ClusterRedisNode> slaves(String masterName);
+
+	/**
+	 * 监控 Redis 节点
+	 *
+	 * @param node
+	 * 		待监控的 Redis 节点
+	 */
+	void monitor(ClusterRedisNode node);
+
+	/**
+	 * 删除 Master 节点
+	 *
+	 * @param master
+	 * 		待删除 Master 节点
+	 */
+	default void remove(NamedNode master){
+		Assert.isNull(master, "Master node cloud not be null when trying to remove.");
+		remove(master.getName());
 	}
 
-	@Override
-	default void discard(){
-		throw new NotSupportedTransactionCommandException("ShardedJedis cloud not suppported transaction.");
+	/**
+	 * 删除 Master 节点
+	 *
+	 * @param masterName
+	 * 		待删除 Master 节点名称
+	 */
+	void remove(String masterName);
+
+	default void failover(NamedNode master){
+		Assert.isNull(master, "Redis node master must not be null for failover.");
+		failover(master.getName());
 	}
+
+	void failover(String masterName);
 
 }

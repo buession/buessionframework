@@ -22,31 +22,36 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.common.net;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Yong.Teng
  */
-public enum InfoSection {
+public abstract class AbstractUserInfoURIBuilder<T, B extends AbstractUserInfoURIBuilder> extends AbstractURIBuilder<T, B> {
 
-	SERVER,
+	protected String username;
 
-	CLIENTS,
+	protected String password;
 
-	MEMORY,
+	protected AbstractUserInfoURIBuilder(){
+		super();
+	}
 
-	CPU,
+	public AbstractUserInfoURIBuilder username(final String username){
+		this.username = username;
+		return this;
+	}
 
-	PERSISTENCE,
+	public AbstractUserInfoURIBuilder password(final String password){
+		this.password = password;
+		return this;
+	}
 
-	STATS,
-
-	REPLICATION,
-
-	CLUSTER,
-
-	COMMAND_STATS,
-
-	KEYSPACE
+	public AbstractUserInfoURIBuilder password(final byte[] password){
+		this.password = new String(password, StandardCharsets.UTF_8);
+		return this;
+	}
 
 }

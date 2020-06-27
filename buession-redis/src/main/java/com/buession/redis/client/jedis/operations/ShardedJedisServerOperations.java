@@ -28,8 +28,8 @@ import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.Client;
+import com.buession.redis.core.ClusterMode;
 import com.buession.redis.core.Info;
-import com.buession.redis.core.InfoSection;
 import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
@@ -48,7 +48,7 @@ import java.util.List;
 public class ShardedJedisServerOperations extends AbstractServerOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisServerOperations(final JedisRedisClient<ShardedJedis> client){
-		super(client);
+		super(client, ClusterMode.SHARDED);
 	}
 
 	@Override
@@ -172,7 +172,7 @@ public class ShardedJedisServerOperations extends AbstractServerOperations<Shard
 	}
 
 	@Override
-	public Info info(final InfoSection section){
+	public Info info(final Info.Section section){
 		commandAllNotSupportedException(ProtocolCommand.INFO);
 		return null;
 	}

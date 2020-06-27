@@ -42,7 +42,7 @@ import java.util.Map;
 public class JedisPubSubOperations extends AbstractPubSubOperations<Jedis, Pipeline> {
 
 	public JedisPubSubOperations(final JedisRedisClient<Jedis> client){
-		super(client);
+		super(client, null);
 	}
 
 	@Override

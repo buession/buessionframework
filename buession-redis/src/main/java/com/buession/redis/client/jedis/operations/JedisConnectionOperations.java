@@ -39,7 +39,7 @@ import redis.clients.jedis.Pipeline;
 public class JedisConnectionOperations extends AbstractConnectionOperations<Jedis, Pipeline> {
 
 	public JedisConnectionOperations(final JedisRedisClient<Jedis> client){
-		super(client);
+		super(client, null);
 	}
 
 	@Override

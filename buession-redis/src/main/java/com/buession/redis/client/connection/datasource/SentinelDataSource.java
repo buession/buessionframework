@@ -22,71 +22,103 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection.datasource.jedis;
-
-import com.buession.redis.core.ShardedRedisNode;
-import redis.clients.jedis.ShardedJedis;
-
-import java.util.Set;
+package com.buession.redis.client.connection.datasource;
 
 /**
- * Jedis 分片模式数据源抽象类
+ * Redis Sentinel 模式数据源
  *
  * @author Yong.Teng
  */
-public abstract class AbstractShardedJedisDataSource extends AbstractJedisDataSource<ShardedJedis> implements ShardedJedisDataSource {
+public interface SentinelDataSource extends DataSource {
 
 	/**
-	 * Redis 分片主机节点
-	 */
-	private Set<ShardedRedisNode> redisNodes;
-
-	/**
-	 * 构造函数
+	 * 获取 Redis Sentinel 主机地址
 	 *
-	 * @param redisNodes
-	 * 		Redis 分片主机节点
+	 * @return Redis Sentinel 主机地址
 	 */
-	public AbstractShardedJedisDataSource(Set<ShardedRedisNode> redisNodes){
-		super();
-		this.redisNodes = redisNodes;
-	}
+	String getHost();
 
 	/**
-	 * 构造函数
+	 * 设置 Redis Sentinel 主机地址
 	 *
-	 * @param redisNodes
-	 * 		Redis 分片主机节点
+	 * @param host
+	 * 		Redis Sentinel 主机地址
+	 */
+	void setHost(String host);
+
+	/**
+	 * 获取 Redis Sentinel 端口
+	 *
+	 * @return Redis Sentinel 端口
+	 */
+	int getPort();
+
+	/**
+	 * 设置 Redis Sentinel 端口
+	 *
+	 * @param port
+	 * 		Redis Sentinel 端口
+	 */
+	void setPort(int port);
+
+	/**
+	 * 获取密码
+	 *
+	 * @return 密码
+	 */
+	String getPassword();
+
+	/**
+	 * 设置密码
+	 *
+	 * @param password
+	 * 		密码
+	 */
+	void setPassword(String password);
+
+	/**
+	 * 获取数据库
+	 *
+	 * @return 数据库
+	 */
+	int getDatabase();
+
+	/**
+	 * 设置数据库
+	 *
 	 * @param database
 	 * 		数据库
 	 */
-	public AbstractShardedJedisDataSource(Set<ShardedRedisNode> redisNodes, int database){
-		this(redisNodes);
-		setDatabase(database);
-	}
+	void setDatabase(int database);
 
 	/**
-	 * 构造函数
+	 * 获取 Master 节点名称
 	 *
-	 * @param redisNodes
-	 * 		Redis 分片主机节点
-	 * @param database
-	 * 		数据库
-	 * @param connectTimeout
-	 * 		连接超时
-	 * @param soTimeout
-	 * 		读取超时
+	 * @return Master 节点名称
 	 */
-	public AbstractShardedJedisDataSource(Set<ShardedRedisNode> redisNodes, int database, int connectTimeout,
-			int soTimeout){
-		this(redisNodes, database);
-		setConnectTimeout(connectTimeout);
-		setSoTimeout(soTimeout);
-	}
+	String getMasterName();
 
-	@Override
-	public Set<ShardedRedisNode> getRedisNodes(){
-		return redisNodes;
-	}
+	/**
+	 * 设置 Master 节点名称
+	 *
+	 * @param masterName
+	 * 		Master 节点名称
+	 */
+	void setMasterName(String masterName);
+
+	/**
+	 * 获取 Client Name
+	 *
+	 * @return Client Name
+	 */
+	String getClientName();
+
+	/**
+	 * 设置 Client Name
+	 *
+	 * @param clientName
+	 * 		Client Name
+	 */
+	void setClientName(String clientName);
 
 }

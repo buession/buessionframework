@@ -25,6 +25,8 @@
 package com.buession.redis.core;
 
 /**
+ * Redis 节点
+ *
  * @author Yong.Teng
  */
 public interface RedisNode {
@@ -32,6 +34,8 @@ public interface RedisNode {
 	String DEFAULT_HOST = "localhost";
 
 	int DEFAULT_PORT = 6379;
+
+	int DEFAULT_SENTINEL_PORT = 26379;
 
 	int DEFAULT_DATABASE = 0;
 

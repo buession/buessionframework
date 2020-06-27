@@ -27,6 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.KeyOperations;
+import com.buession.redis.core.ClusterMode;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.convert.JedisConverters;
@@ -51,8 +52,8 @@ public abstract class AbstractKeyOperations<C extends JedisCommands, P extends P
 	protected final static Converter<MigrateOperation, MigrateParams> MIGRATE_OPERATION_JEDIS_CONVERTER =
 			JedisConverters.migrateOperationJedisConverter();
 
-	public AbstractKeyOperations(final JedisRedisClient<C> client){
-		super(client);
+	public AbstractKeyOperations(final JedisRedisClient<C> client, final ClusterMode clusterMode){
+		super(client, clusterMode);
 	}
 
 	@Override

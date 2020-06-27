@@ -26,6 +26,7 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.ClusterMode;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.utils.ReturnUtils;
@@ -40,7 +41,7 @@ import java.util.List;
 public class ShardedJedisListOperations extends AbstractListOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisListOperations(final JedisRedisClient<ShardedJedis> client){
-		super(client);
+		super(client, ClusterMode.SHARDED);
 	}
 
 	@Override

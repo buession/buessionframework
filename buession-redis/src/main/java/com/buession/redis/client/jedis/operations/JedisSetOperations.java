@@ -42,7 +42,7 @@ import java.util.Set;
 public class JedisSetOperations extends AbstractSetOperations<Jedis, Pipeline> {
 
 	public JedisSetOperations(final JedisRedisClient<Jedis> client){
-		super(client);
+		super(client, null);
 	}
 
 	@Override

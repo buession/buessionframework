@@ -26,6 +26,7 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.TransactionOperations;
+import com.buession.redis.core.ClusterMode;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 
@@ -34,8 +35,8 @@ import redis.clients.jedis.commands.JedisCommands;
  */
 public abstract class AbstractTransactionOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements TransactionOperations {
 
-	public AbstractTransactionOperations(final JedisRedisClient<C> client){
-		super(client);
+	public AbstractTransactionOperations(final JedisRedisClient<C> client, final ClusterMode clusterMode){
+		super(client, clusterMode);
 	}
 
 }

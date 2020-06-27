@@ -27,11 +27,13 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.Executor;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.AbstractRedisClientOperations;
+import com.buession.redis.core.ClusterMode;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.core.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.jedis.JedisTransaction;
 import org.springframework.core.convert.converter.Converter;
@@ -56,8 +58,9 @@ public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands
 
 	protected JedisRedisClient<C> client;
 
-	public AbstractJedisRedisClientOperations(final JedisRedisClient<C> client){
+	public AbstractJedisRedisClientOperations(final JedisRedisClient<C> client, final ClusterMode clusterMode){
 		this.client = client;
+		setClusterMode(clusterMode);
 	}
 
 	protected redis.clients.jedis.Transaction getTransaction(){
@@ -70,8 +73,15 @@ public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands
 		return client.getConnection().isTransaction();
 	}
 
+	@SuppressWarnings({"unchecked"})
 	protected P getPipeline(){
-		JedisPipeline<P> jedisPipeline = (JedisPipeline) client.getConnection().getPipeline();
+		Pipeline pipeline = client.getConnection().getPipeline();
+
+		if(pipeline == null){
+			return null;
+		}
+
+		JedisPipeline<P> jedisPipeline = (JedisPipeline<P>) pipeline;
 		return jedisPipeline.primitive();
 	}
 

@@ -22,29 +22,32 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.common;
+package com.buession.redis.client.connection.datasource;
 
-import java.nio.charset.StandardCharsets;
+import com.buession.redis.core.ClusterRedisNode;
+
+import java.util.Set;
 
 /**
+ * Redis Cluster 模式数据源
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractUserInfoURIBuilder extends AbstractURIBuilder {
+public interface ClusterDataSource extends DataSource {
 
-	protected String password;
+	/**
+	 * 获取集群主机节点
+	 *
+	 * @return 集群主机节点
+	 */
+	Set<ClusterRedisNode> getNodes();
 
-	protected AbstractUserInfoURIBuilder(){
-		super();
-	}
-
-	public AbstractUserInfoURIBuilder password(final String password){
-		this.password = password;
-		return this;
-	}
-
-	public AbstractUserInfoURIBuilder password(final byte[] password){
-		this.password = new String(password, StandardCharsets.UTF_8);
-		return this;
-	}
+	/**
+	 * 设置集群主机节点
+	 *
+	 * @param nodes
+	 * 		集群主机节点
+	 */
+	void setNodes(Set<ClusterRedisNode> nodes);
 
 }

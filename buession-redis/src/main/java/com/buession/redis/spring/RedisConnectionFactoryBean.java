@@ -25,6 +25,7 @@
 package com.buession.redis.spring;
 
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.RedisURI;
 import com.buession.redis.core.ShardedRedisNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,25 @@ public abstract class RedisConnectionFactoryBean<C extends RedisConnection> exte
 
 	public RedisConnectionFactoryBean(){
 		super();
+	}
+
+	public RedisConnectionFactoryBean(final RedisURI redisURI){
+		super(redisURI);
+	}
+
+	public RedisConnectionFactoryBean(final RedisURI redisURI, final boolean usePool){
+		super(redisURI, usePool);
+	}
+
+	public RedisConnectionFactoryBean(final RedisURI redisURI, final SSLSocketFactory sslSocketFactory,
+			final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
+		super(redisURI, sslSocketFactory, sslParameters, hostnameVerifier);
+	}
+
+	public RedisConnectionFactoryBean(final RedisURI redisURI, final boolean usePool,
+			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
+			final HostnameVerifier hostnameVerifier){
+		super(redisURI, usePool, sslSocketFactory, sslParameters, hostnameVerifier);
 	}
 
 	public RedisConnectionFactoryBean(final String host){

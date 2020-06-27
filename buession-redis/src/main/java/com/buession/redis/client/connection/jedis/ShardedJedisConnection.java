@@ -25,11 +25,12 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.core.Executor;
-import com.buession.redis.client.connection.ShardedConnection;
+import com.buession.core.utils.ReflectUtils;
+import com.buession.core.validator.Validate;
+import com.buession.redis.client.connection.RedisShardedConnection;
 import com.buession.redis.client.connection.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.ShardedJedisDataSource;
-import com.buession.redis.client.connection.datasource.jedis.ShardedJedisPoolDataSource;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.core.convert.JedisConverters;
@@ -38,62 +39,290 @@ import com.buession.redis.pipeline.jedis.JedisPipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 /**
+ * Jedis 分片模式连接器
+ *
  * @author Yong.Teng
  */
-public class ShardedJedisConnection extends AbstractJedisRedisConnection<ShardedJedis> implements JedisRedisConnection<ShardedJedis>, ShardedConnection {
+public class ShardedJedisConnection extends AbstractJedisRedisConnection<ShardedJedis> implements JedisRedisConnection<ShardedJedis>, RedisShardedConnection {
 
+	/**
+	 * Sharded Jedis 连接池
+	 */
 	private ShardedJedisPool pool;
 
+	/**
+	 * ShardedJedis 对象
+	 */
 	private ShardedJedis shardedJedis;
 
 	private final static Logger logger = LoggerFactory.getLogger(ShardedJedisConnection.class);
 
+	/**
+	 * 构造函数
+	 */
 	public ShardedJedisConnection(){
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 */
 	public ShardedJedisConnection(ShardedJedisDataSource dataSource){
 		super(dataSource);
 	}
 
-	public ShardedJedisConnection(ShardedJedisDataSource dataSource, SslConfiguration sslConfiguration){
-		super(dataSource, sslConfiguration);
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, int connectTimeout, int soTimeout){
+		super(dataSource, connectTimeout, soTimeout);
 	}
 
-	public ShardedJedisConnection(ShardedJedisDataSource dataSource, String clientName){
-		super(dataSource, clientName);
-	}
-
-	public ShardedJedisConnection(ShardedJedisDataSource dataSource, String clientName,
-			SslConfiguration sslConfiguration){
-		super(dataSource, clientName, sslConfiguration);
-	}
-
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 */
 	public ShardedJedisConnection(ShardedJedisDataSource dataSource, boolean useSsl){
 		super(dataSource, useSsl);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, SslConfiguration sslConfiguration){
+		super(dataSource, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
 	public ShardedJedisConnection(ShardedJedisDataSource dataSource, boolean useSsl,
 			SslConfiguration sslConfiguration){
 		super(dataSource, useSsl, sslConfiguration);
 	}
 
-	public ShardedJedisConnection(ShardedJedisDataSource dataSource, String clientName, boolean useSsl){
-		super(dataSource, clientName, useSsl);
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 */
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, int connectTimeout, int soTimeout,
+			boolean useSsl){
+		super(dataSource, connectTimeout, soTimeout, useSsl);
 	}
 
-	public ShardedJedisConnection(ShardedJedisDataSource dataSource, String clientName, boolean useSsl,
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, int connectTimeout, int soTimeout,
 			SslConfiguration sslConfiguration){
-		super(dataSource, clientName, useSsl, sslConfiguration);
+		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, int connectTimeout, int soTimeout, boolean useSsl
+			, SslConfiguration sslConfiguration){
+		super(dataSource, connectTimeout, soTimeout, useSsl, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig){
+		super(dataSource, poolConfig);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
+			int soTimeout){
+		super(dataSource, poolConfig, connectTimeout, soTimeout);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 */
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig, boolean useSsl){
+		super(dataSource, poolConfig, useSsl);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig,
+			SslConfiguration sslConfiguration){
+		super(dataSource, poolConfig, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig, boolean useSsl,
+			SslConfiguration sslConfiguration){
+		super(dataSource, poolConfig, useSsl, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 */
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
+			int soTimeout, boolean useSsl){
+		super(dataSource, poolConfig, connectTimeout, soTimeout, useSsl);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
+			int soTimeout, SslConfiguration sslConfiguration){
+		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
+			int soTimeout, boolean useSsl, SslConfiguration sslConfiguration){
+		super(dataSource, poolConfig, connectTimeout, soTimeout, useSsl, sslConfiguration);
 	}
 
 	@Override
@@ -109,19 +338,36 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	@Override
 	public Pipeline getPipeline(){
 		if(pipeline == null){
-			pipeline = new JedisPipeline(shardedJedis.pipelined());
+			pipeline = new JedisPipeline<>(shardedJedis.pipelined());
 		}
 
 		return pipeline;
 	}
 
-	protected ShardedJedisPool createPool(final ShardedJedisPoolDataSource dataSource){
+	protected List<JedisShardInfo> createJedisShardInfo(final Set<ShardedRedisNode> nodes){
 		final SslConfiguration sslConfiguration = getSslConfiguration();
-		final List<JedisShardInfo> shardInfos = JedisClientUtils.createJedisShardInfo(dataSource.getRedisNodes(),
-				dataSource.getDatabase(), dataSource.getConnectTimeout(), dataSource.getSoTimeout(), isUseSsl(),
-				sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
-				sslConfiguration.getHostnameVerifier());
-		final ShardedJedisPool pool = new ShardedJedisPool(dataSource.getPoolConfig(), shardInfos);
+		final List<JedisShardInfo> shardInfos = new ArrayList<>(nodes.size());
+		JedisShardInfo shardInfo;
+
+		for(ShardedRedisNode node : nodes){
+			shardInfo = new JedisShardInfo(node.getHost(), node.getName(), node.getPort(), 0, node.getWeight(),
+					isUseSsl(), sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
+					sslConfiguration.getHostnameVerifier());
+
+			shardInfo.setConnectionTimeout(getConnectTimeout());
+			shardInfo.setSoTimeout(getSoTimeout());
+
+			ReflectUtils.setField(shardInfo, "db", node.getDatabase());
+
+			shardInfos.add(shardInfo);
+		}
+
+		return shardInfos;
+	}
+
+	protected ShardedJedisPool createPool(final ShardedJedisDataSource dataSource){
+		final ShardedJedisPool pool = new ShardedJedisPool(getPoolConfig(),
+				createJedisShardInfo(dataSource.getNodes()));
 
 		return pool;
 	}
@@ -133,9 +379,13 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 			return;
 		}
 
-		if(dataSource instanceof ShardedJedisPoolDataSource){
-			ShardedJedisPoolDataSource shardedJedisPoolDataSource = (ShardedJedisPoolDataSource) dataSource;
-			pool = createPool(shardedJedisPoolDataSource);
+		ShardedJedisDataSource shardedJedisDataSource = (ShardedJedisDataSource) dataSource;
+		if(Validate.isEmpty(shardedJedisDataSource.getNodes())){
+			return;
+		}
+
+		if(getPoolConfig() != null){
+			pool = createPool(shardedJedisDataSource);
 
 			try{
 				shardedJedis = pool.getResource();
@@ -148,13 +398,7 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 						shardedJedis.getAllShardInfo().size());
 			}
 		}else{
-			ShardedJedisDataSource shardedJedisDataSource = (ShardedJedisDataSource) dataSource;
-			Set<ShardedRedisNode> shardedRedisNodes = shardedJedisDataSource.getRedisNodes();
-			SslConfiguration sslConfiguration = getSslConfiguration();
-			List<JedisShardInfo> shardInfos = JedisClientUtils.createJedisShardInfo(shardedRedisNodes,
-					dataSource.getDatabase(), dataSource.getConnectTimeout(), dataSource.getSoTimeout(), isUseSsl(),
-					sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
-					sslConfiguration.getHostnameVerifier());
+			List<JedisShardInfo> shardInfos = createJedisShardInfo(shardedJedisDataSource.getNodes());
 
 			try{
 				shardedJedis = new ShardedJedis(shardInfos);

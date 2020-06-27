@@ -24,8 +24,8 @@
  */
 package com.buession.redis.core;
 
-import com.buession.common.AbstractUserInfoURI;
-import com.buession.common.AbstractUserInfoURIBuilder;
+import com.buession.common.net.AbstractUserInfoURI;
+import com.buession.common.net.AbstractUserInfoURIBuilder;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 
@@ -59,6 +59,8 @@ public class RedisURI extends AbstractUserInfoURI {
 	public final static Set<String> ALLOWED_SCHEMES = new HashSet<>();
 
 	public final static int DEFAULT_TIMEOUT = 60;
+
+	private URI uri;
 
 	private int database;
 
@@ -118,7 +120,11 @@ public class RedisURI extends AbstractUserInfoURI {
 	}
 
 	public static RedisURI create(URI uri){
-		return buildRedisUriFromUri(uri);
+		RedisURI redisURI = buildRedisUriFromUri(uri);
+
+		redisURI.uri = uri;
+
+		return redisURI;
 	}
 
 	@Override
@@ -151,6 +157,11 @@ public class RedisURI extends AbstractUserInfoURI {
 		return sb.toString();
 	}
 
+	@Override
+	public URI toURI(){
+		return this.uri;
+	}
+
 	private final static RedisURI buildRedisUriFromUri(URI uri){
 		Assert.isNull(uri, "URI must not be null");
 
@@ -159,8 +170,6 @@ public class RedisURI extends AbstractUserInfoURI {
 		}
 
 		Builder builder = Builder.getInstance();
-
-		builder.useSsl(REDISS.equals(uri.getScheme()));
 
 		String userInfo = uri.getUserInfo();
 
@@ -204,13 +213,7 @@ public class RedisURI extends AbstractUserInfoURI {
 
 		private int database = RedisNode.DEFAULT_DATABASE;
 
-		private String clientName;
-
-		private int weight;
-
-		private int timeout = DEFAULT_TIMEOUT;
-
-		private boolean useSsl = false;
+		private String queryString;
 
 		private Builder(){
 			super();
@@ -228,26 +231,12 @@ public class RedisURI extends AbstractUserInfoURI {
 			return this;
 		}
 
-		public Builder clientName(final String clientName){
-			this.clientName = clientName;
+		public Builder queryString(final String queryString){
+			this.queryString = queryString;
 			return this;
 		}
 
-		public Builder weight(final int weight){
-			this.weight = weight;
-			return this;
-		}
-
-		public Builder timeout(final int timeout){
-			this.timeout = timeout;
-			return this;
-		}
-
-		public Builder useSsl(boolean ssl){
-			this.useSsl = ssl;
-			return this;
-		}
-
+		@Override
 		public RedisURI build(){
 			RedisURI redisURI = new RedisURI();
 
@@ -259,9 +248,6 @@ public class RedisURI extends AbstractUserInfoURI {
 			}
 
 			redisURI.setDatabase(database);
-			redisURI.setClientName(clientName);
-			redisURI.setUseSsl(useSsl);
-			redisURI.setTimeout(timeout);
 
 			Map<String, String> parameters = parseParameters(queryString);
 
@@ -272,6 +258,8 @@ public class RedisURI extends AbstractUserInfoURI {
 				parseWeight(redisURI, parameters.get(PARAMETER_NAME_WEIGHT));
 				parseTimeout(redisURI, parameters.get(PARAMETER_NAME_TIMEOUT));
 			}
+
+			redisURI.setUseSsl(REDISS.equalsIgnoreCase(scheme));
 
 			return redisURI;
 		}
@@ -308,8 +296,11 @@ public class RedisURI extends AbstractUserInfoURI {
 
 				if(timeout >= 0){
 					redisURI.setTimeout(timeout);
+					return;
 				}
 			}
+
+			redisURI.setTimeout(DEFAULT_TIMEOUT);
 		}
 
 	}

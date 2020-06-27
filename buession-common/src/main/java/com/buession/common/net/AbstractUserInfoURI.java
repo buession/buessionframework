@@ -22,74 +22,33 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.common;
-
-import com.buession.core.utils.Assert;
-import com.buession.core.validator.Validate;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
+package com.buession.common.net;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractURIBuilder {
+public abstract class AbstractUserInfoURI extends AbstractURI {
 
-	protected String host;
+	private static final long serialVersionUID = 1436152521536810273L;
 
-	protected int port;
+	protected String username;
 
-	protected String queryString;
+	protected String password;
 
-	protected boolean isSsl;
-
-	protected AbstractURIBuilder(){
+	public String getUsername(){
+		return username;
 	}
 
-	public AbstractURIBuilder host(final String host){
-		Assert.isBlank(host, "Host must not be null or empty.");
-		this.host = host;
-		return this;
+	public void setUsername(String username){
+		this.username = username;
 	}
 
-	public AbstractURIBuilder port(final int port){
-		Assert.isTrue(Validate.isValidPort(port), String.format("Port out of range: %s", port));
-		this.port = port;
-		return this;
+	public String getPassword(){
+		return password;
 	}
 
-	public AbstractURIBuilder hostAndPort(final String host, final int port){
-		Assert.isBlank(host, "Host must not be null or empty.");
-		Assert.isTrue(Validate.isValidPort(port), String.format("Port out of range: %s", port));
-
-		this.host = host;
-		this.port = port;
-
-		return this;
-	}
-
-	public AbstractURIBuilder queryString(final String queryString){
-		this.queryString = queryString;
-		return this;
-	}
-
-	protected Map<String, String> parseParameters(final String queryString){
-		if(Validate.hasText(queryString) == false){
-			return null;
-		}
-
-		StringTokenizer tokenizer = new StringTokenizer(queryString, "&");
-		Map<String, String> result = new LinkedHashMap<>(16, 0.8F);
-
-		while(tokenizer.hasMoreTokens()){
-			String queryParam = tokenizer.nextToken();
-			int ei = queryParam.indexOf('=');
-
-			result.put(queryParam.substring(0, ei), queryParam.substring(ei));
-		}
-
-		return result;
+	public void setPassword(String password){
+		this.password = password;
 	}
 
 }

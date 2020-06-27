@@ -27,6 +27,8 @@ package com.buession.redis.core;
 import org.springframework.util.ObjectUtils;
 
 /**
+ * 普通 Redis 节点
+ *
  * @author Yong.Teng
  */
 public class GenericRedisNode implements RedisNode {
@@ -34,16 +36,27 @@ public class GenericRedisNode implements RedisNode {
 	/**
 	 * Redis 服务器主机地址
 	 */
-	private String host;
+	private String host = DEFAULT_HOST;
 
 	/**
 	 * Redis 服务器主机端口
 	 */
-	private int port;
+	private int port = 6379;
 
+	/**
+	 * 构造函数
+	 */
 	public GenericRedisNode(){
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 */
 	public GenericRedisNode(String host, int port){
 		this.host = host;
 		this.port = port;
@@ -70,7 +83,11 @@ public class GenericRedisNode implements RedisNode {
 	}
 
 	public String asString(){
-		return host + ":" + port;
+		final StringBuilder sb = new StringBuilder(16);
+
+		sb.append(host).append(':').append(port);
+
+		return sb.toString();
 	}
 
 	@Override

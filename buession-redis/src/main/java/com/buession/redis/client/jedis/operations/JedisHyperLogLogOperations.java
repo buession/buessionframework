@@ -36,7 +36,7 @@ import redis.clients.jedis.Pipeline;
 public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Jedis, Pipeline> {
 
 	public JedisHyperLogLogOperations(final JedisRedisClient<Jedis> client){
-		super(client);
+		super(client, null);
 	}
 
 	@Override

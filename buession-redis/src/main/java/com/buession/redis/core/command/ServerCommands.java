@@ -29,7 +29,6 @@ import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.Info;
-import com.buession.redis.core.InfoSection;
 import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
@@ -509,7 +508,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 关于 Redis 服务器的各种信息和统计数值
 	 */
-	Info info(InfoSection section);
+	Info info(Info.Section section);
 
 	/**
 	 * 获取关于 Redis 服务器的各种信息和统计数值

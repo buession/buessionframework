@@ -24,25 +24,15 @@
  */
 package com.buession.redis.client.jedis;
 
-import com.buession.core.utils.ReflectUtils;
 import com.buession.redis.core.ObjectCommand;
-import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.utils.RedisClientUtils;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.commands.BinaryRedisPipeline;
 import redis.clients.jedis.commands.RedisPipeline;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSocketFactory;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author Yong.Teng
@@ -50,28 +40,6 @@ import java.util.Set;
 public class JedisClientUtils extends RedisClientUtils {
 
 	private JedisClientUtils(){
-	}
-
-	public final static List<JedisShardInfo> createJedisShardInfo(final Set<ShardedRedisNode> redisNodes,
-			final int database, final int connectionTimeout, final int soTimeout, final boolean useSsl,
-			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
-			final HostnameVerifier hostnameVerifier){
-		List<JedisShardInfo> shardInfos = new ArrayList<>();
-		JedisShardInfo shardInfo;
-
-		for(ShardedRedisNode node : redisNodes){
-			shardInfo = new JedisShardInfo(node.getHost(), node.getName(), node.getPort(), 0, node.getWeight(), useSsl
-					, sslSocketFactory, sslParameters, hostnameVerifier);
-
-			shardInfo.setConnectionTimeout(connectionTimeout);
-			shardInfo.setSoTimeout(soTimeout);
-
-			ReflectUtils.setField(shardInfo, "db", database);
-
-			shardInfos.add(shardInfo);
-		}
-
-		return shardInfos;
 	}
 
 	public final static Jedis getShard(final ShardedJedis shardedJedis, final String key){

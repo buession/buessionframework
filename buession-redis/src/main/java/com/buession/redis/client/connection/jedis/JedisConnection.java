@@ -26,11 +26,10 @@ package com.buession.redis.client.connection.jedis;
 
 import com.buession.core.Executor;
 import com.buession.core.validator.Validate;
-import com.buession.redis.client.connection.GenericConnection;
+import com.buession.redis.client.connection.StandaloneConnection;
 import com.buession.redis.client.connection.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
-import com.buession.redis.client.connection.datasource.jedis.JedisPoolDataSource;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.pipeline.Pipeline;
@@ -41,57 +40,282 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Client;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.io.IOException;
 import java.util.List;
 
 /**
+ * Jedis 单机模式连接器
+ *
  * @author Yong.Teng
  */
 public class JedisConnection extends AbstractJedisRedisConnection<Jedis> implements JedisRedisConnection<Jedis>,
-		GenericConnection {
+		StandaloneConnection {
 
+	/**
+	 * Jedis 连接池
+	 */
 	private JedisPool pool;
 
+	/**
+	 * Jedis 对象
+	 */
 	private Jedis jedis;
 
 	private static Logger logger = LoggerFactory.getLogger(JedisConnection.class);
 
+	/**
+	 * 构造函数
+	 */
 	public JedisConnection(){
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 */
 	public JedisConnection(JedisDataSource dataSource){
 		super(dataSource);
 	}
 
-	public JedisConnection(JedisDataSource dataSource, SslConfiguration sslConfiguration){
-		super(dataSource, sslConfiguration);
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout){
+		super(dataSource, connectTimeout, soTimeout);
 	}
 
-	public JedisConnection(JedisDataSource dataSource, String clientName){
-		super(dataSource, clientName);
-	}
-
-	public JedisConnection(JedisDataSource dataSource, String clientName, SslConfiguration sslConfiguration){
-		super(dataSource, clientName, sslConfiguration);
-	}
-
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 */
 	public JedisConnection(JedisDataSource dataSource, boolean useSsl){
 		super(dataSource, useSsl);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public JedisConnection(JedisDataSource dataSource, SslConfiguration sslConfiguration){
+		super(dataSource, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
 	public JedisConnection(JedisDataSource dataSource, boolean useSsl, SslConfiguration sslConfiguration){
 		super(dataSource, useSsl, sslConfiguration);
 	}
 
-	public JedisConnection(JedisDataSource dataSource, String clientName, boolean useSsl){
-		super(dataSource, clientName, useSsl);
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 */
+	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout, boolean useSsl){
+		super(dataSource, connectTimeout, soTimeout, useSsl);
 	}
 
-	public JedisConnection(JedisDataSource dataSource, String clientName, boolean useSsl,
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout,
 			SslConfiguration sslConfiguration){
-		super(dataSource, clientName, useSsl, sslConfiguration);
+		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout, boolean useSsl,
+			SslConfiguration sslConfiguration){
+		super(dataSource, connectTimeout, soTimeout, useSsl, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
+	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig){
+		super(dataSource, poolConfig);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout, int soTimeout){
+		super(dataSource, poolConfig, connectTimeout, soTimeout);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 */
+	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, boolean useSsl){
+		super(dataSource, poolConfig, useSsl);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, SslConfiguration sslConfiguration){
+		super(dataSource, poolConfig, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, boolean useSsl,
+			SslConfiguration sslConfiguration){
+		super(dataSource, poolConfig, useSsl, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 */
+	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout, int soTimeout,
+			boolean useSsl){
+		super(dataSource, poolConfig, connectTimeout, soTimeout, useSsl);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout, int soTimeout,
+			SslConfiguration sslConfiguration){
+		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout, int soTimeout,
+			boolean useSsl, SslConfiguration sslConfiguration){
+		super(dataSource, poolConfig, connectTimeout, soTimeout, useSsl, sslConfiguration);
 	}
 
 	@Override
@@ -131,12 +355,13 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 		}
 	}
 
-	protected JedisPool createPool(final JedisPoolDataSource dataSource){
+	protected JedisPool createPool(final JedisDataSource dataSource){
 		final SslConfiguration sslConfiguration = getSslConfiguration();
-		final JedisPool pool = new JedisPool(dataSource.getPoolConfig(), dataSource.getHost(), dataSource.getPort(),
-				dataSource.getConnectTimeout(), dataSource.getSoTimeout(), dataSource.getPassword(),
-				dataSource.getDatabase(), getClientName(), isUseSsl(), sslConfiguration.getSslSocketFactory(),
-				sslConfiguration.getSslParameters(), sslConfiguration.getHostnameVerifier());
+		final JedisPool pool = new JedisPool(getPoolConfig(), dataSource.getHost(), dataSource.getPort(),
+				getConnectTimeout(), getSoTimeout(), "".equals(dataSource.getPassword()) ? null :
+				dataSource.getPassword(), dataSource.getDatabase(), dataSource.getClientName(), isUseSsl(),
+				sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
+				sslConfiguration.getHostnameVerifier());
 
 		return pool;
 	}
@@ -148,9 +373,9 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 			return;
 		}
 
-		if(dataSource instanceof JedisPoolDataSource){
-			JedisPoolDataSource jedisPoolDataSource = ((JedisPoolDataSource) dataSource);
-			pool = createPool(jedisPoolDataSource);
+		JedisDataSource jedisDataSource = ((JedisDataSource) dataSource);
+		if(getPoolConfig() != null){
+			pool = createPool(jedisDataSource);
 
 			try{
 				jedis = pool.getResource();
@@ -160,17 +385,15 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 
 			logger.info("Jedis initialize with pool success.");
 		}else{
-			JedisDataSource jedisDataSource = (JedisDataSource) dataSource;
 			SslConfiguration sslConfiguration = getSslConfiguration();
 
-			jedis = new Jedis(jedisDataSource.getHost(), jedisDataSource.getPort(),
-					jedisDataSource.getConnectTimeout(), jedisDataSource.getSoTimeout(), isUseSsl(),
-					sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
-					sslConfiguration.getHostnameVerifier());
+			jedis = new Jedis(jedisDataSource.getHost(), jedisDataSource.getPort(), getConnectTimeout(),
+					getSoTimeout(), isUseSsl(), sslConfiguration.getSslSocketFactory(),
+					sslConfiguration.getSslParameters(), sslConfiguration.getHostnameVerifier());
 
 			Client client = jedis.getClient();
 
-			if(Validate.hasText(jedisDataSource.getPassword())){
+			if("".equals(jedisDataSource.getPassword()) == false){
 				client.setPassword(jedisDataSource.getPassword());
 			}
 			client.setDb(jedisDataSource.getDatabase());
@@ -181,8 +404,8 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 				throw JedisConverters.exceptionConvert(e);
 			}
 
-			if(Validate.hasText(getClientName())){
-				client.clientSetname(getClientName());
+			if(Validate.hasText(jedisDataSource.getClientName())){
+				client.clientSetname(jedisDataSource.getClientName());
 			}
 
 			logger.info("Jedis initialize success.");

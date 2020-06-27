@@ -27,6 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ListOperations;
+import com.buession.redis.core.ClusterMode;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.utils.ReturnUtils;
@@ -44,8 +45,8 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 	protected final static Converter<ListPosition, redis.clients.jedis.ListPosition> LISTPOSITION_JEDIS_CONVERTER =
 			JedisConverters.listPositionJedisConverter();
 
-	public AbstractListOperations(final JedisRedisClient<C> client){
-		super(client);
+	public AbstractListOperations(final JedisRedisClient<C> client, final ClusterMode clusterMode){
+		super(client, clusterMode);
 	}
 
 	@Override

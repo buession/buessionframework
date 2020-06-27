@@ -32,6 +32,6 @@ import redis.clients.jedis.commands.JedisCommands;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractJedisDataSource<T extends JedisCommands> extends AbstractDataSource {
+public abstract class AbstractJedisDataSource<T extends JedisCommands> extends AbstractDataSource implements JedisRedisDataSource<T> {
 
 }

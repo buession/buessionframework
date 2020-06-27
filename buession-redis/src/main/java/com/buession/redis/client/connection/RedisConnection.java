@@ -36,32 +36,157 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Redis 链接对象
+ * Redis 连接对象
  *
  * @author Yong.Teng
  */
 public interface RedisConnection extends Closeable {
 
+	/**
+	 * 获取 Redis 数据源
+	 *
+	 * @return Redis 数据源
+	 */
 	DataSource getDataSource();
 
+	/**
+	 * 设置 Redis 数据源
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 */
 	void setDataSource(DataSource dataSource);
 
+	/**
+	 * 获取连接超时
+	 *
+	 * @return 连接超时（单位：秒）
+	 */
+	int getConnectTimeout();
+
+	/**
+	 * 设置连接超时
+	 *
+	 * @param connectTimeout
+	 * 		连接超时（单位：秒）
+	 */
+	void setConnectTimeout(int connectTimeout);
+
+	/**
+	 * 设置读取超时
+	 *
+	 * @return 读取超时（单位：秒）
+	 */
+	int getSoTimeout();
+
+	/**
+	 * 设置读取超时
+	 *
+	 * @param soTimeout
+	 * 		读取超时（单位：秒）
+	 */
+	void setSoTimeout(int soTimeout);
+
+	/**
+	 * 返回是否启用 SSL 连接
+	 *
+	 * @return 启用 SSL 连接，返回 true; 否则，返回 false
+	 */
+	boolean isUseSsl();
+
+	/**
+	 * 设置是否启用 SSL 连接
+	 *
+	 * @param useSsl
+	 * 		是否启用 SSL 连接
+	 */
+	void setUseSsl(final boolean useSsl);
+
+	/**
+	 * SSL 配置
+	 *
+	 * @return SSL 配置
+	 */
+	SslConfiguration getSslConfiguration();
+
+	/**
+	 * 设置 SSL 配置
+	 *
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	void setSslConfiguration(SslConfiguration sslConfiguration);
+
+	/**
+	 * 连接 Redis
+	 *
+	 * @return 连接成功，则返回 Status.SUCCESS; 否则，返回 Status.FAILURE
+	 *
+	 * @throws IOException
+	 * 		I/O 异常
+	 */
 	Status connect() throws IOException;
 
+	/**
+	 * 执行 Redis 命令
+	 *
+	 * @param executor
+	 * 		命令执行器
+	 * @param <C>
+	 * 		执行命令
+	 * @param <R>
+	 * 		返回值类型
+	 *
+	 * @return 不同命令，返回不同的结果
+	 *
+	 * @throws RedisException
+	 * 		Redis Exception
+	 */
 	<C, R> R execute(final Executor<C, R> executor) throws RedisException;
 
+	/**
+	 * 获取事务
+	 *
+	 * @return 事务
+	 */
 	Transaction getTransaction();
 
+	/**
+	 * 当前是否处于事务状态
+	 *
+	 * @return 处于事务状态，则返回 true; 否则，返回 false
+	 */
 	boolean isTransaction();
 
+	/**
+	 * 获取管道
+	 *
+	 * @return 管道
+	 */
 	Pipeline getPipeline();
 
+	/**
+	 * 当前是否处于管道状态
+	 *
+	 * @return 处于管道状态，则返回 true; 否则，返回 false
+	 */
 	boolean isPipeline();
 
+	/**
+	 * 标记事务开始
+	 */
 	void multi();
 
+	/**
+	 * 执行所有事务块内的命令
+	 *
+	 * @return 事务块内所有命令的返回值
+	 */
 	List<Object> exec();
 
+	/**
+	 * 取消事务
+	 */
 	void discard();
 
 	/**

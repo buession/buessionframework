@@ -36,10 +36,18 @@ import java.util.Set;
 public interface ShardedDataSource extends DataSource {
 
 	/**
-	 * 获取 Redis 分片主机节点
+	 * 获取分片主机节点
 	 *
-	 * @return Redis 分片主机节点
+	 * @return 分片主机节点
 	 */
-	Set<ShardedRedisNode> getRedisNodes();
+	Set<ShardedRedisNode> getNodes();
+
+	/**
+	 * 设置分片主机节点
+	 *
+	 * @param nodes
+	 * 		分片主机节点
+	 */
+	void setNodes(Set<ShardedRedisNode> nodes);
 
 }

@@ -22,33 +22,34 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.common;
+package com.buession.redis.core;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractUserInfoURI extends AbstractURI {
+public enum ClusterMode {
 
-	private static final long serialVersionUID = -2088413448847123378L;
+	SHARDED("Sharded"),
 
-	protected String username;
+	MASTER_SLAVE("Master-Slave"),
 
-	protected String password;
+	SENTINEL("Sentinel"),
 
-	public String getUsername(){
-		return username;
+	CLUSTER("Cluster");
+
+	private String value;
+
+	ClusterMode(String value){
+		this.value = value;
 	}
 
-	public void setUsername(String username){
-		this.username = username;
+	public String getValue(){
+		return value;
 	}
 
-	public String getPassword(){
-		return password;
-	}
-
-	public void setPassword(String password){
-		this.password = password;
+	@Override
+	public String toString(){
+		return value;
 	}
 
 }

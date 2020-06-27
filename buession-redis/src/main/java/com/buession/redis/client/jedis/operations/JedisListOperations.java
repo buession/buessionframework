@@ -39,7 +39,7 @@ import java.util.List;
 public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline> {
 
 	public JedisListOperations(final JedisRedisClient<Jedis> client){
-		super(client);
+		super(client, null);
 	}
 
 	@Override

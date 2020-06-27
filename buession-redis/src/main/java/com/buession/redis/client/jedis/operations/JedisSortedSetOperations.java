@@ -45,7 +45,7 @@ import java.util.Set;
 public class JedisSortedSetOperations extends AbstractSortedSetOperations<Jedis, Pipeline> {
 
 	public JedisSortedSetOperations(final JedisRedisClient<Jedis> client){
-		super(client);
+		super(client, null);
 	}
 
 	@Override

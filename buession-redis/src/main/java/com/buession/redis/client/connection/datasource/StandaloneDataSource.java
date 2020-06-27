@@ -76,4 +76,34 @@ public interface StandaloneDataSource extends DataSource {
 	 */
 	void setPassword(String password);
 
+	/**
+	 * 获取数据库
+	 *
+	 * @return 数据库
+	 */
+	int getDatabase();
+
+	/**
+	 * 设置数据库
+	 *
+	 * @param database
+	 * 		数据库
+	 */
+	void setDatabase(int database);
+
+	/**
+	 * 获取 Client Name
+	 *
+	 * @return Client Name
+	 */
+	String getClientName();
+
+	/**
+	 * 设置 Client Name
+	 *
+	 * @param clientName
+	 * 		Client Name
+	 */
+	void setClientName(String clientName);
+
 }

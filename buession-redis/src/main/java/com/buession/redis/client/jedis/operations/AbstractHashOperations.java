@@ -28,6 +28,7 @@ import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.HashOperations;
+import com.buession.redis.core.ClusterMode;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.JedisConverters;
@@ -52,8 +53,8 @@ public abstract class AbstractHashOperations<C extends JedisCommands, P extends 
 	protected final static Converter<redis.clients.jedis.ScanResult<Map.Entry<byte[], byte[]>>, ScanResult<Map<byte[],
 			byte[]>>> BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER = JedisConverters.mapScanResultExposeConverter();
 
-	public AbstractHashOperations(final JedisRedisClient<C> client){
-		super(client);
+	public AbstractHashOperations(final JedisRedisClient<C> client, final ClusterMode clusterMode){
+		super(client, clusterMode);
 	}
 
 	@Override

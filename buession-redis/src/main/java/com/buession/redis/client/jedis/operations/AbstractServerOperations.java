@@ -30,6 +30,7 @@ import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ServerOperations;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientUnblockType;
+import com.buession.redis.core.ClusterMode;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.command.ProtocolCommand;
 import redis.clients.jedis.PipelineBase;
@@ -40,8 +41,8 @@ import redis.clients.jedis.commands.JedisCommands;
  */
 public abstract class AbstractServerOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements ServerOperations {
 
-	public AbstractServerOperations(final JedisRedisClient<C> client){
-		super(client);
+	public AbstractServerOperations(final JedisRedisClient<C> client, final ClusterMode clusterMode){
+		super(client, clusterMode);
 	}
 
 	@Override

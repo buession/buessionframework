@@ -27,6 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.core.ClusterMode;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
@@ -47,7 +48,7 @@ import java.util.Set;
 public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisKeyOperations(final JedisRedisClient<ShardedJedis> client){
-		super(client);
+		super(client, ClusterMode.SHARDED);
 	}
 
 	@Override

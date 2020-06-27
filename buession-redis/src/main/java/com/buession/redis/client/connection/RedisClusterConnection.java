@@ -22,66 +22,28 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.common;
-
-import java.io.Serializable;
-import java.util.Map;
+package com.buession.redis.client.connection;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractURI implements Serializable {
+public interface RedisClusterConnection extends RedisConnection {
 
-	private static final long serialVersionUID = -1695251022185424158L;
+	int DEFAULT_MAX_RETRIES = 5;
 
-	protected String host;
+	/**
+	 * 获取最大重试次数
+	 *
+	 * @return 最大重试次数
+	 */
+	int getMaxRetries();
 
-	protected int port;
-
-	protected String path;
-
-	protected Map<String, Object> parameters;
-
-	protected boolean isSsl;
-
-	public String getHost(){
-		return host;
-	}
-
-	public void setHost(String host){
-		this.host = host;
-	}
-
-	public int getPort(){
-		return port;
-	}
-
-	public void setPort(int port){
-		this.port = port;
-	}
-
-	public String getPath(){
-		return path;
-	}
-
-	public void setPath(String path){
-		this.path = path;
-	}
-
-	public Map<String, Object> getParameters(){
-		return parameters;
-	}
-
-	public void setParameters(Map<String, Object> parameters){
-		this.parameters = parameters;
-	}
-
-	public boolean isSsl(){
-		return isSsl;
-	}
-
-	public void setSsl(boolean ssl){
-		isSsl = ssl;
-	}
+	/**
+	 * 最大重试次数
+	 *
+	 * @param maxRetries
+	 * 		最大重试次数
+	 */
+	void setMaxRetries(int maxRetries);
 
 }

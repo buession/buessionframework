@@ -29,7 +29,6 @@ import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.Info;
-import com.buession.redis.core.InfoSection;
 import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
@@ -55,7 +54,7 @@ import java.util.List;
 public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipeline> {
 
 	public JedisServerOperations(final JedisRedisClient<Jedis> client){
-		super(client);
+		super(client, null);
 	}
 
 	@Override
@@ -236,7 +235,7 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 	}
 
 	@Override
-	public Info info(final InfoSection section){
+	public Info info(final Info.Section section){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().info(section.name().toLowerCase()),
 					JedisConverters.infoConvert()));

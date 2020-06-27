@@ -22,11 +22,49 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection;
+package com.buession.common.net;
 
 /**
  * @author Yong.Teng
  */
-public interface GenericConnection extends RedisConnection {
+public enum Protocol {
+
+	FTP(21),
+
+	SSH(22),
+
+	SCP(22),
+
+	TELNET(23),
+
+	SMTP(25),
+
+	TFTP(69),
+
+	HTTP(80),
+
+	POP3(110),
+
+	HTTPS(443),
+
+	MYSQL(3306),
+
+	WINDOWS_RDP(3389),
+
+	REDIS(6379),
+
+	REDIS_SENTINEL(26379),
+
+	MONGODB(27017);
+
+	private int port;
+
+	Protocol(int port){
+		this.port = port;
+	}
+
+	public int getPort(){
+		return port;
+	}
 
 }

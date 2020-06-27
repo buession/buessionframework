@@ -64,4 +64,11 @@ public class JedisPipeline<T extends redis.clients.jedis.PipelineBase> implement
 		}
 	}
 
+	@Override
+	public void close(){
+		if(pipeline instanceof redis.clients.jedis.Pipeline){
+			((redis.clients.jedis.Pipeline) pipeline).close();
+		}
+	}
+
 }

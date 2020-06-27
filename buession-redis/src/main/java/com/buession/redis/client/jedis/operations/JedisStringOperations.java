@@ -46,7 +46,7 @@ import java.util.Map;
 public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipeline> {
 
 	public JedisStringOperations(final JedisRedisClient<Jedis> client){
-		super(client);
+		super(client, null);
 	}
 
 	@Override
