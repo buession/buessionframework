@@ -36,8 +36,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractConverter<M, S extends AbstractRecord, R extends AbstractResponse> implements
-		Converter<M, S, R> {
+public abstract class AbstractConverter<M, S extends AbstractRecord, R extends AbstractResponse> implements Converter<M, S, R> {
 
 	@Override
 	public M converter(S s){
@@ -86,9 +85,7 @@ public abstract class AbstractConverter<M, S extends AbstractRecord, R extends A
 		final String country = locale.getCountry();
 		final StringBuilder sb = new StringBuilder(language.length() + country.length() + 1);
 
-		sb.append(language);
-		sb.append(separator);
-		sb.append(country);
+		sb.append(language).append(separator).append(country);
 
 		return sb.toString();
 	}

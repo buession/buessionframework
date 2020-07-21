@@ -31,15 +31,14 @@ import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractPrimitiveCrossOriginAnnotationMethodAdvice extends
-		AbstractWebAnnotationMethodAdvice<PrimitiveCrossOrigin> implements PrimitiveCrossOriginAnnotationMethodAdvice {
+public abstract class AbstractPrimitiveCrossOriginAnnotationMethodAdvice extends AbstractWebAnnotationMethodAdvice<PrimitiveCrossOrigin, Void> implements PrimitiveCrossOriginAnnotationMethodAdvice {
 
-	public AbstractPrimitiveCrossOriginAnnotationMethodAdvice(AnnotationHandler<PrimitiveCrossOrigin> handler){
+	public AbstractPrimitiveCrossOriginAnnotationMethodAdvice(AnnotationHandler<PrimitiveCrossOrigin, Void> handler){
 		super(handler);
 	}
 
-	public AbstractPrimitiveCrossOriginAnnotationMethodAdvice(AnnotationHandler<PrimitiveCrossOrigin> handler,
-															  AnnotationResolver resolver){
+	public AbstractPrimitiveCrossOriginAnnotationMethodAdvice(AnnotationHandler<PrimitiveCrossOrigin, Void> handler,
+			AnnotationResolver resolver){
 		super(handler, resolver);
 	}
 

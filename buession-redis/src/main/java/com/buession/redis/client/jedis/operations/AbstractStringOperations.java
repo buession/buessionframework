@@ -28,7 +28,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.StringOperations;
 import com.buession.redis.core.BitOperation;
-import com.buession.redis.core.ClusterMode;
+import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.StringCommands;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.utils.ReturnUtils;
@@ -45,7 +45,7 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractStringOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements StringOperations {
+public abstract class AbstractStringOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements StringOperations<C> {
 
 	protected final static Converter<BitOperation, BitOP> BIT_OPERATION_JEDIS_CONVERTER =
 			JedisConverters.bitOperationJedisConverter();
@@ -53,8 +53,8 @@ public abstract class AbstractStringOperations<C extends JedisCommands, P extend
 	protected final static Converter<StringCommands.SetArgument, SetParams> SET_ARGUMENT_JEDIS_CONVERTER =
 			JedisConverters.setArgumentJedisConverter();
 
-	public AbstractStringOperations(final JedisRedisClient<C> client, final ClusterMode clusterMode){
-		super(client, clusterMode);
+	public AbstractStringOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
+		super(client, redisMode);
 	}
 
 	@Override

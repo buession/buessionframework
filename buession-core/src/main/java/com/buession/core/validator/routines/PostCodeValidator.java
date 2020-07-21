@@ -21,28 +21,34 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
+
+import com.buession.core.validator.Validate;
 
 /**
  * @author Yong.Teng
  */
 public class PostCodeValidator {
 
-    private final static int POST_LENGTH = 6;
+	private final static int POST_LENGTH = 6;
 
-    private PostCodeValidator(){
+	private PostCodeValidator(){
+	}
 
-    }
+	public final static boolean isValid(final CharSequence charSequence){
+		if(charSequence == null){
+			return false;
+		}
 
-    public final static boolean isValid(final CharSequence charSequence){
-        if(charSequence == null){
-            return false;
-        }
+		if(charSequence.length() != POST_LENGTH){
+			return false;
+		}
 
-        return charSequence.length() == POST_LENGTH && NumberValidateUtil.type2(charSequence);
-    }
+		char c = charSequence.charAt(0);
+		return c >= '1' && c <= '9' && Validate.isNumeric(charSequence.subSequence(1, charSequence.length() - 1));
+	}
 
 }

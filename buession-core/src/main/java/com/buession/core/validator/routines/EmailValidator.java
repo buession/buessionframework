@@ -65,7 +65,7 @@ public class EmailValidator {
 			return false;
 		}
 
-		if(charSequence.toString().endsWith(".") == true){
+		if(charSequence.toString().endsWith(".")){
 			return false;
 		}
 
@@ -90,8 +90,8 @@ public class EmailValidator {
 	protected final static boolean isValidDomain(final String domain){
 		// see if domain is an IP address in brackets
 		Matcher ipDomainMatcher = IP_DOMAIN_PATTERN.matcher(domain);
-		return ipDomainMatcher.matches() ? InetAddressValidator.isValid(ipDomainMatcher.group(1)) : DomainValidator
-				.isValid(domain);
+		return ipDomainMatcher.matches() ? InetAddressValidator.isValid(ipDomainMatcher.group(1)) :
+				DomainValidator.isValid(domain);
 	}
 
 }

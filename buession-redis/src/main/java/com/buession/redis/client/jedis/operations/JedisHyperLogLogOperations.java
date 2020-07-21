@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
@@ -35,7 +35,7 @@ import redis.clients.jedis.Pipeline;
  */
 public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Jedis, Pipeline> {
 
-	public JedisHyperLogLogOperations(final JedisRedisClient<Jedis> client){
+	public JedisHyperLogLogOperations(final JedisClient client){
 		super(client, null);
 	}
 

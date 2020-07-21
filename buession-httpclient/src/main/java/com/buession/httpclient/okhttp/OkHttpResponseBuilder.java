@@ -30,7 +30,6 @@ import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.helper.AbstractResponseBuilder;
 import com.buession.httpclient.helper.ResponseBuilder;
 import okhttp3.Headers;
-import okhttp3.Protocol;
 import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +55,7 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder {
 
 		KeyValueParser keyValueParser = new KeyValueParser(httpResponse.protocol().toString(), '/');
 		String protocolName = keyValueParser.getKey();
-		String[] versionTemp = StringUtils.split(keyValueParser.getValue(), '.');
+		String[] versionTemp = StringUtils.splitByWholeSeparatorPreserveAllTokens(keyValueParser.getValue(), ".");
 		int majorVersion = Integer.parseInt(versionTemp[0]);
 		int minorVersion = versionTemp.length > 1 ? Integer.parseInt(versionTemp[1]) : 0;
 

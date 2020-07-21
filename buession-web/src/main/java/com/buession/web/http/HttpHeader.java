@@ -97,6 +97,12 @@ public enum HttpHeader {
 
 	VIA("Via"),
 
+	X_FORWARDED_HOST("X-Forwarded-Host"),
+
+	X_FORWARDED_PROTO("X-Forwarded-Proto"),
+
+	X_FORWARDED_PROTOCOL("X-Forwarded-Protocol"),
+
 	X_REQUESTED_WITH("X-Requested-With");
 
 	private String value;

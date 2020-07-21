@@ -30,8 +30,7 @@ import com.buession.web.http.response.annotation.ContentType;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractContentTypeAnnotationHandler extends AbstractAnnotationHandler<ContentType> implements
-		ContentTypeAnnotationHandler {
+public abstract class AbstractContentTypeAnnotationHandler extends AbstractAnnotationHandler<ContentType, Void> implements ContentTypeAnnotationHandler {
 
 	public AbstractContentTypeAnnotationHandler(){
 		super(ContentType.class);

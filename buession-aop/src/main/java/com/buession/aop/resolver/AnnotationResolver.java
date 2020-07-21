@@ -19,12 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.resolver;
 
-import com.buession.aop.MethodInvocation;
+import org.aopalliance.intercept.MethodInvocation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -34,8 +34,8 @@ import java.lang.reflect.Method;
  */
 public interface AnnotationResolver {
 
-    Annotation getAnnotation(MethodInvocation mi, Class<? extends Annotation> clazz);
+	Annotation getAnnotation(MethodInvocation mi, Class<? extends Annotation> clazz);
 
-    Annotation getAnnotation(Method method, Class<? extends Annotation> clazz);
+	Annotation getAnnotation(Method method, Class<? extends Annotation> clazz);
 
 }

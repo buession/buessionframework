@@ -30,8 +30,8 @@ import com.buession.web.http.response.annotation.ResponseHeaders;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractResponseHeadersAnnotationHandler extends AbstractAnnotationHandler<ResponseHeaders>
-		implements ResponseHeadersAnnotationHandler {
+public abstract class AbstractResponseHeadersAnnotationHandler extends AbstractAnnotationHandler<ResponseHeaders,
+		Void> implements ResponseHeadersAnnotationHandler {
 
 	public AbstractResponseHeadersAnnotationHandler(){
 		super(ResponseHeaders.class);

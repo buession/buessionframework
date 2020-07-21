@@ -24,24 +24,23 @@
  */
 package com.buession.web.aop.interceptor;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.aop.handler.AnnotationHandler;
 import com.buession.aop.interceptor.AbstractAnnotationMethodInterceptor;
 import com.buession.aop.resolver.AnnotationResolver;
+import org.aopalliance.intercept.MethodInvocation;
 
 import java.lang.annotation.Annotation;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractWebAnnotationMethodInterceptor<A extends Annotation> extends
-		AbstractAnnotationMethodInterceptor<A> {
+public abstract class AbstractWebAnnotationMethodInterceptor<A extends Annotation, R> extends AbstractAnnotationMethodInterceptor<A, R> {
 
-	public AbstractWebAnnotationMethodInterceptor(AnnotationHandler<A> handler){
+	public AbstractWebAnnotationMethodInterceptor(AnnotationHandler<A, R> handler){
 		super(handler);
 	}
 
-	public AbstractWebAnnotationMethodInterceptor(AnnotationHandler<A> handler, AnnotationResolver resolver){
+	public AbstractWebAnnotationMethodInterceptor(AnnotationHandler<A, R> handler, AnnotationResolver resolver){
 		super(handler, resolver);
 	}
 

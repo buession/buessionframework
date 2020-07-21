@@ -34,6 +34,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.buession.core.reflect.FieldUtils;
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.ReflectUtils;
 import com.buession.core.validator.Validate;
@@ -450,9 +451,12 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 			if(resultMap.getType() == e.getClass()){
 				List<ResultMapping> resultMappings = resultMap.getIdResultMappings();
 
-				if(Validate.isEmpty(resultMappings) == false){
+				if(Validate.isNotEmpty(resultMappings)){
 					for(ResultMapping resultMapping : resultMappings){
-						ReflectUtils.setField(e, resultMapping.getProperty(), primary);
+						try{
+							FieldUtils.writeField(e, resultMapping.getProperty(), primary, true);
+						}catch(IllegalAccessException illegalAccessException){
+						}
 					}
 				}
 				break;

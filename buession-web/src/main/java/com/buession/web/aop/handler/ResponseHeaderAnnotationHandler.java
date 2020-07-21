@@ -29,6 +29,6 @@ import com.buession.web.http.response.annotation.ResponseHeader;
 /**
  * @author Yong.Teng
  */
-public interface ResponseHeaderAnnotationHandler extends WebAnnotationHandler<ResponseHeader> {
+public interface ResponseHeaderAnnotationHandler extends WebAnnotationHandler<ResponseHeader, Void> {
 
 }

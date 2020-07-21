@@ -24,7 +24,6 @@
  */
 package com.buession.web.servlet.aop.handler;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractContentTypeAnnotationHandler;
 import com.buession.web.http.HttpHeader;
@@ -32,6 +31,7 @@ import com.buession.web.http.response.annotation.ContentType;
 import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
+import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,21 +49,20 @@ public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnno
 	}
 
 	@Override
-	public void execute(MethodInvocation mi, ContentType contentType){
-		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
-		doExecute(httpServlet, contentType);
+	public Void execute(MethodInvocation mi, ContentType contentType){
+		doExecute(AopUtils.getHttpServlet(mi), contentType);
+		return null;
 	}
 
 	@Override
-	public Object execute(Object target, Method method, Object[] arguments, ContentType contentType){
-		HttpServlet httpServlet = MethodUtils.createHttpServletFromMethodArguments(arguments);
-		doExecute(httpServlet, contentType);
+	public Void execute(Object target, Method method, Object[] arguments, ContentType contentType){
+		doExecute(MethodUtils.createHttpServletFromArguments(arguments), contentType);
 		return null;
 	}
 
 	private final static void doExecute(final HttpServlet httpServlet, final ContentType contentType){
 		if(httpServlet == null || httpServlet.getResponse() == null){
-			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "ServerHttpResponse");
+			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "HttpServletResponse");
 			return;
 		}
 

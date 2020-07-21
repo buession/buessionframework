@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis;
 import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.client.ShardedRedisClient;
-import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.jedis.ShardedJedisConnection;
 import com.buession.redis.client.jedis.operations.ShardedJedisGeoOperations;
 import com.buession.redis.client.jedis.operations.ShardedJedisConnectionOperations;
 import com.buession.redis.client.jedis.operations.ShardedJedisHashOperations;
@@ -69,7 +69,7 @@ public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> i
 		super();
 	}
 
-	public ShardedJedisClient(RedisConnection connection){
+	public ShardedJedisClient(ShardedJedisConnection connection){
 		super(connection);
 	}
 

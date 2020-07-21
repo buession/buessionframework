@@ -43,6 +43,15 @@ public class GeoRadius implements Serializable {
 
 	private Geo geo;
 
+	public GeoRadius(){
+	}
+
+	public GeoRadius(byte[] member, double distance, Geo geo){
+		this.member = member;
+		this.distance = distance;
+		this.geo = geo;
+	}
+
 	public byte[] getMember(){
 		return member;
 	}

@@ -38,6 +38,4 @@ public interface JedisRedisClient<C extends JedisCommands> extends RedisClient {
 
 	Queue<FutureResult<Response<?>>> getTxResults();
 
-	void setTxResults(Queue<FutureResult<Response<?>>> txResults);
-
 }

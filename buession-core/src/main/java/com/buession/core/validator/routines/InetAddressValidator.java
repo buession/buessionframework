@@ -26,7 +26,9 @@
  */
 package com.buession.core.validator.routines;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
+import com.buession.lang.Constants;
 import com.buession.lang.IpType;
 
 /**
@@ -43,9 +45,9 @@ public class InetAddressValidator {
 	}
 
 	public final static boolean isValid(final CharSequence charSequence, final IpType ipType){
-		if(IpType.IP_V4.equals(ipType) == true){
+		if(IpType.IP_V4.equals(ipType)){
 			return isValidInet4Address(charSequence);
-		}else if(IpType.IP_V6.equals(ipType) == true){
+		}else if(IpType.IP_V6.equals(ipType)){
 			return isValidInet6Address(charSequence);
 		}else{
 			return false;
@@ -53,11 +55,11 @@ public class InetAddressValidator {
 	}
 
 	public final static boolean isValidInet4Address(final CharSequence charSequence){
-		if(charSequence == null || "".equals(charSequence) == false){
+		if(charSequence == null || Constants.EMPTY_STRING.equals(charSequence) == false){
 			return false;
 		}
 
-		String[] parts = charSequence.toString().split(".");
+		String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(charSequence.toString(), ":");
 		if(parts == null || parts.length != 4){
 			return false;
 		}
@@ -72,7 +74,7 @@ public class InetAddressValidator {
 	}
 
 	public final static boolean isValidInet6Address(final CharSequence charSequence){
-		if(charSequence == null || "".equals(charSequence) == false){
+		if(charSequence == null || Constants.EMPTY_STRING.equals(charSequence) == false){
 			return false;
 		}
 
@@ -80,13 +82,13 @@ public class InetAddressValidator {
 			return true;
 		}
 
-		String[] parts = charSequence.toString().split(":");
-		if(parts == null || parts.length >= 8){
+		String[] parts = StringUtils.splitByWholeSeparatorPreserveAllTokens(charSequence.toString(), ":");
+		if(parts == null || parts.length > 8){
 			return false;
 		}
 
 		for(String part : parts){
-			if(isInet6AddressGroup(part) == false && "".equals(part) == false){
+			if(isInet6AddressGroup(part) == false && Constants.EMPTY_STRING.equals(part) == false){
 				return false;
 			}
 		}

@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.utils.ReturnUtils;
@@ -45,7 +45,7 @@ import java.util.Map;
  */
 public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipeline> {
 
-	public JedisStringOperations(final JedisRedisClient<Jedis> client){
+	public JedisStringOperations(final JedisClient client){
 		super(client, null);
 	}
 

@@ -39,12 +39,11 @@ import java.util.Map;
  */
 public abstract class NotEmptyConstraintValidator<T> implements ConstraintValidator<NotEmpty, T> {
 
-	public final static class CharSequenceNotEmptyConstraintValidator extends
-			NotEmptyConstraintValidator<CharSequence> {
+	public final static class CharSequenceNotEmptyConstraintValidator extends NotEmptyConstraintValidator<CharSequence> {
 
 		@Override
 		public boolean isValid(CharSequence value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
+			return Validate.isNotEmpty(value);
 		}
 
 	}
@@ -53,7 +52,7 @@ public abstract class NotEmptyConstraintValidator<T> implements ConstraintValida
 
 		@Override
 		public boolean isValid(Object[] value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
+			return Validate.isNotEmpty(value);
 		}
 
 	}
@@ -62,7 +61,7 @@ public abstract class NotEmptyConstraintValidator<T> implements ConstraintValida
 
 		@Override
 		public boolean isValid(Map value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
+			return Validate.isNotEmpty(value);
 		}
 
 	}
@@ -71,7 +70,7 @@ public abstract class NotEmptyConstraintValidator<T> implements ConstraintValida
 
 		@Override
 		public boolean isValid(Collection value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
+			return Validate.isNotEmpty(value);
 		}
 
 	}
@@ -80,7 +79,7 @@ public abstract class NotEmptyConstraintValidator<T> implements ConstraintValida
 
 		@Override
 		public boolean isValid(Iterator value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
+			return Validate.isNotEmpty(value);
 		}
 
 	}
@@ -89,7 +88,7 @@ public abstract class NotEmptyConstraintValidator<T> implements ConstraintValida
 
 		@Override
 		public boolean isValid(Enumeration value, ConstraintValidatorContext context){
-			return Validate.isEmpty(value) == false;
+			return Validate.isNotEmpty(value);
 		}
 
 	}

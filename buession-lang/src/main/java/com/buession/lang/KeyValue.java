@@ -25,6 +25,7 @@
 package com.buession.lang;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author Yong.Teng
@@ -70,32 +71,17 @@ public class KeyValue<K, V> implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj){
-		if(obj == null){
-			return false;
+	public boolean equals(Object o){
+		if(this == o){
+			return true;
 		}
 
-		if(!(obj instanceof KeyValue)){
-			return false;
+		if(o instanceof KeyValue){
+			KeyValue that = (KeyValue) o;
+			return Objects.equals(key, that.key) && Objects.equals(value, that.value);
 		}
 
-		KeyValue that = (KeyValue) obj;
-
-		if(that.getKey().equals(this.key) == false){
-			return false;
-		}
-
-		if(this.value == null && that.getValue() != null){
-			if(that.getValue().equals(this.value) == false){
-				return false;
-			}
-		}else{
-			if(this.value.equals(that.getValue()) == false){
-				return false;
-			}
-		}
-
-		return true;
+		return false;
 	}
 
 	@Override

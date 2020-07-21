@@ -29,6 +29,6 @@ import com.buession.redis.core.command.KeyCommands;
 /**
  * @author Yong.Teng
  */
-public interface KeyOperations extends KeyCommands, RedisClientOperations {
+public interface KeyOperations<T> extends KeyCommands, RedisClientOperations<T> {
 
 }

@@ -19,17 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.aspectj;
 
-import com.buession.aop.MethodInvocation;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.Signature;
-import org.aspectj.lang.reflect.AdviceSignature;
-import org.aspectj.lang.reflect.MethodSignature;
+import org.aopalliance.intercept.MethodInvocation;
 
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
 
 /**
@@ -37,36 +34,41 @@ import java.lang.reflect.Method;
  */
 public abstract class AbstractAdviceMethodInvocationAdapter implements MethodInvocation {
 
-    private Object object;
+	private Object object;
 
-    private Method method;
+	private Method method;
 
-    private Object[] arguments;
+	private Object[] arguments;
 
-    public AbstractAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments){
-        this.object = object;
-        this.method = method;
-        this.arguments = arguments;
-    }
+	public AbstractAdviceMethodInvocationAdapter(Object object, Method method, Object[] arguments){
+		this.object = object;
+		this.method = method;
+		this.arguments = arguments;
+	}
 
-    @Override
-    public Object proceed() throws Throwable{
-        return null;
-    }
+	@Override
+	public Object proceed() throws Throwable{
+		return null;
+	}
 
-    @Override
-    public Object getThis(){
-        return object;
-    }
+	@Override
+	public Object getThis(){
+		return object;
+	}
 
-    @Override
-    public Method getMethod(){
-        return method;
-    }
+	@Override
+	public Method getMethod(){
+		return method;
+	}
 
-    @Override
-    public Object[] getArguments(){
-        return arguments;
-    }
+	@Override
+	public AccessibleObject getStaticPart(){
+		return method;
+	}
+
+	@Override
+	public Object[] getArguments(){
+		return arguments;
+	}
 
 }

@@ -29,6 +29,6 @@ import com.buession.redis.core.command.ConnectionCommands;
 /**
  * @author Yong.Teng
  */
-public interface ConnectionOperations extends ConnectionCommands, RedisClientOperations {
+public interface ConnectionOperations<T> extends ConnectionCommands, RedisClientOperations<T> {
 
 }

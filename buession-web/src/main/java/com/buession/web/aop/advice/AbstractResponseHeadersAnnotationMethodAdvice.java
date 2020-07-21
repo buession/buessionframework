@@ -31,15 +31,14 @@ import com.buession.web.http.response.annotation.ResponseHeaders;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractResponseHeadersAnnotationMethodAdvice extends
-		AbstractWebAnnotationMethodAdvice<ResponseHeaders> implements ResponseHeadersAnnotationMethodAdvice {
+public abstract class AbstractResponseHeadersAnnotationMethodAdvice extends AbstractWebAnnotationMethodAdvice<ResponseHeaders, Void> implements ResponseHeadersAnnotationMethodAdvice {
 
-	public AbstractResponseHeadersAnnotationMethodAdvice(AnnotationHandler<ResponseHeaders> handler){
+	public AbstractResponseHeadersAnnotationMethodAdvice(AnnotationHandler<ResponseHeaders, Void> handler){
 		super(handler);
 	}
 
-	public AbstractResponseHeadersAnnotationMethodAdvice(AnnotationHandler<ResponseHeaders> handler,
-														 AnnotationResolver resolver){
+	public AbstractResponseHeadersAnnotationMethodAdvice(AnnotationHandler<ResponseHeaders, Void> handler,
+			AnnotationResolver resolver){
 		super(handler, resolver);
 	}
 

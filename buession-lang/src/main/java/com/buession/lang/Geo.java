@@ -59,18 +59,22 @@ public class Geo {
 	}
 
 	@Override
-	public boolean equals(Object object){
-		if(object == null || (object instanceof Geo) == false){
-			return false;
+	public boolean equals(Object o){
+		if(this == o){
+			return true;
 		}
 
-		Geo that = (Geo) object;
-		return that.getLongitude() == longitude && that.getLatitude() == latitude;
+		if(o instanceof Geo){
+			Geo that = (Geo) o;
+			return that.getLongitude() == longitude && that.getLatitude() == latitude;
+		}
+
+		return false;
 	}
 
 	@Override
 	public String toString(){
-		return "Geo{" + "longitude=" + longitude + ", latitude=" + latitude + '}';
+		return longitude + ", " + latitude;
 	}
 
 }

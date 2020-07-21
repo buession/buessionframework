@@ -54,7 +54,7 @@ public class GsonJsonSerializer extends AbstractJsonSerializer {
 
 	@Override
 	public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
-		return serializeAsBytes(object, DEFAULT_CHARSET);
+		return serializeAsBytes(object, Charset.defaultCharset());
 	}
 
 	@Override

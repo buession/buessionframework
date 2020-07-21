@@ -29,6 +29,6 @@ import com.buession.web.http.response.annotation.ContentType;
 /**
  * @author Yong.Teng
  */
-public interface ContentTypeAnnotationHandler extends WebAnnotationHandler<ContentType> {
+public interface ContentTypeAnnotationHandler extends WebAnnotationHandler<ContentType, Void> {
 
 }

@@ -24,6 +24,8 @@
  */
 package org.apache.ibatis.type;
 
+import com.buession.core.utils.Assert;
+
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,31 +36,28 @@ import java.util.Set;
  */
 public abstract class AbstractSetTypeHandler<E> extends BaseTypeHandler<Set<E>> {
 
-    protected Class<E> type;
+	protected Class<E> type;
 
-    public AbstractSetTypeHandler(Class<E> type){
-        if(type == null){
-            throw new IllegalArgumentException("Type argument cannot be null");
-        }else{
-            this.type = type;
-        }
-    }
+	public AbstractSetTypeHandler(Class<E> type){
+		Assert.isNull(type, "Type argument cannot be null.");
+		this.type = type;
+	}
 
-    @Override
-    public Set<E> getNullableResult(ResultSet rs, String columnName) throws SQLException{
-        return parseResult(rs.getString(columnName));
-    }
+	@Override
+	public Set<E> getNullableResult(ResultSet rs, String columnName) throws SQLException{
+		return parseResult(rs.getString(columnName));
+	}
 
-    @Override
-    public Set<E> getNullableResult(ResultSet rs, int columnIndex) throws SQLException{
-        return parseResult(rs.getString(columnIndex));
-    }
+	@Override
+	public Set<E> getNullableResult(ResultSet rs, int columnIndex) throws SQLException{
+		return parseResult(rs.getString(columnIndex));
+	}
 
-    @Override
-    public Set<E> getNullableResult(CallableStatement cs, int columnIndex) throws SQLException{
-        return parseResult(cs.getString(columnIndex));
-    }
+	@Override
+	public Set<E> getNullableResult(CallableStatement cs, int columnIndex) throws SQLException{
+		return parseResult(cs.getString(columnIndex));
+	}
 
-    protected abstract Set<E> parseResult(final String str);
+	protected abstract Set<E> parseResult(final String str);
 
 }

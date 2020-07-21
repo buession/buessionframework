@@ -40,7 +40,7 @@ public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.
 
 	protected final static Date operatorTime(Date date){
 		if(date != null){
-			date.setTime(date.getTime() * 1000);
+			date.setTime(date.getTime() * 1000L);
 		}
 
 		return date;

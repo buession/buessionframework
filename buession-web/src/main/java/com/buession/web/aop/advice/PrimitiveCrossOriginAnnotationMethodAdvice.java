@@ -30,6 +30,6 @@ import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
 /**
  * @author Yong.Teng
  */
-public interface PrimitiveCrossOriginAnnotationMethodAdvice extends AnnotationMethodAdvice<PrimitiveCrossOrigin> {
+public interface PrimitiveCrossOriginAnnotationMethodAdvice extends AnnotationMethodAdvice<PrimitiveCrossOrigin, Void> {
 
 }

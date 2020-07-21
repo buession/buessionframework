@@ -32,6 +32,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
@@ -44,11 +45,8 @@ public class EncodedFormRequestBodyConverter implements ApacheRequestBodyConvert
 			return null;
 		}
 
-		List<NameValuePair> data = new ArrayList<>(source.getContent().size());
-
-		for(RequestBodyElement element : source.getContent()){
-			data.add(new BasicNameValuePair(element.getName(), element.getOptionalValue()));
-		}
+		List<NameValuePair> data = source.getContent().stream().map(element->new BasicNameValuePair(element.getName(),
+				element.getOptionalValue())).collect(Collectors.toList());
 
 		return new UrlEncodedFormEntity(data, source.getContentType().getCharset());
 	}

@@ -25,7 +25,6 @@
 package com.buession.web.servlet.config;
 
 import com.buession.web.servlet.annotation.RequestClientIpHandlerMethodArgumentResolver;
-import com.buession.web.servlet.annotation.RequestMobileHandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
@@ -36,10 +35,9 @@ import java.util.List;
  */
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
-    @Override
-    protected void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers){
-        argumentResolvers.add(new RequestClientIpHandlerMethodArgumentResolver());
-        argumentResolvers.add(new RequestMobileHandlerMethodArgumentResolver());
-    }
+	@Override
+	protected void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers){
+		argumentResolvers.add(new RequestClientIpHandlerMethodArgumentResolver());
+	}
 
 }

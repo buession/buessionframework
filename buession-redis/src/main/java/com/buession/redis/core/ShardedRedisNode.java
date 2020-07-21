@@ -31,7 +31,9 @@ import com.buession.core.utils.Assert;
  *
  * @author Yong.Teng
  */
-public class ShardedRedisNode extends EnhanceRedisNode {
+public class ShardedRedisNode extends RedisNamedServer {
+
+	private static final long serialVersionUID = 5161327009453777887L;
 
 	/**
 	 * 密码
@@ -46,7 +48,7 @@ public class ShardedRedisNode extends EnhanceRedisNode {
 	/**
 	 * 权重
 	 */
-	private int weight;
+	private int weight = 1;
 
 	/**
 	 * 构造函数

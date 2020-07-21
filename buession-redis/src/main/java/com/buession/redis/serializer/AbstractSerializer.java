@@ -160,7 +160,7 @@ public abstract class AbstractSerializer implements Serializer {
 		if(str == null){
 			return null;
 		}else{
-			return str.stream().map((value)->deserialize(value, clazz)).collect(Collectors.toCollection(ArrayList::new));
+			return str.stream().map((value)->deserialize(value, clazz)).collect(Collectors.toList());
 		}
 	}
 
@@ -169,7 +169,7 @@ public abstract class AbstractSerializer implements Serializer {
 		if(bytes == null){
 			return null;
 		}else{
-			return bytes.stream().map((value)->deserializeBytes(value, clazz)).collect(Collectors.toCollection(ArrayList::new));
+			return bytes.stream().map((value)->deserializeBytes(value, clazz)).collect(Collectors.toList());
 		}
 	}
 

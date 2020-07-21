@@ -29,7 +29,7 @@ import com.buession.core.converter.ListConverter;
 import com.buession.lang.Geo;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.GeoOperations;
-import com.buession.redis.core.ClusterMode;
+import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.GeoCommands;
@@ -47,7 +47,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractGeoOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements GeoOperations {
+public abstract class AbstractGeoOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements GeoOperations<C> {
 
 	protected final static MapConverter<String, Geo, String, GeoCoordinate> STRING_MAP_GEOMAP_JEDIS_CONVERTER =
 			JedisConverters.mapGeoMapJedisConverter();
@@ -66,8 +66,8 @@ public abstract class AbstractGeoOperations<C extends JedisCommands, P extends P
 	protected final static Converter<GeoUnit, redis.clients.jedis.GeoUnit> GEO_UNIT_JEDIS_CONVERTER =
 			JedisConverters.geoUnitJedisConverter();
 
-	public AbstractGeoOperations(final JedisRedisClient<C> client, final ClusterMode clusterMode){
-		super(client, clusterMode);
+	public AbstractGeoOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
+		super(client, redisMode);
 	}
 
 	@Override

@@ -27,7 +27,7 @@ package com.buession.redis.client.operations;
 import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
-import com.buession.redis.core.ClusterMode;
+import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.Converters;
 import com.buession.redis.exception.NotSupportedCommandException;
@@ -38,7 +38,7 @@ import org.springframework.core.convert.converter.Converter;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRedisClientOperations implements RedisClientOperations {
+public abstract class AbstractRedisClientOperations<T> implements RedisClientOperations<T> {
 
 	protected final static ListConverter<String, byte[]> STRING_TO_BINARY_LIST_CONVERTER =
 			Converters.stringToBinaryListConverter();
@@ -54,14 +54,14 @@ public abstract class AbstractRedisClientOperations implements RedisClientOperat
 
 	protected final static Converter<String, Status> OK_TO_STATUS_CONVERTER = Converters.okToStatusConverter();
 
-	private ClusterMode clusterMode;
+	private RedisMode redisMode;
 
-	public ClusterMode getClusterMode(){
-		return clusterMode;
+	public RedisMode getRedisMode(){
+		return redisMode;
 	}
 
-	public void setClusterMode(ClusterMode clusterMode){
-		this.clusterMode = clusterMode;
+	public void setRedisMode(RedisMode redisMode){
+		this.redisMode = redisMode;
 	}
 
 	protected abstract boolean isTransaction();
@@ -69,7 +69,7 @@ public abstract class AbstractRedisClientOperations implements RedisClientOperat
 	protected abstract boolean isPipeline();
 
 	protected void pipelineAndTransactionNotSupportedException(final ProtocolCommand command){
-		if(getClusterMode() == null){
+		if(getRedisMode() == null){
 			if(isPipeline()){
 				throw new NotSupportedPipelineCommandException(command);
 			}else if(isTransaction()){
@@ -77,17 +77,17 @@ public abstract class AbstractRedisClientOperations implements RedisClientOperat
 			}
 		}else{
 			if(isPipeline()){
-				throw new NotSupportedPipelineCommandException(commandNotSupportedMessage(command, getClusterMode(),
+				throw new NotSupportedPipelineCommandException(commandNotSupportedMessage(command, getRedisMode(),
 						"pipeline"));
 			}else if(isTransaction()){
-				throw new NotSupportedTransactionCommandException(commandNotSupportedMessage(command, getClusterMode()
-						, "transaction"));
+				throw new NotSupportedTransactionCommandException(commandNotSupportedMessage(command, getRedisMode(),
+						"transaction"));
 			}
 		}
 	}
 
 	protected void commandAllNotSupportedException(final ProtocolCommand command){
-		if(getClusterMode() == null){
+		if(getRedisMode() == null){
 			if(isPipeline()){
 				throw new NotSupportedPipelineCommandException(command);
 			}else if(isTransaction()){
@@ -97,18 +97,18 @@ public abstract class AbstractRedisClientOperations implements RedisClientOperat
 			}
 		}else{
 			if(isPipeline()){
-				throw new NotSupportedPipelineCommandException(commandNotSupportedMessage(command, getClusterMode(),
+				throw new NotSupportedPipelineCommandException(commandNotSupportedMessage(command, getRedisMode(),
 						"pipeline"));
 			}else if(isTransaction()){
-				throw new NotSupportedTransactionCommandException(commandNotSupportedMessage(command, getClusterMode()
-						, "transaction"));
+				throw new NotSupportedTransactionCommandException(commandNotSupportedMessage(command, getRedisMode(),
+						"transaction"));
 			}else{
-				throw new NotSupportedCommandException(commandNotSupportedMessage(command, getClusterMode(), null));
+				throw new NotSupportedCommandException(commandNotSupportedMessage(command, getRedisMode(), null));
 			}
 		}
 	}
 
-	private final static String commandNotSupportedMessage(final ProtocolCommand command, final ClusterMode mode,
+	private final static String commandNotSupportedMessage(final ProtocolCommand command, final RedisMode mode,
 			final String s){
 		final StringBuilder sb = new StringBuilder(64);
 

@@ -47,7 +47,7 @@ public enum Multiplexing {
 
 	@Override
 	public String toString(){
-		return value;
+		return getValue();
 	}
 
 }

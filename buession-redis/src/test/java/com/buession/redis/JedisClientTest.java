@@ -25,15 +25,11 @@
 package com.buession.redis;
 
 import com.buession.redis.core.Info;
-import com.buession.redis.core.Server;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * @author Yong.Teng
@@ -42,35 +38,42 @@ public class JedisClientTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void info(){
-		RedisTemplate redisTemplate = getRedisTemplate();
-		System.out.println(redisTemplate.info());
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		Info info = redisTemplate.info();
+		System.out.println(info.getMemory().isActiveDefragRunning());
+		System.out.println(info);
+	}
+
+	@Test
+	public void clientGetName(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		System.out.println(redisTemplate.clientGetName());
 	}
 
 	@Test
 	public void set(){
-		Info info = new Info();
-		RedisTemplate redisTemplate = getRedisTemplate();
-		redisTemplate.set("info", info);
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		redisTemplate.set("info", "info");
 	}
 
 	@Test
 	public void get(){
-		RedisTemplate redisTemplate = getRedisTemplate();
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
 		System.out.println(redisTemplate.get("info"));
 		System.out.println(redisTemplate.getObject("info", Info.class));
 	}
 
 	@Test
 	public void transaction(){
-		RedisTemplate redisTemplate = getRedisTemplate();
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
 
 		Transaction transaction = redisTemplate.multi();
 		//redisTemplate.set("server", new Server());
 		//redisTemplate.set("server2", new Server());
 		//redisTemplate.set("t1", "T1222333");
 		//redisTemplate.type("test");
-		redisTemplate.getObject("server", Server.class);
-		redisTemplate.mGetObject(new String[]{"server", "server1"}, Server.class);
+		redisTemplate.getObject("server", Info.Server.class);
+		redisTemplate.mGetObject(new String[]{"server", "server1"}, Info.Server.class);
 		List<Object> result = redisTemplate.exec();
 
 		if(result != null){
@@ -82,15 +85,15 @@ public class JedisClientTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void pipeline(){
-		RedisTemplate redisTemplate = getRedisTemplate();
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
 
 		Pipeline pipeline = redisTemplate.pipeline();
 		//redisTemplate.set("sg", new Server());
 		//redisTemplate.set("sg2", new Server());
 		//redisTemplate.set("t4", "T4");
 		//redisTemplate.type("test");
-		redisTemplate.getObject("sg", Server.class);
-		redisTemplate.mGetObject(new String[]{"sg", "sg2"}, Server.class);
+		redisTemplate.getObject("sg", Info.Server.class);
+		redisTemplate.mGetObject(new String[]{"sg", "sg2"}, Info.Server.class);
 		List<Object> result = redisTemplate.exec();
 
 		if(result != null){
@@ -102,7 +105,7 @@ public class JedisClientTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void thread(){
-		RedisTemplate redisTemplate = getRedisTemplate();
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
 
 		Thread threadA = new Thread(new Runnable() {
 

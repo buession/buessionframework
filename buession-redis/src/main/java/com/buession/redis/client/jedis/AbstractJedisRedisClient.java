@@ -48,7 +48,6 @@ import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
-import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.jedis.JedisTransaction;
@@ -1984,16 +1983,6 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	@Override
 	public Queue<FutureResult<Response<?>>> getTxResults(){
 		return txResults;
-	}
-
-	@Override
-	public void setTxResults(Queue<FutureResult<Response<?>>> txResults){
-		this.txResults = txResults;
-	}
-
-	@Override
-	public <C, R> R execute(final Executor<C, R> executor) throws RedisException{
-		return super.execute(executor);
 	}
 
 	protected redis.clients.jedis.Transaction getTransaction(){

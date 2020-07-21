@@ -29,6 +29,6 @@ import com.buession.redis.core.command.PubSubCommands;
 /**
  * @author Yong.Teng
  */
-public interface PubSubOperations extends PubSubCommands, RedisClientOperations {
+public interface PubSubOperations<T> extends PubSubCommands, RedisClientOperations<T> {
 
 }

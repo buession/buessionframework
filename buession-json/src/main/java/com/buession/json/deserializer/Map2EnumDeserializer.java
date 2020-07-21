@@ -24,8 +24,8 @@
  */
 package com.buession.json.deserializer;
 
+import com.buession.core.reflect.FieldUtils;
 import com.buession.core.utils.EnumUtils;
-import com.buession.core.utils.ReflectUtils;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -52,8 +52,7 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 
 	@SuppressWarnings({"unchecked"})
 	@Override
-	public Enum<?> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws
-			IOException{
+	public Enum<?> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException{
 		JsonNode node = jsonParser.getCodec().readTree(jsonParser);
 		/** 当前节点名 */
 		String fieldName = jsonParser.getCurrentName();
@@ -81,28 +80,29 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 				return ret;
 			}
 
-			Map<String, JsonNode> nodeMapValues = getNodeMapVlues(node);
+			Map<String, JsonNode> nodeMapValues = getNodeMapValues(node);
 			Field[] nodeCurrentFieldTypeFields = nodeCurrentFieldType.getDeclaredFields();
+			Enum<?> enumValue;
+			Field[] enumValueFields;
 
 			for(Field field : nodeCurrentFieldTypeFields){
 				if(field.isEnumConstant() == false){
 					continue;
 				}
 
-				ReflectUtils.setFieldAccessible(field);
+				FieldUtils.setAccessible(field);
 
-				Enum<?> enumValue = (Enum<?>) field.get(currentValue);
+				enumValue = (Enum<?>) field.get(currentValue);
 				if(enumValue == null){
 					continue;
 				}
 
-				Field[] enumValueFields = enumValue.getClass().getDeclaredFields();
+				enumValueFields = enumValue.getClass().getDeclaredFields();
 				Map<String, Object> temp = new HashMap<>(enumValueFields.length);
 
 				for(Field enumValueField : enumValueFields){
 					if(EnumUtils.notEnumValuesField(enumValueField)){
-						ReflectUtils.setFieldAccessible(enumValueField);
-
+						FieldUtils.setAccessible(enumValueField);
 						temp.put(enumValueField.getName(), enumValueField.get(enumValue));
 					}
 				}
@@ -110,15 +110,14 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 				if(temp.size() == nodeMapValues.size()){
 					if(comparatorMap(temp, nodeMapValues)){
 						cache.put(cacheKey, enumValue);
-
 						return enumValue;
 					}
 				}
 			}
 		}catch(NoSuchFieldException e){
-			logger.error("{}", e);
+			logger.error(e.getMessage(), e);
 		}catch(IllegalAccessException e){
-			logger.error("{}", e);
+			logger.error(e.getMessage(), e);
 		}
 
 		return null;
@@ -130,26 +129,23 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 		final String nodeName = node.toString();
 		final StringBuilder sb = new StringBuilder(className.length() + fieldName.length() + nodeName.length() + 2);
 
-		sb.append(className);
-		sb.append('_');
-		sb.append(fieldName);
-		sb.append('_');
-		sb.append(nodeName);
+		sb.append(className).append('_').append(fieldName).append('_').append(nodeName);
 
 		return sb.toString();
 	}
 
-	private final static Map<String, JsonNode> getNodeMapVlues(final JsonNode node){
+	private final static Map<String, JsonNode> getNodeMapValues(final JsonNode node){
 		if(node == null || node.isObject() == false){
 			return null;
 		}
 
 		final Iterator<Map.Entry<String, JsonNode>> iterator = node.fields();
 		final Map<String, JsonNode> result = new HashMap<>(node.size());
+		Map.Entry<String, JsonNode> entry;
 
 		while(iterator.hasNext()){
-			Map.Entry<String, JsonNode> map = iterator.next();
-			result.put(map.getKey(), map.getValue());
+			entry = iterator.next();
+			result.put(entry.getKey(), entry.getValue());
 		}
 
 		return result;
@@ -157,10 +153,10 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 
 	private final static boolean comparatorMap(final Map<String, Object> map1, final Map<String, JsonNode> map2){
 		Iterator<Map.Entry<String, Object>> iterator1 = map1.entrySet().iterator();
+		Map.Entry<String, Object> entry1;
 
 		while(iterator1.hasNext()){
-			Map.Entry<String, Object> entry1 = iterator1.next();
-
+			entry1 = iterator1.next();
 			if(checkEquals(entry1.getValue(), map2.get(entry1.getKey())) == false){
 				return false;
 			}
@@ -173,17 +169,13 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 		if(node.isBigDecimal()){
 			return value.equals(node.decimalValue());
 		}else if(node.isBigInteger()){
-			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue())
-					|| value.equals(node.bigIntegerValue());
+			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue()) || value.equals(node.bigIntegerValue());
 		}else if(node.isLong()){
-			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue())
-					|| value.equals(node.bigIntegerValue());
+			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue()) || value.equals(node.bigIntegerValue());
 		}else if(node.isInt()){
-			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue())
-					|| value.equals(node.bigIntegerValue());
+			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue()) || value.equals(node.bigIntegerValue());
 		}else if(node.isShort()){
-			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue())
-					|| value.equals(node.bigIntegerValue());
+			return value.equals(node.shortValue()) || value.equals(node.intValue()) || value.equals(node.longValue()) || value.equals(node.bigIntegerValue());
 		}else if(node.isDouble()){
 			return value.equals(node.floatValue()) || value.equals(node.doubleValue());
 		}else if(node.isFloat()){

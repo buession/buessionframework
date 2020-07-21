@@ -29,6 +29,6 @@ import com.buession.redis.core.command.StringCommands;
 /**
  * @author Yong.Teng
  */
-public interface StringOperations extends StringCommands, RedisClientOperations {
+public interface StringOperations<T> extends StringCommands, RedisClientOperations<T> {
 
 }

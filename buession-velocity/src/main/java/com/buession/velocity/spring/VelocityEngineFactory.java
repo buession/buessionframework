@@ -148,7 +148,7 @@ public class VelocityEngineFactory {
 
 		try{
 			StringBuilder resolvedPath = new StringBuilder();
-			String[] paths = StringUtils.split(resourceLoaderPath, ",");
+			String[] paths = StringUtils.split(resourceLoaderPath, ',');
 
 			for(int i = 0; i < paths.length; i++){
 				String path = paths[i];
@@ -167,16 +167,16 @@ public class VelocityEngineFactory {
 			velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_CACHE, "true");
 			velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, resolvedPath.toString());
 		}catch(IOException ex){
-			logger.debug("Cannot resolve resource loader path [{}] to [java.io.File]: using " +
-					"SpringResourceLoader", resourceLoaderPath, ex);
+			logger.debug("Cannot resolve resource loader path [{}] to [java.io.File]: using " + "SpringResourceLoader"
+					, resourceLoaderPath, ex);
 			initSpringResourceLoader(velocityEngine, resourceLoaderPath);
 		}
 	}
 
 	protected void initSpringResourceLoader(VelocityEngine velocityEngine, String resourceLoaderPath){
 		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, SpringResourceLoader.NAME);
-		velocityEngine.setProperty(SpringResourceLoader.SPRING_RESOURCE_LOADER_CLASS, SpringResourceLoader.class
-				.getName());
+		velocityEngine.setProperty(SpringResourceLoader.SPRING_RESOURCE_LOADER_CLASS,
+				SpringResourceLoader.class.getName());
 		velocityEngine.setProperty(SpringResourceLoader.SPRING_RESOURCE_LOADER_CACHE, "true");
 		velocityEngine.setApplicationAttribute(SpringResourceLoader.SPRING_RESOURCE_LOADER, getResourceLoader());
 		velocityEngine.setApplicationAttribute(SpringResourceLoader.SPRING_RESOURCE_LOADER_PATH, resourceLoaderPath);

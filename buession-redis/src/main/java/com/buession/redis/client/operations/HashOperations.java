@@ -29,6 +29,6 @@ import com.buession.redis.core.command.HashCommands;
 /**
  * @author Yong.Teng
  */
-public interface HashOperations extends HashCommands, RedisClientOperations {
+public interface HashOperations<T> extends HashCommands, RedisClientOperations<T> {
 
 }

@@ -24,405 +24,53 @@
  */
 package com.buession.redis.spring;
 
-import com.buession.core.utils.ReflectUtils;
-import com.buession.redis.client.connection.SslConfiguration;
+import com.buession.core.reflect.FieldUtils;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.ShardedJedisDataSource;
 import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.connection.jedis.ShardedJedisConnection;
-import com.buession.redis.core.RedisURI;
-import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.exception.PoolException;
+import com.buession.redis.spring.jedis.JedisConfiguration;
+import com.buession.redis.spring.jedis.ShardedRedisConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.JedisPoolConfig;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLParameters;
-import javax.net.ssl.SSLSocketFactory;
-import java.util.Set;
-
 /**
+ * Jedis Redis 连接工厂 Bean
+ *
  * @author Yong.Teng
  */
 public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<JedisRedisConnection> {
 
+	/**
+	 * 连接池配置
+	 */
 	private JedisPoolConfig poolConfig = new JedisPoolConfig();
 
 	private final static Logger logger = LoggerFactory.getLogger(JedisRedisConnectionFactoryBean.class);
 
-	public JedisRedisConnectionFactoryBean(){
-		super();
-	}
-
-	public JedisRedisConnectionFactoryBean(final RedisURI redisURI){
-		super(redisURI);
-	}
-
-	public JedisRedisConnectionFactoryBean(final RedisURI redisURI, final boolean usePool){
-		super(redisURI, usePool);
-	}
-
-	public JedisRedisConnectionFactoryBean(final RedisURI redisURI, final SSLSocketFactory sslSocketFactory,
-			final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
-		super(redisURI, sslSocketFactory, sslParameters, hostnameVerifier);
-	}
-
-	public JedisRedisConnectionFactoryBean(final RedisURI redisURI, final boolean usePool,
-			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
-			final HostnameVerifier hostnameVerifier){
-		super(redisURI, usePool, sslSocketFactory, sslParameters, hostnameVerifier);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host){
-		super(host);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final String password){
-		super(host, password);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final String password, final int database){
-		super(host, password, database);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final String password, final int database,
-			final boolean usePool){
-		super(host, password, database, usePool);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final String password, final int database,
-			final int connectTimeout, final int soTimeout){
-		super(host, password, database, connectTimeout, soTimeout);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final String password, final boolean usePool){
-		super(host, password, usePool);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final String password, final int connectTimeout,
-			final int soTimeout){
-		super(host, password, connectTimeout, soTimeout);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port){
-		super(host, port);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final int database){
-		super(host, port, database);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password){
-		super(host, port, password);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database){
-		super(host, port, password, database);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final boolean usePool){
-		super(host, port, password, database, usePool);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final int connectTimeout, final int soTimeout){
-		super(host, port, password, database, connectTimeout, soTimeout);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final int connectTimeout, final int soTimeout, final boolean usePool){
-		super(host, port, password, database, connectTimeout, soTimeout, usePool);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final String clientName, final int connectTimeout, final int soTimeout){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final String clientName, final boolean usePool){
-		super(host, port, password, database, clientName, usePool);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final String clientName, final int connectTimeout, final int soTimeout,
-			final boolean usePool){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, usePool);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final String clientName, final int connectTimeout, final int soTimeout,
-			final boolean usePool, final boolean useSsl){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, usePool, useSsl);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final String clientName, final int connectTimeout, final int soTimeout,
-			final boolean usePool, final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
-			final HostnameVerifier hostnameVerifier){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, usePool, sslSocketFactory,
-				sslParameters, hostnameVerifier);
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final String clientName, final int connectTimeout, final int soTimeout,
-			final boolean usePool, final boolean useSsl, final SSLSocketFactory sslSocketFactory,
-			final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, usePool, useSsl, sslSocketFactory
-				, sslParameters, hostnameVerifier);
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes){
-		super(redisNodes);
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database){
-		super(redisNodes, database);
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
-			final boolean usePool){
-		super(redisNodes, database, usePool);
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final boolean usePool){
-		super(redisNodes, usePool);
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int connectTimeout,
-			final int soTimeout){
-		super(redisNodes, connectTimeout, soTimeout);
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
-			final int connectTimeout, final int soTimeout){
-		super(redisNodes, database, connectTimeout, soTimeout);
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int connectTimeout,
-			final int soTimeout, final boolean usePool){
-		super(redisNodes, connectTimeout, soTimeout, usePool);
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
-			final int connectTimeout, final int soTimeout, final boolean usePool){
-		super(redisNodes, database, connectTimeout, soTimeout, usePool);
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
-			final int connectTimeout, final int soTimeout, final boolean usePool,
-			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
-			final HostnameVerifier hostnameVerifier){
-		super(redisNodes, database, connectTimeout, soTimeout, usePool, sslSocketFactory, sslParameters,
-				hostnameVerifier);
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
-			final int connectTimeout, final int soTimeout, final boolean usePool, final boolean useSsl,
-			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
-			final HostnameVerifier hostnameVerifier){
-		super(redisNodes, database, connectTimeout, soTimeout, usePool, useSsl, sslSocketFactory, sslParameters,
-				hostnameVerifier);
-	}
-
-	public JedisRedisConnectionFactoryBean(final JedisPoolConfig poolConfig){
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final JedisPoolConfig poolConfig){
-		super(host);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final String password, final JedisPoolConfig poolConfig){
-		super(host, password);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final String password, final int database,
-			final JedisPoolConfig poolConfig){
-		super(host, password, database);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final String password, final int database,
-			final boolean usePool, final JedisPoolConfig poolConfig){
-		super(host, password, database, usePool);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final String password, final int database,
-			final int connectTimeout, final int soTimeout, final JedisPoolConfig poolConfig){
-		super(host, password, database, connectTimeout, soTimeout);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final String password, final boolean usePool,
-			final JedisPoolConfig poolConfig){
-		super(host, password, usePool);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final String password, final int connectTimeout,
-			final int soTimeout, final JedisPoolConfig poolConfig){
-		super(host, password, connectTimeout, soTimeout);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final JedisPoolConfig poolConfig){
-		super(host, port);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final int database,
-			final JedisPoolConfig poolConfig){
-		super(host, port, database);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final JedisPoolConfig poolConfig){
-		super(host, port, password);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final JedisPoolConfig poolConfig){
-		super(host, port, password, database);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final boolean usePool, final JedisPoolConfig poolConfig){
-		super(host, port, password, database, usePool);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final int connectTimeout, final int soTimeout, final JedisPoolConfig poolConfig){
-		super(host, port, password, database, connectTimeout, soTimeout);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final int connectTimeout, final int soTimeout, final boolean usePool,
-			final JedisPoolConfig poolConfig){
-		super(host, port, password, database, connectTimeout, soTimeout, usePool);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final String clientName, final int connectTimeout, final int soTimeout,
-			final JedisPoolConfig poolConfig){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final String clientName, final boolean usePool, final JedisPoolConfig poolConfig){
-		super(host, port, password, database, clientName, usePool);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final String clientName, final int connectTimeout, final int soTimeout,
-			final boolean usePool, final JedisPoolConfig poolConfig){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, usePool);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final String clientName, final int connectTimeout, final int soTimeout,
-			final boolean usePool, final boolean useSsl, final JedisPoolConfig poolConfig){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, usePool, useSsl);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final String clientName, final int connectTimeout, final int soTimeout,
-			final boolean usePool, final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
-			final HostnameVerifier hostnameVerifier, final JedisPoolConfig poolConfig){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, usePool, sslSocketFactory,
-				sslParameters, hostnameVerifier);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final String host, final int port, final String password,
-			final int database, final String clientName, final int connectTimeout, final int soTimeout,
-			final boolean usePool, final boolean useSsl, final SSLSocketFactory sslSocketFactory,
-			final SSLParameters sslParameters, final HostnameVerifier hostnameVerifier,
-			final JedisPoolConfig poolConfig){
-		super(host, port, password, database, clientName, connectTimeout, soTimeout, usePool, useSsl, sslSocketFactory
-				, sslParameters, hostnameVerifier);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final JedisPoolConfig poolConfig){
-		super(redisNodes);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
-			final JedisPoolConfig poolConfig){
-		super(redisNodes, database);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
-			final boolean usePool, final JedisPoolConfig poolConfig){
-		super(redisNodes, database, usePool);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final boolean usePool,
-			final JedisPoolConfig poolConfig){
-		super(redisNodes, usePool);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int connectTimeout,
-			final int soTimeout, final JedisPoolConfig poolConfig){
-		super(redisNodes, connectTimeout, soTimeout);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
-			final int connectTimeout, final int soTimeout, final JedisPoolConfig poolConfig){
-		super(redisNodes, database, connectTimeout, soTimeout);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int connectTimeout,
-			final int soTimeout, final boolean usePool, final JedisPoolConfig poolConfig){
-		super(redisNodes, connectTimeout, soTimeout, usePool);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
-			final int connectTimeout, final int soTimeout, final boolean usePool, final JedisPoolConfig poolConfig){
-		super(redisNodes, database, connectTimeout, soTimeout, usePool);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
-			final int connectTimeout, final int soTimeout, final boolean usePool,
-			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
-			final HostnameVerifier hostnameVerifier, final JedisPoolConfig poolConfig){
-		super(redisNodes, database, connectTimeout, soTimeout, usePool, sslSocketFactory, sslParameters,
-				hostnameVerifier);
-		this.poolConfig = poolConfig;
-	}
-
-	public JedisRedisConnectionFactoryBean(final Set<ShardedRedisNode> redisNodes, final int database,
-			final int connectTimeout, final int soTimeout, final boolean usePool, final boolean useSsl,
-			final SSLSocketFactory sslSocketFactory, final SSLParameters sslParameters,
-			final HostnameVerifier hostnameVerifier, final JedisPoolConfig poolConfig){
-		super(redisNodes, database, connectTimeout, soTimeout, usePool, useSsl, sslSocketFactory, sslParameters,
-				hostnameVerifier);
+	/**
+	 * 构造函数
+	 *
+	 * @param configuration
+	 * 		连接配置
+	 */
+	public JedisRedisConnectionFactoryBean(final RedisConfiguration configuration){
+		super(configuration);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param configuration
+	 * 		连接配置
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
+	public JedisRedisConnectionFactoryBean(final RedisConfiguration configuration, final JedisPoolConfig poolConfig){
+		this(configuration);
 		this.poolConfig = poolConfig;
 	}
 
@@ -432,18 +80,13 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 
 	@Override
 	public void afterPropertiesSet() throws Exception{
-		final SslConfiguration sslConfiguration = new SslConfiguration();
-
-		sslConfiguration.setSslSocketFactory(getSslSocketFactory());
-		sslConfiguration.setSslParameters(getSslParameters());
-		sslConfiguration.setHostnameVerifier(getHostnameVerifier());
-
 		if(isShardedConnection()){
 			final ShardedJedisDataSource dataSource = createShardedJedisDataSource();
-			final ShardedJedisConnection connection = new ShardedJedisConnection(dataSource, getConnectTimeout(),
-					getSoTimeout(), isUseSsl(), sslConfiguration);
+			final ShardedJedisConnection connection = new ShardedJedisConnection(dataSource,
+					getConfiguration().getConnectTimeout(), getConfiguration().getSoTimeout(),
+					getConfiguration().getSslConfiguration());
 
-			if(isUsePool()){
+			if(getPoolConfig() != null){
 				connection.setPoolConfig(getPoolConfig());
 				logger.debug("Initialize sharded connection with pool.");
 			}else{
@@ -453,10 +96,10 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 			setConnection(connection);
 		}else{
 			final JedisDataSource dataSource = createJedisDataSource();
-			final JedisConnection connection = new JedisConnection(dataSource, getConnectTimeout(), getSoTimeout(),
-					isUseSsl(), sslConfiguration);
+			final JedisConnection connection = new JedisConnection(dataSource, getConfiguration().getConnectTimeout(),
+					getConfiguration().getSoTimeout(), getConfiguration().getSslConfiguration());
 
-			if(isUsePool()){
+			if(getPoolConfig() != null){
 				connection.setPoolConfig(getPoolConfig());
 				logger.debug("Initialize connection with pool.");
 			}else{
@@ -468,30 +111,25 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 	}
 
 	protected JedisDataSource createJedisDataSource(){
-		return new JedisDataSource(getHost(), getPort(), getPassword(), getDatabase(), getClientName());
+		JedisConfiguration configuration = (JedisConfiguration) getConfiguration();
+		return new JedisDataSource(configuration.getHost(), configuration.getPort(), configuration.getPassword(),
+				configuration.getDatabase(), configuration.getClientName());
 	}
 
 	protected ShardedJedisDataSource createShardedJedisDataSource(){
-		return new ShardedJedisDataSource(getRedisNodes());
+		ShardedRedisConfiguration configuration = (ShardedRedisConfiguration) getConfiguration();
+		return new ShardedJedisDataSource(configuration.getNodes());
 	}
 
 	@Override
 	protected void afterDestroy(JedisRedisConnection connection){
-		if(isUsePool() == false){
-			return;
-		}
-
-		if(connection == null){
-			return;
-		}
-
-		if(connection.getPool() == null){
+		if(connection == null || connection.getPool() == null){
 			return;
 		}
 
 		try{
 			connection.getPool().destroy();
-			ReflectUtils.setField(connection, "pool", null);
+			FieldUtils.writeDeclaredField(connection, "pool", null, true);
 		}catch(Exception e){
 			logger.warn("Cannot properly close ShardedJedis pool", e);
 			throw new PoolException(e.getMessage(), e);

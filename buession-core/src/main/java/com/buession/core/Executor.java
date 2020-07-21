@@ -32,6 +32,14 @@ package com.buession.core;
 @FunctionalInterface
 public interface Executor<C, R> {
 
-	R execute(C command);
+	/**
+	 * 命令执行
+	 *
+	 * @param context
+	 * 		命令执行器上下文
+	 *
+	 * @return R 对象实例
+	 */
+	R execute(C context);
 
 }

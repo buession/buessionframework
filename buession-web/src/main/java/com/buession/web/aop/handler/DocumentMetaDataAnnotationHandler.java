@@ -29,6 +29,6 @@ import com.buession.web.mvc.view.document.DocumentMetaData;
 /**
  * @author Yong.Teng
  */
-public interface DocumentMetaDataAnnotationHandler extends WebAnnotationHandler<DocumentMetaData> {
+public interface DocumentMetaDataAnnotationHandler extends WebAnnotationHandler<DocumentMetaData, Void> {
 
 }

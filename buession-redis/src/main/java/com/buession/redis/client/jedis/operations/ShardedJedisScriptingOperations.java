@@ -25,8 +25,8 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.core.ClusterMode;
+import com.buession.redis.client.jedis.ShardedJedisClient;
+import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.ProtocolCommand;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
@@ -38,8 +38,8 @@ import java.util.List;
  */
 public class ShardedJedisScriptingOperations extends AbstractScriptingOperations<ShardedJedis, ShardedJedisPipeline> {
 
-	public ShardedJedisScriptingOperations(final JedisRedisClient<ShardedJedis> client){
-		super(client, ClusterMode.SHARDED);
+	public ShardedJedisScriptingOperations(final ShardedJedisClient client){
+		super(client, RedisMode.SHARDED);
 	}
 
 	@Override

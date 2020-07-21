@@ -29,6 +29,6 @@ import com.buession.redis.core.command.SetCommands;
 /**
  * @author Yong.Teng
  */
-public interface SetOperations extends SetCommands, RedisClientOperations {
+public interface SetOperations<T> extends SetCommands, RedisClientOperations<T> {
 
 }

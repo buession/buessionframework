@@ -33,21 +33,25 @@ import com.buession.core.validator.Validate;
  */
 public class QQValidator {
 
-    private final static int MIN_LENGTH = 5;
+	private final static int MIN_LENGTH = 5;
 
-    private final static int MAX_LENGTH = 10;
+	private final static int MAX_LENGTH = 10;
 
-    private QQValidator(){
+	private QQValidator(){
 
-    }
+	}
 
-    public final static boolean isValid(final CharSequence charSequence){
-        if(charSequence == null){
-            return false;
-        }
+	public final static boolean isValid(final CharSequence charSequence){
+		if(charSequence == null){
+			return false;
+		}
 
-        return Validate.isBetween(charSequence.length(), MIN_LENGTH, MAX_LENGTH, true) && NumberValidateUtil.type2
-                (charSequence);
-    }
+		if(Validate.isBetween(charSequence.length(), MIN_LENGTH, MAX_LENGTH, true) == false){
+			return false;
+		}
+
+		char c = charSequence.charAt(0);
+		return c >= '1' && c <= '9' && Validate.isNumeric(charSequence.subSequence(1, charSequence.length() - 1));
+	}
 
 }

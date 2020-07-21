@@ -35,28 +35,28 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class MethodUtils {
 
-    private MethodUtils(){
+	private MethodUtils(){
 
-    }
+	}
 
-    public final static HttpServlet createHttpServletFromMethodArguments(final Object[] arguments){
-        if(arguments == null){
-            return null;
-        }
+	public final static HttpServlet createHttpServletFromArguments(final Object[] arguments){
+		if(arguments == null){
+			return null;
+		}
 
-        HttpServlet httpServlet = new HttpServlet();
+		HttpServlet httpServlet = new HttpServlet();
 
-        for(Object argument : arguments){
-            if(argument instanceof HttpServletRequest){
-                httpServlet.setRequest((HttpServletRequest) argument);
-            }else if(argument instanceof HttpServletResponse){
-                httpServlet.setResponse((HttpServletResponse) argument);
-            }else if(argument instanceof Model){
-                httpServlet.setModel((Model) argument);
-            }
-        }
+		for(Object argument : arguments){
+			if(argument instanceof HttpServletRequest){
+				httpServlet.setRequest((HttpServletRequest) argument);
+			}else if(argument instanceof HttpServletResponse){
+				httpServlet.setResponse((HttpServletResponse) argument);
+			}else if(argument instanceof Model){
+				httpServlet.setModel((Model) argument);
+			}
+		}
 
-        return httpServlet;
-    }
+		return httpServlet;
+	}
 
 }

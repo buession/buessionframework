@@ -28,34 +28,37 @@ import com.buession.web.reactive.http.ServerHttp;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.ui.Model;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * @author Yong.Teng
  */
 public class MethodUtils {
 
-    private MethodUtils(){
+	private MethodUtils(){
 
-    }
+	}
 
-    public final static ServerHttp createServerHttpFromMethodArguments(final Object[] arguments){
-        if(arguments == null){
-            return null;
-        }
+	public final static ServerHttp createServerHttpFromArguments(final Object[] arguments){
+		if(arguments == null){
+			return null;
+		}
 
-        ServerHttp serverHttp = new ServerHttp();
+		ServerHttp serverHttp = new ServerHttp();
 
-        for(Object argument : arguments){
-            if(argument instanceof ServerHttpRequest){
-                serverHttp.setRequest((ServerHttpRequest) argument);
-            }else if(argument instanceof ServerHttpResponse){
-                serverHttp.setResponse((ServerHttpResponse) argument);
-            }else if(argument instanceof Model){
-                serverHttp.setModel((Model) argument);
-            }
-        }
+		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
+		for(Object argument : arguments){
+			if(argument instanceof ServerHttpRequest){
+				serverHttp.setRequest((ServerHttpRequest) argument);
+			}else if(argument instanceof ServerHttpResponse){
+				serverHttp.setResponse((ServerHttpResponse) argument);
+			}else if(argument instanceof Model){
+				serverHttp.setModel((Model) argument);
+			}
+		}
 
-        return serverHttp;
-    }
+		return serverHttp;
+	}
 
 }

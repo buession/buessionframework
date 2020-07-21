@@ -37,30 +37,29 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractAnnotationMethodAdvice<A extends Annotation> extends AbstractAdvice implements
-		AnnotationMethodAdvice<A> {
+public abstract class AbstractAnnotationMethodAdvice<A extends Annotation, R> extends AbstractAdvice<R> implements AnnotationMethodAdvice<A, R> {
 
-	private AnnotationHandler<A> handler;
+	private AnnotationHandler<A, R> handler;
 
 	private AnnotationResolver resolver;
 
 	private final static Map<String, Annotation> ANNOTATIONS_CACHE = new ConcurrentHashMap<>(64);
 
-	public AbstractAnnotationMethodAdvice(AnnotationHandler<A> handler){
+	public AbstractAnnotationMethodAdvice(AnnotationHandler<A, R> handler){
 		this(handler, new DefaultAnnotationResolver());
 	}
 
-	public AbstractAnnotationMethodAdvice(AnnotationHandler<A> handler, AnnotationResolver resolver){
+	public AbstractAnnotationMethodAdvice(AnnotationHandler<A, R> handler, AnnotationResolver resolver){
 		Assert.isNull(handler, "AnnotationHandler argument cloud not be null.");
 		setHandler(handler);
 		setResolver(resolver != null ? resolver : new DefaultAnnotationResolver());
 	}
 
-	public AnnotationHandler<A> getHandler(){
+	public AnnotationHandler<A, R> getHandler(){
 		return handler;
 	}
 
-	public void setHandler(AnnotationHandler<A> handler){
+	public void setHandler(AnnotationHandler<A, R> handler){
 		this.handler = handler;
 	}
 
@@ -78,7 +77,7 @@ public abstract class AbstractAnnotationMethodAdvice<A extends Annotation> exten
 	}
 
 	@Override
-	protected Object doInvoke(Object target, Method method, Object[] arguments) throws Throwable{
+	protected R doInvoke(Object target, Method method, Object[] arguments) throws Throwable{
 		return getHandler().execute(target, method, arguments, getAnnotation(target, method));
 	}
 
@@ -101,8 +100,8 @@ public abstract class AbstractAnnotationMethodAdvice<A extends Annotation> exten
 
 	protected final String annotationCacheKey(final Object object, final Method method, final Class<A> annotation){
 		final String objectName = object.toString();
-		final StringBuilder sb = new StringBuilder(objectName.length() + method.getName().length() + annotation
-				.getName().length() + 4);
+		final StringBuilder sb =
+				new StringBuilder(objectName.length() + method.getName().length() + annotation.getName().length() + 4);
 
 		sb.append(objectName).append("::").append(method.getName());
 		sb.append('_').append(annotation.getName());

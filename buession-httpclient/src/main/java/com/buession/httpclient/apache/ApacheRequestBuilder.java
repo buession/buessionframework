@@ -87,41 +87,31 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 
 	public final static ApacheRequestBuilder create(){
 		final ApacheRequestBuilder builder = new ApacheRequestBuilder();
-
 		builder.request = new HttpComponentsRequest();
-
 		return builder;
 	}
 
 	public final static ApacheRequestBuilder create(String url){
 		final ApacheRequestBuilder builder = create();
-
 		builder.setUrl(url);
-
 		return builder;
 	}
 
 	public final static ApacheRequestBuilder create(String url, Map<String, Object> parameters){
 		final ApacheRequestBuilder builder = create(url);
-
 		builder.setParameters(parameters);
-
 		return builder;
 	}
 
 	public final static ApacheRequestBuilder create(String url, List<Header> headers){
 		final ApacheRequestBuilder builder = create(url);
-
 		builder.setHeaders(headers);
-
 		return builder;
 	}
 
 	public final static ApacheRequestBuilder create(String url, Map<String, Object> parameters, List<Header> headers){
 		final ApacheRequestBuilder builder = create(url, parameters);
-
 		builder.setHeaders(headers);
-
 		return builder;
 	}
 

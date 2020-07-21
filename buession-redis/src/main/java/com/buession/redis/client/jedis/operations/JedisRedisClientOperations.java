@@ -31,6 +31,6 @@ import redis.clients.jedis.commands.JedisCommands;
 /**
  * @author Yong.Teng
  */
-public interface JedisRedisClientOperations<C extends JedisCommands, P extends PipelineBase> extends RedisClientOperations {
+public interface JedisRedisClientOperations<C extends JedisCommands, P extends PipelineBase> extends RedisClientOperations<C> {
 
 }

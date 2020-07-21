@@ -24,7 +24,6 @@
  */
 package com.buession.web.reactive.aop.handler;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractResponseHeadersAnnotationHandler;
 import com.buession.web.http.HttpHeader;
@@ -34,6 +33,7 @@ import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.response.ResponseUtils;
 import com.buession.web.reactive.aop.MethodUtils;
+import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -53,15 +53,14 @@ public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHe
 	}
 
 	@Override
-	public void execute(MethodInvocation mi, ResponseHeaders responseHeaders){
-		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
-		doExecute(serverHttp, responseHeaders);
+	public Void execute(MethodInvocation mi, ResponseHeaders responseHeaders){
+		doExecute(AopUtils.getServerHttp(mi), responseHeaders);
+		return null;
 	}
 
 	@Override
-	public Object execute(Object target, Method method, Object[] arguments, ResponseHeaders responseHeaders){
-		ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
-		doExecute(serverHttp, responseHeaders);
+	public Void execute(Object target, Method method, Object[] arguments, ResponseHeaders responseHeaders){
+		doExecute(MethodUtils.createServerHttpFromArguments(arguments), responseHeaders);
 		return null;
 	}
 

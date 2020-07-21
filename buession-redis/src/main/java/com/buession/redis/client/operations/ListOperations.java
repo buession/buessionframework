@@ -29,6 +29,6 @@ import com.buession.redis.core.command.ListCommands;
 /**
  * @author Yong.Teng
  */
-public interface ListOperations extends ListCommands, RedisClientOperations {
+public interface ListOperations<T> extends ListCommands, RedisClientOperations<T> {
 
 }

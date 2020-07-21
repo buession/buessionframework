@@ -29,7 +29,7 @@ import com.buession.core.utils.NumberUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.SortedSetOperations;
 import com.buession.redis.core.Aggregate;
-import com.buession.redis.core.ClusterMode;
+import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -48,7 +48,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractSortedSetOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements SortedSetOperations {
+public abstract class AbstractSortedSetOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements SortedSetOperations<C> {
 
 	protected final static Converter<Aggregate, ZParams.Aggregate> AGGREGATE_JEDIS_CONVERTER =
 			JedisConverters.aggregateJedisConverter();
@@ -59,8 +59,8 @@ public abstract class AbstractSortedSetOperations<C extends JedisCommands, P ext
 	protected final static Converter<redis.clients.jedis.Tuple, Tuple> TUPLE_EXPOSE_CONVERTER =
 			JedisConverters.tupleExposeConverter();
 
-	public AbstractSortedSetOperations(final JedisRedisClient<C> client, final ClusterMode clusterMode){
-		super(client, clusterMode);
+	public AbstractSortedSetOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
+		super(client, redisMode);
 	}
 
 	@Override

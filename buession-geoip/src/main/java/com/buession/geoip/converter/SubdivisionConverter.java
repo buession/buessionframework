@@ -53,21 +53,19 @@ public class SubdivisionConverter extends AbstractConverter<District, com.maxmin
 			}
 		}
 
-		return new District(subdivision.getGeoNameId(), subdivision.getConfidence(), subdivision.getName(), name,
-				null, parent);
+		return new District(subdivision.getGeoNameId(), subdivision.getConfidence(), subdivision.getName(), name, null
+				, parent);
 	}
 
-	private static District converter(Subdivision subdivision, CityResponse response, Locale locale, boolean
-			isPrivate){
+	private static District converter(Subdivision subdivision, CityResponse response, Locale locale,
+			boolean isPrivate){
 		if(subdivision == null){
 			return null;
 		}
 
 		final String name = getName(subdivision.getNames(), locale);
-		District parent = null;
-
-		return new District(subdivision.getGeoNameId(), subdivision.getConfidence(), subdivision.getName(), name,
-				null, parent);
+		return new District(subdivision.getGeoNameId(), subdivision.getConfidence(), subdivision.getName(), name, null
+				, null);
 	}
 
 }

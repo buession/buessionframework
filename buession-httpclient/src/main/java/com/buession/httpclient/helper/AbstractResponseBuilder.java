@@ -39,68 +39,66 @@ import java.util.Map;
  */
 public abstract class AbstractResponseBuilder implements ResponseBuilder {
 
-    protected Response response = new Response();
+	protected Response response = new Response();
 
-    @Override
-    public ResponseBuilder setProtocolVersion(ProtocolVersion protocolVersion){
-        response.setProtocolVersion(protocolVersion);
-        return this;
-    }
+	@Override
+	public ResponseBuilder setProtocolVersion(ProtocolVersion protocolVersion){
+		response.setProtocolVersion(protocolVersion);
+		return this;
+	}
 
-    @Override
-    public ResponseBuilder setStatusCode(int statusCode){
-        response.setStatusCode(statusCode);
-        return this;
-    }
+	@Override
+	public ResponseBuilder setStatusCode(int statusCode){
+		response.setStatusCode(statusCode);
+		return this;
+	}
 
-    @Override
-    public ResponseBuilder setStatusText(String statusText){
-        response.setStatusText(statusText);
-        return this;
-    }
+	@Override
+	public ResponseBuilder setStatusText(String statusText){
+		response.setStatusText(statusText);
+		return this;
+	}
 
-    @Override
-    public ResponseBuilder setHeaders(List<Header> headers){
-        response.setHeaders(headers);
-        return this;
-    }
+	@Override
+	public ResponseBuilder setHeaders(List<Header> headers){
+		response.setHeaders(headers);
+		return this;
+	}
 
-    @Override
-    public ResponseBuilder setInputStream(InputStream inputStream){
-        response.setInputStream(inputStream);
-        return this;
-    }
+	@Override
+	public ResponseBuilder setInputStream(InputStream inputStream){
+		response.setInputStream(inputStream);
+		return this;
+	}
 
-    @Override
-    public ResponseBuilder setBody(String body){
-        response.setBody(body);
-        return this;
-    }
+	@Override
+	public ResponseBuilder setBody(String body){
+		response.setBody(body);
+		return this;
+	}
 
-    @Override
-    public ResponseBuilder setContentLength(long contentLength){
-        response.setContentLength(contentLength);
-        return this;
-    }
+	@Override
+	public ResponseBuilder setContentLength(long contentLength){
+		response.setContentLength(contentLength);
+		return this;
+	}
 
-    @Override
-    public Response build(){
-        response.setStatusLine(new StatusLine(response.getStatusCode(), response.getStatusText()));
-        return response;
-    }
+	@Override
+	public Response build(){
+		response.setStatusLine(new StatusLine(response.getStatusCode(), response.getStatusText()));
+		return response;
+	}
 
-    protected final static List<Header> headersMap2List(final Map<String, String> headersMap){
-        if(headersMap == null){
-            return null;
-        }
+	protected final static List<Header> headersMap2List(final Map<String, String> headersMap){
+		if(headersMap == null){
+			return null;
+		}
 
-        List<Header> headers = new ArrayList<>(headersMap.size());
+		List<Header> headers = new ArrayList<>(headersMap.size());
 
-        headersMap.forEach((name, value)->{
-            headers.add(new Header(name, value));
-        });
+		headersMap.forEach((name, value)->headers.add(new Header(name, value)));
 
-        return headers;
-    }
+		return headers;
+	}
 
 }

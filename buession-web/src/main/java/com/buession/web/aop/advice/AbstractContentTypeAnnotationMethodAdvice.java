@@ -31,15 +31,15 @@ import com.buession.web.http.response.annotation.ContentType;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractContentTypeAnnotationMethodAdvice extends
-		AbstractWebAnnotationMethodAdvice<ContentType> implements ContentTypeAnnotationMethodAdvice {
+public abstract class AbstractContentTypeAnnotationMethodAdvice extends AbstractWebAnnotationMethodAdvice<ContentType
+		, Void> implements ContentTypeAnnotationMethodAdvice {
 
-	public AbstractContentTypeAnnotationMethodAdvice(AnnotationHandler<ContentType> handler){
+	public AbstractContentTypeAnnotationMethodAdvice(AnnotationHandler<ContentType, Void> handler){
 		super(handler);
 	}
 
-	public AbstractContentTypeAnnotationMethodAdvice(AnnotationHandler<ContentType> handler, AnnotationResolver
-			resolver){
+	public AbstractContentTypeAnnotationMethodAdvice(AnnotationHandler<ContentType, Void> handler,
+			AnnotationResolver resolver){
 		super(handler, resolver);
 	}
 

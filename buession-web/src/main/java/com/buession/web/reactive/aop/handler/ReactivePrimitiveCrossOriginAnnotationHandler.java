@@ -24,7 +24,6 @@
  */
 package com.buession.web.reactive.aop.handler;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractPrimitiveCrossOriginAnnotationHandler;
 import com.buession.web.http.HttpHeader;
@@ -33,6 +32,7 @@ import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.http.request.RequestUtils;
 import com.buession.web.reactive.aop.MethodUtils;
+import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -51,15 +51,14 @@ public class ReactivePrimitiveCrossOriginAnnotationHandler extends AbstractPrimi
 	}
 
 	@Override
-	public void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin){
-		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
-		doExecute(serverHttp, primitiveCrossOrigin);
+	public Void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin){
+		doExecute(AopUtils.getServerHttp(mi), primitiveCrossOrigin);
+		return null;
 	}
 
 	@Override
-	public Object execute(Object target, Method method, Object[] arguments, PrimitiveCrossOrigin primitiveCrossOrigin){
-		ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
-		doExecute(serverHttp, primitiveCrossOrigin);
+	public Void execute(Object target, Method method, Object[] arguments, PrimitiveCrossOrigin primitiveCrossOrigin){
+		doExecute(MethodUtils.createServerHttpFromArguments(arguments), primitiveCrossOrigin);
 		return null;
 	}
 

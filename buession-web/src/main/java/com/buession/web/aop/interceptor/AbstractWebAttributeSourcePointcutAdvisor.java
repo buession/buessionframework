@@ -24,6 +24,7 @@
  */
 package com.buession.web.aop.interceptor;
 
+import com.buession.web.aop.AopUtils;
 import com.buession.web.http.response.annotation.ContentType;
 import com.buession.web.http.response.annotation.DisableHttpCache;
 import com.buession.web.http.response.annotation.HttpCache;
@@ -32,7 +33,6 @@ import com.buession.web.http.response.annotation.ResponseHeader;
 import com.buession.web.http.response.annotation.ResponseHeaders;
 import com.buession.web.mvc.view.document.DocumentMetaData;
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -46,41 +46,21 @@ public abstract class AbstractWebAttributeSourcePointcutAdvisor extends StaticMe
 			ResponseHeaders.class, ContentType.class, PrimitiveCrossOrigin.class, HttpCache.class,
 			DisableHttpCache.class, DocumentMetaData.class};
 
+	private static final long serialVersionUID = -25452444487918871L;
+
 	@Override
 	public boolean matches(Method method, Class<?> targetClass){
 		Method m = method;
 
-		if(hasMethodAnnotationPresent(m)){
+		if(AopUtils.hasMethodAnnotationPresent(m, WEB_ANNOTATION_CLASSES)){
 			return true;
 		}
 
 		if(targetClass != null){
 			try{
 				m = targetClass.getMethod(m.getName(), m.getParameterTypes());
-				return hasMethodAnnotationPresent(m) || hasClassAnnotationPresent(targetClass);
+				return AopUtils.hasMethodAnnotationPresent(m, WEB_ANNOTATION_CLASSES) || AopUtils.hasClassAnnotationPresent(targetClass, WEB_ANNOTATION_CLASSES);
 			}catch(NoSuchMethodException e){
-			}
-		}
-
-		return false;
-	}
-
-	private boolean hasClassAnnotationPresent(Class<?> targetClazz){
-		for(Class<? extends Annotation> clazz : WEB_ANNOTATION_CLASSES){
-			Annotation annotation = AnnotationUtils.findAnnotation(targetClazz, clazz);
-			if(annotation != null){
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private boolean hasMethodAnnotationPresent(Method method){
-		for(Class<? extends Annotation> clazz : WEB_ANNOTATION_CLASSES){
-			Annotation annotation = AnnotationUtils.findAnnotation(method, clazz);
-			if(annotation != null){
-				return true;
 			}
 		}
 

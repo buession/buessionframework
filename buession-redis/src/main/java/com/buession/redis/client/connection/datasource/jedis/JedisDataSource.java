@@ -25,7 +25,7 @@
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
-import com.buession.redis.core.Server;
+import com.buession.redis.core.RedisNode;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -38,12 +38,12 @@ public class JedisDataSource extends AbstractJedisDataSource<Jedis> implements S
 	/**
 	 * Redis 主机地址
 	 */
-	private String host = Server.DEFAULT_HOST;
+	private String host = RedisNode.DEFAULT_HOST;
 
 	/**
 	 * Redis 端口
 	 */
-	private int port = Server.DEFAULT_PORT;
+	private int port = RedisNode.DEFAULT_PORT;
 
 	/**
 	 * 密码
@@ -53,7 +53,7 @@ public class JedisDataSource extends AbstractJedisDataSource<Jedis> implements S
 	/**
 	 * 数据库
 	 */
-	private int database = Server.DEFAULT_DATABASE;
+	private int database = RedisNode.DEFAULT_DATABASE;
 
 	/**
 	 * Client Name

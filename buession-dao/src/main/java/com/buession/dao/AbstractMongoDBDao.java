@@ -165,7 +165,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	@Override
 	public int updateByPrimary(P primary, E e){
 		final Map<String, Object> conditions = new HashMap<>(1);
-
 		conditions.put(PRIMARY_FIELD, primary);
 		return update(e, conditions);
 	}
@@ -181,9 +180,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	@Override
 	public E getByPrimary(P primary){
 		final Map<String, Object> conditions = new HashMap<>(1);
-
 		conditions.put(PRIMARY_FIELD, primary);
-
 		return selectOne(conditions);
 	}
 
@@ -502,7 +499,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 			return getSlaveMongoTemplate(0);
 		}else{
 			int index = RANDOM.nextInt(slaveMongoTemplates.size());
-
 			return getSlaveMongoTemplate(index);
 		}
 	}
@@ -561,7 +557,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 	}
 
 	protected void buildSort(final Query query, final Map<String, Order> orders){
-		if(Validate.isEmpty(orders) == false){
+		if(Validate.isNotEmpty(orders)){
 			final List<Sort.Order> sortOrders = new ArrayList<>(orders.size());
 
 			orders.forEach((field, order)->{
@@ -578,9 +574,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	private <E> BasicDBObject toDbObject(E e){
 		BasicDBObject doc = new BasicDBObject();
-
 		masterMongoTemplate.getConverter().write(e, doc);
-
 		return doc;
 	}
 

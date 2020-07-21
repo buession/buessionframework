@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.advice;
@@ -33,16 +33,15 @@ import java.lang.annotation.Annotation;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractWebAnnotationMethodAdvice<A extends Annotation> extends
-        AbstractAnnotationMethodAdvice<A> {
+public abstract class AbstractWebAnnotationMethodAdvice<A extends Annotation, R> extends AbstractAnnotationMethodAdvice<A, R> {
 
-    public AbstractWebAnnotationMethodAdvice(AnnotationHandler<A> handler){
-        super(handler);
-    }
+	public AbstractWebAnnotationMethodAdvice(AnnotationHandler<A, R> handler){
+		super(handler);
+	}
 
-    public AbstractWebAnnotationMethodAdvice(AnnotationHandler<A> handler, AnnotationResolver resolver){
-        super(handler, resolver);
-    }
+	public AbstractWebAnnotationMethodAdvice(AnnotationHandler<A, R> handler, AnnotationResolver resolver){
+		super(handler, resolver);
+	}
 
 
 }

@@ -33,7 +33,7 @@ public enum Arch {
 
 	ARCH_64(64);
 
-	int version;
+	private int version;
 
 	Arch(int version){
 		this.version = version;
@@ -47,5 +47,5 @@ public enum Arch {
 	public String toString(){
 		return Integer.toString(version);
 	}
-	
+
 }

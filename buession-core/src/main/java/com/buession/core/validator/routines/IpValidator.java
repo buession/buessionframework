@@ -28,6 +28,7 @@ package com.buession.core.validator.routines;
 
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
+import com.buession.lang.Constants;
 import com.buession.lang.IpType;
 
 /**
@@ -63,9 +64,9 @@ public class IpValidator {
 			return false;
 		}
 
-		if(IpType.IP_V4.equals(type) == true){
+		if(IpType.IP_V4.equals(type)){
 			return isIpv4(charSequence.toString());
-		}else if(IpType.IP_V6.equals(type) == true){
+		}else if(IpType.IP_V6.equals(type)){
 			return isIpv6(charSequence.toString());
 		}else{
 			return false;
@@ -86,7 +87,7 @@ public class IpValidator {
 			return false;
 		}
 
-		String[] groups = StringUtils.split(str, '.');
+		String[] groups = StringUtils.splitByWholeSeparatorPreserveAllTokens(str, ".");
 		if(groups == null || groups.length != 4){
 			return false;
 		}
@@ -152,7 +153,7 @@ public class IpValidator {
 			return false;
 		}
 
-		if("::".equals(str) == true || "::1".equals(str) == true){
+		if("::".equals(str) || "::1".equals(str)){
 			return true;
 		}
 
@@ -162,7 +163,6 @@ public class IpValidator {
 		int dotIndex = str.indexOf('.');
 		if(dotIndex > -1){
 			int colonIndex = str.lastIndexOf(':');
-
 			return isIpv6(str.substring(0, colonIndex + 1), 1, 6) && isIpv4(str.substring(colonIndex + 1));
 		}else{
 			return isIpv6(str, IPV6_MIN_GROUP_SIZE, IPV6_MAX_GROUP_SIZE);
@@ -197,7 +197,7 @@ public class IpValidator {
 		}
 
 		for(int i = 0; i < groups.length; i++){
-			if("".equals(groups[i])){
+			if(Constants.EMPTY_STRING.equals(groups[i])){
 				continue;
 			}
 

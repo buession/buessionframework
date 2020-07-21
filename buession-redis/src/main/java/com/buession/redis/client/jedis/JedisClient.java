@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis;
 import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.client.GenericRedisClient;
-import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.jedis.operations.JedisConnectionOperations;
 import com.buession.redis.client.jedis.operations.JedisGeoOperations;
 import com.buession.redis.client.jedis.operations.JedisHashOperations;
@@ -69,7 +69,7 @@ public class JedisClient extends AbstractJedisRedisClient<Jedis> implements Gene
 		super();
 	}
 
-	public JedisClient(RedisConnection connection){
+	public JedisClient(JedisConnection connection){
 		super(connection);
 	}
 

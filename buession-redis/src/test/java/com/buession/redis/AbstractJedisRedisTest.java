@@ -24,10 +24,13 @@
  */
 package com.buession.redis;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
+import com.buession.redis.spring.jedis.JedisConfiguration;
+import com.buession.redis.spring.jedis.ShardedRedisConfiguration;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -38,8 +41,17 @@ import java.util.Set;
 public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 
 	protected RedisConnection createJedisConnection(){
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean("redis.host", 6379, "tQP" +
-				"!Vf7JxL-nrH-x", 10, true);
+		JedisConfiguration configuration = new JedisConfiguration();
+
+		configuration.setHost("redis.host");
+		configuration.setHost("10.101.0.131");
+		configuration.setPort(30718);
+		configuration.setPassword("tQP!Vf7JxL-nrH-x");
+		configuration.setPassword("passwd");
+		configuration.setDatabase(10);
+		configuration.setClientName(StringUtils.random(6));
+
+		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean(configuration, null);
 
 		try{
 			factoryBean.afterPropertiesSet();
@@ -52,10 +64,13 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 	protected RedisConnection createShardedJedisConnection(){
 		Set<ShardedRedisNode> nodes = new LinkedHashSet<>(2);
 
-		nodes.add(new ShardedRedisNode("10.101.0.230", 6379, 10, ""));
-		nodes.add(new ShardedRedisNode("10.101.0.45", 6379, 9, ""));
+		nodes.add(new ShardedRedisNode("10.101.0.230", 6379, 10));
+		nodes.add(new ShardedRedisNode("10.101.0.45", 6379, 9));
 
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean(nodes, 10, true);
+		ShardedRedisConfiguration configuration = new ShardedRedisConfiguration();
+		configuration.setNodes(nodes);
+
+		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean(configuration);
 
 		try{
 			factoryBean.afterPropertiesSet();
@@ -65,8 +80,8 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 		}
 	}
 
-	protected RedisTemplate getRedisTemplate(){
-		RedisTemplate redisTemplate = new RedisTemplate(createShardedJedisConnection());
+	protected RedisTemplate getRedisTemplate(RedisConnection connection){
+		RedisTemplate redisTemplate = new RedisTemplate(connection);
 
 		Options options = new Options();
 

@@ -37,52 +37,52 @@ import com.buession.core.validator.Validate;
  */
 public class IDCardValidator {
 
-    private final static int IDCARD_LENGTH = 18;
+	private final static int IDCARD_LENGTH = 18;
 
-    private final static int[] DIVISORS = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
+	private final static int[] DIVISORS = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
 
-    private final static char[] CHECK_CODES = {'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
+	private final static char[] CHECK_CODES = {'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
 
-    private IDCardValidator(){
+	private IDCardValidator(){
 
-    }
+	}
 
-    public final static boolean isValid(final CharSequence charSequence, final boolean strict, final Date birthday){
-        if(charSequence == null || charSequence.length() != IDCARD_LENGTH){
-            return false;
-        }else if(strict == true && birthday == null){
-            return false;
-        }
+	public final static boolean isValid(final CharSequence charSequence, final boolean strict, final Date birthday){
+		if(charSequence == null || charSequence.length() != IDCARD_LENGTH){
+			return false;
+		}else if(strict && birthday == null){
+			return false;
+		}
 
-        int sum = 0;
-        for(int i = 0; i < IDCARD_LENGTH - 1; i++){
-            char c = charSequence.charAt(i);
+		int sum = 0;
+		for(int i = 0; i < IDCARD_LENGTH - 1; i++){
+			char c = charSequence.charAt(i);
 
-            if(Validate.isNumeric(c) == false){
-                return false;
-            }
+			if(Validate.isNumeric(c) == false){
+				return false;
+			}
 
-            sum += (c - '0') * DIVISORS[i];
-        }
+			sum += (c - '0') * DIVISORS[i];
+		}
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
-        char check_code = CHECK_CODES[sum % 11];
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
+		char check_code = CHECK_CODES[sum % 11];
 
-        if(check_code == charSequence.charAt(IDCARD_LENGTH - 1)){
-            if(strict == true){
-                String s = charSequence.subSequence(6, 14).toString();
+		if(check_code == charSequence.charAt(IDCARD_LENGTH - 1)){
+			if(strict == true){
+				String s = charSequence.subSequence(6, 14).toString();
 
-                try{
-                    return birthday.equals(simpleDateFormat.parse(s));
-                }catch(ParseException e){
-                    return false;
-                }
-            }
+				try{
+					return birthday.equals(simpleDateFormat.parse(s));
+				}catch(ParseException e){
+					return false;
+				}
+			}
 
-            return true;
-        }
+			return true;
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 }

@@ -66,6 +66,18 @@ public class Validate {
 	}
 
 	/**
+	 * 验证是否不为 NULL
+	 *
+	 * @param var
+	 * 		待验证的对象
+	 *
+	 * @return 不为 NULL 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotNull(final Object var){
+		return var != null;
+	}
+
+	/**
 	 * 验证一个有序字符集合是否为空
 	 *
 	 * @param charSequence
@@ -219,7 +231,7 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或不含有元素时，返回 TRUE；否则，返回 FALSE
 	 */
-	public final static boolean isEmpty(final Iterator iterator){
+	public final static boolean isEmpty(final Iterator<?> iterator){
 		return iterator == null || iterator.hasNext() == false;
 	}
 
@@ -231,8 +243,176 @@ public class Validate {
 	 *
 	 * @return 为 NULL 或不含有元素时，返回 TRUE；否则，返回 FALSE
 	 */
-	public final static boolean isEmpty(final Enumeration enumeration){
+	public final static boolean isEmpty(final Enumeration<?> enumeration){
 		return enumeration == null || enumeration.hasMoreElements() == false;
+	}
+
+	/**
+	 * 验证一个有序字符集合是否不为空
+	 *
+	 * @param charSequence
+	 * 		待验证的有序字符集合
+	 *
+	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotEmpty(final CharSequence charSequence){
+		return charSequence != null && charSequence.length() > 0;
+	}
+
+	/**
+	 * 验证数组是否不为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotEmpty(final float[] array){
+		return array != null && array.length > 0;
+	}
+
+	/**
+	 * 验证数组是否不为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotEmpty(final double[] array){
+		return array != null && array.length > 0;
+	}
+
+	/**
+	 * 验证数组是否不为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotEmpty(final short[] array){
+		return array != null && array.length > 0;
+	}
+
+	/**
+	 * 验证数组是否不为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotEmpty(final int[] array){
+		return array != null && array.length > 0;
+	}
+
+	/**
+	 * 验证数组是否不为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotEmpty(final long[] array){
+		return array != null && array.length > 0;
+	}
+
+	/**
+	 * 验证数组是否不为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotEmpty(final byte[] array){
+		return array != null && array.length > 0;
+	}
+
+	/**
+	 * 验证数组是否不为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotEmpty(final char[] array){
+		return array != null && array.length > 0;
+	}
+
+	/**
+	 * 验证数组是否不为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotEmpty(final boolean[] array){
+		return array != null && array.length > 0;
+	}
+
+	/**
+	 * 验证数组是否不为空
+	 *
+	 * @param array
+	 * 		待验证数组
+	 *
+	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static <O> boolean isNotEmpty(final O[] array){
+		return array != null && array.length > 0;
+	}
+
+	/**
+	 * 验证一个容器是否不为空
+	 *
+	 * @param collection
+	 * 		待验证的容器
+	 *
+	 * @return 不为 NULL 且含有元素时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotEmpty(final Collection<?> collection){
+		return collection != null && collection.isEmpty() == false;
+	}
+
+	/**
+	 * 验证一个 Map 是否不为空
+	 *
+	 * @param map
+	 * 		待验证的容器
+	 *
+	 * @return 不为 NULL 且含有元素时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotEmpty(final Map<?, ?> map){
+		return map != null && map.isEmpty() == false;
+	}
+
+	/**
+	 * 验证一个迭代器是否不为空
+	 *
+	 * @param iterator
+	 * 		待验证的迭代器
+	 *
+	 * @return 不为 NULL 且含有元素时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotEmpty(final Iterator<?> iterator){
+		return iterator != null && iterator.hasNext();
+	}
+
+	/**
+	 * 验证一个 Enumeration 是否不为空
+	 *
+	 * @param enumeration
+	 * 		待验证的迭代器
+	 *
+	 * @return 不为 NULL 且含有元素时，返回 TRUE；否则，返回 FALSE
+	 */
+	public final static boolean isNotEmpty(final Enumeration<?> enumeration){
+		return enumeration != null && enumeration.hasMoreElements();
 	}
 
 	/**
@@ -741,8 +921,8 @@ public class Validate {
 	 *
 	 * @return Boolean
 	 */
-	public final static boolean isValidPort(final int port){
-		return port >= 0 && port <= 65535;
+	public final static boolean isPort(final int port){
+		return isBetween(port, 0, 65535, true);
 	}
 
 }

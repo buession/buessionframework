@@ -19,24 +19,26 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.interceptor;
 
-import com.buession.aop.MethodInvocation;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractMethodInterceptor implements MethodInterceptor {
+public abstract class AbstractMethodInterceptor<R> implements MethodInterceptor {
 
-    @Override
-    public Object invoke(MethodInvocation mi) throws Throwable{
-        doInvoke(mi);
-        return mi.proceed();
-    }
+	@Override
+	@SuppressWarnings({"unchecked"})
+	public R invoke(MethodInvocation mi) throws Throwable{
+		doInvoke(mi);
+		return (R) mi.proceed();
+	}
 
-    protected abstract void doInvoke(MethodInvocation mi) throws Throwable;
+	protected abstract void doInvoke(MethodInvocation mi) throws Throwable;
 
 }

@@ -26,6 +26,7 @@
  */
 package org.apache.ibatis.type;
 
+import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,60 +41,57 @@ import java.sql.SQLException;
  */
 public class IgnoreCaseEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
-    private final Class<E> type;
+	private final Class<E> type;
 
-    private final static Logger logger = LoggerFactory.getLogger(IgnoreCaseEnumTypeHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(IgnoreCaseEnumTypeHandler.class);
 
-    public IgnoreCaseEnumTypeHandler(Class<E> type){
-        if(type == null){
-            throw new IllegalArgumentException("Type argument cannot be null");
-        }else{
-            this.type = type;
-        }
-    }
+	public IgnoreCaseEnumTypeHandler(Class<E> type){
+		Assert.isNull(type, "Type argument cannot be null.");
+		this.type = type;
+	}
 
-    @Override
-    public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException{
-        if(jdbcType == null){
-            ps.setString(i, parameter.name());
-        }else{
-            ps.setObject(i, parameter.name(), jdbcType.TYPE_CODE);
-        }
-    }
+	@Override
+	public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException{
+		if(jdbcType == null){
+			ps.setString(i, parameter.name());
+		}else{
+			ps.setObject(i, parameter.name(), jdbcType.TYPE_CODE);
+		}
+	}
 
-    @Override
-    public E getNullableResult(ResultSet rs, String columnName) throws SQLException{
-        return convert(rs.getString(columnName));
-    }
+	@Override
+	public E getNullableResult(ResultSet rs, String columnName) throws SQLException{
+		return convert(rs.getString(columnName));
+	}
 
-    @Override
-    public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException{
-        return convert(rs.getString(columnIndex));
-    }
+	@Override
+	public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException{
+		return convert(rs.getString(columnIndex));
+	}
 
-    @Override
-    public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException{
-        return convert(cs.getString(columnIndex));
-    }
+	@Override
+	public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException{
+		return convert(cs.getString(columnIndex));
+	}
 
-    private final E convert(final String str){
-        if(Validate.hasText(str) == false){
-            return null;
-        }
+	private final E convert(final String str){
+		if(Validate.hasText(str) == false){
+			return null;
+		}
 
-        try{
-            logger.info("{} convert {} success.", str, type.getName());
-            return Enum.valueOf(type, str);
-        }catch(IllegalArgumentException e){
-            try{
-                logger.info("{} after toUpperCase convert {} success.", str, type.getName());
-                return Enum.valueOf(type, str.toUpperCase());
-            }catch(IllegalArgumentException ex){
-                logger.warn("{} convert {} failure: {}.", str, type.getName(), ex.getMessage());
-            }
-        }
+		try{
+			logger.info("{} convert {} success.", str, type.getName());
+			return Enum.valueOf(type, str);
+		}catch(IllegalArgumentException e){
+			try{
+				logger.info("{} after toUpperCase convert {} success.", str, type.getName());
+				return Enum.valueOf(type, str.toUpperCase());
+			}catch(IllegalArgumentException ex){
+				logger.warn("{} convert {} failure: {}.", str, type.getName(), ex.getMessage());
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
 }

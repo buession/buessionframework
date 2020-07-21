@@ -24,8 +24,8 @@
  */
 package com.buession.aop.resolver;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.core.utils.Assert;
+import org.aopalliance.intercept.MethodInvocation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -35,35 +35,33 @@ import java.lang.reflect.Method;
  */
 public class DefaultAnnotationResolver extends AbstractAnnotationResolver {
 
-    @Override
-    public Annotation getAnnotation(MethodInvocation mi, Class<? extends Annotation> clazz){
-        Assert.isNull(mi, "method arguments cloud not be null");
+	@Override
+	public Annotation getAnnotation(MethodInvocation mi, Class<? extends Annotation> clazz){
+		Assert.isNull(mi, "method arguments cloud not be null");
 
-        Method method = mi.getMethod();
-        if(method == null){
-            throw new IllegalArgumentException(MethodInvocation.class.getName() + " parameter incorrectly " +
-                    "constructed.getMethod() returned null");
-        }
+		Method method = mi.getMethod();
+		Assert.isNull(method, MethodInvocation.class.getName() + " parameter incorrectly constructed.getMethod() " +
+				"returned null.");
 
-        Annotation annotation = method.getAnnotation(clazz);
-        if(annotation == null){
-            Object miThis = mi.getThis();
-            annotation = miThis != null ? miThis.getClass().getAnnotation(clazz) : null;
-        }
+		Annotation annotation = method.getAnnotation(clazz);
+		if(annotation == null){
+			Object miThis = mi.getThis();
+			annotation = miThis != null ? miThis.getClass().getAnnotation(clazz) : null;
+		}
 
-        return annotation;
-    }
+		return annotation;
+	}
 
-    @Override
-    public Annotation getAnnotation(Method method, Class<? extends Annotation> clazz){
-        Assert.isNull(method, "method arguments cloud not be null");
+	@Override
+	public Annotation getAnnotation(Method method, Class<? extends Annotation> clazz){
+		Assert.isNull(method, "method arguments cloud not be null");
 
-        Annotation annotation = method.getAnnotation(clazz);
-        if(annotation == null){
-            annotation = method.getDeclaringClass().getAnnotation(clazz);
-        }
+		Annotation annotation = method.getAnnotation(clazz);
+		if(annotation == null){
+			annotation = method.getDeclaringClass().getAnnotation(clazz);
+		}
 
-        return annotation;
-    }
+		return annotation;
+	}
 
 }

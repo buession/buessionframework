@@ -19,17 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.handler;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.web.aop.handler.AbstractDocumentMetaDataAnnotationHandler;
 import com.buession.web.mvc.view.document.DocumentMetaData;
 import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
+import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,32 +40,31 @@ import java.lang.reflect.Method;
  */
 public class ServletDocumentMetaDataAnnotationHandler extends AbstractDocumentMetaDataAnnotationHandler {
 
-    private final static Logger logger = LoggerFactory.getLogger(ServletDocumentMetaDataAnnotationHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(ServletDocumentMetaDataAnnotationHandler.class);
 
-    public ServletDocumentMetaDataAnnotationHandler(){
-        super();
-    }
+	public ServletDocumentMetaDataAnnotationHandler(){
+		super();
+	}
 
-    @Override
-    public void execute(MethodInvocation mi, DocumentMetaData documentMetaData){
-        HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
-        doExecute(httpServlet, documentMetaData);
-    }
+	@Override
+	public Void execute(MethodInvocation mi, DocumentMetaData documentMetaData){
+		doExecute(AopUtils.getHttpServlet(mi), documentMetaData);
+		return null;
+	}
 
-    @Override
-    public Object execute(Object target, Method method, Object[] arguments, DocumentMetaData documentMetaData){
-        HttpServlet httpServlet = MethodUtils.createHttpServletFromMethodArguments(arguments);
-        doExecute(httpServlet, documentMetaData);
-        return null;
-    }
+	@Override
+	public Void execute(Object target, Method method, Object[] arguments, DocumentMetaData documentMetaData){
+		doExecute(MethodUtils.createHttpServletFromArguments(arguments), documentMetaData);
+		return null;
+	}
 
-    private final static void doExecute(final HttpServlet httpServlet, final DocumentMetaData documentMetaData){
-        if(httpServlet == null || httpServlet.getModel() == null){
-            logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "ServerHttpResponse");
-            return;
-        }
+	private final static void doExecute(final HttpServlet httpServlet, final DocumentMetaData documentMetaData){
+		if(httpServlet == null || httpServlet.getModel() == null){
+			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "Model");
+			return;
+		}
 
-        addModelAttribute(httpServlet.getModel(), documentMetaData);
-    }
+		addModelAttribute(httpServlet.getModel(), documentMetaData);
+	}
 
 }

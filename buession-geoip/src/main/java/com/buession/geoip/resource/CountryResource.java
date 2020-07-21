@@ -24,7 +24,7 @@
  */
 package com.buession.geoip.resource;
 
-import com.buession.core.utils.StringUtils;
+import com.buession.core.utils.KeyValueParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,11 +50,11 @@ public class CountryResource {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 
 			try{
-				while(reader.ready()){
-					String line = reader.readLine();
+				KeyValueParser keyValueParser;
 
-					String[] rows = StringUtils.split(line, ':');
-					data.put(rows[0], rows[1]);
+				while(reader.ready()){
+					keyValueParser = new KeyValueParser(reader.readLine(), ":");
+					data.put(keyValueParser.getKey(), keyValueParser.getValue());
 				}
 			}catch(IOException e){
 				logger.error("Load dict error.", e);

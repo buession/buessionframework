@@ -19,46 +19,71 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
+
+import java.util.Objects;
 
 /**
  * @author Yong.Teng
  */
 public class Header {
 
-    private String name;
+	private String name;
 
-    private String value;
+	private String value;
 
-    public Header(){
-    }
+	public Header(){
+	}
 
-    public Header(String name, String value){
-        this.name = name;
-        this.value = value;
-    }
+	public Header(String name, String value){
+		this.name = name;
+		this.value = value;
+	}
 
-    public String getName(){
-        return name;
-    }
+	public String getName(){
+		return name;
+	}
 
-    public void setName(final String name){
-        this.name = name;
-    }
+	public void setName(final String name){
+		this.name = name;
+	}
 
-    public String getValue(){
-        return value;
-    }
+	public String getValue(){
+		return value;
+	}
 
-    public void setValue(final String value){
-        this.value = value;
-    }
+	public void setValue(final String value){
+		this.value = value;
+	}
 
-    @Override
-    public String toString(){
-        return name + ": " + value;
-    }
+	@Override
+	public int hashCode(){
+		return Objects.hash(name, value);
+	}
+
+	@Override
+	public boolean equals(Object o){
+		if(o == this){
+			return true;
+		}
+
+		if(o instanceof Header){
+			Header that = (Header) o;
+			return Objects.equals(name, that.name) && Objects.equals(value, that.value);
+		}
+
+		return false;
+	}
+
+	@Override
+	public String toString(){
+		final StringBuilder sb = new StringBuilder((name == null ? 0 : name.length()) + (value == null ? 0 :
+				value.length()) + 2);
+		sb.append(name).append(": ").append(value);
+		return sb.toString();
+	}
+
 }

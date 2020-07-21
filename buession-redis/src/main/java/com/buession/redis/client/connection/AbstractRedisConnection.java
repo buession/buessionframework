@@ -58,11 +58,6 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
 
 	/**
-	 * 是否启用 SSL 连接
-	 */
-	private boolean useSsl;
-
-	/**
 	 * SSL 配置
 	 */
 	private SslConfiguration sslConfiguration;
@@ -114,57 +109,12 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 	 *
 	 * @param dataSource
 	 * 		Redis 数据源
-	 * @param useSsl
-	 * 		是否启用 SSL 连接
-	 */
-	public AbstractRedisConnection(DataSource dataSource, boolean useSsl){
-		this.dataSource = dataSource;
-		this.useSsl = useSsl;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
 	public AbstractRedisConnection(DataSource dataSource, SslConfiguration sslConfiguration){
 		this.dataSource = dataSource;
 		this.sslConfiguration = sslConfiguration;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param useSsl
-	 * 		是否启用 SSL 连接
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public AbstractRedisConnection(DataSource dataSource, boolean useSsl, SslConfiguration sslConfiguration){
-		this(dataSource, useSsl);
-		this.sslConfiguration = sslConfiguration;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时
-	 * @param soTimeout
-	 * 		读取超时
-	 * @param useSsl
-	 * 		是否启用 SSL 连接
-	 */
-	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout, boolean useSsl){
-		this(dataSource, connectTimeout, soTimeout);
-		this.useSsl = useSsl;
 	}
 
 	/**
@@ -182,26 +132,6 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
 			SslConfiguration sslConfiguration){
 		this(dataSource, connectTimeout, soTimeout);
-		this.sslConfiguration = sslConfiguration;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param dataSource
-	 * 		Redis 数据源
-	 * @param connectTimeout
-	 * 		连接超时
-	 * @param soTimeout
-	 * 		读取超时
-	 * @param useSsl
-	 * 		是否启用 SSL 连接
-	 * @param sslConfiguration
-	 * 		SSL 配置
-	 */
-	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout, boolean useSsl,
-			SslConfiguration sslConfiguration){
-		this(dataSource, connectTimeout, soTimeout, useSsl);
 		this.sslConfiguration = sslConfiguration;
 	}
 
@@ -237,12 +167,7 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 
 	@Override
 	public boolean isUseSsl(){
-		return useSsl;
-	}
-
-	@Override
-	public void setUseSsl(final boolean useSsl){
-		this.useSsl = useSsl;
+		return sslConfiguration != null;
 	}
 
 	@Override
@@ -322,6 +247,10 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 			transaction.close();
 			transaction = null;
 		}
+	}
+
+	protected final static String redisPassword(final String password){
+		return "".equals(password) ? null : password;
 	}
 
 	protected abstract void doConnect() throws IOException;

@@ -69,8 +69,7 @@ public class PinyinUtils {
 	 * @throws net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination
 	 * 		异常
 	 */
-	public static String getPinyin(final String str, final boolean hasTone, final CaseType caseType) throws
-			BadHanyuPinyinOutputFormatCombination{
+	public static String getPinyin(final String str, final boolean hasTone, final CaseType caseType) throws BadHanyuPinyinOutputFormatCombination{
 		if(Validate.isEmpty(str)){
 			return str;
 		}
@@ -97,7 +96,7 @@ public class PinyinUtils {
 				if(Character.toString(c).matches("[\\u4E00-\\u9FA5]+") == true){
 					sb.append(PinyinHelper.toHanyuPinyinStringArray(c, outputFormat)[0]);
 				}else{
-					sb.append(Character.toString(c));
+					sb.append(c);
 				}
 			}
 		}catch(BadHanyuPinyinOutputFormatCombination e){
@@ -120,12 +119,12 @@ public class PinyinUtils {
 			return str;
 		}
 
-		StringBuilder sb = new StringBuilder(str.length());
-
 		char chars[] = str.toCharArray();
+		String[] pinyinArray;
+		StringBuilder sb = new StringBuilder(chars.length);
 
 		for(char c : chars){
-			String[] pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c);
+			pinyinArray = PinyinHelper.toHanyuPinyinStringArray(c);
 			if(pinyinArray != null){
 				sb.append(pinyinArray[0].charAt(0));
 			}else{

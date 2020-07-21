@@ -88,24 +88,18 @@ public class AliCloudOSSClient extends AbstractOSSClient {
 	 */
 	@Override
 	public Result crop(final String bucketName, final String path, final int width, final int height, final int x,
-					   final int y){
+			final int y){
 		final String objectKey = path.startsWith("/") ? path.substring(1) : path;
 		final StringBuilder sbStyle = new StringBuilder(64);
 		final Formatter styleFormatter = new Formatter(sbStyle);
 
 		sbStyle.append("image/crop");
-		sbStyle.append(",w_");
-		sbStyle.append(width);
-		sbStyle.append(",h_");
-		sbStyle.append(height);
-		sbStyle.append(",x_");
-		sbStyle.append(x);
-		sbStyle.append(",y_");
-		sbStyle.append(y);
+		sbStyle.append(",w_").append(width).append(",h_").append(height);
+		sbStyle.append(",x_").append(x).append(",y_").append(y);
 		sbStyle.append(",r_1");
 
-		styleFormatter.format("|sys/saveas,o_%s,b_%s", BinaryUtil.toBase64String(objectKey.getBytes()), BinaryUtil
-				.toBase64String(bucketName.getBytes()));
+		styleFormatter.format("|sys/saveas,o_%s,b_%s", BinaryUtil.toBase64String(objectKey.getBytes()),
+				BinaryUtil.toBase64String(bucketName.getBytes()));
 
 		ProcessObjectRequest request = new ProcessObjectRequest(bucketName, objectKey, sbStyle.toString());
 		GenericResult genericResult = getOssClient().processObject(request);

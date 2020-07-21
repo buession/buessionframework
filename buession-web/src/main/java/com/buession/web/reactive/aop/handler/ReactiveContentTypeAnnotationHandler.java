@@ -24,12 +24,12 @@
  */
 package com.buession.web.reactive.aop.handler;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.web.aop.handler.AbstractContentTypeAnnotationHandler;
 import com.buession.web.http.response.annotation.ContentType;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.aop.MethodUtils;
+import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -49,15 +49,14 @@ public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnn
 	}
 
 	@Override
-	public void execute(MethodInvocation mi, ContentType contentType){
-		ServerHttp serverHttp = AopUtils.getServerHttp(mi);
-		doExecute(serverHttp, contentType);
+	public Void execute(MethodInvocation mi, ContentType contentType){
+		doExecute(AopUtils.getServerHttp(mi), contentType);
+		return null;
 	}
 
 	@Override
-	public Object execute(Object target, Method method, Object[] arguments, ContentType contentType){
-		ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
-		doExecute(serverHttp, contentType);
+	public Void execute(Object target, Method method, Object[] arguments, ContentType contentType){
+		doExecute(MethodUtils.createServerHttpFromArguments(arguments), contentType);
 		return null;
 	}
 

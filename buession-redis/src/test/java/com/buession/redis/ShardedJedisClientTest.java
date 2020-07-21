@@ -27,6 +27,8 @@ package com.buession.redis;
 import com.buession.redis.core.Info;
 import org.junit.Test;
 
+import java.util.Properties;
+
 /**
  * @author Yong.Teng
  */
@@ -34,14 +36,14 @@ public class ShardedJedisClientTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void info(){
-		RedisTemplate redisTemplate = getRedisTemplate();
+		RedisTemplate redisTemplate = getRedisTemplate(createShardedJedisConnection());
 		System.out.println(redisTemplate.info());
 	}
 
 	@Test
 	public void set(){
-		Info info = new Info();
-		RedisTemplate redisTemplate = getRedisTemplate();
+		Info info = null;
+		RedisTemplate redisTemplate = getRedisTemplate(createShardedJedisConnection());
 		redisTemplate.set("s1_info", info);
 		redisTemplate.set("s2_info", info);
 		redisTemplate.set("a_info", info);

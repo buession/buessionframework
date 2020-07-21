@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.advice;
@@ -32,16 +32,16 @@ import java.lang.reflect.Method;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractAdvice implements Advice {
+public abstract class AbstractAdvice<R> implements Advice<R> {
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractAdvice.class);
 
 	@Override
-	public Object invoke(Object target, Method method, Object[] arguments) throws Throwable{
+	public R invoke(Object target, Method method, Object[] arguments) throws Throwable{
 		logger.debug("Invoke advice method {}::{}", target.getClass().getName(), method);
 		return doInvoke(target, method, arguments);
 	}
 
-	protected abstract Object doInvoke(Object target, Method method, Object[] arguments) throws Throwable;
+	protected abstract R doInvoke(Object target, Method method, Object[] arguments) throws Throwable;
 
 }

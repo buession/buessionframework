@@ -51,8 +51,8 @@ public enum DomainTLD {
 
 	ABUDHABI("abudhabi", DomainTLDType.GENERIC, "Abu Dhabi Systems and Information Centre"),
 
-	AC("ac", DomainTLDType.COUNTRY, "Network Information Center (AC Domain Registry)c/o Cable and Wireless (Ascension"
-	 + " Island)"),
+	AC("ac", DomainTLDType.COUNTRY,
+	 "Network Information Center (AC Domain Registry)c/o Cable and Wireless (Ascension" + " Island)"),
 
 	ACADEMY("academy", DomainTLDType.GENERIC, "Binky Moon, LLC"),
 
@@ -132,8 +132,8 @@ public enum DomainTLD {
 
 	AM("am", DomainTLDType.COUNTRY, "\"Internet Society\" Non-governmental Organization"),
 
-	AMERICANEXPRESS("americanexpress", DomainTLDType.GENERIC, "American Express Travel Related Services Company, Inc"
-	+ "."),
+	AMERICANEXPRESS("americanexpress", DomainTLDType.GENERIC,
+	 "American Express Travel Related Services Company, Inc" + "."),
 
 	AMERICANFAMILY("americanfamily", DomainTLDType.GENERIC, "AmFam, Inc."),
 
@@ -347,8 +347,8 @@ public enum DomainTLD {
 
 	BMW("bmw", DomainTLDType.GENERIC, "Bayerische Motoren Werke Aktiengesellschaft"),
 
-	BN("bn", DomainTLDType.COUNTRY, "Authority for Info-communications Technology Industry of Brunei Darussalam " + ""
-	 + "(AITI)"),
+	BN("bn", DomainTLDType.COUNTRY,
+	 "Authority for Info-communications Technology Industry of Brunei Darussalam " + "" + "(AITI)"),
 
 	BNL("bnl", DomainTLDType.GENERIC, "Banca Nazionale del Lavoro"),
 
@@ -430,8 +430,9 @@ public enum DomainTLD {
 
 	BZH("bzh", DomainTLDType.GENERIC, "Association www.bzh"),
 
-	CA("ca", DomainTLDType.COUNTRY, "Canadian Internet Registration Authority (CIRA) AutoritÃ© Canadienne pour les " +
-	 "enregistrements Internet (ACEI)"),
+	CA("ca", DomainTLDType.COUNTRY,
+	 "Canadian Internet Registration Authority (CIRA) AutoritÃ© Canadienne pour les " + "enregistrements Internet " +
+	 "(ACEI)"),
 
 	CAB("cab", DomainTLDType.GENERIC, "Binky Moon, LLC"),
 
@@ -546,8 +547,8 @@ public enum DomainTLD {
 
 	CHURCH("church", DomainTLDType.GENERIC, "Binky Moon, LLC"),
 
-	CI("ci", DomainTLDType.COUNTRY, "AutoritÃ© de RÃ©gulation des TÃ©lÃ©communications/TIC de CÃ´te dâlvoire " + ""
-	+ "(ARTCI)"),
+	CI("ci", DomainTLDType.COUNTRY,
+	 "AutoritÃ© de RÃ©gulation des TÃ©lÃ©communications/TIC de CÃ´te dâlvoire " + "" + "(ARTCI)"),
 
 	CIPRIANI("cipriani", DomainTLDType.GENERIC, "Hotel Cipriani Srl"),
 
@@ -1153,14 +1154,8 @@ public enum DomainTLD {
 
 	GURU("guru", DomainTLDType.GENERIC, "Binky Moon, LLC"),
 
-	GW("gw", DomainTLDType.COUNTRY, "Autoridade Reguladora Nacional - Tecnologias de InformaÃ§Ã£o e ComunicaÃ§Ã£o da "
-	 + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-	 "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + ""
-	 + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-	 "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + ""
-	 + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" +
-	 "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + ""
-	 + "" + "" + "" + "" + "" + "GuinÃ©-Bissau"),
+	GW("gw", DomainTLDType.COUNTRY,
+	 "Autoridade Reguladora Nacional - Tecnologias de InformaÃ§Ã£o e ComunicaÃ§Ã£o da " + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "" + "GuinÃ©-Bissau"),
 
 	GY("gy", DomainTLDType.COUNTRY, "University of Guyana"),
 
@@ -1606,8 +1601,8 @@ public enum DomainTLD {
 
 	LUXURY("luxury", DomainTLDType.GENERIC, "Luxury Partners LLC"),
 
-	LV("lv", DomainTLDType.COUNTRY, "University of LatviaInstitute of Mathematics and Computer ScienceDepartment of "
-	+ "Network Solutions (DNS)"),
+	LV("lv", DomainTLDType.COUNTRY,
+	 "University of LatviaInstitute of Mathematics and Computer ScienceDepartment of " + "Network Solutions (DNS)"),
 
 	LY("ly", DomainTLDType.COUNTRY, "General Post and Telecommunication Company"),
 
@@ -1665,8 +1660,8 @@ public enum DomainTLD {
 
 	MEET("meet", DomainTLDType.GENERIC, "Charleston Road Registry Inc."),
 
-	MELBOURNE("melbourne", DomainTLDType.GENERIC, "The Crown in right of the State of Victoria, represented by its " +
-	 "Department of State Development, Business and Innovation"),
+	MELBOURNE("melbourne", DomainTLDType.GENERIC,
+	 "The Crown in right of the State of Victoria, represented by its " + "Department of State Development, Business " + "and Innovation"),
 
 	MEME("meme", DomainTLDType.GENERIC, "Charleston Road Registry Inc."),
 
@@ -1746,8 +1741,8 @@ public enum DomainTLD {
 
 	MORTGAGE("mortgage", DomainTLDType.GENERIC, "United TLD Holdco, Ltd"),
 
-	MOSCOW("moscow", DomainTLDType.GENERIC, "Foundation for Assistance for Internet Technologies and Infrastructure "
-	+ "Development (FAITID)"),
+	MOSCOW("moscow", DomainTLDType.GENERIC,
+	 "Foundation for Assistance for Internet Technologies and Infrastructure " + "Development (FAITID)"),
 
 	MOTO("moto", DomainTLDType.GENERIC, "Motorola Trademark Holdings, LLC"),
 
@@ -1988,8 +1983,8 @@ public enum DomainTLD {
 
 	PFIZER("pfizer", DomainTLDType.GENERIC, "Pfizer Inc."),
 
-	PG("pg", DomainTLDType.COUNTRY, "PNG DNS AdministrationVice Chancellors OfficeThe Papua New Guinea University of "
-	 + "" + "" + "" + "" + "" + "" + "" + "" + "" + "Technology"),
+	PG("pg", DomainTLDType.COUNTRY,
+	 "PNG DNS AdministrationVice Chancellors OfficeThe Papua New Guinea University of " + "" + "" + "" + "" + "" + "" + "" + "" + "" + "Technology"),
 
 	PH("ph", DomainTLDType.COUNTRY, "PH Domain Foundation"),
 
@@ -2542,8 +2537,8 @@ public enum DomainTLD {
 
 	TF("tf", DomainTLDType.COUNTRY, "Association FranÃ§aise pour le Nommage Internet en CoopÃ©ration (A.F.N.I.C.)"),
 
-	TG("tg", DomainTLDType.COUNTRY, "Autorite de Reglementation des secteurs de Postes et de Telecommunications " + ""
-	 + "(ART&P)"),
+	TG("tg", DomainTLDType.COUNTRY,
+	 "Autorite de Reglementation des secteurs de Postes et de Telecommunications " + "" + "(ART&P)"),
 
 	TH("th", DomainTLDType.COUNTRY, "Thai Network Information Center Foundation"),
 
@@ -2585,8 +2580,8 @@ public enum DomainTLD {
 
 	TN("tn", DomainTLDType.COUNTRY, "Agence Tunisienne d'Internet"),
 
-	TO("to", DomainTLDType.COUNTRY, "Government of the Kingdom of TongaH.R.H. Crown Prince Tupouto'ac/o Consulate of "
-	 + "" + "" + "" + "" + "" + "" + "" + "" + "" + "Tonga"),
+	TO("to", DomainTLDType.COUNTRY,
+	 "Government of the Kingdom of TongaH.R.H. Crown Prince Tupouto'ac/o Consulate of " + "" + "" + "" + "" + "" + "" + "" + "" + "" + "Tonga"),
 
 	TODAY("today", DomainTLDType.GENERIC, "Binky Moon, LLC"),
 
@@ -3045,4 +3040,5 @@ public enum DomainTLD {
 	public String getDescription(){
 		return description;
 	}
+
 }

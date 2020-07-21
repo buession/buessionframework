@@ -26,7 +26,7 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
@@ -47,7 +47,7 @@ import java.util.Set;
  */
 public class JedisKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
 
-	public JedisKeyOperations(final JedisRedisClient<Jedis> client){
+	public JedisKeyOperations(final JedisClient client){
 		super(client, null);
 	}
 

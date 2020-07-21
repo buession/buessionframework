@@ -44,7 +44,6 @@
 
 	<modules>
 		<module>../buession-aop</module>
-		<module>../buession-common</module>
 		<module>../buession-core</module>
 		<module>../buession-cron</module>
 		<module>../buession-dao</module>
@@ -53,6 +52,7 @@
 		<module>../buession-io</module>
 		<module>../buession-json</module>
 		<module>../buession-lang</module>
+		<module>../buession-net</module>
 		<module>../buession-oss</module>
 		<module>../buession-redis</module>
 		<module>../buession-session</module>

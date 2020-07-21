@@ -24,7 +24,6 @@
  */
 package com.buession.web.servlet.aop.handler;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractResponseHeaderAnnotationHandler;
 import com.buession.web.http.HttpHeader;
@@ -33,6 +32,7 @@ import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
 import com.buession.web.servlet.http.response.ResponseUtils;
+import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,21 +51,20 @@ public class ServletResponseHeaderAnnotationHandler extends AbstractResponseHead
 	}
 
 	@Override
-	public void execute(MethodInvocation mi, ResponseHeader responseHeader){
-		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
-		doExecute(httpServlet, responseHeader);
+	public Void execute(MethodInvocation mi, ResponseHeader responseHeader){
+		doExecute(AopUtils.getHttpServlet(mi), responseHeader);
+		return null;
 	}
 
 	@Override
-	public Object execute(Object target, Method method, Object[] arguments, ResponseHeader responseHeader){
-		HttpServlet httpServlet = MethodUtils.createHttpServletFromMethodArguments(arguments);
-		doExecute(httpServlet, responseHeader);
+	public Void execute(Object target, Method method, Object[] arguments, ResponseHeader responseHeader){
+		doExecute(MethodUtils.createHttpServletFromArguments(arguments), responseHeader);
 		return null;
 	}
 
 	private final static void doExecute(final HttpServlet httpServlet, final ResponseHeader responseHeader){
 		if(httpServlet == null || httpServlet.getResponse() == null){
-			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "ServerHttpResponse");
+			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "HttpServletResponse");
 			return;
 		}
 

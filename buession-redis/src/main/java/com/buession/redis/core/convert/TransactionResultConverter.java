@@ -48,7 +48,7 @@ public class TransactionResultConverter<V> implements Converter<List<Object>, Li
 		Assert.isTrue(rawResults.size() != txResults.size(),
 				"Incorrect number of transaction results. Expected: " + txResults.size() + " Actual: " + rawResults.size());
 
-		List<Object> result = new ArrayList<>();
+		List<Object> result = new ArrayList<>(rawResults.size());
 
 		for(Object rawResult : rawResults){
 			FutureResult<V> futureResult = txResults.remove();

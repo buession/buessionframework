@@ -24,8 +24,8 @@
  */
 package com.buession.json.serializer;
 
+import com.buession.core.reflect.FieldUtils;
 import com.buession.core.utils.EnumUtils;
-import com.buession.core.utils.ReflectUtils;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -56,16 +56,15 @@ public class Enum2MapSerializer extends JsonSerializer<Enum<?>> {
 		generator.writeEndObject();
 	}
 
-	private final static void writeFieldValue(final JsonGenerator generator, final Enum<?> en, final Field field)
-			throws IOException{
-		ReflectUtils.setFieldAccessible(field);
+	private final static void writeFieldValue(final JsonGenerator generator, final Enum<?> en, final Field field) throws IOException{
+		FieldUtils.setAccessible(field);
 
 		try{
 			generator.writeFieldName(field.getName());
 			generator.writeObject(field.get(en));
 		}catch(IllegalAccessException e){
-			logger.error("Read {}::{} failure: {}", field.getDeclaringClass().getName(), field.getName(), e.getMessage
-					());
+			logger.error("Read {}::{} failure: {}", field.getDeclaringClass().getName(), field.getName(),
+					e.getMessage());
 		}
 	}
 

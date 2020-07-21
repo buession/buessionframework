@@ -30,6 +30,6 @@ import com.buession.web.http.response.annotation.ContentType;
 /**
  * @author Yong.Teng
  */
-public interface ContentTypeAnnotationMethodAdvice extends AnnotationMethodAdvice<ContentType> {
+public interface ContentTypeAnnotationMethodAdvice extends AnnotationMethodAdvice<ContentType, Void> {
 
 }

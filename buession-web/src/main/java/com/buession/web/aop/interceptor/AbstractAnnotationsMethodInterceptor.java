@@ -19,15 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.interceptor;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.aop.interceptor.AbstractMethodInterceptor;
 import com.buession.aop.interceptor.AnnotationMethodInterceptor;
 import com.buession.core.validator.Validate;
+import org.aopalliance.intercept.MethodInvocation;
 
 import java.util.Collection;
 
@@ -36,40 +36,39 @@ import java.util.Collection;
  */
 public abstract class AbstractAnnotationsMethodInterceptor extends AbstractMethodInterceptor {
 
-    private Collection<AnnotationMethodInterceptor> methodInterceptors;
+	private Collection<AnnotationMethodInterceptor> methodInterceptors;
 
-    public AbstractAnnotationsMethodInterceptor(){
-    }
+	public AbstractAnnotationsMethodInterceptor(){
+	}
 
-    public AbstractAnnotationsMethodInterceptor(Collection<AnnotationMethodInterceptor> methodInterceptors){
-        this.methodInterceptors = methodInterceptors;
-    }
+	public AbstractAnnotationsMethodInterceptor(Collection<AnnotationMethodInterceptor> methodInterceptors){
+		this.methodInterceptors = methodInterceptors;
+	}
 
-    public Collection<AnnotationMethodInterceptor> getMethodInterceptors(){
-        return methodInterceptors;
-    }
+	public Collection<AnnotationMethodInterceptor> getMethodInterceptors(){
+		return methodInterceptors;
+	}
 
-    public void setMethodInterceptors(Collection<AnnotationMethodInterceptor> methodInterceptors){
-        this.methodInterceptors = methodInterceptors;
-    }
+	public void setMethodInterceptors(Collection<AnnotationMethodInterceptor> methodInterceptors){
+		this.methodInterceptors = methodInterceptors;
+	}
 
-    protected Object continueInvocation(Object aopAllianceMethodInvocation) throws Throwable{
-        org.aopalliance.intercept.MethodInvocation mi = (org.aopalliance.intercept.MethodInvocation)
-                aopAllianceMethodInvocation;
-        return mi.proceed();
-    }
+	protected Object continueInvocation(Object aopAllianceMethodInvocation) throws Throwable{
+		MethodInvocation mi = (MethodInvocation) aopAllianceMethodInvocation;
+		return mi.proceed();
+	}
 
-    @Override
-    protected void doInvoke(MethodInvocation mi) throws Throwable{
-        Collection<AnnotationMethodInterceptor> methodInterceptors = getMethodInterceptors();
+	@Override
+	protected void doInvoke(MethodInvocation mi) throws Throwable{
+		Collection<AnnotationMethodInterceptor> methodInterceptors = getMethodInterceptors();
 
-        if(Validate.isEmpty(methodInterceptors) == false){
-            for(AnnotationMethodInterceptor methodInterceptor : methodInterceptors){
-                if(methodInterceptor.isSupport(mi)){
-                    methodInterceptor.invoke(mi);
-                }
-            }
-        }
-    }
+		if(Validate.isNotEmpty(methodInterceptors)){
+			for(AnnotationMethodInterceptor methodInterceptor : methodInterceptors){
+				if(methodInterceptor.isSupport(mi)){
+					methodInterceptor.invoke(mi);
+				}
+			}
+		}
+	}
 
 }

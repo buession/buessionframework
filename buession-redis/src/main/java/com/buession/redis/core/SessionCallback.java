@@ -28,6 +28,6 @@ package com.buession.redis.core;
  * @author Yong.Teng
  */
 @FunctionalInterface
-public interface SessionCallback<R> extends Executor<R> {
+public interface SessionCallback<R> extends com.buession.core.Executor<com.buession.redis.client.RedisClient, R> {
 
 }

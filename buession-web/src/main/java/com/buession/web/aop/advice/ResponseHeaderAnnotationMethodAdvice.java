@@ -30,6 +30,6 @@ import com.buession.web.http.response.annotation.ResponseHeader;
 /**
  * @author Yong.Teng
  */
-public interface ResponseHeaderAnnotationMethodAdvice extends AnnotationMethodAdvice<ResponseHeader> {
+public interface ResponseHeaderAnnotationMethodAdvice extends AnnotationMethodAdvice<ResponseHeader, Void> {
 
 }

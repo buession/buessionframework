@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.core.convert.TransactionResultConverter;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.transaction.Transaction;
@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class JedisTransactionOperations extends AbstractTransactionOperations<Jedis, Pipeline> {
 
-	public JedisTransactionOperations(final JedisRedisClient<Jedis> client){
+	public JedisTransactionOperations(final JedisClient client){
 		super(client, null);
 	}
 

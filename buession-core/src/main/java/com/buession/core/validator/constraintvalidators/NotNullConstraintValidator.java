@@ -37,7 +37,7 @@ public class NotNullConstraintValidator implements ConstraintValidator<NotNull, 
 
 	@Override
 	public boolean isValid(Object value, ConstraintValidatorContext context){
-		return Validate.isNull(value) == false;
+		return Validate.isNotNull(value);
 	}
 
 }

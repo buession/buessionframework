@@ -24,8 +24,8 @@
  */
 package com.buession.httpclient.okhttp;
 
+import com.buession.core.reflect.FieldUtils;
 import com.buession.core.utils.EnumUtils;
-import com.buession.core.utils.ReflectUtils;
 import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.HtmlRawRequestBody;
@@ -65,7 +65,7 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 	private final static okhttp3.RequestBody DEFAULT_REQUEST_BODY = new FormBody.Builder().build();
 
 	private final static Map<Class<? extends RequestBody>, OkHttpRequestBodyConverter> REQUEST_BODY_CONVERTS =
-			new HashMap<>(16, 0.8F);
+			new HashMap<>(8, 0.8F);
 
 	static{
 		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new EncodedFormRequestBodyConverter());
@@ -83,41 +83,31 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 
 	public final static OkHttpRequestBuilder create(){
 		final OkHttpRequestBuilder builder = new OkHttpRequestBuilder();
-
 		builder.request = new OkHttpRequest();
-
 		return builder;
 	}
 
 	public final static OkHttpRequestBuilder create(String url){
 		final OkHttpRequestBuilder builder = create();
-
 		builder.setUrl(url);
-
 		return builder;
 	}
 
 	public final static OkHttpRequestBuilder create(String url, Map<String, Object> parameters){
 		final OkHttpRequestBuilder builder = create(url);
-
 		builder.setParameters(parameters);
-
 		return builder;
 	}
 
 	public final static OkHttpRequestBuilder create(String url, List<Header> headers){
 		final OkHttpRequestBuilder builder = create(url);
-
 		builder.setHeaders(headers);
-
 		return builder;
 	}
 
 	public final static OkHttpRequestBuilder create(String url, Map<String, Object> parameters, List<Header> headers){
 		final OkHttpRequestBuilder builder = create(url, parameters);
-
 		builder.setHeaders(headers);
-
 		return builder;
 	}
 
@@ -314,7 +304,8 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 		}
 
 		try{
-			String methodName = ReflectUtils.getField(request.getRequestBuilder(), "method");
+			String methodName = String.valueOf(FieldUtils.readDeclaredField(request.getRequestBuilder(), "method",
+					true));
 			request.setMethod(EnumUtils.valueOf(RequestMethod.class, methodName.toUpperCase()));
 		}catch(Exception e){
 		}
@@ -325,6 +316,7 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 		return request;
 	}
 
+	@SuppressWarnings({"unchecked"})
 	private okhttp3.RequestBody buildRequestBody(RequestBody data){
 		if(data == null){
 			return DEFAULT_REQUEST_BODY;
@@ -345,6 +337,7 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 		public void setRequestBuilder(okhttp3.Request.Builder builder){
 			this.builder = builder;
 		}
+
 	}
 
 }

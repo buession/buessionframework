@@ -24,10 +24,10 @@
  */
 package com.buession.redis.core;
 
-import com.buession.common.net.AbstractUserInfoURI;
-import com.buession.common.net.AbstractUserInfoURIBuilder;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
+import com.buession.net.AbstractUserInfoURI;
+import com.buession.net.AbstractUserInfoURIBuilder;
 
 import java.net.URI;
 import java.util.Collections;
@@ -40,7 +40,7 @@ import java.util.Set;
  */
 public class RedisURI extends AbstractUserInfoURI {
 
-	private static final long serialVersionUID = 7893709100532398408L;
+	private final static long serialVersionUID = 7893709100532398408L;
 
 	public final static String REDIS = "redis";
 
@@ -104,6 +104,11 @@ public class RedisURI extends AbstractUserInfoURI {
 
 	public void setTimeout(int timeout){
 		this.timeout = timeout;
+	}
+
+	@Override
+	public boolean isSsl(){
+		return REDISS.equals(getScheme());
 	}
 
 	public boolean isUseSsl(){
@@ -251,7 +256,7 @@ public class RedisURI extends AbstractUserInfoURI {
 
 			Map<String, String> parameters = parseParameters(queryString);
 
-			if(Validate.isEmpty(parameters) == false){
+			if(Validate.isNotEmpty(parameters)){
 				parseDatabase(redisURI, parameters.get(PARAMETER_NAME_DATABASE));
 				parseDatabase(redisURI, parameters.get(PARAMETER_NAME_DATABASE_ALT));
 				parseClientName(redisURI, parameters.get(PARAMETER_NAME_CLIENT_NAME));

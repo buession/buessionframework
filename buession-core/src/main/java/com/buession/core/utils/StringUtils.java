@@ -102,8 +102,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @return 否为布尔 False
 	 */
 	public static boolean isFalse(final String str){
-		return Boolean.parseBoolean(str) == false || Constants.EMPTY_STRING.equals(str) || "0".equals(str) || "no"
-				.equalsIgnoreCase(str);
+		return Boolean.parseBoolean(str) == false || Constants.EMPTY_STRING.equals(str) || "0".equals(str) || "no".equalsIgnoreCase(str);
 	}
 
 	/**
@@ -125,7 +124,6 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 			for(int i = 0; i < length; i++){
 				int j = random.nextInt(Constants.ALNUM.length);
-
 				sb.append(Constants.ALNUM[j]);
 			}
 
@@ -177,8 +175,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}
 	}
 
-	public static boolean regionMatches(final CharSequence cs, final boolean ignoreCase, final int thisStart, final
-	CharSequence substring, final int start, final int length){
+	public static boolean regionMatches(final CharSequence cs, final boolean ignoreCase, final int thisStart,
+			final CharSequence substring, final int start, final int length){
 		if(cs instanceof String && substring instanceof String){
 			return ((String) cs).regionMatches(ignoreCase, thisStart, (String) substring, start, length);
 		}
@@ -214,8 +212,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			}
 
 			// The same check as in String.regionMatches():
-			if(Character.toUpperCase(c1) != Character.toUpperCase(c2) && Character.toLowerCase(c1) != Character
-					.toLowerCase(c2)){
+			if(Character.toUpperCase(c1) != Character.toUpperCase(c2) && Character.toLowerCase(c1) != Character.toLowerCase(c2)){
 				return false;
 			}
 		}

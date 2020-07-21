@@ -27,13 +27,11 @@ package com.buession.redis.core;
 /**
  * @author Yong.Teng
  */
-public class ClusterRedisNode extends EnhanceRedisNode {
+public class ClusterRedisNode extends RedisNamedServer {
+
+	private static final long serialVersionUID = -1193116310442835296L;
 
 	private String masterId;
-
-	public ClusterRedisNode(){
-		super();
-	}
 
 	public ClusterRedisNode(String host, int port){
 		super(host, port);
@@ -44,19 +42,17 @@ public class ClusterRedisNode extends EnhanceRedisNode {
 	}
 
 	public ClusterRedisNode(String host, int port, Role role){
-		super(host, port, role);
+		super(host, port);
+		//setRole(role);
 	}
 
-	public ClusterRedisNode(String host, int port, String id, String name, Role role){
-		super(host, port, id, name, role);
+	public ClusterRedisNode(String host, int port, String name, Role role){
+		super(host, port, name);
+		//setRole(role);
 	}
 
 	public Role getNodeType(){
 		return getRole();
-	}
-
-	public void setNodeType(Role nodeType){
-		setRole(nodeType);
 	}
 
 	public String getMasterId(){

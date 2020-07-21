@@ -17,7 +17,7 @@
  * <http://www.apache.org/>.
  *
  * +-------------------------------------------------------------------------------------------------------+
- * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 											   |
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
@@ -25,6 +25,11 @@
 package com.buession.core.utils;
 
 import com.buession.core.validator.Validate;
+
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Yong.Teng
@@ -55,6 +60,66 @@ public class Assert {
 
 	public final static void notNull(final Object object, final String message){
 		if(object != null){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void isEmpty(final Object[] objects, final String message){
+		if(Validate.isEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void isEmpty(final Collection<?> collection, final String message){
+		if(Validate.isEmpty(collection)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void isEmpty(final Map<?, ?> map, final String message){
+		if(Validate.isEmpty(map)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void isEmpty(final Iterator iterator, final String message){
+		if(Validate.isEmpty(iterator)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void isEmpty(final Enumeration enumeration, final String message){
+		if(Validate.isEmpty(enumeration)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void notEmpty(final Object[] objects, final String message){
+		if(Validate.isNotEmpty(objects)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void notEmpty(final Collection<?> collection, final String message){
+		if(Validate.isNotEmpty(collection)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void notEmpty(final Map<?, ?> map, final String message){
+		if(Validate.isNotEmpty(map)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void notEmpty(final Iterator iterator, final String message){
+		if(Validate.isNotEmpty(iterator)){
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	public final static void notEmpty(final Enumeration enumeration, final String message){
+		if(Validate.isNotEmpty(enumeration)){
 			throw new IllegalArgumentException(message);
 		}
 	}

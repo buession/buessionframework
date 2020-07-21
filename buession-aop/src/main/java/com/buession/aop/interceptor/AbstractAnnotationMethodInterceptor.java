@@ -24,11 +24,11 @@
  */
 package com.buession.aop.interceptor;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.aop.handler.AnnotationHandler;
 import com.buession.aop.resolver.AnnotationResolver;
 import com.buession.aop.resolver.DefaultAnnotationResolver;
 import com.buession.core.utils.Assert;
+import org.aopalliance.intercept.MethodInvocation;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
@@ -37,30 +37,29 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation> extends AbstractMethodInterceptor
-		implements AnnotationMethodInterceptor<A> {
+public abstract class AbstractAnnotationMethodInterceptor<A extends Annotation, R> extends AbstractMethodInterceptor<R> implements AnnotationMethodInterceptor<A, R> {
 
-	private AnnotationHandler<A> handler;
+	private AnnotationHandler<A, R> handler;
 
 	private AnnotationResolver resolver;
 
 	private final static Map<String, Annotation> ANNOTATIONS_CACHE = new ConcurrentHashMap<>(64);
 
-	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler){
+	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A, R> handler){
 		this(handler, new DefaultAnnotationResolver());
 	}
 
-	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A> handler, AnnotationResolver resolver){
+	public AbstractAnnotationMethodInterceptor(AnnotationHandler<A, R> handler, AnnotationResolver resolver){
 		Assert.isNull(handler, "AnnotationHandler argument cloud not be null.");
 		setHandler(handler);
 		setResolver(resolver != null ? resolver : new DefaultAnnotationResolver());
 	}
 
-	public AnnotationHandler<A> getHandler(){
+	public AnnotationHandler<A, R> getHandler(){
 		return handler;
 	}
 
-	public void setHandler(AnnotationHandler<A> handler){
+	public void setHandler(AnnotationHandler<A, R> handler){
 		this.handler = handler;
 	}
 

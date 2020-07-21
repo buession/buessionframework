@@ -24,7 +24,6 @@
  */
 package com.buession.web.servlet.aop.handler;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.core.validator.Validate;
 import com.buession.web.aop.handler.AbstractPrimitiveCrossOriginAnnotationHandler;
 import com.buession.web.http.HttpHeader;
@@ -33,6 +32,7 @@ import com.buession.web.servlet.aop.AopUtils;
 import com.buession.web.servlet.aop.MethodUtils;
 import com.buession.web.servlet.http.HttpServlet;
 import com.buession.web.servlet.http.request.RequestUtils;
+import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,20 +51,19 @@ public class ServletPrimitiveCrossOriginAnnotationHandler extends AbstractPrimit
 	}
 
 	@Override
-	public void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin){
-		HttpServlet httpServlet = AopUtils.getHttpServlet(mi);
-		doExecute(httpServlet, primitiveCrossOrigin);
-	}
-
-	@Override
-	public Object execute(Object target, Method method, Object[] arguments, PrimitiveCrossOrigin primitiveCrossOrigin){
-		HttpServlet httpServlet = MethodUtils.createHttpServletFromMethodArguments(arguments);
-		doExecute(httpServlet, primitiveCrossOrigin);
+	public Void execute(MethodInvocation mi, PrimitiveCrossOrigin primitiveCrossOrigin){
+		doExecute(AopUtils.getHttpServlet(mi), primitiveCrossOrigin);
 		return null;
 	}
 
-	private final static void doExecute(final HttpServlet httpServlet, final PrimitiveCrossOrigin
-			primitiveCrossOrigin){
+	@Override
+	public Void execute(Object target, Method method, Object[] arguments, PrimitiveCrossOrigin primitiveCrossOrigin){
+		doExecute(MethodUtils.createHttpServletFromArguments(arguments), primitiveCrossOrigin);
+		return null;
+	}
+
+	private final static void doExecute(final HttpServlet httpServlet,
+			final PrimitiveCrossOrigin primitiveCrossOrigin){
 		if(httpServlet == null || httpServlet.getRequest() == null || httpServlet.getResponse() == null){
 			if(httpServlet == null){
 				logger.debug("HttpServlet is null.");

@@ -95,14 +95,6 @@ public interface RedisConnection extends Closeable {
 	boolean isUseSsl();
 
 	/**
-	 * 设置是否启用 SSL 连接
-	 *
-	 * @param useSsl
-	 * 		是否启用 SSL 连接
-	 */
-	void setUseSsl(final boolean useSsl);
-
-	/**
 	 * SSL 配置
 	 *
 	 * @return SSL 配置

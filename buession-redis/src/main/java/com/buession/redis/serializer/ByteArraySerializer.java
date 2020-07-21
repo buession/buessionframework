@@ -50,7 +50,7 @@ public class ByteArraySerializer extends AbstractSerializer {
 		try{
 			return serializer.serialize(object);
 		}catch(SerializerException e){
-			logger.error("{}", e);
+			logger.error("{} serializer error.", object, e);
 			return null;
 		}
 	}
@@ -64,7 +64,7 @@ public class ByteArraySerializer extends AbstractSerializer {
 		try{
 			return serializer.serializeAsBytes(object);
 		}catch(SerializerException e){
-			logger.error("{}", e);
+			logger.error("{} serializer error.", object, e);
 			return null;
 		}
 	}
@@ -78,7 +78,7 @@ public class ByteArraySerializer extends AbstractSerializer {
 		try{
 			return serializer.deserialize(str);
 		}catch(SerializerException e){
-			logger.error("{}", e);
+			logger.error("{} serializer error.", str, e);
 			return null;
 		}
 	}
@@ -92,7 +92,7 @@ public class ByteArraySerializer extends AbstractSerializer {
 		try{
 			return serializer.deserialize(bytes);
 		}catch(SerializerException e){
-			logger.error("{}", e);
+			logger.error("{} serializer error.", bytes, e);
 			return null;
 		}
 	}

@@ -25,7 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Geo;
-import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import redis.clients.jedis.GeoCoordinate;
@@ -41,7 +41,7 @@ import java.util.Map;
  */
 public class JedisGeoOperations extends AbstractGeoOperations<Jedis, Pipeline> {
 
-	public JedisGeoOperations(final JedisRedisClient<Jedis> client){
+	public JedisGeoOperations(final JedisClient client){
 		super(client, null);
 	}
 

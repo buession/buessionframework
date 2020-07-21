@@ -24,8 +24,8 @@
  */
 package com.buession.web.reactive.aop;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.web.reactive.http.ServerHttp;
+import org.aopalliance.intercept.MethodInvocation;
 import org.aspectj.lang.JoinPoint;
 
 /**
@@ -41,7 +41,7 @@ public class AopUtils {
 		if(mi == null || mi.getArguments() == null){
 			return null;
 		}else{
-			return MethodUtils.createServerHttpFromMethodArguments(mi.getArguments());
+			return MethodUtils.createServerHttpFromArguments(mi.getArguments());
 		}
 	}
 
@@ -49,7 +49,7 @@ public class AopUtils {
 		if(joinPoint == null || joinPoint.getArgs() == null){
 			return null;
 		}else{
-			return MethodUtils.createServerHttpFromMethodArguments(joinPoint.getArgs());
+			return MethodUtils.createServerHttpFromArguments(joinPoint.getArgs());
 		}
 	}
 

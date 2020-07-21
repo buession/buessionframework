@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.handler;
@@ -31,22 +31,22 @@ import java.lang.annotation.Annotation;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractAnnotationHandler<A extends Annotation> implements AnnotationHandler<A> {
+public abstract class AbstractAnnotationHandler<A extends Annotation, R> implements AnnotationHandler<A, R> {
 
-    protected Class<A> annotationClass;
+	protected Class<A> annotationClass;
 
-    public AbstractAnnotationHandler(Class<A> annotationClass){
-        setAnnotationClass(annotationClass);
-    }
+	public AbstractAnnotationHandler(Class<A> annotationClass){
+		setAnnotationClass(annotationClass);
+	}
 
-    @Override
-    public Class<A> getAnnotationClass(){
-        return annotationClass;
-    }
+	@Override
+	public Class<A> getAnnotationClass(){
+		return annotationClass;
+	}
 
-    protected void setAnnotationClass(Class<A> annotationClass) throws IllegalArgumentException{
-        Assert.isNull(annotationClass, "annotationClass argument could not be null");
-        this.annotationClass = annotationClass;
-    }
+	protected void setAnnotationClass(Class<A> annotationClass) throws IllegalArgumentException{
+		Assert.isNull(annotationClass, "annotationClass argument could not be null");
+		this.annotationClass = annotationClass;
+	}
 
 }

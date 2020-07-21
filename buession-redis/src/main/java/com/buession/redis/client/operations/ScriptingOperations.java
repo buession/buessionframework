@@ -29,6 +29,6 @@ import com.buession.redis.core.command.ScriptingCommands;
 /**
  * @author Yong.Teng
  */
-public interface ScriptingOperations extends ScriptingCommands, RedisClientOperations {
+public interface ScriptingOperations<T> extends ScriptingCommands, RedisClientOperations<T> {
 
 }

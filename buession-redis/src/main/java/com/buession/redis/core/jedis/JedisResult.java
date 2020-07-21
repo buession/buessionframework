@@ -60,6 +60,7 @@ public class JedisResult<V, R> extends FutureResult<Response<V>> {
 		@SuppressWarnings("unchecked")
 		private Converter<T, R> converter;
 
+		@SuppressWarnings("unchecked")
 		JedisResultBuilder(final Response<T> response){
 			this.response = response;
 			this.converter = (source)->(R) source;

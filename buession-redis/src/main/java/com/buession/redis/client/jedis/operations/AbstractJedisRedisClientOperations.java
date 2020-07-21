@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.Executor;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.AbstractRedisClientOperations;
-import com.buession.redis.core.ClusterMode;
+import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.convert.JedisConverters;
@@ -46,7 +46,7 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractRedisClientOperations implements JedisRedisClientOperations<C, P> {
+public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractRedisClientOperations<C> implements JedisRedisClientOperations<C, P> {
 
 	protected final static Converter<redis.clients.jedis.ScanResult<String>, ScanResult<List<String>>> STRING_LIST_SCANRESULT_EXPOSE_CONVERTER = JedisConverters.listScanResultExposeConverter();
 
@@ -58,9 +58,14 @@ public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands
 
 	protected JedisRedisClient<C> client;
 
-	public AbstractJedisRedisClientOperations(final JedisRedisClient<C> client, final ClusterMode clusterMode){
+	public AbstractJedisRedisClientOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
 		this.client = client;
-		setClusterMode(clusterMode);
+		setRedisMode(redisMode);
+	}
+
+	@Override
+	public <R> R execute(final Executor<C, R> executor) throws RedisException{
+		return client.execute(executor);
 	}
 
 	protected redis.clients.jedis.Transaction getTransaction(){
@@ -88,10 +93,6 @@ public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands
 	@Override
 	protected boolean isPipeline(){
 		return client.getConnection().isPipeline();
-	}
-
-	protected <R> R execute(final Executor<C, R> executor) throws RedisException{
-		return client.execute(executor);
 	}
 
 	protected <R> R transactionExecute(final Executor<C, JedisResult> executor) throws RedisException{

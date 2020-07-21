@@ -26,8 +26,8 @@
  */
 package com.buession.core.codec;
 
-import com.buession.core.utils.ClassUtils;
-import com.buession.core.utils.ReflectUtils;
+import com.buession.core.reflect.ClassUtils;
+import com.buession.core.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AdvisedSupport;
@@ -39,7 +39,6 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.env.Environment;
 
 import java.lang.reflect.Field;
-import java.util.List;
 
 /**
  * @author Yong.Teng
@@ -74,16 +73,16 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException{
 		Class clazz = bean.getClass();
 		Field[] fields = ClassUtils.getAllFields(clazz);
+		Message message;
 
 		for(Field field : fields){
-			final Message message = AnnotationUtils.getAnnotation(field, Message.class);
+			message = AnnotationUtils.getAnnotation(field, Message.class);
 			if(message == null){
 				continue;
 			}
 
 			if(field.getType().isAssignableFrom(MessageObject.class) == false){
-				throw new BeanCreationException("The field " + field.getName() + " is not subclass of " +
-						MessageObject.class.getName() + ", on: " + beanName + "(" + bean.getClass().getName() + ").");
+				throw new BeanCreationException("The field " + field.getName() + " is not subclass of " + MessageObject.class.getName() + ", on: " + beanName + "(" + bean.getClass().getName() + ").");
 			}
 
 			handleMessageInjected(clazz, bean, beanName, field, message);
@@ -93,7 +92,7 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 	}
 
 	private void handleMessageInjected(final Class clazz, final Object bean, final String beanName, final Field field,
-									   final Message message) throws BeansException{
+			final Message message) throws BeansException{
 		final String key = message.value();
 		final String text = getEnvironment().getProperty(buildProperty(key, message.textField()));
 
@@ -104,22 +103,12 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 
 		final int code = getEnvironment().getProperty(buildProperty(key, message.codeField()), Integer.class);
 
-		if(AopUtils.isCglibProxy(bean)){
-			try{
-				ReflectUtils.setField(getCglibProxyTargetObject(bean), field, new MessageObject(code, text));
-			}catch(Exception e){
-				throw new BeanCreationException("Exception thrown when handleMessageInjected, on: " + beanName + "(" +
-						clazz.getName() + ")", e);
-			}
-		}else{
-			try{
-				ReflectUtils.setField(bean, field, new MessageObject(code, text));
-			}catch(Exception e){
-				if(message.required()){
-					throw new BeanCreationException("Exception thrown when handleMessageInjected, on: " + beanName +
-							"" + "(" + clazz.getName() + ")", e);
-				}
-			}
+		try{
+			final Object beanObject = AopUtils.isCglibProxy(bean) ? getCglibProxyTargetObject(bean) : bean;
+
+			FieldUtils.writeField(field, beanObject, new MessageObject(code, text), true);
+		}catch(Exception e){
+			throw new BeanCreationException("Exception thrown when handleMessageInjected, on: " + beanName + "(" + clazz.getName() + ")", e);
 		}
 		logger.debug("Parse message '{}', code: {}, text: {}", key, code, text);
 	}

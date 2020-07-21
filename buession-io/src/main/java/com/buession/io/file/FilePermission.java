@@ -25,20 +25,34 @@
 package com.buession.io.file;
 
 /**
+ * 文件权限
+ *
  * @author Yong.Teng
  */
 public enum FilePermission {
 
+	/**
+	 * 可读
+	 */
 	READ('r', "r"),
 
+	/**
+	 * 可写
+	 */
 	WRITE('w', "w"),
 
+	/**
+	 * 可执行
+	 */
 	EXECUTE('x', "x"),
 
 	SGUID('s', "s"),
 
 	STICKY('t', "t"),
 
+	/**
+	 * 无
+	 */
 	NONE('-', "-");
 
 	char value;

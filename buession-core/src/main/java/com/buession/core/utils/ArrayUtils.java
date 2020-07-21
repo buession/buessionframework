@@ -174,6 +174,334 @@ public class ArrayUtils {
 	}
 
 	/**
+	 * 将 byte 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final byte[] a){
+		return toString(a, DEFAULT_GLUE);
+	}
+
+	/**
+	 * 将 byte 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 * @param glue
+	 * 		拼接字符串
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final byte[] a, final String glue){
+		if(a == null){
+			return null;
+		}else if(a.length == 0){
+			return Constants.EMPTY_STRING;
+		}else{
+			StringBuilder sb = new StringBuilder();
+
+			for(int i = 0; i < a.length; i++){
+				sb.append(a[i]);
+				if(i < a.length - 1){
+					sb.append(glue);
+				}
+			}
+
+			return sb.toString();
+		}
+	}
+
+	/**
+	 * 将 char 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final char[] a){
+		return toString(a, DEFAULT_GLUE);
+	}
+
+	/**
+	 * 将 char 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 * @param glue
+	 * 		拼接字符串
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final char[] a, final String glue){
+		if(a == null){
+			return null;
+		}else if(a.length == 0){
+			return Constants.EMPTY_STRING;
+		}else{
+			StringBuilder sb = new StringBuilder();
+
+			for(int i = 0; i < a.length; i++){
+				sb.append(a[i]);
+				if(i < a.length - 1){
+					sb.append(glue);
+				}
+			}
+
+			return sb.toString();
+		}
+	}
+
+	/**
+	 * 将 short 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final short[] a){
+		return toString(a, DEFAULT_GLUE);
+	}
+
+	/**
+	 * 将 short 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 * @param glue
+	 * 		拼接字符串
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final short[] a, final String glue){
+		if(a == null){
+			return null;
+		}else if(a.length == 0){
+			return Constants.EMPTY_STRING;
+		}else{
+			StringBuilder sb = new StringBuilder();
+
+			for(int i = 0; i < a.length; i++){
+				sb.append(a[i]);
+				if(i < a.length - 1){
+					sb.append(glue);
+				}
+			}
+
+			return sb.toString();
+		}
+	}
+
+	/**
+	 * 将 int 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final int[] a){
+		return toString(a, DEFAULT_GLUE);
+	}
+
+	/**
+	 * 将 int 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 * @param glue
+	 * 		拼接字符串
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final int[] a, final String glue){
+		if(a == null){
+			return null;
+		}else if(a.length == 0){
+			return Constants.EMPTY_STRING;
+		}else{
+			StringBuilder sb = new StringBuilder();
+
+			for(int i = 0; i < a.length; i++){
+				sb.append(a[i]);
+				if(i < a.length - 1){
+					sb.append(glue);
+				}
+			}
+
+			return sb.toString();
+		}
+	}
+
+	/**
+	 * 将 long 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final long[] a){
+		return toString(a, DEFAULT_GLUE);
+	}
+
+	/**
+	 * 将 long 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 * @param glue
+	 * 		拼接字符串
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final long[] a, final String glue){
+		if(a == null){
+			return null;
+		}else if(a.length == 0){
+			return Constants.EMPTY_STRING;
+		}else{
+			StringBuilder sb = new StringBuilder();
+
+			for(int i = 0; i < a.length; i++){
+				sb.append(a[i]);
+				if(i < a.length - 1){
+					sb.append(glue);
+				}
+			}
+
+			return sb.toString();
+		}
+	}
+
+	/**
+	 * 将 float 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final float[] a){
+		return toString(a, DEFAULT_GLUE);
+	}
+
+	/**
+	 * 将 float 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 * @param glue
+	 * 		拼接字符串
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final float[] a, final String glue){
+		if(a == null){
+			return null;
+		}else if(a.length == 0){
+			return Constants.EMPTY_STRING;
+		}else{
+			StringBuilder sb = new StringBuilder();
+
+			for(int i = 0; i < a.length; i++){
+				sb.append(a[i]);
+				if(i < a.length - 1){
+					sb.append(glue);
+				}
+			}
+
+			return sb.toString();
+		}
+	}
+
+	/**
+	 * 将 double 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final double[] a){
+		return toString(a, DEFAULT_GLUE);
+	}
+
+	/**
+	 * 将 double 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 * @param glue
+	 * 		拼接字符串
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final double[] a, final String glue){
+		if(a == null){
+			return null;
+		}else if(a.length == 0){
+			return Constants.EMPTY_STRING;
+		}else{
+			StringBuilder sb = new StringBuilder();
+
+			for(int i = 0; i < a.length; i++){
+				sb.append(a[i]);
+				if(i < a.length - 1){
+					sb.append(glue);
+				}
+			}
+
+			return sb.toString();
+		}
+	}
+
+	/**
+	 * 将 boolean 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final boolean[] a){
+		return toString(a, DEFAULT_GLUE);
+	}
+
+	/**
+	 * 将 boolean 型数组拼接成字符串
+	 *
+	 * @param a
+	 * 		需要拼接的数组
+	 * @param glue
+	 * 		拼接字符串
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static String toString(final boolean[] a, final String glue){
+		if(a == null){
+			return null;
+		}else if(a.length == 0){
+			return Constants.EMPTY_STRING;
+		}else{
+			StringBuilder sb = new StringBuilder();
+
+			for(int i = 0; i < a.length; i++){
+				sb.append(a[i]);
+				if(i < a.length - 1){
+					sb.append(glue);
+				}
+			}
+
+			return sb.toString();
+		}
+	}
+
+	/**
 	 * 将 O 型数组拼接成字符串
 	 *
 	 * @param a
@@ -279,6 +607,147 @@ public class ArrayUtils {
 	}
 
 	/**
+	 * 将 byte 型数组转换为 List
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static List<Byte> toList(final byte[] a){
+		if(a == null){
+			return null;
+		}
+
+		Byte[] temp = new Byte[a.length];
+		for(int i = 0; i < a.length; i++){
+			temp[i] = a[i];
+		}
+
+		return Arrays.asList(temp);
+	}
+
+	/**
+	 * 将 char 型数组转换为 List
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static List<Character> toList(final char[] a){
+		if(a == null){
+			return null;
+		}
+
+		Character[] temp = new Character[a.length];
+		for(int i = 0; i < a.length; i++){
+			temp[i] = a[i];
+		}
+
+		return Arrays.asList(temp);
+	}
+
+	/**
+	 * 将 short 型数组转换为 List
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static List<Short> toList(final short[] a){
+		if(a == null){
+			return null;
+		}
+
+		Short[] temp = new Short[a.length];
+		for(int i = 0; i < a.length; i++){
+			temp[i] = a[i];
+		}
+
+		return Arrays.asList(temp);
+	}
+
+	/**
+	 * 将 int 型数组转换为 List
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static List<Integer> toList(final int[] a){
+		return a == null ? null : Arrays.stream(a).boxed().collect(Collectors.toList());
+	}
+
+	/**
+	 * 将 long 型数组转换为 List
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static List<Long> toList(final long[] a){
+		return a == null ? null : Arrays.stream(a).boxed().collect(Collectors.toList());
+	}
+
+	/**
+	 * 将 float 型数组转换为 List
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static List<Float> toList(final float[] a){
+		if(a == null){
+			return null;
+		}
+
+		Float[] temp = new Float[a.length];
+		for(int i = 0; i < a.length; i++){
+			temp[i] = a[i];
+		}
+
+		return Arrays.asList(temp);
+	}
+
+	/**
+	 * 将 double 型数组转换为 List
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static List<Double> toList(final double[] a){
+		return a == null ? null : Arrays.stream(a).boxed().collect(Collectors.toList());
+	}
+
+	/**
+	 * 将 boolean 型数组转换为 List
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static List<Boolean> toList(final boolean[] a){
+		if(a == null){
+			return null;
+		}
+
+		Boolean[] temp = new Boolean[a.length];
+		for(int i = 0; i < a.length; i++){
+			temp[i] = a[i];
+		}
+
+		return Arrays.asList(temp);
+	}
+
+	/**
 	 * 将数组转换为 List
 	 *
 	 * @param a
@@ -290,6 +759,102 @@ public class ArrayUtils {
 	 */
 	public final static <O> List<O> toList(final O[] a){
 		return a == null ? null : Arrays.asList(a);
+	}
+
+	/**
+	 * 将 byte 型数组转换为 Set
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static Set<Byte> toSet(final byte[] a){
+		return a == null ? null : new LinkedHashSet<>(toList(a));
+	}
+
+	/**
+	 * 将 char 型数组转换为 Set
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static Set<Character> toSet(final char[] a){
+		return a == null ? null : new LinkedHashSet<>(toList(a));
+	}
+
+	/**
+	 * 将 short 型数组转换为 Set
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static Set<Short> toSet(final short[] a){
+		return a == null ? null : new LinkedHashSet<>(toList(a));
+	}
+
+	/**
+	 * 将 int 型数组转换为 Set
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static Set<Integer> toSet(final int[] a){
+		return a == null ? null : new LinkedHashSet<>(toList(a));
+	}
+
+	/**
+	 * 将 long 型数组转换为 Set
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static Set<Long> toSet(final long[] a){
+		return a == null ? null : new LinkedHashSet<>(toList(a));
+	}
+
+	/**
+	 * 将 float 型数组转换为 Set
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static Set<Float> toSet(final float[] a){
+		return a == null ? null : new LinkedHashSet<>(toList(a));
+	}
+
+	/**
+	 * 将 double 型数组转换为 Set
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static Set<Double> toSet(final double[] a){
+		return a == null ? null : new LinkedHashSet<>(toList(a));
+	}
+
+	/**
+	 * 将 boolean 型数组转换为 Set
+	 *
+	 * @param a
+	 * 		需要转换的数组
+	 *
+	 * @return 转换结果
+	 */
+	public static Set<Boolean> toSet(final boolean[] a){
+		return a == null ? null : new LinkedHashSet<>(toList(a));
 	}
 
 	/**
@@ -456,7 +1021,7 @@ public class ArrayUtils {
 		String[] result = new String[data.length];
 
 		for(int i = 0; i < data.length; i++){
-			result[i] = data[i] == null ? null : data[i].toString();
+			result[i] = data[i] == null ? null : String.valueOf(data[i]);
 		}
 
 		return result;

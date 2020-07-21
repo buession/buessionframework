@@ -19,20 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.interceptor;
 
-import com.buession.aop.MethodInvocation;
+import org.aopalliance.intercept.MethodInterceptor;
+import org.aopalliance.intercept.MethodInvocation;
 
 import java.lang.annotation.Annotation;
 
 /**
  * @author Yong.Teng
  */
-public interface AnnotationMethodInterceptor<A extends Annotation> extends MethodInterceptor {
+public interface AnnotationMethodInterceptor<A extends Annotation, R> extends MethodInterceptor {
 
-    boolean isSupport(MethodInvocation mi);
+	boolean isSupport(MethodInvocation mi);
 
 }

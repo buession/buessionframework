@@ -33,9 +33,7 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,220 +48,6 @@ import java.util.Map;
 public class ReflectUtils extends ReflectionUtils {
 
 	private final static Logger logger = LoggerFactory.getLogger(ReflectUtils.class);
-
-	/**
-	 * 设置属性权限
-	 *
-	 * @param field
-	 * 		属性
-	 */
-	public static void setFieldAccessible(Field field){
-		makeAccessible(field);
-	}
-
-	/**
-	 * 判断属性是否为静态属性
-	 *
-	 * @param field
-	 * 		属性
-	 *
-	 * @return 属性是为静态属性，返回 true；否则返回 false
-	 */
-	public static boolean isStaticField(Field field){
-		return field != null && Modifier.isStatic(field.getModifiers());
-	}
-
-	/**
-	 * 判断方法是否为静态方法
-	 *
-	 * @param method
-	 * 		方法
-	 *
-	 * @return 方法是为静态方法，返回 true；否则返回 false
-	 */
-	public static boolean isStaticMethod(Method method){
-		return method != null && Modifier.isStatic(method.getModifiers());
-	}
-
-	/**
-	 * 给对象属性的赋于新值
-	 *
-	 * @param object
-	 * 		对象
-	 * @param field
-	 * 		属性
-	 * @param value
-	 * 		值
-	 */
-	public static void setField(@Nullable Object object, @Nullable Field field, Object value){
-		setFieldAccessible(field);
-		setField(field, object, value);
-	}
-
-	/**
-	 * 给对象属性的赋于新值
-	 *
-	 * @param object
-	 * 		对象
-	 * @param fieldName
-	 * 		属性名称
-	 * @param value
-	 * 		值
-	 */
-	public static void setField(@Nullable Object object, @Nullable String fieldName, Object value){
-		setField(object.getClass(), object, fieldName, value);
-	}
-
-	/**
-	 * 给对象属性的赋于新值
-	 *
-	 * @param clazz
-	 * 		对象类型
-	 * @param object
-	 * 		对象
-	 * @param fieldName
-	 * 		属性类型
-	 * @param value
-	 * 		值
-	 * @param <T>
-	 * 		对象类型
-	 */
-	public static <T> void setField(@Nullable Class<T> clazz, @Nullable Object object, @Nullable String fieldName,
-									Object value){
-		Field field = findField(clazz, fieldName);
-		setField(object, field, value);
-	}
-
-	/**
-	 * 给对象属性的赋于新值
-	 *
-	 * @param object
-	 * 		对象
-	 * @param fieldName
-	 * 		属性名称
-	 * @param fieldType
-	 * 		属性类型
-	 * @param value
-	 * 		值
-	 */
-	public static void setField(@Nullable Object object, @Nullable String fieldName, @Nullable Class<?> fieldType,
-								Object value){
-		setField(object.getClass(), object, fieldName, fieldType, value);
-	}
-
-	/**
-	 * 给对象属性的赋于新值
-	 *
-	 * @param clazz
-	 * 		对象类型
-	 * @param object
-	 * 		对象
-	 * @param fieldName
-	 * 		属性名称
-	 * @param fieldType
-	 * 		属性类型
-	 * @param value
-	 * 		值
-	 * @param <T>
-	 * 		对象类型
-	 */
-	public static <T> void setField(@Nullable Class<T> clazz, @Nullable Object object, @Nullable String fieldName,
-									@Nullable Class<?> fieldType, Object value){
-		Field field = findField(clazz, fieldName, fieldType);
-		setField(object, field, value);
-	}
-
-	/**
-	 * 获取对象属性值
-	 *
-	 * @param object
-	 * 		对象
-	 * @param field
-	 * 		属性
-	 * @param <T>
-	 * 		对象类型
-	 *
-	 * @return 对象属性
-	 */
-	public static <T> T getField(@Nullable Object object, @Nullable Field field){
-		setFieldAccessible(field);
-		return (T) getField(field, object);
-	}
-
-	/**
-	 * 获取对象属性值
-	 *
-	 * @param object
-	 * 		对象
-	 * @param fieldName
-	 * 		属性名称
-	 * @param <T>
-	 * 		对象类型
-	 *
-	 * @return 对象属性
-	 */
-	public static <T> T getField(@Nullable Object object, @Nullable String fieldName){
-		return (T) getField(object.getClass(), object, fieldName);
-	}
-
-	/**
-	 * 获取对象属性值
-	 *
-	 * @param clazz
-	 * 		对象类型
-	 * @param object
-	 * 		对象
-	 * @param fieldName
-	 * 		属性名称
-	 * @param <T>
-	 * 		对象类型
-	 *
-	 * @return 对象属性
-	 */
-	public static <T> T getField(@Nullable Class<T> clazz, @Nullable Object object, @Nullable String fieldName){
-		Field field = findField(clazz, fieldName);
-		return (T) getField(object, field);
-	}
-
-	/**
-	 * 获取对象属性值
-	 *
-	 * @param object
-	 * 		对象
-	 * @param fieldName
-	 * 		属性名称
-	 * @param fieldType
-	 * 		属性类型
-	 * @param <T>
-	 * 		对象类型
-	 *
-	 * @return 对象属性
-	 */
-	public static <T> T getField(@Nullable Object object, @Nullable String fieldName, @Nullable Class<?> fieldType){
-		return (T) getField(object.getClass(), object, fieldName, fieldType);
-	}
-
-	/**
-	 * 获取对象属性值
-	 *
-	 * @param clazz
-	 * 		对象类型
-	 * @param object
-	 * 		对象
-	 * @param fieldName
-	 * 		属性名称
-	 * @param fieldType
-	 * 		属性类型
-	 * @param <T>
-	 * 		对象类型
-	 *
-	 * @return 对象属性
-	 */
-	public static <T> T getField(@Nullable Class<T> clazz, @Nullable Object object, @Nullable String fieldName,
-								 @Nullable Class<?> fieldType){
-		Field field = findField(clazz, fieldName, fieldType);
-		return (T) getField(object, field);
-	}
 
 	public static <E> E setter(@Nullable Map<String, Object> data, @Nullable Class<E> clazz){
 		Assert.isNull(data, "Data cloud not be null.");
@@ -280,11 +64,13 @@ public class ReflectUtils extends ReflectionUtils {
 		return null;
 	}
 
+	@SuppressWarnings({"unchecked"})
 	public static <E> E setter(@Nullable Map<String, Object> data, @Nullable E object){
 		Assert.isNull(object, "Object cloud not be null.");
 		return setter(data, (Class<E>) object.getClass(), object);
 	}
 
+	@SuppressWarnings({"unchecked"})
 	public static <E> E setter(@Nullable Map<String, Object> data, @Nullable Class<E> clazz, @Nullable E object){
 		Assert.isNull(data, "Data cloud not be null.");
 		Assert.isNull(object, "Object cloud not be null.");
@@ -356,6 +142,7 @@ public class ReflectUtils extends ReflectionUtils {
 	 *
 	 * @return Map 对象
 	 */
+	@SuppressWarnings({"unchecked"})
 	public static <T> Map<String, Object> classConvertMap(Class<T> clazz, T object){
 		if(object == null){
 			return null;
@@ -365,7 +152,7 @@ public class ReflectUtils extends ReflectionUtils {
 			clazz = (Class<T>) object.getClass();
 		}
 
-		Map<String, Object> result;
+		Map<String, Object> result = null;
 
 		try{
 			BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
@@ -385,16 +172,15 @@ public class ReflectUtils extends ReflectionUtils {
 			logger.error("{}", e.getMessage());
 		}
 
-		return null;
+		return result;
 	}
 
 	private final static <E> void invokeSetterMethod(final E object, final Method method, final String propertyName,
-													 final Object value){
+			final Object value){
 		Type genericParameterType = method.getGenericParameterTypes()[0];
 
 		try{
-			if((genericParameterType == Short.TYPE || genericParameterType == Short.class || genericParameterType ==
-					short.class)){
+			if((genericParameterType == Short.TYPE || genericParameterType == Short.class || genericParameterType == short.class)){
 				if((value instanceof Short || value instanceof Integer || value instanceof Long)){
 					long lv = ((Number) value).longValue();
 
@@ -403,8 +189,7 @@ public class ReflectUtils extends ReflectionUtils {
 						return;
 					}
 				}
-			}else if((genericParameterType == Integer.TYPE || genericParameterType == Integer.class ||
-					genericParameterType == int.class)){
+			}else if((genericParameterType == Integer.TYPE || genericParameterType == Integer.class || genericParameterType == int.class)){
 				if((value instanceof Short || value instanceof Integer || value instanceof Long)){
 					long lv = ((Number) value).longValue();
 
@@ -413,8 +198,7 @@ public class ReflectUtils extends ReflectionUtils {
 						return;
 					}
 				}
-			}else if((genericParameterType == Long.TYPE || genericParameterType == Long.class || genericParameterType
-					== long.class)){
+			}else if((genericParameterType == Long.TYPE || genericParameterType == Long.class || genericParameterType == long.class)){
 				if((value instanceof Short || value instanceof Integer || value instanceof Long)){
 					long lv = ((Number) value).longValue();
 
@@ -423,17 +207,13 @@ public class ReflectUtils extends ReflectionUtils {
 						return;
 					}
 				}
-			}else if((genericParameterType == Float.TYPE || genericParameterType == Float.class ||
-					genericParameterType == float.class)){
-				if((value instanceof Short || value instanceof Integer || value instanceof Long || value instanceof
-						Double)){
+			}else if((genericParameterType == Float.TYPE || genericParameterType == Float.class || genericParameterType == float.class)){
+				if((value instanceof Short || value instanceof Integer || value instanceof Long || value instanceof Double)){
 					invokeMethod(method, object, new Object[]{((Number) value).floatValue()});
 					return;
 				}
-			}else if((genericParameterType == Double.TYPE || genericParameterType == Double.class ||
-					genericParameterType == double.class)){
-				if((value instanceof Short || value instanceof Integer || value instanceof Long || value instanceof
-						Float || value instanceof Double)){
+			}else if((genericParameterType == Double.TYPE || genericParameterType == Double.class || genericParameterType == double.class)){
+				if((value instanceof Short || value instanceof Integer || value instanceof Long || value instanceof Float || value instanceof Double)){
 					invokeMethod(method, object, new Object[]{((Number) value).doubleValue()});
 					return;
 				}

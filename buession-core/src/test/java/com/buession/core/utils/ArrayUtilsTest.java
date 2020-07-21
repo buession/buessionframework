@@ -26,12 +26,47 @@ package com.buession.core.utils;
 
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
  * @author Yong.Teng
  */
 public class ArrayUtilsTest {
+
+	@Test
+	public void arrayToString(){
+		short[] sa = new short[]{1, 2, 3};
+		System.out.println(ArrayUtils.toString(sa));
+
+		char[] ca = new char[]{'a', 'b', 'c'};
+		System.out.println(ArrayUtils.toString(ca));
+
+		byte[] ba = new byte[]{'a', 'b', 'c'};
+		System.out.println(ArrayUtils.toString(ba));
+
+		boolean[] boola = new boolean[]{true, false};
+		System.out.println(ArrayUtils.toString(boola));
+	}
+
+	@Test
+	public void listToString(){
+		List<Short> shortList = new ArrayList<>();
+		shortList.add((short) 1);
+		shortList.add((short) 2);
+		System.out.println(ArrayUtils.toString(shortList));
+	}
+
+	@Test
+	public void toList(){
+		int[] sa = new int[]{1, 2, 3};
+		List<Integer> set = ArrayUtils.toList(sa);
+
+		for(Integer v : set){
+			System.out.println(v);
+		}
+	}
 
 	@Test
 	public void toSet(){

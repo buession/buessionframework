@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.handler;
@@ -33,35 +33,35 @@ import org.springframework.ui.Model;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractDocumentMetaDataAnnotationHandler extends AbstractAnnotationHandler<DocumentMetaData>
-        implements DocumentMetaDataAnnotationHandler {
+public abstract class AbstractDocumentMetaDataAnnotationHandler extends AbstractAnnotationHandler<DocumentMetaData,
+        Void> implements DocumentMetaDataAnnotationHandler {
 
-    public AbstractDocumentMetaDataAnnotationHandler(){
-        super(DocumentMetaData.class);
-    }
+	public AbstractDocumentMetaDataAnnotationHandler(){
+		super(DocumentMetaData.class);
+	}
 
-    protected final static void addModelAttribute(final Model model, final DocumentMetaData metaData){
-        String attrName = Validate.hasText(metaData.attrName()) ? metaData.attrName() : DocumentMetaData
-                .DEFAULT_ATTR_NAME;
-        model.addAttribute(attrName, metaDataConvert(metaData));
-    }
+	protected final static void addModelAttribute(final Model model, final DocumentMetaData metaData){
+		String attrName = Validate.hasText(metaData.attrName()) ? metaData.attrName() :
+                DocumentMetaData.DEFAULT_ATTR_NAME;
+		model.addAttribute(attrName, metaDataConvert(metaData));
+	}
 
-    private final static MetaData metaDataConvert(final DocumentMetaData documentMetaData){
-        if(documentMetaData == null){
-            return null;
-        }
+	private final static MetaData metaDataConvert(final DocumentMetaData documentMetaData){
+		if(documentMetaData == null){
+			return null;
+		}
 
-        MetaData metaData = new MetaData();
+		MetaData metaData = new MetaData();
 
-        metaData.setTitle(documentMetaData.title());
-        metaData.setAuthor(documentMetaData.author());
-        metaData.setCharset(documentMetaData.charset());
-        metaData.setKeywords(documentMetaData.keywords());
-        metaData.setDescription(documentMetaData.description());
-        metaData.setAuthor(documentMetaData.author());
-        metaData.setCopyright(documentMetaData.copyright());
+		metaData.setTitle(documentMetaData.title());
+		metaData.setAuthor(documentMetaData.author());
+		metaData.setCharset(documentMetaData.charset());
+		metaData.setKeywords(documentMetaData.keywords());
+		metaData.setDescription(documentMetaData.description());
+		metaData.setAuthor(documentMetaData.author());
+		metaData.setCopyright(documentMetaData.copyright());
 
-        return metaData;
-    }
+		return metaData;
+	}
 
 }

@@ -31,6 +31,8 @@ import com.buession.core.validator.Validate;
  */
 public class RequestUtils {
 
+	public final static String DEFAULT_IP = "127.0.0.1";
+
 	public final static String[] CLIENT_IP_HEADERS = new String[]{
 			/* 微信 */
 			"X-Forwarded-For-Pound",

@@ -24,6 +24,8 @@
  */
 package com.buession.core.serializer;
 
+import java.nio.charset.Charset;
+
 /**
  * @author Yong.Teng
  */
@@ -31,22 +33,22 @@ public abstract class AbstractByteArraySerializer extends AbstractSerializer imp
 
 	@Override
 	public <V> String serialize(final V object) throws SerializerException{
-		return serialize(object, DEFAULT_CHARSET);
+		return serialize(object, Charset.defaultCharset());
 	}
 
 	@Override
 	public <V> byte[] serializeAsBytes(final V object) throws SerializerException{
-		return serializeAsBytes(object, DEFAULT_CHARSET);
+		return serializeAsBytes(object, Charset.defaultCharset());
 	}
 
 	@Override
 	public <V> V deserialize(final String str) throws SerializerException{
-		return deserialize(str, DEFAULT_CHARSET_NAME);
+		return deserialize(str, Charset.defaultCharset().name());
 	}
 
 	@Override
 	public <V> V deserialize(final byte[] bytes) throws SerializerException{
-		return deserialize(bytes, DEFAULT_CHARSET_NAME);
+		return deserialize(bytes, Charset.defaultCharset().name());
 	}
 
 }

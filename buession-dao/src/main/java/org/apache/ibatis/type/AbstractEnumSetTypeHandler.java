@@ -26,6 +26,8 @@
  */
 package org.apache.ibatis.type;
 
+import com.buession.core.utils.StringUtils;
+
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -42,8 +44,7 @@ public abstract class AbstractEnumSetTypeHandler<E extends Enum<E>> extends Abst
 	}
 
 	@Override
-	public void setNonNullParameter(PreparedStatement ps, int i, Set<E> parameter, JdbcType jdbcType) throws
-			SQLException{
+	public void setNonNullParameter(PreparedStatement ps, int i, Set<E> parameter, JdbcType jdbcType) throws SQLException{
 		String result = parameter.stream().map(v->v.name()).collect(Collectors.joining(";"));
 		ps.setString(i, result);
 	}
@@ -56,7 +57,7 @@ public abstract class AbstractEnumSetTypeHandler<E extends Enum<E>> extends Abst
 			return null;
 		}
 
-		String[] temp = str.split(",");
+		String[] temp = StringUtils.splitByWholeSeparatorPreserveAllTokens(str, ",");
 		HashSet<E> data = new HashSet<>(temp.length);
 
 		for(String s : temp){

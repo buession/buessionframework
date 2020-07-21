@@ -26,7 +26,6 @@
  */
 package com.buession.geoip;
 
-import com.buession.core.net.InetAddressUtils;
 import com.buession.geoip.model.District;
 import com.buession.geoip.model.Country;
 import com.buession.geoip.model.Location;
@@ -34,6 +33,7 @@ import com.buession.geoip.converter.CityConverter;
 import com.buession.geoip.converter.ContinentConverter;
 import com.buession.geoip.converter.CountryConverter;
 import com.buession.geoip.converter.TraitsConverter;
+import com.buession.net.utils.InetAddressUtils;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 
 import java.io.IOException;

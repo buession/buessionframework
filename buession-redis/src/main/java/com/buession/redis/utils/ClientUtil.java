@@ -52,7 +52,7 @@ public class ClientUtil {
 		String[] clients = str.split("[\\r\\n]");
 		List<Client> result = new ArrayList<>(clients.length);
 
-		if(Validate.isEmpty(clients) == false){
+		if(Validate.isNotEmpty(clients)){
 			for(String s : clients){
 				Client client = doParse(s);
 
@@ -66,7 +66,7 @@ public class ClientUtil {
 	}
 
 	private final static Client doParse(final String str){
-		String[] properties = StringUtils.split(str, " ");
+		String[] properties = StringUtils.splitByWholeSeparatorPreserveAllTokens(str, " ");
 
 		if(Validate.isEmpty(properties)){
 			return null;
@@ -95,7 +95,7 @@ public class ClientUtil {
 			}else if("idle".equals(keyValueParser.getKey())){
 				client.setIdle(keyValueParser.getIntValue());
 			}else if("flags".equals(keyValueParser.getKey())){
-				String[] flagsArr = StringUtils.split(keyValueParser.getValue(), ',');
+				String[] flagsArr = StringUtils.splitByWholeSeparatorPreserveAllTokens(keyValueParser.getValue(), ",");
 
 				if(flagsArr != null){
 					Set<Client.Flag> flags = new LinkedHashSet<>(flagsArr.length);

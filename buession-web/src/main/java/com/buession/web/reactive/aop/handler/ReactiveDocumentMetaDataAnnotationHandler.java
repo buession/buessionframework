@@ -19,17 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.handler;
 
-import com.buession.aop.MethodInvocation;
 import com.buession.web.aop.handler.AbstractDocumentMetaDataAnnotationHandler;
 import com.buession.web.mvc.view.document.DocumentMetaData;
 import com.buession.web.reactive.aop.AopUtils;
 import com.buession.web.reactive.http.ServerHttp;
 import com.buession.web.reactive.aop.MethodUtils;
+import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,32 +40,31 @@ import java.lang.reflect.Method;
  */
 public class ReactiveDocumentMetaDataAnnotationHandler extends AbstractDocumentMetaDataAnnotationHandler {
 
-    private final static Logger logger = LoggerFactory.getLogger(ReactiveDocumentMetaDataAnnotationHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(ReactiveDocumentMetaDataAnnotationHandler.class);
 
-    public ReactiveDocumentMetaDataAnnotationHandler(){
-        super();
-    }
+	public ReactiveDocumentMetaDataAnnotationHandler(){
+		super();
+	}
 
-    @Override
-    public void execute(MethodInvocation mi, DocumentMetaData documentMetaData){
-        ServerHttp serverHttp = AopUtils.getServerHttp(mi);
-        doExecute(serverHttp, documentMetaData);
-    }
+	@Override
+	public Void execute(MethodInvocation mi, DocumentMetaData documentMetaData){
+		doExecute(AopUtils.getServerHttp(mi), documentMetaData);
+		return null;
+	}
 
-    @Override
-    public Object execute(Object target, Method method, Object[] arguments, DocumentMetaData documentMetaData){
-        ServerHttp serverHttp = MethodUtils.createServerHttpFromMethodArguments(arguments);
-        doExecute(serverHttp, documentMetaData);
-        return null;
-    }
+	@Override
+	public Void execute(Object target, Method method, Object[] arguments, DocumentMetaData documentMetaData){
+		doExecute(MethodUtils.createServerHttpFromArguments(arguments), documentMetaData);
+		return null;
+	}
 
-    private final static void doExecute(final ServerHttp serverHttp, final DocumentMetaData documentMetaData){
-        if(serverHttp == null || serverHttp.getModel() == null){
-            logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
-            return;
-        }
+	private final static void doExecute(final ServerHttp serverHttp, final DocumentMetaData documentMetaData){
+		if(serverHttp == null || serverHttp.getModel() == null){
+			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "Model");
+			return;
+		}
 
-        addModelAttribute(serverHttp.getModel(), documentMetaData);
-    }
+		addModelAttribute(serverHttp.getModel(), documentMetaData);
+	}
 
 }

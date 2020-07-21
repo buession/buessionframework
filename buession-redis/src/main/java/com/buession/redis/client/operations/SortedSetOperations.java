@@ -29,6 +29,6 @@ import com.buession.redis.core.command.SortedSetCommands;
 /**
  * @author Yong.Teng
  */
-public interface SortedSetOperations extends SortedSetCommands, RedisClientOperations {
+public interface SortedSetOperations<T> extends SortedSetCommands, RedisClientOperations<T> {
 
 }

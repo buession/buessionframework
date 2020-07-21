@@ -54,14 +54,14 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 		String ip;
 		for(String header : CLIENT_IP_HEADERS){
 			ip = request.getHeader(header);
-			if(Validate.hasText(ip) == true && "unknown".equalsIgnoreCase(ip) == false){
+			if(Validate.hasText(ip) && "unknown".equalsIgnoreCase(ip) == false){
 				return ip;
 			}
 		}
 
 		ip = request.getRemoteAddr();
-		if(Validate.hasText(ip) == false || "unknown".equalsIgnoreCase(ip) == true){
-			ip = "127.0.0.1";
+		if(Validate.hasText(ip) == false || "unknown".equalsIgnoreCase(ip)){
+			ip = DEFAULT_IP;
 		}
 
 		return ip;
@@ -88,8 +88,8 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 * @return 是否为移动端请求
 	 */
 	public final static boolean isMobile(final HttpServletRequest request){
-		return isMobile(request.getHeader(HttpHeader.USER_AGENT.getValue()), request.getHeader(HttpHeader.ACCEPT
-				.getValue()));
+		return isMobile(request.getHeader(HttpHeader.USER_AGENT.getValue()),
+				request.getHeader(HttpHeader.ACCEPT.getValue()));
 	}
 
 	/**
@@ -101,17 +101,34 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 * @return 当前 Scheme
 	 */
 	public final static String getScheme(final HttpServletRequest request){
-		String scheme = request.getHeader("X-Forwarded-Protocol");
+		String scheme = request.getHeader(HttpHeader.X_FORWARDED_PROTOCOL.getValue());
 		if(Validate.hasText(scheme)){
 			return scheme;
 		}
 
-		scheme = request.getHeader("X-Forwarded-Proto");
+		scheme = request.getHeader(HttpHeader.X_FORWARDED_PROTO.getValue());
 		if(Validate.hasText(scheme)){
 			return scheme;
 		}
 
 		return request.getScheme();
+	}
+
+	/**
+	 * 获取当前主机
+	 *
+	 * @param request
+	 * 		HttpServletRequest
+	 *
+	 * @return 当前主机
+	 */
+	public final static String getHost(final HttpServletRequest request){
+		String host = request.getHeader(HttpHeader.X_FORWARDED_HOST.getValue());
+		if(Validate.hasText(host)){
+			return host;
+		}
+
+		return request.getServerName();
 	}
 
 	/**
@@ -122,13 +139,9 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @return 当前域名
 	 */
+	@Deprecated
 	public final static String getDomain(final HttpServletRequest request){
-		String host = request.getHeader("X-Forwarded-Host");
-		if(Validate.hasText(host)){
-			return host;
-		}
-
-		return request.getServerName();
+		return getHost(request);
 	}
 
 }

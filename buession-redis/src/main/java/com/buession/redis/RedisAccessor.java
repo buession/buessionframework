@@ -24,6 +24,7 @@
  */
 package com.buession.redis;
 
+import com.buession.core.Executor;
 import com.buession.core.serializer.type.TypeReference;
 import com.buession.core.utils.Assert;
 import com.buession.redis.client.RedisClient;
@@ -32,7 +33,6 @@ import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.connection.jedis.ShardedJedisConnection;
 import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.client.jedis.ShardedJedisClient;
-import com.buession.redis.core.Executor;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.SessionCallback;
 import com.buession.redis.core.command.CommandArguments;
@@ -144,11 +144,11 @@ public abstract class RedisAccessor {
 		}
 	}
 
-	protected <R> R execute(final Executor<R> executor, final ProtocolCommand command){
+	protected <R> R execute(final Executor<RedisClient, R> executor, final ProtocolCommand command){
 		return execute(executor, command, null);
 	}
 
-	protected <R> R execute(final Executor<R> executor, final ProtocolCommand command,
+	protected <R> R execute(final Executor<RedisClient, R> executor, final ProtocolCommand command,
 			final CommandArguments arguments){
 		checkInitialized();
 
@@ -183,14 +183,14 @@ public abstract class RedisAccessor {
 
 	protected RedisClient doGetRedisClient(RedisConnection connection) throws RedisException{
 		if(connection instanceof JedisConnection){
-			JedisClient jedisClient = new JedisClient(connection);
+			JedisClient jedisClient = new JedisClient((JedisConnection) connection);
 
 			jedisClient.setEnableTransactionSupport(enableTransactionSupport);
 			jedisClient.setConnection(connection);
 
 			return jedisClient;
 		}else if(connection instanceof ShardedJedisConnection){
-			ShardedJedisClient shardedJedisClient = new ShardedJedisClient(connection);
+			ShardedJedisClient shardedJedisClient = new ShardedJedisClient((ShardedJedisConnection) connection);
 
 			shardedJedisClient.setEnableTransactionSupport(enableTransactionSupport);
 			shardedJedisClient.setConnection(connection);

@@ -26,6 +26,7 @@ package com.buession.redis.core.command;
 
 import com.buession.core.utils.ArrayUtils;
 import com.buession.core.validator.Validate;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -87,7 +88,9 @@ public class CommandArguments {
 				sb.append(name).append(" => ");
 
 				if(value != null){
-					if(value.getClass().isArray()){
+					if(value instanceof byte[]){
+						sb.append(SafeEncoder.encode((byte[]) value));
+					}else if(value.getClass().isArray()){
 						sb.append(ArrayUtils.toString((Object[]) value));
 					}else{
 						sb.append(value);

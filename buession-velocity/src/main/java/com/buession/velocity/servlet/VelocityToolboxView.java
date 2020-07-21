@@ -24,6 +24,7 @@
  */
 package com.buession.velocity.servlet;
 
+import com.buession.core.utils.ReflectUtils;
 import org.apache.velocity.context.Context;
 import org.apache.velocity.tools.Scope;
 import org.apache.velocity.tools.ToolManager;
@@ -31,7 +32,6 @@ import org.apache.velocity.tools.ToolboxFactory;
 import org.apache.velocity.tools.view.ViewToolContext;
 import org.apache.velocity.tools.view.ViewToolManager;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.ReflectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,52 +43,52 @@ import java.util.Map;
  */
 public class VelocityToolboxView extends VelocityView {
 
-    private String toolboxConfigLocation;
+	private String toolboxConfigLocation;
 
-    protected String getToolboxConfigLocation(){
-        return this.toolboxConfigLocation;
-    }
+	protected String getToolboxConfigLocation(){
+		return this.toolboxConfigLocation;
+	}
 
-    public void setToolboxConfigLocation(String toolboxConfigLocation){
-        this.toolboxConfigLocation = toolboxConfigLocation;
-    }
+	public void setToolboxConfigLocation(String toolboxConfigLocation){
+		this.toolboxConfigLocation = toolboxConfigLocation;
+	}
 
-    @Override
-    protected Context createVelocityContext(Map<String, Object> model, HttpServletRequest request,
-                                            HttpServletResponse response) throws Exception{
-        ViewToolContext velocityContext = new ViewToolContext(getVelocityEngine(), request, response,
-                getServletContext());
+	@Override
+	protected Context createVelocityContext(Map<String, Object> model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception{
+		ViewToolContext velocityContext = new ViewToolContext(getVelocityEngine(), request, response,
+				getServletContext());
 
-        velocityContext.putAll(model);
+		velocityContext.putAll(model);
 
-        if(getToolboxConfigLocation() != null){
-            ToolManager toolManager = new ViewToolManager(getServletContext(), false, true);
+		if(getToolboxConfigLocation() != null){
+			ToolManager toolManager = new ViewToolManager(getServletContext(), false, true);
 
-            toolManager.setVelocityEngine(getVelocityEngine());
-            toolManager.configure(getToolboxConfigLocation());
+			toolManager.setVelocityEngine(getVelocityEngine());
+			toolManager.configure(getToolboxConfigLocation());
 
-            ToolboxFactory toolboxFactory = toolManager.getToolboxFactory();
+			ToolboxFactory toolboxFactory = toolManager.getToolboxFactory();
 
-            if(toolboxFactory.hasTools(Scope.APPLICATION)){
-                velocityContext.addToolbox(toolboxFactory.createToolbox(Scope.APPLICATION));
-            }
-            if(toolboxFactory.hasTools(Scope.SESSION)){
-                velocityContext.addToolbox(toolboxFactory.createToolbox(Scope.SESSION));
-            }
-            if(toolboxFactory.hasTools(Scope.REQUEST)){
-                velocityContext.addToolbox(toolboxFactory.createToolbox(Scope.REQUEST));
-            }
-        }
+			if(toolboxFactory.hasTools(Scope.APPLICATION)){
+				velocityContext.addToolbox(toolboxFactory.createToolbox(Scope.APPLICATION));
+			}
+			if(toolboxFactory.hasTools(Scope.SESSION)){
+				velocityContext.addToolbox(toolboxFactory.createToolbox(Scope.SESSION));
+			}
+			if(toolboxFactory.hasTools(Scope.REQUEST)){
+				velocityContext.addToolbox(toolboxFactory.createToolbox(Scope.REQUEST));
+			}
+		}
 
-        return velocityContext;
-    }
+		return velocityContext;
+	}
 
-    @Override
-    protected void initTool(Object tool, Context velocityContext) throws Exception{
-        Method initMethod = ClassUtils.getMethodIfAvailable(tool.getClass(), "init", Object.class);
-        if(initMethod != null){
-            ReflectionUtils.invokeMethod(initMethod, tool, velocityContext);
-        }
-    }
+	@Override
+	protected void initTool(Object tool, Context velocityContext) throws Exception{
+		Method initMethod = ClassUtils.getMethodIfAvailable(tool.getClass(), "init", Object.class);
+		if(initMethod != null){
+			ReflectUtils.invokeMethod(initMethod, tool, velocityContext);
+		}
+	}
 
 }

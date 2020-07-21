@@ -24,9 +24,14 @@
  */
 package com.buession.redis.client.operations;
 
+import com.buession.core.Executor;
+import com.buession.redis.exception.RedisException;
+
 /**
  * @author Yong.Teng
  */
-public interface RedisClientOperations {
+public interface RedisClientOperations<T> {
+
+	<R> R execute(final Executor<T, R> executor) throws RedisException;
 
 }

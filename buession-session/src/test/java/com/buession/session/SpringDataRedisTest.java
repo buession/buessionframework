@@ -26,12 +26,16 @@ package com.buession.session;
 
 import org.apache.commons.pool2.impl.BaseObjectPoolConfig;
 import org.junit.Test;
+import org.springframework.data.redis.connection.RedisNode;
 import org.springframework.data.redis.connection.RedisPassword;
+import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import redis.clients.jedis.JedisPoolConfig;
+
+import java.util.ArrayList;
 
 /**
  * @author Yong.Teng
@@ -76,10 +80,27 @@ public class SpringDataRedisTest {
 		return factory;
 	}
 
+	private JedisConnectionFactory createJedisSentinelConnectionFactory(){
+		RedisSentinelConfiguration configuration = new RedisSentinelConfiguration();
+
+		ArrayList<RedisNode> sentinels = new ArrayList<>(1);
+
+		sentinels.add(new RedisNode("10.101.0.131", 31127));
+
+		configuration.setSentinels(sentinels);
+		configuration.setMaster("master-server");
+
+		JedisConnectionFactory factory = new JedisConnectionFactory(configuration, createJedisPoolConfig());
+
+		factory.afterPropertiesSet();
+
+		return factory;
+	}
+
 	private RedisTemplate redisTemplate(){
 		RedisTemplate redisTemplate = new RedisTemplate();
 
-		redisTemplate.setConnectionFactory(createJedisConnectionFactory());
+		redisTemplate.setConnectionFactory(createJedisSentinelConnectionFactory());
 
 		redisTemplate.afterPropertiesSet();
 
@@ -94,6 +115,13 @@ public class SpringDataRedisTest {
 		redisTemplate.multi();
 		redisTemplate.opsForValue().set("test_tx1", "A");
 		redisTemplate.exec();
+	}
+
+	@Test
+	public void masters(){
+		RedisTemplate redisTemplate = redisTemplate();
+		//redisTemplate.getConnectionFactory().getSentinelConnection().masters();
+		redisTemplate.opsForValue().set("test_tx1", "A");
 	}
 
 }

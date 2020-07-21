@@ -221,10 +221,15 @@ public class JedisConverters extends Converters {
 				geoRadiusParam.withDist();
 			}
 
-			if(source.getOrder() == Order.ASC){
-				geoRadiusParam.sortAscending();
-			}else if(source.getOrder() == Order.DESC){
-				geoRadiusParam.sortDescending();
+			switch(source.getOrder()){
+				case ASC:
+					geoRadiusParam.sortAscending();
+					break;
+				case DESC:
+					geoRadiusParam.sortDescending();
+					break;
+				default:
+					break;
 			}
 
 			if(source.getCount() != null){
@@ -312,15 +317,8 @@ public class JedisConverters extends Converters {
 	}
 
 	public final static Converter<GeoRadiusResponse, GeoRadius> geoRadiusExposeConverter(){
-		return (source)->{
-			final GeoRadius geoRadius = new GeoRadius();
-
-			geoRadius.setMember(source.getMember());
-			geoRadius.setDistance(source.getDistance());
-			geoRadius.setGeo(geoExposeConverter().convert(source.getCoordinate()));
-
-			return geoRadius;
-		};
+		return (source)->new GeoRadius(source.getMember(), source.getDistance(),
+				geoExposeConverter().convert(source.getCoordinate()));
 	}
 
 	public final static ListConverter<GeoRadius, GeoRadiusResponse> listGeoRadiusJedisConverter(){
@@ -335,15 +333,8 @@ public class JedisConverters extends Converters {
 	}
 
 	public final static ListConverter<GeoRadiusResponse, GeoRadius> listGeoRadiusExposeConverter(){
-		return new ListConverter<>((source)->{
-			GeoRadius geoRadius = new GeoRadius();
-
-			geoRadius.setMember(source.getMember());
-			geoRadius.setDistance(source.getDistance());
-			geoRadius.setGeo(geoExposeConverter().convert(source.getCoordinate()));
-
-			return geoRadius;
-		});
+		return new ListConverter<>((source)->new GeoRadius(source.getMember(), source.getDistance(),
+				geoExposeConverter().convert(source.getCoordinate())));
 	}
 
 	public final static Converter<Tuple, redis.clients.jedis.Tuple> tupleJedisConverter(){
@@ -371,10 +362,15 @@ public class JedisConverters extends Converters {
 				sortingParams.by(source.getBy());
 			}
 
-			if(source.getOrder() == Order.ASC){
-				sortingParams.asc();
-			}else if(source.getOrder() == Order.DESC){
-				sortingParams.desc();
+			switch(source.getOrder()){
+				case ASC:
+					sortingParams.asc();
+					break;
+				case DESC:
+					sortingParams.desc();
+					break;
+				default:
+					break;
 			}
 
 			if(source.getLimit() != null){
@@ -475,7 +471,6 @@ public class JedisConverters extends Converters {
 		return (source)->{
 			Map<K, V> data = source.getResult().stream().collect(Collectors.toMap(item->item.getKey(),
 					item->item.getValue(), (a, b)->a, LinkedHashMap::new));
-
 			return new ScanResult<>(source.getCursorAsBytes(), data);
 		};
 	}

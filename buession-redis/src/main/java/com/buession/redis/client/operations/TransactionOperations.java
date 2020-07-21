@@ -29,6 +29,6 @@ import com.buession.redis.core.command.TransactionCommands;
 /**
  * @author Yong.Teng
  */
-public interface TransactionOperations extends TransactionCommands, RedisClientOperations {
+public interface TransactionOperations<T> extends TransactionCommands, RedisClientOperations<T> {
 
 }

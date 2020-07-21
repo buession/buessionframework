@@ -21,36 +21,39 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
 
 import com.buession.core.utils.ArrayUtils;
+import com.buession.core.utils.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
  */
 public class SimpleSetTypeHandler extends AbstractSetTypeHandler<String> {
 
-    public SimpleSetTypeHandler(Class<String> type){
-        super(type);
-    }
+	private final static String DELIMITER = ",";
 
-    @Override
-    public void setNonNullParameter(PreparedStatement ps, int i, Set<String> parameter, JdbcType jdbcType) throws
-            SQLException{
-        String[] data = parameter.toArray(new String[parameter.size()]);
-        ps.setString(i, ArrayUtils.toString(data));
-    }
+	public SimpleSetTypeHandler(Class<String> type){
+		super(type);
+	}
 
-    @Override
-    protected Set<String> parseResult(final String str){
-        return str == null ? null : ArrayUtils.toSet(str.split(","));
-    }
+	@Override
+	public void setNonNullParameter(PreparedStatement ps, int i, Set<String> parameter, JdbcType jdbcType) throws SQLException{
+		ps.setString(i, parameter.stream().collect(Collectors.joining(DELIMITER)));
+	}
+
+	@Override
+	protected Set<String> parseResult(final String str){
+		return str == null ? null : ArrayUtils.toSet(StringUtils.splitByWholeSeparatorPreserveAllTokens(str,
+				DELIMITER));
+	}
 
 }

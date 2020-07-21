@@ -29,8 +29,6 @@ import com.buession.web.http.response.annotation.ResponseHeaders;
 /**
  * @author Yong.Teng
  */
-public interface ResponseHeadersAnnotationHandler extends WebAnnotationHandler<ResponseHeaders> {
-
-	String EXPIRES = "Expires";
+public interface ResponseHeadersAnnotationHandler extends WebAnnotationHandler<ResponseHeaders, Void> {
 
 }

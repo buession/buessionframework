@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.advice;
@@ -31,16 +31,15 @@ import com.buession.web.mvc.view.document.DocumentMetaData;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractDocumentMetaDataAnnotationMethodAdvice extends
-        AbstractWebAnnotationMethodAdvice<DocumentMetaData> implements DocumentMetaDataAnnotationMethodAdvice {
+public abstract class AbstractDocumentMetaDataAnnotationMethodAdvice extends AbstractWebAnnotationMethodAdvice<DocumentMetaData, Void> implements DocumentMetaDataAnnotationMethodAdvice {
 
-    public AbstractDocumentMetaDataAnnotationMethodAdvice(AnnotationHandler<DocumentMetaData> handler){
-        super(handler);
-    }
+	public AbstractDocumentMetaDataAnnotationMethodAdvice(AnnotationHandler<DocumentMetaData, Void> handler){
+		super(handler);
+	}
 
-    public AbstractDocumentMetaDataAnnotationMethodAdvice(AnnotationHandler<DocumentMetaData> handler,
-                                                          AnnotationResolver resolver){
-        super(handler, resolver);
-    }
+	public AbstractDocumentMetaDataAnnotationMethodAdvice(AnnotationHandler<DocumentMetaData, Void> handler,
+			AnnotationResolver resolver){
+		super(handler, resolver);
+	}
 
 }

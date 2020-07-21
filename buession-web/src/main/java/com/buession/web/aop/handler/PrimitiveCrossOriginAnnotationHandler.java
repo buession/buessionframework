@@ -29,6 +29,6 @@ import com.buession.web.http.response.annotation.PrimitiveCrossOrigin;
 /**
  * @author Yong.Teng
  */
-public interface PrimitiveCrossOriginAnnotationHandler extends WebAnnotationHandler<PrimitiveCrossOrigin> {
+public interface PrimitiveCrossOriginAnnotationHandler extends WebAnnotationHandler<PrimitiveCrossOrigin, Void> {
 
 }

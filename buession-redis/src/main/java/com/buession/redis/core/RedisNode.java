@@ -24,49 +24,123 @@
  */
 package com.buession.redis.core;
 
+import org.springframework.util.ObjectUtils;
+
+import java.io.Serializable;
+
 /**
  * Redis 节点
  *
  * @author Yong.Teng
  */
-public interface RedisNode {
+public class RedisNode implements Serializable {
 
-	String DEFAULT_HOST = "localhost";
+	private final static long serialVersionUID = -2212702986712034274L;
 
-	int DEFAULT_PORT = 6379;
+	public final static String DEFAULT_HOST = "localhost";
 
-	int DEFAULT_SENTINEL_PORT = 26379;
+	public final static int DEFAULT_PORT = 6379;
 
-	int DEFAULT_DATABASE = 0;
+	public final static int DEFAULT_SENTINEL_PORT = 26379;
+
+	public final static int DEFAULT_DATABASE = 0;
+
+	/**
+	 * Redis 服务器主机地址
+	 */
+	private String host = DEFAULT_HOST;
+
+	/**
+	 * Redis 服务器主机端口
+	 */
+	private int port = DEFAULT_PORT;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 */
+	public RedisNode(String host){
+		this.host = host;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 */
+	public RedisNode(String host, int port){
+		this.host = host;
+		this.port = port;
+	}
 
 	/**
 	 * 获取 Redis 服务器主机地址
 	 *
 	 * @return Redis 服务器主机地址
 	 */
-	String getHost();
-
-	/**
-	 * 设置 Redis 服务器主机地址
-	 *
-	 * @param host
-	 * 		Redis 服务器主机地址
-	 */
-	void setHost(String host);
+	public String getHost(){
+		return host;
+	}
 
 	/**
 	 * 获取 Redis 服务器主机端口
 	 *
 	 * @return Redis 服务器主机端口
 	 */
-	int getPort();
+	public int getPort(){
+		return port;
+	}
 
-	/**
-	 * 设置 Redis 服务器主机端口
-	 *
-	 * @param port
-	 * 		Redis 服务器主机端口
-	 */
-	void setPort(int port);
+	public String asString(){
+		final StringBuilder sb = new StringBuilder(16);
+
+		sb.append(host).append(':').append(port);
+
+		return sb.toString();
+	}
+
+	@Override
+	public String toString(){
+		return asString();
+	}
+
+	@Override
+	public int hashCode(){
+		final int prime = 31;
+		int result = 1;
+
+		result = prime * result + ObjectUtils.nullSafeHashCode(host);
+		result = prime * result + ObjectUtils.nullSafeHashCode(port);
+
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj == null || (obj instanceof RedisNode) == false){
+			return false;
+		}
+
+		RedisNode that = (RedisNode) obj;
+
+		if(ObjectUtils.nullSafeEquals(this.host, that.host) == false){
+			return false;
+		}
+
+		if(ObjectUtils.nullSafeEquals(this.port, that.port) == false){
+			return false;
+		}
+
+		return true;
+	}
 
 }

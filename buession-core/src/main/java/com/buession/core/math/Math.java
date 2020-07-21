@@ -24,8 +24,6 @@
  */
 package com.buession.core.math;
 
-import java.util.stream.LongStream;
-
 /**
  * @author Yong.Teng
  */
@@ -41,8 +39,8 @@ public class Math {
 	 *
 	 * @return 两个数之间连续相加结果
 	 */
-	public final static long continuousAddition(final short start, final short end){
-		return LongStream.rangeClosed(start, end).sum();
+	public final static long continuousSum(short start, short end){
+		return continuousSum((long) start, (long) end);
 	}
 
 	/**
@@ -55,8 +53,8 @@ public class Math {
 	 *
 	 * @return 两个数之间连续相加结果
 	 */
-	public final static long continuousAddition(final int start, final int end){
-		return LongStream.rangeClosed(start, end).sum();
+	public final static long continuousSum(int start, int end){
+		return continuousSum((long) start, (long) end);
 	}
 
 	/**
@@ -69,8 +67,15 @@ public class Math {
 	 *
 	 * @return 两个数之间连续相加结果
 	 */
-	public final static long continuousAddition(final long start, final long end){
-		return LongStream.rangeClosed(start, end).sum();
+	public final static long continuousSum(long start, long end){
+		if(start > end){
+			start = start ^ end;
+			end = start ^ end;
+			start = start ^ end;
+		}
+
+		long count = end - start + 1;
+		return count * start + count * ((count - 1) >> 1) * 1;
 	}
 
 }
