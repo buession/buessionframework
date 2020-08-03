@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -29,8 +29,6 @@ package com.buession.core.validator.routines;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.buession.core.validator.Validate;
 
 /**
  * @author Yong.Teng
@@ -58,7 +56,7 @@ public class IDCardValidator {
 		for(int i = 0; i < IDCARD_LENGTH - 1; i++){
 			char c = charSequence.charAt(i);
 
-			if(Validate.isNumeric(c) == false){
+			if(c < '0' || c > '9'){
 				return false;
 			}
 
@@ -69,7 +67,7 @@ public class IDCardValidator {
 		char check_code = CHECK_CODES[sum % 11];
 
 		if(check_code == charSequence.charAt(IDCARD_LENGTH - 1)){
-			if(strict == true){
+			if(strict){
 				String s = charSequence.subSequence(6, 14).toString();
 
 				try{

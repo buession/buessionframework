@@ -44,10 +44,8 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 		JedisConfiguration configuration = new JedisConfiguration();
 
 		configuration.setHost("redis.host");
-		configuration.setHost("10.101.0.131");
-		configuration.setPort(30718);
+		configuration.setPort(6379);
 		configuration.setPassword("tQP!Vf7JxL-nrH-x");
-		configuration.setPassword("passwd");
 		configuration.setDatabase(10);
 		configuration.setClientName(StringUtils.random(6));
 

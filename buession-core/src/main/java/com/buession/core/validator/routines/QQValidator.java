@@ -46,7 +46,8 @@ public class QQValidator {
 			return false;
 		}
 
-		if(Validate.isBetween(charSequence.length(), MIN_LENGTH, MAX_LENGTH, true) == false){
+		int length = charSequence.length();
+		if(length < MIN_LENGTH || length > MAX_LENGTH){
 			return false;
 		}
 

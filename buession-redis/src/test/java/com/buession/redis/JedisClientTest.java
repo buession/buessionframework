@@ -26,10 +26,12 @@ package com.buession.redis;
 
 import com.buession.redis.core.Info;
 import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.spring.jedis.JedisConfiguration;
 import com.buession.redis.transaction.Transaction;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @author Yong.Teng
@@ -68,12 +70,17 @@ public class JedisClientTest extends AbstractJedisRedisTest {
 		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
 
 		Transaction transaction = redisTemplate.multi();
-		//redisTemplate.set("server", new Server());
-		//redisTemplate.set("server2", new Server());
-		//redisTemplate.set("t1", "T1222333");
-		//redisTemplate.type("test");
+
+		redisTemplate.set("server", new Info.Server(new Properties()));
+		redisTemplate.set("server2", new Info.Server(new Properties()));
+		redisTemplate.set("t1", "T1222333");
+		redisTemplate.set("user", new User(100, "admin"));
+		redisTemplate.set("JedisConfiguration", new JedisConfiguration());
+		redisTemplate.type("test");
 		redisTemplate.getObject("server", Info.Server.class);
 		redisTemplate.mGetObject(new String[]{"server", "server1"}, Info.Server.class);
+		redisTemplate.getObject("user", User.class);
+		redisTemplate.getObject("JedisConfiguration", JedisConfiguration.class);
 		List<Object> result = redisTemplate.exec();
 
 		if(result != null){

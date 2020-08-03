@@ -25,12 +25,12 @@
 package com.buession.redis.core;
 
 import com.buession.core.validator.Validate;
-import com.buession.lang.Arch;
 import com.buession.lang.Constants;
-import com.buession.lang.Multiplexing;
+import com.buession.net.Multiplexing;
 import com.buession.lang.Status;
 import com.buession.lang.Uptime;
 import com.buession.net.HostAndPort;
+import org.apache.commons.lang3.arch.Processor;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -349,7 +349,7 @@ public class Info implements Serializable {
 		 *
 		 * @return Redis 架构
 		 */
-		public Arch getArch(){
+		public Processor.Arch getArch(){
 			return getObject(properties, Key.ARCH.value);
 		}
 
@@ -371,7 +371,7 @@ public class Info implements Serializable {
 			return get(properties, Key.BUILD_ID.value);
 		}
 
-		public int getConfiguredHz(){
+		public Integer getConfiguredHz(){
 			return getInt(properties, Key.CONFIGURED_HZ.value);
 		}
 

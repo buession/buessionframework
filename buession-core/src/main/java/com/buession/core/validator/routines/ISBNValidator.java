@@ -45,9 +45,9 @@ public class ISBNValidator {
 	}
 
 	public final static boolean isValid(final CharSequence charSequence, final char separator, final ISBNType type){
-		if(ISBNType.ISBN_TYPE_10.equals(type) == true){
+		if(ISBNType.ISBN_TYPE_10.equals(type)){
 			return isIsbn10(charSequence, separator);
-		}else if(ISBNType.ISBN_TYPE_13.equals(type) == true){
+		}else if(ISBNType.ISBN_TYPE_13.equals(type)){
 			return isIsbn13(charSequence, separator);
 		}else{
 			return false;
@@ -67,7 +67,7 @@ public class ISBNValidator {
 				return false;
 			}
 
-			if(Validate.isNumeric(lash_ch) == false && lash_ch != 'X'){
+			if(validLastCharacter(lash_ch) == false){
 				return false;
 			}
 
@@ -79,8 +79,7 @@ public class ISBNValidator {
 				return false;
 			}
 
-			if(Validate.isNumeric(charSequence.charAt(0)) == false || (Validate.isNumeric(lash_ch) == false && lash_ch
-					!= 'X')){
+			if(Validate.isNumeric(charSequence.charAt(0)) == false || validLastCharacter(lash_ch) == false){
 				return false;
 			}
 
@@ -101,7 +100,7 @@ public class ISBNValidator {
 					++sl;
 					gl = 0;
 					continue;
-				}else if(Validate.isNumeric(c) == false){
+				}else if(c < '0' || c > '9'){
 					return false;
 				}else{
 					++gl;
@@ -188,7 +187,7 @@ public class ISBNValidator {
 					++sl;
 					gl = 0;
 					continue;
-				}else if(Validate.isNumeric(c) == false){
+				}else if(c < '0' || c > '9'){
 					return false;
 				}else{
 					++gl;
@@ -223,6 +222,10 @@ public class ISBNValidator {
 
 	private final static boolean validSeparator(final char separator){
 		return separator == '\0' || separator == '-' || separator == ' ';
+	}
+
+	private final static boolean validLastCharacter(final char ch){
+		return (ch < '0' || ch > '9') && ch != 'X';
 	}
 
 }

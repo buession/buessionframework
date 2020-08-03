@@ -24,9 +24,7 @@
  */
 package com.buession.core.converter;
 
-import org.apache.commons.collections4.map.HashedMap;
-import org.springframework.core.convert.converter.Converter;
-
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -52,7 +50,7 @@ public class MapConverter<SK, SV, TK, TV> implements Converter<Map<SK, SV>, Map<
 		}else{
 			return source.entrySet().stream().collect(Collectors.toMap(e->keyConverter.convert(e.getKey()),
 					e->valueConverter.convert(e.getValue()), (a, b)->a, source instanceof LinkedHashMap ?
-							LinkedHashMap::new : HashedMap::new));
+							LinkedHashMap::new : HashMap::new));
 		}
 	}
 

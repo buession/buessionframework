@@ -24,8 +24,6 @@
  */
 package com.buession.core.converter;
 
-import org.springframework.core.convert.converter.Converter;
-
 import java.util.ArrayList;
 import java.util.List;
 

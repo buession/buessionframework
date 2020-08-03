@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.operations;
 
+import com.buession.core.converter.Converter;
 import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
@@ -33,7 +34,6 @@ import com.buession.redis.core.convert.Converters;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedPipelineCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
-import org.springframework.core.convert.converter.Converter;
 
 /**
  * @author Yong.Teng

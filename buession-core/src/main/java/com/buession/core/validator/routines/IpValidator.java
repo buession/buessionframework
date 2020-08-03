@@ -27,8 +27,6 @@
 package com.buession.core.validator.routines;
 
 import com.buession.core.utils.StringUtils;
-import com.buession.core.validator.Validate;
-import com.buession.lang.Constants;
 import com.buession.lang.IpType;
 
 /**
@@ -47,11 +45,10 @@ public class IpValidator {
 	private final static int IPV6_MAX_GROUP_SIZE = 8;
 
 	private IpValidator(){
-
 	}
 
 	public final static boolean isValid(final CharSequence charSequence){
-		if(charSequence == null){
+		if(charSequence == null || charSequence.length() == 0){
 			return false;
 		}
 
@@ -60,7 +57,7 @@ public class IpValidator {
 	}
 
 	public final static boolean isValid(final CharSequence charSequence, final IpType type){
-		if(charSequence == null){
+		if(charSequence == null || charSequence.length() == 0){
 			return false;
 		}
 
@@ -93,7 +90,8 @@ public class IpValidator {
 		}
 
 		for(String group : groups){
-			if(IPV4_group_valid(group) == false){
+			char[] digits = group.toCharArray();
+			if(IPV4_group_valid(digits, digits.length) == false){
 				return false;
 			}
 		}
@@ -101,47 +99,23 @@ public class IpValidator {
 		return true;
 	}
 
-	private final static boolean IPV4_group_valid(final String str){
-		if(str == null){
-			return false;
-		}
-
-		char c;
-		switch(str.length()){
+	private final static boolean IPV4_group_valid(final char[] digits, final int digitSize){
+		switch(digitSize){
 			case 1:
-				c = str.charAt(0);
-				return c >= '0' && c <= '9';
+				return digits[0] >= '0' && digits[0] <= '9';
 			case 2:
-				c = str.charAt(0);
-				if(c < '1' || c > '9'){
-					return false;
-				}
-
-				c = str.charAt(1);
-				return c >= '0' && c <= '9';
+				return (digits[0] >= 1 && digits[0] <= 9) && (digits[1] >= '0' && digits[1] <= '9');
 			case 3:
-				c = str.charAt(0);
-				if(c == '1'){
-					return Validate.isNumeric(str.substring(1));
-				}else if(c == '2'){
-					c = str.charAt(1);
-					if(c > '5'){
+				if(digits[0] == '1'){
+					return (digits[1] >= '0' && digits[1] <= '9') && (digits[2] >= '0' && digits[2] <= '9');
+				}else if(digits[0] == '2'){
+					if(digits[1] < '0' || digits[1] > '5'){
 						return false;
-					}else if(c == '5'){
-						c = str.charAt(2);
-						if(c < '0' || c > '5'){
-							return false;
-						}
+					}else if(digits[1] == '5'){
+						return digits[2] >= '0' && digits[2] <= '5';
 					}else{
-						c = str.charAt(2);
-						if(c < '0' || c > '9'){
-							return false;
-						}
+						return digits[2] >= '0' && digits[2] <= '9';
 					}
-
-					return true;
-				}else{
-					return false;
 				}
 			default:
 				return false;
@@ -187,8 +161,7 @@ public class IpValidator {
 				return false;
 			}
 
-			char c = str.charAt(j);
-			if(c == ':'){
+			if(str.charAt(j) == ':'){
 				int nj = j + 1;
 				if(nj < strLen && str.charAt(nj) == ':'){
 					sc++;
@@ -196,12 +169,9 @@ public class IpValidator {
 			}
 		}
 
-		for(int i = 0; i < groups.length; i++){
-			if(Constants.EMPTY_STRING.equals(groups[i])){
-				continue;
-			}
-
-			if(IPV6_group_valid(groups[i]) == false){
+		for(String group : groups){
+			char[] digits = group.toCharArray();
+			if(IPV6_group_valid(digits, digits.length) == false){
 				return false;
 			}
 		}
@@ -209,13 +179,20 @@ public class IpValidator {
 		return true;
 	}
 
-	private final static boolean IPV6_group_valid(final String str){
-		if(str == null){
+	private final static boolean IPV6_group_valid(final char[] digits, final int digitSize){
+		if(digitSize < 1 || digitSize > 4){
 			return false;
 		}
 
-		int length = str.length();
-		return length >= 1 && length <= 4 && Validate.isXdigit(str);
+		for(char c : digits){
+			if((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')){
+				continue;
+			}else{
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 }

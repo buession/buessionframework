@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core;
 
-import org.springframework.core.convert.converter.Converter;
+import com.buession.core.converter.Converter;
 import org.springframework.lang.Nullable;
 
 import java.util.function.Supplier;

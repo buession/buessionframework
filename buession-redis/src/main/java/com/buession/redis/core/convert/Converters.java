@@ -24,12 +24,12 @@
  */
 package com.buession.redis.core.convert;
 
+import com.buession.core.converter.Converter;
 import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
-import org.springframework.core.convert.converter.Converter;
 
 import java.util.ArrayList;
 import java.util.Collection;

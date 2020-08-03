@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.Converter;
 import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Geo;
@@ -34,7 +35,6 @@ import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.GeoCommands;
 import com.buession.redis.core.convert.JedisConverters;
-import org.springframework.core.convert.converter.Converter;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;
 import redis.clients.jedis.PipelineBase;
@@ -55,7 +55,8 @@ public abstract class AbstractGeoOperations<C extends JedisCommands, P extends P
 	protected final static MapConverter<byte[], Geo, byte[], GeoCoordinate> BINARY_MAP_GEOMAP_JEDIS_CONVERTER =
 			JedisConverters.mapGeoMapJedisConverter();
 
-	protected final static Converter<GeoCommands.GeoRadiusArgument, GeoRadiusParam> GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER = JedisConverters.geoRadiusArgumentJedisConverter();
+	protected final static Converter<GeoRadiusArgument, GeoRadiusParam> GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER =
+			JedisConverters.geoRadiusArgumentJedisConverter();
 
 	protected final static ListConverter<GeoRadiusResponse, GeoRadius> LIST_GEO_RADIUS_EXPOSE_CONVERTER =
 			JedisConverters.listGeoRadiusExposeConverter();

@@ -42,7 +42,7 @@ public abstract class AlphaConstraintValidator<T> implements ConstraintValidator
 		this.validWhenNull = alpha.validWhenNull();
 	}
 
-	public final static class CharSequenceAlnumConstraintValidator extends AlphaConstraintValidator<CharSequence> {
+	public final static class CharSequenceAlphaConstraintValidator extends AlphaConstraintValidator<CharSequence> {
 
 		@Override
 		public boolean isValid(CharSequence value, ConstraintValidatorContext context){
@@ -51,7 +51,7 @@ public abstract class AlphaConstraintValidator<T> implements ConstraintValidator
 
 	}
 
-	public final static class CharAlnumConstraintValidator extends AlphaConstraintValidator<Character> {
+	public final static class CharAlphaConstraintValidator extends AlphaConstraintValidator<Character> {
 
 		@Override
 		public boolean isValid(Character value, ConstraintValidatorContext context){

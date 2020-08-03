@@ -26,8 +26,7 @@ package com.buession.redis.utils;
 
 import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.StringUtils;
-import com.buession.lang.Arch;
-import com.buession.lang.Multiplexing;
+import com.buession.net.Multiplexing;
 import com.buession.lang.Uptime;
 import com.buession.redis.core.AtomicvarApi;
 import com.buession.redis.core.Info;
@@ -35,6 +34,7 @@ import com.buession.redis.core.MaxMemoryPolicy;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.Role;
+import org.apache.commons.lang3.arch.Processor;
 import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
@@ -128,9 +128,9 @@ public class InfoUtil {
 
 				if(Info.Server.Key.ARCH.getValue().equals(keyValueParser.getKey())){
 					if("32".equals(keyValueParser.getValue())){
-						properties.put(keyValueParser.getKey(), Arch.ARCH_32);
+						properties.put(keyValueParser.getKey(), Processor.Arch.BIT_32);
 					}else if("64".equals(keyValueParser.getValue())){
-						properties.put(keyValueParser.getKey(), Arch.ARCH_64);
+						properties.put(keyValueParser.getKey(), Processor.Arch.BIT_64);
 					}
 				}else if(Info.Server.Key.ATOMICVAR_API.getValue().equals(keyValueParser.getKey())){
 					for(AtomicvarApi v : AtomicvarApi.values()){

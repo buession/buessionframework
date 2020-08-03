@@ -148,7 +148,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		}
 
 		UpdateResult writeResult = masterMongoTemplate.updateFirst(query, update, getStatement());
-
 		return (int) writeResult.getModifiedCount();
 	}
 
@@ -443,7 +442,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		}
 
 		DeleteResult writeResult = getMasterMongoTemplate().remove(query, getStatement());
-
 		return (int) writeResult.getDeletedCount();
 	}
 
@@ -463,7 +461,6 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		query.addCriteria(criteria);
 
 		DeleteResult writeResult = getMasterMongoTemplate().remove(query, getStatement());
-
 		return (int) writeResult.getDeletedCount();
 	}
 

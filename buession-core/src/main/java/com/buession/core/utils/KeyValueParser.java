@@ -129,8 +129,8 @@ public class KeyValueParser {
 
 	public Status getStatusValue(){
 		if(statusValue == null){
-			statusValue = Status.valueOf("OK".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value) || "on"
-					.equalsIgnoreCase(value) || "1".equals(value) || "true".equalsIgnoreCase(value));
+			statusValue =
+					StatusUtils.valueOf("OK".equalsIgnoreCase(value) || "yes".equalsIgnoreCase(value) || "on".equalsIgnoreCase(value) || "1".equals(value) || "true".equalsIgnoreCase(value));
 		}
 
 		return statusValue;

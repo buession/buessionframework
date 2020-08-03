@@ -82,7 +82,7 @@
 
 		<dependency>
 			<groupId>org.mongodb</groupId>
-			<artifactId>mongo-java-driver</artifactId>
+			<artifactId>mongodb-driver-core</artifactId>
 			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>

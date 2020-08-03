@@ -730,7 +730,7 @@ public class Validate {
 	 * @return Boolean
 	 */
 	public final static boolean isXdigit(final char ch){
-		return isNumeric(ch) || ch >= 'a' && ch <= 'f' || ch >= 'A' || ch <= 'F';
+		return isNumeric(ch) || ch >= 'a' && ch <= 'f' || ch >= 'A' && ch <= 'F';
 	}
 
 	/**

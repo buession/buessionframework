@@ -27,10 +27,7 @@
 package com.buession.redis.serializer;
 
 import com.buession.core.serializer.DefaultByteArraySerializer;
-import com.buession.core.serializer.SerializerException;
 import com.buession.core.serializer.type.TypeReference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
@@ -39,62 +36,8 @@ public class ByteArraySerializer extends AbstractSerializer {
 
 	private final static DefaultByteArraySerializer serializer = new DefaultByteArraySerializer();
 
-	private final static Logger logger = LoggerFactory.getLogger(ByteArraySerializer.class);
-
-	@Override
-	public <V> String serialize(final V object){
-		if(object == null){
-			return null;
-		}
-
-		try{
-			return serializer.serialize(object);
-		}catch(SerializerException e){
-			logger.error("{} serializer error.", object, e);
-			return null;
-		}
-	}
-
-	@Override
-	public <V> byte[] serializeAsBytes(final V object){
-		if(object == null){
-			return null;
-		}
-
-		try{
-			return serializer.serializeAsBytes(object);
-		}catch(SerializerException e){
-			logger.error("{} serializer error.", object, e);
-			return null;
-		}
-	}
-
-	@Override
-	public <V> V deserialize(final String str){
-		if(str == null){
-			return null;
-		}
-
-		try{
-			return serializer.deserialize(str);
-		}catch(SerializerException e){
-			logger.error("{} serializer error.", str, e);
-			return null;
-		}
-	}
-
-	@Override
-	public <V> V deserializeBytes(final byte[] bytes){
-		if(bytes == null){
-			return null;
-		}
-
-		try{
-			return serializer.deserialize(bytes);
-		}catch(SerializerException e){
-			logger.error("{} serializer error.", bytes, e);
-			return null;
-		}
+	public ByteArraySerializer(){
+		super(serializer);
 	}
 
 	@Override

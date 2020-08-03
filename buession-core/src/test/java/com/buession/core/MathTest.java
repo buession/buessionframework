@@ -70,6 +70,10 @@ public class MathTest {
 		System.out.println(5 >> 1);
 		System.out.println(6 >> 1);
 		System.out.println(7 >> 1);
+		System.out.println(2 * 2);
+		System.out.println(2 << 1);
+		System.out.println(2 * 8);
+		System.out.println(2 << 3);
 	}
 
 	@Test
@@ -87,6 +91,10 @@ public class MathTest {
 			long l = i * 1L;
 		}
 		System.out.println("耗时：" + (System.currentTimeMillis() - startTimestamp));
+
+		char c = '1';
+		System.out.println("c: " + (c - '0'));
+		System.out.println("c: " + ((int) c));
 	}
 
 }

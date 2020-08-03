@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.convert;
 
+import com.buession.core.converter.Converter;
 import com.buession.core.converter.MapConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.SetConverter;
@@ -52,7 +53,6 @@ import com.buession.redis.exception.RedisException;
 import com.buession.redis.utils.InfoUtil;
 import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
-import org.springframework.core.convert.converter.Converter;
 import redis.clients.jedis.BitOP;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;

@@ -44,16 +44,18 @@ import com.buession.redis.serializer.Serializer;
 import com.buession.redis.utils.KeyUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.convert.converter.Converter;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Yong.Teng
  */
-public abstract class RedisAccessor {
+public abstract class RedisAccessor implements Closeable {
 
 	protected final static Options DEFAULT_OPTIONS = new Options();
 
@@ -69,7 +71,7 @@ public abstract class RedisAccessor {
 
 	protected boolean enableTransactionSupport = false;
 
-	protected ThreadLocal<Integer> index = new ThreadLocal<>();
+	protected AtomicInteger index = new AtomicInteger(-1);
 
 	private final static Logger logger = LoggerFactory.getLogger(RedisAccessor.class);
 
@@ -144,6 +146,13 @@ public abstract class RedisAccessor {
 		}
 	}
 
+	@Override
+	public void close() throws IOException{
+		if(connection != null){
+			connection.close();
+		}
+	}
+
 	protected <R> R execute(final Executor<RedisClient, R> executor, final ProtocolCommand command){
 		return execute(executor, command, null);
 	}
@@ -156,14 +165,14 @@ public abstract class RedisAccessor {
 
 		if(logger.isDebugEnabled()){
 			if(arguments != null){
-				logger.debug("Execute command '{}' width arguments: {}", command, argumentsString);
+				logger.debug("Execute command '{}' with arguments: {}", command, argumentsString);
 			}else{
 				logger.debug("Execute command '{}'", command);
 			}
 		}
 
 		if(isPipeline() || isTransaction()){
-			updateIndex();
+			index.getAndIncrement();
 		}
 
 		try{
@@ -171,10 +180,10 @@ public abstract class RedisAccessor {
 		}catch(Exception e){
 			if(logger.isDebugEnabled()){
 				if(arguments != null){
-					logger.error("Execute command '{}' width arguments: {}, failure: {}", command, argumentsString,
-							e.getMessage());
+					logger.error("Execute command '{}' with arguments: {}, failure: {}", command, argumentsString,
+							e.getMessage(), e);
 				}else{
-					logger.error("Execute command '{}', failure: {}", command, e.getMessage());
+					logger.error("Execute command '{}', failure: {}", command, e.getMessage(), e);
 				}
 			}
 			throw e;
@@ -203,7 +212,7 @@ public abstract class RedisAccessor {
 
 	protected final void checkInitialized(){
 		if(client == null){
-			throw new RedisException("RedisClient is not initialized. You can call the afterPropertiesSet method for " + "initialization.");
+			throw new RedisException("RedisClient is not initialized. You can call the afterPropertiesSet method for " + "initialize.");
 		}
 	}
 
@@ -213,16 +222,6 @@ public abstract class RedisAccessor {
 
 	protected boolean isPipeline(){
 		return getConnection().isPipeline();
-	}
-
-	protected void updateIndex(){
-		Integer currentValue = index.get();
-
-		if(currentValue == null){
-			index.set(1);
-		}else{
-			index.set(currentValue.intValue() + 1);
-		}
 	}
 
 	protected final String makeRawKey(final String key){
@@ -351,311 +350,6 @@ public abstract class RedisAccessor {
 
 	protected <V> Map<byte[], V> deserializeBytes(final Map<byte[], byte[]> bytes, final TypeReference<V> type){
 		return serializer.deserializeBytes(bytes, type);
-	}
-
-	protected final static class TxResult<S, T> {
-
-		private Converter<S, T> converter;
-
-		private Class[] paramTypes;
-
-		public TxResult(Converter<S, T> converter){
-			this(converter, null);
-		}
-
-		public TxResult(Converter<S, T> converter, Class... paramTypes){
-			this.converter = converter;
-			this.paramTypes = paramTypes;
-		}
-
-		public Converter<S, T> getConverter(){
-			return converter;
-		}
-
-		public Class[] getParamTypes(){
-			return paramTypes;
-		}
-
-	}
-
-	protected final static class StringDeserialize<V> implements Converter<String, V> {
-
-		protected Serializer serializer;
-
-		protected Class<V> clazz;
-
-		protected TypeReference<V> type;
-
-		public StringDeserialize(Serializer serializer){
-			this.serializer = serializer;
-		}
-
-		public StringDeserialize(Serializer serializer, Class<V> clazz){
-			this.serializer = serializer;
-			this.clazz = clazz;
-		}
-
-		public StringDeserialize(Serializer serializer, TypeReference<V> type){
-			this.serializer = serializer;
-			this.type = type;
-		}
-
-		@Override
-		public V convert(String source){
-			if(type != null){
-				return serializer.deserialize(source, type);
-			}else if(clazz != null){
-				return serializer.deserialize(source, clazz);
-			}else{
-				return serializer.deserialize(source);
-			}
-		}
-
-	}
-
-	protected final static class BinaryDeserialize<V> implements Converter<byte[], V> {
-
-		protected Serializer serializer;
-
-		protected Class<V> clazz;
-
-		protected TypeReference<V> type;
-
-		public BinaryDeserialize(Serializer serializer){
-			this.serializer = serializer;
-		}
-
-		public BinaryDeserialize(Serializer serializer, Class<V> clazz){
-			this.serializer = serializer;
-			this.clazz = clazz;
-		}
-
-		public BinaryDeserialize(Serializer serializer, TypeReference<V> type){
-			this.serializer = serializer;
-			this.type = type;
-		}
-
-		@Override
-		public V convert(byte[] source){
-			if(type != null){
-				return serializer.deserializeBytes(source, type);
-			}else if(clazz != null){
-				return serializer.deserializeBytes(source, clazz);
-			}else{
-				return serializer.deserializeBytes(source);
-			}
-		}
-
-	}
-
-	protected final static class StringMapDeserialize<V> implements Converter<Map<String, String>, Map<String, V>> {
-
-		protected Serializer serializer;
-
-		protected Class<V> clazz;
-
-		protected TypeReference<V> type;
-
-		public StringMapDeserialize(Serializer serializer){
-			this.serializer = serializer;
-		}
-
-		public StringMapDeserialize(Serializer serializer, Class<V> clazz){
-			this.serializer = serializer;
-			this.clazz = clazz;
-		}
-
-		public StringMapDeserialize(Serializer serializer, TypeReference<V> type){
-			this.serializer = serializer;
-			this.type = type;
-		}
-
-		@Override
-		public Map<String, V> convert(Map<String, String> source){
-			if(type != null){
-				return serializer.deserialize(source, type);
-			}else if(clazz != null){
-				return serializer.deserialize(source, clazz);
-			}else{
-				return serializer.deserialize(source);
-			}
-		}
-
-	}
-
-	protected final static class BinaryMapDeserialize<V> implements Converter<Map<byte[], byte[]>, Map<byte[], V>> {
-
-		protected Serializer serializer;
-
-		protected Class<V> clazz;
-
-		protected TypeReference<V> type;
-
-		public BinaryMapDeserialize(Serializer serializer){
-			this.serializer = serializer;
-		}
-
-		public BinaryMapDeserialize(Serializer serializer, Class<V> clazz){
-			this.serializer = serializer;
-			this.clazz = clazz;
-		}
-
-		public BinaryMapDeserialize(Serializer serializer, TypeReference<V> type){
-			this.serializer = serializer;
-			this.type = type;
-		}
-
-		@Override
-		public Map<byte[], V> convert(Map<byte[], byte[]> source){
-			if(type != null){
-				return serializer.deserializeBytes(source, type);
-			}else if(clazz != null){
-				return serializer.deserializeBytes(source, clazz);
-			}else{
-				return serializer.deserializeBytes(source);
-			}
-		}
-
-	}
-
-	protected final static class StringListDeserialize<V> implements Converter<List<String>, List<V>> {
-
-		protected Serializer serializer;
-
-		protected Class<V> clazz;
-
-		protected TypeReference<V> type;
-
-		public StringListDeserialize(Serializer serializer){
-			this.serializer = serializer;
-		}
-
-		public StringListDeserialize(Serializer serializer, Class<V> clazz){
-			this.serializer = serializer;
-			this.clazz = clazz;
-		}
-
-		public StringListDeserialize(Serializer serializer, TypeReference<V> type){
-			this.serializer = serializer;
-			this.type = type;
-		}
-
-		@Override
-		public List<V> convert(List<String> source){
-			if(type != null){
-				return serializer.deserialize(source, type);
-			}else if(clazz != null){
-				return serializer.deserialize(source, clazz);
-			}else{
-				return serializer.deserialize(source);
-			}
-		}
-
-	}
-
-	protected final static class BinaryListDeserialize<V> implements Converter<List<byte[]>, List<V>> {
-
-		protected Serializer serializer;
-
-		protected Class<V> clazz;
-
-		protected TypeReference<V> type;
-
-		public BinaryListDeserialize(Serializer serializer){
-			this.serializer = serializer;
-		}
-
-		public BinaryListDeserialize(Serializer serializer, Class<V> clazz){
-			this.serializer = serializer;
-			this.clazz = clazz;
-		}
-
-		public BinaryListDeserialize(Serializer serializer, TypeReference<V> type){
-			this.serializer = serializer;
-			this.type = type;
-		}
-
-		@Override
-		public List<V> convert(List<byte[]> source){
-			if(type != null){
-				return serializer.deserializeBytes(source, type);
-			}else if(clazz != null){
-				return serializer.deserializeBytes(source, clazz);
-			}else{
-				return serializer.deserializeBytes(source);
-			}
-		}
-
-	}
-
-	protected final static class StringSetDeserialize<V> implements Converter<List<String>, List<V>> {
-
-		protected Serializer serializer;
-
-		protected Class<V> clazz;
-
-		protected TypeReference<V> type;
-
-		public StringSetDeserialize(Serializer serializer){
-			this.serializer = serializer;
-		}
-
-		public StringSetDeserialize(Serializer serializer, Class<V> clazz){
-			this.serializer = serializer;
-			this.clazz = clazz;
-		}
-
-		public StringSetDeserialize(Serializer serializer, TypeReference<V> type){
-			this.serializer = serializer;
-			this.type = type;
-		}
-
-		@Override
-		public List<V> convert(List<String> source){
-			if(type != null){
-				return serializer.deserialize(source, type);
-			}else if(clazz != null){
-				return serializer.deserialize(source, clazz);
-			}else{
-				return serializer.deserialize(source);
-			}
-		}
-
-	}
-
-	protected final static class BinarySetDeserialize<V> implements Converter<List<byte[]>, List<V>> {
-
-		protected Serializer serializer;
-
-		protected Class<V> clazz;
-
-		protected TypeReference<V> type;
-
-		public BinarySetDeserialize(Serializer serializer){
-			this.serializer = serializer;
-		}
-
-		public BinarySetDeserialize(Serializer serializer, Class<V> clazz){
-			this.serializer = serializer;
-			this.clazz = clazz;
-		}
-
-		public BinarySetDeserialize(Serializer serializer, TypeReference<V> type){
-			this.serializer = serializer;
-			this.type = type;
-		}
-
-		@Override
-		public List<V> convert(List<byte[]> source){
-			if(type != null){
-				return serializer.deserializeBytes(source, type);
-			}else if(clazz != null){
-				return serializer.deserializeBytes(source, clazz);
-			}else{
-				return serializer.deserializeBytes(source);
-			}
-		}
-
 	}
 
 }

@@ -25,6 +25,7 @@
 package com.buession.redis.utils;
 
 import com.buession.core.utils.EnumUtils;
+import com.buession.core.utils.StatusUtils;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.core.RedisServerTime;
@@ -38,7 +39,7 @@ import java.util.List;
 public class ReturnUtils {
 
 	public final static Status statusForOK(final String str){
-		return Status.valueOf("OK".equalsIgnoreCase(str));
+		return StatusUtils.valueOf("OK".equalsIgnoreCase(str));
 	}
 
 	public final static Status statusForOK(final byte[] str){
@@ -46,7 +47,7 @@ public class ReturnUtils {
 	}
 
 	public final static Status statusForBool(final boolean value){
-		return Status.valueOf(value);
+		return StatusUtils.valueOf(value);
 	}
 
 	public final static <V extends Enum<V>> V enumValueOf(final String str, final Class<V> enumType){

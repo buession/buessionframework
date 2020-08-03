@@ -24,8 +24,8 @@
  */
 package com.buession.redis.core.jedis;
 
+import com.buession.core.converter.Converter;
 import com.buession.redis.core.FutureResult;
-import org.springframework.core.convert.converter.Converter;
 import redis.clients.jedis.Response;
 
 import java.util.function.Supplier;

@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.lang;
+package com.buession.net;
 
 /**
  * @author Yong.Teng

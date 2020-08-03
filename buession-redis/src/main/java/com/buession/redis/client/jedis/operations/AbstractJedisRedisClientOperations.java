@@ -25,6 +25,7 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.Executor;
+import com.buession.core.converter.Converter;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.AbstractRedisClientOperations;
 import com.buession.redis.core.RedisMode;
@@ -36,7 +37,6 @@ import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.jedis.JedisTransaction;
-import org.springframework.core.convert.converter.Converter;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.commands.JedisCommands;

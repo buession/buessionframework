@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -39,67 +39,66 @@ import java.security.NoSuchAlgorithmException;
  */
 public class ShortUrlGenerator {
 
-    private final static String ALGO = "MD5";
+	private final static String ALGO = "MD5";
 
-    private final static int LENGTH = 6;
+	private final static int LENGTH = 6;
 
-    private final static int GROUP_SIZE = 4;
+	private final static int GROUP_SIZE = 4;
 
-    private ShortUrlGenerator(){
+	private ShortUrlGenerator(){
 
-    }
+	}
 
-    public final static String[] encode(final String url){
-        Assert.isBlank(url, "Encode short url cloud not be null or empty");
+	public final static String[] encode(final String url){
+		Assert.isBlank(url, "Encode short url cloud not be null or empty");
 
-        String md5Str = doEncode(url);
-        String[] result = new String[GROUP_SIZE];
+		String md5Str = doEncode(url);
+		String sTempSubString;
+		String[] result = new String[GROUP_SIZE];
 
-        for(int i = 0; i < GROUP_SIZE; i++){
-            // 把加密字符按照 8 位一组 16 进制与 0x3FFFFFFF 进行位与运算
-            String sTempSubString = md5Str.substring(i * 8, i * 8 + 8);
+		for(int i = 0; i < GROUP_SIZE; i++){
+			// 把加密字符按照 8 位一组 16 进制与 0x3FFFFFFF 进行位与运算
+			sTempSubString = md5Str.substring(i << 3, i << 3 + 8);
 
-            // 这里需要使用 long 型来转换，因为 Integer.parseInt() 只能处理 31 位 , 首位为符号位 , 如果不用 long ，则会越界
-            long lHexLong = 0x3FFFFFFF & Long.parseLong(sTempSubString, 16);
-            char[] outChars = new char[LENGTH];
+			// 这里需要使用 long 型来转换，因为 Integer.parseInt() 只能处理 31 位, 首位为符号位, 如果不用 long ，则会越界
+			long lHexLong = 0x3FFFFFFF & Long.parseLong(sTempSubString, 16);
+			char[] outChars = new char[LENGTH];
 
-            for(int j = 0; j < LENGTH; j++){
-                // 把得到的值与 0x0000003D 进行位与运算，取得字符数组 chars 索引
-                long index = 0x0000003D & lHexLong;
-                // 把取得的字符相加
-                outChars[i] = Constants.ALNUM[(int) index];
-                // 每次循环按位右移 5 位
-                lHexLong = lHexLong >> 5;
-            }
+			for(int j = 0; j < LENGTH; j++){
+				// 把得到的值与 0x0000003D 进行位与运算，取得字符数组 chars 索引
+				long index = 0x0000003D & lHexLong;
+				// 把取得的字符相加
+				outChars[i] = Constants.ALNUM[(int) index];
+				// 每次循环按位右移 5 位
+				lHexLong = lHexLong >> 5;
+			}
 
-            // 把字符串存入对应索引的输出数组
-            result[i] = new String(outChars);
-        }
+			// 把字符串存入对应索引的输出数组
+			result[i] = new String(outChars);
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    private final static String doEncode(final String url){
-        try{
-            MessageDigest messageDigest = MessageDigest.getInstance(ALGO);
+	private final static String doEncode(final String url){
+		try{
+			MessageDigest messageDigest = MessageDigest.getInstance(ALGO);
+			messageDigest.update(url.getBytes(StandardCharsets.UTF_8));
+			return getFormattedText(messageDigest.digest());
+		}catch(NoSuchAlgorithmException e){
+			throw new SecurityException(e);
+		}
+	}
 
-            messageDigest.update(url.getBytes(StandardCharsets.UTF_8));
+	private final static String getFormattedText(byte[] bytes){
+		final StringBuilder buffer = new StringBuilder(bytes.length << 1);
 
-            return getFormattedText(messageDigest.digest());
-        }catch(NoSuchAlgorithmException e){
-            throw new SecurityException(e);
-        }
-    }
+		for(int j = 0; j < bytes.length; j++){
+			buffer.append(Constants.HEX_DIGITS[(bytes[j] >> 4) & 0x0f]);
+			buffer.append(Constants.HEX_DIGITS[bytes[j] & 0x0f]);
+		}
 
-    private final static String getFormattedText(byte[] bytes){
-        final StringBuilder buffer = new StringBuilder(bytes.length * 2);
-
-        for(int j = 0; j < bytes.length; j++){
-            buffer.append(Constants.HEX_DIGITS[(bytes[j] >> 4) & 0x0f]);
-            buffer.append(Constants.HEX_DIGITS[bytes[j] & 0x0f]);
-        }
-
-        return buffer.toString();
-    }
+		return buffer.toString();
+	}
 
 }

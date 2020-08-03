@@ -17,55 +17,19 @@
  * <http://www.apache.org/>.
  *
  * +-------------------------------------------------------------------------------------------------------+
- * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
+ * | License: http://buession.buession.com.cn/LICENSE 												       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.oss.core;
-
-import java.io.Serializable;
+package com.buession.oss;
 
 /**
  * @author Yong.Teng
  */
-public class Result implements Serializable {
+public abstract class AbstractAliCloudTest {
 
-	private final static long serialVersionUID = 9118410836243186340L;
-
-	private String url;
-
-	private String path;
-
-	private long size;
-
-	public String getUrl(){
-		return url;
-	}
-
-	public void setUrl(String url){
-		this.url = url;
-	}
-
-	public String getPath(){
-		return path;
-	}
-
-	public void setPath(String path){
-		this.path = path;
-	}
-
-	public long getSize(){
-		return size;
-	}
-
-	public void setSize(long size){
-		this.size = size;
-	}
-
-	@Override
-	public String toString(){
-		return "{" + "url: " + url + ", path: " + path + ", size: " + size + '}';
-	}
+	protected final static OSSClient ossClient = new AliCloudOSSClient("oss-cn-hangzhou.aliyuncs.com",
+			"LTAI2SUCqYxw0jc9", "dRGpARX865S6DZfOTyaczMxyZP5n9T");
 
 }

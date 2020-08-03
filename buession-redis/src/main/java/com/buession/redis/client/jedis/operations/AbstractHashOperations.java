@@ -24,6 +24,7 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.Converter;
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
@@ -34,7 +35,6 @@ import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.core.jedis.JedisScanParams;
 import com.buession.redis.utils.ReturnUtils;
-import org.springframework.core.convert.converter.Converter;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 
