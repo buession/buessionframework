@@ -29,6 +29,10 @@ package com.buession.web.http.response;
  */
 public interface ServerInfoFilterInterface {
 
-    String SERVER_NAME_HEADER_NAME = "Server-Name";
+	String SERVER_NAME_HEADER_NAME = "Server-Name";
+
+	String getHeaderName();
+
+	void setHeaderName(String headerName);
 
 }

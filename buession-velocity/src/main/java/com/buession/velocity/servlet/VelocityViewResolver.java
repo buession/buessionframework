@@ -1,26 +1,28 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.
- * See the NOTICE file distributed with this work for additional information regarding copyright ownership.
- * The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  *
- * =========================================================================================================
+ * =================================================================================================
  *
  * This software consists of voluntary contributions made by many individuals on behalf of the
  * Apache Software Foundation. For more information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- * +-------------------------------------------------------------------------------------------------------+
- * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
- * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
- * +-------------------------------------------------------------------------------------------------------+
+ * +------------------------------------------------------------------------------------------------+
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
+ * | Author: Yong.Teng <webmaster@buession.com> 													|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.servlet;
 
@@ -34,88 +36,88 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
  */
 public class VelocityViewResolver extends AbstractTemplateViewResolver {
 
-    private String encoding;
+	private String encoding;
 
-    private String toolboxConfigLocation;
+	private String toolboxConfigLocation;
 
-    private String dateToolAttribute;
+	private String dateToolAttribute;
 
-    private String numberToolAttribute;
+	private String numberToolAttribute;
 
-    private final static Logger logger = LoggerFactory.getLogger(VelocityViewResolver.class);
+	private final static Logger logger = LoggerFactory.getLogger(VelocityViewResolver.class);
 
-    public VelocityViewResolver(){
-        setViewClass(requiredViewClass());
-    }
+	public VelocityViewResolver(){
+		setViewClass(requiredViewClass());
+	}
 
-    public String getEncoding(){
-        return encoding;
-    }
+	public String getEncoding(){
+		return encoding;
+	}
 
-    public void setEncoding(String encoding){
-        this.encoding = encoding;
-    }
+	public void setEncoding(String encoding){
+		this.encoding = encoding;
+	}
 
-    public String getToolboxConfigLocation(){
-        return toolboxConfigLocation;
-    }
+	public String getToolboxConfigLocation(){
+		return toolboxConfigLocation;
+	}
 
-    public void setToolboxConfigLocation(String toolboxConfigLocation){
-        this.toolboxConfigLocation = toolboxConfigLocation;
-    }
+	public void setToolboxConfigLocation(String toolboxConfigLocation){
+		this.toolboxConfigLocation = toolboxConfigLocation;
+	}
 
-    public String getDateToolAttribute(){
-        return dateToolAttribute;
-    }
+	public String getDateToolAttribute(){
+		return dateToolAttribute;
+	}
 
-    public void setDateToolAttribute(String dateToolAttribute){
-        this.dateToolAttribute = dateToolAttribute;
-    }
+	public void setDateToolAttribute(String dateToolAttribute){
+		this.dateToolAttribute = dateToolAttribute;
+	}
 
-    public String getNumberToolAttribute(){
-        return numberToolAttribute;
-    }
+	public String getNumberToolAttribute(){
+		return numberToolAttribute;
+	}
 
-    public void setNumberToolAttribute(String numberToolAttribute){
-        this.numberToolAttribute = numberToolAttribute;
-    }
+	public void setNumberToolAttribute(String numberToolAttribute){
+		this.numberToolAttribute = numberToolAttribute;
+	}
 
-    @Override
-    protected Class<?> requiredViewClass(){
-        return VelocityView.class;
-    }
+	@Override
+	protected Class<?> requiredViewClass(){
+		return VelocityView.class;
+	}
 
-    @Override
-    protected void initApplicationContext(){
-        super.initApplicationContext();
+	@Override
+	protected void initApplicationContext(){
+		super.initApplicationContext();
 
-        if(toolboxConfigLocation == null){
-            return;
-        }
+		if(toolboxConfigLocation == null){
+			return;
+		}
 
-        if(VelocityView.class == getViewClass()){
-            logger.info("Using VelocityToolboxView instead of default VelocityView due to specified " +
-                    "toolboxConfigLocation");
-            setViewClass(VelocityToolboxView.class);
-        }else if(!VelocityToolboxView.class.isAssignableFrom(getViewClass())){
-            throw new IllegalArgumentException("Given view class [" + getViewClass().getName() + "] is not of " +
-                    "type [" + VelocityToolboxView.class.getName() + "], which it needs to be in case of a " +
-                    "specified toolboxConfigLocation");
-        }
-    }
+		if(VelocityView.class == getViewClass()){
+			logger.info("Using VelocityToolboxView instead of default VelocityView due to specified " +
+					"toolboxConfigLocation");
+			setViewClass(VelocityToolboxView.class);
+		}else if(VelocityToolboxView.class.isAssignableFrom(getViewClass()) == false){
+			throw new IllegalArgumentException("Given view class [" + getViewClass().getName() + "] is not of " +
+					"type [" + VelocityToolboxView.class.getName() + "], which it needs to be in case of a " +
+					"specified toolboxConfigLocation");
+		}
+	}
 
-    @Override
-    protected AbstractUrlBasedView buildView(String viewName) throws Exception{
-        VelocityView view = (VelocityView) super.buildView(viewName);
+	@Override
+	protected AbstractUrlBasedView buildView(String viewName) throws Exception{
+		VelocityView view = (VelocityView) super.buildView(viewName);
 
-        view.setDateToolAttribute(dateToolAttribute);
-        view.setNumberToolAttribute(numberToolAttribute);
+		view.setDateToolAttribute(dateToolAttribute);
+		view.setNumberToolAttribute(numberToolAttribute);
 
-        if(toolboxConfigLocation != null){
-            ((VelocityToolboxView) view).setToolboxConfigLocation(toolboxConfigLocation);
-        }
+		if(toolboxConfigLocation != null){
+			((VelocityToolboxView) view).setToolboxConfigLocation(toolboxConfigLocation);
+		}
 
-        return view;
-    }
+		return view;
+	}
 
 }

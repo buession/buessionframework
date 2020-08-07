@@ -1,26 +1,28 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.
- * See the NOTICE file distributed with this work for additional information regarding copyright ownership.
- * The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  *
- * =========================================================================================================
+ * =================================================================================================
  *
  * This software consists of voluntary contributions made by many individuals on behalf of the
  * Apache Software Foundation. For more information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- * +-------------------------------------------------------------------------------------------------------+
- * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
- * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
- * +-------------------------------------------------------------------------------------------------------+
+ * +------------------------------------------------------------------------------------------------+
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
+ * | Author: Yong.Teng <webmaster@buession.com> 													|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.spring;
 
@@ -57,6 +59,8 @@ public class VelocityEngineFactory {
 	private ResourceLoader resourceLoader = new DefaultResourceLoader();
 
 	private boolean preferFileSystemAccess = true;
+
+	private boolean enableCache = true;
 
 	private final static Logger logger = LoggerFactory.getLogger(VelocityEngineFactory.class);
 
@@ -110,6 +114,18 @@ public class VelocityEngineFactory {
 		this.preferFileSystemAccess = preferFileSystemAccess;
 	}
 
+	public boolean isEnableCache(){
+		return getEnableCache();
+	}
+
+	public boolean getEnableCache(){
+		return enableCache;
+	}
+
+	public void setEnableCache(boolean enableCache){
+		this.enableCache = enableCache;
+	}
+
 	public VelocityEngine createVelocityEngine() throws IOException, VelocityException{
 		VelocityEngine velocityEngine = new VelocityEngine();
 		Map<String, Object> properties = new HashMap<>(velocityProperties.size());
@@ -147,24 +163,25 @@ public class VelocityEngineFactory {
 		}
 
 		try{
-			StringBuilder resolvedPath = new StringBuilder();
+			StringBuilder resolvedPath = new StringBuilder(resourceLoaderPath.length());
 			String[] paths = StringUtils.split(resourceLoaderPath, ',');
 
 			for(int i = 0; i < paths.length; i++){
 				String path = paths[i];
 				Resource resource = getResourceLoader().getResource(path);
 				File file = resource.getFile();
+				String absolutePath = file.getAbsolutePath();
 
-				logger.debug("Resource loader path [{}] resolved to file [{}]", path, file.getAbsolutePath());
+				logger.debug("Resource loader path [{}] resolved to file [{}]", path, absolutePath);
 
-				resolvedPath.append(file.getAbsolutePath());
+				resolvedPath.append(absolutePath);
 				if(i < paths.length - 1){
 					resolvedPath.append(',');
 				}
 			}
 
 			velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "file");
-			velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_CACHE, "true");
+			velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_CACHE, isEnableCache());
 			velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, resolvedPath.toString());
 		}catch(IOException ex){
 			logger.debug("Cannot resolve resource loader path [{}] to [java.io.File]: using " + "SpringResourceLoader"
@@ -177,7 +194,7 @@ public class VelocityEngineFactory {
 		velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, SpringResourceLoader.NAME);
 		velocityEngine.setProperty(SpringResourceLoader.SPRING_RESOURCE_LOADER_CLASS,
 				SpringResourceLoader.class.getName());
-		velocityEngine.setProperty(SpringResourceLoader.SPRING_RESOURCE_LOADER_CACHE, "true");
+		velocityEngine.setProperty(SpringResourceLoader.SPRING_RESOURCE_LOADER_CACHE, isEnableCache());
 		velocityEngine.setApplicationAttribute(SpringResourceLoader.SPRING_RESOURCE_LOADER, getResourceLoader());
 		velocityEngine.setApplicationAttribute(SpringResourceLoader.SPRING_RESOURCE_LOADER_PATH, resourceLoaderPath);
 	}

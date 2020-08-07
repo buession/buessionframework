@@ -1,26 +1,28 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.
- * See the NOTICE file distributed with this work for additional information regarding copyright ownership.
- * The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  *
- * =========================================================================================================
+ * =================================================================================================
  *
  * This software consists of voluntary contributions made by many individuals on behalf of the
  * Apache Software Foundation. For more information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- * +-------------------------------------------------------------------------------------------------------+
- * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
- * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
- * +-------------------------------------------------------------------------------------------------------+
+ * +------------------------------------------------------------------------------------------------+
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
+ * | Author: Yong.Teng <webmaster@buession.com> 													|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity;
 
@@ -42,76 +44,76 @@ import java.util.Arrays;
  */
 public class SpringResourceLoader extends ResourceLoader {
 
-    public final static String NAME = "spring";
+	public final static String NAME = "spring";
 
-    public final static String SPRING_RESOURCE_LOADER_CLASS = "spring.resource.loader.class";
+	public final static String SPRING_RESOURCE_LOADER_CLASS = "spring.resource.loader.class";
 
-    public final static String SPRING_RESOURCE_LOADER_CACHE = "spring.resource.loader.cache";
+	public final static String SPRING_RESOURCE_LOADER_CACHE = "spring.resource.loader.cache";
 
-    public final static String SPRING_RESOURCE_LOADER = "spring.resource.loader";
+	public final static String SPRING_RESOURCE_LOADER = "spring.resource.loader";
 
-    public final static String SPRING_RESOURCE_LOADER_PATH = "spring.resource.loader.path";
+	public final static String SPRING_RESOURCE_LOADER_PATH = "spring.resource.loader.path";
 
-    private org.springframework.core.io.ResourceLoader resourceLoader;
+	private org.springframework.core.io.ResourceLoader resourceLoader;
 
-    private String[] resourceLoaderPaths;
+	private String[] resourceLoaderPaths;
 
-    private final static Logger logger = LoggerFactory.getLogger(SpringResourceLoader.class);
+	private final static Logger logger = LoggerFactory.getLogger(SpringResourceLoader.class);
 
-    @Override
-    public void init(final ExtProperties configuration){
-        resourceLoader = (org.springframework.core.io.ResourceLoader) rsvc.getApplicationAttribute
-                (SPRING_RESOURCE_LOADER);
-        String resourceLoaderPath = (String) rsvc.getApplicationAttribute(SPRING_RESOURCE_LOADER_PATH);
+	@Override
+	public void init(final ExtProperties configuration){
+		resourceLoader =
+                (org.springframework.core.io.ResourceLoader) rsvc.getApplicationAttribute(SPRING_RESOURCE_LOADER);
+		String resourceLoaderPath = (String) rsvc.getApplicationAttribute(SPRING_RESOURCE_LOADER_PATH);
 
-        if(resourceLoader == null){
-            throw new IllegalArgumentException("'resourceLoader' application attribute must be present for " +
+		if(resourceLoader == null){
+			throw new IllegalArgumentException("'resourceLoader' application attribute must be present for " +
                     "SpringResourceLoader");
-        }
+		}
 
-        if(resourceLoaderPath == null){
-            throw new IllegalArgumentException("'resourceLoaderPath' application attribute must be present for " +
+		if(resourceLoaderPath == null){
+			throw new IllegalArgumentException("'resourceLoaderPath' application attribute must be present for " +
                     "SpringResourceLoader");
-        }
+		}
 
-        resourceLoaderPaths = StringUtils.split(resourceLoaderPath);
+		resourceLoaderPaths = StringUtils.split(resourceLoaderPath);
 
-        for(int i = 0; i < resourceLoaderPaths.length; i++){
-            String path = resourceLoaderPaths[i];
-            if(path.endsWith("/") == false){
-                resourceLoaderPaths[i] = path + "/";
-            }
-        }
+		for(int i = 0; i < resourceLoaderPaths.length; i++){
+			String path = resourceLoaderPaths[i];
+			if(path.endsWith("/") == false){
+				resourceLoaderPaths[i] = path + "/";
+			}
+		}
 
-        logger.info("SpringResourceLoader for Velocity: using resource loader [{}] and resource loader paths {}",
+		logger.info("SpringResourceLoader for Velocity: using resource loader [{}] and resource loader paths {}",
                 resourceLoader, Arrays.asList(resourceLoaderPaths));
-    }
+	}
 
-    @Override
-    public Reader getResourceReader(String source, String encoding) throws ResourceNotFoundException{
-        logger.debug("Looking for Velocity resource with name [{}]", source);
+	@Override
+	public Reader getResourceReader(String source, String encoding) throws ResourceNotFoundException{
+		logger.debug("Looking for Velocity resource with name [{}]", source);
 
-        for(String resourceLoaderPath : resourceLoaderPaths){
-            org.springframework.core.io.Resource resource = resourceLoader.getResource(resourceLoaderPath + source);
+		for(String resourceLoaderPath : resourceLoaderPaths){
+			org.springframework.core.io.Resource resource = resourceLoader.getResource(resourceLoaderPath + source);
 
-            try{
-                return new InputStreamReader(resource.getInputStream());
-            }catch(IOException ex){
-                logger.debug("Could not find Velocity resource: {}", resource);
-            }
-        }
+			try{
+				return new InputStreamReader(resource.getInputStream());
+			}catch(IOException ex){
+				logger.debug("Could not find Velocity resource: {}", resource);
+			}
+		}
 
-        throw new ResourceNotFoundException("Could not find resource [" + source + "] in Spring resource loader path");
-    }
+		throw new ResourceNotFoundException("Could not find resource [" + source + "] in Spring resource loader path");
+	}
 
-    @Override
-    public boolean isSourceModified(Resource resource){
-        return false;
-    }
+	@Override
+	public boolean isSourceModified(Resource resource){
+		return false;
+	}
 
-    @Override
-    public long getLastModified(Resource resource){
-        return 0;
-    }
+	@Override
+	public long getLastModified(Resource resource){
+		return 0;
+	}
 
 }

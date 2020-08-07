@@ -29,7 +29,7 @@ package com.buession.web.servlet.filter;
 import com.buession.web.http.response.ServerInfoFilterInterface;
 import com.buession.web.utils.ServerUtils;
 
-import java.util.LinkedHashMap;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -37,31 +37,25 @@ import java.util.Map;
  */
 public class ServerInfoFilter extends ResponseHeadersFilter implements ServerInfoFilterInterface {
 
-    private static Map<String, String> headers = null;
+	private String headerName = SERVER_NAME_HEADER_NAME;
 
-    private String headerName = SERVER_NAME_HEADER_NAME;
+	@Override
+	public String getHeaderName(){
+		return headerName;
+	}
 
-    public String getHeaderName(){
-        return headerName;
-    }
+	@Override
+	public void setHeaderName(String headerName){
+		this.headerName = headerName;
+	}
 
-    public void setHeaderName(String headerName){
-        this.headerName = headerName;
-    }
+	@Override
+	public Map<String, String> getHeaders(){
+		return Collections.singletonMap(getHeaderName(), format(ServerUtils.getHostName()));
+	}
 
-    @Override
-    public Map<String, String> getHeaders(){
-        if(headers == null){
-            headers = new LinkedHashMap<>(1);
-
-            headers.put(getHeaderName(), format(ServerUtils.getHostName()));
-        }
-
-        return headers;
-    }
-
-    protected String format(final String computerName){
-        return computerName;
-    }
+	protected String format(final String computerName){
+		return computerName;
+	}
 
 }

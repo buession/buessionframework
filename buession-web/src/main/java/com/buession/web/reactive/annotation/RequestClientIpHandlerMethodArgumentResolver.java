@@ -51,7 +51,7 @@ public class RequestClientIpHandlerMethodArgumentResolver implements HandlerMeth
 			ServerWebExchange exchange){
 		ServerHttpRequest serverHttpRequest = exchange.getRequest();
 		if(serverHttpRequest == null){
-			return null;
+			return Mono.empty();
 		}
 
 		final String ip = RequestUtils.getClientIp(serverHttpRequest);

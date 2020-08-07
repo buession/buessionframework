@@ -30,6 +30,6 @@ package com.buession.oss;
 public abstract class AbstractAliCloudTest {
 
 	protected final static OSSClient ossClient = new AliCloudOSSClient("oss-cn-hangzhou.aliyuncs.com",
-			"LTAI2SUCqYxw0jc9", "dRGpARX865S6DZfOTyaczMxyZP5n9T");
+			"", "");
 
 }
