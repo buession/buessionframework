@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.utils;
@@ -32,37 +32,36 @@ import java.net.UnknownHostException;
  */
 public class ServerUtils {
 
-    private ServerUtils(){
+	private final static String[] ENVIRONMENTS = new String[]{"COMPUTERNAME", "HOSTNAME"};
 
-    }
+	private ServerUtils(){
 
-    public final static String getHostName(){
-        String computerName = System.getenv("COMPUTERNAME");
+	}
 
-        if(computerName != null){
-            return computerName;
-        }
+	public final static String getHostName(){
+		for(String env : ENVIRONMENTS){
+			String value = System.getenv(env);
 
-        computerName = System.getenv("HOSTNAME");
-        if(computerName != null){
-            return computerName;
-        }
+			if(value != null){
+				return value;
+			}
+		}
 
-        try{
-            return (InetAddress.getLocalHost()).getHostName();
-        }catch(UnknownHostException e){
-            String host = e.getMessage();
+		try{
+			return InetAddress.getLocalHost().getHostName();
+		}catch(UnknownHostException e){
+			String host = e.getMessage();
 
-            if(host != null){
-                int colon = host.indexOf(':');
+			if(host != null){
+				int colon = host.indexOf(':');
 
-                if(colon > 0){
-                    return host.substring(0, colon);
-                }
-            }
-        }
+				if(colon > 0){
+					return host.substring(0, colon);
+				}
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 
 }

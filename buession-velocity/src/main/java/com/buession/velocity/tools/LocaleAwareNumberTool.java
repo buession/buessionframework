@@ -37,7 +37,7 @@ import java.util.Locale;
  */
 public class LocaleAwareNumberTool extends NumberTool {
 
-	private static final long serialVersionUID = 57208157489365877L;
+	private final static long serialVersionUID = 57208157489365877L;
 
 	private final HttpServletRequest request;
 

@@ -86,7 +86,9 @@ public class JsonTool extends SafeConfig {
 		try{
 			return objectMapper.writeValueAsString(object);
 		}catch(JsonProcessingException e){
-			logger.warn("{} convert to string error.", Objects.toString(object, "<null>"), e);
+			if(logger.isErrorEnabled()){
+				logger.warn("{} convert to string error.", Objects.toString(object, "<null>"), e);
+			}
 		}
 
 		return null;

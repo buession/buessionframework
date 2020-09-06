@@ -95,14 +95,15 @@ public class VelocityViewResolver extends AbstractTemplateViewResolver {
 			return;
 		}
 
-		if(VelocityView.class == getViewClass()){
+		if(VelocityView.class.isAssignableFrom(getViewClass())){
 			logger.info("Using VelocityToolboxView instead of default VelocityView due to specified " +
-					"toolboxConfigLocation");
+					"toolboxConfigLocation.");
 			setViewClass(VelocityToolboxView.class);
 		}else if(VelocityToolboxView.class.isAssignableFrom(getViewClass()) == false){
-			throw new IllegalArgumentException("Given view class [" + getViewClass().getName() + "] is not of " +
-					"type [" + VelocityToolboxView.class.getName() + "], which it needs to be in case of a " +
-					"specified toolboxConfigLocation");
+			String message = String.format("Given view class [%s] is not of type [%s], which it needs to be in case of" +
+					" a specified toolboxConfigLocation.", getViewClass().getName(),
+					VelocityToolboxView.class.getName());
+			throw new IllegalArgumentException(message);
 		}
 	}
 

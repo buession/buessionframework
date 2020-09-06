@@ -38,7 +38,7 @@ import java.util.TimeZone;
  */
 public class LocaleAwareDateTool extends DateTool {
 
-	private static final long serialVersionUID = 1077494810801235996L;
+	private final static long serialVersionUID = 1077494810801235996L;
 
 	private final HttpServletRequest request;
 
