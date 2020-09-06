@@ -24,9 +24,55 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.exception;/**
- * 
- *
+package com.buession.core.exception;
+
+/**
  * @author Yong.Teng
- */public class PresentException {
+ * @since 1.2.0
+ */
+public class PresentException extends RuntimeException {
+
+	private static final long serialVersionUID = -1610503662713551445L;
+
+	public PresentException(){
+		super();
+	}
+
+	public PresentException(String message){
+		super(message);
+	}
+
+	public PresentException(String message, Throwable cause){
+		super(message, cause);
+	}
+
+	public PresentException(Throwable cause){
+		super(cause);
+	}
+
+	public PresentException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
+	public PresentException(String delegate, String original){
+		super(delegateExceptionMessage(delegate, original));
+	}
+
+	public PresentException(String delegate, String original, Throwable cause){
+		super(delegateExceptionMessage(delegate, original), cause);
+	}
+
+	public PresentException(String delegate, String original, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace){
+		super(delegateExceptionMessage(delegate, original), cause, enableSuppression, writableStackTrace);
+	}
+
+	protected static String delegateExceptionMessage(String delegate, String original){
+		StringBuilder sb = new StringBuilder(32);
+
+		sb.append(delegate).append(" must be present for ").append(original).append('.');
+
+		return sb.toString();
+	}
+
 }

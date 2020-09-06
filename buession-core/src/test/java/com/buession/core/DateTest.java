@@ -24,9 +24,24 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.core;/**
- * 
- *
+package com.buession.core;
+
+import org.junit.Test;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
+
+/**
  * @author Yong.Teng
- */public class DateTest {
+ */
+public class DateTest {
+
+	@Test
+	public void convert() throws ParseException{
+		String str = "2020-02-05 23:09:38.0";
+		Date date = DateFormat.getInstance().parse(str);
+		System.out.println(date);
+	}
+
 }

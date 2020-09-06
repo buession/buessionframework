@@ -24,9 +24,65 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.exception;/**
- * 
+package com.buession.core.exception;
+
+import java.lang.reflect.Method;
+
+/**
+ * 类方法废弃后，需要使用其它类库方法来替代
  *
  * @author Yong.Teng
- */public class InsteadException {
+ * @since 1.2.0
+ */
+public class InsteadException extends RuntimeException {
+
+	private final static long serialVersionUID = -537962037756547721L;
+
+	private Method method;
+
+	private String groupId;
+
+	private String artifactId;
+
+	private String version;
+
+	private String className;
+
+	private String methodName;
+
+	public InsteadException(Method method, String groupId, String artifactId, String version, String className,
+			String methodName){
+		super(method + " is deprecated, instead of " + className + "." + methodName + "() with dependency: " + groupId + ":" + artifactId + ":" + version + ".");
+		this.method = method;
+		this.groupId = groupId;
+		this.artifactId = artifactId;
+		this.version = version;
+		this.className = className;
+		this.methodName = methodName;
+	}
+
+	public Method getMethod(){
+		return method;
+	}
+
+	public String getGroupId(){
+		return groupId;
+	}
+
+	public String getArtifactId(){
+		return artifactId;
+	}
+
+	public String getVersion(){
+		return version;
+	}
+
+	public String getClassName(){
+		return className;
+	}
+
+	public String getMethodName(){
+		return methodName;
+	}
+
 }

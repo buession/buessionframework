@@ -24,13 +24,13 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.utils.beanutils.converters;
+package com.buession.core.exception;
 
 /**
  * 数据类型转换异常
  *
  * @author Yong.Teng
- * @since 1.3.0
+ * @since 1.2.0
  */
 public class ConversionException extends RuntimeException {
 
