@@ -24,7 +24,7 @@
  */
 package com.buession.redis.spring;
 
-import com.buession.core.reflect.FieldUtils;
+import com.buession.core.utils.FieldUtils;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.connection.datasource.jedis.ShardedJedisDataSource;
 import com.buession.redis.client.connection.jedis.JedisConnection;
