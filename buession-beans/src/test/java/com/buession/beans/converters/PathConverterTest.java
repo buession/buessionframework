@@ -31,21 +31,20 @@ import org.junit.Test;
 /**
  * @author Yong.Teng
  */
-public class FileConverterTest {
+public class PathConverterTest {
 
 	@Test
 	public void test1(){
-		FileConverter fileConverter = new FileConverter();
-		System.out.println(fileConverter.convert("true"));
-		System.out.println(fileConverter.convert("on"));
-		System.out.println(fileConverter.convert("/Volumes/data/htdocs/buession" + ".com/buession-security/buession" +
-				"-security-pac4j"));
-		System.out.println(fileConverter.convert(true));
-		System.out.println(fileConverter.convert(Boolean.FALSE));
-		System.out.println(fileConverter.convert(new Object()));
-		System.out.println(fileConverter.convert(true));
-		System.out.println(fileConverter.convert(1));
-		System.out.println(fileConverter.convert(null));
+		PathConverter pathConverter = new PathConverter();
+		System.out.println(pathConverter.convert("true"));
+		System.out.println(pathConverter.convert("on"));
+		System.out.println(pathConverter.convert("/Volumes/data/htdocs/buession" + ".com/buession-security/buession" + "-security-pac4j"));
+		System.out.println(pathConverter.convert(true));
+		System.out.println(pathConverter.convert(Boolean.FALSE));
+		System.out.println(pathConverter.convert(new Object()));
+		System.out.println(pathConverter.convert(true));
+		System.out.println(pathConverter.convert(1));
+		System.out.println(pathConverter.convert(null));
 	}
 
 }

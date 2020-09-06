@@ -24,9 +24,72 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans.context;/**
- * 
- *
+package com.buession.beans.context;
+
+import com.buession.core.utils.Assert;
+import org.apache.commons.beanutils.IntrospectionContext;
+
+import java.beans.PropertyDescriptor;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+/**
  * @author Yong.Teng
- */public class DefaultIntrospectionContext {
+ * @since 1.2.0
+ */
+public class DefaultIntrospectionContext implements IntrospectionContext {
+
+	private final Class<?> currentClass;
+
+	private final Map<String, PropertyDescriptor> descriptors = new HashMap<>();
+
+	public DefaultIntrospectionContext(final Class<?> clazz){
+		currentClass = clazz;
+	}
+
+	@Override
+	public Class<?> getTargetClass(){
+		return currentClass;
+	}
+
+	@Override
+	public void addPropertyDescriptor(final PropertyDescriptor descriptor){
+		Assert.isNull(descriptor, "Property descriptor cloud not be null.");
+		descriptors.put(descriptor.getName(), descriptor);
+	}
+
+	@Override
+	public void addPropertyDescriptors(final PropertyDescriptor[] descriptors){
+		Assert.isNull(descriptors, "Descriptors cloud not be null.");
+
+		for(PropertyDescriptor descriptor : descriptors){
+			addPropertyDescriptor(descriptor);
+		}
+	}
+
+	@Override
+	public boolean hasProperty(final String name){
+		return descriptors.containsKey(name);
+	}
+
+	@Override
+	public PropertyDescriptor getPropertyDescriptor(final String name){
+		return descriptors.get(name);
+	}
+
+	@Override
+	public void removePropertyDescriptor(final String name){
+		descriptors.remove(name);
+	}
+
+	@Override
+	public Set<String> propertyNames(){
+		return descriptors.keySet();
+	}
+
+	public PropertyDescriptor[] getPropertyDescriptors(){
+		return descriptors.values().toArray(new PropertyDescriptor[]{});
+	}
+
 }

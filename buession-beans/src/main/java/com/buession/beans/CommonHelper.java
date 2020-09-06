@@ -24,9 +24,37 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans;/**
- * 
- *
+package com.buession.beans;
+
+import com.buession.core.utils.Assert;
+import org.apache.commons.beanutils.NestedNullException;
+
+/**
  * @author Yong.Teng
- */public class CommonHelper {
+ * @since 1.2.0
+ */
+class CommonHelper {
+
+	public final static void checkBeanNull(final Object bean){
+		Assert.isNull(bean, "No bean specified.");
+	}
+
+	public final static void checkBeanNameNull(final Object bean, final String name){
+		Assert.isNull(name, "No name specified for bean class '" + bean.getClass() + "'.");
+	}
+
+	public final static IllegalArgumentException invalidMappedProperty(final Object bean, final String name,
+			final String message){
+		return new IllegalArgumentException("Invalid mapped property '" + name + "' on bean class '" + bean.getClass() + "'" + (message == null ? "" : " " + message) + ".");
+	}
+
+	public final static NoSuchMethodException unknownProperty(final Object bean, final String name){
+		return new NoSuchMethodException("Unknown property '" + name + "'+ on bean class '" + bean.getClass() + "'.");
+	}
+
+	public final static NestedNullException nullPropertyValue(final Object bean, final String name){
+		return new NestedNullException("Null property value for '" + name + "' on bean class '" + bean.getClass() +
+				"'" + ".");
+	}
+
 }

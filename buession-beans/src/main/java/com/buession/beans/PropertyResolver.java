@@ -26,51 +26,32 @@
  */
 package com.buession.beans;
 
-import com.buession.beans.context.DefaultIntrospectionContext;
-import com.buession.core.utils.Assert;
-import com.buession.core.validator.Validate;
 import org.apache.commons.beanutils.BeanIntrospector;
-import org.apache.commons.beanutils.DefaultBeanIntrospector;
-import org.apache.commons.beanutils.MappedPropertyDescriptor;
-import org.apache.commons.beanutils.MethodUtils;
-import org.apache.commons.beanutils.NestedNullException;
-import org.apache.commons.beanutils.SuppressPropertiesBeanIntrospector;
-import org.apache.commons.beanutils.expression.DefaultResolver;
 import org.apache.commons.beanutils.expression.Resolver;
-import org.apache.commons.collections.FastHashMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.beans.IndexedPropertyDescriptor;
-import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * 属性工具类
+ * 属性解析器
  *
  * @author Yong.Teng
  * @since 1.2.0
  */
-public class PropertyUtils {
+public interface PropertyResolver {
 
-	private final static Map<Class<?>, BeanData> DESCRIPTORS_CACHE = new HashMap<>(64);
+	void addBeanIntrospector(final BeanIntrospector introspector);
 
-	private final static List<BeanIntrospector> INTROSPECTORS = new CopyOnWriteArrayList<>();
+	boolean removeBeanIntrospector(final BeanIntrospector introspector);
 
-	private final static Resolver RESOLVER = new DefaultResolver();
+	PropertyDescriptor[] getPropertyDescriptors(final Object bean);
 
-	private final static Logger logger = LoggerFactory.getLogger(PropertyUtils.class);
+	PropertyDescriptor getPropertyDescriptor(final Object bean, final String name);
 
-	static{
-		INTROSPECTORS.add(DefaultBeanIntrospector.INSTANCE);
-		INTROSPECTORS.add(SuppressPropertiesBeanIntrospector.SUPPRESS_CLASS);
-	}
+	Object getProperty(final Object bean, final String name) throws IllegalAccessException, InvocationTargetException,
+			NoSuchMethodException;
+
+	void setProperty(final Object bean, final String name, final Object value) throws IllegalAccessException,
+			InvocationTargetException, NoSuchMethodException;
 
 }

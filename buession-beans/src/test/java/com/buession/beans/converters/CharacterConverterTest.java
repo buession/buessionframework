@@ -24,9 +24,23 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans.converters;/**
- * 
- *
+package com.buession.beans.converters;
+
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
- */public class CharacterConverterTest {
+ */
+public class CharacterConverterTest {
+
+	@Test
+	public void test1(){
+		CharacterConverter characterConverter = new CharacterConverter();
+		System.out.println(characterConverter.convert("true"));
+		System.out.println(characterConverter.convert("on"));
+		System.out.println(characterConverter.convert('a'));
+		System.out.println(characterConverter.convert(new Object()));
+		System.out.println(characterConverter.convert(null));
+	}
+
 }

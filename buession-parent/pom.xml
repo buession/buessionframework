@@ -44,6 +44,7 @@
 
 	<modules>
 		<module>../buession-aop</module>
+		<module>../buession-beans</module>
 		<module>../buession-core</module>
 		<module>../buession-cron</module>
 		<module>../buession-dao</module>

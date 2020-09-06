@@ -28,50 +28,55 @@ package com.buession.beans.converters;
 
 import com.buession.core.exception.ConversionException;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 /**
- * {@link com.buession.beans.converters.Converter} 的 Byte 对象的实现，处理 <b>{@link java.lang.Integer}</b> 对象之间的转换的实现。
+ * {@link com.buession.beans.converters.Converter} 的 BigDecimal 对象的实现，处理 <b>{@link java.math.BigDecimal}</b>
+ * 对象之间的转换的实现。
  *
  * @author Yong.Teng
  * @since 1.2.0
  */
-public final class IntegerConverter extends AbstractNumberConverter<Integer> {
+public final class BigDecimalConverter extends AbstractNumberConverter<BigDecimal> {
 
-	public IntegerConverter(){
-		super(false);
+	public BigDecimalConverter(){
+		super(true);
 	}
 
-	public IntegerConverter(final Integer defaultValue){
-		super(false, defaultValue);
-	}
-
-	@Override
-	public Class<Integer> getType(){
-		return Integer.class;
+	public BigDecimalConverter(final BigDecimal defaultValue){
+		super(true, defaultValue);
 	}
 
 	@Override
-	protected Integer toNumber(final Class<?> sourceType, final Class<Integer> targetType, final Number value) throws ConversionException{
-		Integer result = super.toNumber(sourceType, targetType, value);
+	public Class<BigDecimal> getType(){
+		return BigDecimal.class;
+	}
+
+	@Override
+	protected BigDecimal toNumber(final Class<?> sourceType, final Class<BigDecimal> targetType, final Number value) throws ConversionException{
+		BigDecimal result = super.toNumber(sourceType, targetType, value);
 
 		if(result == null){
-			if(targetType.equals(Integer.class)){
-				final long longValue = value.longValue();
-
-				if(longValue > Integer.MAX_VALUE){
-					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(targetType));
+			if(targetType.equals(BigDecimal.class)){
+				if(value instanceof Float || value instanceof Double){
+					return targetType.cast(new BigDecimal(value.toString()));
+				}else if(value instanceof BigInteger){
+					return targetType.cast(new BigDecimal((BigInteger) value));
+				}else if(value instanceof BigDecimal){
+					return targetType.cast(new BigDecimal(value.toString()));
+				}else{
+					return targetType.cast(BigDecimal.valueOf(value.longValue()));
 				}
-
-				if(longValue < Integer.MIN_VALUE){
-					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too small " + toString(targetType));
-				}
-
-				return targetType.cast(new Integer(value.intValue()));
 			}
 		}
 
-		final String message = toString(getClass()) + " cannot handle conversion to '" + toString(targetType) + "'";
-		logger.warn("    " + message);
-		throw new ConversionException(message);
+		throw cannotHandleConversion(sourceType, targetType);
+	}
+
+	@Override
+	protected BigDecimal toNumber(final Class<?> sourceType, final Class<BigDecimal> targetType, final String value) throws ConversionException{
+		return new BigDecimal(value);
 	}
 
 }

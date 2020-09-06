@@ -24,9 +24,64 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans;/**
- * 
+package com.buession.beans;
+
+import org.apache.commons.beanutils.MethodUtils;
+
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+import java.util.Objects;
+
+/**
+ * {@link java.beans.PropertyDescriptor} 工具类
  *
  * @author Yong.Teng
- */public class PropertyDescriptorUtils {
+ * @since 1.2.0
+ */
+public class PropertyDescriptorUtils {
+
+	public static Method getReadMethod(final PropertyDescriptor descriptor){
+		return MethodUtils.getAccessibleMethod(descriptor.getReadMethod());
+	}
+
+	public static Method getReadMethod(final Class<?> clazz, final PropertyDescriptor descriptor){
+		return MethodUtils.getAccessibleMethod(clazz, descriptor.getReadMethod());
+	}
+
+	public static Method getWriteMethod(final PropertyDescriptor descriptor){
+		return MethodUtils.getAccessibleMethod(descriptor.getWriteMethod());
+	}
+
+	public static Method getWriteMethod(final Class<?> clazz, final PropertyDescriptor descriptor){
+		return MethodUtils.getAccessibleMethod(clazz, descriptor.getWriteMethod());
+	}
+
+	public static boolean equals(final PropertyDescriptor pd, final PropertyDescriptor otherPd){
+		if(Objects.equals(pd.getPropertyType(), otherPd.getPropertyType()) == false){
+			return false;
+		}
+
+		if(Objects.equals(pd.getPropertyEditorClass(), otherPd.getPropertyEditorClass()) == false){
+			return false;
+		}
+
+		if(Objects.equals(pd.getReadMethod(), otherPd.getReadMethod()) == false){
+			return false;
+		}
+
+		if(Objects.equals(pd.getWriteMethod(), otherPd.getWriteMethod()) == false){
+			return false;
+		}
+
+		if(pd.isConstrained() != otherPd.isConstrained()){
+			return false;
+		}
+
+		if(pd.isBound() != otherPd.isBound()){
+			return false;
+		}
+
+		return true;
+	}
+
 }

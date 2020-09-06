@@ -24,9 +24,112 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans;/**
- * 
- *
+package com.buession.beans;
+
+import com.buession.beans.annotations.DateFormat;
+
+import java.util.Date;
+import java.util.Map;
+
+/**
  * @author Yong.Teng
- */public class User {
+ */
+public class User {
+
+	private int id;
+
+	private String username;
+
+	private Integer age;
+
+	private int weight;
+
+	private Integer height;
+
+	private boolean enable;
+
+	private boolean disable;
+
+	@DateFormat(pattern = "HH:mm:ss, yyyy-MM-dd")
+	private Date lastLoginTime;
+
+	private Map<String, Object> map;
+
+	public int getId(){
+		return id;
+	}
+
+	public void setId(int id){
+		this.id = id;
+	}
+
+	public String getUsername(){
+		return username;
+	}
+
+	public void setUsername(String username){
+		this.username = username;
+	}
+
+	public Integer getAge(){
+		return age;
+	}
+
+	public void setAge(Integer age){
+		this.age = age;
+	}
+
+	public int getWeight(){
+		return weight;
+	}
+
+	public void setWeight(Integer weight){
+		this.weight = weight;
+	}
+
+	public int getHeight(){
+		return height;
+	}
+
+	public void setHeight(int height){
+		this.height = height;
+	}
+
+	public boolean isEnable(){
+		return enable;
+	}
+
+	public void setEnable(boolean enable){
+		this.enable = enable;
+	}
+
+	public boolean getDisable(){
+		return disable;
+	}
+
+	public void setDisable(boolean disable){
+		this.disable = disable;
+	}
+
+	public Date getLastLoginTime(){
+		return lastLoginTime;
+	}
+
+	public void setLastLoginTime(Date lastLoginTime){
+		this.lastLoginTime = lastLoginTime;
+	}
+
+	public Map<String, Object> getMap(){
+		return map;
+	}
+
+	public void setMap(Map<String, Object> map){
+		this.map = map;
+	}
+
+	@Override
+	public String toString(){
+		return "User{" + "id=" + id + ", username='" + username + '\'' + ", age=" + age + ", weight=" + weight + ", " + "height=" + height + ", enable=" + enable + ", disable=" + disable + ", lastLoginTime=" + lastLoginTime + ", map=" + map + '}';
+	}
+
 }

@@ -31,19 +31,19 @@ import org.junit.Test;
 /**
  * @author Yong.Teng
  */
-public class URLConverterTest {
+public class URIConverterTest {
 
 	@Test
 	public void test1(){
-		URLConverter urlConverter = new URLConverter();
-		System.out.println(urlConverter.convert("https://www.baidu.com/s"));
-		System.out.println(urlConverter.convert("file:///Volumes"));
-		System.out.println(urlConverter.convert("true"));
-		System.out.println(urlConverter.convert("on"));
-		System.out.println(urlConverter.convert(true));
-		System.out.println(urlConverter.convert(Boolean.FALSE));
-		System.out.println(urlConverter.convert(new Object()));
-		System.out.println(urlConverter.convert(null));
+		URIConverter uriConverter = new URIConverter();
+		System.out.println(uriConverter.convert("https://www.baidu.com/s"));
+		System.out.println(uriConverter.convert("file:///Volumes"));
+		System.out.println(uriConverter.convert("true"));
+		System.out.println(uriConverter.convert("on"));
+		System.out.println(uriConverter.convert(true));
+		System.out.println(uriConverter.convert(Boolean.FALSE));
+		System.out.println(uriConverter.convert(new Object()));
+		System.out.println(uriConverter.convert(null));
 	}
 
 }

@@ -24,9 +24,30 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans.converters;/**
- * 
+package com.buession.beans.converters;
+
+import com.buession.core.exception.ConversionException;
+
+/**
+ * 通用数据类型转换器，可以在 BeanUtils 包中注册和使用，以管理对象从一种类型到另一种类型的转换。
  *
  * @author Yong.Teng
- */public interface Converter {
+ * @since 1.2.0
+ */
+@FunctionalInterface
+public interface Converter<T> {
+
+	/**
+	 * 将输入对象转换为指定类型的输出对象
+	 *
+	 * @param value
+	 * 		待转换的值
+	 *
+	 * @return 转换结果
+	 *
+	 * @throws ConversionException
+	 * 		当发生转换错误
+	 */
+	T convert(final Object value) throws ConversionException;
+
 }

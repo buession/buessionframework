@@ -26,50 +26,78 @@
  */
 package com.buession.beans;
 
-import com.buession.core.utils.Assert;
-import org.apache.commons.beanutils.DynaBean;
-import org.apache.commons.beanutils.DynaProperty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Bean 解析器
+ *
  * @author Yong.Teng
+ * @since 1.2.0
  */
-public class BeanUtils {
+public interface BeanResolver {
 
-	public final static Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+	Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
-	private final static Logger logger = LoggerFactory.getLogger(BeanUtils.class);
+	/**
+	 * 获取 Bean 描述
+	 *
+	 * @param bean
+	 * 		Bean 实例
+	 *
+	 * @return Bean 描述
+	 *
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 */
+	Map<String, Object> describe(final Object bean) throws IllegalAccessException, InvocationTargetException,
+			NoSuchMethodException;
 
-	/*public static Map<String, String> describe(final Object bean) throws IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException{
-		Assert.isNull(bean, "Describe bean cloud not be null.");
+	/**
+	 * 设置 Bean 属性值
+	 *
+	 * @param bean
+	 * 		Bean 实例
+	 * @param name
+	 * 		属性名称
+	 * @param value
+	 * 		属性值
+	 *
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	void setProperty(final Object bean, String name, final Object value) throws IllegalAccessException,
+			InvocationTargetException;
 
-		logger.debug("Describing bean: {}.", bean.getClass().getName());
+	/**
+	 * 获取 Bean 属性值
+	 *
+	 * @param bean
+	 * 		Bean 实例
+	 * @param name
+	 * 		属性名称
+	 *
+	 * @return Bean 属性值
+	 *
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 * @throws NoSuchMethodException
+	 */
+	Object getProperty(final Object bean, final String name) throws IllegalAccessException, InvocationTargetException,
+			NoSuchMethodException;
 
-		final PropertyDescriptor[] descriptors = PropertyUtils.getPropertyDescriptors(bean);
-		final Class<?> clazz = bean.getClass();
-		final Map<String, String> description = new HashMap<>(descriptors.length);
-
-		for(PropertyDescriptor descriptor : descriptors){
-			final String name = descriptor.getName();
-			if(PropertyDescriptorUtils.getReadMethod(clazz, descriptor) != null){
-				description.put(name, getProperty(bean, name));
-			}
-		}
-
-		return description;
-	}
-
-	public static String getProperty(final Object bean, final String name) throws IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException{
-		final Object value = PropertyUtils.getNestedProperty(bean, name);
-
-	}*/
+	/**
+	 * 将 source 的属性或当 source 为 {@link java.util.Map} 时的 key，映射到 Bean bean 中的属性
+	 *
+	 * @param bean
+	 * 		Bean 实例
+	 * @param source
+	 * 		源对象
+	 *
+	 * @throws IllegalAccessException
+	 * @throws InvocationTargetException
+	 */
+	void populate(final Object bean, final Object source) throws IllegalAccessException, InvocationTargetException;
 
 }

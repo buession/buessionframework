@@ -24,9 +24,54 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans.converters;/**
- * 
+package com.buession.beans.converters;
+
+import java.util.Calendar;
+import java.util.Date;
+
+/**
+ * {@link com.buession.beans.converters.Converter} 的日历对象的实现，处理 <b>{@link java.util.Calendar}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
- */public class CalendarConverter {
+ * @since 1.2.0
+ */
+public final class CalendarConverter extends AbstractDateTimeConverter<Calendar> {
+
+	public CalendarConverter(){
+		super();
+	}
+
+	public CalendarConverter(final Calendar defaultValue){
+		super(defaultValue);
+	}
+
+	@Override
+	public Class<Calendar> getType(){
+		return Calendar.class;
+	}
+
+	@Override
+	protected Calendar toDate(final Class<?> sourceType, Class<Calendar> targetType, long value){
+		if(targetType.equals(Calendar.class)){
+			Calendar calendar;
+
+			if(getLocale() == null && getTimeZone() == null){
+				calendar = Calendar.getInstance();
+			}else if(getLocale() == null){
+				calendar = Calendar.getInstance(getTimeZone());
+			}else if(getTimeZone() == null){
+				calendar = Calendar.getInstance(getLocale());
+			}else{
+				calendar = Calendar.getInstance(getTimeZone(), getLocale());
+			}
+
+			calendar.setTime(new Date(value));
+			calendar.setLenient(false);
+
+			return targetType.cast(calendar);
+		}
+
+		throw cannotHandleConversion(sourceType, targetType);
+	}
+
 }

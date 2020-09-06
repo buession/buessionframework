@@ -26,27 +26,75 @@
  */
 package com.buession.beans.converters;
 
-import java.util.Calendar;
+import com.buession.aop.resolver.SpringAnnotationResolver;
+import com.buession.core.exception.ConversionException;
+import com.buession.core.utils.ArrayUtils;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
- * {@link com.buession.beans.converters.Converter} 的日历对象的实现，处理 <b>{@link java.util.Calendar}</b> 对象之间的转换的实现。
+ * {@link com.buession.beans.converters.Converter} 的日历对象的实现，处理 <b>{@link java.util.Date}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
  * @since 1.2.0
  */
-public final class CalendarConverter extends AbstractDateTimeConverter<Calendar> {
+public final class DateConverter extends AbstractDateTimeConverter<Date> {
 
-	public CalendarConverter(){
+	private final static String[] FORMATS = new String[]{"yyyy-MM-dd'T'HH:mm:ss.SSSX", "yyyy-MM-dd'T'HH:mm:ss.SSS",
+			"EEE, dd MMM yyyy HH:mm:ss zzz", "yyyy-MM-dd", "yyyy/MM/dd", "yyyy-MM-dd HH:mm:ss", "yyyy/MM/dd HH:mm:ss"};
+
+	private SpringAnnotationResolver annotationResolver = new SpringAnnotationResolver();
+
+	public DateConverter(){
 		super();
 	}
 
-	public CalendarConverter(final Calendar defaultValue){
+	public DateConverter(final Date defaultValue){
 		super(defaultValue);
 	}
 
 	@Override
-	public Class<Calendar> getType(){
-		return Calendar.class;
+	public Class<Date> getType(){
+		return Date.class;
+	}
+
+	@Override
+	protected Date toDate(final Class<?> sourceType, Class<Date> targetType, long value){
+		if(targetType.equals(Date.class)){
+			return targetType.cast(new Date(value));
+		}
+
+		throw cannotHandleConversion(sourceType, targetType);
+	}
+
+	@Override
+	protected Date toDate(final Class<?> sourceType, final Class<Date> targetType, final String value){
+		if(targetType.equals(Date.class)){
+			Date result;
+
+			for(String format : FORMATS){
+				result = toDate(format, value);
+				if(result != null){
+					return result;
+				}
+			}
+
+			throw new ConversionException("String must be in format ['" + ArrayUtils.toString(FORMATS, "', '") + "'] " + "to create a java.util.Date.");
+		}
+
+		throw cannotHandleConversion(sourceType, targetType);
+	}
+
+	private Date toDate(final String format, final String value){
+		final SimpleDateFormat sdf = new SimpleDateFormat(format);
+
+		try{
+			return sdf.parse(value);
+		}catch(ParseException e){
+			return null;
+		}
 	}
 
 }

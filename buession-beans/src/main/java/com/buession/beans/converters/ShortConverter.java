@@ -29,43 +29,52 @@ package com.buession.beans.converters;
 import com.buession.core.exception.ConversionException;
 
 /**
- * {@link com.buession.beans.converters.Converter} 的 Byte 对象的实现，处理 <b>{@link java.lang.Float}</b> 对象之间的转换的实现。
+ * {@link com.buession.beans.converters.Converter} 的 Short 对象的实现，处理 <b>{@link java.lang.Short}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
  * @since 1.2.0
  */
-public final class FloatConverter extends AbstractNumberConverter<Float> {
+public final class ShortConverter extends AbstractNumberConverter<Short> {
 
-	public FloatConverter(){
+	public ShortConverter(){
 		super(false);
 	}
 
-	public FloatConverter(final Float defaultValue){
+	public ShortConverter(final Short defaultValue){
 		super(false, defaultValue);
 	}
 
 	@Override
-	public Class<Float> getType(){
-		return Float.class;
+	public Class<Short> getType(){
+		return Short.class;
 	}
 
 	@Override
-	protected Float toNumber(final Class<?> sourceType, final Class<Float> targetType, final Number value) throws ConversionException{
-		Float result = super.toNumber(sourceType, targetType, value);
+	protected Short toNumber(final Class<?> sourceType, final Class<Short> targetType, final Number value) throws ConversionException{
+		Short result = super.toNumber(sourceType, targetType, value);
 
 		if(result == null){
-			if(targetType.equals(Float.class)){
-				if(value.doubleValue() > Float.MAX_VALUE){
-					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(targetType));
+			if(targetType.equals(Short.class)){
+				final long longValue = value.longValue();
+
+				if(longValue > Short.MAX_VALUE){
+					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(targetType) + ".");
 				}
 
-				return targetType.cast(new Float(value.floatValue()));
+				if(longValue < Short.MIN_VALUE){
+					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too small " + toString(targetType) + ".");
+				}
+
+				return targetType.cast(new Short(value.shortValue()));
 			}
 		}
 
-		final String message = toString(getClass()) + " cannot handle conversion to '" + toString(targetType) + "'";
-		logger.warn("    " + message);
-		throw new ConversionException(message);
+		throw cannotHandleConversion(sourceType, targetType);
+	}
+
+	@Override
+	protected Short toNumber(final Class<?> sourceType, final Class<Short> targetType, final String value) throws ConversionException{
+		return new Short(value);
 	}
 
 }

@@ -24,9 +24,28 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans.converters;/**
- * 
- *
+package com.buession.beans.converters;
+
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
- */public class FileConverterTest {
+ */
+public class FileConverterTest {
+
+	@Test
+	public void test1(){
+		FileConverter fileConverter = new FileConverter();
+		System.out.println(fileConverter.convert("true"));
+		System.out.println(fileConverter.convert("on"));
+		System.out.println(fileConverter.convert("/Volumes/data/htdocs/buession" + ".com/buession-security/buession" +
+				"-security-pac4j"));
+		System.out.println(fileConverter.convert(true));
+		System.out.println(fileConverter.convert(Boolean.FALSE));
+		System.out.println(fileConverter.convert(new Object()));
+		System.out.println(fileConverter.convert(true));
+		System.out.println(fileConverter.convert(1));
+		System.out.println(fileConverter.convert(null));
+	}
+
 }

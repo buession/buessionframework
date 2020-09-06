@@ -24,9 +24,59 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans;/**
- * 
- *
+package com.buession.beans;
+
+import org.junit.Test;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
  * @author Yong.Teng
- */public class BeanResolverTest {
+ */
+public class BeanResolverTest {
+
+	@Test
+	public void describe() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException{
+		User user = new User();
+
+		user.setHeight(1);
+
+		BeanResolver beanResolver = new DefaultBeanResolver();
+		Map<String, Object> result = beanResolver.describe(user);
+
+		if(result != null){
+			result.forEach((key, value)->{
+				System.out.println(key + ": " + value);
+			});
+		}
+	}
+
+	@Test
+	public void populate() throws InvocationTargetException, IllegalAccessException{
+		User user = new User();
+
+		Map<String, Object> data = new HashMap<>(16);
+		data.put("a", "A");
+
+		Map<String, Object> map = new HashMap<>();
+
+		//map.put("id", 1);
+		//map.put("username", 1);
+		//map.put("age", 11.1F);
+		//map.put("enable", Boolean.FALSE);
+		//map.put("disable", true);
+		//map.put("last_login_time", new Date());
+		//map.put("last_login_time", "Fri Aug 28 13:47:53 CST 2020");
+		//map.put("lastLoginTime", "00:23:45, 2020-11-12");
+		//map.put("map", data);
+
+
+		BeanResolver beanResolver = new DefaultBeanResolver();
+		beanResolver.populate(user, map);
+		System.out.println(user);
+	}
+
 }

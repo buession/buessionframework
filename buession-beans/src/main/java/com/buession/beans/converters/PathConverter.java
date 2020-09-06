@@ -27,32 +27,33 @@
 package com.buession.beans.converters;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
- * {@link com.buession.beans.converters.Converter} 的文件对象的实现，处理 <b>{@link java.io.File}</b> 对象之间的转换的实现。
+ * {@link com.buession.beans.converters.Converter} 的文件对象的实现，处理 <b>{@link java.nio.file.Path}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
  * @since 1.2.0
  */
-public final class FileConverter extends AbstractConverter<File> {
+public final class PathConverter extends AbstractConverter<Path> {
 
-	public FileConverter(){
+	public PathConverter(){
 		super();
 	}
 
-	public FileConverter(final File defaultValue){
+	public PathConverter(final Path defaultValue){
 		super(defaultValue);
 	}
 
 	@Override
-	public Class<File> getType(){
-		return File.class;
+	public Class<Path> getType(){
+		return Path.class;
 	}
 
 	@Override
-	protected File convertToType(Class<File> type, Object value) throws Throwable{
-		if(File.class.equals(type)){
-			return type.cast(new File(value.toString()));
+	protected Path convertToType(Class<Path> type, Object value) throws Throwable{
+		if(Path.class.equals(type)){
+			return type.cast(new File(value.toString()).toPath());
 		}
 
 		throw conversionException(type, value);

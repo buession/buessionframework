@@ -24,9 +24,51 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans.converters;/**
- * 
+package com.buession.beans.converters;
+
+/**
+ * {@link com.buession.beans.converters.Converter} 的类对象的实现，处理 <b>{@link java.lang.Class}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
- */public class ClassConverter {
+ * @since 1.2.0
+ */
+public final class ClassConverter extends AbstractConverter<Class> {
+
+	public ClassConverter(){
+		super();
+	}
+
+	public ClassConverter(final Class defaultValue){
+		super(defaultValue);
+	}
+
+	@Override
+	public Class<Class> getType(){
+		return Class.class;
+	}
+
+	@Override
+	protected String convertToString(final Object value) throws Throwable{
+		return (value instanceof Class) ? ((Class<?>) value).getName() : value.toString();
+	}
+
+	@Override
+	protected Class<?> convertToType(Class<Class> type, Object value) throws Throwable{
+		if(Class.class.equals(type)){
+			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+			if(classLoader != null){
+				try{
+					return type.cast(classLoader.loadClass(value.toString()));
+				}catch(ClassNotFoundException e){
+				}
+			}
+
+			classLoader = ClassConverter.class.getClassLoader();
+			return type.cast(classLoader.loadClass(value.toString()));
+		}
+
+		throw conversionException(type, value);
+	}
+
 }

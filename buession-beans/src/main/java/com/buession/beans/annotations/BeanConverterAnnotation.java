@@ -24,9 +24,21 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans.annotations;/**
- * 
+package com.buession.beans.annotations;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * 元注释，用作于其它注释，用于标记 buession-beans 包中的格式转换注释
  *
  * @author Yong.Teng
- */public @interface BeanConverterAnnotation {
+ * @since 1.2.0
+ */
+@Target({ElementType.ANNOTATION_TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface BeanConverterAnnotation {
+
 }

@@ -24,9 +24,38 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans.converters;/**
- * 
+package com.buession.beans.converters;
+
+import java.net.URL;
+
+/**
+ * {@link com.buession.beans.converters.Converter} 的 URL 对象的实现，处理 <b>{@link java.net.URL}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
- */public class URLConverter {
+ * @since 1.2.0
+ */
+public class URLConverter extends AbstractConverter<URL> {
+
+	public URLConverter(){
+		super();
+	}
+
+	public URLConverter(URL defaultValue){
+		super(defaultValue);
+	}
+
+	@Override
+	public Class<URL> getType(){
+		return URL.class;
+	}
+
+	@Override
+	protected URL convertToType(final Class<URL> type, final Object value) throws Throwable{
+		if(URL.class.equals(type)){
+			return type.cast(new URL(value.toString()));
+		}
+
+		throw conversionException(type, value);
+	}
+
 }

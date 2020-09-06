@@ -29,39 +29,52 @@ package com.buession.beans.converters;
 import com.buession.core.exception.ConversionException;
 
 /**
- * {@link com.buession.beans.converters.Converter} 的 Byte 对象的实现，处理 <b>{@link java.lang.Double}</b> 对象之间的转换的实现。
+ * {@link com.buession.beans.converters.Converter} 的 Integer 对象的实现，处理 <b>{@link java.lang.Integer}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
  * @since 1.2.0
  */
-public final class DoubleConverter extends AbstractNumberConverter<Double> {
+public final class IntegerConverter extends AbstractNumberConverter<Integer> {
 
-	public DoubleConverter(){
+	public IntegerConverter(){
 		super(false);
 	}
 
-	public DoubleConverter(final Double defaultValue){
+	public IntegerConverter(final Integer defaultValue){
 		super(false, defaultValue);
 	}
 
 	@Override
-	public Class<Double> getType(){
-		return Double.class;
+	public Class<Integer> getType(){
+		return Integer.class;
 	}
 
 	@Override
-	protected Double toNumber(final Class<?> sourceType, final Class<Double> targetType, final Number value) throws ConversionException{
-		Double result = super.toNumber(sourceType, targetType, value);
+	protected Integer toNumber(final Class<?> sourceType, final Class<Integer> targetType, final Number value) throws ConversionException{
+		Integer result = super.toNumber(sourceType, targetType, value);
 
 		if(result == null){
-			if(targetType.equals(Double.class)){
-				return targetType.cast(new Double(value.doubleValue()));
+			if(targetType.equals(Integer.class)){
+				final long longValue = value.longValue();
+
+				if(longValue < Integer.MIN_VALUE){
+					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too small " + toString(targetType) + ".");
+				}
+
+				if(longValue > Integer.MAX_VALUE){
+					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(targetType) + ".");
+				}
+
+				return targetType.cast(new Integer(value.intValue()));
 			}
 		}
 
-		final String message = toString(getClass()) + " cannot handle conversion to '" + toString(targetType) + "'";
-		logger.warn("    " + message);
-		throw new ConversionException(message);
+		throw cannotHandleConversion(sourceType, targetType);
+	}
+
+	@Override
+	protected Integer toNumber(final Class<?> sourceType, final Class<Integer> targetType, final String value) throws ConversionException{
+		return new Integer(value);
 	}
 
 }

@@ -24,9 +24,25 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans.converters;/**
- * 
- *
+package com.buession.beans.converters;
+
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
- */public class StringConverterTest {
+ */
+public class StringConverterTest {
+
+	@Test
+	public void test1(){
+		StringConverter stringConverter = new StringConverter();
+		System.out.println(stringConverter.convert("true"));
+		System.out.println(stringConverter.convert(new StringBuilder("StringBuilder class")));
+		System.out.println(stringConverter.convert(true));
+		System.out.println(stringConverter.convert(Boolean.FALSE));
+		//System.out.println(stringConverter.convert(new User()));
+		System.out.println(stringConverter.convert(new Object()));
+		System.out.println(stringConverter.convert(null));
+	}
+
 }

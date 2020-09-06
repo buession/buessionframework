@@ -26,40 +26,68 @@
  */
 package com.buession.beans.converters;
 
-import java.sql.Time;
+import com.buession.core.exception.ConversionException;
+
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * {@link com.buession.beans.converters.Converter} 的 java.sql.Time 对象的实现，处理 <b>{@link java.sql.Time}</b> 对象之间的转换的实现。
+ * {@link com.buession.beans.converters.Converter} 的 java.sql.Timestamp 对象的实现，处理 <b>{@link java.sql.Timestamp}</b>
+ * 对象之间的转换的实现。
  *
  * @author Yong.Teng
  * @since 1.2.0
  */
-public final class SqlTimeConverter extends AbstractDateTimeConverter<Time> {
+public final class SqlTimestampConverter extends AbstractDateTimeConverter<Timestamp> {
 
-	public SqlTimeConverter(){
+	public SqlTimestampConverter(){
 		super();
 	}
 
-	public SqlTimeConverter(final Time defaultValue){
+	public SqlTimestampConverter(final Timestamp defaultValue){
 		super(defaultValue);
 	}
 
 	@Override
-	public Class<Time> getType(){
-		return Time.class;
+	public Class<Timestamp> getType(){
+		return Timestamp.class;
 	}
 
 	@Override
 	protected DateFormat getFormat(final Locale locale, final TimeZone timeZone){
-		DateFormat format = locale == null ? DateFormat.getTimeInstance(DateFormat.SHORT) :
-				DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+		DateFormat format = locale == null ? DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT) :
+				DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, locale);
+
 		if(timeZone != null){
 			format.setTimeZone(timeZone);
 		}
+
 		return format;
+	}
+
+	@Override
+	protected Timestamp toDate(final Class<?> sourceType, Class<Timestamp> targetType, long value){
+		if(targetType.equals(Timestamp.class)){
+			return targetType.cast(new Timestamp(value));
+		}
+
+		throw cannotHandleConversion(sourceType, targetType);
+	}
+
+	@Override
+	protected Timestamp toDate(final Class<?> sourceType, final Class<Timestamp> targetType, final String value){
+		if(targetType.equals(Timestamp.class)){
+			try{
+				return targetType.cast(Timestamp.valueOf(value));
+			}catch(final IllegalArgumentException e){
+				throw new ConversionException("String must be in JDBC format [yyyy-MM-dd HH:mm:ss.fffffffff] to " +
+						"create" + " a java.sql.Timestamp.");
+			}
+		}
+
+		throw cannotHandleConversion(sourceType, targetType);
 	}
 
 }

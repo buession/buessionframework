@@ -24,9 +24,24 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans.converters;/**
- * 
- *
+package com.buession.beans.converters;
+
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
- */public class ClassConverterTest {
+ */
+public class ClassConverterTest {
+
+	@Test
+	public void test1(){
+		ClassConverter classConverter = new ClassConverter();
+		System.out.println(classConverter.convert("true".getClass()));
+		System.out.println(classConverter.convert("true"));
+		System.out.println(classConverter.convert("on"));
+		System.out.println(classConverter.convert('a'));
+		System.out.println(classConverter.convert(new Object()));
+		System.out.println(classConverter.convert(null));
+	}
+
 }

@@ -26,56 +26,59 @@
  */
 package com.buession.beans.converters;
 
+import com.buession.lang.Status;
+
 /**
- * {@link com.buession.beans.converters.Converter} 的布尔值对象的实现，处理 <b>{@link java.lang.Boolean}</b> 对象之间的转换的实现。
+ * {@link com.buession.beans.converters.Converter} 的 com.buession.lang.Status 对象的实现，处理 <b>{@link
+ * com.buession.lang.Status}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
  * @since 1.2.0
  */
-public final class BooleanConverter extends AbstractConverter<Boolean> {
+public final class StatusConverter extends AbstractConverter<Status> {
 
-	private String[] trueStrings = {"true", "yes", "y", "on", "1"};
+	private String[] successStrings = {"success", "1"};
 
-	private String[] falseStrings = {"false", "no", "n", "off", "0"};
+	private String[] failureStrings = {"failure", "0"};
 
-	public BooleanConverter(){
+	public StatusConverter(){
 		super();
 	}
 
-	public BooleanConverter(final Boolean defaultValue){
+	public StatusConverter(final Status defaultValue){
 		super(defaultValue);
 	}
 
-	public BooleanConverter(final String[] trueStrings, final String[] falseStrings){
+	public StatusConverter(final String[] successStrings, final String[] falseStrings){
 		super();
-		this.trueStrings = copyStrings(trueStrings);
-		this.falseStrings = copyStrings(falseStrings);
+		this.successStrings = copyStrings(successStrings);
+		this.failureStrings = copyStrings(falseStrings);
 	}
 
-	public BooleanConverter(final String[] trueStrings, final String[] falseStrings, final Boolean defaultValue){
+	public StatusConverter(final String[] successStrings, final String[] falseStrings, final Status defaultValue){
 		super(defaultValue);
-		this.trueStrings = copyStrings(trueStrings);
-		this.falseStrings = copyStrings(falseStrings);
+		this.successStrings = copyStrings(successStrings);
+		this.failureStrings = copyStrings(falseStrings);
 	}
 
 	@Override
-	public Class<Boolean> getType(){
-		return Boolean.class;
+	public Class<Status> getType(){
+		return Status.class;
 	}
 
 	@Override
-	protected Boolean convertToType(Class<Boolean> type, Object value) throws Throwable{
+	protected Status convertToType(Class<Status> type, Object value) throws Throwable{
 		final String stringValue = value.toString().toLowerCase();
 
-		for(String trueString : trueStrings){
-			if(trueString.equals(stringValue)){
-				return Boolean.TRUE;
+		for(String successString : successStrings){
+			if(successString.equals(stringValue)){
+				return Status.SUCCESS;
 			}
 		}
 
-		for(String falseString : falseStrings){
-			if(falseString.equals(stringValue)){
-				return Boolean.FALSE;
+		for(String failureString : failureStrings){
+			if(failureString.equals(stringValue)){
+				return Status.FAILURE;
 			}
 		}
 

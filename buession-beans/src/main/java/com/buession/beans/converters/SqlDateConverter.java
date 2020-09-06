@@ -26,27 +26,51 @@
  */
 package com.buession.beans.converters;
 
-import java.util.Date;
+import com.buession.core.exception.ConversionException;
+
+import java.sql.Date;
 
 /**
- * {@link com.buession.beans.converters.Converter} 的日历对象的实现，处理 <b>{@link java.util.Date}</b> 对象之间的转换的实现。
+ * {@link com.buession.beans.converters.Converter} 的 java.sql.Date 对象的实现，处理 <b>{@link java.sql.Date}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
  * @since 1.2.0
  */
-public final class DateConverter extends AbstractDateTimeConverter<Date> {
+public final class SqlDateConverter extends AbstractDateTimeConverter<Date> {
 
-	public DateConverter(){
+	public SqlDateConverter(){
 		super();
 	}
 
-	public DateConverter(final Date defaultValue){
+	public SqlDateConverter(final Date defaultValue){
 		super(defaultValue);
 	}
 
 	@Override
 	public Class<Date> getType(){
 		return Date.class;
+	}
+
+	@Override
+	protected Date toDate(final Class<?> sourceType, Class<Date> targetType, long value){
+		if(targetType.equals(Date.class)){
+			return targetType.cast(new Date(value));
+		}
+
+		throw cannotHandleConversion(sourceType, targetType);
+	}
+
+	@Override
+	protected Date toDate(final Class<?> sourceType, final Class<Date> targetType, final String value){
+		if(targetType.equals(Date.class)){
+			try{
+				return targetType.cast(Date.valueOf(value));
+			}catch(final IllegalArgumentException e){
+				throw new ConversionException("String must be in JDBC format [yyyy-MM-dd] to create a java.sql.Date.");
+			}
+		}
+
+		throw cannotHandleConversion(sourceType, targetType);
 	}
 
 }

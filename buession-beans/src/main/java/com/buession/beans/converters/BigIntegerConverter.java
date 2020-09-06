@@ -32,47 +32,45 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * {@link com.buession.beans.converters.Converter} 的 Byte 对象的实现，处理 <b>{@link Integer}</b> 对象之间的转换的实现。
+ * {@link com.buession.beans.converters.Converter} 的 BigInteger 对象的实现，处理 <b>{@link java.math.BigInteger}</b>
+ * 对象之间的转换的实现。
  *
  * @author Yong.Teng
  * @since 1.2.0
  */
-public final class BigDecimalConverter extends AbstractNumberConverter<java.math.BigDecimal> {
+public final class BigIntegerConverter extends AbstractNumberConverter<BigInteger> {
 
-	public BigDecimalConverter(){
+	public BigIntegerConverter(){
 		super(false);
 	}
 
-	public BigDecimalConverter(final BigDecimal defaultValue){
+	public BigIntegerConverter(final BigInteger defaultValue){
 		super(false, defaultValue);
 	}
 
 	@Override
-	public Class<BigDecimal> getType(){
-		return BigDecimal.class;
+	public Class<BigInteger> getType(){
+		return BigInteger.class;
 	}
 
 	@Override
-	protected BigDecimal toNumber(final Class<?> sourceType, final Class<BigDecimal> targetType, final Number value) throws ConversionException{
-		BigDecimal result = super.toNumber(sourceType, targetType, value);
+	protected BigInteger toNumber(final Class<?> sourceType, final Class<BigInteger> targetType, final Number value) throws ConversionException{
+		BigInteger result = super.toNumber(sourceType, targetType, value);
 
 		if(result == null){
-			if(targetType.equals(BigDecimal.class)){
-				if(value instanceof Float || value instanceof Double){
-					return targetType.cast(new BigDecimal(value.toString()));
-				}else if(value instanceof BigInteger){
-					return targetType.cast(new BigDecimal((BigInteger) value));
-				}else if(value instanceof BigDecimal){
-					return targetType.cast(new BigDecimal(value.toString()));
-				}else{
-					return targetType.cast(BigDecimal.valueOf(value.longValue()));
-				}
+			if(value instanceof BigDecimal){
+				return targetType.cast(((BigDecimal) value).toBigInteger());
+			}else{
+				return targetType.cast(BigInteger.valueOf(value.longValue()));
 			}
 		}
 
-		final String message = toString(getClass()) + " cannot handle conversion to '" + toString(targetType) + "'";
-		logger.warn("    " + message);
-		throw new ConversionException(message);
+		throw cannotHandleConversion(sourceType, targetType);
+	}
+
+	@Override
+	protected BigInteger toNumber(final Class<?> sourceType, final Class<BigInteger> targetType, final String value) throws ConversionException{
+		return new BigInteger(value);
 	}
 
 }

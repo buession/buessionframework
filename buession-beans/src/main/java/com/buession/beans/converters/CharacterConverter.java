@@ -24,9 +24,44 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans.converters;/**
- * 
+package com.buession.beans.converters;
+
+import com.buession.lang.Constants;
+
+/**
+ * {@link com.buession.beans.converters.Converter} 的字符对象的实现，处理 <b>{@link java.lang.Character}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
- */public class CharacterConverter {
+ * @since 1.2.0
+ */
+public final class CharacterConverter extends AbstractConverter<Character> {
+
+	public CharacterConverter(){
+		super();
+	}
+
+	public CharacterConverter(final Character defaultValue){
+		super(defaultValue);
+	}
+
+	public CharacterConverter(final char defaultValue){
+		super(defaultValue);
+	}
+
+	@Override
+	public Class<Character> getType(){
+		return Character.class;
+	}
+
+	@Override
+	protected String convertToString(final Object value){
+		final String strValue = value.toString();
+		return strValue.length() == 0 ? Constants.EMPTY_STRING : strValue.substring(0, 1);
+	}
+
+	@Override
+	protected Character convertToType(Class<Character> type, final Object value) throws Throwable{
+		return new Character(value.toString().charAt(0));
+	}
+
 }

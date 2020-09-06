@@ -24,9 +24,24 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans.exception;/**
- * 
- *
+package com.buession.beans.exception;
+
+import org.apache.commons.beanutils.BeanAccessLanguageException;
+
+/**
  * @author Yong.Teng
- */public class PropertyNotAllowedException {
+ * @since 1.2.0
+ */
+public class PropertyNotAllowedException extends BeanAccessLanguageException {
+
+	private final static long serialVersionUID = 5735144093138255489L;
+
+	public PropertyNotAllowedException(){
+		super();
+	}
+
+	public PropertyNotAllowedException(String message){
+		super(message);
+	}
+
 }

@@ -24,9 +24,57 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans.converters;/**
- * 
+package com.buession.beans.converters;
+
+import com.buession.core.exception.ConversionException;
+
+/**
+ * {@link com.buession.beans.converters.Converter} 的 Byte 对象的实现，处理 <b>{@link java.lang.Byte}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
- */public class ByteConverter {
+ * @since 1.2.0
+ */
+public final class ByteConverter extends AbstractNumberConverter<Byte> {
+
+	public ByteConverter(){
+		super(false);
+	}
+
+	public ByteConverter(final Byte defaultValue){
+		super(false, defaultValue);
+	}
+
+	@Override
+	public Class<Byte> getType(){
+		return Byte.class;
+	}
+
+	@Override
+	protected Byte toNumber(final Class<?> sourceType, final Class<Byte> targetType, final Number value) throws ConversionException{
+		Byte result = super.toNumber(sourceType, targetType, value);
+
+		if(result == null){
+			if(targetType.equals(Byte.class)){
+				final long longValue = value.longValue();
+
+				if(longValue > Byte.MAX_VALUE){
+					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(targetType) + ".");
+				}
+
+				if(longValue < Byte.MIN_VALUE){
+					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too small " + toString(targetType) + ".");
+				}
+
+				return targetType.cast(new Byte(value.byteValue()));
+			}
+		}
+
+		throw cannotHandleConversion(sourceType, targetType);
+	}
+
+	@Override
+	protected Byte toNumber(final Class<?> sourceType, final Class<Byte> targetType, final String value) throws ConversionException{
+		return new Byte(value);
+	}
+
 }

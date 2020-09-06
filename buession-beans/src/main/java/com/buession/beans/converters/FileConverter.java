@@ -26,70 +26,36 @@
  */
 package com.buession.beans.converters;
 
+import java.io.File;
+
 /**
- * {@link com.buession.beans.converters.Converter} 的布尔值对象的实现，处理 <b>{@link java.lang.Boolean}</b> 对象之间的转换的实现。
+ * {@link com.buession.beans.converters.Converter} 的文件对象的实现，处理 <b>{@link java.io.File}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
  * @since 1.2.0
  */
-public final class BooleanConverter extends AbstractConverter<Boolean> {
+public final class FileConverter extends AbstractConverter<File> {
 
-	private String[] trueStrings = {"true", "yes", "y", "on", "1"};
-
-	private String[] falseStrings = {"false", "no", "n", "off", "0"};
-
-	public BooleanConverter(){
+	public FileConverter(){
 		super();
 	}
 
-	public BooleanConverter(final Boolean defaultValue){
+	public FileConverter(final File defaultValue){
 		super(defaultValue);
 	}
 
-	public BooleanConverter(final String[] trueStrings, final String[] falseStrings){
-		super();
-		this.trueStrings = copyStrings(trueStrings);
-		this.falseStrings = copyStrings(falseStrings);
-	}
-
-	public BooleanConverter(final String[] trueStrings, final String[] falseStrings, final Boolean defaultValue){
-		super(defaultValue);
-		this.trueStrings = copyStrings(trueStrings);
-		this.falseStrings = copyStrings(falseStrings);
+	@Override
+	public Class<File> getType(){
+		return File.class;
 	}
 
 	@Override
-	public Class<Boolean> getType(){
-		return Boolean.class;
-	}
-
-	@Override
-	protected Boolean convertToType(Class<Boolean> type, Object value) throws Throwable{
-		final String stringValue = value.toString().toLowerCase();
-
-		for(String trueString : trueStrings){
-			if(trueString.equals(stringValue)){
-				return Boolean.TRUE;
-			}
-		}
-
-		for(String falseString : falseStrings){
-			if(falseString.equals(stringValue)){
-				return Boolean.FALSE;
-			}
+	protected File convertToType(Class<File> type, Object value) throws Throwable{
+		if(File.class.equals(type)){
+			return type.cast(new File(value.toString()));
 		}
 
 		throw conversionException(type, value);
-	}
-
-	private final static String[] copyStrings(final String[] src){
-		final String[] dest = new String[src.length];
-
-		for(int i = 0; i < src.length; ++i){
-			dest[i] = src[i].toLowerCase();
-		}
-
-		return dest;
 	}
 
 }

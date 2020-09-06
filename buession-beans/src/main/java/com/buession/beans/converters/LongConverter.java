@@ -29,39 +29,42 @@ package com.buession.beans.converters;
 import com.buession.core.exception.ConversionException;
 
 /**
- * {@link com.buession.beans.converters.Converter} 的 Byte 对象的实现，处理 <b>{@link java.lang.Double}</b> 对象之间的转换的实现。
+ * {@link com.buession.beans.converters.Converter} 的 Long 对象的实现，处理 <b>{@link java.lang.Long}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
  * @since 1.2.0
  */
-public final class DoubleConverter extends AbstractNumberConverter<Double> {
+public final class LongConverter extends AbstractNumberConverter<Long> {
 
-	public DoubleConverter(){
+	public LongConverter(){
 		super(false);
 	}
 
-	public DoubleConverter(final Double defaultValue){
+	public LongConverter(final Long defaultValue){
 		super(false, defaultValue);
 	}
 
 	@Override
-	public Class<Double> getType(){
-		return Double.class;
+	public Class<Long> getType(){
+		return Long.class;
 	}
 
 	@Override
-	protected Double toNumber(final Class<?> sourceType, final Class<Double> targetType, final Number value) throws ConversionException{
-		Double result = super.toNumber(sourceType, targetType, value);
+	protected Long toNumber(final Class<?> sourceType, final Class<Long> targetType, final Number value) throws ConversionException{
+		Long result = super.toNumber(sourceType, targetType, value);
 
 		if(result == null){
-			if(targetType.equals(Double.class)){
-				return targetType.cast(new Double(value.doubleValue()));
+			if(targetType.equals(Long.class)){
+				return targetType.cast(new Long(value.longValue()));
 			}
 		}
 
-		final String message = toString(getClass()) + " cannot handle conversion to '" + toString(targetType) + "'";
-		logger.warn("    " + message);
-		throw new ConversionException(message);
+		throw cannotHandleConversion(sourceType, targetType);
+	}
+
+	@Override
+	protected Long toNumber(final Class<?> sourceType, final Class<Long> targetType, final String value) throws ConversionException{
+		return new Long(value);
 	}
 
 }

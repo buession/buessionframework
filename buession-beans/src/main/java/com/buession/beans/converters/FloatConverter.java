@@ -29,37 +29,46 @@ package com.buession.beans.converters;
 import com.buession.core.exception.ConversionException;
 
 /**
- * {@link com.buession.beans.converters.Converter} 的 Byte 对象的实现，处理 <b>{@link java.lang.Double}</b> 对象之间的转换的实现。
+ * {@link com.buession.beans.converters.Converter} 的 Float 对象的实现，处理 <b>{@link java.lang.Float}</b> 对象之间的转换的实现。
  *
  * @author Yong.Teng
  * @since 1.2.0
  */
-public final class DoubleConverter extends AbstractNumberConverter<Double> {
+public final class FloatConverter extends AbstractNumberConverter<Float> {
 
-	public DoubleConverter(){
-		super(false);
+	public FloatConverter(){
+		super(true);
 	}
 
-	public DoubleConverter(final Double defaultValue){
-		super(false, defaultValue);
-	}
-
-	@Override
-	public Class<Double> getType(){
-		return Double.class;
+	public FloatConverter(final Float defaultValue){
+		super(true, defaultValue);
 	}
 
 	@Override
-	protected Double toNumber(final Class<?> sourceType, final Class<Double> targetType, final Number value) throws ConversionException{
-		Double result = super.toNumber(sourceType, targetType, value);
+	public Class<Float> getType(){
+		return Float.class;
+	}
 
-		if(targetType.equals(Double.class)){
-			return targetType.cast(new Double(value.doubleValue()));
+	@Override
+	protected Float toNumber(final Class<?> sourceType, final Class<Float> targetType, final Number value) throws ConversionException{
+		Float result = super.toNumber(sourceType, targetType, value);
+
+		if(result == null){
+			if(targetType.equals(Float.class)){
+				if(value.doubleValue() > Float.MAX_VALUE){
+					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(targetType) + ".");
+				}
+
+				return targetType.cast(new Float(value.floatValue()));
+			}
 		}
 
-		final String message = toString(getClass()) + " cannot handle conversion to '" + toString(targetType) + "'";
-		logger.warn("    " + message);
-		throw new ConversionException(message);
+		throw cannotHandleConversion(sourceType, targetType);
+	}
+
+	@Override
+	protected Float toNumber(final Class<?> sourceType, final Class<Float> targetType, final String value) throws ConversionException{
+		return new Float(value);
 	}
 
 }

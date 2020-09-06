@@ -24,9 +24,98 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans;/**
- * 
- *
+package com.buession.beans;
+
+import org.apache.commons.beanutils.MethodUtils;
+
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
  * @author Yong.Teng
- */public class BeanData {
+ * @since 1.2.0
+ */
+public class BeanData {
+
+	private final PropertyDescriptor[] descriptors;
+
+	private final Map<String, String> readMethodNames;
+
+	private final Map<String, String> writeMethodNames;
+
+	public BeanData(final PropertyDescriptor[] descriptors){
+		this(descriptors, setReadMethodNames(descriptors), setWriteMethodNames(descriptors));
+	}
+
+	public BeanData(final PropertyDescriptor[] descriptors, final Map<String, String> readMethodNames,
+			final Map<String, String> writeMethodNames){
+		this.descriptors = descriptors;
+		this.readMethodNames = readMethodNames;
+		this.writeMethodNames = writeMethodNames;
+	}
+
+	public PropertyDescriptor[] getDescriptors(){
+		return descriptors;
+	}
+
+	public PropertyDescriptor getDescriptor(final String name){
+		for(PropertyDescriptor pd : descriptors){
+			if(name.equals(pd.getName())){
+				return pd;
+			}
+		}
+
+		return null;
+	}
+
+	public Method getWriteMethod(final Class<?> beanClazz, final PropertyDescriptor descriptor){
+		Method method = descriptor.getWriteMethod();
+
+		if(method == null){
+			final String methodName = writeMethodNames.get(descriptor.getName());
+
+			if(methodName != null){
+				method = MethodUtils.getAccessibleMethod(beanClazz, methodName, descriptor.getPropertyType());
+
+				if(method != null){
+					try{
+						descriptor.setWriteMethod(method);
+					}catch(IntrospectionException e){
+					}
+				}
+			}
+		}
+
+		return method;
+	}
+
+	private static Map<String, String> setReadMethodNames(final PropertyDescriptor[] descriptors){
+		final Map<String, String> methods = new HashMap<>(descriptors.length);
+
+		for(PropertyDescriptor pd : descriptors){
+			Method method = pd.getReadMethod();
+			if(method != null){
+				methods.put(pd.getName(), method.getName());
+			}
+		}
+
+		return methods;
+	}
+
+	private static Map<String, String> setWriteMethodNames(final PropertyDescriptor[] descriptors){
+		final Map<String, String> methods = new HashMap<>(descriptors.length);
+
+		for(PropertyDescriptor pd : descriptors){
+			Method method = pd.getWriteMethod();
+			if(method != null){
+				methods.put(pd.getName(), method.getName());
+			}
+		}
+
+		return methods;
+	}
+
 }

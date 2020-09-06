@@ -26,20 +26,42 @@
  */
 package com.buession.beans;
 
-import com.buession.core.utils.MethodUtils;
 import org.junit.Test;
 
 import java.beans.IntrospectionException;
-import java.lang.reflect.Method;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 
 /**
  * @author Yong.Teng
  */
-public class PropertyUtilsTest {
+public class PropertyResolverTest {
 
 	@Test
 	public void findPropertyType() throws IntrospectionException{
-		
+
+	}
+
+	@Test
+	public void getProperty() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException{
+		User user = new User();
+
+		user.setId(11);
+		user.setMap(Collections.emptyMap());
+
+		PropertyResolver propertyResolver = new DefaultPropertyResolver();
+		System.out.println(propertyResolver.getProperty(user, "id"));
+		System.out.println(propertyResolver.getProperty(user, "map"));
+	}
+
+	@Test
+	public void getPropertyDescriptor() throws IllegalAccessException, NoSuchMethodException,
+			InvocationTargetException{
+		User user = new User();
+		PropertyResolver propertyResolver = new DefaultPropertyResolver();
+		PropertyDescriptor propertyDescriptor = propertyResolver.getPropertyDescriptor(user, "disable");
+		System.out.println(propertyDescriptor);
 	}
 
 }
