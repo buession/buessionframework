@@ -34,7 +34,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.buession.core.reflect.FieldUtils;
+import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.ReflectUtils;
 import com.buession.core.validator.Validate;

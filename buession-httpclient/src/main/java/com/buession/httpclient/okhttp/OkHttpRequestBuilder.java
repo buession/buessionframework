@@ -24,7 +24,7 @@
  */
 package com.buession.httpclient.okhttp;
 
-import com.buession.core.reflect.FieldUtils;
+import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.EnumUtils;
 import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.Header;

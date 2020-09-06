@@ -26,8 +26,8 @@
  */
 package com.buession.core.codec;
 
-import com.buession.core.reflect.ClassUtils;
-import com.buession.core.reflect.FieldUtils;
+import com.buession.core.utils.ClassUtils;
+import com.buession.core.utils.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AdvisedSupport;

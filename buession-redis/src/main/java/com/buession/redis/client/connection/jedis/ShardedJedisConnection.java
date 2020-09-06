@@ -25,7 +25,7 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.core.Executor;
-import com.buession.core.reflect.FieldUtils;
+import com.buession.core.utils.FieldUtils;
 import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.RedisShardedConnection;
 import com.buession.redis.client.connection.SslConfiguration;

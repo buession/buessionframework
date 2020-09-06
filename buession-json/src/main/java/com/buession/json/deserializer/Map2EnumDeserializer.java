@@ -24,7 +24,7 @@
  */
 package com.buession.json.deserializer;
 
-import com.buession.core.reflect.FieldUtils;
+import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.EnumUtils;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
