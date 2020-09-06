@@ -1,119 +1,78 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements.
- * See the NOTICE file distributed with this work for additional information regarding copyright ownership.
- * The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more contributor license
+ * agreements. See the NOTICE file distributed with this work for additional information regarding
+ * copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with the License. You may obtain
+ * a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is
- * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
  *
- * =========================================================================================================
+ * =================================================================================================
  *
  * This software consists of voluntary contributions made by many individuals on behalf of the
  * Apache Software Foundation. For more information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  *
- * +-------------------------------------------------------------------------------------------------------+
- * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
- * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
- * +-------------------------------------------------------------------------------------------------------+
+ * +------------------------------------------------------------------------------------------------+
+ * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
+ * | Author: Yong.Teng <webmaster@buession.com> 													|
+ * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.buession.core.exception.InsteadException;
+import org.apache.commons.beanutils.BeanMap;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ReflectionUtils;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.Date;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 反射工具类
- * More {@link org.springframework.util.ReflectionUtils}
+ * 反射工具类 More {@link ReflectionUtils}
  *
  * @author Yong.Teng
  */
 public class ReflectUtils extends ReflectionUtils {
 
-	private final static Logger logger = LoggerFactory.getLogger(ReflectUtils.class);
+	/**
+	 * Map 转换成 pojo 类
+	 *
+	 * @param data
+	 * 		Map 对象
+	 * @param clazz
+	 * 		pojo 类类型 Class
+	 * @param <E>
+	 * 		pojo 类类型
+	 *
+	 * @return pojo 类对象
+	 */
+	@Deprecated
+	public static <E> E mapConvertObject(@Nullable Map<String, Object> data, @Nullable Class<E> clazz){
+		throw new InsteadException(MethodUtils.getAccessibleMethod(ReflectUtils.class, "mapConvertObject"), "com" +
+				".buession", "buession-beans", "1.2.0", "com.buession.beans.DefaultBeanResolver", "populate");
+	}
 
+	@Deprecated
 	public static <E> E setter(@Nullable Map<String, Object> data, @Nullable Class<E> clazz){
-		Assert.isNull(data, "Data cloud not be null.");
-		Assert.isNull(clazz, "Class cloud not be null.");
-
-		try{
-			return setter(data, clazz, clazz.newInstance());
-		}catch(InstantiationException e){
-			logger.error("{}", e.getMessage());
-		}catch(IllegalAccessException e){
-			logger.error("{}", e.getMessage());
-		}
-
-		return null;
+		return mapConvertObject(data, clazz);
 	}
 
-	@SuppressWarnings({"unchecked"})
+	@Deprecated
 	public static <E> E setter(@Nullable Map<String, Object> data, @Nullable E object){
-		Assert.isNull(object, "Object cloud not be null.");
-		return setter(data, (Class<E>) object.getClass(), object);
+		return mapConvertObject(data, null);
 	}
 
-	@SuppressWarnings({"unchecked"})
+	@Deprecated
 	public static <E> E setter(@Nullable Map<String, Object> data, @Nullable Class<E> clazz, @Nullable E object){
-		Assert.isNull(data, "Data cloud not be null.");
-		Assert.isNull(object, "Object cloud not be null.");
-
-		if(clazz == null){
-			clazz = (Class<E>) object.getClass();
-		}
-
-		try{
-			BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
-			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-
-			for(PropertyDescriptor propertyDescriptor : propertyDescriptors){
-				String propertyName = propertyDescriptor.getName();
-
-				if(data.containsKey(propertyName) == false){
-					StringBuilder sb = new StringBuilder(propertyName.length() + 8);
-
-					for(char c : propertyName.toCharArray()){
-						if(c >= 'A' && c <= 'Z'){
-							sb.append('_');
-							sb.append(Character.toLowerCase(c));
-						}else{
-							sb.append(c);
-						}
-					}
-
-					propertyName = sb.toString();
-					if(data.containsKey(propertyName) == false){
-						continue;
-					}
-				}
-
-				Method method = propertyDescriptor.getWriteMethod();
-				Object value = data.get(propertyName);
-
-				invokeSetterMethod(object, method, propertyName, value);
-			}
-		}catch(IntrospectionException e){
-			logger.error("{}", e.getMessage());
-		}
-
-		return object;
+		return setter(data, object);
 	}
 
 	/**
@@ -126,8 +85,34 @@ public class ReflectUtils extends ReflectionUtils {
 	 *
 	 * @return Map 对象
 	 */
+	public static <T> Map<String, Object> objectConvertMap(final T object){
+		BeanMap map = new BeanMap(object);
+		Map<String, Object> result = new HashMap<>(map.size() - 1);
+
+		map.forEach((key, value)->{
+			String k = String.valueOf(key);
+
+			if("class".equals(k) == false){
+				result.put(k, value);
+			}
+		});
+
+		return Collections.unmodifiableMap(result);
+	}
+
+	/**
+	 * 将对象转换为 Map
+	 *
+	 * @param object
+	 * 		对象
+	 * @param <T>
+	 * 		对象类型
+	 *
+	 * @return Map 对象
+	 */
+	@Deprecated
 	public static <T> Map<String, Object> classConvertMap(final T object){
-		return classConvertMap(null, object);
+		return objectConvertMap(object);
 	}
 
 	/**
@@ -142,93 +127,9 @@ public class ReflectUtils extends ReflectionUtils {
 	 *
 	 * @return Map 对象
 	 */
-	@SuppressWarnings({"unchecked"})
+	@Deprecated
 	public static <T> Map<String, Object> classConvertMap(Class<T> clazz, T object){
-		if(object == null){
-			return null;
-		}
-
-		if(clazz == null){
-			clazz = (Class<T>) object.getClass();
-		}
-
-		Map<String, Object> result = null;
-
-		try{
-			BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
-			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-
-			result = new HashMap<>(propertyDescriptors.length);
-
-			for(PropertyDescriptor propertyDescriptor : propertyDescriptors){
-				String key = propertyDescriptor.getName();
-
-				if("class".equals(key) == false){
-					Method getter = propertyDescriptor.getReadMethod();
-					result.put(key, invokeMethod(getter, object));
-				}
-			}
-		}catch(IntrospectionException e){
-			logger.error("{}", e.getMessage());
-		}
-
-		return result;
-	}
-
-	private final static <E> void invokeSetterMethod(final E object, final Method method, final String propertyName,
-			final Object value){
-		Type genericParameterType = method.getGenericParameterTypes()[0];
-
-		try{
-			if((genericParameterType == Short.TYPE || genericParameterType == Short.class || genericParameterType == short.class)){
-				if((value instanceof Short || value instanceof Integer || value instanceof Long)){
-					long lv = ((Number) value).longValue();
-
-					if(lv >= Short.MIN_VALUE && lv <= Short.MAX_VALUE){
-						invokeMethod(method, object, new Object[]{((Number) value).shortValue()});
-						return;
-					}
-				}
-			}else if((genericParameterType == Integer.TYPE || genericParameterType == Integer.class || genericParameterType == int.class)){
-				if((value instanceof Short || value instanceof Integer || value instanceof Long)){
-					long lv = ((Number) value).longValue();
-
-					if(lv >= Integer.MIN_VALUE && lv <= Integer.MAX_VALUE){
-						invokeMethod(method, object, new Object[]{((Number) value).intValue()});
-						return;
-					}
-				}
-			}else if((genericParameterType == Long.TYPE || genericParameterType == Long.class || genericParameterType == long.class)){
-				if((value instanceof Short || value instanceof Integer || value instanceof Long)){
-					long lv = ((Number) value).longValue();
-
-					if(lv >= Long.MIN_VALUE && lv <= Long.MAX_VALUE){
-						invokeMethod(method, object, new Object[]{((Number) value).longValue()});
-						return;
-					}
-				}
-			}else if((genericParameterType == Float.TYPE || genericParameterType == Float.class || genericParameterType == float.class)){
-				if((value instanceof Short || value instanceof Integer || value instanceof Long || value instanceof Double)){
-					invokeMethod(method, object, new Object[]{((Number) value).floatValue()});
-					return;
-				}
-			}else if((genericParameterType == Double.TYPE || genericParameterType == Double.class || genericParameterType == double.class)){
-				if((value instanceof Short || value instanceof Integer || value instanceof Long || value instanceof Float || value instanceof Double)){
-					invokeMethod(method, object, new Object[]{((Number) value).doubleValue()});
-					return;
-				}
-			}else if(genericParameterType == Date.class){
-				if(value instanceof Long){
-					Date date = new Date(((Number) value).longValue());
-					invokeMethod(method, object, new Object[]{date});
-					return;
-				}
-			}
-
-			invokeMethod(method, object, new Object[]{value});
-		}catch(IllegalArgumentException e){
-			logger.error("Get {} failure: {}", propertyName, e.getMessage());
-		}
+		return classConvertMap(object);
 	}
 
 }

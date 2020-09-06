@@ -24,9 +24,75 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.utils;/**
- * 
- *
+package com.buession.core.utils;
+
+import com.buession.lang.Status;
+import org.apache.commons.beanutils.BeanUtils;
+import org.junit.Test;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
  * @author Yong.Teng
- */public class BeanUtilsTest {
+ */
+public class BeanUtilsTest {
+
+	private final static Map<String, Object> MAP = new HashMap<>();
+
+	static{
+		MAP.put("one", 1);
+		MAP.put("status", Status.SUCCESS);
+		MAP.put("bool", true);
+	}
+
+	@Test
+	public void populate() throws InvocationTargetException, IllegalAccessException{
+		BeanUtils beanUtils = new BeanUtils();
+
+		User user = new User();
+		beanUtils.populate(user, MAP);
+		System.out.println(user);
+	}
+
+	public final static class User {
+
+		private int one;
+
+		private Status status;
+
+		private Boolean bool;
+
+		public int getOne(){
+			return one;
+		}
+
+		public void setOne(int one){
+			this.one = one;
+		}
+
+		public Status getStatus(){
+			return status;
+		}
+
+		public void setStatus(Status status){
+			this.status = status;
+		}
+
+		public Boolean getBool(){
+			return bool;
+		}
+
+		public void setBool(Boolean bool){
+			this.bool = bool;
+		}
+
+		@Override
+		public String toString(){
+			return "User{" + "one=" + one + ", status=" + status + ", bool=" + bool + '}';
+		}
+
+	}
+
 }

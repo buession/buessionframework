@@ -26,6 +26,7 @@ package com.buession.core.utils;
 
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -33,6 +34,19 @@ import java.util.Map;
  * @author Yong.Teng
  */
 public class ReflectionUtilsTest {
+
+	private final static User user = new User();
+
+	{
+		user.setId(10);
+		user.setUserName("username");
+		user.setTimestamp(System.currentTimeMillis());
+	}
+
+	@Test
+	public void classConvertMap(){
+		System.out.println(ReflectUtils.classConvertMap(user));
+	}
 
 	@Test
 	public void setter(){
@@ -51,6 +65,7 @@ public class ReflectionUtilsTest {
 		data.put("b2", Boolean.TRUE);
 		data.put("b3", Boolean.TRUE);
 		data.put("b4", true);
+		data.put("date", System.currentTimeMillis());
 
 		User user = ReflectUtils.setter(data, User.class);
 		System.out.println(user);
@@ -83,6 +98,8 @@ public class ReflectionUtilsTest {
 		private Boolean b3;
 
 		private boolean b4;
+
+		private Date date;
 
 		public int getId(){
 			return id;
@@ -188,13 +205,19 @@ public class ReflectionUtilsTest {
 			this.b4 = b4;
 		}
 
+		public Date getDate(){
+			return date;
+		}
+
+		public void setDate(Date date){
+			this.date = date;
+		}
+
 		@Override
 		public String toString(){
-			return "User{" + "id=" + id + ", username='" + username + '\'' + ", userName='" + userName + '\'' + ", " +
-					"password='" + password + '\'' + ", timestamp=" + timestamp + ", loginTimes=" + loginTimes + ", "
-					+ "todayLoginTimes=" + todayLoginTimes + ", isLock=" + isLock + ", type=" + type + ", b1=" + b1 +
-					"," + " b2=" + b2 + ", b3=" + b3 + ", b4=" + b4 + '}';
+			return "User{" + "id=" + id + ", username='" + username + '\'' + ", userName='" + userName + '\'' + ", " + "password='" + password + '\'' + ", timestamp=" + timestamp + ", loginTimes=" + loginTimes + ", " + "todayLoginTimes=" + todayLoginTimes + ", isLock=" + isLock + ", type=" + type + ", b1=" + b1 + "," + " b2=" + b2 + ", b3=" + b3 + ", b4=" + b4 + ", date=" + date + '}';
 		}
+
 	}
 
 }

@@ -24,9 +24,7 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.reflect;
-
-import com.buession.core.utils.Assert;
+package com.buession.core.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -39,6 +37,7 @@ import java.util.List;
  * 类工具类 More {@link org.apache.commons.lang3.ClassUtils}
  *
  * @author Yong.Teng
+ * @since 1.2.0
  */
 public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 

@@ -24,18 +24,16 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.reflect;
-
-import com.buession.core.utils.Assert;
+package com.buession.core.utils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 /**
- * 类属性工具类
- * More {@link org.apache.commons.lang3.reflect.FieldUtils}
+ * 类属性工具类 More {@link org.apache.commons.lang3.reflect.FieldUtils}
  *
  * @author Yong.Teng
+ * @since 1.2.0
  */
 public class FieldUtils extends org.apache.commons.lang3.reflect.FieldUtils {
 

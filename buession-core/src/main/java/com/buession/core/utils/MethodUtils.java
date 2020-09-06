@@ -24,17 +24,14 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.reflect;
+package com.buession.core.utils;
 
-import com.buession.core.utils.Assert;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
- * 类方法工具类
- * More {@link org.apache.commons.lang3.reflect.MethodUtils}
+ * 类方法工具类 More {@link org.apache.commons.lang3.reflect.MethodUtils}
  *
  * @author Yong.Teng
  */

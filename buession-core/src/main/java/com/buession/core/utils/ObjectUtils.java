@@ -29,10 +29,10 @@ package com.buession.core.utils;
 import java.nio.charset.Charset;
 
 /**
- * 对象工具类
- * More {@link org.apache.commons.lang3.ObjectUtils}
+ * 对象工具类 More {@link org.apache.commons.lang3.ObjectUtils}
  *
  * @author Yong.Teng
+ * @see 1.3.0
  */
 public class ObjectUtils extends org.apache.commons.lang3.ObjectUtils {
 
