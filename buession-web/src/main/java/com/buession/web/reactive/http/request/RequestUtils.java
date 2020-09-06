@@ -35,6 +35,8 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import java.util.List;
 
 /**
+ * HTTP 请求工具类 Reactive 的实现
+ *
  * @author Yong.Teng
  */
 public class RequestUtils extends com.buession.web.http.request.RequestUtils {
@@ -104,12 +106,12 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	}
 
 	/**
-	 * 获取当前 Scheme
+	 * 获取请求的真实 Scheme
 	 *
 	 * @param request
-	 * 		HttpServletRequest
+	 * 		ServerHttpRequest
 	 *
-	 * @return 当前 Scheme
+	 * @return 请求的真实 Scheme
 	 */
 	public final static String getScheme(final ServerHttpRequest request){
 		HttpHeaders httpHeaders = request.getHeaders();
@@ -127,12 +129,14 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	}
 
 	/**
-	 * 获取当前主机
+	 * 获取请求的真实主机地址
 	 *
 	 * @param request
-	 * 		HttpServletRequest
+	 * 		ServerHttpRequest
 	 *
-	 * @return 当前主机
+	 * @return 请求的真实主机地址
+	 *
+	 * @since 1.2.0
 	 */
 	public final static String getHost(final ServerHttpRequest request){
 		HttpHeaders httpHeaders = request.getHeaders();
@@ -141,20 +145,59 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 			return host;
 		}
 
+		host = httpHeaders.getFirst(HttpHeader.HOST.getValue());
+		if(Validate.hasText(host)){
+			return host;
+		}
+
 		return request.getURI().getHost();
 	}
 
 	/**
-	 * 获取当前域名
+	 * 获取请求的真实域名
 	 *
 	 * @param request
-	 * 		HttpServletRequest
+	 * 		ServerHttpRequest
 	 *
-	 * @return 当前域名
+	 * @return 请求的真实域名
 	 */
 	@Deprecated
 	public final static String getDomain(final ServerHttpRequest request){
 		return getHost(request);
+	}
+
+	/**
+	 * 获取请求的真实端口
+	 *
+	 * @param request
+	 * 		ServerHttpRequest
+	 *
+	 * @return 请求的真实端口
+	 *
+	 * @since 1.2.0
+	 */
+	public final static int getPort(final ServerHttpRequest request){
+		HttpHeaders httpHeaders = request.getHeaders();
+		String forwardedPort = httpHeaders.getFirst(HttpHeader.X_FORWARDED_PORT.getValue());
+		if(Validate.hasText(forwardedPort)){
+			return Integer.parseInt(forwardedPort);
+		}
+
+		return request.getURI().getPort();
+	}
+
+	/**
+	 * 获取请求的 URL 的权威部分
+	 *
+	 * @param request
+	 * 		HttpServletRequest
+	 *
+	 * @return 请求的 URL 的权威部分
+	 *
+	 * @since 1.2.0
+	 */
+	public final static String getAuthority(final ServerHttpRequest request){
+		return getAuthority(getScheme(request), getHost(request), getPort(request));
 	}
 
 }

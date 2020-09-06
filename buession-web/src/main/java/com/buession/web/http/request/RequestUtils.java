@@ -27,9 +27,11 @@ package com.buession.web.http.request;
 import com.buession.core.validator.Validate;
 
 /**
+ * HTTP 请求工具基类
+ *
  * @author Yong.Teng
  */
-public class RequestUtils {
+public abstract class RequestUtils {
 
 	public final static String DEFAULT_IP = "127.0.0.1";
 
@@ -203,6 +205,22 @@ public class RequestUtils {
 		final String wml = "vnd.wap.wml";
 		final String html = "text/html";
 		return accept.contains(wml) && accept.contains(html) == false || accept.indexOf(wml) > accept.indexOf(html);
+	}
+
+	protected final static String getAuthority(final String scheme, final String host, final int port){
+		final StringBuilder sb = new StringBuilder(host);
+
+		if("http".equals(scheme)){
+			if(port != 80){
+				sb.append(':').append(port);
+			}
+		}else if("https".equals(scheme)){
+			if(port != 443){
+				sb.append(':').append(port);
+			}
+		}
+
+		return sb.toString();
 	}
 
 }

@@ -103,6 +103,8 @@ public enum HttpHeader {
 
 	X_FORWARDED_PROTOCOL("X-Forwarded-Protocol"),
 
+	X_FORWARDED_PORT("X-Forwarded-Port"),
+
 	X_REQUESTED_WITH("X-Requested-With");
 
 	private String value;

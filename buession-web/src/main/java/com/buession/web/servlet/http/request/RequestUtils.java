@@ -33,6 +33,8 @@ import com.buession.web.http.HttpHeader;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * HTTP 请求工具类 Servlet 的实现
+ *
  * @author Yong.Teng
  */
 public class RequestUtils extends com.buession.web.http.request.RequestUtils {
@@ -93,12 +95,12 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	}
 
 	/**
-	 * 获取当前 Scheme
+	 * 获取请求的真实 Scheme
 	 *
 	 * @param request
 	 * 		HttpServletRequest
 	 *
-	 * @return 当前 Scheme
+	 * @return 请求的真实 Scheme
 	 */
 	public final static String getScheme(final HttpServletRequest request){
 		String scheme = request.getHeader(HttpHeader.X_FORWARDED_PROTOCOL.getValue());
@@ -115,15 +117,22 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	}
 
 	/**
-	 * 获取当前主机
+	 * 获取请求的真实主机地址
 	 *
 	 * @param request
 	 * 		HttpServletRequest
 	 *
-	 * @return 当前主机
+	 * @return 请求的真实主机地址
+	 *
+	 * @since 1.2.0
 	 */
 	public final static String getHost(final HttpServletRequest request){
 		String host = request.getHeader(HttpHeader.X_FORWARDED_HOST.getValue());
+		if(Validate.hasText(host)){
+			return host;
+		}
+
+		host = request.getHeader(HttpHeader.HOST.getValue());
 		if(Validate.hasText(host)){
 			return host;
 		}
@@ -132,16 +141,49 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	}
 
 	/**
-	 * 获取当前域名
+	 * 获取请求的真实域名
 	 *
 	 * @param request
 	 * 		HttpServletRequest
 	 *
-	 * @return 当前域名
+	 * @return 请求的真实域名
 	 */
 	@Deprecated
 	public final static String getDomain(final HttpServletRequest request){
 		return getHost(request);
+	}
+
+	/**
+	 * 获取请求的真实端口
+	 *
+	 * @param request
+	 * 		HttpServletRequest
+	 *
+	 * @return 请求的真实端口
+	 *
+	 * @since 1.2.0
+	 */
+	public final static int getPort(final HttpServletRequest request){
+		String forwardedPort = request.getHeader(HttpHeader.X_FORWARDED_PORT.getValue());
+		if(Validate.hasText(forwardedPort)){
+			return Integer.parseInt(forwardedPort);
+		}
+
+		return request.getServerPort();
+	}
+
+	/**
+	 * 获取请求的 URL 的权威部分
+	 *
+	 * @param request
+	 * 		HttpServletRequest
+	 *
+	 * @return 请求的 URL 的权威部分
+	 *
+	 * @since 1.2.0
+	 */
+	public final static String getAuthority(final HttpServletRequest request){
+		return getAuthority(getScheme(request), getHost(request), getPort(request));
 	}
 
 }
