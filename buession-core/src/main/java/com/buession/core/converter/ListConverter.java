@@ -28,12 +28,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * List 转换器
+ *
+ * @param <S>
+ * 		原类型
+ * @param <T>
+ * 		目标类型
+ *
  * @author Yong.Teng
+ * @see 1.3.0
  */
 public class ListConverter<S, T> implements Converter<List<S>, List<T>> {
 
+	/**
+	 * List item 转换器
+	 */
 	private Converter<S, T> itemConverter;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param itemConverter
+	 * 		List item 转换器
+	 */
 	public ListConverter(final Converter<S, T> itemConverter){
 		this.itemConverter = itemConverter;
 	}

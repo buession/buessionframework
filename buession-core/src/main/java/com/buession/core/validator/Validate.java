@@ -254,6 +254,8 @@ public class Validate {
 	 * 		待验证的有序字符集合
 	 *
 	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static boolean isNotEmpty(final CharSequence charSequence){
 		return charSequence != null && charSequence.length() > 0;
@@ -266,6 +268,8 @@ public class Validate {
 	 * 		待验证数组
 	 *
 	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static boolean isNotEmpty(final float[] array){
 		return array != null && array.length > 0;
@@ -278,6 +282,8 @@ public class Validate {
 	 * 		待验证数组
 	 *
 	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static boolean isNotEmpty(final double[] array){
 		return array != null && array.length > 0;
@@ -290,6 +296,8 @@ public class Validate {
 	 * 		待验证数组
 	 *
 	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static boolean isNotEmpty(final short[] array){
 		return array != null && array.length > 0;
@@ -302,6 +310,8 @@ public class Validate {
 	 * 		待验证数组
 	 *
 	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static boolean isNotEmpty(final int[] array){
 		return array != null && array.length > 0;
@@ -314,6 +324,8 @@ public class Validate {
 	 * 		待验证数组
 	 *
 	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static boolean isNotEmpty(final long[] array){
 		return array != null && array.length > 0;
@@ -326,6 +338,8 @@ public class Validate {
 	 * 		待验证数组
 	 *
 	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static boolean isNotEmpty(final byte[] array){
 		return array != null && array.length > 0;
@@ -338,6 +352,8 @@ public class Validate {
 	 * 		待验证数组
 	 *
 	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static boolean isNotEmpty(final char[] array){
 		return array != null && array.length > 0;
@@ -350,6 +366,8 @@ public class Validate {
 	 * 		待验证数组
 	 *
 	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static boolean isNotEmpty(final boolean[] array){
 		return array != null && array.length > 0;
@@ -362,6 +380,8 @@ public class Validate {
 	 * 		待验证数组
 	 *
 	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static <O> boolean isNotEmpty(final O[] array){
 		return array != null && array.length > 0;
@@ -374,6 +394,8 @@ public class Validate {
 	 * 		待验证的容器
 	 *
 	 * @return 不为 NULL 且含有元素时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static boolean isNotEmpty(final Collection<?> collection){
 		return collection != null && collection.isEmpty() == false;
@@ -386,6 +408,8 @@ public class Validate {
 	 * 		待验证的容器
 	 *
 	 * @return 不为 NULL 且含有元素时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static boolean isNotEmpty(final Map<?, ?> map){
 		return map != null && map.isEmpty() == false;
@@ -398,6 +422,8 @@ public class Validate {
 	 * 		待验证的迭代器
 	 *
 	 * @return 不为 NULL 且含有元素时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static boolean isNotEmpty(final Iterator<?> iterator){
 		return iterator != null && iterator.hasNext();
@@ -410,6 +436,8 @@ public class Validate {
 	 * 		待验证的迭代器
 	 *
 	 * @return 不为 NULL 且含有元素时，返回 TRUE；否则，返回 FALSE
+	 *
+	 * @since 1.2.0
 	 */
 	public final static boolean isNotEmpty(final Enumeration<?> enumeration){
 		return enumeration != null && enumeration.hasMoreElements();

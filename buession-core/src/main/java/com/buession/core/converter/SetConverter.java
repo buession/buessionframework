@@ -30,12 +30,29 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * Set 转换器
+ *
+ * @param <S>
+ * 		原类型
+ * @param <T>
+ * 		目标类型
+ *
  * @author Yong.Teng
+ * @see 1.3.0
  */
 public class SetConverter<S, T> implements Converter<Set<S>, Set<T>> {
 
+	/**
+	 * Set item 转换器
+	 */
 	private Converter<S, T> itemConverter;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param itemConverter
+	 * 		Set item 转换器
+	 */
 	public SetConverter(final Converter<S, T> itemConverter){
 		this.itemConverter = itemConverter;
 	}

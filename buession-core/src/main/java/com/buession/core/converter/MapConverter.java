@@ -30,14 +30,40 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * Map 转换器
+ *
+ * @param <SK>
+ * 		Map 原 key 类型
+ * @param <SV>
+ * 		Map 原 value 类型
+ * @param <TK>
+ * 		Map 目标 key 类型
+ * @param <TV>
+ * 		Map 目标 value 类型
+ *
  * @author Yong.Teng
+ * @see 1.3.0
  */
 public class MapConverter<SK, SV, TK, TV> implements Converter<Map<SK, SV>, Map<TK, TV>> {
 
+	/**
+	 * Map key 转换器
+	 */
 	private Converter<SK, TK> keyConverter;
 
+	/**
+	 * Map value 转换器
+	 */
 	private Converter<SV, TV> valueConverter;
 
+	/**
+	 * 构造函数
+	 *
+	 * @param keyConverter
+	 * 		Map key 转换器
+	 * @param valueConverter
+	 * 		Map value 转换器
+	 */
 	public MapConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter){
 		this.keyConverter = keyConverter;
 		this.valueConverter = valueConverter;
