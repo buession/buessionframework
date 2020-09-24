@@ -41,37 +41,29 @@ public final class CalendarConverter extends AbstractDateTimeConverter<Calendar>
 		super();
 	}
 
-	public CalendarConverter(final Calendar defaultValue){
-		super(defaultValue);
-	}
-
 	@Override
-	public Class<Calendar> getType(){
-		return Calendar.class;
-	}
+	protected Calendar toDate(final Class<?> sourceType, final Class<?> targetType, long value){
+		Calendar calendar;
 
-	@Override
-	protected Calendar toDate(final Class<?> sourceType, Class<Calendar> targetType, long value){
-		if(targetType.equals(Calendar.class)){
-			Calendar calendar;
-
-			if(getLocale() == null && getTimeZone() == null){
-				calendar = Calendar.getInstance();
-			}else if(getLocale() == null){
-				calendar = Calendar.getInstance(getTimeZone());
-			}else if(getTimeZone() == null){
-				calendar = Calendar.getInstance(getLocale());
-			}else{
-				calendar = Calendar.getInstance(getTimeZone(), getLocale());
-			}
-
-			calendar.setTime(new Date(value));
-			calendar.setLenient(false);
-
-			return targetType.cast(calendar);
+		if(getLocale() == null && getTimeZone() == null){
+			calendar = Calendar.getInstance();
+		}else if(getLocale() == null){
+			calendar = Calendar.getInstance(getTimeZone());
+		}else if(getTimeZone() == null){
+			calendar = Calendar.getInstance(getLocale());
+		}else{
+			calendar = Calendar.getInstance(getTimeZone(), getLocale());
 		}
 
-		throw cannotHandleConversion(sourceType, targetType);
+		calendar.setTime(new Date(value));
+		calendar.setLenient(false);
+
+		return calendar;
+	}
+
+	@Override
+	protected Calendar toDate(final Class<?> sourceType, final Class<?> targetType, final String value){
+		return null;
 	}
 
 }

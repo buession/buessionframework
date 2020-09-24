@@ -153,47 +153,6 @@ public class DefaultBeanResolver implements BeanResolver {
 			return; // Skip this property setter
 		}
 
-		/*if(target instanceof Map){
-			type = Object.class;
-		}else if(target != null && target.getClass().isArray() && index >= 0){
-			type = Array.get(target, index).getClass();
-		}else{
-			PropertyDescriptor descriptor = propertyResolver.getPropertyDescriptor(bean, name);
-			if(descriptor == null){
-				return; // Skip this property setter
-			}
-
-			if(descriptor instanceof MappedPropertyDescriptor){
-				if(((MappedPropertyDescriptor) descriptor).getMappedWriteMethod() == null){
-					logger.debug("Skipping read-only property.");
-					return; // Read-only, skip this property setter
-				}
-				type = ((MappedPropertyDescriptor) descriptor).
-						getMappedPropertyType();
-			}else if(index >= 0 && descriptor instanceof IndexedPropertyDescriptor){
-				if(((IndexedPropertyDescriptor) descriptor).getIndexedWriteMethod() == null){
-					logger.debug("Skipping read-only property.");
-					return; // Read-only, skip this property setter
-				}
-				type = ((IndexedPropertyDescriptor) descriptor).
-						getIndexedPropertyType();
-			}else if(index >= 0 && List.class.isAssignableFrom(descriptor.getPropertyType())){
-				type = Object.class;
-			}else if(key != null){
-				if(descriptor.getReadMethod() == null){
-					logger.debug("Skipping read-only property.");
-					return; // Read-only, skip this property setter
-				}
-				type = (value == null) ? Object.class : value.getClass();
-			}else{
-				if(descriptor.getWriteMethod() == null){
-					logger.debug("Skipping read-only property.");
-					return; // Read-only, skip this property setter
-				}
-				type = descriptor.getPropertyType();
-			}
-		}*/
-
 		if(descriptor.getWriteMethod() == null){
 			logger.debug("Skipping read-only property.");
 			return; // Read-only, skip this property setter
@@ -203,9 +162,9 @@ public class DefaultBeanResolver implements BeanResolver {
 		Object newValue;
 		if(type.isArray()){
 			if(value instanceof String || value == null){
-				newValue = convertResolver.convert(type.getComponentType(), (String) value);
+				newValue = convertResolver.convert(type.getComponentType(), new String[]{(String) value});
 			}else if(value instanceof String[]){
-				newValue = convertResolver.convert(type.getComponentType(), ((String[]) value)[0]);
+				newValue = convertResolver.convert(type.getComponentType(), (String[]) value);
 			}else{
 				newValue = convertResolver.convert(type.getComponentType(), value);
 			}
@@ -233,6 +192,7 @@ public class DefaultBeanResolver implements BeanResolver {
 	}
 
 	@Override
+	@SuppressWarnings({"unchecked"})
 	public void populate(final Object bean, final Object source) throws IllegalAccessException,
 			InvocationTargetException{
 		Assert.isNull(bean, "No destination bean specified.");

@@ -37,8 +37,6 @@ import java.util.Map;
  */
 public interface BeanResolver {
 
-	Object[] EMPTY_OBJECT_ARRAY = new Object[0];
-
 	/**
 	 * 获取 Bean 描述
 	 *

@@ -45,29 +45,14 @@ public final class StatusConverter extends AbstractConverter<Status> {
 		super();
 	}
 
-	public StatusConverter(final Status defaultValue){
-		super(defaultValue);
-	}
-
 	public StatusConverter(final String[] successStrings, final String[] falseStrings){
 		super();
 		this.successStrings = copyStrings(successStrings);
 		this.failureStrings = copyStrings(falseStrings);
 	}
 
-	public StatusConverter(final String[] successStrings, final String[] falseStrings, final Status defaultValue){
-		super(defaultValue);
-		this.successStrings = copyStrings(successStrings);
-		this.failureStrings = copyStrings(falseStrings);
-	}
-
 	@Override
-	public Class<Status> getType(){
-		return Status.class;
-	}
-
-	@Override
-	protected Status convertToType(Class<Status> type, Object value) throws Throwable{
+	protected Status convertToType(final Class<?> sourceType, final Class<?> targetType, final Object value) throws Throwable{
 		final String stringValue = value.toString().toLowerCase();
 
 		for(String successString : successStrings){
@@ -82,7 +67,7 @@ public final class StatusConverter extends AbstractConverter<Status> {
 			}
 		}
 
-		throw conversionException(type, value);
+		throw conversionException(Status.class, value);
 	}
 
 	private final static String[] copyStrings(final String[] src){

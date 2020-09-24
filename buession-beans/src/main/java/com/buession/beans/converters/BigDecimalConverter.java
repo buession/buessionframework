@@ -44,38 +44,21 @@ public final class BigDecimalConverter extends AbstractNumberConverter<BigDecima
 		super(true);
 	}
 
-	public BigDecimalConverter(final BigDecimal defaultValue){
-		super(true, defaultValue);
-	}
-
 	@Override
-	public Class<BigDecimal> getType(){
-		return BigDecimal.class;
-	}
-
-	@Override
-	protected BigDecimal toNumber(final Class<?> sourceType, final Class<BigDecimal> targetType, final Number value) throws ConversionException{
-		BigDecimal result = super.toNumber(sourceType, targetType, value);
-
-		if(result == null){
-			if(targetType.equals(BigDecimal.class)){
-				if(value instanceof Float || value instanceof Double){
-					return targetType.cast(new BigDecimal(value.toString()));
-				}else if(value instanceof BigInteger){
-					return targetType.cast(new BigDecimal((BigInteger) value));
-				}else if(value instanceof BigDecimal){
-					return targetType.cast(new BigDecimal(value.toString()));
-				}else{
-					return targetType.cast(BigDecimal.valueOf(value.longValue()));
-				}
-			}
+	protected BigDecimal toNumber(final Class<?> sourceType, final Class<?> targetType, final Number value) throws ConversionException{
+		if(value instanceof Float || value instanceof Double){
+			return new BigDecimal(value.toString());
+		}else if(value instanceof BigInteger){
+			return new BigDecimal((BigInteger) value);
+		}else if(value instanceof BigDecimal){
+			return (BigDecimal) value;
+		}else{
+			return BigDecimal.valueOf(value.longValue());
 		}
-
-		throw cannotHandleConversion(sourceType, targetType);
 	}
 
 	@Override
-	protected BigDecimal toNumber(final Class<?> sourceType, final Class<BigDecimal> targetType, final String value) throws ConversionException{
+	protected BigDecimal toNumber(final Class<?> sourceType, final Class<?> targetType, final String value) throws ConversionException{
 		return new BigDecimal(value);
 	}
 

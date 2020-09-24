@@ -27,7 +27,6 @@
 package com.buession.beans.converters;
 
 import java.net.URI;
-import java.net.URL;
 
 /**
  * {@link com.buession.beans.converters.Converter} 的 URL 对象的实现，处理 <b>{@link java.net.URI}</b> 对象之间的转换的实现。
@@ -41,22 +40,9 @@ public class URIConverter extends AbstractConverter<URI> {
 		super();
 	}
 
-	public URIConverter(URI defaultValue){
-		super(defaultValue);
-	}
-
 	@Override
-	public Class<URI> getType(){
-		return URI.class;
-	}
-
-	@Override
-	protected URI convertToType(final Class<URI> type, final Object value) throws Throwable{
-		if(URI.class.equals(type)){
-			return type.cast(new URI(value.toString()));
-		}
-
-		throw conversionException(type, value);
+	protected URI convertToType(final Class<?> sourceType, final Class<?> targetType, final Object value) throws Throwable{
+		return new URI(value.toString());
 	}
 
 }

@@ -40,40 +40,27 @@ public final class ByteConverter extends AbstractNumberConverter<Byte> {
 		super(false);
 	}
 
-	public ByteConverter(final Byte defaultValue){
-		super(false, defaultValue);
-	}
-
 	@Override
-	public Class<Byte> getType(){
-		return Byte.class;
-	}
-
-	@Override
-	protected Byte toNumber(final Class<?> sourceType, final Class<Byte> targetType, final Number value) throws ConversionException{
-		Byte result = super.toNumber(sourceType, targetType, value);
-
-		if(result == null){
-			if(targetType.equals(Byte.class)){
-				final long longValue = value.longValue();
-
-				if(longValue > Byte.MAX_VALUE){
-					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(targetType) + ".");
-				}
-
-				if(longValue < Byte.MIN_VALUE){
-					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too small " + toString(targetType) + ".");
-				}
-
-				return targetType.cast(new Byte(value.byteValue()));
-			}
+	protected Byte toNumber(final Class<?> sourceType, final Class<?> targetType, final Number value) throws ConversionException{
+		if(Byte.class.equals(value.getClass())){
+			return Byte.class.cast(value);
 		}
 
-		throw cannotHandleConversion(sourceType, targetType);
+		final long longValue = value.longValue();
+
+		if(longValue > Byte.MAX_VALUE){
+			throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(Byte.TYPE) + ".");
+		}
+
+		if(longValue < Byte.MIN_VALUE){
+			throw new ConversionException(toString(sourceType) + " value '" + value + "' is too small " + toString(Byte.TYPE) + ".");
+		}
+
+		return new Byte(value.byteValue());
 	}
 
 	@Override
-	protected Byte toNumber(final Class<?> sourceType, final Class<Byte> targetType, final String value) throws ConversionException{
+	protected Byte toNumber(final Class<?> sourceType, final Class<?> targetType, final String value) throws ConversionException{
 		return new Byte(value);
 	}
 

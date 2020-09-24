@@ -40,40 +40,23 @@ public final class ShortConverter extends AbstractNumberConverter<Short> {
 		super(false);
 	}
 
-	public ShortConverter(final Short defaultValue){
-		super(false, defaultValue);
-	}
-
 	@Override
-	public Class<Short> getType(){
-		return Short.class;
-	}
+	protected Short toNumber(final Class<?> sourceType, final Class<?> targetType, final Number value) throws ConversionException{
+		final long longValue = value.longValue();
 
-	@Override
-	protected Short toNumber(final Class<?> sourceType, final Class<Short> targetType, final Number value) throws ConversionException{
-		Short result = super.toNumber(sourceType, targetType, value);
-
-		if(result == null){
-			if(targetType.equals(Short.class)){
-				final long longValue = value.longValue();
-
-				if(longValue > Short.MAX_VALUE){
-					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(targetType) + ".");
-				}
-
-				if(longValue < Short.MIN_VALUE){
-					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too small " + toString(targetType) + ".");
-				}
-
-				return targetType.cast(new Short(value.shortValue()));
-			}
+		if(longValue > Short.MAX_VALUE){
+			throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(Short.TYPE) + ".");
 		}
 
-		throw cannotHandleConversion(sourceType, targetType);
+		if(longValue < Short.MIN_VALUE){
+			throw new ConversionException(toString(sourceType) + " value '" + value + "' is too small " + toString(Short.TYPE) + ".");
+		}
+
+		return value.shortValue();
 	}
 
 	@Override
-	protected Short toNumber(final Class<?> sourceType, final Class<Short> targetType, final String value) throws ConversionException{
+	protected Short toNumber(final Class<?> sourceType, final Class<?> targetType, final String value) throws ConversionException{
 		return new Short(value);
 	}
 

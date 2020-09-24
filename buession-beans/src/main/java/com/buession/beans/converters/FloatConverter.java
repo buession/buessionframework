@@ -40,34 +40,41 @@ public final class FloatConverter extends AbstractNumberConverter<Float> {
 		super(true);
 	}
 
-	public FloatConverter(final Float defaultValue){
-		super(true, defaultValue);
-	}
-
 	@Override
-	public Class<Float> getType(){
-		return Float.class;
-	}
-
-	@Override
-	protected Float toNumber(final Class<?> sourceType, final Class<Float> targetType, final Number value) throws ConversionException{
-		Float result = super.toNumber(sourceType, targetType, value);
-
-		if(result == null){
-			if(targetType.equals(Float.class)){
-				if(value.doubleValue() > Float.MAX_VALUE){
-					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(targetType) + ".");
-				}
-
-				return targetType.cast(new Float(value.floatValue()));
-			}
+	protected Float toNumber(final Class<?> sourceType, final Class<?> targetType, final Number value) throws ConversionException{
+		if(Float.class.equals(value.getClass())){
+			return Float.class.cast(value);
 		}
 
-		throw cannotHandleConversion(sourceType, targetType);
+		if(value.doubleValue() > Float.MAX_VALUE){
+			throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(Float.TYPE) + ".");
+		}
+
+		return value.floatValue();
 	}
 
 	@Override
-	protected Float toNumber(final Class<?> sourceType, final Class<Float> targetType, final String value) throws ConversionException{
+	protected Float toNumber(final Class<?> sourceType, final Class<?> targetType, final String value) throws ConversionException{
+		switch(value.charAt(0)){
+			case 'I':
+				if(isPosInf(value)){
+					return Float.POSITIVE_INFINITY;
+				}
+				break;
+			case 'N':
+				if(isNaN(value)){
+					return Float.NaN;
+				}
+				break;
+			case '-':
+				if(isNegInf(value)){
+					return Float.NEGATIVE_INFINITY;
+				}
+				break;
+			default:
+				break;
+		}
+
 		return new Float(value);
 	}
 

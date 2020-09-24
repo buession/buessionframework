@@ -29,7 +29,7 @@ package com.buession.beans.converters;
 import com.buession.core.exception.ConversionException;
 
 /**
- * 通用数据类型转换器，可以在 BeanUtils 包中注册和使用，以管理对象从一种类型到另一种类型的转换。
+ * 通用数据类型转换器，可以在 BeanResolver 包中注册和使用，以管理对象从一种类型到另一种类型的转换。
  *
  * @author Yong.Teng
  * @since 1.2.0
@@ -40,6 +40,8 @@ public interface Converter<T> {
 	/**
 	 * 将输入对象转换为指定类型的输出对象
 	 *
+	 * @param type
+	 * 		转换的目标类型
 	 * @param value
 	 * 		待转换的值
 	 *
@@ -48,6 +50,6 @@ public interface Converter<T> {
 	 * @throws ConversionException
 	 * 		当发生转换错误
 	 */
-	T convert(final Object value) throws ConversionException;
+	T convert(final Class<?> type, final Object value) throws ConversionException;
 
 }

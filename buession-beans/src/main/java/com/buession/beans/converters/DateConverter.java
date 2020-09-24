@@ -51,40 +51,24 @@ public final class DateConverter extends AbstractDateTimeConverter<Date> {
 		super();
 	}
 
-	public DateConverter(final Date defaultValue){
-		super(defaultValue);
+	@Override
+	protected Date toDate(final Class<?> sourceType, final Class<?> targetType, final long value){
+		return new Date(value);
 	}
 
 	@Override
-	public Class<Date> getType(){
-		return Date.class;
-	}
+	protected Date toDate(final Class<?> sourceType, final Class<?> targetType, final String value){
+		Date result;
 
-	@Override
-	protected Date toDate(final Class<?> sourceType, Class<Date> targetType, long value){
-		if(targetType.equals(Date.class)){
-			return targetType.cast(new Date(value));
-		}
-
-		throw cannotHandleConversion(sourceType, targetType);
-	}
-
-	@Override
-	protected Date toDate(final Class<?> sourceType, final Class<Date> targetType, final String value){
-		if(targetType.equals(Date.class)){
-			Date result;
-
-			for(String format : FORMATS){
-				result = toDate(format, value);
-				if(result != null){
-					return result;
-				}
+		for(String format : FORMATS){
+			result = toDate(format, value);
+			if(result != null){
+				return result;
 			}
-
-			throw new ConversionException("String must be in format ['" + ArrayUtils.toString(FORMATS, "', '") + "'] " + "to create a java.util.Date.");
 		}
 
-		throw cannotHandleConversion(sourceType, targetType);
+		throw new ConversionException("String must be in format ['" + ArrayUtils.toString(FORMATS, "', '") + "'] " +
+				"to create a java.util.Date.");
 	}
 
 	private Date toDate(final String format, final String value){

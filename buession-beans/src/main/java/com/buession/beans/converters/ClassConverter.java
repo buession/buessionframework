@@ -38,37 +38,24 @@ public final class ClassConverter extends AbstractConverter<Class> {
 		super();
 	}
 
-	public ClassConverter(final Class defaultValue){
-		super(defaultValue);
-	}
-
-	@Override
-	public Class<Class> getType(){
-		return Class.class;
-	}
-
 	@Override
 	protected String convertToString(final Object value) throws Throwable{
 		return (value instanceof Class) ? ((Class<?>) value).getName() : value.toString();
 	}
 
 	@Override
-	protected Class<?> convertToType(Class<Class> type, Object value) throws Throwable{
-		if(Class.class.equals(type)){
-			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+	protected Class convertToType(final Class<?> sourceType, final Class<?> targetType, Object value) throws Throwable{
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-			if(classLoader != null){
-				try{
-					return type.cast(classLoader.loadClass(value.toString()));
-				}catch(ClassNotFoundException e){
-				}
+		if(classLoader != null){
+			try{
+				return Class.class.cast(classLoader.loadClass(value.toString()));
+			}catch(ClassNotFoundException e){
 			}
-
-			classLoader = ClassConverter.class.getClassLoader();
-			return type.cast(classLoader.loadClass(value.toString()));
 		}
 
-		throw conversionException(type, value);
+		classLoader = ClassConverter.class.getClassLoader();
+		return Class.class.cast(classLoader.loadClass(value.toString()));
 	}
 
 }

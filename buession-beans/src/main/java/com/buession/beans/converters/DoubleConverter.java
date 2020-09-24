@@ -40,30 +40,37 @@ public final class DoubleConverter extends AbstractNumberConverter<Double> {
 		super(true);
 	}
 
-	public DoubleConverter(final Double defaultValue){
-		super(true, defaultValue);
-	}
-
 	@Override
-	public Class<Double> getType(){
-		return Double.class;
-	}
-
-	@Override
-	protected Double toNumber(final Class<?> sourceType, final Class<Double> targetType, final Number value) throws ConversionException{
-		Double result = super.toNumber(sourceType, targetType, value);
-
-		if(result == null){
-			if(targetType.equals(Double.class)){
-				return targetType.cast(new Double(value.doubleValue()));
-			}
+	protected Double toNumber(final Class<?> sourceType, final Class<?> targetType, final Number value) throws ConversionException{
+		if(Double.class.equals(value.getClass())){
+			return Double.class.cast(value);
 		}
 
-		throw cannotHandleConversion(sourceType, targetType);
+		return value.doubleValue();
 	}
 
 	@Override
-	protected Double toNumber(final Class<?> sourceType, final Class<Double> targetType, final String value) throws ConversionException{
+	protected Double toNumber(final Class<?> sourceType, final Class<?> targetType, final String value) throws ConversionException{
+		switch(value.charAt(0)){
+			case 'I':
+				if(isPosInf(value)){
+					return Double.POSITIVE_INFINITY;
+				}
+				break;
+			case 'N':
+				if(isNaN(value)){
+					return Double.NaN;
+				}
+				break;
+			case '-':
+				if(isNegInf(value)){
+					return Double.NEGATIVE_INFINITY;
+				}
+				break;
+			default:
+				break;
+		}
+
 		return new Double(value);
 	}
 

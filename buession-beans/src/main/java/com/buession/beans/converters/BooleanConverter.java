@@ -42,29 +42,14 @@ public final class BooleanConverter extends AbstractConverter<Boolean> {
 		super();
 	}
 
-	public BooleanConverter(final Boolean defaultValue){
-		super(defaultValue);
-	}
-
 	public BooleanConverter(final String[] trueStrings, final String[] falseStrings){
 		super();
 		this.trueStrings = copyStrings(trueStrings);
 		this.falseStrings = copyStrings(falseStrings);
 	}
 
-	public BooleanConverter(final String[] trueStrings, final String[] falseStrings, final Boolean defaultValue){
-		super(defaultValue);
-		this.trueStrings = copyStrings(trueStrings);
-		this.falseStrings = copyStrings(falseStrings);
-	}
-
 	@Override
-	public Class<Boolean> getType(){
-		return Boolean.class;
-	}
-
-	@Override
-	protected Boolean convertToType(Class<Boolean> type, Object value) throws Throwable{
+	protected Boolean convertToType(final Class<?> sourceType, final Class<?> targetType, final Object value) throws Throwable{
 		final String stringValue = value.toString().toLowerCase();
 
 		for(String trueString : trueStrings){
@@ -79,7 +64,7 @@ public final class BooleanConverter extends AbstractConverter<Boolean> {
 			}
 		}
 
-		throw conversionException(type, value);
+		throw conversionException(Boolean.TYPE, value);
 	}
 
 	private final static String[] copyStrings(final String[] src){

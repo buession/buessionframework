@@ -66,13 +66,15 @@ public class BeanResolverTest {
 		//map.put("id", 1);
 		//map.put("username", 1);
 		//map.put("age", 11.1F);
-		//map.put("enable", Boolean.FALSE);
+		//map.put("enable", Boolean.TRUE);
 		//map.put("disable", true);
 		//map.put("last_login_time", new Date());
 		//map.put("last_login_time", "Fri Aug 28 13:47:53 CST 2020");
 		//map.put("lastLoginTime", "00:23:45, 2020-11-12");
 		//map.put("map", data);
+		map.put("status", 1L);
 
+		map.put("arr", new String[]{"A", "B"});
 
 		BeanResolver beanResolver = new DefaultBeanResolver();
 		beanResolver.populate(user, map);

@@ -40,19 +40,6 @@ public final class CharacterConverter extends AbstractConverter<Character> {
 		super();
 	}
 
-	public CharacterConverter(final Character defaultValue){
-		super(defaultValue);
-	}
-
-	public CharacterConverter(final char defaultValue){
-		super(defaultValue);
-	}
-
-	@Override
-	public Class<Character> getType(){
-		return Character.class;
-	}
-
 	@Override
 	protected String convertToString(final Object value){
 		final String strValue = value.toString();
@@ -60,7 +47,7 @@ public final class CharacterConverter extends AbstractConverter<Character> {
 	}
 
 	@Override
-	protected Character convertToType(Class<Character> type, final Object value) throws Throwable{
+	protected Character convertToType(final Class<?> sourceType, final Class<?> targetType, final Object value) throws Throwable{
 		return new Character(value.toString().charAt(0));
 	}
 

@@ -46,15 +46,6 @@ public final class SqlTimestampConverter extends AbstractDateTimeConverter<Times
 		super();
 	}
 
-	public SqlTimestampConverter(final Timestamp defaultValue){
-		super(defaultValue);
-	}
-
-	@Override
-	public Class<Timestamp> getType(){
-		return Timestamp.class;
-	}
-
 	@Override
 	protected DateFormat getFormat(final Locale locale, final TimeZone timeZone){
 		DateFormat format = locale == null ? DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT) :
@@ -68,26 +59,18 @@ public final class SqlTimestampConverter extends AbstractDateTimeConverter<Times
 	}
 
 	@Override
-	protected Timestamp toDate(final Class<?> sourceType, Class<Timestamp> targetType, long value){
-		if(targetType.equals(Timestamp.class)){
-			return targetType.cast(new Timestamp(value));
-		}
-
-		throw cannotHandleConversion(sourceType, targetType);
+	protected Timestamp toDate(final Class<?> sourceType, final Class<?> targetType, final long value){
+		return new Timestamp(value);
 	}
 
 	@Override
-	protected Timestamp toDate(final Class<?> sourceType, final Class<Timestamp> targetType, final String value){
-		if(targetType.equals(Timestamp.class)){
-			try{
-				return targetType.cast(Timestamp.valueOf(value));
-			}catch(final IllegalArgumentException e){
-				throw new ConversionException("String must be in JDBC format [yyyy-MM-dd HH:mm:ss.fffffffff] to " +
-						"create" + " a java.sql.Timestamp.");
-			}
+	protected Timestamp toDate(final Class<?> sourceType, final Class<?> targetType, final String value){
+		try{
+			return Timestamp.valueOf(value);
+		}catch(IllegalArgumentException e){
+			throw new ConversionException("String must be in JDBC format [yyyy-MM-dd HH:mm:ss.fffffffff] to " +
+					"create" + " a java.sql.Timestamp.");
 		}
-
-		throw cannotHandleConversion(sourceType, targetType);
 	}
 
 }

@@ -40,40 +40,27 @@ public final class IntegerConverter extends AbstractNumberConverter<Integer> {
 		super(false);
 	}
 
-	public IntegerConverter(final Integer defaultValue){
-		super(false, defaultValue);
-	}
-
 	@Override
-	public Class<Integer> getType(){
-		return Integer.class;
-	}
-
-	@Override
-	protected Integer toNumber(final Class<?> sourceType, final Class<Integer> targetType, final Number value) throws ConversionException{
-		Integer result = super.toNumber(sourceType, targetType, value);
-
-		if(result == null){
-			if(targetType.equals(Integer.class)){
-				final long longValue = value.longValue();
-
-				if(longValue < Integer.MIN_VALUE){
-					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too small " + toString(targetType) + ".");
-				}
-
-				if(longValue > Integer.MAX_VALUE){
-					throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(targetType) + ".");
-				}
-
-				return targetType.cast(new Integer(value.intValue()));
-			}
+	protected Integer toNumber(final Class<?> sourceType, final Class<?> targetType, final Number value) throws ConversionException{
+		if(Integer.class.equals(value.getClass())){
+			return Integer.class.cast(value);
 		}
 
-		throw cannotHandleConversion(sourceType, targetType);
+		final long longValue = value.longValue();
+
+		if(longValue < Integer.MIN_VALUE){
+			throw new ConversionException(toString(sourceType) + " value '" + value + "' is too small " + toString(Integer.TYPE) + ".");
+		}
+
+		if(longValue > Integer.MAX_VALUE){
+			throw new ConversionException(toString(sourceType) + " value '" + value + "' is too large for " + toString(Integer.TYPE) + ".");
+		}
+
+		return value.intValue();
 	}
 
 	@Override
-	protected Integer toNumber(final Class<?> sourceType, final Class<Integer> targetType, final String value) throws ConversionException{
+	protected Integer toNumber(final Class<?> sourceType, final Class<?> targetType, final String value) throws ConversionException{
 		return new Integer(value);
 	}
 

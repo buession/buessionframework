@@ -64,6 +64,6 @@ public interface ConvertResolver {
 
 	Object convert(final Class<?> clazz, final String[] values);
 
-	Object convert(final Class<?> targetType, final Object value);
+	Object convert(final Class<?> clazz, final Object value);
 
 }

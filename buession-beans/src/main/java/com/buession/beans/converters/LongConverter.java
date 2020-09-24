@@ -28,6 +28,9 @@ package com.buession.beans.converters;
 
 import com.buession.core.exception.ConversionException;
 
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * {@link com.buession.beans.converters.Converter} 的 Long 对象的实现，处理 <b>{@link java.lang.Long}</b> 对象之间的转换的实现。
  *
@@ -40,31 +43,24 @@ public final class LongConverter extends AbstractNumberConverter<Long> {
 		super(false);
 	}
 
-	public LongConverter(final Long defaultValue){
-		super(false, defaultValue);
+	@Override
+	protected Long toNumber(final Class<?> sourceType, final Class<?> targetType, final Number value) throws ConversionException{
+		return value.longValue();
 	}
 
 	@Override
-	public Class<Long> getType(){
-		return Long.class;
-	}
-
-	@Override
-	protected Long toNumber(final Class<?> sourceType, final Class<Long> targetType, final Number value) throws ConversionException{
-		Long result = super.toNumber(sourceType, targetType, value);
-
-		if(result == null){
-			if(targetType.equals(Long.class)){
-				return targetType.cast(new Long(value.longValue()));
-			}
-		}
-
-		throw cannotHandleConversion(sourceType, targetType);
-	}
-
-	@Override
-	protected Long toNumber(final Class<?> sourceType, final Class<Long> targetType, final String value) throws ConversionException{
+	protected Long toNumber(final Class<?> sourceType, final Class<?> targetType, final String value) throws ConversionException{
 		return new Long(value);
+	}
+
+	@Override
+	protected Long parseDate(final Class<?> targetType, final Date value){
+		return value.getTime();
+	}
+
+	@Override
+	protected Long parseCalendar(final Class<?> targetType, final Calendar calendar){
+		return calendar.getTime().getTime();
 	}
 
 }

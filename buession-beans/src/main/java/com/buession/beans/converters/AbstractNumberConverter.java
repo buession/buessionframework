@@ -26,7 +26,7 @@
  */
 package com.buession.beans.converters;
 
-import org.apache.commons.beanutils.ConversionException;
+import com.buession.core.exception.ConversionException;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -44,9 +44,9 @@ import java.util.Locale;
  */
 public abstract class AbstractNumberConverter<T extends Number> extends AbstractConverter<T> {
 
-	protected final static Integer ZERO = new Integer(0);
+	protected final static Integer ZERO = 0;
 
-	protected final static Integer ONE = new Integer(1);
+	protected final static Integer ONE = 1;
 
 	private final boolean allowDecimals;
 
@@ -58,11 +58,6 @@ public abstract class AbstractNumberConverter<T extends Number> extends Abstract
 
 	public AbstractNumberConverter(final boolean allowDecimals){
 		super();
-		this.allowDecimals = allowDecimals;
-	}
-
-	public AbstractNumberConverter(final boolean allowDecimals, final T defaultValue){
-		super(defaultValue);
 		this.allowDecimals = allowDecimals;
 	}
 
@@ -177,83 +172,100 @@ public abstract class AbstractNumberConverter<T extends Number> extends Abstract
 	}
 
 	@Override
-	protected T convertToType(final Class<T> targetType, final Object value) throws Throwable{
-		final Class<?> sourceType = value.getClass();
-
-		// Handle Number
+	protected T convertToType(final Class<?> sourceType, final Class<?> targetType, final Object value) throws Throwable{
 		if(value instanceof Number){
 			return toNumber(sourceType, targetType, (Number) value);
 		}
 
-		// Handle Boolean
 		if(value instanceof Boolean){
-			return toNumber(sourceType, targetType, ((Boolean) value).booleanValue() ? ONE : ZERO);
+			return toNumber(sourceType, targetType, ((Boolean) value) ? ONE : ZERO);
 		}
 
-		// Handle Date --> Long
-		if(value instanceof Date && Long.class.equals(targetType)){
-			return targetType.cast(new Long(((Date) value).getTime()));
+		if(value instanceof Date){
+			T result = parseDate(targetType, (Date) value);
+
+			if(result != null){
+				return result;
+			}
 		}
 
-		// Handle Calendar --> Long
-		if(value instanceof Calendar && Long.class.equals(targetType)){
-			return targetType.cast(new Long(((Calendar) value).getTime().getTime()));
+		if(value instanceof Calendar){
+			T result = parseCalendar(targetType, (Calendar) value);
+
+			if(result != null){
+				return result;
+			}
 		}
 
-		// Convert all other types to String & handle
 		final String stringValue = value.toString().trim();
 		if(stringValue.length() == 0){
 			return handleMissing(targetType);
 		}
 
-		// Convert/Parse a String
-		Number number = null;
+		Number number;
 		if(useLocaleFormat){
-			final NumberFormat format = getFormat();
-			number = parse(sourceType, targetType, stringValue, format);
+			number = parse(sourceType, targetType, stringValue, getFormat());
 		}else{
 			logger.debug("    No NumberFormat, using default conversion.");
 			number = toNumber(sourceType, targetType, stringValue);
 		}
 
-		// Ensure the correct number type is returned
 		return toNumber(sourceType, targetType, number);
 	}
 
-	protected T toNumber(final Class<?> sourceType, final Class<T> targetType, final Number value) throws ConversionException{
-		if(targetType.equals(value.getClass())){
-			return targetType.cast(value);
-		}
+	protected abstract T toNumber(final Class<?> sourceType, final Class<?> targetType, final Number value) throws ConversionException;
 
-		return null;
-	}
+	protected abstract T toNumber(final Class<?> sourceType, final Class<?> targetType, final String value) throws ConversionException;
 
-	protected T toNumber(final Class<?> sourceType, final Class<T> targetType, final String value) throws ConversionException{
-		throw cannotHandleConversion(sourceType, targetType);
-	}
-
-	protected Number parse(final Class<?> sourceType, final Class<T> targetType, final String value,
+	protected Number parse(final Class<?> sourceType, final Class<?> targetType, final String value,
 			final NumberFormat format){
-		final ParsePosition pos = new ParsePosition(0);
-		final Number result = format.parse(value, pos);
+		final ParsePosition position = new ParsePosition(0);
+		final Number result = format.parse(value, position);
 
-		if(pos.getErrorIndex() >= 0 || pos.getIndex() != value.length() || result == null){
-			String message = "Error converting from '" + toString(sourceType) + "' to '" + toString(targetType) + "'";
+		if(position.getErrorIndex() >= 0 || position.getIndex() != value.length() || result == null){
+			StringBuilder sb = new StringBuilder(128);
+
+			sb.append("Error converting ");
+			sb.append("from '").append(toString(sourceType)).append("' to '").append(toString(targetType)).append('\'');
 
 			if(format instanceof DecimalFormat){
-				message += " using pattern '" + ((DecimalFormat) format).toPattern() + "'";
+				sb.append(" using pattern '").append(((DecimalFormat) format).toPattern()).append('\'');
 			}
-			if(locale != null){
-				message += " for locale=[" + locale + "]";
-			}
-			message += ".";
 
-			logger.debug("    " + message);
+			if(locale != null){
+				sb.append(" for locale=[").append(locale).append(']');
+			}
+
+			sb.append('.');
+
+			String message = sb.toString();
+
+			logger.debug("    {}", message);
 
 			throw new ConversionException(message);
 		}
 
 		return result;
+	}
+
+	protected T parseDate(final Class<?> targetType, final Date value){
+		return null;
+	}
+
+	protected T parseCalendar(final Class<?> targetType, final Calendar calendar){
+		return null;
+	}
+
+	protected final static boolean isNegInf(final String text){
+		return "-Infinity".equals(text) || "-INF".equals(text);
+	}
+
+	protected final static boolean isPosInf(final String text){
+		return "Infinity".equals(text) || "INF".equals(text);
+	}
+
+	protected final static boolean isNaN(final String text){
+		return "NaN".equals(text);
 	}
 
 }

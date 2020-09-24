@@ -40,22 +40,9 @@ public final class FileConverter extends AbstractConverter<File> {
 		super();
 	}
 
-	public FileConverter(final File defaultValue){
-		super(defaultValue);
-	}
-
 	@Override
-	public Class<File> getType(){
-		return File.class;
-	}
-
-	@Override
-	protected File convertToType(Class<File> type, Object value) throws Throwable{
-		if(File.class.equals(type)){
-			return type.cast(new File(value.toString()));
-		}
-
-		throw conversionException(type, value);
+	protected File convertToType(final Class<?> sourceType, final Class<?> targetType, final Object value) throws Throwable{
+		return new File(value.toString());
 	}
 
 }

@@ -41,22 +41,9 @@ public final class PathConverter extends AbstractConverter<Path> {
 		super();
 	}
 
-	public PathConverter(final Path defaultValue){
-		super(defaultValue);
-	}
-
 	@Override
-	public Class<Path> getType(){
-		return Path.class;
-	}
-
-	@Override
-	protected Path convertToType(Class<Path> type, Object value) throws Throwable{
-		if(Path.class.equals(type)){
-			return type.cast(new File(value.toString()).toPath());
-		}
-
-		throw conversionException(type, value);
+	protected Path convertToType(final Class<?> sourceType, final Class<?> targetType, final Object value) throws Throwable{
+		return new File(value.toString()).toPath();
 	}
 
 }

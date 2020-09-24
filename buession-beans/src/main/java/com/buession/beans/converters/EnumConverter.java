@@ -26,21 +26,42 @@
  */
 package com.buession.beans.converters;
 
-import org.junit.Test;
+import com.buession.core.utils.EnumUtils;
+
+import java.lang.reflect.Field;
 
 /**
+ * {@link com.buession.beans.converters.Converter} 的 枚举对象的实现，处理 <b>{@link java.lang.Enum}</b> 对象之间的转换的实现。
+ *
  * @author Yong.Teng
+ * @since 1.2.0
  */
-public class CharacterConverterTest {
+public final class EnumConverter extends AbstractConverter<Enum> {
 
-	@Test
-	public void test1(){
-		CharacterConverter characterConverter = new CharacterConverter();
-		System.out.println(characterConverter.convert("true"));
-		System.out.println(characterConverter.convert("on"));
-		System.out.println(characterConverter.convert('a'));
-		System.out.println(characterConverter.convert(new Object()));
-		System.out.println(characterConverter.convert(null));
+	public EnumConverter(){
+		super();
+	}
+
+	@Override
+	@SuppressWarnings({"unchecked"})
+	protected Enum convertToType(final Class<?> sourceType, final Class<?> targetType, final Object value) throws Throwable{
+		Class<Enum> targetClazz = (Class<Enum>) targetType;
+
+		if(Short.class.isAssignableFrom(sourceType) || Integer.class.isAssignableFrom(sourceType) || Long.class.isAssignableFrom(sourceType)){
+			int currentValue = Integer.parseInt(value.toString());
+			Field[] fields = targetType.getFields();
+			Enum<?>[] enumConstants = targetClazz.getEnumConstants();
+
+			for(int i = 0; i < fields.length; i++){
+				if(i == currentValue){
+					return enumConstants[i];
+				}
+			}
+		}else if(String.class.isAssignableFrom(sourceType)){
+			return EnumUtils.valueOf(targetClazz, value.toString());
+		}
+
+		throw conversionException(targetType, value);
 	}
 
 }

@@ -63,8 +63,6 @@ public class DefaultConvertResolver implements ConvertResolver {
 		register(String.class, new StringConverter());
 		register(Status.class, new StatusConverter());
 
-		register(Class.class, new ClassConverter());
-
 		register(Byte.class, new ByteConverter());
 		register(Float.class, new FloatConverter());
 		register(Double.class, new DoubleConverter());
@@ -85,6 +83,9 @@ public class DefaultConvertResolver implements ConvertResolver {
 
 		register(URI.class, new URIConverter());
 		register(URL.class, new URLConverter());
+
+		register(Class.class, new ClassConverter());
+		register(Enum.class, new EnumConverter());
 	}
 
 	@Override
@@ -116,7 +117,7 @@ public class DefaultConvertResolver implements ConvertResolver {
 		}
 
 		final Converter<String> converter = lookup(String.class);
-		return converter.convert(val);
+		return converter.convert(String.class, val);
 	}
 
 	@Override
@@ -125,14 +126,13 @@ public class DefaultConvertResolver implements ConvertResolver {
 			logger.debug("Convert string '{}' to class '{}'.", value, clazz.getName());
 		}
 
-		Converter converter = lookup(clazz);
+		Converter<?> converter = lookup(clazz);
 		if(converter == null){
 			converter = lookup(String.class);
 		}
 
 		logger.trace("  Using converter {}.", converter);
-		return converter.convert(value);
-
+		return converter.convert(clazz, value);
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class DefaultConvertResolver implements ConvertResolver {
 
 		logger.debug("Convert String[{}] to class '{}[]'.", values.length, type.getName());
 
-		Converter converter = lookup(type);
+		Converter<?> converter = lookup(type);
 		if(converter == null){
 			converter = lookup(String.class);
 		}
@@ -155,36 +155,35 @@ public class DefaultConvertResolver implements ConvertResolver {
 		final Object array = Array.newInstance(type, values.length);
 
 		for(int i = 0; i < values.length; i++){
-			Array.set(array, i, converter.convert(values[i]));
+			Array.set(array, i, converter.convert(clazz, values[i]));
 		}
 
 		return array;
 	}
 
 	@Override
-	public Object convert(final Class<?> targetType, final Object value){
+	public Object convert(final Class<?> clazz, final Object value){
 		final Class<?> sourceType = value == null ? null : value.getClass();
 
 		if(value == null){
-			logger.debug("Convert null value to type '{}'.", targetType.getName());
+			logger.debug("Convert null value to type '{}'.", clazz.getName());
 		}else{
-			logger.debug("Convert type '{}' value '{}' to type '{}'.", sourceType.getName(), value,
-					targetType.getName());
+			logger.debug("Convert type '{}' value '{}' to type '{}'.", sourceType.getName(), value, clazz.getName());
 		}
 
 		Object converted = value;
-		Converter converter = lookup(sourceType, targetType);
+		Converter<?> converter = lookup(sourceType, clazz);
 		if(converter != null){
 			logger.trace("  Using converter {}", converter);
-			converted = converter.convert(value);
+			converted = converter.convert(clazz, value);
 		}
 
-		if(String.class.equals(targetType) && converted != null && !(converted instanceof String)){
+		if(String.class.equals(clazz) && converted != null && !(converted instanceof String)){
 			converter = lookup(String.class);
 
 			if(converter != null){
 				logger.trace("  Using converter {}", converter);
-				converted = converter.convert(converted);
+				converted = converter.convert(clazz, converted);
 			}
 
 			if(converted != null && !(converted instanceof String)){
@@ -195,12 +194,17 @@ public class DefaultConvertResolver implements ConvertResolver {
 		return converted;
 	}
 
+	@SuppressWarnings({"unchecked"})
 	private <T> Converter<T> lookup(final Class<T> clazz){
 		Converter<T> converter = converters.get(clazz);
 
 		if(converter == null){
 			final Class<T> targetType = ConvertUtils.primitiveToWrapper(clazz);
 			converter = converters.get(targetType);
+
+			if(converter == null && clazz.isEnum()){
+				converter = converters.get(Enum.class);
+			}
 		}
 
 		return converter;

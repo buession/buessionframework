@@ -38,22 +38,9 @@ public final class StringConverter extends AbstractConverter<String> {
 		super();
 	}
 
-	public StringConverter(final String defaultValue){
-		super(defaultValue);
-	}
-
 	@Override
-	public Class<String> getType(){
-		return String.class;
-	}
-
-	@Override
-	protected String convertToType(Class<String> type, final Object value) throws Throwable{
-		if(CharSequence.class.isAssignableFrom(type) || Object.class.equals(type)){
-			return type.cast(value.toString());
-		}
-
-		throw conversionException(type, value);
+	protected String convertToType(final Class<?> sourceType, final Class<?> targetType, final Object value) throws Throwable{
+		return convertToString(value);
 	}
 
 }

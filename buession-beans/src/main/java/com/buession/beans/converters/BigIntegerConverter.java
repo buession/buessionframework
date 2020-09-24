@@ -44,32 +44,17 @@ public final class BigIntegerConverter extends AbstractNumberConverter<BigIntege
 		super(false);
 	}
 
-	public BigIntegerConverter(final BigInteger defaultValue){
-		super(false, defaultValue);
-	}
-
 	@Override
-	public Class<BigInteger> getType(){
-		return BigInteger.class;
-	}
-
-	@Override
-	protected BigInteger toNumber(final Class<?> sourceType, final Class<BigInteger> targetType, final Number value) throws ConversionException{
-		BigInteger result = super.toNumber(sourceType, targetType, value);
-
-		if(result == null){
-			if(value instanceof BigDecimal){
-				return targetType.cast(((BigDecimal) value).toBigInteger());
-			}else{
-				return targetType.cast(BigInteger.valueOf(value.longValue()));
-			}
+	protected BigInteger toNumber(final Class<?> sourceType, final Class<?> targetType, final Number value) throws ConversionException{
+		if(value instanceof BigDecimal){
+			return ((BigDecimal) value).toBigInteger();
+		}else{
+			return BigInteger.valueOf(value.longValue());
 		}
-
-		throw cannotHandleConversion(sourceType, targetType);
 	}
 
 	@Override
-	protected BigInteger toNumber(final Class<?> sourceType, final Class<BigInteger> targetType, final String value) throws ConversionException{
+	protected BigInteger toNumber(final Class<?> sourceType, final Class<?> targetType, final String value) throws ConversionException{
 		return new BigInteger(value);
 	}
 

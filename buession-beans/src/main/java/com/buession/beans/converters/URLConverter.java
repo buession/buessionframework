@@ -40,22 +40,9 @@ public class URLConverter extends AbstractConverter<URL> {
 		super();
 	}
 
-	public URLConverter(URL defaultValue){
-		super(defaultValue);
-	}
-
 	@Override
-	public Class<URL> getType(){
-		return URL.class;
-	}
-
-	@Override
-	protected URL convertToType(final Class<URL> type, final Object value) throws Throwable{
-		if(URL.class.equals(type)){
-			return type.cast(new URL(value.toString()));
-		}
-
-		throw conversionException(type, value);
+	protected URL convertToType(final Class<?> sourceType, final Class<?> targetType, final Object value) throws Throwable{
+		return new URL(value.toString());
 	}
 
 }

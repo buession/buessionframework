@@ -42,35 +42,18 @@ public final class SqlDateConverter extends AbstractDateTimeConverter<Date> {
 		super();
 	}
 
-	public SqlDateConverter(final Date defaultValue){
-		super(defaultValue);
+	@Override
+	protected Date toDate(final Class<?> sourceType, final Class<?> targetType, final long value){
+		return new Date(value);
 	}
 
 	@Override
-	public Class<Date> getType(){
-		return Date.class;
-	}
-
-	@Override
-	protected Date toDate(final Class<?> sourceType, Class<Date> targetType, long value){
-		if(targetType.equals(Date.class)){
-			return targetType.cast(new Date(value));
+	protected Date toDate(final Class<?> sourceType, final Class<?> targetType, final String value){
+		try{
+			return Date.valueOf(value);
+		}catch(IllegalArgumentException e){
+			throw new ConversionException("String must be in JDBC format [yyyy-MM-dd] to create a java.sql.Date.");
 		}
-
-		throw cannotHandleConversion(sourceType, targetType);
-	}
-
-	@Override
-	protected Date toDate(final Class<?> sourceType, final Class<Date> targetType, final String value){
-		if(targetType.equals(Date.class)){
-			try{
-				return targetType.cast(Date.valueOf(value));
-			}catch(final IllegalArgumentException e){
-				throw new ConversionException("String must be in JDBC format [yyyy-MM-dd] to create a java.sql.Date.");
-			}
-		}
-
-		throw cannotHandleConversion(sourceType, targetType);
 	}
 
 }

@@ -45,15 +45,6 @@ public final class SqlTimeConverter extends AbstractDateTimeConverter<Time> {
 		super();
 	}
 
-	public SqlTimeConverter(final Time defaultValue){
-		super(defaultValue);
-	}
-
-	@Override
-	public Class<Time> getType(){
-		return Time.class;
-	}
-
 	@Override
 	protected DateFormat getFormat(final Locale locale, final TimeZone timeZone){
 		DateFormat format = locale == null ? DateFormat.getTimeInstance(DateFormat.SHORT) :
@@ -67,25 +58,17 @@ public final class SqlTimeConverter extends AbstractDateTimeConverter<Time> {
 	}
 
 	@Override
-	protected Time toDate(final Class<?> sourceType, Class<Time> targetType, long value){
-		if(targetType.equals(Time.class)){
-			return targetType.cast(new Time(value));
-		}
-
-		throw cannotHandleConversion(sourceType, targetType);
+	protected Time toDate(final Class<?> sourceType, final Class<?> targetType, final long value){
+		return new Time(value);
 	}
 
 	@Override
-	protected Time toDate(final Class<?> sourceType, final Class<Time> targetType, final String value){
-		if(targetType.equals(Time.class)){
-			try{
-				return targetType.cast(Time.valueOf(value));
-			}catch(final IllegalArgumentException e){
-				throw new ConversionException("String must be in JDBC format [HH:mm:ss] to create a java.sql.Time.");
-			}
+	protected Time toDate(final Class<?> sourceType, final Class<?> targetType, final String value){
+		try{
+			return Time.valueOf(value);
+		}catch(IllegalArgumentException e){
+			throw new ConversionException("String must be in JDBC format [HH:mm:ss] to create a java.sql.Time.");
 		}
-
-		throw cannotHandleConversion(sourceType, targetType);
 	}
 
 }

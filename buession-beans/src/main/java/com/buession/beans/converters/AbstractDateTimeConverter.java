@@ -58,10 +58,6 @@ public abstract class AbstractDateTimeConverter<T> extends AbstractConverter<T> 
 		super();
 	}
 
-	public AbstractDateTimeConverter(T defaultValue){
-		super(defaultValue);
-	}
-
 	/**
 	 * 返回是否使用格式转换日期时间
 	 *
@@ -169,7 +165,7 @@ public abstract class AbstractDateTimeConverter<T> extends AbstractConverter<T> 
 		}else if(value instanceof Calendar){
 			date = ((Calendar) value).getTime();
 		}else if(value instanceof Long){
-			date = new Date(((Long) value).longValue());
+			date = new Date((Long) value);
 		}
 
 		String result;
@@ -181,12 +177,12 @@ public abstract class AbstractDateTimeConverter<T> extends AbstractConverter<T> 
 
 			logFormat("Formatting", format);
 			if(logger.isDebugEnabled()){
-				logger.debug("    Converted  to String using format '{}'.", result);
+				logger.debug("    Converted to String using format '{}'.", result);
 			}
 		}else{
 			result = value.toString();
 			if(logger.isDebugEnabled()){
-				logger.debug("    Converted  to String using toString() '{}'.", result);
+				logger.debug("    Converted to String using toString() '{}'.", result);
 			}
 		}
 
@@ -194,10 +190,7 @@ public abstract class AbstractDateTimeConverter<T> extends AbstractConverter<T> 
 	}
 
 	@Override
-	protected T convertToType(final Class<T> targetType, final Object value) throws Throwable{
-		final Class<?> sourceType = value.getClass();
-
-		// Handle java.sql.Timestamp
+	protected T convertToType(final Class<?> sourceType, final Class<?> targetType, final Object value) throws Throwable{
 		if(value instanceof java.sql.Timestamp){
 			final java.sql.Timestamp timestamp = (java.sql.Timestamp) value;
 			long timeInMillis = ((timestamp.getTime() / 1000) * 1000) + timestamp.getNanos() / 1000000;
@@ -205,66 +198,45 @@ public abstract class AbstractDateTimeConverter<T> extends AbstractConverter<T> 
 			return toDate(sourceType, targetType, timeInMillis);
 		}
 
-		// Handle Date (includes java.sql.Date & java.sql.Time)
 		if(value instanceof Date){
 			final Date date = (Date) value;
 			return toDate(sourceType, targetType, date.getTime());
 		}
 
-		// Handle Calendar
 		if(value instanceof Calendar){
 			final Calendar calendar = (Calendar) value;
 			return toDate(sourceType, targetType, calendar.getTime().getTime());
 		}
 
-		// Handle Long
 		if(value instanceof Long){
-			final Long longObj = (Long) value;
-			return toDate(sourceType, targetType, longObj.longValue());
+			return toDate(sourceType, targetType, (Long) value);
 		}
 
-		// Convert all other types to String & handle
 		final String stringValue = value.toString().trim();
 		if(stringValue.length() == 0){
 			return handleMissing(targetType);
 		}
 
-		// Parse the Date/Time
 		if(useLocaleFormat){
-			Calendar calendar;
+			Calendar calendar = patterns != null && patterns.length > 0 ? parse(sourceType, targetType, stringValue) :
+					parse(sourceType, targetType, stringValue, getFormat(locale, timeZone));
 
-			if(patterns != null && patterns.length > 0){
-				calendar = parse(sourceType, targetType, stringValue);
-			}else{
-				final DateFormat format = getFormat(locale, timeZone);
-				calendar = parse(sourceType, targetType, stringValue, format);
-			}
-
-			if(Calendar.class.isAssignableFrom(targetType)){
-				return targetType.cast(calendar);
-			}else{
-				return toDate(sourceType, targetType, calendar.getTime().getTime());
-			}
+			return toDate(sourceType, targetType, calendar.getTime().getTime());
 		}
-		
+
 		return toDate(sourceType, targetType, stringValue);
 	}
 
-	protected T toDate(final Class<?> sourceType, final Class<T> targetType, final long value) throws ConversionException{
-		throw cannotHandleConversion(getClass(), targetType);
-	}
+	protected abstract T toDate(final Class<?> sourceType, final Class<?> targetType, final long value) throws ConversionException;
 
-	protected T toDate(final Class<?> sourceType, final Class<T> targetType, final String value){
-		throw cannotHandleConversion(getClass(), targetType);
-	}
+	protected abstract T toDate(final Class<?> sourceType, final Class<?> targetType, final String value);
 
-	protected Calendar parse(final Class<?> sourceType, final Class<T> targetType, final String value) throws Exception{
+	protected Calendar parse(final Class<?> sourceType, final Class<?> targetType, final String value) throws Exception{
 		Exception firstEx = null;
 
 		for(String pattern : patterns){
 			try{
-				final DateFormat format = getFormat(pattern);
-				return parse(sourceType, targetType, value, format);
+				return parse(sourceType, targetType, value, getFormat(pattern));
 			}catch(final Exception ex){
 				if(firstEx == null){
 					firstEx = ex;
@@ -273,26 +245,34 @@ public abstract class AbstractDateTimeConverter<T> extends AbstractConverter<T> 
 		}
 
 		if(patterns.length > 1){
-			throw new ConversionException("Error converting '" + toString(sourceType) + "' to '" + toString(targetType) + "' using  patterns '" + ArrayUtils.toString(patterns) + "'.");
+			throw new ConversionException("Error converting '" + toString(sourceType) + "' to '" + toString(targetType) + "' using patterns '" + ArrayUtils.toString(patterns) + "'.");
 		}else{
 			throw firstEx;
 		}
 	}
 
-	protected Calendar parse(final Class<?> sourceType, final Class<T> targetType, final String value,
+	protected Calendar parse(final Class<?> sourceType, final Class<?> targetType, final String value,
 			final DateFormat format){
 		logFormat("Parsing", format);
 		format.setLenient(false);
 		final ParsePosition pos = new ParsePosition(0);
-		final Date parsedDate = format.parse(value, pos); // ignore the result (use the Calendar)
+		final Date parsedDate = format.parse(value, pos);
 
 		if(pos.getErrorIndex() >= 0 || pos.getIndex() != value.length() || parsedDate == null){
-			String message = "Error converting '" + toString(sourceType) + "' to '" + toString(targetType) + "'";
+			final StringBuilder sb = new StringBuilder(128);
+
+			sb.append("Error converting '").append(toString(sourceType)).append("' to '").append(toString(targetType)).append('\'');
+
 			if(format instanceof SimpleDateFormat){
-				message += " using pattern '" + ((SimpleDateFormat) format).toPattern() + "'";
+				sb.append(" using pattern '").append(((SimpleDateFormat) format).toPattern()).append('\'');
 			}
-			message += '.';
-			logger.debug("    " + message);
+
+			sb.append('.');
+
+			final String message = sb.toString();
+
+			logger.debug("    {}", message);
+
 			throw new ConversionException(message);
 		}
 
@@ -301,7 +281,7 @@ public abstract class AbstractDateTimeConverter<T> extends AbstractConverter<T> 
 
 	private void logFormat(final String action, final DateFormat format){
 		if(logger.isDebugEnabled()){
-			final StringBuilder sb = new StringBuilder(45);
+			final StringBuilder sb = new StringBuilder(128);
 
 			sb.append("    ").append(action).append(" with Format");
 

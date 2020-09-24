@@ -28,6 +28,7 @@ package com.buession.beans;
 
 import com.buession.beans.annotations.DateFormat;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 
@@ -53,7 +54,11 @@ public class User {
 	@DateFormat(pattern = "HH:mm:ss, yyyy-MM-dd")
 	private Date lastLoginTime;
 
+	private Status status;
+
 	private Map<String, Object> map;
+
+	private String[] arr;
 
 	public int getId(){
 		return id;
@@ -119,6 +124,14 @@ public class User {
 		this.lastLoginTime = lastLoginTime;
 	}
 
+	public Status getStatus(){
+		return status;
+	}
+
+	public void setStatus(Status status){
+		this.status = status;
+	}
+
 	public Map<String, Object> getMap(){
 		return map;
 	}
@@ -127,9 +140,25 @@ public class User {
 		this.map = map;
 	}
 
+	public String[] getArr(){
+		return arr;
+	}
+
+	public void setArr(String[] arr){
+		this.arr = arr;
+	}
+
 	@Override
 	public String toString(){
-		return "User{" + "id=" + id + ", username='" + username + '\'' + ", age=" + age + ", weight=" + weight + ", " + "height=" + height + ", enable=" + enable + ", disable=" + disable + ", lastLoginTime=" + lastLoginTime + ", map=" + map + '}';
+		return "User{" + "id=" + id + ", username='" + username + '\'' + ", age=" + age + ", weight=" + weight + ", " + "height=" + height + ", enable=" + enable + ", disable=" + disable + ", lastLoginTime=" + lastLoginTime + ", status=" + status + ", map=" + map + ", arr=" + Arrays.toString(arr) + '}';
+	}
+
+	public enum Status {
+
+		ON,
+
+		OFF
+
 	}
 
 }

@@ -102,7 +102,7 @@ public class DefaultPropertyResolver implements PropertyResolver {
 			throw new NoSuchMethodException("Property '" + name + "' has no getter method in class '" + bean.getClass() + "'.");
 		}
 
-		return invokeMethod(readMethod, bean, BeanResolver.EMPTY_OBJECT_ARRAY);
+		return invokeMethod(readMethod, bean, new Object[0]);
 	}
 
 	@Override
@@ -171,7 +171,7 @@ public class DefaultPropertyResolver implements PropertyResolver {
 			sb.append("Method invocation failed: ");
 			sb.append("Cannot invoke ").append(method.getDeclaringClass().getName()).append('.').append(method.getName());
 			sb.append(" on bean class '").append(bean.getClass()).append('\'');
-			sb.append(" - ").append(e.getMessage()).append(" - had objects of type ");
+			sb.append(" - ").append(e.getMessage()).append(" - bad objects of type ");
 
 			sb.append('"');
 			if(values != null){
