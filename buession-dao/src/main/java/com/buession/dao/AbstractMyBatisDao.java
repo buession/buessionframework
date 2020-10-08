@@ -26,6 +26,7 @@
  */
 package com.buession.dao;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -34,9 +35,10 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.buession.beans.BeanResolver;
+import com.buession.beans.DefaultBeanResolver;
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.Assert;
-import com.buession.core.utils.ReflectUtils;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Order;
 import org.apache.ibatis.mapping.ResultMap;
@@ -61,6 +63,8 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 
 	@Resource
 	protected List<SqlSessionTemplate> slaveSqlSessionTemplates;
+
+	protected BeanResolver beanResolver = new DefaultBeanResolver();
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractMyBatisDao.class);
 
@@ -143,15 +147,27 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	public int update(E e, Map<String, Object> conditions){
 		Assert.isNull(e, "The data could not be empty for update.");
 
-		Map<String, Object> data = new HashMap<>(16);
+		Map<String, Object> data = new HashMap<>(conditions == null ? 16 : conditions.size());
 		if(conditions != null){
 			data.putAll(conditions);
 		}
 
 		if(e instanceof Map){
-			data.putAll((Map<String, Object>) e);
+			Map<Object, Object> eMap = (Map<Object, Object>) e;
+
+			eMap.forEach((key, value)->{
+				data.put(key.toString(), value);
+			});
 		}else{
-			data.putAll(ReflectUtils.classConvertMap(e));
+			try{
+				beanResolver.populate(data, e);
+			}catch(IllegalAccessException ex){
+				logger.error("Execute update command error: {}", ex.getMessage(), ex);
+				return 0;
+			}catch(InvocationTargetException ex){
+				logger.error("Execute update command error: {}", ex.getMessage(), ex);
+				return 0;
+			}
 		}
 
 		return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE), data);
@@ -455,7 +471,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 					for(ResultMapping resultMapping : resultMappings){
 						try{
 							FieldUtils.writeField(e, resultMapping.getProperty(), primary, true);
-						}catch(IllegalAccessException illegalAccessException){
+						}catch(IllegalAccessException ex){
 						}
 					}
 				}
