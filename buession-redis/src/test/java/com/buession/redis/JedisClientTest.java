@@ -63,6 +63,9 @@ public class JedisClientTest extends AbstractJedisRedisTest {
 		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
 		System.out.println(redisTemplate.get("info"));
 		System.out.println(redisTemplate.getObject("info", Info.class));
+		
+		redisTemplate.set("int", "1");
+		System.out.println(redisTemplate.getObject("int", Integer.class));
 	}
 
 	@Test

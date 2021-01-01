@@ -164,7 +164,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 		Map<String, String> temp = new LinkedHashMap<>(data.size());
 
 		for(KeyValue<String, V> kv : data){
-			temp.put(kv.getKey(), serialize(kv.getValue()));
+			temp.put(kv.getKey(), serializer.serialize(kv.getValue()));
 		}
 
 		return hMSet(key, temp);
@@ -175,7 +175,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 		Map<byte[], byte[]> temp = new LinkedHashMap<>(data.size());
 
 		for(KeyValue<byte[], V> kv : data){
-			temp.put(kv.getKey(), serializeAsBytes(kv.getValue()));
+			temp.put(kv.getKey(), serializer.serializeAsBytes(kv.getValue()));
 		}
 
 		return hMSet(key, temp);
@@ -183,22 +183,22 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> Status hSet(final String key, final String field, final V value){
-		return hSet(key, field, serialize(value));
+		return hSet(key, field, serializer.serialize(value));
 	}
 
 	@Override
 	public <V> Status hSet(final byte[] key, final byte[] field, final V value){
-		return hSet(key, field, serializeAsBytes(value));
+		return hSet(key, field, serializer.serializeAsBytes(value));
 	}
 
 	@Override
 	public <V> Status hSetNx(final String key, final String field, final V value){
-		return hSetNx(key, field, serialize(value));
+		return hSetNx(key, field, serializer.serialize(value));
 	}
 
 	@Override
 	public <V> Status hSetNx(final byte[] key, final byte[] field, final V value){
-		return hSetNx(key, field, serializeAsBytes(value));
+		return hSetNx(key, field, serializer.serializeAsBytes(value));
 	}
 
 	@Override
@@ -385,12 +385,12 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> Long lInsert(final String key, final V value, final ListPosition position, final V pivot){
-		return lInsert(key, serialize(value), position, serialize(pivot));
+		return lInsert(key, serializer.serialize(value), position, serializer.serialize(pivot));
 	}
 
 	@Override
 	public <V> Long lInsert(final byte[] key, final V value, final ListPosition position, final V pivot){
-		return lInsert(key, serializeAsBytes(value), position, serializeAsBytes(pivot));
+		return lInsert(key, serializer.serializeAsBytes(value), position, serializer.serializeAsBytes(pivot));
 	}
 
 	@Override
@@ -425,42 +425,42 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> Long lPush(final String key, final V value){
-		return lPush(key, serialize(value));
+		return lPush(key, serializer.serialize(value));
 	}
 
 	@Override
 	public <V> Long lPush(final byte[] key, final V value){
-		return lPush(key, serializeAsBytes(value));
+		return lPush(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
 	public <V> Long lPush(final String key, final V... values){
-		return lPush(key, serialize(values));
+		return lPush(key, serializer.serialize(values));
 	}
 
 	@Override
 	public <V> Long lPush(final byte[] key, final V... values){
-		return lPush(key, serializeAsBytes(values));
+		return lPush(key, serializer.serializeAsBytes(values));
 	}
 
 	@Override
 	public <V> Long lPushX(final String key, final V value){
-		return lPushX(key, serialize(value));
+		return lPushX(key, serializer.serialize(value));
 	}
 
 	@Override
 	public <V> Long lPushX(final byte[] key, final V value){
-		return lPushX(key, serializeAsBytes(value));
+		return lPushX(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
 	public <V> Long lPushX(final String key, final V... values){
-		return lPushX(key, serialize(values));
+		return lPushX(key, serializer.serialize(values));
 	}
 
 	@Override
 	public <V> Long lPushX(final byte[] key, final V... values){
-		return lPushX(key, serializeAsBytes(values));
+		return lPushX(key, serializer.serializeAsBytes(values));
 	}
 
 	@Override
@@ -525,22 +525,22 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> Status lSet(final String key, final int index, final V value){
-		return lSet(key, index, serialize(value));
+		return lSet(key, index, serializer.serialize(value));
 	}
 
 	@Override
 	public <V> Status lSet(final byte[] key, final int index, final V value){
-		return lSet(key, index, serializeAsBytes(value));
+		return lSet(key, index, serializer.serializeAsBytes(value));
 	}
 
 	@Override
 	public <V> Status lSet(final String key, final long index, final V value){
-		return lSet(key, index, serialize(value));
+		return lSet(key, index, serializer.serialize(value));
 	}
 
 	@Override
 	public <V> Status lSet(final byte[] key, final long index, final V value){
-		return lSet(key, index, serializeAsBytes(value));
+		return lSet(key, index, serializer.serializeAsBytes(value));
 	}
 
 	@Override
@@ -605,62 +605,62 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> Long rPush(final String key, final V value){
-		return rPush(key, serialize(value));
+		return rPush(key, serializer.serialize(value));
 	}
 
 	@Override
 	public <V> Long rPush(final byte[] key, final V value){
-		return rPush(key, serializeAsBytes(value));
+		return rPush(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
 	public <V> Long rPush(final String key, final V... values){
-		return rPush(key, serialize(values));
+		return rPush(key, serializer.serialize(values));
 	}
 
 	@Override
 	public <V> Long rPush(final byte[] key, final V... values){
-		return rPush(key, serializeAsBytes(values));
+		return rPush(key, serializer.serializeAsBytes(values));
 	}
 
 	@Override
 	public <V> Long rPushX(final String key, final V value){
-		return rPushX(key, serialize(value));
+		return rPushX(key, serializer.serialize(value));
 	}
 
 	@Override
 	public <V> Long rPushX(final byte[] key, final V value){
-		return rPushX(key, serializeAsBytes(value));
+		return rPushX(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
 	public <V> Long rPushX(final String key, final V... values){
-		return rPushX(key, serialize(values));
+		return rPushX(key, serializer.serialize(values));
 	}
 
 	@Override
 	public <V> Long rPushX(final byte[] key, final V... values){
-		return rPushX(key, serializeAsBytes(values));
+		return rPushX(key, serializer.serializeAsBytes(values));
 	}
 
 	@Override
 	public <V> Long sAdd(final String key, final V member){
-		return sAdd(key, serialize(member));
+		return sAdd(key, serializer.serialize(member));
 	}
 
 	@Override
 	public <V> Long sAdd(final byte[] key, final V member){
-		return sAdd(key, serializeAsBytes(member));
+		return sAdd(key, serializer.serializeAsBytes(member));
 	}
 
 	@Override
 	public <V> Long sAdd(final String key, final V... members){
-		return sAdd(key, serialize(members));
+		return sAdd(key, serializer.serialize(members));
 	}
 
 	@Override
 	public <V> Long sAdd(final byte[] key, final V... members){
-		return sAdd(key, serializeAsBytes(members));
+		return sAdd(key, serializer.serializeAsBytes(members));
 	}
 
 	@Override
@@ -845,22 +845,22 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> Long sRem(final String key, final V member){
-		return sRem(key, serialize(member));
+		return sRem(key, serializer.serialize(member));
 	}
 
 	@Override
 	public <V> Long sRem(final byte[] key, final V member){
-		return sRem(key, serializeAsBytes(member));
+		return sRem(key, serializer.serializeAsBytes(member));
 	}
 
 	@Override
 	public <V> Long sRem(final String key, final V... members){
-		return sRem(key, serialize(members));
+		return sRem(key, serializer.serialize(members));
 	}
 
 	@Override
 	public <V> Long sRem(final byte[] key, final V... members){
-		return sRem(key, serializeAsBytes(members));
+		return sRem(key, serializer.serializeAsBytes(members));
 	}
 
 	@Override
@@ -895,32 +895,32 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> V getSet(final String key, final V value){
-		return simpleStringCall(getSet(key, serialize(value)));
+		return simpleStringCall(getSet(key, serializer.serialize(value)));
 	}
 
 	@Override
 	public <V> V getSet(final byte[] key, final V value){
-		return simpleBinaryCall(getSet(key, serializeAsBytes(value)));
+		return simpleBinaryCall(getSet(key, serializer.serializeAsBytes(value)));
 	}
 
 	@Override
 	public <V> V getSet(final String key, final V value, final Class<V> clazz){
-		return simpleStringCall(getSet(key, serialize(value)), clazz);
+		return simpleStringCall(getSet(key, serializer.serialize(value)), clazz);
 	}
 
 	@Override
 	public <V> V getSet(final byte[] key, final V value, final Class<V> clazz){
-		return simpleBinaryCall(getSet(key, serializeAsBytes(value)), clazz);
+		return simpleBinaryCall(getSet(key, serializer.serializeAsBytes(value)), clazz);
 	}
 
 	@Override
 	public <V> V getSet(final String key, final V value, final TypeReference<V> type){
-		return simpleStringCall(getSet(key, serialize(value)), type);
+		return simpleStringCall(getSet(key, serializer.serialize(value)), type);
 	}
 
 	@Override
 	public <V> V getSet(final byte[] key, final V value, final TypeReference<V> type){
-		return simpleBinaryCall(getSet(key, serializeAsBytes(value)), type);
+		return simpleBinaryCall(getSet(key, serializer.serializeAsBytes(value)), type);
 	}
 
 	@Override
@@ -955,52 +955,52 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 
 	@Override
 	public <V> Status pSetEx(final String key, final V value, final int lifetime){
-		return pSetEx(key, serialize(value), lifetime);
+		return pSetEx(key, serializer.serialize(value), lifetime);
 	}
 
 	@Override
 	public <V> Status pSetEx(final byte[] key, final V value, final int lifetime){
-		return pSetEx(key, serializeAsBytes(value), lifetime);
+		return pSetEx(key, serializer.serializeAsBytes(value), lifetime);
 	}
 
 	@Override
 	public <V> Status set(final String key, final V value){
-		return set(key, serialize(value));
+		return set(key, serializer.serialize(value));
 	}
 
 	@Override
 	public <V> Status set(final byte[] key, final V value){
-		return set(key, serializeAsBytes(value));
+		return set(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
 	public <V> Status set(final String key, final V value, final SetArgument setArgument){
-		return set(key, serialize(value), setArgument);
+		return set(key, serializer.serialize(value), setArgument);
 	}
 
 	@Override
 	public <V> Status set(final byte[] key, final V value, final SetArgument setArgument){
-		return set(key, serializeAsBytes(value), setArgument);
+		return set(key, serializer.serializeAsBytes(value), setArgument);
 	}
 
 	@Override
 	public <V> Status setEx(final String key, final V value, final int lifetime){
-		return setEx(key, serialize(value), lifetime);
+		return setEx(key, serializer.serialize(value), lifetime);
 	}
 
 	@Override
 	public <V> Status setEx(final byte[] key, final V value, final int lifetime){
-		return setEx(key, serializeAsBytes(value), lifetime);
+		return setEx(key, serializer.serializeAsBytes(value), lifetime);
 	}
 
 	@Override
 	public <V> Status setNx(final String key, final V value){
-		return setNx(key, serialize(value));
+		return setNx(key, serializer.serialize(value));
 	}
 
 	@Override
 	public <V> Status setNx(final byte[] key, final V value){
-		return setNx(key, serializeAsBytes(value));
+		return setNx(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
@@ -1033,7 +1033,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					String.class));
 			return null;
 		}else{
-			return deserialize(result);
+			return serializer.deserialize(result);
 		}
 	}
 
@@ -1043,7 +1043,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					byte[].class));
 			return null;
 		}else{
-			return deserializeBytes(result);
+			return serializer.deserializeBytes(result);
 		}
 	}
 
@@ -1053,7 +1053,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					String.class));
 			return null;
 		}else{
-			return deserialize(result, clazz);
+			return serializer.deserialize(result, clazz);
 		}
 	}
 
@@ -1063,7 +1063,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					byte[].class));
 			return null;
 		}else{
-			return deserializeBytes(result, clazz);
+			return serializer.deserializeBytes(result, clazz);
 		}
 	}
 
@@ -1073,7 +1073,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					String.class));
 			return null;
 		}else{
-			return deserialize(result, type);
+			return serializer.deserialize(result, type);
 		}
 	}
 
@@ -1083,7 +1083,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					byte[].class));
 			return null;
 		}else{
-			return deserializeBytes(result, type);
+			return serializer.deserializeBytes(result, type);
 		}
 	}
 
@@ -1093,7 +1093,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					Map.class));
 			return null;
 		}else{
-			return deserialize(result);
+			return serializer.deserialize(result);
 		}
 	}
 
@@ -1103,7 +1103,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					Map.class));
 			return null;
 		}else{
-			return deserializeBytes(result);
+			return serializer.deserializeBytes(result);
 		}
 	}
 
@@ -1113,7 +1113,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					Map.class));
 			return null;
 		}else{
-			return deserialize(result, clazz);
+			return serializer.deserialize(result, clazz);
 		}
 	}
 
@@ -1123,7 +1123,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					Map.class));
 			return null;
 		}else{
-			return deserializeBytes(result, clazz);
+			return serializer.deserializeBytes(result, clazz);
 		}
 	}
 
@@ -1133,7 +1133,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					Map.class));
 			return null;
 		}else{
-			return deserialize(result, type);
+			return serializer.deserialize(result, type);
 		}
 	}
 
@@ -1143,7 +1143,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					Map.class));
 			return null;
 		}else{
-			return deserializeBytes(result, type);
+			return serializer.deserializeBytes(result, type);
 		}
 	}
 
@@ -1153,7 +1153,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					List.class));
 			return null;
 		}else{
-			return deserialize(result);
+			return serializer.deserialize(result);
 		}
 	}
 
@@ -1163,7 +1163,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					List.class));
 			return null;
 		}else{
-			return deserializeBytes(result);
+			return serializer.deserializeBytes(result);
 		}
 	}
 
@@ -1173,7 +1173,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					List.class));
 			return null;
 		}else{
-			return deserialize(result, clazz);
+			return serializer.deserialize(result, clazz);
 		}
 	}
 
@@ -1183,7 +1183,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					List.class));
 			return null;
 		}else{
-			return deserializeBytes(result, clazz);
+			return serializer.deserializeBytes(result, clazz);
 		}
 	}
 
@@ -1193,7 +1193,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					type), List.class));
 			return null;
 		}else{
-			return deserialize(result, type);
+			return serializer.deserialize(result, type);
 		}
 	}
 
@@ -1203,7 +1203,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					List.class));
 			return null;
 		}else{
-			return deserializeBytes(result, type);
+			return serializer.deserializeBytes(result, type);
 		}
 	}
 
@@ -1213,7 +1213,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					Set.class));
 			return null;
 		}else{
-			return deserialize(result);
+			return serializer.deserialize(result);
 		}
 	}
 
@@ -1223,7 +1223,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					Set.class));
 			return null;
 		}else{
-			return deserializeBytes(result);
+			return serializer.deserializeBytes(result);
 		}
 	}
 
@@ -1233,7 +1233,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					Set.class));
 			return null;
 		}else{
-			return deserialize(result, clazz);
+			return serializer.deserialize(result, clazz);
 		}
 	}
 
@@ -1243,7 +1243,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					Set.class));
 			return null;
 		}else{
-			return deserializeBytes(result, clazz);
+			return serializer.deserializeBytes(result, clazz);
 		}
 	}
 
@@ -1253,7 +1253,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					Set.class));
 			return null;
 		}else{
-			return deserialize(result, type);
+			return serializer.deserialize(result, type);
 		}
 	}
 
@@ -1263,7 +1263,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 					Set.class));
 			return null;
 		}else{
-			return deserializeBytes(result, type);
+			return serializer.deserializeBytes(result, type);
 		}
 	}
 

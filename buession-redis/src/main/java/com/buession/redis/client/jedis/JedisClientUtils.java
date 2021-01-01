@@ -51,7 +51,7 @@ public class JedisClientUtils extends RedisClientUtils {
 	}
 
 	public static boolean isInMulti(final Jedis jedis){
-		return jedis == null ? false : jedis.getClient().isInMulti();
+		return jedis != null && jedis.getClient().isInMulti();
 	}
 
 	public static boolean isInMulti(final ShardedJedis shardedJedis){
