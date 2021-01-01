@@ -24,9 +24,69 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.servlet.filter;/**
- * 
+package com.buession.web.servlet.filter;
+
+import com.buession.web.http.HttpHeader;
+import com.buession.web.http.request.DefaultRequestIdService;
+import com.buession.web.http.request.RequestIdService;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+/**
+ * 请求 ID Filter
  *
  * @author Yong.Teng
- */public class RequestIdFilter {
+ * @since 1.2.0
+ */
+public class RequestIdFilter extends OncePerRequestFilter {
+
+	private RequestIdService requestIdService = new DefaultRequestIdService();
+
+	private String key;
+
+	private boolean sendResponse;
+
+	public RequestIdService getRequestIdService(){
+		return requestIdService;
+	}
+
+	public void setRequestIdService(RequestIdService requestIdService){
+		this.requestIdService = requestIdService;
+	}
+
+	public String getKey(){
+		return key;
+	}
+
+	public void setKey(String key){
+		this.key = key;
+	}
+
+	public boolean isSendResponse(){
+		return sendResponse;
+	}
+
+	public void setSendResponse(boolean sendResponse){
+		this.sendResponse = sendResponse;
+	}
+
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
+		getRequestIdService().setKey(getKey());
+		String requestId = getRequestIdService().generate();
+
+		request.setAttribute(HttpHeader.X_REQUESTED_ID.getValue(), requestId);
+
+		if(sendResponse){
+			response.setHeader(HttpHeader.X_REQUESTED_ID.getValue(), requestId);
+		}
+
+		filterChain.doFilter(request, response);
+	}
+
 }

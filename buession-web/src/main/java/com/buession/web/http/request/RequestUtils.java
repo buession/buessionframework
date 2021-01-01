@@ -26,6 +26,8 @@ package com.buession.web.http.request;
 
 import com.buession.core.validator.Validate;
 
+import java.util.UUID;
+
 /**
  * HTTP 请求工具基类
  *

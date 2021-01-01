@@ -24,9 +24,21 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.http.request;/**
- * 
+package com.buession.web.http.request;
+
+import java.util.UUID;
+
+/**
+ * 默认请求 ID 服务
  *
  * @author Yong.Teng
- */public class DefaultRequestIdService {
+ * @since 1.2.0
+ */
+public class DefaultRequestIdService extends AbstractRequestIdService {
+
+	@Override
+	public String generate(){
+		return UUID.randomUUID().toString();
+	}
+
 }

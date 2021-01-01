@@ -24,9 +24,36 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.http.request;/**
- * 
+package com.buession.web.http.request;
+
+/**
+ * 请求 ID 服务
  *
  * @author Yong.Teng
- */public interface RequestIdService {
+ * @since 1.2.0
+ */
+public interface RequestIdService {
+
+	/**
+	 * 获取密钥
+	 *
+	 * @return 密钥
+	 */
+	String getKey();
+
+	/**
+	 * 设置密钥
+	 *
+	 * @param key
+	 * 		密钥
+	 */
+	void setKey(String key);
+
+	/**
+	 * 生成请求 ID
+	 *
+	 * @return 请求 ID
+	 */
+	String generate();
+
 }

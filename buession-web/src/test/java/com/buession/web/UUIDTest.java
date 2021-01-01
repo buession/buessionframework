@@ -24,9 +24,20 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web;/**
- * 
- *
+package com.buession.web;
+
+import org.junit.Test;
+
+import java.util.UUID;
+
+/**
  * @author Yong.Teng
- */public class UUIDTest {
+ */
+public class UUIDTest {
+
+	@Test
+	public void uuid(){
+		System.out.println(UUID.nameUUIDFromBytes("ABC".getBytes()).toString());
+	}
+
 }

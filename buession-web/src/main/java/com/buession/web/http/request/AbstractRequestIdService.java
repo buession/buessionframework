@@ -24,9 +24,29 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.http.request;/**
- * 
+package com.buession.web.http.request;
+
+/**
+ * 请求 ID 服务抽象类
  *
  * @author Yong.Teng
- */public class AbstractRequestIdService {
+ * @since 1.2.0
+ */
+public abstract class AbstractRequestIdService implements RequestIdService {
+
+	/**
+	 * 密钥
+	 */
+	private String key;
+
+	@Override
+	public String getKey(){
+		return key;
+	}
+
+	@Override
+	public void setKey(String key){
+		this.key = key;
+	}
+
 }
