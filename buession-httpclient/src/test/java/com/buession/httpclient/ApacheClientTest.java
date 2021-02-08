@@ -53,11 +53,8 @@ public class ApacheClientTest {
 			ConnectTimeoutException, RequestException{
 		Map<String, Object> parameters = new HashMap<>();
 
-		parameters.put("url", "https%3A%2F%2Fwww.aliyun.com%2F&list=pc-topbar-list");
-
 		HttpClient httpClient = new ApacheHttpClient();
-		Response response = httpClient.get("https://query.aliyun.com/rest/aliyun-config.services.black_white",
-				parameters);
+		Response response = httpClient.get("https://www.baidu.com/", parameters);
 		System.out.print(response.getBody());
 	}
 
