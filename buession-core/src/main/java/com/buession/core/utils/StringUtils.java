@@ -28,8 +28,6 @@ package com.buession.core.utils;
 
 import com.buession.lang.Constants;
 
-import java.util.Random;
-
 /**
  * 字符串工具
  * More {@link org.apache.commons.lang3.StringUtils}
@@ -120,10 +118,9 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			return Constants.EMPTY_STRING;
 		}else{
 			StringBuilder sb = new StringBuilder(length);
-			Random random = new Random();
 
 			for(int i = 0; i < length; i++){
-				int j = random.nextInt(Constants.ALNUM.length);
+				int j = RandomUtils.nextInt(Constants.ALNUM.length);
 				sb.append(Constants.ALNUM[j]);
 			}
 
@@ -176,7 +173,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	}
 
 	public static boolean regionMatches(final CharSequence cs, final boolean ignoreCase, final int thisStart,
-			final CharSequence substring, final int start, final int length){
+										final CharSequence substring, final int start, final int length){
 		if(cs instanceof String && substring instanceof String){
 			return ((String) cs).regionMatches(ignoreCase, thisStart, (String) substring, start, length);
 		}

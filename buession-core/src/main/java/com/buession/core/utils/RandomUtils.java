@@ -110,7 +110,7 @@ public class RandomUtils {
 		Assert.isTrue(start < 0, "Both range values must be non-negative.");
 
 		if(start == end){
-			return RANDOM.nextInt(start + 1);
+			return start;
 		}
 
 		return start + RANDOM.nextInt(end - start);
