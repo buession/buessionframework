@@ -106,13 +106,13 @@ public class RandomUtils {
 	 * @since 1.2.0
 	 */
 	public final static int nextInt(final int start, final int end){
-		Assert.isTrue(start >= end, "Start value must be smaller or equal to end value.");
 		Assert.isTrue(start < 0, "Both range values must be non-negative.");
 
 		if(start == end){
 			return start;
 		}
 
+		Assert.isTrue(start > end, "Start value must be smaller or equal to end value.");
 		return start + RANDOM.nextInt(end - start);
 	}
 
@@ -154,13 +154,13 @@ public class RandomUtils {
 	 * @since 1.2.0
 	 */
 	public final static long nextLong(final long start, final long end){
-		Assert.isTrue(start >= end, "Start value must be smaller or equal to end value.");
 		Assert.isTrue(start < 0, "Both range values must be non-negative.");
 
 		if(start == end){
 			return start;
 		}
 
+		Assert.isTrue(start > end, "Start value must be smaller or equal to end value.");
 		return (long) nextDouble(start, end);
 	}
 
@@ -202,13 +202,13 @@ public class RandomUtils {
 	 * @since 1.2.0
 	 */
 	public final static float nextFloat(final float start, final float end){
-		Assert.isTrue(start >= end, "Start value must be smaller or equal to end value.");
 		Assert.isTrue(start < 0, "Both range values must be non-negative.");
 
 		if(start == end){
 			return start;
 		}
 
+		Assert.isTrue(start > end, "Start value must be smaller or equal to end value.");
 		return start + ((end - start) * RANDOM.nextFloat());
 	}
 
@@ -250,13 +250,13 @@ public class RandomUtils {
 	 * @since 1.2.0
 	 */
 	public final static double nextDouble(final double start, final double end){
-		Assert.isTrue(start >= end, "Start value must be smaller or equal to end value.");
 		Assert.isTrue(start < 0, "Both range values must be non-negative.");
 
 		if(start == end){
 			return start;
 		}
 
+		Assert.isTrue(start > end, "Start value must be smaller or equal to end value.");
 		return start + ((end - start) * RANDOM.nextDouble());
 	}
 
