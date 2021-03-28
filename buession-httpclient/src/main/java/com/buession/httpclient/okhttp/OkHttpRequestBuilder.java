@@ -26,27 +26,33 @@ package com.buession.httpclient.okhttp;
 
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.EnumUtils;
+import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
 import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.HtmlRawRequestBody;
+import com.buession.httpclient.core.InputStreamRequestBody;
 import com.buession.httpclient.core.JavaScriptRawRequestBody;
 import com.buession.httpclient.core.JsonRawRequestBody;
 import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.ObjectFormRequestBody;
 import com.buession.httpclient.core.ProtocolVersion;
+import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 import com.buession.httpclient.core.Request;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.TextRawRequestBody;
 import com.buession.httpclient.core.XmlRawRequestBody;
 import com.buession.httpclient.helper.AbstractRequestBuilder;
+import com.buession.httpclient.okhttp.convert.ChunkedInputStreamRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.EncodedFormRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.HtmlRawRequestBodyConverter;
+import com.buession.httpclient.okhttp.convert.InputStreamRequestBodyConvert;
 import com.buession.httpclient.okhttp.convert.JavaScriptRawRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.JsonRawRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.MultipartFormRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.ObjectRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.OkHttpRequestBodyConverter;
+import com.buession.httpclient.okhttp.convert.RepeatableInputStreamRequestBodyConvert;
 import com.buession.httpclient.okhttp.convert.TextRawRequestBodyConverter;
 import com.buession.httpclient.okhttp.convert.XmlRawRequestBodyConverter;
 import okhttp3.FormBody;
@@ -65,17 +71,21 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 	private final static okhttp3.RequestBody DEFAULT_REQUEST_BODY = new FormBody.Builder().build();
 
 	private final static Map<Class<? extends RequestBody>, OkHttpRequestBodyConverter> REQUEST_BODY_CONVERTS =
-			new HashMap<>(8, 0.8F);
+			new HashMap<>(16, 0.8F);
 
 	static{
+		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new ChunkedInputStreamRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new EncodedFormRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new HtmlRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(InputStreamRequestBody.class, new InputStreamRequestBodyConvert());
 		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new JavaScriptRawRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new JsonRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(ObjectFormRequestBody.class, new ObjectRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(RepeatableInputStreamRequestBody.class,
+				new RepeatableInputStreamRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
 	}
 
 	private OkHttpRequestBuilder(){

@@ -25,12 +25,10 @@
 package com.buession.httpclient.apache.convert;
 
 import com.buession.httpclient.core.EncodedFormRequestBody;
-import com.buession.httpclient.core.RequestBodyElement;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

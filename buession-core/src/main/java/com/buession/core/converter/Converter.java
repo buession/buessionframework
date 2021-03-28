@@ -37,7 +37,7 @@ import org.springframework.lang.Nullable;
  * 		目标类型
  *
  * @author Yong.Teng
- * @see 1.3.0
+ * @see 1.2.0
  */
 @FunctionalInterface
 public interface Converter<S, T> {

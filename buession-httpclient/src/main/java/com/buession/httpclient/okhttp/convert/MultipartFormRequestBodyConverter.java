@@ -32,6 +32,8 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
+import java.io.IOException;
+
 /**
  * @author Yong.Teng
  */
@@ -50,7 +52,13 @@ public class MultipartFormRequestBodyConverter implements OkHttpRequestBodyConve
 		for(MultipartRequestBodyElement element : source.getContent()){
 			if(element.getFile() != null){
 				File file = new File(element.getFile());
-				MimeType mimeType = file.getMimeType();
+				MimeType mimeType = null;
+
+				try{
+					mimeType = file.getMimeType();
+				}catch(IOException e){
+				}
+
 				MediaType mediaType = mimeType == null ? MediaType.parse("application/octet-stream") :
 						MediaType.parse(mimeType.toString());
 

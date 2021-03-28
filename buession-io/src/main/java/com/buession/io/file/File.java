@@ -27,14 +27,18 @@
 package com.buession.io.file;
 
 import com.buession.io.MimeType;
+import com.buession.lang.Constants;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.tika.Tika;
 
-import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 
 /**
  * @author Yong.Teng
@@ -42,6 +46,10 @@ import java.net.URI;
 public class File extends java.io.File {
 
 	private final static long serialVersionUID = 1512573860637989192L;
+
+	private MimeType mimeType;
+
+	private String extension;
 
 	/**
 	 * @param parent
@@ -87,15 +95,22 @@ public class File extends java.io.File {
 		super(uri);
 	}
 
-	public MimeType getMimeType(){
-		Tika tika = new Tika();
-
-		try{
-			return MimeType.parse(tika.detect(this));
-		}catch(IOException e){
+	/**
+	 * 获取文件 MimeType
+	 *
+	 * @return MimeType
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @since 1.2.0
+	 */
+	public MimeType getMimeType() throws IOException{
+		if(mimeType == null){
+			Tika tika = new Tika();
+			mimeType = MimeType.parse(tika.detect(this));
 		}
 
-		return null;
+		return mimeType;
 	}
 
 	/**
@@ -108,21 +123,28 @@ public class File extends java.io.File {
 	 * @throws IOException
 	 * 		IO 异常
 	 */
-	public String read() throws FileNotFoundException, IOException{
-		FileReader reader = new FileReader(this);
+	public byte[] read() throws FileNotFoundException, IOException{
+		int size = 4096;
+		DataInputStream dis = new DataInputStream(new FileInputStream(this));
+		byte[] tempChars = new byte[size];
+		int num = 0;
+		ArrayList<Byte> bytes = new ArrayList<>();
 
-		BufferedReader bufferedReader = new BufferedReader(reader);
-		StringBuffer sb = new StringBuffer((int) length());
-		String line;
+		while((num = dis.read(tempChars)) != -1){
+			for(int i = 0; i < num; i++){
+				bytes.add(tempChars[i]);
+			}
+		}
+		dis.close();
 
-		while((line = bufferedReader.readLine()) != null){
-			sb.append(line);
+		Byte[] oBytes = bytes.toArray(new Byte[0]);
+		byte[] result = new byte[oBytes.length];
+
+		for(int i = 0; i < oBytes.length; i++){
+			result[i] = oBytes[i];
 		}
 
-		bufferedReader.close();
-		reader.close();
-
-		return sb.toString();
+		return result;
 	}
 
 	/**
@@ -135,10 +157,7 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 */
 	public void write(final String str) throws IOException{
-		FileWriter writer = new FileWriter(this);
-
-		writer.write(str);
-		writer.close();
+		write(str.getBytes());
 	}
 
 	/**
@@ -151,10 +170,18 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 */
 	public void write(final char[] chars) throws IOException{
-		FileWriter writer = new FileWriter(this);
+		DataOutputStream dos = new DataOutputStream(new FileOutputStream(this));
 
-		writer.write(chars);
-		writer.close();
+		for(int i = 0; i < chars.length; i++){
+			byte[] b = new byte[2];
+			b[0] = (byte) ((chars[i] & 0xFF00) >> 8);
+			b[1] = (byte) (chars[i] & 0xFF);
+
+			dos.write(b);
+		}
+
+		dos.flush();
+		dos.close();
 	}
 
 	/**
@@ -167,7 +194,159 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 */
 	public void write(final byte[] bytes) throws IOException{
-		write(new String(bytes));
+		DataOutputStream dos = new DataOutputStream(new FileOutputStream(this));
+
+		dos.write(bytes);
+		dos.flush();
+		dos.close();
+	}
+
+	/**
+	 * 向文件写内容
+	 *
+	 * @param str
+	 * 		待写入内容
+	 * @param append
+	 * 		是否追加写入
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @since 1.2.0
+	 */
+	public void write(final String str, boolean append) throws IOException{
+		write(str.getBytes(), append);
+	}
+
+	/**
+	 * 向文件写内容
+	 *
+	 * @param chars
+	 * 		待写入内容
+	 * @param append
+	 * 		是否追加写入
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @since 1.2.0
+	 */
+	public void write(final char[] chars, boolean append) throws IOException{
+		DataOutputStream dos = new DataOutputStream(new FileOutputStream(this, append));
+
+		for(int i = 0; i < chars.length; i++){
+			byte[] b = new byte[2];
+			b[0] = (byte) ((chars[i] & 0xFF00) >> 8);
+			b[1] = (byte) (chars[i] & 0xFF);
+
+			dos.write(b);
+		}
+
+		dos.flush();
+		dos.close();
+	}
+
+	/**
+	 * 向文件写内容
+	 *
+	 * @param bytes
+	 * 		待写入内容
+	 * @param append
+	 * 		是否追加写入
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @since 1.2.0
+	 */
+	public void write(final byte[] bytes, boolean append) throws IOException{
+		DataOutputStream dos = new DataOutputStream(new FileOutputStream(this, append));
+
+		dos.write(bytes);
+		dos.flush();
+		dos.close();
+	}
+
+	/**
+	 * 获取文件 MD5 值
+	 *
+	 * @return 文件 MD5 值
+	 *
+	 * @throws FileNotFoundException
+	 * 		当文件不存在
+	 * @throws IOException
+	 * 		IO 异常
+	 * @since 1.2.0
+	 */
+	public String getMd5() throws IOException{
+		if(exists() == false){
+			throw new FileNotFoundException(getPath() + " not found.");
+		}
+
+		if(isFile() == false){
+			throw new IOException(getPath() + " is not a file.");
+		}
+
+		FileInputStream fs = new FileInputStream(this);
+		String result = DigestUtils.md5Hex(fs);
+
+		fs.close();
+
+		return result;
+	}
+
+	/**
+	 * 获取文件 SHA1 值
+	 *
+	 * @return 文件 SHA1 值
+	 *
+	 * @throws FileNotFoundException
+	 * 		当文件不存在
+	 * @throws IOException
+	 * 		IO 异常
+	 * @since 1.2.0
+	 */
+	public String getSha1() throws IOException{
+		if(exists() == false){
+			throw new FileNotFoundException(getPath() + " not found.");
+		}
+
+		if(isFile() == false){
+			throw new IOException(getPath() + " is not a file.");
+		}
+
+		FileInputStream fs = new FileInputStream(this);
+		String result = DigestUtils.sha1Hex(fs);
+
+		fs.close();
+
+		return result;
+	}
+
+	/**
+	 * 获取文件扩展名
+	 *
+	 * @return 文件扩展名
+	 *
+	 * @throws IOException
+	 * 		IO 异常
+	 * @since 1.2.0
+	 */
+	public String getExtension() throws IOException{
+		if(isFile() == false){
+			throw new IOException(getPath() + " is not a file.");
+		}
+
+		if(extension == null){
+			String fileName = getName();
+
+			if(fileName.endsWith(".tar.gz")){
+				extension = "tar.gz";
+			}else{
+				int i = fileName.lastIndexOf('.');
+				extension = i == fileName.length() - 1 ? Constants.EMPTY_STRING :
+						fileName.substring(i + 1).toLowerCase();
+			}
+		}
+
+		return extension;
 	}
 
 }

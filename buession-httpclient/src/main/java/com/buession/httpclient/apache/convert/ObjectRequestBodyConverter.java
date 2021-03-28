@@ -50,9 +50,7 @@ public class ObjectRequestBodyConverter implements ApacheRequestBodyConverter<Ob
 
 		try{
 			String str = OBJECT_MAPPER.writeValueAsString(source.getContent());
-			return new StringEntity(str,
-					org.apache.http.entity.ContentType.create(source.getContentType().getMimeType(),
-							source.getContentType().getCharset()));
+			return new StringEntity(str, ContentTypeUtils.create(source.getContentType()));
 		}catch(JsonProcessingException e){
 			logger.error("{} convert to JSON String error.", RequestBody.class.getName(), e);
 		}

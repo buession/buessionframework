@@ -97,4 +97,10 @@ public class MathTest {
 		System.out.println("c: " + ((int) c));
 	}
 
+	@Test
+	public void divide(){
+		Object ret = 5 / 2;
+		System.out.println(ret.getClass());
+	}
+
 }

@@ -33,6 +33,8 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 
+import java.io.IOException;
+
 /**
  * @author Yong.Teng
  */
@@ -53,7 +55,13 @@ public class MultipartFormRequestBodyConverter implements ApacheRequestBodyConve
 		for(MultipartRequestBodyElement element : source.getContent()){
 			if(element.getFile() != null){
 				File file = new File(element.getFile());
-				MimeType mimeType = file.getMimeType();
+				MimeType mimeType = null;
+
+				try{
+					mimeType = file.getMimeType();
+				}catch(IOException e){
+				}
+
 				ContentType contentType = mimeType == null ? ContentType.APPLICATION_OCTET_STREAM :
 						ContentType.create(mimeType.toString(), source.getContentType().getCharset());
 

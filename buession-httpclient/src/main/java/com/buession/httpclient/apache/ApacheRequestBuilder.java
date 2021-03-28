@@ -25,15 +25,21 @@
 package com.buession.httpclient.apache;
 
 import com.buession.core.utils.EnumUtils;
+import com.buession.httpclient.apache.convert.ChunkedInputStreamRequestBodyConverter;
+import com.buession.httpclient.apache.convert.InputStreamRequestBodyConvert;
 import com.buession.httpclient.apache.convert.MultipartFormRequestBodyConverter;
+import com.buession.httpclient.apache.convert.RepeatableInputStreamRequestBodyConvert;
+import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
 import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.HtmlRawRequestBody;
+import com.buession.httpclient.core.InputStreamRequestBody;
 import com.buession.httpclient.core.JavaScriptRawRequestBody;
 import com.buession.httpclient.core.JsonRawRequestBody;
 import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.ObjectFormRequestBody;
 import com.buession.httpclient.core.ProtocolVersion;
+import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
 import com.buession.httpclient.core.Request;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
@@ -72,14 +78,18 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 			new HashMap<>(16, 0.8F);
 
 	static{
+		REQUEST_BODY_CONVERTS.put(ChunkedInputStreamRequestBody.class, new ChunkedInputStreamRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(EncodedFormRequestBody.class, new EncodedFormRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(HtmlRawRequestBody.class, new HtmlRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(InputStreamRequestBody.class, new InputStreamRequestBodyConvert());
 		REQUEST_BODY_CONVERTS.put(JavaScriptRawRequestBody.class, new JavaScriptRawRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(JsonRawRequestBody.class, new JsonRawRequestBodyConverter());
-		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(MultipartFormRequestBody.class, new MultipartFormRequestBodyConverter());
 		REQUEST_BODY_CONVERTS.put(ObjectFormRequestBody.class, new ObjectRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(RepeatableInputStreamRequestBody.class,
+				new RepeatableInputStreamRequestBodyConvert());
+		REQUEST_BODY_CONVERTS.put(TextRawRequestBody.class, new TextRawRequestBodyConverter());
+		REQUEST_BODY_CONVERTS.put(XmlRawRequestBody.class, new XmlRawRequestBodyConverter());
 	}
 
 	private ApacheRequestBuilder(){

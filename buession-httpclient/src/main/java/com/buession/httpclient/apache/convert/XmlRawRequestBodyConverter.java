@@ -38,7 +38,7 @@ public class XmlRawRequestBodyConverter implements ApacheRequestBodyConverter<Xm
 			return null;
 		}
 
-		return new StringEntity(source.getContent().asXML(), source.getContentType().getCharset());
+		return new StringEntity(source.getContent().asXML(), ContentTypeUtils.create(source.getContentType()));
 	}
 
 }

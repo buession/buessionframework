@@ -19,26 +19,30 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert;
 
-import com.buession.httpclient.core.TextRawRequestBody;
-import org.apache.http.entity.StringEntity;
+import com.buession.httpclient.core.RepeatableInputStreamRequestBody;
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.InputStreamEntity;
 
 /**
  * @author Yong.Teng
+ * @since 1.2.0
  */
-public class TextRawRequestBodyConverter implements ApacheRequestBodyConverter<TextRawRequestBody> {
+public class RepeatableInputStreamRequestBodyConvert implements ApacheRequestBodyConverter<RepeatableInputStreamRequestBody> {
 
 	@Override
-	public StringEntity convert(TextRawRequestBody source){
+	public HttpEntity convert(RepeatableInputStreamRequestBody source){
 		if(source == null || source.getContent() == null){
 			return null;
 		}
 
-		return new StringEntity(source.getContent(), ContentTypeUtils.create(source.getContentType()));
+		return new InputStreamEntity(source.getContent(), source.getContentLength(),
+				ContentTypeUtils.create(source.getContentType()));
 	}
 
 }

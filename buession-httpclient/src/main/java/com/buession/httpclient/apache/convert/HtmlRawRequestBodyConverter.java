@@ -38,7 +38,7 @@ public class HtmlRawRequestBodyConverter implements ApacheRequestBodyConverter<H
 			return null;
 		}
 
-		return new StringEntity(source.getContent(), source.getContentType().getCharset());
+		return new StringEntity(source.getContent(), ContentTypeUtils.create(source.getContentType()));
 	}
 
 }
