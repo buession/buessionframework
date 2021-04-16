@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache;
@@ -60,6 +60,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.*;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +73,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 		ApacheRequestBuilder.HttpComponentsRequest> {
 
 	private final static HttpEntity DEFAULT_HTTP_ENTITY = new UrlEncodedFormEntity(new ArrayList<>(),
-			EncodedFormRequestBody.CONTENT_TYPE.getCharset());
+			StandardCharsets.ISO_8859_1);
 
 	private final static Map<Class<? extends RequestBody>, ApacheRequestBodyConverter> REQUEST_BODY_CONVERTS =
 			new HashMap<>(16, 0.8F);
@@ -108,21 +109,15 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 	}
 
 	public final static ApacheRequestBuilder create(String url, Map<String, Object> parameters){
-		final ApacheRequestBuilder builder = create(url);
-		builder.setParameters(parameters);
-		return builder;
+		return create(url).setParameters(parameters);
 	}
 
 	public final static ApacheRequestBuilder create(String url, List<Header> headers){
-		final ApacheRequestBuilder builder = create(url);
-		builder.setHeaders(headers);
-		return builder;
+		return create(url).setHeaders(headers);
 	}
 
 	public final static ApacheRequestBuilder create(String url, Map<String, Object> parameters, List<Header> headers){
-		final ApacheRequestBuilder builder = create(url, parameters);
-		builder.setHeaders(headers);
-		return builder;
+		return create(url, parameters).setHeaders(headers);
 	}
 
 	@Override
@@ -355,7 +350,7 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 			return null;
 		}
 
-		ApacheRequestBodyConverter convert = REQUEST_BODY_CONVERTS.get(data.getClass());
+		ApacheRequestBodyConverter<RequestBody> convert = REQUEST_BODY_CONVERTS.get(data.getClass());
 		return convert == null ? DEFAULT_HTTP_ENTITY : convert.convert(data);
 	}
 
