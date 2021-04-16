@@ -46,7 +46,7 @@ public @interface Mobile {
 	/**
 	 * 当值为 null ，是否验证；true：需验证，false：不验证
 	 *
-	 * @return
+	 * @return 当值为 null ，是否验证
 	 */
 	boolean validWhenNull() default true;
 

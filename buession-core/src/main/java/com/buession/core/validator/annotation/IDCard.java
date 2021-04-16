@@ -46,21 +46,21 @@ public @interface IDCard {
 	/**
 	 * 是否严格验证，严格验证时，需要传 birthday
 	 *
-	 * @return
+	 * @return 是否严格验证
 	 */
 	boolean strict() default true;
 
 	/**
 	 * 生日
 	 *
-	 * @return
+	 * @return 生日
 	 */
 	String birthday() default "";
 
 	/**
 	 * 当值为 null ，是否验证；true：需验证，false：不验证
 	 *
-	 * @return
+	 * @return 当值为 null ，是否验证
 	 */
 	boolean validWhenNull() default true;
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package org.apache.http.client.methods;
@@ -35,16 +35,30 @@ public class HttpPropfind extends HttpRequestBase {
 
 	public final static String METHOD_NAME = RequestMethod.PROPFIND.name();
 
+	/**
+	 * 构造函数
+	 */
 	public HttpPropfind(){
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param uri
+	 * 		URL {@link URI}
+	 */
 	public HttpPropfind(final URI uri){
 		super();
 		setURI(uri);
 	}
 
 	/**
+	 * 构造函数
+	 *
+	 * @param uri
+	 * 		URL {@link URI}
+	 *
 	 * @throws IllegalArgumentException
 	 * 		if the uri is invalid.
 	 */

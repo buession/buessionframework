@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -86,7 +86,9 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 * @return 返回方法执行结果
 	 *
 	 * @throws InvocationTargetException
+	 * 		反射异常，当被调用的方法的内部抛出了异常而没有被捕获时，将由此异常接收
 	 * @throws IllegalAccessException
+	 *        {@link IllegalAccessException}
 	 */
 	public final static Object invoke(final Object object, final Method method) throws InvocationTargetException,
 			IllegalAccessException{

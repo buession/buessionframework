@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -34,12 +34,25 @@ package com.buession.httpclient.core;
  */
 public interface RequestBody<V> {
 
+	/**
+	 * 返回请求体 Content-Type
+	 *
+	 * @return 请求体 Content-Type
+	 */
 	ContentType getContentType();
 
-	Header getContentEncoding();
-
-	long getContentLength();
-
+	/**
+	 * 返回请求体
+	 *
+	 * @return 请求体
+	 */
 	V getContent();
+
+	/**
+	 * 返回请求体大小
+	 *
+	 * @return 请求体大小
+	 */
+	long getContentLength();
 
 }

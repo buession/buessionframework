@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.converter;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
  * 		目标类型
  *
  * @author Yong.Teng
- * @see 1.3.0
+ * @since 1.3.0
  */
 public class SetConverter<S, T> implements Converter<Set<S>, Set<T>> {
 

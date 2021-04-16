@@ -50,14 +50,14 @@ public @interface Between {
 	/**
 	 * 是否包含边界值
 	 *
-	 * @return
+	 * @return 是否包含边界值
 	 */
 	boolean contain() default true;
 
 	/**
 	 * 当值为 null ，是否验证；true：需验证，false：不验证
 	 *
-	 * @return
+	 * @return 当值为 null ，是否验证
 	 */
 	boolean validWhenNull() default true;
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http.response.annotation;
@@ -48,21 +48,29 @@ public @interface ContentType {
 
 	/**
 	 * MIME
+	 *
+	 * @return 返回 MIME
 	 */
 	@AliasFor("value") String mime() default DEFAULT_MIME;
 
 	/**
 	 * MIME
+	 *
+	 * @return 返回 MIME
 	 */
 	@AliasFor("mime") String value() default DEFAULT_MIME;
 
 	/**
 	 * 编码
+	 *
+	 * @return 返回编码
 	 */
 	@AliasFor("encoding") String charset() default DEFAULT_ENCODING;
 
 	/**
 	 * 编码
+	 *
+	 * @return 返回编码
 	 */
 	@AliasFor("charset") String encoding() default DEFAULT_ENCODING;
 

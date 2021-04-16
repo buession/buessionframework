@@ -50,14 +50,14 @@ public @interface Isbn {
 	/**
 	 * 分隔符
 	 *
-	 * @return
+	 * @return 分隔符
 	 */
 	char separator() default '-';
 
 	/**
 	 * 当值为 null ，是否验证；true：需验证，false：不验证
 	 *
-	 * @return
+	 * @return 当值为 null ，是否验证
 	 */
 	boolean validWhenNull() default true;
 
