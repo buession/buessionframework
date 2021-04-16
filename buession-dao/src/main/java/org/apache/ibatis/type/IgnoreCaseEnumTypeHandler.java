@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2017 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -84,10 +84,14 @@ public class IgnoreCaseEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandle
 			return Enum.valueOf(type, str);
 		}catch(IllegalArgumentException e){
 			try{
-				logger.info("{} after toUpperCase convert {} success.", str, type.getName());
+				if(logger.isInfoEnabled()){
+					logger.info("{} after toUpperCase convert {} success.", str, type.getName());
+				}
 				return Enum.valueOf(type, str.toUpperCase());
 			}catch(IllegalArgumentException ex){
-				logger.warn("{} convert {} failure: {}.", str, type.getName(), ex.getMessage());
+				if(logger.isWarnEnabled()){
+					logger.warn("{} convert {} failure: {}.", str, type.getName(), ex.getMessage());
+				}
 			}
 		}
 

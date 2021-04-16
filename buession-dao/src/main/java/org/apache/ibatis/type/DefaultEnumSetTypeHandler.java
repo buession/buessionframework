@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -45,7 +45,10 @@ public class DefaultEnumSetTypeHandler<E extends Enum<E>> extends AbstractEnumSe
 			try{
 				return Enum.valueOf(type, str.toUpperCase());
 			}catch(IllegalArgumentException e){
-				logger.error("Database value '{}' convert to '{}' failure: {}", str, type.getName(), e.getMessage());
+				if(logger.isErrorEnabled()){
+					logger.error("Database value '{}' convert to '{}' failure: {}", str, type.getName(),
+							e.getMessage());
+				}
 			}
 		}
 
