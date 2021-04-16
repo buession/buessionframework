@@ -19,34 +19,84 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
+import java.nio.charset.Charset;
+
 /**
+ * 原始请求体抽象类
+ *
+ * @param <V>
+ * 		请求体类型
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractRawRequestBody<C extends ContentType, V> extends AbstractRequestBody<V> implements RawRequestBody<C, V> {
 
+	/**
+	 * 构造函数
+	 */
 	public AbstractRawRequestBody(){
 		super();
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param contentType
+	 * 		请求体 Content-Type
+	 * @param content
+	 * 		请求体
+	 */
 	public AbstractRawRequestBody(ContentType contentType, V content){
 		super(contentType, content);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param contentType
+	 * 		请求体 Content-Type
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 */
 	public AbstractRawRequestBody(ContentType contentType, V content, long contentLength){
 		super(contentType, content, contentLength);
 	}
 
-	public AbstractRawRequestBody(ContentType contentType, Header contentEncoding, V content){
-		super(contentType, contentEncoding, content);
+	/**
+	 * 构造函数，ContentType 为 text/plain
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param charset
+	 * 		字符集
+	 *
+	 * @since 1.2.1
+	 */
+	public AbstractRawRequestBody(V content, Charset charset){
+		super(content, charset);
 	}
 
-	public AbstractRawRequestBody(ContentType contentType, Header contentEncoding, V content, long contentLength){
-		super(contentType, contentEncoding, content, contentLength);
+	/**
+	 * 构造函数，ContentType 为 text/plain
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 * @param charset
+	 * 		字符集
+	 *
+	 * @since 1.2.1
+	 */
+	public AbstractRawRequestBody(V content, long contentLength, Charset charset){
+		super(content, contentLength, charset);
 	}
 
 }

@@ -19,34 +19,77 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
+import java.nio.charset.Charset;
+
 /**
+ * JSON 请求体
+ *
  * @author Yong.Teng
  */
 public class JsonRawRequestBody<V> extends AbstractRawRequestBody<ContentType, V> {
 
+	/**
+	 * 构造函数
+	 */
 	public JsonRawRequestBody(){
-		super();
+		this(null);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 */
 	public JsonRawRequestBody(V content){
 		super(ContentType.APPLICATION_JSON, content);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 */
 	public JsonRawRequestBody(V content, long contentLength){
 		super(ContentType.APPLICATION_JSON, content, contentLength);
 	}
 
-	public JsonRawRequestBody(Header contentEncoding, V content){
-		super(ContentType.APPLICATION_JSON, contentEncoding, content);
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param charset
+	 * 		请求体编码
+	 *
+	 * @since 1.2.1
+	 */
+	public JsonRawRequestBody(V content, Charset charset){
+		super(new ContentType(ContentType.APPLICATION_JSON.getMimeType(), charset), content);
 	}
 
-	public JsonRawRequestBody(Header contentEncoding, V content, long contentLength){
-		super(ContentType.APPLICATION_JSON, contentEncoding, content, contentLength);
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 * @param charset
+	 * 		请求体编码
+	 *
+	 * @since 1.2.1
+	 */
+	public JsonRawRequestBody(V content, long contentLength, Charset charset){
+		super(new ContentType(ContentType.APPLICATION_JSON.getMimeType(), charset), content, contentLength);
 	}
 
 }

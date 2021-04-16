@@ -19,67 +19,291 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
+import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
+ * 文件上传表单表单请求体
+ *
  * @author Yong.Teng
  */
 public class MultipartFormRequestBody extends AbstractRequestBody<List<MultipartRequestBodyElement>> {
 
-	public final static ContentType CONTENT_TYPE = ContentType.MULTIPART_FORM_DATA;
-
+	/**
+	 * 构造函数
+	 */
 	public MultipartFormRequestBody(){
-		super(CONTENT_TYPE, null);
+		this(null);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求元素
+	 */
 	public MultipartFormRequestBody(List<MultipartRequestBodyElement> content){
-		super(CONTENT_TYPE, content);
+		super(ContentType.MULTIPART_FORM_DATA, content);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求元素
+	 * @param contentLength
+	 * 		请求体大小
+	 */
 	public MultipartFormRequestBody(List<MultipartRequestBodyElement> content, long contentLength){
-		super(CONTENT_TYPE, content, contentLength);
+		super(ContentType.MULTIPART_FORM_DATA, content, contentLength);
 	}
 
-	public MultipartFormRequestBody(Header contentEncoding, List<MultipartRequestBodyElement> content){
-		super(CONTENT_TYPE, contentEncoding, content);
-	}
-
-	public MultipartFormRequestBody(Header contentEncoding, List<MultipartRequestBodyElement> content,
-									long contentLength){
-		super(CONTENT_TYPE, contentEncoding, content, contentLength);
-	}
-
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求元素
+	 * @param charset
+	 * 		请求体编码
+	 */
 	public MultipartFormRequestBody(List<MultipartRequestBodyElement> content, Charset charset){
-		this(content, -1, charset);
+		super(new ContentType(ContentType.MULTIPART_FORM_DATA.getMimeType(), charset), content);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求元素
+	 * @param contentLength
+	 * 		请求体大小
+	 * @param charset
+	 * 		请求体编码
+	 */
 	public MultipartFormRequestBody(List<MultipartRequestBodyElement> content, long contentLength, Charset charset){
-		super(new ContentType(CONTENT_TYPE.getMimeType(), charset), content, contentLength);
+		super(new ContentType(ContentType.MULTIPART_FORM_DATA.getMimeType(), charset), content, contentLength);
 	}
 
-	public MultipartFormRequestBody(Header contentEncoding, List<MultipartRequestBodyElement> content,
-									Charset charset){
-		this(contentEncoding, content, -1, charset);
-	}
-
-	public MultipartFormRequestBody(Header contentEncoding, List<MultipartRequestBodyElement> content,
-									long contentLength, Charset charset){
-		super(new ContentType(CONTENT_TYPE.getMimeType(), charset), contentEncoding, content, contentLength);
-	}
-
+	/**
+	 * 添加表单元素
+	 *
+	 * @param requestBodyElement
+	 * 		表单元素
+	 */
 	public void addRequestBodyElement(MultipartRequestBodyElement requestBodyElement){
 		if(getContent() == null){
 			setContent(new ArrayList<>());
 		}
 
 		getContent().add(requestBodyElement);
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		文件对象
+	 *
+	 * @since 1.2.1
+	 */
+	public void addRequestBodyElement(String name, File value){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		getContent().add(new MultipartRequestBodyElement(name, value));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 *
+	 * @since 1.2.1
+	 */
+	public void addRequestBodyElement(String name, short value){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		getContent().add(new MultipartRequestBodyElement(name, value));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 *
+	 * @since 1.2.1
+	 */
+	public void addRequestBodyElement(String name, int value){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		getContent().add(new MultipartRequestBodyElement(name, value));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 *
+	 * @since 1.2.1
+	 */
+	public void addRequestBodyElement(String name, long value){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		getContent().add(new MultipartRequestBodyElement(name, value));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 *
+	 * @since 1.2.1
+	 */
+	public void addRequestBodyElement(String name, float value){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		getContent().add(new MultipartRequestBodyElement(name, value));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 *
+	 * @since 1.2.1
+	 */
+	public void addRequestBodyElement(String name, double value){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		getContent().add(new MultipartRequestBodyElement(name, value));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 *
+	 * @since 1.2.1
+	 */
+	public void addRequestBodyElement(String name, boolean value){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		getContent().add(new MultipartRequestBodyElement(name, value));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 */
+	public void addRequestBodyElement(String name, String value){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		getContent().add(new MultipartRequestBodyElement(name, value));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 *
+	 * @since 1.2.1
+	 */
+	public void addRequestBodyElement(String name, Object value){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		getContent().add(new MultipartRequestBodyElement(name, value));
+	}
+
+	/**
+	 * 批量添加表单元素
+	 *
+	 * @param requestBodyElements
+	 * 		表单元素
+	 *
+	 * @since 1.2.1
+	 */
+	public void addRequestBodyElements(List<MultipartRequestBodyElement> requestBodyElements){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		getContent().addAll(requestBodyElements);
+	}
+
+	/**
+	 * 批量添加表单元素
+	 *
+	 * @param requestBodyElements
+	 * 		表单元素名称和值健对值
+	 *
+	 * @since 1.2.1
+	 */
+	public void addRequestBodyElements(Map<String, Object> requestBodyElements){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		if(requestBodyElements != null){
+			requestBodyElements.forEach((name, value)->{
+				if(value instanceof File){
+					getContent().add(new MultipartRequestBodyElement(name, (File) value));
+				}else{
+					getContent().add(new MultipartRequestBodyElement(name, value));
+				}
+			});
+		}
 	}
 
 }

@@ -33,16 +33,11 @@ import org.apache.http.entity.InputStreamEntity;
  * @author Yong.Teng
  * @since 1.2.0
  */
-public class RepeatableInputStreamRequestBodyConvert implements ApacheRequestBodyConverter<RepeatableInputStreamRequestBody> {
+public class RepeatableInputStreamRequestBodyConvert extends BaseInputStreamRequestBodyConverter<RepeatableInputStreamRequestBody> {
 
 	@Override
-	public HttpEntity convert(RepeatableInputStreamRequestBody source){
-		if(source == null || source.getContent() == null){
-			return null;
-		}
-
-		return new InputStreamEntity(source.getContent(), source.getContentLength(),
-				ContentTypeUtils.create(source.getContentType()));
+	protected HttpEntity afterConvert(InputStreamEntity streamEntity){
+		return streamEntity;
 	}
 
 }

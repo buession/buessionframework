@@ -30,15 +30,11 @@ import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
  * @author Yong.Teng
  * @since 1.2.0
  */
-public class ChunkedInputStreamRequestBodyConverter implements OkHttpRequestBodyConverter<ChunkedInputStreamRequestBody> {
+public class ChunkedInputStreamRequestBodyConverter extends BaseInputStreamRequestBodyConverter<ChunkedInputStreamRequestBody> {
 
 	@Override
-	public okhttp3.RequestBody convert(ChunkedInputStreamRequestBody source){
-		if(source == null || source.getContent() == null){
-			return null;
-		}
-
-		return null;
+	protected okhttp3.RequestBody afterConvert(okhttp3.RequestBody requestBody){
+		return requestBody;
 	}
 
 }

@@ -19,34 +19,77 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
+import java.nio.charset.Charset;
+
 /**
+ * TEXT 请求体
+ *
  * @author Yong.Teng
  */
 public class TextRawRequestBody extends AbstractRawRequestBody<ContentType, String> {
 
+	/**
+	 * 构造函数
+	 */
 	public TextRawRequestBody(){
-		super();
+		this(null);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 */
 	public TextRawRequestBody(String content){
 		super(ContentType.TEXT_PLAIN, content);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 */
 	public TextRawRequestBody(String content, long contentLength){
 		super(ContentType.TEXT_PLAIN, content, contentLength);
 	}
 
-	public TextRawRequestBody(Header contentEncoding, String content){
-		super(ContentType.TEXT_PLAIN, contentEncoding, content);
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param charset
+	 * 		请求体编码
+	 *
+	 * @since 1.2.1
+	 */
+	public TextRawRequestBody(String content, Charset charset){
+		super(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), content);
 	}
 
-	public TextRawRequestBody(Header contentEncoding, String content, long contentLength){
-		super(ContentType.TEXT_PLAIN, contentEncoding, content, contentLength);
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 * @param charset
+	 * 		请求体编码
+	 *
+	 * @since 1.2.1
+	 */
+	public TextRawRequestBody(String content, long contentLength, Charset charset){
+		super(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), content, contentLength);
 	}
 
 }

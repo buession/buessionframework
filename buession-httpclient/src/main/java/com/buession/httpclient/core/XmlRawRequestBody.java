@@ -19,36 +19,79 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
 import org.dom4j.Node;
 
+import java.nio.charset.Charset;
+
 /**
+ * XML 请求体
+ *
  * @author Yong.Teng
  */
 public class XmlRawRequestBody extends AbstractRawRequestBody<ContentType, Node> {
 
+	/**
+	 * 构造函数
+	 */
 	public XmlRawRequestBody(){
-		super();
+		this(null);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 */
 	public XmlRawRequestBody(Node content){
 		super(ContentType.TEXT_XML, content);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 */
 	public XmlRawRequestBody(Node content, long contentLength){
 		super(ContentType.TEXT_XML, content, contentLength);
 	}
 
-	public XmlRawRequestBody(Header contentEncoding, Node content){
-		super(ContentType.TEXT_XML, contentEncoding, content);
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param charset
+	 * 		请求体编码
+	 *
+	 * @since 1.2.1
+	 */
+	public XmlRawRequestBody(Node content, Charset charset){
+		super(new ContentType(ContentType.TEXT_XML.getMimeType(), charset), content);
 	}
 
-	public XmlRawRequestBody(Header contentEncoding, Node content, long contentLength){
-		super(ContentType.TEXT_XML, contentEncoding, content, contentLength);
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 * @param charset
+	 * 		请求体编码
+	 *
+	 * @since 1.2.1
+	 */
+	public XmlRawRequestBody(Node content, long contentLength, Charset charset){
+		super(new ContentType(ContentType.TEXT_XML.getMimeType(), charset), content, contentLength);
 	}
 
 }

@@ -19,34 +19,77 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
+import java.nio.charset.Charset;
+
 /**
+ * HTML 请求体
+ *
  * @author Yong.Teng
  */
 public class HtmlRawRequestBody extends AbstractRawRequestBody<ContentType, String> {
 
+	/**
+	 * 构造函数
+	 */
 	public HtmlRawRequestBody(){
-		super();
+		this(null);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 */
 	public HtmlRawRequestBody(String content){
 		super(ContentType.TEXT_HTML, content);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 */
 	public HtmlRawRequestBody(String content, long contentLength){
 		super(ContentType.TEXT_HTML, content, contentLength);
 	}
 
-	public HtmlRawRequestBody(Header contentEncoding, String content){
-		super(ContentType.TEXT_HTML, contentEncoding, content);
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param charset
+	 * 		请求体编码
+	 *
+	 * @since 1.2.1
+	 */
+	public HtmlRawRequestBody(String content, Charset charset){
+		super(new ContentType(ContentType.TEXT_HTML.getMimeType(), charset), content);
 	}
 
-	public HtmlRawRequestBody(Header contentEncoding, String content, long contentLength){
-		super(ContentType.TEXT_HTML, contentEncoding, content, contentLength);
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 * @param charset
+	 * 		请求体编码
+	 *
+	 * @since 1.2.1
+	 */
+	public HtmlRawRequestBody(String content, long contentLength, Charset charset){
+		super(new ContentType(ContentType.TEXT_HTML.getMimeType(), charset), content, contentLength);
 	}
 
 }

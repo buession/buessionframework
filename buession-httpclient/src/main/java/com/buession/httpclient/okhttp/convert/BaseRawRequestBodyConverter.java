@@ -24,17 +24,29 @@
  */
 package com.buession.httpclient.okhttp.convert;
 
-import com.buession.httpclient.core.RequestBody;
+import com.buession.httpclient.core.AbstractRawRequestBody;
+import com.buession.httpclient.core.ContentType;
+import com.buession.httpclient.core.HtmlRawRequestBody;
+import okhttp3.MediaType;
 
 /**
- * 请求体抽象类
+ * 原始请求体转换器基类
  *
- * @param <V>
- * 		请求体类型
+ * @param <S>
+ * 		请求体
  *
  * @author Yong.Teng
  * @since 1.2.1
  */
-public abstract class AbstractRequestBody<V> implements RequestBody<V> {
+public abstract class BaseRawRequestBodyConverter<S extends AbstractRawRequestBody<ContentType, String>> implements OkHttpRequestBodyConverter<S> {
+
+	@Override
+	public okhttp3.RequestBody convert(S source){
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		return okhttp3.RequestBody.create(source.getContent(), MediaType.parse(source.getContentType().valueOf()));
+	}
 
 }

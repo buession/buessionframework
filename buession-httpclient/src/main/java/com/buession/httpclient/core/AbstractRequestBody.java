@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -27,56 +27,90 @@ package com.buession.httpclient.core;
 import java.nio.charset.Charset;
 
 /**
+ * 请求体抽象类
+ *
+ * @param <V>
+ * 		请求体类型
+ *
  * @author Yong.Teng
  */
 public abstract class AbstractRequestBody<V> implements RequestBody<V> {
 
+	/**
+	 * 请求体 Content-Type
+	 */
 	private ContentType contentType;
 
-	private Header contentEncoding;
-
+	/**
+	 * 请求体
+	 */
 	private V content;
 
+	/**
+	 * 请求体大小
+	 */
 	private long contentLength;
 
+	/**
+	 * 构造函数
+	 */
 	public AbstractRequestBody(){
 		this.contentLength = -1;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param contentType
+	 * 		请求体 Content-Type
+	 * @param content
+	 * 		请求体
+	 */
 	public AbstractRequestBody(ContentType contentType, V content){
+		this();
 		this.contentType = contentType;
 		this.content = content;
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param contentType
+	 * 		请求体 Content-Type
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 */
 	public AbstractRequestBody(ContentType contentType, V content, long contentLength){
 		this(contentType, content);
 		this.contentLength = contentLength;
 	}
 
-	public AbstractRequestBody(ContentType contentType, Header contentEncoding, V content){
-		this(contentType, content);
-		this.contentEncoding = contentEncoding;
-	}
-
-	public AbstractRequestBody(ContentType contentType, Header contentEncoding, V content, long contentLength){
-		this(contentType, content, contentLength);
-		this.contentEncoding = contentEncoding;
-	}
-
+	/**
+	 * 构造函数，ContentType 为 text/plain
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param charset
+	 * 		请求体编码
+	 */
 	public AbstractRequestBody(V content, Charset charset){
 		this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), content);
 	}
 
+	/**
+	 * 构造函数，ContentType 为 text/plain
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 * @param charset
+	 * 		请求体编码
+	 */
 	public AbstractRequestBody(V content, long contentLength, Charset charset){
 		this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), content, contentLength);
-	}
-
-	public AbstractRequestBody(Header contentEncoding, V content, Charset charset){
-		this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), contentEncoding, content);
-	}
-
-	public AbstractRequestBody(Header contentEncoding, V content, long contentLength, Charset charset){
-		this(new ContentType(ContentType.TEXT_PLAIN.getMimeType(), charset), contentEncoding, content, contentLength);
 	}
 
 	@Override
@@ -86,21 +120,6 @@ public abstract class AbstractRequestBody<V> implements RequestBody<V> {
 
 	public void setContentType(ContentType contentType){
 		this.contentType = contentType;
-	}
-
-	@Override
-	public Header getContentEncoding(){
-		return contentEncoding;
-	}
-
-	public void setContentEncoding(Header contentEncoding){
-		this.contentEncoding = contentEncoding;
-	}
-
-	public void setContentEncoding(String contentEncoding){
-		if(contentEncoding != null){
-			setContentEncoding(new Header(HttpHeader.CONTENT_ENCODING, contentEncoding));
-		}
 	}
 
 	@Override

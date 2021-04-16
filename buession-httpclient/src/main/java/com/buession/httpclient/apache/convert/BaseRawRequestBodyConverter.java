@@ -29,10 +29,15 @@ import com.buession.httpclient.core.ContentType;
 import org.apache.http.entity.StringEntity;
 
 /**
+ * 原始请求体转换器基类
+ *
+ * @param <S>
+ * 		请求体
+ *
  * @author Yong.Teng
  * @since 1.2.1
  */
-public abstract class BaseStringRequestBodyConverter<S extends AbstractRawRequestBody<ContentType, String>> implements ApacheRequestBodyConverter<S> {
+public abstract class BaseRawRequestBodyConverter<S extends AbstractRawRequestBody<ContentType, String>> implements ApacheRequestBodyConverter<S> {
 
 	@Override
 	public StringEntity convert(S source){

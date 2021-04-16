@@ -22,10 +22,65 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.okhttp.convert;/**
- * 
+package com.buession.httpclient.okhttp.convert;
+
+import com.buession.httpclient.core.InputStreamRequestBody;
+import okhttp3.MediaType;
+import okhttp3.internal.Util;
+import okio.BufferedSink;
+import okio.Okio;
+import okio.Source;
+
+import java.io.IOException;
+
+/**
+ * 流式请求体转换器基类
+ *
+ * @param <S>
+ * 		请求体
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class BaseInputStreamRequestBodyConverter {
+ */
+public abstract class BaseInputStreamRequestBodyConverter<S extends InputStreamRequestBody> implements OkHttpRequestBodyConverter<S> {
+
+	@Override
+	public okhttp3.RequestBody convert(S source){
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		okhttp3.RequestBody requestBody = new okhttp3.RequestBody() {
+
+			@Override
+			public MediaType contentType(){
+				return MediaType.parse(source.getContentType().getMimeType());
+			}
+
+			@Override
+			public long contentLength(){
+				try{
+					return source.getContent().available();
+				}catch(IOException e){
+					return 0;
+				}
+			}
+
+			@Override
+			public void writeTo(BufferedSink sink) throws IOException{
+				Source oSource = null;
+				try{
+					oSource = Okio.source(source.getContent());
+					sink.writeAll(oSource);
+				}finally{
+					Util.closeQuietly(oSource);
+				}
+			}
+		};
+
+		return afterConvert(requestBody);
+	}
+
+	protected abstract okhttp3.RequestBody afterConvert(okhttp3.RequestBody requestBody);
+
 }

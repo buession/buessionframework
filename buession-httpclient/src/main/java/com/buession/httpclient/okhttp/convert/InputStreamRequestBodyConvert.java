@@ -30,15 +30,11 @@ import com.buession.httpclient.core.InputStreamRequestBody;
  * @author Yong.Teng
  * @since 1.2.0
  */
-public class InputStreamRequestBodyConvert implements OkHttpRequestBodyConverter<InputStreamRequestBody> {
+public class InputStreamRequestBodyConvert extends BaseInputStreamRequestBodyConverter<InputStreamRequestBody> {
 
 	@Override
-	public okhttp3.RequestBody convert(InputStreamRequestBody source){
-		if(source == null || source.getContent() == null){
-			return null;
-		}
-
-		return null;
+	protected okhttp3.RequestBody afterConvert(okhttp3.RequestBody requestBody){
+		return requestBody;
 	}
 
 }

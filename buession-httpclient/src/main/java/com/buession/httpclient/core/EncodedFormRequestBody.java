@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -27,51 +27,76 @@ package com.buession.httpclient.core;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
+ * 普通表单请求体
+ *
  * @author Yong.Teng
  */
 public class EncodedFormRequestBody extends AbstractRequestBody<List<RequestBodyElement>> {
 
-	public final static ContentType CONTENT_TYPE = ContentType.APPLICATION_FORM_URLENCODED;
-
+	/**
+	 * 构造函数
+	 */
 	public EncodedFormRequestBody(){
-		super(CONTENT_TYPE, null);
+		this(null);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求元素
+	 */
 	public EncodedFormRequestBody(List<RequestBodyElement> content){
-		super(CONTENT_TYPE, content);
+		super(ContentType.APPLICATION_FORM_URLENCODED, content);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求元素
+	 * @param contentLength
+	 * 		请求体大小
+	 */
 	public EncodedFormRequestBody(List<RequestBodyElement> content, long contentLength){
-		super(CONTENT_TYPE, content, contentLength);
+		super(ContentType.APPLICATION_FORM_URLENCODED, content, contentLength);
 	}
 
-	public EncodedFormRequestBody(Header contentEncoding, List<RequestBodyElement> content){
-		super(CONTENT_TYPE, contentEncoding, content);
-	}
-
-	public EncodedFormRequestBody(Header contentEncoding, List<RequestBodyElement> content, long contentLength){
-		super(CONTENT_TYPE, contentEncoding, content, contentLength);
-	}
-
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求元素
+	 * @param charset
+	 * 		请求体编码
+	 */
 	public EncodedFormRequestBody(List<RequestBodyElement> content, Charset charset){
-		this(content, -1, charset);
+		super(new ContentType(ContentType.APPLICATION_FORM_URLENCODED.getMimeType(), charset), content);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求元素
+	 * @param contentLength
+	 * 		请求体大小
+	 * @param charset
+	 * 		请求体编码
+	 */
 	public EncodedFormRequestBody(List<RequestBodyElement> content, long contentLength, Charset charset){
-		super(new ContentType(CONTENT_TYPE.getMimeType(), charset), content, contentLength);
+		super(new ContentType(ContentType.APPLICATION_FORM_URLENCODED.getMimeType(), charset), content, contentLength);
 	}
 
-	public EncodedFormRequestBody(Header contentEncoding, List<RequestBodyElement> content, Charset charset){
-		this(contentEncoding, content, -1, charset);
-	}
-
-	public EncodedFormRequestBody(Header contentEncoding, List<RequestBodyElement> content, long contentLength,
-								  Charset charset){
-		super(new ContentType(CONTENT_TYPE.getMimeType(), charset), contentEncoding, content, contentLength);
-	}
-
+	/**
+	 * 添加表单元素
+	 *
+	 * @param requestBodyElement
+	 * 		表单元素
+	 */
 	public void addRequestBodyElement(RequestBodyElement requestBodyElement){
 		if(getContent() == null){
 			setContent(new ArrayList<>());
@@ -80,12 +105,56 @@ public class EncodedFormRequestBody extends AbstractRequestBody<List<RequestBody
 		getContent().add(requestBodyElement);
 	}
 
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 */
 	public void addRequestBodyElement(String name, String value){
 		if(getContent() == null){
 			setContent(new ArrayList<>());
 		}
 
 		getContent().add(new RequestBodyElement(name, value));
+	}
+
+	/**
+	 * 批量添加表单元素
+	 *
+	 * @param requestBodyElements
+	 * 		表单元素
+	 *
+	 * @since 1.2.1
+	 */
+	public void addRequestBodyElements(List<RequestBodyElement> requestBodyElements){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		getContent().addAll(requestBodyElements);
+	}
+
+	/**
+	 * 批量添加表单元素
+	 *
+	 * @param requestBodyElements
+	 * 		表单元素名称和值健对值
+	 *
+	 * @since 1.2.1
+	 */
+	public void addRequestBodyElements(Map<String, String> requestBodyElements){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
+		}
+
+		if(requestBodyElements != null){
+			requestBodyElements.forEach((name, value)->{
+				getContent().add(new RequestBodyElement(name, value));
+			});
+		}
 	}
 
 }

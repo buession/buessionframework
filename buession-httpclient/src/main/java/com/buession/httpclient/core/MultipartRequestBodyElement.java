@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -31,6 +31,8 @@ import java.util.Objects;
  * @author Yong.Teng
  */
 public class MultipartRequestBodyElement extends RequestBodyElement {
+
+	private static final long serialVersionUID = 5534971168870221225L;
 
 	private final File file;
 

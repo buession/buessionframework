@@ -28,46 +28,108 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 /**
+ * Repeatable 二进制请求体
+ *
  * @author Yong.Teng
  */
 public class RepeatableInputStreamRequestBody extends InputStreamRequestBody {
 
+	/**
+	 * 构造函数，ContentType 为 application/octet-stream
+	 */
 	public RepeatableInputStreamRequestBody(){
 		super();
 	}
 
-	public RepeatableInputStreamRequestBody(ContentType contentType, InputStream content){
-		super(contentType, content);
+	/**
+	 * 构造函数，ContentType 为 application/octet-stream
+	 *
+	 * @param content
+	 * 		请求流
+	 */
+	public RepeatableInputStreamRequestBody(InputStream content){
+		super(content);
 	}
 
-	public RepeatableInputStreamRequestBody(ContentType contentType, InputStream content, long contentLength){
-		super(contentType, content, contentLength);
+	/**
+	 * 构造函数，ContentType 为 application/octet-stream
+	 *
+	 * @param content
+	 * 		请求流
+	 * @param contentLength
+	 * 		请求体大小
+	 */
+	public RepeatableInputStreamRequestBody(InputStream content, long contentLength){
+		super(content, contentLength);
 	}
 
-	public RepeatableInputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content){
-		super(contentType, contentEncoding, content);
-	}
-
-	public RepeatableInputStreamRequestBody(ContentType contentType, Header contentEncoding, InputStream content,
-											long contentLength){
-		super(contentType, contentEncoding, content, contentLength);
-	}
-
+	/**
+	 * 构造函数，ContentType 为 application/octet-stream
+	 *
+	 * @param content
+	 * 		请求流
+	 * @param charset
+	 * 		请求体字符集
+	 */
 	public RepeatableInputStreamRequestBody(InputStream content, Charset charset){
 		super(content, charset);
 	}
 
+	/**
+	 * 构造函数，ContentType 为 application/octet-stream
+	 *
+	 * @param content
+	 * 		请求流
+	 * @param contentLength
+	 * 		请求体大小
+	 * @param charset
+	 * 		请求体字符集
+	 */
 	public RepeatableInputStreamRequestBody(InputStream content, long contentLength, Charset charset){
 		super(content, contentLength, charset);
 	}
 
-	public RepeatableInputStreamRequestBody(Header contentEncoding, InputStream content, Charset charset){
-		super(contentEncoding, content, charset);
+	/**
+	 * 构造函数
+	 *
+	 * @param contentType
+	 * 		ContentType
+	 * @param content
+	 * 		请求流
+	 */
+	public RepeatableInputStreamRequestBody(ContentType contentType, InputStream content){
+		super(contentType, content);
 	}
 
-	public RepeatableInputStreamRequestBody(Header contentEncoding, InputStream content, long contentLength,
+	/**
+	 * 构造函数
+	 *
+	 * @param contentType
+	 * 		ContentType
+	 * @param content
+	 * 		请求流
+	 * @param contentLength
+	 * 		请求体大小
+	 */
+	public RepeatableInputStreamRequestBody(ContentType contentType, InputStream content, long contentLength){
+		super(contentType, content, contentLength);
+	}
+
+	/**
+	 * 构造函数，ContentType 为 application/octet-stream
+	 *
+	 * @param contentType
+	 * 		ContentType
+	 * @param content
+	 * 		请求流
+	 * @param contentLength
+	 * 		请求体大小
+	 * @param charset
+	 * 		请求体字符集
+	 */
+	public RepeatableInputStreamRequestBody(ContentType contentType, InputStream content, long contentLength,
 											Charset charset){
-		super(contentEncoding, content, contentLength, charset);
+		super(contentType, content, contentLength, charset);
 	}
 
 }

@@ -32,16 +32,11 @@ import org.apache.http.entity.InputStreamEntity;
  * @author Yong.Teng
  * @since 1.2.0
  */
-public class InputStreamRequestBodyConvert implements ApacheRequestBodyConverter<InputStreamRequestBody> {
+public class InputStreamRequestBodyConvert extends BaseInputStreamRequestBodyConverter<InputStreamRequestBody> {
 
 	@Override
-	public HttpEntity convert(InputStreamRequestBody source){
-		if(source == null || source.getContent() == null){
-			return null;
-		}
-
-		return new InputStreamEntity(source.getContent(), source.getContentLength(),
-				ContentTypeUtils.create(source.getContentType()));
+	protected HttpEntity afterConvert(InputStreamEntity streamEntity){
+		return streamEntity;
 	}
 
 }

@@ -22,10 +22,34 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache.convert;/**
- * 
+package com.buession.httpclient.apache.convert;
+
+import com.buession.httpclient.core.InputStreamRequestBody;
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.InputStreamEntity;
+
+/**
+ * 流式请求体转换器基类
+ *
+ * @param <S>
+ * 		请求体
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class BaseInputStreamRequestBodyConverter {
+ */
+public abstract class BaseInputStreamRequestBodyConverter<S extends InputStreamRequestBody> implements ApacheRequestBodyConverter<S> {
+
+	@Override
+	public HttpEntity convert(S source){
+		if(source == null || source.getContent() == null){
+			return null;
+		}
+
+		InputStreamEntity streamEntity = new InputStreamEntity(source.getContent(), source.getContentLength(),
+				ContentTypeUtils.create(source.getContentType()));
+		return afterConvert(streamEntity);
+	}
+
+	protected abstract HttpEntity afterConvert(InputStreamEntity streamEntity);
+
 }

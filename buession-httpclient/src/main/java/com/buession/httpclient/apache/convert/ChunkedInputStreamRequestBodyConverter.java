@@ -32,19 +32,11 @@ import org.apache.http.entity.InputStreamEntity;
  * @author Yong.Teng
  * @since 1.2.0
  */
-public class ChunkedInputStreamRequestBodyConverter implements ApacheRequestBodyConverter<ChunkedInputStreamRequestBody> {
+public class ChunkedInputStreamRequestBodyConverter extends BaseInputStreamRequestBodyConverter<ChunkedInputStreamRequestBody> {
 
 	@Override
-	public HttpEntity convert(ChunkedInputStreamRequestBody source){
-		if(source == null || source.getContent() == null){
-			return null;
-		}
-
-		InputStreamEntity streamEntity = new InputStreamEntity(source.getContent(), source.getContentLength(),
-				ContentTypeUtils.create(source.getContentType()));
-
+	protected HttpEntity afterConvert(InputStreamEntity streamEntity){
 		streamEntity.setChunked(true);
-
 		return streamEntity;
 	}
 

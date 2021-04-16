@@ -19,34 +19,77 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
+import java.nio.charset.Charset;
+
 /**
+ * JavaScript 请求体
+ *
  * @author Yong.Teng
  */
 public class JavaScriptRawRequestBody extends AbstractRawRequestBody<ContentType, String> {
 
+	/**
+	 * 构造函数
+	 */
 	public JavaScriptRawRequestBody(){
-		super();
+		this(null);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 */
 	public JavaScriptRawRequestBody(String content){
 		super(ContentType.APPLICATION_JAVASCRIPT, content);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 */
 	public JavaScriptRawRequestBody(String content, long contentLength){
 		super(ContentType.APPLICATION_JAVASCRIPT, content, contentLength);
 	}
 
-	public JavaScriptRawRequestBody(Header contentEncoding, String content){
-		super(ContentType.APPLICATION_JAVASCRIPT, contentEncoding, content);
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param charset
+	 * 		请求体编码
+	 *
+	 * @since 1.2.1
+	 */
+	public JavaScriptRawRequestBody(String content, Charset charset){
+		super(new ContentType(ContentType.APPLICATION_JAVASCRIPT.getMimeType(), charset), content);
 	}
 
-	public JavaScriptRawRequestBody(Header contentEncoding, String content, long contentLength){
-		super(ContentType.APPLICATION_JAVASCRIPT, contentEncoding, content, contentLength);
+	/**
+	 * 构造函数
+	 *
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 * @param charset
+	 * 		请求体编码
+	 *
+	 * @since 1.2.1
+	 */
+	public JavaScriptRawRequestBody(String content, long contentLength, Charset charset){
+		super(new ContentType(ContentType.APPLICATION_JAVASCRIPT.getMimeType(), charset), content, contentLength);
 	}
 
 }
