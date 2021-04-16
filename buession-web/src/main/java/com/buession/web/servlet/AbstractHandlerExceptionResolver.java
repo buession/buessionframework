@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet;
@@ -61,8 +61,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractHandlerExceptionResolver extends org.springframework.web.servlet.handler
-		.AbstractHandlerExceptionResolver implements ServletExceptionHandlerResolver {
+public abstract class AbstractHandlerExceptionResolver extends org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver implements ServletExceptionHandlerResolver {
 
 	private String exceptionAttribute = DEFAULT_EXCEPTION_ATTRIBUTE;
 
@@ -105,8 +104,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 	@ExceptionHandler(value = {Throwable.class, Exception.class})
 	@Nullable
 	@Override
-	protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, @Nullable
-			Object handler, Exception ex){
+	protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response,
+											  @Nullable Object handler, Exception ex){
 		ModelAndView mv = doSpecialResolveException(request, response, handler, ex);
 
 		if(mv != null){
@@ -145,8 +144,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 				return handleHttpMediaTypeNotSupportedException(request, response, handler,
 						(HttpMediaTypeNotSupportedException) ex);
 			}else if(ex instanceof MissingPathVariableException){
-				return handleMissingPathVariableException(request, response, handler, (MissingPathVariableException)
-						ex);
+				return handleMissingPathVariableException(request, response, handler,
+						(MissingPathVariableException) ex);
 			}else if(ex instanceof ConversionNotSupportedException){
 				return handleConversionNotSupportedException(request, response, handler,
 						(ConversionNotSupportedException) ex);
@@ -154,8 +153,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 				return handleHttpMessageNotWritableException(request, response, handler,
 						(HttpMessageNotWritableException) ex);
 			}else if(ex instanceof AsyncRequestTimeoutException){
-				return handleAsyncRequestTimeoutException(request, response, handler, (AsyncRequestTimeoutException)
-						ex);
+				return handleAsyncRequestTimeoutException(request, response, handler,
+						(AsyncRequestTimeoutException) ex);
 			}
 		}catch(Exception handlerEx){
 			if(logger.isWarnEnabled()){
@@ -166,90 +165,219 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 		return doDefaultResolveException(request, response, handler, ex);
 	}
 
-	protected ModelAndView doSpecialResolveException(final HttpServletRequest request, final HttpServletResponse
-			response, final Object handler, final Exception ex){
+	protected ModelAndView doSpecialResolveException(final HttpServletRequest request,
+													 final HttpServletResponse response, final Object handler,
+													 final Exception ex){
 		return null;
 	}
 
-	protected ModelAndView doDefaultResolveException(final HttpServletRequest request, final HttpServletResponse
-			response, final Object handler, final Exception ex){
+	protected ModelAndView doDefaultResolveException(final HttpServletRequest request,
+													 final HttpServletResponse response, final Object handler,
+													 final Exception ex){
 		return null;
 	}
 
 	/**
 	 * Status code: 400
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link MethodArgumentNotValidException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleMethodArgumentNotValidException(final HttpServletRequest request, final
-	HttpServletResponse response, @Nullable final Object handler, final MethodArgumentNotValidException ex) throws
-			IOException{
+	protected ModelAndView handleMethodArgumentNotValidException(final HttpServletRequest request,
+																 final HttpServletResponse response,
+																 @Nullable final Object handler,
+																 final MethodArgumentNotValidException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		return doResolve(request, response, ex);
 	}
 
 	/**
 	 * Status code: 400
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link MissingServletRequestPartException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleMissingServletRequestPartException(final HttpServletRequest request, final
-	HttpServletResponse response, @Nullable final Object handler, final MissingServletRequestPartException ex) throws
-			IOException{
+	protected ModelAndView handleMissingServletRequestPartException(final HttpServletRequest request,
+																	final HttpServletResponse response,
+																	@Nullable final Object handler,
+																	final MissingServletRequestPartException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		return doResolve(request, response, ex);
 	}
 
 	/**
 	 * Status code: 400
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link BindException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
 	protected ModelAndView handleBindException(final HttpServletRequest request, final HttpServletResponse response,
-											   @Nullable final Object handler, final BindException ex) throws
-			IOException{
+											   @Nullable final Object handler, final BindException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		return doResolve(request, response, ex);
 	}
 
 	/**
 	 * Status code: 400
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link MissingServletRequestParameterException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleMissingServletRequestParameterException(final HttpServletRequest request, final
-	HttpServletResponse response, @Nullable final Object handler, final MissingServletRequestParameterException ex)
-			throws IOException{
+	protected ModelAndView handleMissingServletRequestParameterException(final HttpServletRequest request,
+																		 final HttpServletResponse response,
+																		 @Nullable final Object handler,
+																		 final MissingServletRequestParameterException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
 		return doResolve(request, response, ex);
 	}
 
 	/**
 	 * Status code: 400
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link ServletRequestBindingException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleServletRequestBindingException(final HttpServletRequest request, final
-	HttpServletResponse response, @Nullable final Object handler, final ServletRequestBindingException ex) throws
-			IOException{
+	protected ModelAndView handleServletRequestBindingException(final HttpServletRequest request,
+																final HttpServletResponse response,
+																@Nullable final Object handler,
+																final ServletRequestBindingException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
 		return doResolve(request, response, ex);
 	}
 
 	/**
 	 * Status code: 400
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link TypeMismatchException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleTypeMismatchException(final HttpServletRequest request, final HttpServletResponse
-			response, @Nullable final Object handler, final TypeMismatchException ex) throws IOException{
+	protected ModelAndView handleTypeMismatchException(final HttpServletRequest request,
+													   final HttpServletResponse response,
+													   @Nullable final Object handler, final TypeMismatchException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		return doResolve(request, response, ex);
 	}
 
 	/**
 	 * Status code: 400
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link HttpMessageNotReadableException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleHttpMessageNotReadableException(final HttpServletRequest request, final
-	HttpServletResponse response, @Nullable final Object handler, final HttpMessageNotReadableException ex) throws
-			IOException{
+	protected ModelAndView handleHttpMessageNotReadableException(final HttpServletRequest request,
+																 final HttpServletResponse response,
+																 @Nullable final Object handler,
+																 final HttpMessageNotReadableException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		return doResolve(request, response, ex);
 	}
 
 	/**
 	 * Status code: 404
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link NoHandlerFoundException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleNoHandlerFoundException(final HttpServletRequest request, final HttpServletResponse
-			response, @Nullable final Object handler, final NoHandlerFoundException ex) throws IOException{
+	protected ModelAndView handleNoHandlerFoundException(final HttpServletRequest request,
+														 final HttpServletResponse response,
+														 @Nullable final Object handler,
+														 final NoHandlerFoundException ex) throws IOException{
 		pageNotFoundLogger.warn(ex.getMessage());
 		response.sendError(HttpServletResponse.SC_NOT_FOUND);
 		return doResolve(request, response, ex);
@@ -257,10 +385,26 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 
 	/**
 	 * Status code: 405
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link HttpRequestMethodNotSupportedException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleHttpRequestMethodNotSupportedException(final HttpServletRequest request, final
-	HttpServletResponse response, @Nullable final Object handler, final HttpRequestMethodNotSupportedException ex)
-			throws IOException{
+	protected ModelAndView handleHttpRequestMethodNotSupportedException(final HttpServletRequest request,
+																		final HttpServletResponse response,
+																		@Nullable final Object handler,
+																		final HttpRequestMethodNotSupportedException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, ex.getMessage());
 
 		String[] supportedMethods = ex.getSupportedMethods();
@@ -273,20 +417,52 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 
 	/**
 	 * Status code: 406
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link HttpMediaTypeNotAcceptableException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleHttpMediaTypeNotAcceptableException(final HttpServletRequest request, final
-	HttpServletResponse response, @Nullable final Object handler, final HttpMediaTypeNotAcceptableException ex) throws
-			IOException{
+	protected ModelAndView handleHttpMediaTypeNotAcceptableException(final HttpServletRequest request,
+																	 final HttpServletResponse response,
+																	 @Nullable final Object handler,
+																	 final HttpMediaTypeNotAcceptableException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_NOT_ACCEPTABLE);
 		return doResolve(request, response, ex);
 	}
 
 	/**
 	 * Status code: 415
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link HttpMediaTypeNotSupportedException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleHttpMediaTypeNotSupportedException(final HttpServletRequest request, final
-	HttpServletResponse response, @Nullable final Object handler, final HttpMediaTypeNotSupportedException ex) throws
-			IOException{
+	protected ModelAndView handleHttpMediaTypeNotSupportedException(final HttpServletRequest request,
+																	final HttpServletResponse response,
+																	@Nullable final Object handler,
+																	final HttpMediaTypeNotSupportedException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE);
 
 		List<MediaType> mediaTypes = ex.getSupportedMediaTypes();
@@ -299,40 +475,104 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 
 	/**
 	 * Status code: 500
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link MissingPathVariableException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleMissingPathVariableException(final HttpServletRequest request, final
-	HttpServletResponse response, @Nullable final Object handler, final MissingPathVariableException ex) throws
-			IOException{
+	protected ModelAndView handleMissingPathVariableException(final HttpServletRequest request,
+															  final HttpServletResponse response,
+															  @Nullable final Object handler,
+															  final MissingPathVariableException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
 		return doResolve(request, response, ex);
 	}
 
 	/**
 	 * Status code: 500
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link ConversionNotSupportedException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleConversionNotSupportedException(final HttpServletRequest request, final
-	HttpServletResponse response, @Nullable final Object handler, final ConversionNotSupportedException ex) throws
-			IOException{
+	protected ModelAndView handleConversionNotSupportedException(final HttpServletRequest request,
+																 final HttpServletResponse response,
+																 @Nullable final Object handler,
+																 final ConversionNotSupportedException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		return doResolve(request, response, ex);
 	}
 
 	/**
 	 * Status code: 500
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link HttpMessageNotWritableException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleHttpMessageNotWritableException(final HttpServletRequest request, final
-	HttpServletResponse response, @Nullable final Object handler, final HttpMessageNotWritableException ex) throws
-			IOException{
+	protected ModelAndView handleHttpMessageNotWritableException(final HttpServletRequest request,
+																 final HttpServletResponse response,
+																 @Nullable final Object handler,
+																 final HttpMessageNotWritableException ex) throws IOException{
 		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		return doResolve(request, response, ex);
 	}
 
 	/**
 	 * Status code: 503
+	 *
+	 * @param request
+	 *        {@link HttpServletRequest}
+	 * @param response
+	 *        {@link HttpServletResponse}
+	 * @param handler
+	 * 		the executed handler, or {@code null} if none chosen at the time of the exception (for example, if
+	 * 		multipart resolution failed)
+	 * @param ex
+	 *        {@link AsyncRequestTimeoutException}
+	 *
+	 * @return 返回数据
+	 *
+	 * @throws IOException
+	 * 		设置 Response 状态错误时抛出
 	 */
-	protected ModelAndView handleAsyncRequestTimeoutException(final HttpServletRequest request, final
-	HttpServletResponse response, @Nullable final Object handler, final AsyncRequestTimeoutException ex) throws
-			IOException{
+	protected ModelAndView handleAsyncRequestTimeoutException(final HttpServletRequest request,
+															  final HttpServletResponse response,
+															  @Nullable final Object handler,
+															  final AsyncRequestTimeoutException ex) throws IOException{
 		if(response.isCommitted() == false){
 			response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
 		}else{
@@ -353,12 +593,12 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 
 	protected ModelAndView createModelAndView(final HttpServletRequest request, final HttpServletResponse response,
 											  final HttpStatus httpStatus, final Exception ex){
-		return acceptJson(request) ? new ModelAndView(new MappingJackson2JsonView()) : new ModelAndView
-				(determineViewName(request, response, ex, httpStatus));
+		return acceptJson(request) ? new ModelAndView(new MappingJackson2JsonView()) :
+				new ModelAndView(determineViewName(request, response, ex, httpStatus));
 	}
 
-	protected ModelAndView doResolve(final HttpServletRequest request, final HttpServletResponse response, final
-	Exception ex){
+	protected ModelAndView doResolve(final HttpServletRequest request, final HttpServletResponse response,
+									 final Exception ex){
 		request.setAttribute("javax.servlet.error.exception", ex);
 
 		HttpStatus httpStatus = HttpStatus.resolve(response.getStatus());
@@ -377,8 +617,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 		return mv;
 	}
 
-	protected String determineViewName(final HttpServletRequest request, final HttpServletResponse response, final
-	Exception ex, final HttpStatus httpStatus){
+	protected String determineViewName(final HttpServletRequest request, final HttpServletResponse response,
+									   final Exception ex, final HttpStatus httpStatus){
 		String viewName = null;
 
 		if(getExceptionViews() != null){
@@ -395,8 +635,8 @@ public abstract class AbstractHandlerExceptionResolver extends org.springframewo
 
 		if(viewName == null && defaultErrorView != null){
 			if(logger.isDebugEnabled()){
-				logger.debug("Resolving to default view '{}' for exception of type [{}]", defaultErrorView, ex
-						.getClass().getName());
+				logger.debug("Resolving to default view '{}' for exception of type [{}]", defaultErrorView,
+						ex.getClass().getName());
 			}
 
 			viewName = defaultErrorView;
