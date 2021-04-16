@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
@@ -107,8 +107,27 @@ public class ApacheHttpClient extends AbstractHttpClient {
 		if(requestConfig == null){
 			final Configuration configuration = getConnectionManager().getConfiguration();
 
-			requestConfig =
-					RequestConfig.custom().setConnectTimeout(configuration.getConnectTimeout()).setConnectionRequestTimeout(configuration.getConnectionRequestTimeout()).setSocketTimeout(configuration.getReadTimeout()).setRedirectsEnabled(configuration.isAllowRedirects()).setCircularRedirectsAllowed(configuration.isCircularRedirectsAllowed()).setRelativeRedirectsAllowed(configuration.isRelativeRedirectsAllowed()).setMaxRedirects(configuration.getMaxRedirects()).setAuthenticationEnabled(configuration.isAuthenticationEnabled()).setContentCompressionEnabled(configuration.isContentCompressionEnabled()).setNormalizeUri(configuration.isNormalizeUri()).build();
+
+			RequestConfig.Builder builder =
+					RequestConfig.custom().setConnectTimeout(configuration.getConnectTimeout()).setConnectionRequestTimeout(configuration.getConnectionRequestTimeout()).setSocketTimeout(configuration.getReadTimeout()).setAuthenticationEnabled(configuration.isAuthenticationEnabled()).setContentCompressionEnabled(configuration.isContentCompressionEnabled()).setNormalizeUri(configuration.isNormalizeUri());
+
+			if(configuration.isAllowRedirects() != null){
+				builder.setRedirectsEnabled(configuration.isAllowRedirects());
+			}
+
+			if(configuration.getMaxRedirects() != null){
+				builder.setMaxRedirects(configuration.getMaxRedirects());
+			}
+
+			if(configuration.isCircularRedirectsAllowed() != null){
+				builder.setCircularRedirectsAllowed(configuration.isCircularRedirectsAllowed());
+			}
+
+			if(configuration.isRelativeRedirectsAllowed() != null){
+				builder.setRelativeRedirectsAllowed(configuration.isRelativeRedirectsAllowed());
+			}
+
+			requestConfig = builder.build();
 		}
 
 		return requestConfig;

@@ -62,16 +62,16 @@ public class Configuration {
 	/**
 	 * 是否允许重定向
 	 */
-	private boolean allowRedirects;
+	private Boolean allowRedirects;
 
-	private boolean relativeRedirectsAllowed;
+	private Boolean relativeRedirectsAllowed;
 
-	private boolean circularRedirectsAllowed;
+	private Boolean circularRedirectsAllowed;
 
 	/**
 	 * 最大允许重定向次数
 	 */
-	private int maxRedirects;
+	private Integer maxRedirects;
 
 	/**
 	 * 是否开启 Http Basic 认证
@@ -204,7 +204,7 @@ public class Configuration {
 	 *
 	 * @return 是否允许重定向
 	 */
-	public boolean isAllowRedirects(){
+	public Boolean isAllowRedirects(){
 		return getAllowRedirects();
 	}
 
@@ -213,7 +213,7 @@ public class Configuration {
 	 *
 	 * @return 是否允许重定向
 	 */
-	public boolean getAllowRedirects(){
+	public Boolean getAllowRedirects(){
 		return allowRedirects;
 	}
 
@@ -223,31 +223,31 @@ public class Configuration {
 	 * @param allowRedirects
 	 * 		是否允许重定向
 	 */
-	public void setAllowRedirects(boolean allowRedirects){
+	public void setAllowRedirects(Boolean allowRedirects){
 		this.allowRedirects = allowRedirects;
 	}
 
-	public boolean isRelativeRedirectsAllowed(){
+	public Boolean isRelativeRedirectsAllowed(){
 		return getRelativeRedirectsAllowed();
 	}
 
-	public boolean getRelativeRedirectsAllowed(){
+	public Boolean getRelativeRedirectsAllowed(){
 		return relativeRedirectsAllowed;
 	}
 
-	public void setRelativeRedirectsAllowed(boolean relativeRedirectsAllowed){
+	public void setRelativeRedirectsAllowed(Boolean relativeRedirectsAllowed){
 		this.relativeRedirectsAllowed = relativeRedirectsAllowed;
 	}
 
-	public boolean isCircularRedirectsAllowed(){
+	public Boolean isCircularRedirectsAllowed(){
 		return getCircularRedirectsAllowed();
 	}
 
-	public boolean getCircularRedirectsAllowed(){
+	public Boolean getCircularRedirectsAllowed(){
 		return circularRedirectsAllowed;
 	}
 
-	public void setCircularRedirectsAllowed(boolean circularRedirectsAllowed){
+	public void setCircularRedirectsAllowed(Boolean circularRedirectsAllowed){
 		this.circularRedirectsAllowed = circularRedirectsAllowed;
 	}
 
@@ -256,7 +256,7 @@ public class Configuration {
 	 *
 	 * @return 最大允许重定向次数
 	 */
-	public int getMaxRedirects(){
+	public Integer getMaxRedirects(){
 		return maxRedirects;
 	}
 
@@ -266,7 +266,7 @@ public class Configuration {
 	 * @param maxRedirects
 	 * 		最大允许重定向次数
 	 */
-	public void setMaxRedirects(int maxRedirects){
+	public void setMaxRedirects(Integer maxRedirects){
 		this.maxRedirects = maxRedirects;
 	}
 

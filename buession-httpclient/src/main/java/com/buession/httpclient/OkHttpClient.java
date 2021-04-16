@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
@@ -89,8 +89,14 @@ public class OkHttpClient extends AbstractHttpClient {
 		if(httpClient == null){
 			final Configuration configuration = getConnectionManager().getConfiguration();
 
-			httpClient =
-					HttpClientBuilder.create().setConnectionManager(((OkHttpClientConnectionManager) getConnectionManager()).getClientConnectionManager()).setConnectTimeout(configuration.getConnectTimeout()).setReadTimeout(configuration.getReadTimeout()).setFollowRedirects(configuration.isAllowRedirects()).build();
+			HttpClientBuilder builder =
+					HttpClientBuilder.create().setConnectionManager(((OkHttpClientConnectionManager) getConnectionManager()).getClientConnectionManager()).setConnectTimeout(configuration.getConnectTimeout()).setReadTimeout(configuration.getReadTimeout());
+
+			if(configuration.isAllowRedirects() != null){
+				builder.setFollowRedirects(configuration.isAllowRedirects());
+			}
+
+			httpClient = builder.build();
 		}
 
 		return httpClient;
