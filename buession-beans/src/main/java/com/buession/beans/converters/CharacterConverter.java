@@ -21,12 +21,10 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans.converters;
-
-import com.buession.lang.Constants;
 
 /**
  * {@link com.buession.beans.converters.Converter} 的字符对象的实现，处理 <b>{@link java.lang.Character}</b> 对象之间的转换的实现。
@@ -43,7 +41,7 @@ public final class CharacterConverter extends AbstractConverter<Character> {
 	@Override
 	protected String convertToString(final Object value){
 		final String strValue = value.toString();
-		return strValue.length() == 0 ? Constants.EMPTY_STRING : strValue.substring(0, 1);
+		return strValue.length() == 0 ? strValue : strValue.substring(0, 1);
 	}
 
 	@Override

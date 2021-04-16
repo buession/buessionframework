@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.aspectj;
@@ -47,11 +47,6 @@ public abstract class AbstractAdviceMethodInvocationAdapter implements MethodInv
 	}
 
 	@Override
-	public Object proceed() throws Throwable{
-		return null;
-	}
-
-	@Override
 	public Object getThis(){
 		return object;
 	}
@@ -69,6 +64,11 @@ public abstract class AbstractAdviceMethodInvocationAdapter implements MethodInv
 	@Override
 	public Object[] getArguments(){
 		return arguments;
+	}
+
+	@Override
+	public Object proceed() throws Throwable{
+		return null;
 	}
 
 }

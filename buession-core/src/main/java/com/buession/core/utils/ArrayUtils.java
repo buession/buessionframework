@@ -488,7 +488,7 @@ public class ArrayUtils {
 		}else if(a.length == 0){
 			return Constants.EMPTY_STRING;
 		}else{
-			StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder(a.length * 5);
 
 			for(int i = 0; i < a.length; i++){
 				sb.append(a[i]);

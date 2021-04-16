@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator;
@@ -378,6 +378,8 @@ public class Validate {
 	 *
 	 * @param array
 	 * 		待验证数组
+	 * @param <O>
+	 * 		数组类型
 	 *
 	 * @return 不为 NULL 且长度大于 0 时，返回 TRUE；否则，返回 FALSE
 	 *
@@ -562,7 +564,7 @@ public class Validate {
 	 * @return 在两个值之间时，返回 TRUE；否则，返回 FALSE
 	 */
 	public final static boolean isBetween(final double value, final double min, final double max,
-			final boolean isContain){
+										  final boolean isContain){
 		return isContain ? (value >= min && value <= max) : (value > min && value < max);
 	}
 
@@ -597,7 +599,7 @@ public class Validate {
 	 * @return 在两个值之间时，返回 TRUE；否则，返回 FALSE
 	 */
 	public final static boolean isBetween(final float value, final float min, final float max,
-			final boolean isContain){
+										  final boolean isContain){
 		return isContain ? (value >= min && value <= max) : (value > min && value < max);
 	}
 
