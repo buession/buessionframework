@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
@@ -98,27 +98,19 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 	}
 
 	public final static OkHttpRequestBuilder create(String url){
-		final OkHttpRequestBuilder builder = create();
-		builder.setUrl(url);
-		return builder;
+		return create().setUrl(url);
 	}
 
 	public final static OkHttpRequestBuilder create(String url, Map<String, Object> parameters){
-		final OkHttpRequestBuilder builder = create(url);
-		builder.setParameters(parameters);
-		return builder;
+		return create(url).setParameters(parameters);
 	}
 
 	public final static OkHttpRequestBuilder create(String url, List<Header> headers){
-		final OkHttpRequestBuilder builder = create(url);
-		builder.setHeaders(headers);
-		return builder;
+		return create(url).setHeaders(headers);
 	}
 
 	public final static OkHttpRequestBuilder create(String url, Map<String, Object> parameters, List<Header> headers){
-		final OkHttpRequestBuilder builder = create(url, parameters);
-		builder.setHeaders(headers);
-		return builder;
+		return create(url, parameters).setHeaders(headers);
 	}
 
 	@Override
@@ -147,157 +139,157 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 
 	@Override
 	public OkHttpRequestBuilder get(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().get());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().get());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder post(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().post());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().post());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder post(RequestBody body){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().post(buildRequestBody(body)));
+		request.setRequestBuilder(new okhttp3.RequestBuilder().post(buildRequestBody(body)));
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder patch(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().patch());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().patch());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder patch(RequestBody body){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().patch(buildRequestBody(body)));
+		request.setRequestBuilder(new okhttp3.RequestBuilder().patch(buildRequestBody(body)));
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder put(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().put());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().put());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder put(RequestBody body){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().put(buildRequestBody(body)));
+		request.setRequestBuilder(new okhttp3.RequestBuilder().put(buildRequestBody(body)));
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder delete(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().delete());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().delete());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder connect(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().connect());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().connect());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder trace(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().trace());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().trace());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder copy(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().copy());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().copy());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder move(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().move());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().move());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder head(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().head());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().head());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder options(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().options());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().options());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder link(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().link());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().link());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder unlink(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().unlink());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().unlink());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder purge(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().purge());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().purge());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder lock(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().lock());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().lock());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder unlock(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().unlock());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().unlock());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder propfind(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().propfind());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().propfind());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder proppatch(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().proppatch());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().proppatch());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder proppatch(RequestBody body){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().proppatch(buildRequestBody(body)));
+		request.setRequestBuilder(new okhttp3.RequestBuilder().proppatch(buildRequestBody(body)));
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder report(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().report());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().report());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder report(RequestBody body){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().report(buildRequestBody(body)));
+		request.setRequestBuilder(new okhttp3.RequestBuilder().report(buildRequestBody(body)));
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder view(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().view());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().view());
 		return this;
 	}
 
 	@Override
 	public OkHttpRequestBuilder wrapped(){
-		request.setRequestBuilder(new com.buession.httpclient.okhttp.RequestBuilder().wrapped());
+		request.setRequestBuilder(new okhttp3.RequestBuilder().wrapped());
 		return this;
 	}
 
