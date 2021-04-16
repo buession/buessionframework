@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.file;
@@ -172,10 +172,10 @@ public class File extends java.io.File {
 	public void write(final char[] chars) throws IOException{
 		DataOutputStream dos = new DataOutputStream(new FileOutputStream(this));
 
-		for(int i = 0; i < chars.length; i++){
+		for(char c : chars){
 			byte[] b = new byte[2];
-			b[0] = (byte) ((chars[i] & 0xFF00) >> 8);
-			b[1] = (byte) (chars[i] & 0xFF);
+			b[0] = (byte) ((c & 0xFF00) >> 8);
+			b[1] = (byte) (c & 0xFF);
 
 			dos.write(b);
 		}
@@ -232,10 +232,10 @@ public class File extends java.io.File {
 	public void write(final char[] chars, boolean append) throws IOException{
 		DataOutputStream dos = new DataOutputStream(new FileOutputStream(this, append));
 
-		for(int i = 0; i < chars.length; i++){
+		for(char c : chars){
 			byte[] b = new byte[2];
-			b[0] = (byte) ((chars[i] & 0xFF00) >> 8);
-			b[1] = (byte) (chars[i] & 0xFF);
+			b[0] = (byte) ((c & 0xFF00) >> 8);
+			b[1] = (byte) (c & 0xFF);
 
 			dos.write(b);
 		}
