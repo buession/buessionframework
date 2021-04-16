@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.helper;
@@ -30,9 +30,7 @@ import com.buession.httpclient.core.Response;
 import com.buession.httpclient.core.StatusLine;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Yong.Teng
@@ -87,18 +85,6 @@ public abstract class AbstractResponseBuilder implements ResponseBuilder {
 	public Response build(){
 		response.setStatusLine(new StatusLine(response.getStatusCode(), response.getStatusText()));
 		return response;
-	}
-
-	protected final static List<Header> headersMap2List(final Map<String, String> headersMap){
-		if(headersMap == null){
-			return null;
-		}
-
-		List<Header> headers = new ArrayList<>(headersMap.size());
-
-		headersMap.forEach((name, value)->headers.add(new Header(name, value)));
-
-		return headers;
 	}
 
 }

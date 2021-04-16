@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache;
@@ -27,14 +27,14 @@ package com.buession.httpclient.apache;
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.helper.AbstractResponseBuilder;
 import com.buession.httpclient.helper.ResponseBuilder;
+import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @author Yong.Teng
@@ -48,7 +48,7 @@ public class ApacheResponseBuilder extends AbstractResponseBuilder {
 	}
 
 	public final static ResponseBuilder create(org.apache.http.HttpResponse httpResponse){
-		final ResponseBuilder responseBuilder = new ApacheResponseBuilder();
+		final ApacheResponseBuilder responseBuilder = new ApacheResponseBuilder();
 		final org.apache.http.StatusLine responseStatusLine = httpResponse.getStatusLine();
 		final org.apache.http.ProtocolVersion responseProtocolVersion = responseStatusLine.getProtocolVersion();
 
@@ -57,33 +57,24 @@ public class ApacheResponseBuilder extends AbstractResponseBuilder {
 		responseBuilder.setStatusCode(responseStatusLine.getStatusCode());
 		responseBuilder.setStatusText(responseStatusLine.getReasonPhrase());
 
-		final org.apache.http.Header[] responseHeaders = httpResponse.getAllHeaders();
+		ApacheResponseHeaderParse responseHeaderParse = new ApacheResponseHeaderParse(httpResponse.getAllHeaders());
+		responseBuilder.setHeaders(responseHeaderParse.parse());
 
-		if(responseHeaders != null){
-			final Map<String, String> headersMap = new LinkedHashMap<>(responseHeaders.length);
+		if(httpResponse.getEntity() != null){
+			responseBuilder.setContentLength(httpResponse.getEntity().getContentLength());
 
-			for(org.apache.http.Header header : responseHeaders){
-				if(header.getElements() != null){
-					String value = headersMap.get(header.getName());
+			try{
+				HttpEntity httpEntity = new BufferedHttpEntity(httpResponse.getEntity());
 
-					if(value == null){
-						headersMap.put(header.getName(), header.getValue());
-					}else{
-						headersMap.put(header.getName(), value + ", " + header.getValue());
-					}
+				responseBuilder.setInputStream(httpEntity.getContent());
+				responseBuilder.setBody(EntityUtils.toString(httpEntity));
+
+				if(httpResponse.getEntity().getContent() != null){
+					httpResponse.getEntity().getContent().close();
 				}
+			}catch(IOException e){
+				logger.error("Response entity to body error.", e);
 			}
-
-			responseBuilder.setHeaders(headersMap2List(headersMap));
-		}
-
-		responseBuilder.setContentLength(httpResponse.getEntity().getContentLength());
-
-		try{
-			responseBuilder.setInputStream(httpResponse.getEntity().getContent());
-			responseBuilder.setBody(EntityUtils.toString(httpResponse.getEntity()));
-		}catch(IOException e){
-			logger.error("Response entity to body error.", e);
 		}
 
 		if(httpResponse instanceof CloseableHttpResponse){

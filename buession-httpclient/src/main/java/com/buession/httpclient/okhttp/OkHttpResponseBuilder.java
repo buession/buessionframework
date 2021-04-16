@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp;
@@ -29,14 +29,12 @@ import com.buession.core.utils.StringUtils;
 import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.helper.AbstractResponseBuilder;
 import com.buession.httpclient.helper.ResponseBuilder;
-import okhttp3.Headers;
 import okhttp3.ResponseBody;
+import okio.BufferedSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * @author Yong.Teng
@@ -61,32 +59,33 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder {
 
 		responseBuilder.setProtocolVersion(ProtocolVersion.createInstance(protocolName, majorVersion, minorVersion));
 
-		Headers responseHeaders = httpResponse.headers();
-		if(responseHeaders != null){
-			final Map<String, String> headersMap = new LinkedHashMap<>(responseHeaders.size());
-
-			for(String name : responseHeaders.names()){
-				String value = headersMap.get(name);
-
-				if(value == null){
-					headersMap.put(name, responseHeaders.get(name));
-				}else{
-					headersMap.put(name, value + ", " + responseHeaders.get(name));
-				}
-			}
-
-			responseBuilder.setHeaders(headersMap2List(headersMap));
-		}
+		OkHttpResponseHeaderParse okHttpResponseHeaderParse = new OkHttpResponseHeaderParse(httpResponse.headers());
+		responseBuilder.setHeaders(okHttpResponseHeaderParse.parse());
 
 		final ResponseBody responseBody = httpResponse.body();
 
-		responseBuilder.setContentLength(responseBody.contentLength());
-		responseBuilder.setInputStream(responseBody.byteStream());
+		if(responseBody != null){
+			responseBuilder.setContentLength(responseBody.contentLength());
 
-		try{
-			responseBuilder.setBody(responseBody.string());
-		}catch(IOException e){
-			logger.error("Response entity to body error.", e);
+			try{
+				BufferedSource source = responseBody.source();
+
+				source.request(Long.MAX_VALUE);
+
+				okio.Buffer sourceBuffer = source.getBuffer();
+				okio.Buffer targetBuffer = new okio.Buffer();
+
+				sourceBuffer.copyTo(targetBuffer, 0, sourceBuffer.size());
+
+				responseBuilder.setBody(responseBody.string());
+				responseBuilder.setInputStream(targetBuffer.inputStream());
+
+				sourceBuffer.close();
+			}catch(IOException e){
+				logger.error("Response entity to body error.", e);
+			}
+
+			responseBody.close();
 		}
 
 		httpResponse.close();
