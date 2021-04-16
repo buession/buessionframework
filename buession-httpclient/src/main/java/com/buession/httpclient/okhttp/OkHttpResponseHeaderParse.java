@@ -22,10 +22,53 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.okhttp;/**
- * 
+package com.buession.httpclient.okhttp;
+
+import com.buession.httpclient.core.Header;
+import com.buession.httpclient.helper.AbstractResponseHeaderParse;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * OKHTTP 响应头解析器
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class OkHttpResponseHeaderParse {
+ */
+public class OkHttpResponseHeaderParse extends AbstractResponseHeaderParse<okhttp3.Headers> {
+
+	/**
+	 * 构造函数
+	 *
+	 * @param headers
+	 * 		原始响应头
+	 */
+	public OkHttpResponseHeaderParse(final okhttp3.Headers headers){
+		super(headers);
+	}
+
+	@Override
+	public List<Header> parse(){
+		if(headers == null){
+			return null;
+		}
+
+		int headerSize = headers.size();
+		if(headerSize == 0){
+			return Collections.emptyList();
+		}
+
+		final Map<String, String> temp = new LinkedHashMap<>(headerSize);
+
+		for(String name : headers.names()){
+			String oldValue = temp.get(name);
+			parseHeaders(temp, name, oldValue, headers.get(name));
+		}
+
+		return convertList(temp);
+	}
+
 }

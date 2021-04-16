@@ -22,10 +22,205 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.core.utils;/**
- * 
+package com.buession.httpclient.core.utils;
+
+import com.buession.httpclient.core.Header;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+
+/**
+ * HTTP 头构建器
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class HeadersBuilder {
+ */
+public class HeadersBuilder {
+
+	private List<Header> headers = new ArrayList<>();
+
+	/**
+	 * 构造函数
+	 */
+	public HeadersBuilder(){
+
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 */
+	public HeadersBuilder(final String name, final String value){
+		add(name, value);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 */
+	public HeadersBuilder(final String name, final short value){
+		add(name, value);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 */
+	public HeadersBuilder(final String name, final int value){
+		add(name, value);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 */
+	public HeadersBuilder(final String name, final long value){
+		add(name, value);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 */
+	public HeadersBuilder(final String name, final Date value){
+		add(name, value);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param headers
+	 * 		HTTP 头
+	 */
+	public HeadersBuilder(final List<Header> headers){
+		add(headers);
+	}
+
+	/**
+	 * 添加 HTTP 头
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 *
+	 * @return HTTP 头构建器
+	 */
+	public HeadersBuilder add(final String name, final String value){
+		headers.add(new Header(name, value));
+		return this;
+	}
+
+	/**
+	 * 添加 HTTP 头
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 *
+	 * @return HTTP 头构建器
+	 */
+	public HeadersBuilder add(final String name, final short value){
+		headers.add(new Header(name, Short.toString(value)));
+		return this;
+	}
+
+	/**
+	 * 添加 HTTP 头
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 *
+	 * @return HTTP 头构建器
+	 */
+	public HeadersBuilder add(final String name, final int value){
+		headers.add(new Header(name, Integer.toString(value)));
+		return this;
+	}
+
+	/**
+	 * 添加 HTTP 头
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 *
+	 * @return HTTP 头构建器
+	 */
+	public HeadersBuilder add(final String name, final long value){
+		headers.add(new Header(name, Long.toString(value)));
+		return this;
+	}
+
+	/**
+	 * 添加日期 HTTP 头
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 *
+	 * @return HTTP 头构建器
+	 */
+	public HeadersBuilder add(final String name, final Date value){
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss GMT", Locale.US);
+
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+		return add(name, sdf.format(value));
+	}
+
+	/**
+	 * 批量添加 HTTP 头
+	 *
+	 * @param headers
+	 * 		HTTP 头
+	 *
+	 * @return HTTP 头构建器
+	 */
+	public HeadersBuilder add(final List<Header> headers){
+		if(headers != null){
+			headers.addAll(headers);
+		}
+
+		return this;
+	}
+
+	/**
+	 * 构建 HTTP 头
+	 *
+	 * @return HTTP 头
+	 */
+	public List<Header> build(){
+		return headers;
+	}
+
 }

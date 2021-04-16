@@ -22,10 +22,28 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.helper;/**
- * 
+package com.buession.httpclient.helper;
+
+import com.buession.httpclient.core.Header;
+
+import java.util.List;
+
+/**
+ * 响应头解析器
+ *
+ * @param <T>
+ * 		原始响应头类型
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public interface ResponseHeaderParse {
+ */
+public interface ResponseHeaderParse<T> {
+
+	/**
+	 * 响应头解析方法
+	 *
+	 * @return 响应头列表
+	 */
+	List<Header> parse();
+
 }

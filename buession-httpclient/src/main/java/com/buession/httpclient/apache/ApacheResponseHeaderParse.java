@@ -22,10 +22,51 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache;/**
- * 
+package com.buession.httpclient.apache;
+
+import com.buession.httpclient.core.Header;
+import com.buession.httpclient.helper.AbstractResponseHeaderParse;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Apache HttpClient 响应头解析器
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class ApacheResponseHeaderParse {
+ */
+public class ApacheResponseHeaderParse extends AbstractResponseHeaderParse<org.apache.http.Header[]> {
+
+	/**
+	 * 构造函数
+	 *
+	 * @param headers
+	 * 		原始响应头
+	 */
+	public ApacheResponseHeaderParse(final org.apache.http.Header[] headers){
+		super(headers);
+	}
+
+	@Override
+	public List<Header> parse(){
+		if(headers == null){
+			return null;
+		}else if(headers.length == 0){
+			return Collections.emptyList();
+		}
+
+		Map<String, String> temp = new LinkedHashMap<>(headers.length);
+
+		for(org.apache.http.Header header : headers){
+			if(header.getElements() != null){
+				String oldValue = temp.get(header.getName());
+				parseHeaders(temp, header.getName(), oldValue, header.getValue());
+			}
+		}
+
+		return convertList(temp);
+	}
 }

@@ -22,10 +22,58 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.helper;/**
- * 
+package com.buession.httpclient.helper;
+
+import com.buession.httpclient.core.Header;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 响应头解析器抽象类
+ *
+ * @param <T>
+ * 		原始响应头类型
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class AbstractResponseHeaderParse {
+ */
+public abstract class AbstractResponseHeaderParse<T> implements ResponseHeaderParse<T> {
+
+	protected final T headers;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param headers
+	 * 		原始响应头
+	 */
+	public AbstractResponseHeaderParse(final T headers){
+		this.headers = headers;
+	}
+
+	protected final static Map<String, String> parseHeaders(final Map<String, String> headers, final String name,
+															final String oldValue, final String newValue){
+		if(oldValue == null){
+			headers.put(name, newValue);
+		}else{
+			headers.put(name, oldValue + ", " + newValue);
+		}
+
+		return headers;
+	}
+
+	protected final static List<Header> convertList(final Map<String, String> headersMap){
+		if(headersMap == null){
+			return null;
+		}
+
+		List<Header> headers = new ArrayList<>(headersMap.size());
+
+		headersMap.forEach((name, value)->headers.add(new Header(name, value)));
+
+		return headers;
+	}
+
 }
