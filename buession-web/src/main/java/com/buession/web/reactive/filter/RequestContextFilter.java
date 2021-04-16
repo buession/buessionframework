@@ -24,7 +24,7 @@
  */
 package com.buession.web.reactive.filter;
 
-import com.buession.web.reactive.context.request.ReactiveRequestContextHolder;
+import com.buession.web.reactive.context.request.RequestContextHolder;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -37,12 +37,12 @@ import reactor.core.publisher.Mono;
  * @author Yong.Teng
  * @since 1.2.1
  */
-public class ReactiveRequestContextFilter implements WebFilter {
+public class RequestContextFilter implements WebFilter {
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
 		ServerHttpRequest request = exchange.getRequest();
-		return chain.filter(exchange).subscriberContext(context->context.put(ReactiveRequestContextHolder.CONTEXT_KEY,
+		return chain.filter(exchange).subscriberContext(context->context.put(RequestContextHolder.CONTEXT_KEY,
 				request));
 	}
 

@@ -33,7 +33,7 @@ import reactor.core.publisher.Mono;
  * @author Yong.Teng
  * @since 1.2.1
  */
-public class ReactiveRequestContextHolder {
+public class RequestContextHolder {
 
 	public static final Class<ServerHttpRequest> CONTEXT_KEY = ServerHttpRequest.class;
 
