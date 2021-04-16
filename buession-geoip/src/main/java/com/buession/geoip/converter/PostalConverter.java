@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -35,7 +35,6 @@ import java.util.Locale;
  * @author Yong.Teng
  */
 public class PostalConverter extends AbstractConverter<Postal, com.maxmind.geoip2.record.Postal, CityResponse> {
-
 
 	@Override
 	public Postal converter(com.maxmind.geoip2.record.Postal postal, CityResponse response, Locale locale){

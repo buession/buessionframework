@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -68,8 +68,7 @@ public class DatabaseResolver extends AbstractResolver {
 		this(database == null ? null : new File(database), fileMode);
 	}
 
-	public DatabaseResolver(final String database, final Reader.FileMode fileMode, final NodeCache cache) throws
-			IOException{
+	public DatabaseResolver(final String database, final Reader.FileMode fileMode, final NodeCache cache) throws IOException{
 		this(database == null ? null : new File(database), fileMode, cache);
 	}
 
@@ -88,14 +87,13 @@ public class DatabaseResolver extends AbstractResolver {
 		this.reader = databaseReaderBuilder(database).fileMode(fileMode).build();
 	}
 
-	public DatabaseResolver(final File database, final Reader.FileMode fileMode, final NodeCache cache) throws
-			IOException{
+	public DatabaseResolver(final File database, final Reader.FileMode fileMode, final NodeCache cache) throws IOException{
 		Assert.isNull(database, "Database could not be null.");
 		this.reader = databaseReaderBuilder(database).fileMode(fileMode).withCache(cache).build();
 	}
 
 	public DatabaseResolver(final Path database) throws IOException{
-		this(null == null ? null : database.toFile());
+		this(database == null ? null : database.toFile());
 	}
 
 	public DatabaseResolver(final Path database, final NodeCache cache) throws IOException{
@@ -106,8 +104,7 @@ public class DatabaseResolver extends AbstractResolver {
 		this(database == null ? null : database.toFile(), fileMode);
 	}
 
-	public DatabaseResolver(final Path database, final Reader.FileMode fileMode, final NodeCache cache) throws
-			IOException{
+	public DatabaseResolver(final Path database, final Reader.FileMode fileMode, final NodeCache cache) throws IOException{
 		this(database == null ? null : database.toFile(), fileMode, cache);
 	}
 
@@ -126,8 +123,7 @@ public class DatabaseResolver extends AbstractResolver {
 		this.reader = databaseReaderBuilder(source).fileMode(fileMode).build();
 	}
 
-	public DatabaseResolver(final InputStream source, final Reader.FileMode fileMode, final NodeCache cache) throws
-			IOException{
+	public DatabaseResolver(final InputStream source, final Reader.FileMode fileMode, final NodeCache cache) throws IOException{
 		Assert.isNull(source, "Database stream could not be null.");
 		this.reader = databaseReaderBuilder(source).fileMode(fileMode).withCache(cache).build();
 	}

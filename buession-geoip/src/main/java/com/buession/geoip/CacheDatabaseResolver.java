@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -76,8 +76,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 		super(database, fileMode);
 	}
 
-	public CacheDatabaseResolver(final String database, final Reader.FileMode fileMode, final NodeCache cache) throws
-			IOException{
+	public CacheDatabaseResolver(final String database, final Reader.FileMode fileMode, final NodeCache cache) throws IOException{
 		super(database, fileMode, cache);
 	}
 
@@ -93,8 +92,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 		super(database, fileMode);
 	}
 
-	public CacheDatabaseResolver(final File database, final Reader.FileMode fileMode, final NodeCache cache) throws
-			IOException{
+	public CacheDatabaseResolver(final File database, final Reader.FileMode fileMode, final NodeCache cache) throws IOException{
 		super(database, fileMode, cache);
 	}
 
@@ -110,8 +108,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 		super(database, fileMode);
 	}
 
-	public CacheDatabaseResolver(final Path database, final Reader.FileMode fileMode, final NodeCache cache) throws
-			IOException{
+	public CacheDatabaseResolver(final Path database, final Reader.FileMode fileMode, final NodeCache cache) throws IOException{
 		super(database, fileMode, cache);
 	}
 
@@ -127,8 +124,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 		super(source, fileMode);
 	}
 
-	public CacheDatabaseResolver(final InputStream source, final Reader.FileMode fileMode, final NodeCache cache)
-			throws IOException{
+	public CacheDatabaseResolver(final InputStream source, final Reader.FileMode fileMode, final NodeCache cache) throws IOException{
 		super(source, fileMode, cache);
 	}
 
@@ -226,7 +222,7 @@ public class CacheDatabaseResolver extends DatabaseResolver {
 	}
 
 	private final static <O> void cleanCache(Map<String, O> cacheData){
-		if(Validate.isEmpty(cacheData) == false){
+		if(Validate.isNotEmpty(cacheData)){
 			/**
 			 * 随机清理
 			 */
