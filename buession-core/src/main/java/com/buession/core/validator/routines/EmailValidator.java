@@ -21,11 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 
 import java.util.regex.Matcher;
@@ -65,7 +66,7 @@ public class EmailValidator {
 			return false;
 		}
 
-		if(charSequence.toString().endsWith(".")){
+		if(StringUtils.endsWith(charSequence, '.')){
 			return false;
 		}
 

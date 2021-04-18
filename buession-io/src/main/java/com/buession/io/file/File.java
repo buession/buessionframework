@@ -26,6 +26,7 @@
  */
 package com.buession.io.file;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.io.MimeType;
 import com.buession.lang.Constants;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -337,7 +338,7 @@ public class File extends java.io.File {
 		if(extension == null){
 			String fileName = getName();
 
-			if(fileName.endsWith(".tar.gz")){
+			if(StringUtils.endsWith(fileName, ".tar.gz")){
 				extension = "tar.gz";
 			}else{
 				int i = fileName.lastIndexOf('.');

@@ -26,6 +26,7 @@
  */
 package com.buession.httpclient.helper;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.ProtocolVersion;
@@ -92,7 +93,7 @@ public abstract class AbstractRequestBuilder<T extends AbstractRequestBuilder, R
 			final String queryString = HttpURI.toQueryString(parameters, false);
 
 			if(url.contains("?")){
-				if(url.endsWith("&") == false){
+				if(StringUtils.endsWith(url, '&') == false){
 					sb.append('&');
 				}
 			}else{
