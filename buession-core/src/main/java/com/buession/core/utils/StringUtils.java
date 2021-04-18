@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -126,6 +126,56 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
 			return sb.toString();
 		}
+	}
+
+	/**
+	 * 检测字符串是否以字符 character 开头
+	 *
+	 * @param str
+	 * 		待检测字符串
+	 * @param character
+	 * 		待检测字符
+	 *
+	 * @return 字符串以字符 character 开头，返回 true；否则，返回 false
+	 *
+	 * @since 1.2.1
+	 */
+	public static boolean startWidth(final String str, final char character){
+		if(str == null){
+			return false;
+		}
+
+		int length = str.length();
+		if(length == 0){
+			return false;
+		}
+
+		return str.charAt(0) == character;
+	}
+
+	/**
+	 * 检测字符串是否以字符 character 结尾
+	 *
+	 * @param str
+	 * 		待检测字符串
+	 * @param character
+	 * 		待检测字符
+	 *
+	 * @return 字符串以字符 character 结尾，返回 true；否则，返回 false
+	 *
+	 * @since 1.2.1
+	 */
+	public static boolean endsWidth(final String str, final char character){
+		if(str == null){
+			return false;
+		}
+
+		int length = str.length();
+		if(length == 0){
+			return false;
+		}
+
+		return str.charAt(length - 1) == character;
 	}
 
 	/**
