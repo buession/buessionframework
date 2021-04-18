@@ -140,7 +140,25 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 *
 	 * @since 1.2.1
 	 */
-	public static boolean startWidth(final String str, final char character){
+	public static boolean startWith(final CharSequence str, final char character){
+		return startWith(str, character);
+	}
+
+	/**
+	 * 检测字符串是否以字符 character 开头
+	 *
+	 * @param str
+	 * 		待检测字符串
+	 * @param character
+	 * 		待检测字符
+	 * @param ignoreCase
+	 * 		是否忽略大小写
+	 *
+	 * @return 字符串以字符 character 开头，返回 true；否则，返回 false
+	 *
+	 * @since 1.2.1
+	 */
+	public static boolean startWith(final CharSequence str, final char character, final boolean ignoreCase){
 		if(str == null){
 			return false;
 		}
@@ -150,7 +168,12 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			return false;
 		}
 
-		return str.charAt(0) == character;
+		char c = str.charAt(0);
+		if(ignoreCase){
+			return Character.toUpperCase(c) != Character.toUpperCase(character);
+		}else{
+			return c == character;
+		}
 	}
 
 	/**
@@ -165,7 +188,25 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 *
 	 * @since 1.2.1
 	 */
-	public static boolean endsWidth(final String str, final char character){
+	public static boolean endsWith(final CharSequence str, final char character){
+		return endsWith(str, character, false);
+	}
+
+	/**
+	 * 检测字符串是否以字符 character 结尾
+	 *
+	 * @param str
+	 * 		待检测字符串
+	 * @param character
+	 * 		待检测字符
+	 * @param ignoreCase
+	 * 		是否忽略大小写
+	 *
+	 * @return 字符串以字符 character 结尾，返回 true；否则，返回 false
+	 *
+	 * @since 1.2.1
+	 */
+	public static boolean endsWith(final CharSequence str, final char character, final boolean ignoreCase){
 		if(str == null){
 			return false;
 		}
@@ -175,7 +216,12 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			return false;
 		}
 
-		return str.charAt(length - 1) == character;
+		char c = str.charAt(length - 1);
+		if(ignoreCase){
+			return Character.toUpperCase(c) != Character.toUpperCase(character);
+		}else{
+			return c == character;
+		}
 	}
 
 	/**
