@@ -27,6 +27,7 @@
 package com.buession.core.utils;
 
 import com.buession.lang.Constants;
+import org.apache.commons.lang3.CharSequenceUtils;
 
 /**
  * 字符串工具
@@ -141,7 +142,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @since 1.2.1
 	 */
 	public static boolean startWith(final CharSequence str, final char character){
-		return startWith(str, character);
+		return startWith(str, character, false);
 	}
 
 	/**
@@ -174,6 +175,22 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}else{
 			return c == character;
 		}
+	}
+
+	/**
+	 * 忽略大小写检测字符串是否以字符 character 开头
+	 *
+	 * @param str
+	 * 		待检测字符串
+	 * @param character
+	 * 		待检测字符
+	 *
+	 * @return 字符串以字符 character 开头，返回 true；否则，返回 false
+	 *
+	 * @since 1.2.1
+	 */
+	public static boolean startWithIgnoreCase(final CharSequence str, final char character){
+		return startWith(str, character, true);
 	}
 
 	/**
@@ -222,6 +239,80 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		}else{
 			return c == character;
 		}
+	}
+
+	/**
+	 * 忽略大小写检测字符串是否以字符 character 结尾
+	 *
+	 * @param str
+	 * 		待检测字符串
+	 * @param character
+	 * 		待检测字符
+	 *
+	 * @return 字符串以字符 character 结尾，返回 true；否则，返回 false
+	 *
+	 * @since 1.2.1
+	 */
+	public static boolean endsWithIgnoreCase(final CharSequence str, final char character){
+		return endsWith(str, character, true);
+	}
+
+	/**
+	 * 检测字符串是否包含字符 character
+	 *
+	 * @param str
+	 * 		待检测字符串
+	 * @param character
+	 * 		待检测字符
+	 *
+	 * @return 字符串包含字符 character，返回 true；否则，返回 false
+	 *
+	 * @since 1.2.1
+	 */
+	public static boolean contains(final CharSequence str, final char character){
+		return contains(str, (int) character);
+	}
+
+	/**
+	 * 检测字符串是否包含字符 character
+	 *
+	 * @param str
+	 * 		待检测字符串
+	 * @param character
+	 * 		待检测字符
+	 * @param ignoreCase
+	 * 		是否忽略大小写
+	 *
+	 * @return 字符串包含字符 character，返回 true；否则，返回 false
+	 *
+	 * @since 1.2.1
+	 */
+	public static boolean contains(final CharSequence str, final char character, final boolean ignoreCase){
+		if(ignoreCase){
+			if(isEmpty(str)){
+				return false;
+			}else{
+				return contains(str.toString().toLowerCase(), Character.toUpperCase((int) character));
+			}
+		}else{
+			return contains(str, (int) character);
+		}
+	}
+
+	/**
+	 * 忽略大小写检测字符串是否包含字符 character
+	 *
+	 * @param str
+	 * 		待检测字符串
+	 * @param character
+	 * 		待检测字符
+	 *
+	 * @return 字符串包含字符 character，返回 true；否则，返回 false
+	 *
+	 * @since 1.2.1
+	 */
+	public static boolean containsIgnoreCase(final CharSequence str, final char character){
+		return contains(str, character, true);
 	}
 
 	/**
