@@ -22,10 +22,46 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;/**
- * 
+package com.buession.core.converter;
+
+import com.buession.core.utils.Assert;
+import com.buession.core.utils.EnumUtils;
+
+/**
+ * 枚举转换器
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class TransactionResultConverter {
+ */
+public class EnumConverter<E extends Enum<E>> implements Converter<String, E> {
+
+	private final Class<E> enumType;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param enumType
+	 * 		枚举类型
+	 */
+	public EnumConverter(final Class<E> enumType){
+		this.enumType = enumType;
+	}
+
+	@Override
+	public E convert(final String source){
+		Assert.isNull(source, "CharSequence cloud not be null.");
+
+		E result = EnumUtils.valueOf(enumType, source);
+
+		if(result == null){
+			result = EnumUtils.valueOf(enumType, source.toUpperCase());
+		}
+
+		if(result == null){
+			result = EnumUtils.valueOf(enumType, source.toUpperCase());
+		}
+
+		return result;
+	}
+
 }

@@ -22,10 +22,32 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;/**
- * 
+package com.buession.core.converter;
+
+import com.buession.core.utils.Assert;
+import com.buession.core.utils.StatusUtils;
+import com.buession.lang.Status;
+
+import java.util.function.Predicate;
+
+/**
+ * 通过 {@link Predicate} 比较参数值转换为 {@link Status}
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class TransactionResultConverter {
+ */
+public class PredicateStatusConverter<S> implements Converter<S, Status> {
+
+	private final Predicate<S> predicate;
+
+	public PredicateStatusConverter(final Predicate<S> predicate){
+		Assert.isNull(predicate, "Predicate cloud not be null.");
+		this.predicate = predicate;
+	}
+
+	@Override
+	public Status convert(final S source){
+		return StatusUtils.valueOf(predicate.test(source));
+	}
+
 }

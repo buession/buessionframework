@@ -22,10 +22,48 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;/**
- * 
- *
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.Limit;
+import com.buession.redis.core.command.KeyCommands;
+import redis.clients.jedis.SortingParams;
+
+/**
  * @author Yong.Teng
  * @since 1.2.1
- */public class TransactionResultConverter {
+ */
+public class SortArgumentJedisConverter implements Converter<KeyCommands.SortArgument, SortingParams> {
+
+	@Override
+	public SortingParams convert(final KeyCommands.SortArgument source){
+		final SortingParams sortingParams = new SortingParams();
+
+		if(source.getBy() != null){
+			sortingParams.by(source.getBy());
+		}
+
+		switch(source.getOrder()){
+			case ASC:
+				sortingParams.asc();
+				break;
+			case DESC:
+				sortingParams.desc();
+				break;
+			default:
+				break;
+		}
+
+		if(source.getLimit() != null){
+			Limit limit = source.getLimit();
+			sortingParams.limit((int) limit.getOffset(), (int) limit.getCount());
+		}
+
+		if(source.getAlpha() != null){
+			sortingParams.alpha();
+		}
+
+		return sortingParams;
+	}
+
 }

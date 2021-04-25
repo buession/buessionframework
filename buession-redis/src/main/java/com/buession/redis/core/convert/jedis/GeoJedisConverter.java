@@ -22,10 +22,10 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;/**
+package com.buession.redis.core.convert.jedis;/**
  * 
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class TransactionResultConverter {
+ */public class GeoJedisConverter {
 }

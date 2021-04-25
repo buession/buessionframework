@@ -22,10 +22,22 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;/**
- * 
+package com.buession.redis.core.convert;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.ScanResult;
+
+/**
+ * {@link ScanResult}&ltS&gt; 转换为 {@link redis.clients.jedis.ScanResult}&ltT&gt;
+ *
+ * @param <S>
+ * 		原始类型
+ * @param <T>
+ * 		目标类型
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class TransactionResultConverter {
+ */
+public interface ScanResultJedisConverter<S, T> extends Converter<ScanResult<S>, redis.clients.jedis.ScanResult<T>> {
+
 }

@@ -22,10 +22,21 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;/**
- * 
+package com.buession.core.converter;
+
+import com.buession.lang.Status;
+
+/**
+ * 布尔值 {@link Status} 到 {@link Boolean} 转换器
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class TransactionResultConverter {
+ */
+public class StatusBooleanConvert implements Converter<Status, Boolean> {
+
+	@Override
+	public Boolean convert(final Status source){
+		return Status.SUCCESS.equals(source);
+	}
+
 }

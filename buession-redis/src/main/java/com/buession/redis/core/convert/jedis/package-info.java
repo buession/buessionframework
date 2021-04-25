@@ -22,10 +22,4 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;/**
- * 
- *
- * @author Yong.Teng
- * @since 1.2.1
- */public class TransactionResultConverter {
-}
+package com.buession.redis.core.convert.jedis;
