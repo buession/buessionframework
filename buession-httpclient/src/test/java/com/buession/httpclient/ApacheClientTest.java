@@ -38,6 +38,7 @@ import com.buession.httpclient.exception.RequestException;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,6 +111,16 @@ public class ApacheClientTest {
 		HttpClient httpClient = new ApacheHttpClient();
 		Response response = httpClient.post("http://www.sinokai.com/httpclient.php?action=uploadFile", requestBody);
 		System.out.print(response.getBody());
+	}
+
+	@Test
+	public void inputStream() throws RequestAbortedException, ReadTimeoutException, ConnectionPoolTimeoutException,
+			ConnectTimeoutException, RequestException{
+		HttpClient httpClient = new ApacheHttpClient();
+		Response response = httpClient.get("https://www.baidu.com/");
+		System.out.print(response.getBody());
+		InputStream inputStream = response.getInputStream();
+		System.out.print(inputStream);
 	}
 
 }

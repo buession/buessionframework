@@ -38,6 +38,8 @@ import com.buession.httpclient.exception.RequestException;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -113,6 +115,20 @@ public class OkHttpClientTest {
 		HttpClient httpClient = new OkHttpClient();
 		Response response = httpClient.post("http://www.sinokai.com/httpclient.php?action=uploadFile", requestBody);
 		System.out.print(response.getBody());
+	}
+
+	@Test
+	public void inputStream() throws IOException, RequestException{
+		HttpClient httpClient = new OkHttpClient();
+		Response response = httpClient.get("https://www.baidu.com/");
+		System.out.print(response.getBody());
+		InputStream inputStream = response.getInputStream();
+
+		System.out.println("=========");
+
+		byte[] buf = new byte[1024];
+		inputStream.read(buf, 0, 1024);
+		System.out.print(new String(buf));
 	}
 
 }
