@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.thesaurus.spring;
@@ -79,8 +79,7 @@ public class ThesaurusFactoryBean extends ThesaurusFactory implements FactoryBea
 		sb.append('.');
 
 		if(first >= 'a' && first <= 'z'){
-			sb.append((char) (first - 32));
-			sb.append(getType().getId().substring(1));
+			sb.append((char) (first - 32)).append(getType().getId().substring(1));
 		}else{
 			sb.append(getType());
 		}
