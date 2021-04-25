@@ -22,10 +22,34 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.BitOperation;
+import redis.clients.jedis.BitOP;
+
+/**
+ * {@link BitOP} 转换为 {@link BitOperation}
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class BitOperationExposeConverter {
+ */
+final public class BitOperationExposeConverter implements Converter<BitOP, BitOperation> {
+
+	@Override
+	public BitOperation convert(final BitOP source){
+		switch(source){
+			case AND:
+				return BitOperation.AND;
+			case OR:
+				return BitOperation.OR;
+			case NOT:
+				return BitOperation.NOT;
+			case XOR:
+				return BitOperation.XOR;
+			default:
+				return null;
+		}
+	}
+
 }

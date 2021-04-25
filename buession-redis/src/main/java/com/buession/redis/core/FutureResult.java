@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -32,38 +32,39 @@ import java.util.function.Supplier;
 /**
  * @author Yong.Teng
  */
-public abstract class FutureResult<V> {
+public abstract class FutureResult<T, SV, TV> {
 
-	private V resultHolder;
+	private T resultHolder;
 
-	@SuppressWarnings("rawtypes")
-	private Converter converter;
+	private Converter<SV, TV> converter;
 
 	private final Supplier<?> defaultConversionResult;
 
-	public FutureResult(final V resultHolder){
-		this(resultHolder, val->val);
+	@SuppressWarnings("unchecked")
+	public FutureResult(final T resultHolder){
+		this(resultHolder, val->(TV) val);
 	}
 
-	public FutureResult(final V resultHolder, final Converter converter){
+	public FutureResult(final T resultHolder, final Converter<SV, TV> converter){
 		this(resultHolder, converter, ()->null);
 	}
 
-	public FutureResult(final V resultHolder, final Converter converter, Supplier<?> defaultConversionResult){
+	@SuppressWarnings("unchecked")
+	public FutureResult(final T resultHolder, final Converter<SV, TV> converter, Supplier<?> defaultConversionResult){
 		this.resultHolder = resultHolder;
-		this.converter = converter != null ? converter : val->val;
+		this.converter = converter != null ? converter : val->(TV) val;
 		this.defaultConversionResult = defaultConversionResult;
 	}
 
-	public V getResultHolder(){
+	public T getResultHolder(){
 		return resultHolder;
 	}
 
-	public abstract Object get();
+	public abstract SV get();
 
 	@SuppressWarnings("unchecked")
 	@Nullable
-	public Object convert(@Nullable Object result){
+	public TV convert(@Nullable SV result){
 		return result == null ? null : converter.convert(result);
 	}
 

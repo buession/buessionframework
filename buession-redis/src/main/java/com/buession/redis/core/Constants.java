@@ -22,10 +22,31 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;/**
- * 
- *
+package com.buession.redis.core;
+
+import com.buession.redis.utils.SafeEncoder;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
+/**
  * @author Yong.Teng
  * @since 1.2.1
- */public interface Constants {
+ */
+public interface Constants {
+
+	Charset CHARSET = StandardCharsets.UTF_8;
+
+	String SCAN_POINTER_START = "0";
+
+	byte[] SCAN_POINTER_START_BINARY = SafeEncoder.encode(SCAN_POINTER_START);
+
+	int DEFAULT_CONNECT_TIMEOUT = 2000;
+
+	int DEFAULT_SO_TIMEOUT = 5000;
+
+	String OK = "OK";
+
+	byte[] OK_BYTE = OK.getBytes();
+
 }

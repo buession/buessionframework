@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -29,9 +29,6 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.AbstractRedisClientOperations;
 import com.buession.redis.core.RedisMode;
-import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.Tuple;
-import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.core.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -41,20 +38,10 @@ import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.Response;
 import redis.clients.jedis.commands.JedisCommands;
 
-import java.util.List;
-
 /**
  * @author Yong.Teng
  */
 public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractRedisClientOperations<C> implements JedisRedisClientOperations<C, P> {
-
-	protected final static Converter<redis.clients.jedis.ScanResult<String>, ScanResult<List<String>>> STRING_LIST_SCANRESULT_EXPOSE_CONVERTER = JedisConverters.listScanResultExposeConverter();
-
-	protected final static Converter<redis.clients.jedis.ScanResult<byte[]>, ScanResult<List<byte[]>>> BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER = JedisConverters.listScanResultExposeConverter();
-
-	protected final static Converter<redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple>,
-			ScanResult<List<Tuple>>> LIST_TUPLE_SCANRESULT_EXPOSE_CONVERTER =
-			JedisConverters.listTupleScanResultExposeConverter();
 
 	protected JedisRedisClient<C> client;
 
@@ -66,6 +53,10 @@ public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands
 	@Override
 	public <R> R execute(final Executor<C, R> executor) throws RedisException{
 		return client.execute(executor);
+	}
+
+	protected <S, R> R execute(final Executor<C, S> executor, final Converter<S, R> converter) throws RedisException{
+		return converter.convert(client.execute(executor));
 	}
 
 	protected redis.clients.jedis.Transaction getTransaction(){
@@ -100,16 +91,16 @@ public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands
 		return null;
 	}
 
-	protected <R> R pipelineExecute(final Executor<C, JedisResult> executor) throws RedisException{
+	protected <T, R> R pipelineExecute(final Executor<C, JedisResult> executor) throws RedisException{
 		client.getTxResults().add(execute(executor));
 		return null;
 	}
 
-	protected JedisResult newJedisResult(final Response<?> response){
-		return JedisResult.JedisResultBuilder.forResponse(response).build();
+	protected <T, R> JedisResult<T, R> newJedisResult(final Response<T> response){
+		return JedisResult.JedisResultBuilder.<T, R>forResponse(response).build();
 	}
 
-	protected <T, R> JedisResult newJedisResult(final Response<T> response, final Converter<T, R> converter){
+	protected <T, R> JedisResult<T, R> newJedisResult(final Response<T> response, final Converter<T, R> converter){
 		return JedisResult.JedisResultBuilder.<T, R>forResponse(response).mappedWith(converter).build();
 	}
 

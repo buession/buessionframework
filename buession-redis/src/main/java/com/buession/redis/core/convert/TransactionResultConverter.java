@@ -22,10 +22,46 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;/**
- * 
+package com.buession.redis.core.convert;
+
+import com.buession.core.converter.Converter;
+import com.buession.core.utils.Assert;
+import com.buession.redis.core.FutureResult;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+
+/**
+ * 事务结果转换器
+ *
+ * @param <V>
+ * 		事务结果类型
  *
  * @author Yong.Teng
- * @since 1.2.1
- */public class TransactionResultConverter {
+ * @since 1.2.0
+ */
+final public class TransactionResultConverter<V> implements Converter<List<Object>, List<Object>> {
+
+	private final Queue<FutureResult<V, Object, Object>> txResults;
+
+	public TransactionResultConverter(Queue<FutureResult<V, Object, Object>> txResults){
+		this.txResults = txResults;
+	}
+
+	@Override
+	public List<Object> convert(final List<Object> rawResults){
+		Assert.isTrue(rawResults.size() != txResults.size(),
+				"Incorrect number of transaction results. Expected: " + txResults.size() + " Actual: " + rawResults.size());
+
+		List<Object> result = new ArrayList<>(rawResults.size());
+
+		for(Object rawResult : rawResults){
+			FutureResult<V, Object, Object> futureResult = txResults.remove();
+			result.add(futureResult.convert(rawResult));
+		}
+
+		return result;
+	}
+
 }

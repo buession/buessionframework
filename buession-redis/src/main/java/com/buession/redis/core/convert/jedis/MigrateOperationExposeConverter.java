@@ -22,10 +22,29 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.MigrateOperation;
+import redis.clients.jedis.params.MigrateParams;
+
+/**
+ * {@link MigrateParams} 转换为 {@link MigrateOperation}
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class MigrateOperationExposeConverter {
+ */
+final public class MigrateOperationExposeConverter implements Converter<MigrateParams, MigrateOperation> {
+
+	@Override
+	public MigrateOperation convert(final MigrateParams source){
+		if(source.getParam(MigrateOperation.COPY.name())){
+			return MigrateOperation.COPY;
+		}else if(source.getParam(MigrateOperation.REPLACE.name())){
+			return MigrateOperation.REPLACE;
+		}else{
+			return null;
+		}
+	}
+
 }

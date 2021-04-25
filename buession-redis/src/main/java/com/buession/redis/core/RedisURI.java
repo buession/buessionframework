@@ -19,12 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.core.utils.Assert;
+import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.net.AbstractUserInfoURI;
 import com.buession.net.AbstractUserInfoURIBuilder;
@@ -184,13 +185,13 @@ public class RedisURI extends AbstractUserInfoURI {
 
 		if(Validate.hasText(userInfo)){
 			String password = userInfo;
+			int semiIndex = password.indexOf(':');
 
-			if(password.startsWith(":")){
+			if(semiIndex == 0){
 				password = password.substring(1);
 			}else{
-				int index = password.indexOf(':');
-				if(index > 0){
-					password = password.substring(index + 1);
+				if(semiIndex > 0){
+					password = password.substring(semiIndex + 1);
 				}
 			}
 

@@ -22,10 +22,32 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.convert.ScanResultJedisConverter;
+
+import java.util.ArrayList;
+import java.util.Map;
+
+/**
+ * {@link ScanResult}&lt;Map&lt;K&gt;, &lt;K&gt;&gt; 转换为 {@link redis.clients.jedis.ScanResult}
+ * &lt;Map.Entry&lt;K&gt;, &lt;K&gt;&gt;
+ *
+ * @param <K>
+ *        {@link java.util.Map} Key 类型
+ * @param <V>
+ *        {@link java.util.Map} 值类型
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class MapScanResultJedisConverter {
+ */
+final public class MapScanResultJedisConverter<K, V> implements ScanResultJedisConverter<Map<K, V>, Map.Entry<K, V>> {
+
+	@Override
+	public redis.clients.jedis.ScanResult<Map.Entry<K, V>> convert(final ScanResult<Map<K, V>> source){
+		return new redis.clients.jedis.ScanResult<>(source.getCursor(),
+				new ArrayList<>(source.getResults().entrySet()));
+	}
+
 }

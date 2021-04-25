@@ -19,14 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClient;
-import com.buession.redis.utils.ReturnUtils;
+import com.buession.redis.core.Constants;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 
@@ -41,40 +42,42 @@ public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Je
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements){
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfadd(key, elements),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfadd(key, elements), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pfadd(key, elements),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().pfadd(key, elements), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.pfadd(key, elements) > 0));
+			return execute((cmd)->cmd.pfadd(key, elements), converter);
 		}
 	}
 
 	@Override
 	public Status pfMerge(final String destKey, final String... keys){
+		final PredicateStatusConverter<String> converter =
+				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfmerge(destKey, keys),
-					OK_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfmerge(destKey, keys), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pfmerge(destKey, keys),
-					OK_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().pfmerge(destKey, keys), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.pfmerge(destKey, keys)));
+			return execute((cmd)->cmd.pfmerge(destKey, keys), converter);
 		}
 	}
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
+		final PredicateStatusConverter<String> converter =
+				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfmerge(destKey, keys),
-					OK_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfmerge(destKey, keys), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pfmerge(destKey, keys),
-					OK_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().pfmerge(destKey, keys), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.pfmerge(destKey, keys)));
+			return execute((cmd)->cmd.pfmerge(destKey, keys), converter);
 		}
 	}
 

@@ -22,10 +22,25 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.MapConverter;
+import com.buession.lang.Geo;
+import redis.clients.jedis.GeoCoordinate;
+
+/**
+ * {@link java.util.Map}&lt;K, Geo&gt; 转换为 {@link java.util.Map}&lt;K, GeoCoordinate&gt;
+ *
+ * @param <K>
+ *        {@link java.util.Map} key 类型
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class MapGeoMapJedisConverter {
+ */
+final public class MapGeoMapJedisConverter<K> extends MapConverter<K, Geo, K, GeoCoordinate> {
+
+	public MapGeoMapJedisConverter(){
+		super((source)->source, (value)->new GeoCoordinate(value.getLongitude(), value.getLatitude()));
+	}
+
 }

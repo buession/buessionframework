@@ -19,17 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.ShardedJedisClient;
+import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.utils.ReturnUtils;
+import com.buession.redis.core.convert.jedis.ListPositionJedisConverter;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
 
@@ -93,7 +95,7 @@ public class ShardedJedisListOperations extends AbstractListOperations<ShardedJe
 
 	@Override
 	public Long lInsert(final byte[] key, final byte[] value, final ListPosition position, final byte[] pivot){
-		final redis.clients.jedis.ListPosition pos = LISTPOSITION_JEDIS_CONVERTER.convert(position);
+		final redis.clients.jedis.ListPosition pos = new ListPositionJedisConverter().convert(position);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().linsert(key, pos, pivot, value)));
@@ -172,27 +174,29 @@ public class ShardedJedisListOperations extends AbstractListOperations<ShardedJe
 
 	@Override
 	public Status lSet(final byte[] key, final long index, final byte[] value){
+		final PredicateStatusConverter<String> converter =
+				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().lset(key, index, value),
-					OK_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().lset(key, index, value), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().lset(key, index, value),
-					OK_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().lset(key, index, value), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.lset(key, index, value)));
+			return execute((cmd)->cmd.lset(key, index, value), converter);
 		}
 	}
 
 	@Override
 	public Status lTrim(final byte[] key, final long start, final long end){
+		final PredicateStatusConverter<String> converter =
+				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().ltrim(key, start, end),
-					OK_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().ltrim(key, start, end), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().ltrim(key, start, end),
-					OK_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().ltrim(key, start, end), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.ltrim(key, start, end)));
+			return execute((cmd)->cmd.ltrim(key, start, end), converter);
 		}
 	}
 

@@ -19,50 +19,50 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.utils;
 
 import com.buession.core.utils.Assert;
-import com.buession.redis.Constants;
+import com.buession.redis.core.Constants;
 
 /**
  * @author Yong.Teng
  */
 public class SafeEncoder {
 
-    private SafeEncoder(){
+	private SafeEncoder(){
 
-    }
+	}
 
-    public static byte[] encode(final String str){
-        Assert.isNull(str, "Value cloud not be null.");
-        return str.getBytes(Constants.CHARSET);
-    }
+	public static byte[] encode(final String str){
+		Assert.isNull(str, "Value cloud not be null.");
+		return str.getBytes(Constants.CHARSET);
+	}
 
-    public static String encode(final byte[] data){
-        return new String(data, Constants.CHARSET);
-    }
+	public static String encode(final byte[] data){
+		return new String(data, Constants.CHARSET);
+	}
 
-    public static byte[][] encode(final String... strs){
-        byte[][] result = new byte[strs.length][];
+	public static byte[][] encode(final String... strs){
+		byte[][] result = new byte[strs.length][];
 
-        for(int i = 0; i < strs.length; i++){
-            result[i] = encode(strs[i]);
-        }
+		for(int i = 0; i < strs.length; i++){
+			result[i] = encode(strs[i]);
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    public static String[] encode(final byte[]... data){
-        String[] result = new String[data.length];
+	public static String[] encode(final byte[]... data){
+		String[] result = new String[data.length];
 
-        for(int i = 0; i < data.length; i++){
-            result[i] = encode(data[i]);
-        }
+		for(int i = 0; i < data.length; i++){
+			result[i] = encode(data[i]);
+		}
 
-        return result;
-    }
+		return result;
+	}
 
 }

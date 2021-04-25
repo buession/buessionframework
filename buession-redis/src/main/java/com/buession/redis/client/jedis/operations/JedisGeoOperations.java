@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -28,6 +28,11 @@ import com.buession.lang.Geo;
 import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.convert.jedis.GeoRadiusArgumentJedisConverter;
+import com.buession.redis.core.convert.jedis.GeoUnitJedisConverter;
+import com.buession.redis.core.convert.jedis.ListGeoExposeConverter;
+import com.buession.redis.core.convert.jedis.ListGeoRadiusExposeConverter;
+import com.buession.redis.core.convert.jedis.MapGeoMapJedisConverter;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
@@ -60,7 +65,7 @@ public class JedisGeoOperations extends AbstractGeoOperations<Jedis, Pipeline> {
 	@Override
 	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
 		final Map<byte[], GeoCoordinate> memberCoordinateMap =
-				BINARY_MAP_GEOMAP_JEDIS_CONVERTER.convert(memberCoordinates);
+				new MapGeoMapJedisConverter<byte[]>().convert(memberCoordinates);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().geoadd(key, memberCoordinateMap)));
@@ -84,14 +89,14 @@ public class JedisGeoOperations extends AbstractGeoOperations<Jedis, Pipeline> {
 
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members){
+		final ListGeoExposeConverter converter = new ListGeoExposeConverter();
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().geopos(key, members),
-					LIST_GEO_EXPOSE_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geopos(key, members), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().geopos(key, members),
-					LIST_GEO_EXPOSE_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().geopos(key, members), converter));
 		}else{
-			return execute((cmd)->LIST_GEO_EXPOSE_CONVERTER.convert(cmd.geopos(key, members)));
+			return execute((cmd)->cmd.geopos(key, members), converter);
 		}
 	}
 
@@ -108,7 +113,7 @@ public class JedisGeoOperations extends AbstractGeoOperations<Jedis, Pipeline> {
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.GeoUnit geoUnit = new GeoUnitJedisConverter().convert(unit);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().geodist(key, member1, member2, geoUnit)));
@@ -121,71 +126,72 @@ public class JedisGeoOperations extends AbstractGeoOperations<Jedis, Pipeline> {
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius, final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+									 final double radius, final GeoUnit unit){
+		final redis.clients.jedis.GeoUnit geoUnit = new GeoUnitJedisConverter().convert(unit);
+		final ListGeoRadiusExposeConverter converter = new ListGeoRadiusExposeConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadius(key, longitude, latitude, radius,
-					geoUnit), LIST_GEO_RADIUS_EXPOSE_CONVERTER));
+					geoUnit), converter));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().georadius(key, longitude, latitude,
-					radius, geoUnit), LIST_GEO_RADIUS_EXPOSE_CONVERTER));
+					radius, geoUnit), converter));
 		}else{
-			return execute((cmd)->LIST_GEO_RADIUS_EXPOSE_CONVERTER.convert(cmd.georadius(key, longitude, latitude,
-					radius, geoUnit)));
+			return execute((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit), converter);
 		}
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-			final double radius, final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
-		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
+									 final double radius, final GeoUnit unit,
+									 final GeoRadiusArgument geoRadiusArgument){
+		final redis.clients.jedis.GeoUnit geoUnit = new GeoUnitJedisConverter().convert(unit);
+		final GeoRadiusParam geoRadiusParam = new GeoRadiusArgumentJedisConverter().convert(geoRadiusArgument);
+		final ListGeoRadiusExposeConverter converter = new ListGeoRadiusExposeConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadius(key, longitude, latitude, radius,
-					geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER));
+					geoUnit, geoRadiusParam), converter));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().georadius(key, longitude, latitude,
-					radius, geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER));
+					radius, geoUnit, geoRadiusParam), converter));
 		}else{
-			return execute((cmd)->LIST_GEO_RADIUS_EXPOSE_CONVERTER.convert(cmd.georadius(key, longitude, latitude,
-					radius, geoUnit, geoRadiusParam)));
+			return execute((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, geoRadiusParam), converter);
 		}
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+											 final GeoUnit unit){
+		final redis.clients.jedis.GeoUnit geoUnit = new GeoUnitJedisConverter().convert(unit);
+		final ListGeoRadiusExposeConverter converter = new ListGeoRadiusExposeConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadiusByMember(key, member, radius, geoUnit)
-					, LIST_GEO_RADIUS_EXPOSE_CONVERTER));
+					, converter));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().georadiusByMember(key, member, radius,
-					geoUnit), LIST_GEO_RADIUS_EXPOSE_CONVERTER));
+					geoUnit), converter));
 		}else{
-			return execute((cmd)->LIST_GEO_RADIUS_EXPOSE_CONVERTER.convert(cmd.georadiusByMember(key, member, radius,
-					geoUnit)));
+			return execute((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit), converter);
 		}
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
-		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
+											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+		final redis.clients.jedis.GeoUnit geoUnit = new GeoUnitJedisConverter().convert(unit);
+		final GeoRadiusParam geoRadiusParam = new GeoRadiusArgumentJedisConverter().convert(geoRadiusArgument);
+		final ListGeoRadiusExposeConverter converter = new ListGeoRadiusExposeConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadiusByMember(key, member, radius, geoUnit,
-					geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER));
+					geoRadiusParam), converter));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().georadiusByMember(key, member, radius,
-					geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER));
+					geoUnit, geoRadiusParam), converter));
 		}else{
-			return execute((cmd)->LIST_GEO_RADIUS_EXPOSE_CONVERTER.convert(cmd.georadiusByMember(key, member, radius,
-					geoUnit, geoRadiusParam)));
+			return execute((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, geoRadiusParam), converter);
 		}
 	}
 

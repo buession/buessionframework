@@ -22,10 +22,22 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
- *
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.convert.ScanResultExposeConverter;
+
+import java.util.List;
+
+/**
  * @author Yong.Teng
  * @since 1.2.1
- */public class ListScanResultExposeConverter {
+ */
+final public class ListScanResultExposeConverter<S> implements ScanResultExposeConverter<S, List<S>> {
+
+	@Override
+	public ScanResult<List<S>> convert(final redis.clients.jedis.ScanResult<S> source){
+		return new ScanResult<>(source.getCursor(), source.getResult());
+	}
+
 }

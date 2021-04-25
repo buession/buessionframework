@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -30,6 +30,7 @@ import com.buession.redis.client.operations.SetOperations;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.jedis.ListScanResultExposeConverter;
 import com.buession.redis.core.jedis.JedisScanParams;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
@@ -167,7 +168,7 @@ public abstract class AbstractSetOperations<C extends JedisCommands, P extends P
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
-		return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor)));
+		return execute((cmd)->new ListScanResultExposeConverter<String>().convert(cmd.sscan(key, cursor)));
 	}
 
 	@Override
@@ -193,7 +194,7 @@ public abstract class AbstractSetOperations<C extends JedisCommands, P extends P
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
-		return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor,
+		return execute((cmd)->new ListScanResultExposeConverter<String>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(pattern))));
 	}
 
@@ -220,7 +221,7 @@ public abstract class AbstractSetOperations<C extends JedisCommands, P extends P
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final int count){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
-		return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor,
+		return execute((cmd)->new ListScanResultExposeConverter<String>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(count))));
 	}
 
@@ -246,9 +247,9 @@ public abstract class AbstractSetOperations<C extends JedisCommands, P extends P
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
-			final int count){
+										  final int count){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
-		return execute((cmd)->STRING_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor,
+		return execute((cmd)->new ListScanResultExposeConverter<String>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(pattern, count))));
 	}
 

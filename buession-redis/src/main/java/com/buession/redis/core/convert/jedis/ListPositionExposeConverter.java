@@ -22,10 +22,29 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.ListPosition;
+
+/**
+ * {@link redis.clients.jedis.ListPosition} 转换为 {@link ListPosition}
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class ListPositionExposeConverter {
+ */
+final public class ListPositionExposeConverter implements Converter<redis.clients.jedis.ListPosition, ListPosition> {
+
+	@Override
+	public ListPosition convert(final redis.clients.jedis.ListPosition source){
+		switch(source){
+			case BEFORE:
+				return ListPosition.BEFORE;
+			case AFTER:
+				return ListPosition.AFTER;
+			default:
+				return null;
+		}
+	}
+
 }

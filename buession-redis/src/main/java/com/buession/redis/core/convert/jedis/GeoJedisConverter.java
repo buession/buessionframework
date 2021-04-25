@@ -22,10 +22,23 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.lang.Geo;
+import redis.clients.jedis.GeoCoordinate;
+
+/**
+ * {@link Geo} 转换为 {@link GeoCoordinate}
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class GeoJedisConverter {
+ */
+final public class GeoJedisConverter implements Converter<Geo, GeoCoordinate> {
+
+	@Override
+	public GeoCoordinate convert(final Geo source){
+		return new GeoCoordinate(source.getLongitude(), source.getLatitude());
+	}
+
 }

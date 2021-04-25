@@ -22,10 +22,42 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.lang.Order;
+import com.buession.redis.core.command.GeoCommands;
+import redis.clients.jedis.params.GeoRadiusParam;
+
+/**
+ * {@link GeoRadiusParam} 转换为 {@link GeoCommands.GeoRadiusArgument}
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class GeoRadiusArgumentExposeConverter {
+ */
+public class GeoRadiusArgumentExposeConverter implements Converter<GeoRadiusParam, GeoCommands.GeoRadiusArgument> {
+
+	@Override
+	public GeoCommands.GeoRadiusArgument convert(final GeoRadiusParam source){
+		final GeoCommands.GeoRadiusArgument.Builder builder = GeoCommands.GeoRadiusArgument.Builder.create();
+
+		for(byte[] v : source.getByteParams()){
+			String s = redis.clients.jedis.util.SafeEncoder.encode(v);
+
+			if("withcoord".equals(s)){
+				builder.withCoord();
+			}else if("withdist".equals(s)){
+				builder.withDist();
+			}else if("asc".equals(s)){
+				builder.order(Order.ASC);
+			}else if("desc".equals(s)){
+				builder.order(Order.DESC);
+			}else if("count".equals(s)){
+				builder.count(source.getParam("count"));
+			}
+		}
+
+		return builder.build();
+	}
+
 }

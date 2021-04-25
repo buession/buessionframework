@@ -19,15 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.core.Constants;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
@@ -66,13 +68,14 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 
 	@Override
 	public Status ping(){
+		Converter<String, Status> converter = (source)->ReturnUtils.statusForBool("PONG".equalsIgnoreCase(source));
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().ping(), JedisConverters.pingResultConvert()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().ping(), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().ping(),
-					JedisConverters.pingResultConvert()));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().ping(), converter));
 		}else{
-			return execute((cmd)->JedisConverters.pingResult(cmd.ping()));
+			return execute((cmd)->cmd.ping(), converter);
 		}
 	}
 
@@ -84,24 +87,29 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 
 	@Override
 	public Status select(final int db){
+		final PredicateStatusConverter<String> converter =
+				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().select(db), OK_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().select(db), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().select(db), OK_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().select(db), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.select(db)));
+			return execute((cmd)->cmd.select(db), converter);
 		}
 	}
 
 	@Override
 	public Status swapdb(final int db1, final int db2){
+		final PredicateStatusConverter<String> converter =
+				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().swapDB(db1, db2), OK_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().swapDB(db1, db2), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().swapDB(db1, db2),
-					OK_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().swapDB(db1, db2), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.swapDB(db1, db2)));
+			return execute((cmd)->cmd.swapDB(db1, db2), converter);
 		}
 	}
 

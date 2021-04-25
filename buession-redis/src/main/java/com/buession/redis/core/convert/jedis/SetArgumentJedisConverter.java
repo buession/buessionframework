@@ -22,10 +22,40 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.StringCommands;
+import redis.clients.jedis.params.SetParams;
+
+/**
+ * {@link StringCommands.SetArgument} 转换为 {@link SetParams}
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class SetArgumentJedisConverter {
+ */
+final public class SetArgumentJedisConverter implements Converter<StringCommands.SetArgument, SetParams> {
+
+	@Override
+	public SetParams convert(final StringCommands.SetArgument source){
+		final SetParams setParams = new SetParams();
+
+		if(source.getEx() != null){
+			setParams.ex(source.getEx().intValue());
+		}
+
+		if(source.getPx() != null){
+			setParams.px(source.getPx().intValue());
+		}
+
+		if(source.getNxXx() == NxXx.NX){
+			setParams.nx();
+		}else if(source.getNxXx() == NxXx.XX){
+			setParams.xx();
+		}
+
+		return setParams;
+	}
+
 }

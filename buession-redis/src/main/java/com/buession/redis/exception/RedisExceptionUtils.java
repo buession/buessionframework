@@ -22,10 +22,28 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.exception;/**
- * 
- *
+package com.buession.redis.exception;
+
+import redis.clients.jedis.exceptions.JedisConnectionException;
+
+/**
  * @author Yong.Teng
  * @since 1.2.1
- */public class RedisExceptionUtils {
+ */
+public class RedisExceptionUtils {
+
+	public final static RedisException convert(final Exception e){
+		if(e instanceof JedisConnectionException){
+			if(e.getMessage().contains("pool")){
+				return new PoolException(e.getMessage(), e);
+			}else{
+				return new RedisConnectionFailureException(e.getMessage(), e);
+			}
+		}else if(e instanceof NotSupportedCommandException){
+			return (NotSupportedCommandException) e;
+		}else{
+			return new RedisException(e.getMessage(), e);
+		}
+	}
+
 }

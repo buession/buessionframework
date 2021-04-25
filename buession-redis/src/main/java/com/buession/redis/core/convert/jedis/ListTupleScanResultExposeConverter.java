@@ -22,10 +22,29 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.Tuple;
+import com.buession.redis.core.convert.ScanResultExposeConverter;
+
+import java.util.List;
+
+/**
+ * {@link redis.clients.jedis.Tuple} 转换为 {@link java.util.List}&lt;T&gt;
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class ListTupleScanResultExposeConverter {
+ */
+final public class ListTupleScanResultExposeConverter implements ScanResultExposeConverter<redis.clients.jedis.Tuple,
+		List<Tuple>> {
+
+	@Override
+	public ScanResult<List<Tuple>> convert(final redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple> source){
+		final ListConverter<redis.clients.jedis.Tuple, Tuple> converter =
+				new ListConverter<>((item)->new Tuple(item.getBinaryElement(), item.getScore()));
+		return new com.buession.redis.core.ScanResult<>(source.getCursor(), converter.convert(source.getResult()));
+	}
+
 }

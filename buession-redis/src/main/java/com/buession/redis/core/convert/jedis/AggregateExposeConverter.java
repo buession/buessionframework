@@ -22,10 +22,32 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.Aggregate;
+import redis.clients.jedis.ZParams;
+
+/**
+ * {@link ZParams.Aggregate} 转换为 {@link Aggregate}
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class AggregateExposeConverter {
+ */
+final public class AggregateExposeConverter implements Converter<ZParams.Aggregate, Aggregate> {
+
+	@Override
+	public Aggregate convert(final ZParams.Aggregate source){
+		switch(source){
+			case MIN:
+				return Aggregate.MIN;
+			case MAX:
+				return Aggregate.MAX;
+			case SUM:
+				return Aggregate.SUM;
+			default:
+				return null;
+		}
+	}
+
 }

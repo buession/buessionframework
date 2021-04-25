@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -99,8 +99,8 @@ public class Info implements Serializable {
 	private final List<Keyspace> keyspace;
 
 	public Info(final Server server, final Clients clients, final Memory memory, final Persistence persistence,
-			final Stats stats, final Replication replication, final Sentinel sentinel, final Cpu cpu,
-			final Cluster cluster, final List<Keyspace> keyspaces){
+				final Stats stats, final Replication replication, final Sentinel sentinel, final Cpu cpu,
+				final Cluster cluster, final List<Keyspace> keyspaces){
 		this.server = server;
 		this.clients = clients;
 		this.memory = memory;
@@ -275,6 +275,7 @@ public class Info implements Serializable {
 		return new Date(timestamp);
 	}
 
+	@SuppressWarnings("unchecked")
 	protected final static <E> E getObject(final Properties properties, final String key){
 		return (E) properties.get(key);
 	}

@@ -28,16 +28,16 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.ScanResult;
 
 /**
- * {@link ScanResult}&ltS&gt; 转换为 {@link redis.clients.jedis.ScanResult}&ltT&gt;
+ * {@link redis.clients.jedis.ScanResult}&lt;S&gt; 转换为 {@link ScanResult}&lt;T&gt;
  *
  * @param <S>
- * 		原始类型
+ * 		原始类型，{@link redis.clients.jedis.ScanResult} 泛型参数
  * @param <T>
- * 		目标类型
+ * 		目标类型，{@link ScanResult} 泛型参数
  *
  * @author Yong.Teng
  * @since 1.2.1
  */
-public interface ScanResultJedisConverter<S, T> extends Converter<ScanResult<S>, redis.clients.jedis.ScanResult<T>> {
+public interface ScanResultExposeConverter<S, T> extends Converter<redis.clients.jedis.ScanResult<S>, ScanResult<T>> {
 
 }

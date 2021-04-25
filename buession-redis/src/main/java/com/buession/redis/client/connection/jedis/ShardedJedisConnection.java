@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
@@ -33,7 +33,7 @@ import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.ShardedJedisDataSource;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.core.ShardedRedisNode;
-import com.buession.redis.core.convert.JedisConverters;
+import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import org.slf4j.Logger;
@@ -124,7 +124,7 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	 * 		SSL 配置
 	 */
 	public ShardedJedisConnection(ShardedJedisDataSource dataSource, int connectTimeout, int soTimeout,
-			SslConfiguration sslConfiguration){
+								  SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -153,7 +153,7 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	 * 		读取超时
 	 */
 	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
-			int soTimeout){
+								  int soTimeout){
 		super(dataSource, poolConfig, connectTimeout, soTimeout);
 	}
 
@@ -168,7 +168,7 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	 * 		SSL 配置
 	 */
 	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig,
-			SslConfiguration sslConfiguration){
+								  SslConfiguration sslConfiguration){
 		super(dataSource, poolConfig, sslConfiguration);
 	}
 
@@ -187,7 +187,7 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	 * 		SSL 配置
 	 */
 	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
-			int soTimeout, SslConfiguration sslConfiguration){
+								  int soTimeout, SslConfiguration sslConfiguration){
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -265,7 +265,7 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 			try{
 				shardedJedis = pool.getResource();
 			}catch(Exception e){
-				throw JedisConverters.exceptionConvert(e);
+				throw RedisExceptionUtils.convert(e);
 			}
 
 			if(logger.isInfoEnabled()){
@@ -278,7 +278,7 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 			try{
 				shardedJedis = new ShardedJedis(shardInfos);
 			}catch(Exception e){
-				throw JedisConverters.exceptionConvert(e);
+				throw RedisExceptionUtils.convert(e);
 			}
 
 			logger.info("ShardedJedis initialize success, size: {}.", shardInfos.size());

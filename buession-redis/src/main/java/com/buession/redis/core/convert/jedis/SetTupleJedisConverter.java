@@ -22,10 +22,21 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.SetConverter;
+import com.buession.redis.core.Tuple;
+
+/**
+ * {@link java.util.Set}&lt;Tuple&gt; 转换为 {@link java.util.Set}&lt;redis.clients.jedis.Tuple&gt;
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class SetTupleJedisConverter {
+ */
+final public class SetTupleJedisConverter extends SetConverter<Tuple, redis.clients.jedis.Tuple> {
+
+	public SetTupleJedisConverter(){
+		super(new TupleJedisConverter());
+	}
+
 }

@@ -19,17 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
 
 import com.buession.core.Executor;
 import com.buession.lang.Status;
-import com.buession.redis.Constants;
+import com.buession.redis.core.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
-import com.buession.redis.core.convert.JedisConverters;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
 
@@ -130,7 +130,7 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 	 * 		SSL 配置
 	 */
 	public AbstractRedisConnection(DataSource dataSource, int connectTimeout, int soTimeout,
-			SslConfiguration sslConfiguration){
+								   SslConfiguration sslConfiguration){
 		this(dataSource, connectTimeout, soTimeout);
 		this.sslConfiguration = sslConfiguration;
 	}
@@ -195,7 +195,7 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 		try{
 			return doExecute((Executor<T, R>) executor);
 		}catch(Exception e){
-			throw JedisConverters.exceptionConvert(e);
+			throw RedisExceptionUtils.convert(e);
 		}
 	}
 

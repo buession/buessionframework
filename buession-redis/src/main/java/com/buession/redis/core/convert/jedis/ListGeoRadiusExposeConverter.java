@@ -22,10 +22,25 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.GeoRadius;
+import redis.clients.jedis.GeoRadiusResponse;
+
+/**
+ * {@link java.util.List}&lt;GeoRadiusResponse&gt; 转换为 {@link java.util.List}&lt;GeoRadius&gt;
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class ListGeoRadiusExposeConverter {
+ */
+final public class ListGeoRadiusExposeConverter extends ListConverter<GeoRadiusResponse, GeoRadius> {
+
+	public ListGeoRadiusExposeConverter(){
+		super((source)->{
+			GeoExposeConverter converter = new GeoExposeConverter();
+			return new GeoRadius(source.getMember(), source.getDistance(), converter.convert(source.getCoordinate()));
+		});
+	}
+
 }

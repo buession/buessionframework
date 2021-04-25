@@ -19,12 +19,11 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis;
 
-import com.buession.core.Executor;
 import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.client.AbstractRedisClient;
@@ -65,7 +64,7 @@ import java.util.Set;
  */
 public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends AbstractRedisClient implements JedisRedisClient<C> {
 
-	private Queue<FutureResult<Response<?>>> txResults = new LinkedList<>();
+	private Queue<FutureResult<Response<Object>, Object, Object>> txResults = new LinkedList<>();
 
 	public AbstractJedisRedisClient(){
 		super();
@@ -137,25 +136,26 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-			final double radius){
+									 final double radius){
 		return geoOperations.geoRadius(key, longitude, longitude, radius);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-			final double radius, final GeoRadiusArgument geoRadiusArgument){
+									 final double radius, final GeoRadiusArgument geoRadiusArgument){
 		return geoOperations.geoRadius(key, longitude, latitude, radius, geoRadiusArgument);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-			final double radius, final GeoUnit unit){
+									 final double radius, final GeoUnit unit){
 		return geoOperations.geoRadius(key, longitude, latitude, radius, unit);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-			final double radius, final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+									 final double radius, final GeoUnit unit,
+									 final GeoRadiusArgument geoRadiusArgument){
 		return geoOperations.geoRadius(key, longitude, latitude, radius, unit, geoRadiusArgument);
 	}
 
@@ -166,19 +166,19 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-			final GeoRadiusArgument geoRadiusArgument){
+											 final GeoRadiusArgument geoRadiusArgument){
 		return geoOperations.geoRadiusByMember(key, member, radius, geoRadiusArgument);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-			final GeoUnit unit){
+											 final GeoUnit unit){
 		return geoOperations.geoRadiusByMember(key, member, radius, unit);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-			final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
 		return geoOperations.geoRadiusByMember(key, member, radius, unit, geoRadiusArgument);
 	}
 
@@ -299,19 +299,19 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern,
-			final int count){
+												 final int count){
 		return hashOperations.hScan(key, cursor, pattern, count);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-			final int count){
+												 final int count){
 		return hashOperations.hScan(key, cursor, pattern, count);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-			final int count){
+												 final int count){
 		return hashOperations.hScan(key, cursor, pattern, count);
 	}
 
@@ -1072,7 +1072,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
-			final int count){
+										  final int count){
 		return setOperations.sScan(key, cursor, pattern, count);
 	}
 
@@ -1158,7 +1158,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long zInterStore(final String destKey, final Aggregate aggregate, final double[] weights,
-			final String... keys){
+							final String... keys){
 		return sortedSetOperations.zInterStore(destKey, aggregate, weights, keys);
 	}
 
@@ -1234,13 +1234,13 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final float min, final float max, final int offset,
-			final int count){
+								   final int count){
 		return zRangeByLex(key, Float.toString(min), Float.toString(max), offset, count);
 	}
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final double min, final double max, final int offset,
-			final int count){
+								   final int count){
 		return zRangeByLex(key, Double.toString(min), Double.toString(max), offset, count);
 	}
 
@@ -1251,13 +1251,13 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final long min, final long max, final int offset,
-			final int count){
+								   final int count){
 		return zRangeByLex(key, Long.toString(min), Long.toString(max), offset, count);
 	}
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final String min, final String max, final int offset,
-			final int count){
+								   final int count){
 		return sortedSetOperations.zRangeByLex(key, min, max, offset, count);
 	}
 
@@ -1288,31 +1288,31 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final float min, final float max, final int offset,
-			final int count){
+									 final int count){
 		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final double min, final double max, final int offset,
-			final int count){
+									 final int count){
 		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final int min, final int max, final int offset,
-			final int count){
+									 final int count){
 		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final long min, final long max, final int offset,
-			final int count){
+									 final int count){
 		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final String min, final String max, final int offset,
-			final int count){
+									 final int count){
 		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
 	}
 
@@ -1343,31 +1343,31 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
-			final int count){
+											  final int count){
 		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
-			final int count){
+											  final int count){
 		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
-			final int count){
+											  final int count){
 		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
-			final int count){
+											  final int count){
 		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final int offset,
-			final int count){
+											  final int count){
 		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
@@ -1538,7 +1538,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Set<String> zRevRangeByLex(final String key, final String min, final String max, final int offset,
-			final int count){
+									  final int count){
 		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
 	}
 
@@ -1569,31 +1569,31 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final float min, final float max, final int offset,
-			final int count){
+										final int count){
 		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final double min, final double max, final int offset,
-			final int count){
+										final int count){
 		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final int min, final int max, final int offset,
-			final int count){
+										final int count){
 		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final long min, final long max, final int offset,
-			final int count){
+										final int count){
 		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final String min, final String max, final int offset,
-			final int count){
+										final int count){
 		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
 	}
 
@@ -1624,31 +1624,31 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
-			final int count){
+												 final int count){
 		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
-			final int offset, final int count){
+												 final int offset, final int count){
 		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
-			final int count){
+												 final int count){
 		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
-			final int count){
+												 final int count){
 		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
-			final int offset, final int count){
+												 final int offset, final int count){
 		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
@@ -1739,7 +1739,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 
 	@Override
 	public Long zUnionStore(final String destKey, final Aggregate aggregate, final double[] weights,
-			final String... keys){
+							final String... keys){
 		return sortedSetOperations.zUnionStore(destKey, aggregate, weights, keys);
 	}
 
@@ -1981,7 +1981,7 @@ public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends 
 	}
 
 	@Override
-	public Queue<FutureResult<Response<?>>> getTxResults(){
+	public Queue<FutureResult<Response<Object>, Object, Object>> getTxResults(){
 		return txResults;
 	}
 

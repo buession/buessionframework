@@ -22,10 +22,48 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.GeoCommands;
+import redis.clients.jedis.params.GeoRadiusParam;
+
+/**
+ * {@link GeoCommands.GeoRadiusArgument} 转换为 {@link GeoRadiusParam}
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class GeoRadiusArgumentJedisConverter {
+ */
+final public class GeoRadiusArgumentJedisConverter implements Converter<GeoCommands.GeoRadiusArgument, GeoRadiusParam> {
+
+	@Override
+	public GeoRadiusParam convert(final GeoCommands.GeoRadiusArgument source){
+		final GeoRadiusParam geoRadiusParam = new GeoRadiusParam();
+
+		if(source.isWithCoord()){
+			geoRadiusParam.withCoord();
+		}
+
+		if(source.isWithDist()){
+			geoRadiusParam.withDist();
+		}
+
+		switch(source.getOrder()){
+			case ASC:
+				geoRadiusParam.sortAscending();
+				break;
+			case DESC:
+				geoRadiusParam.sortDescending();
+				break;
+			default:
+				break;
+		}
+
+		if(source.getCount() != null){
+			geoRadiusParam.count(source.getCount());
+		}
+
+		return geoRadiusParam;
+	}
+
 }

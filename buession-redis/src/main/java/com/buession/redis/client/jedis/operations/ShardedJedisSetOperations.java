@@ -29,6 +29,7 @@ import com.buession.redis.client.jedis.ShardedJedisClient;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.jedis.ListScanResultExposeConverter;
 import com.buession.redis.core.jedis.JedisScanParams;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
@@ -196,28 +197,28 @@ public class ShardedJedisSetOperations extends AbstractSetOperations<ShardedJedi
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
-		return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor)));
+		return execute((cmd)->new ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor)));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
-		return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor,
+		return execute((cmd)->new ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(pattern))));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
-		return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor,
+		return execute((cmd)->new ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(count))));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-			final int count){
+										  final int count){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
-		return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor,
+		return execute((cmd)->new ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(pattern, count))));
 	}
 

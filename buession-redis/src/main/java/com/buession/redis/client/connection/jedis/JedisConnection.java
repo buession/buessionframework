@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
@@ -31,7 +31,7 @@ import com.buession.redis.client.connection.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.jedis.JedisClientUtils;
-import com.buession.redis.core.convert.JedisConverters;
+import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.jedis.JedisTransaction;
@@ -120,7 +120,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	 * 		SSL 配置
 	 */
 	public JedisConnection(JedisDataSource dataSource, int connectTimeout, int soTimeout,
-			SslConfiguration sslConfiguration){
+						   SslConfiguration sslConfiguration){
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -181,7 +181,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	 * 		SSL 配置
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout, int soTimeout,
-			SslConfiguration sslConfiguration){
+						   SslConfiguration sslConfiguration){
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 	}
 
@@ -254,7 +254,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 			try{
 				jedis = pool.getResource();
 			}catch(Exception e){
-				throw JedisConverters.exceptionConvert(e);
+				throw RedisExceptionUtils.convert(e);
 			}
 
 			logger.info("Jedis initialize with pool success.");
@@ -273,7 +273,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 			try{
 				jedis.connect();
 			}catch(Exception e){
-				throw JedisConverters.exceptionConvert(e);
+				throw RedisExceptionUtils.convert(e);
 			}
 
 			jedis.auth(redisPassword(jedisDataSource.getPassword()));

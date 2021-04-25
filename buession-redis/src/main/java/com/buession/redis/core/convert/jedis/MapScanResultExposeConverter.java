@@ -22,10 +22,34 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.convert.ScanResultExposeConverter;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/**
+ * {@link redis.clients.jedis.ScanResult}&lt;Map.Entry&lt;K&gt;, &lt;K&gt;&gt; 转换为 {@link ScanResult}
+ * * &lt;Map&lt;K&gt;, &lt;K&gt;&gt;
+ *
+ * @param <K>
+ * 		Map Key 类型
+ * @param <V>
+ * 		Map 值类型
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class MapScanResultExposeConverter {
+ */
+final public class MapScanResultExposeConverter<K, V> implements ScanResultExposeConverter<Map.Entry<K, V>, Map<K, V>> {
+
+	@Override
+	public ScanResult<Map<K, V>> convert(redis.clients.jedis.ScanResult<Map.Entry<K, V>> source){
+		Map<K, V> data = source.getResult().stream().collect(Collectors.toMap(item->item.getKey(),
+				item->item.getValue(), (a, b)->a, LinkedHashMap::new));
+		return new ScanResult<>(source.getCursorAsBytes(), data);
+	}
+
 }

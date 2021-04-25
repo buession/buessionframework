@@ -19,17 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.core.Constants;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.jedis.MapScanResultExposeConverter;
 import com.buession.redis.core.jedis.JedisScanParams;
-import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 
@@ -147,67 +149,69 @@ public class JedisHashOperations extends AbstractHashOperations<Jedis, Pipeline>
 
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
+		final PredicateStatusConverter<String> converter =
+				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmset(key, data), OK_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmset(key, data), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hmset(key, data),
-					OK_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hmset(key, data), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)));
+			return execute((cmd)->cmd.hmset(key, data), converter);
 		}
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
-		return execute((cmd)->BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor)));
+		return execute((cmd)->new MapScanResultExposeConverter<byte[], byte[]>().convert(cmd.hscan(key, cursor)));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
-		return execute((cmd)->BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
+		return execute((cmd)->new MapScanResultExposeConverter<byte[], byte[]>().convert(cmd.hscan(key, cursor,
 				new JedisScanParams(pattern))));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
-		return execute((cmd)->BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
+		return execute((cmd)->new MapScanResultExposeConverter<byte[], byte[]>().convert(cmd.hscan(key, cursor,
 				new JedisScanParams(count))));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-			final int count){
+												 final int count){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
-		return execute((cmd)->BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
+		return execute((cmd)->new MapScanResultExposeConverter<byte[], byte[]>().convert(cmd.hscan(key, cursor,
 				new JedisScanParams(pattern, count))));
 	}
 
 	@Override
 	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.hset(key, field, value) > 0));
+			return execute((cmd)->cmd.hset(key, field, value), converter);
 		}
 	}
 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.hsetnx(key, field, value) > 0));
+			return execute((cmd)->cmd.hsetnx(key, field, value), converter);
 		}
 	}
 

@@ -22,10 +22,32 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.RedisServerTime;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * Jedis 返回的服务器时间转换为 {@link RedisServerTime}
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class RedisServerTimeConverter {
+ */
+final public class RedisServerTimeConverter implements Converter<List<String>, RedisServerTime> {
+
+	@Override
+	public RedisServerTime convert(final List<String> source){
+		if(source == null){
+			return null;
+		}
+
+		Date date = new Date();
+		date.setTime(Long.parseLong(source.get(0)) * 1000L);
+
+		return new RedisServerTime(date, Long.parseLong(source.get(1)));
+	}
+
 }

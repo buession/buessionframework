@@ -19,17 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.jedis.ListScanResultExposeConverter;
 import com.buession.redis.core.jedis.JedisScanParams;
-import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 
@@ -179,27 +180,27 @@ public class JedisSetOperations extends AbstractSetOperations<Jedis, Pipeline> {
 
 	@Override
 	public Status sMove(final String key, final String destKey, final String member){
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().smove(key, destKey, member),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().smove(key, destKey, member), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().smove(key, destKey, member),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().smove(key, destKey, member), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.smove(key, destKey, member) > 0));
+			return execute((cmd)->cmd.smove(key, destKey, member), converter);
 		}
 	}
 
 	@Override
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member){
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().smove(key, destKey, member),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().smove(key, destKey, member), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().smove(key, destKey, member),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().smove(key, destKey, member), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.smove(key, destKey, member) > 0));
+			return execute((cmd)->cmd.smove(key, destKey, member), converter);
 		}
 	}
 
@@ -250,28 +251,28 @@ public class JedisSetOperations extends AbstractSetOperations<Jedis, Pipeline> {
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
-		return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor)));
+		return execute((cmd)->new ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor)));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
-		return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor,
+		return execute((cmd)->new ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(pattern))));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
-		return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor,
+		return execute((cmd)->new ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(count))));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-			final int count){
+										  final int count){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
-		return execute((cmd)->BINARY_LIST_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.sscan(key, cursor,
+		return execute((cmd)->new ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(pattern, count))));
 	}
 

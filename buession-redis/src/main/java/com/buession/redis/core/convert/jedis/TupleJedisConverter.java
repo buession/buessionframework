@@ -22,10 +22,22 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.Tuple;
+
+/**
+ * {@link Tuple} 转换为 {@link redis.clients.jedis.Tuple}
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class TupleJedisConverter {
+ */
+final public class TupleJedisConverter implements Converter<Tuple, redis.clients.jedis.Tuple> {
+
+	@Override
+	public redis.clients.jedis.Tuple convert(final Tuple source){
+		return new redis.clients.jedis.Tuple(source.getBinaryElement(), source.getScore());
+	}
+
 }

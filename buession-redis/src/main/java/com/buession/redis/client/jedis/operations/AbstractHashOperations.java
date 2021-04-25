@@ -19,22 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.Converter;
+import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.HashOperations;
+import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.JedisConverters;
+import com.buession.redis.core.convert.jedis.MapScanResultExposeConverter;
 import com.buession.redis.core.jedis.JedisScanParams;
-import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 
@@ -46,12 +46,6 @@ import java.util.Set;
  * @author Yong.Teng
  */
 public abstract class AbstractHashOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements HashOperations<C> {
-
-	protected final static Converter<redis.clients.jedis.ScanResult<Map.Entry<String, String>>, ScanResult<Map<String,
-			String>>> STRING_MAP_SCANRESULT_EXPOSE_CONVERTER = JedisConverters.mapScanResultExposeConverter();
-
-	protected final static Converter<redis.clients.jedis.ScanResult<Map.Entry<byte[], byte[]>>, ScanResult<Map<byte[],
-			byte[]>>> BINARY_MAP_SCANRESULT_EXPOSE_CONVERTER = JedisConverters.mapScanResultExposeConverter();
 
 	public AbstractHashOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
 		super(client, redisMode);
@@ -198,13 +192,15 @@ public abstract class AbstractHashOperations<C extends JedisCommands, P extends 
 
 	@Override
 	public Status hMSet(final String key, final Map<String, String> data){
+		final PredicateStatusConverter<String> converter =
+				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmset(key, data), OK_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmset(key, data), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hmset(key, data),
-					OK_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hmset(key, data), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.hmset(key, data)));
+			return execute((cmd)->cmd.hmset(key, data), converter);
 		}
 	}
 
@@ -231,7 +227,7 @@ public abstract class AbstractHashOperations<C extends JedisCommands, P extends 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
-		return execute((cmd)->STRING_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor)));
+		return execute((cmd)->new MapScanResultExposeConverter<String, String>().convert(cmd.hscan(key, cursor)));
 	}
 
 	@Override
@@ -257,7 +253,7 @@ public abstract class AbstractHashOperations<C extends JedisCommands, P extends 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
-		return execute((cmd)->STRING_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
+		return execute((cmd)->new MapScanResultExposeConverter<String, String>().convert(cmd.hscan(key, cursor,
 				new JedisScanParams(pattern))));
 	}
 
@@ -284,65 +280,65 @@ public abstract class AbstractHashOperations<C extends JedisCommands, P extends 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
-		return execute((cmd)->STRING_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
+		return execute((cmd)->new MapScanResultExposeConverter<String, String>().convert(cmd.hscan(key, cursor,
 				new JedisScanParams(count))));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern,
-			final int count){
+												 final int count){
 		return hScan(key, Integer.toString(cursor), pattern, count);
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern,
-			final int count){
+												 final int count){
 		return hScan(key, NumberUtils.int2bytes(cursor), pattern, count);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-			final int count){
+												 final int count){
 		return hScan(key, Long.toString(cursor), pattern, count);
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-			final int count){
+												 final int count){
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-			final int count){
+												 final int count){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
-		return execute((cmd)->STRING_MAP_SCANRESULT_EXPOSE_CONVERTER.convert(cmd.hscan(key, cursor,
+		return execute((cmd)->new MapScanResultExposeConverter<String, String>().convert(cmd.hscan(key, cursor,
 				new JedisScanParams(pattern, count))));
 	}
 
 	@Override
 	public Status hSet(final String key, final String field, final String value){
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.hset(key, field, value) > 0));
+			return execute((cmd)->cmd.hset(key, field, value), converter);
 		}
 	}
 
 	@Override
 	public Status hSetNx(final String key, final String field, final String value){
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value),
-					POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForBool(cmd.hsetnx(key, field, value) > 0));
+			return execute((cmd)->cmd.hsetnx(key, field, value), converter);
 		}
 	}
 

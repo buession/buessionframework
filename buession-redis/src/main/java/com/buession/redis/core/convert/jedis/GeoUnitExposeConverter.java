@@ -22,10 +22,33 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.GeoUnit;
+
+/**
+ * {@link redis.clients.jedis.GeoUnit} 转换为 {@link GeoUnit}
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class GeoUnitExposeConverter {
+ */
+final public class GeoUnitExposeConverter implements Converter<redis.clients.jedis.GeoUnit, GeoUnit> {
+
+	@Override
+	public GeoUnit convert(final redis.clients.jedis.GeoUnit source){
+		switch(source){
+			case M:
+				return GeoUnit.M;
+			case KM:
+				return GeoUnit.KM;
+			case MI:
+				return GeoUnit.MI;
+			case FT:
+				return GeoUnit.FT;
+			default:
+				return null;
+		}
+	}
+
 }

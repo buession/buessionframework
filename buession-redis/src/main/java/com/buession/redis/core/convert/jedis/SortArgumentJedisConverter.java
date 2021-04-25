@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.Limit;
@@ -30,10 +30,12 @@ import com.buession.redis.core.command.KeyCommands;
 import redis.clients.jedis.SortingParams;
 
 /**
+ * {@link KeyCommands.SortArgument} 转换为 {@link SortingParams}
+ *
  * @author Yong.Teng
  * @since 1.2.1
  */
-public class SortArgumentJedisConverter implements Converter<KeyCommands.SortArgument, SortingParams> {
+final public class SortArgumentJedisConverter implements Converter<KeyCommands.SortArgument, SortingParams> {
 
 	@Override
 	public SortingParams convert(final KeyCommands.SortArgument source){

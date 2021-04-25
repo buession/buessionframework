@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.jedis;
@@ -33,18 +33,18 @@ import java.util.function.Supplier;
 /**
  * @author Yong.Teng
  */
-public class JedisResult<V, R> extends FutureResult<Response<V>> {
+public class JedisResult<V, R> extends FutureResult<Response<V>, V, R> {
 
 	public JedisResult(final Response<V> resultHolder){
 		super(resultHolder);
 	}
 
-	public JedisResult(final Response<V> resultHolder, final Converter converter){
+	public JedisResult(final Response<V> resultHolder, final Converter<V, R> converter){
 		super(resultHolder, converter);
 	}
 
-	public JedisResult(final Response<V> resultHolder, final Converter converter,
-			final Supplier<R> defaultConversionResult){
+	public JedisResult(final Response<V> resultHolder, final Converter<V, R> converter,
+					   final Supplier<R> defaultConversionResult){
 		super(resultHolder, converter, defaultConversionResult);
 	}
 
@@ -57,7 +57,6 @@ public class JedisResult<V, R> extends FutureResult<Response<V>> {
 
 		private final Response<T> response;
 
-		@SuppressWarnings("unchecked")
 		private Converter<T, R> converter;
 
 		@SuppressWarnings("unchecked")
@@ -66,7 +65,7 @@ public class JedisResult<V, R> extends FutureResult<Response<V>> {
 			this.converter = (source)->(R) source;
 		}
 
-		public final static <T, R> JedisResultBuilder<T, R> forResponse(Response<T> response){
+		public final static <T, R> JedisResultBuilder<T, R> forResponse(final Response<T> response){
 			return new JedisResultBuilder<>(response);
 		}
 

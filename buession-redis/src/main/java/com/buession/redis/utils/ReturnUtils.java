@@ -19,19 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.utils;
 
-import com.buession.core.utils.EnumUtils;
 import com.buession.core.utils.StatusUtils;
-import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
-import com.buession.redis.core.RedisServerTime;
-
-import java.util.Date;
-import java.util.List;
+import com.buession.redis.core.Constants;
 
 /**
  * @author Yong.Teng
@@ -39,43 +34,11 @@ import java.util.List;
 public class ReturnUtils {
 
 	public final static Status statusForOK(final String str){
-		return StatusUtils.valueOf("OK".equalsIgnoreCase(str));
-	}
-
-	public final static Status statusForOK(final byte[] str){
-		return statusForOK(SafeEncoder.encode(str));
+		return StatusUtils.valueOf(Constants.OK.equalsIgnoreCase(str));
 	}
 
 	public final static Status statusForBool(final boolean value){
 		return StatusUtils.valueOf(value);
-	}
-
-	public final static <V extends Enum<V>> V enumValueOf(final String str, final Class<V> enumType){
-		return EnumUtils.valueOf(enumType, str.toUpperCase());
-	}
-
-	public final static RedisServerTime redisServerTime(final List<String> ret){
-		if(ret == null){
-			return null;
-		}
-
-		RedisServerTime time = new RedisServerTime();
-
-		Date date = new Date();
-		date.setTime(Long.parseLong(ret.get(0)) * 1000L);
-
-		time.setDate(date);
-		time.setUsec(Long.parseLong(ret.get(1)));
-
-		return time;
-	}
-
-	public final static <V> V listFirst(final List<V> data){
-		return listFirst(data, null);
-	}
-
-	public final static <V> V listFirst(final List<V> data, final V defaultValue){
-		return Validate.isEmpty(data) ? defaultValue : data.get(0);
 	}
 
 }

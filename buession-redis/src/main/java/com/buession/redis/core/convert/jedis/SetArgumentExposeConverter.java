@@ -22,10 +22,43 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.core.utils.NumberUtils;
+import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.StringCommands;
+import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.params.SetParams;
+
+/**
+ * {@link SetParams} 转换为 {@link StringCommands.SetArgument}
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class SetArgumentExposeConverter {
+ */
+final public class SetArgumentExposeConverter implements Converter<SetParams, StringCommands.SetArgument> {
+
+	@Override
+	public StringCommands.SetArgument convert(final SetParams source){
+		final StringCommands.SetArgument.Builder builder = StringCommands.SetArgument.Builder.create();
+		byte[][] params = source.getByteParams();
+
+		for(int i = 0; i < params.length; i++){
+			String s = SafeEncoder.encode(params[i]);
+
+			if("ex".equals(s)){
+				builder.ex(NumberUtils.bytes2long(params[++i]));
+			}else if("px".equals(s)){
+				builder.px(NumberUtils.bytes2long(params[++i]));
+			}else if("nx".equals(s)){
+				builder.nxXX(NxXx.NX);
+			}else if("xx".equals(s)){
+				builder.nxXX(NxXx.XX);
+			}
+		}
+
+		return builder.build();
+	}
+
 }

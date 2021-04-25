@@ -22,10 +22,22 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;/**
- * 
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.ListConverter;
+import com.buession.lang.Geo;
+import redis.clients.jedis.GeoCoordinate;
+
+/**
+ * {@link java.util.List}&lt;GeoCoordinate&gt; 转换为 {@link java.util.List}&lt;Geo&gt;
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class ListGeoExposeConverter {
+ */
+final public class ListGeoExposeConverter extends ListConverter<GeoCoordinate, Geo> {
+
+	public ListGeoExposeConverter(){
+		super((source)->new Geo(source.getLongitude(), source.getLatitude()));
+	}
+
 }

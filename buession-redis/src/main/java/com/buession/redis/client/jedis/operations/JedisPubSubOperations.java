@@ -19,11 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapConverter;
 import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -77,7 +79,8 @@ public class JedisPubSubOperations extends AbstractPubSubOperations<Jedis, Pipel
 
 	@Override
 	public List<byte[]> pubsubChannels(final byte[] pattern){
-		return STRING_TO_BINARY_LIST_CONVERTER.convert(pubsubChannels(SafeEncoder.encode(pattern)));
+		final ListConverter<String, byte[]> converter = new ListConverter<>((value)->SafeEncoder.encode(value));
+		return converter.convert(pubsubChannels(SafeEncoder.encode(pattern)));
 	}
 
 	@Override
@@ -102,7 +105,9 @@ public class JedisPubSubOperations extends AbstractPubSubOperations<Jedis, Pipel
 				sChannels[i] = SafeEncoder.encode(channels[i]);
 			}
 
-			return STRING_TO_BINARY_HASH_CONVERTER.convert(cmd.pubsubNumSub(sChannels));
+			MapConverter<String, String, byte[], byte[]> converter = new MapConverter<>((key)->SafeEncoder.encode(key)
+					, (value)->SafeEncoder.encode(value));
+			return converter.convert(cmd.pubsubNumSub(sChannels));
 		});
 	}
 

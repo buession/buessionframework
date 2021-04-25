@@ -19,18 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.operations;
 
-import com.buession.core.converter.Converter;
-import com.buession.core.converter.MapConverter;
-import com.buession.core.converter.ListConverter;
-import com.buession.lang.Status;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.Converters;
 import com.buession.redis.exception.NotSupportedCommandException;
 import com.buession.redis.exception.NotSupportedPipelineCommandException;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
@@ -39,20 +34,6 @@ import com.buession.redis.exception.NotSupportedTransactionCommandException;
  * @author Yong.Teng
  */
 public abstract class AbstractRedisClientOperations<T> implements RedisClientOperations<T> {
-
-	protected final static ListConverter<String, byte[]> STRING_TO_BINARY_LIST_CONVERTER =
-			Converters.stringToBinaryListConverter();
-
-	protected final static MapConverter<String, String, byte[], byte[]> STRING_TO_BINARY_HASH_CONVERTER =
-			Converters.stringToBinaryHashConverter();
-
-	protected final static Converter<Long, Status> POSITIVE_LONG_NUMBER_TO_STATUS_CONVERTER =
-			Converters.positiveLongNumberToStatusConverter();
-
-	protected final static Converter<Boolean, Status> BOOLEAN_TO_STATUS_CONVERTER =
-			Converters.booleanToStatusConverter();
-
-	protected final static Converter<String, Status> OK_TO_STATUS_CONVERTER = Converters.okToStatusConverter();
 
 	private RedisMode redisMode;
 
@@ -109,7 +90,7 @@ public abstract class AbstractRedisClientOperations<T> implements RedisClientOpe
 	}
 
 	private final static String commandNotSupportedMessage(final ProtocolCommand command, final RedisMode mode,
-			final String s){
+														   final String s){
 		final StringBuilder sb = new StringBuilder(64);
 
 		sb.append("Not supported command: ").append(command);
