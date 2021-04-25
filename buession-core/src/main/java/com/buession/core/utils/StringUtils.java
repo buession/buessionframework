@@ -141,8 +141,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 *
 	 * @since 1.2.1
 	 */
-	public static boolean startWith(final CharSequence str, final char character){
-		return startWith(str, character, false);
+	public static boolean startsWith(final CharSequence str, final char character){
+		return startsWith(str, character, false);
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 *
 	 * @since 1.2.1
 	 */
-	public static boolean startWith(final CharSequence str, final char character, final boolean ignoreCase){
+	public static boolean startsWith(final CharSequence str, final char character, final boolean ignoreCase){
 		if(str == null){
 			return false;
 		}
@@ -189,8 +189,8 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 *
 	 * @since 1.2.1
 	 */
-	public static boolean startWithIgnoreCase(final CharSequence str, final char character){
-		return startWith(str, character, true);
+	public static boolean startsWithIgnoreCase(final CharSequence str, final char character){
+		return startsWith(str, character, true);
 	}
 
 	/**
