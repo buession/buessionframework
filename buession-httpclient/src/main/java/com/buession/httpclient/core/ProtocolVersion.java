@@ -68,11 +68,11 @@ public enum ProtocolVersion {
 
 		switch(major){
 			case 0:
-				return createProtocolVersion0(major);
+				return createProtocolVersion0(minor);
 			case 1:
-				return createProtocolVersion1(major);
+				return createProtocolVersion1(minor);
 			case 2:
-				return createProtocolVersion2(major);
+				return createProtocolVersion2(minor);
 			default:
 				throw new IllegalArgumentException("Unknown protocol major: " + major);
 		}
