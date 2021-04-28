@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -132,15 +132,7 @@ public class RedisNode implements Serializable {
 
 		RedisNode that = (RedisNode) obj;
 
-		if(ObjectUtils.nullSafeEquals(this.host, that.host) == false){
-			return false;
-		}
-
-		if(ObjectUtils.nullSafeEquals(this.port, that.port) == false){
-			return false;
-		}
-
-		return true;
+		return ObjectUtils.nullSafeEquals(this.host, that.host) && ObjectUtils.nullSafeEquals(this.port, that.port);
 	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -31,7 +31,7 @@ import org.springframework.util.ObjectUtils;
  */
 public class RedisServer extends RedisNode {
 
-	private static final long serialVersionUID = 4843502163987630437L;
+	private final static long serialVersionUID = 4843502163987630437L;
 
 	/**
 	 * Redis 服务器主机 IP 地址
@@ -163,8 +163,6 @@ public class RedisServer extends RedisNode {
 		if(obj == null || (obj instanceof RedisServer) == false){
 			return false;
 		}
-
-		RedisServer that = (RedisServer) obj;
 
 		return super.equals(obj);
 	}

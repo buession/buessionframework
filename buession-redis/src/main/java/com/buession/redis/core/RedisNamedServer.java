@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -31,7 +31,7 @@ import org.springframework.util.ObjectUtils;
  */
 public class RedisNamedServer extends RedisServer implements RedisNamedNode {
 
-	private static final long serialVersionUID = -4695061230031566288L;
+	private final static long serialVersionUID = -4695061230031566288L;
 
 	/**
 	 * 节点名称

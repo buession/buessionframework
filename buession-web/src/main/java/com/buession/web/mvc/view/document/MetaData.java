@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.mvc.view.document;
@@ -35,7 +35,7 @@ import java.io.Serializable;
  */
 public class MetaData implements Serializable {
 
-	private static final long serialVersionUID = -2362098929099645692L;
+	private final static long serialVersionUID = -2362098929099645692L;
 
 	/**
 	 * 标题
@@ -179,6 +179,20 @@ public class MetaData implements Serializable {
 	 */
 	public void setCopyright(String copyright){
 		this.copyright = copyright;
+	}
+
+	@Override
+	public String toString(){
+		final StringBuilder sb = new StringBuilder(128);
+
+		sb.append("title：").append(title).append(", ");
+		sb.append("charset: ").append(charset).append(", ");
+		sb.append("keywords: ").append(keywords).append(", ");
+		sb.append("description: ").append(description).append(", ");
+		sb.append("author: ").append(author).append(", ");
+		sb.append("copyright: ").append(copyright);
+
+		return sb.toString();
 	}
 
 }

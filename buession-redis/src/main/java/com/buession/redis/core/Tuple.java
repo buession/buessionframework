@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -36,82 +36,82 @@ import java.util.Objects;
  */
 public class Tuple implements Comparable<Tuple>, Serializable {
 
-    private final static long serialVersionUID = -6469375940111456577L;
+	private final static long serialVersionUID = -6469375940111456577L;
 
-    private byte[] element;
+	private byte[] element;
 
-    private Double score;
+	private Double score;
 
-    public Tuple(String element, Double score){
-        this(SafeEncoder.encode(element), score);
-    }
+	public Tuple(String element, Double score){
+		this(SafeEncoder.encode(element), score);
+	}
 
-    public Tuple(byte[] element, Double score){
-        super();
-        this.element = element;
-        this.score = score;
-    }
+	public Tuple(byte[] element, Double score){
+		super();
+		this.element = element;
+		this.score = score;
+	}
 
-    public String getElement(){
-        return element == null ? null : SafeEncoder.encode(element);
-    }
+	public String getElement(){
+		return element == null ? null : SafeEncoder.encode(element);
+	}
 
-    public byte[] getBinaryElement(){
-        return element;
-    }
+	public byte[] getBinaryElement(){
+		return element;
+	}
 
-    public double getScore(){
-        return score;
-    }
+	public double getScore(){
+		return score;
+	}
 
-    @Override
-    public int hashCode(){
-        final int prime = 31;
-        int result = 1;
+	@Override
+	public int hashCode(){
+		final int prime = 31;
+		int result = 1;
 
-        result = prime * result;
+		result = prime * result;
 
-        if(null != element){
-            for(byte b : element){
-                result = prime * result + b;
-            }
-        }
+		if(null != element){
+			for(byte b : element){
+				result = prime * result + b;
+			}
+		}
 
-        long temp = Double.doubleToLongBits(score);
-        return prime * result + (int) (temp ^ (temp >>> 32));
-    }
+		long temp = Double.doubleToLongBits(score);
+		return prime * result + (int) (temp ^ (temp >>> 32));
+	}
 
-    @Override
-    public boolean equals(Object obj){
-        if(this == obj){
-            return true;
-        }else if(obj == null){
-            return false;
-        }
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}else if(obj == null){
+			return false;
+		}
 
-        if(getClass() != obj.getClass()){
-            return false;
-        }
+		if(getClass() != obj.getClass()){
+			return false;
+		}
 
-        Tuple that = (Tuple) obj;
-        return Arrays.equals(element, that.element) && Objects.equals(score, that.score);
-    }
+		Tuple that = (Tuple) obj;
+		return Arrays.equals(element, that.element) && Objects.equals(score, that.score);
+	}
 
-    @Override
-    public int compareTo(Tuple that){
-        int compScore = Double.compare(this.score, that.score);
+	@Override
+	public int compareTo(Tuple that){
+		int compScore = Double.compare(this.score, that.score);
 
-        if(compScore != 0){
-            return compScore;
-        }else{
-            ByteArrayComparable comparable = new ByteArrayComparable(this.element);
-            return comparable.compareTo(that.element);
-        }
-    }
+		if(compScore != 0){
+			return compScore;
+		}else{
+			ByteArrayComparable comparable = new ByteArrayComparable(this.element);
+			return comparable.compareTo(that.element);
+		}
+	}
 
-    @Override
-    public String toString(){
-        return "Tuple{" + "element=" + Arrays.toString(element) + ", score=" + score + '}';
-    }
+	@Override
+	public String toString(){
+		return "element=" + Arrays.toString(element) + ", score=" + score;
+	}
 
 }
