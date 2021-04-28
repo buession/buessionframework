@@ -64,7 +64,7 @@ public class ScanResult<V> {
 	}
 
 	public boolean isCompleteIteration(){
-		return Constants.SCAN_POINTER_START.equals(getCursor());
+		return Constants.SCAN_POINTER_START.equals(getCursorAsString());
 	}
 
 }

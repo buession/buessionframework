@@ -33,6 +33,7 @@ import com.buession.redis.core.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
+import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.jedis.JedisTransaction;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.Response;
@@ -60,7 +61,13 @@ public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands
 	}
 
 	protected redis.clients.jedis.Transaction getTransaction(){
-		JedisTransaction jedisTransaction = (JedisTransaction) client.getConnection().getTransaction();
+		Transaction transaction = client.getConnection().getTransaction();
+
+		if(transaction == null){
+			return null;
+		}
+
+		JedisTransaction jedisTransaction = (JedisTransaction) transaction;
 		return jedisTransaction.primitive();
 	}
 
@@ -77,7 +84,7 @@ public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands
 			return null;
 		}
 
-		JedisPipeline<P> jedisPipeline = (JedisPipeline<P>) pipeline;
+		JedisPipeline jedisPipeline = (JedisPipeline) pipeline;
 		return jedisPipeline.primitive();
 	}
 
@@ -86,22 +93,24 @@ public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands
 		return client.getConnection().isPipeline();
 	}
 
+	@SuppressWarnings({"unchecked"})
 	protected <R> R transactionExecute(final Executor<C, JedisResult> executor) throws RedisException{
 		client.getTxResults().add(execute(executor));
 		return null;
 	}
 
+	@SuppressWarnings({"unchecked"})
 	protected <T, R> R pipelineExecute(final Executor<C, JedisResult> executor) throws RedisException{
 		client.getTxResults().add(execute(executor));
 		return null;
 	}
 
 	protected <T, R> JedisResult<T, R> newJedisResult(final Response<T> response){
-		return JedisResult.JedisResultBuilder.<T, R>forResponse(response).build();
+		return new JedisResult<>(response);
 	}
 
 	protected <T, R> JedisResult<T, R> newJedisResult(final Response<T> response, final Converter<T, R> converter){
-		return JedisResult.JedisResultBuilder.<T, R>forResponse(response).mappedWith(converter).build();
+		return new JedisResult<>(response, converter);
 	}
 
 }

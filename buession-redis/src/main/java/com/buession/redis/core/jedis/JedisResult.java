@@ -28,8 +28,6 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.FutureResult;
 import redis.clients.jedis.Response;
 
-import java.util.function.Supplier;
-
 /**
  * @author Yong.Teng
  */
@@ -43,41 +41,9 @@ public class JedisResult<V, R> extends FutureResult<Response<V>, V, R> {
 		super(resultHolder, converter);
 	}
 
-	public JedisResult(final Response<V> resultHolder, final Converter<V, R> converter,
-					   final Supplier<R> defaultConversionResult){
-		super(resultHolder, converter, defaultConversionResult);
-	}
-
 	@Override
 	public V get(){
 		return getResultHolder().get();
-	}
-
-	public final static class JedisResultBuilder<T, R> {
-
-		private final Response<T> response;
-
-		private Converter<T, R> converter;
-
-		@SuppressWarnings("unchecked")
-		JedisResultBuilder(final Response<T> response){
-			this.response = response;
-			this.converter = (source)->(R) source;
-		}
-
-		public final static <T, R> JedisResultBuilder<T, R> forResponse(final Response<T> response){
-			return new JedisResultBuilder<>(response);
-		}
-
-		public JedisResultBuilder<T, R> mappedWith(Converter<T, R> converter){
-			this.converter = converter;
-			return this;
-		}
-
-		public JedisResult<T, R> build(){
-			return new JedisResult<>(response, converter);
-		}
-
 	}
 
 }

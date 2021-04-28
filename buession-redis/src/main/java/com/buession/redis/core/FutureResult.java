@@ -32,35 +32,26 @@ import java.util.function.Supplier;
 /**
  * @author Yong.Teng
  */
-public abstract class FutureResult<T, SV, TV> {
+public abstract class FutureResult<T, SV, TV> implements Supplier<SV> {
 
 	private T resultHolder;
 
 	private Converter<SV, TV> converter;
-
-	private final Supplier<?> defaultConversionResult;
 
 	@SuppressWarnings("unchecked")
 	public FutureResult(final T resultHolder){
 		this(resultHolder, val->(TV) val);
 	}
 
-	public FutureResult(final T resultHolder, final Converter<SV, TV> converter){
-		this(resultHolder, converter, ()->null);
-	}
-
 	@SuppressWarnings("unchecked")
-	public FutureResult(final T resultHolder, final Converter<SV, TV> converter, Supplier<?> defaultConversionResult){
+	public FutureResult(final T resultHolder, final Converter<SV, TV> converter){
 		this.resultHolder = resultHolder;
 		this.converter = converter != null ? converter : val->(TV) val;
-		this.defaultConversionResult = defaultConversionResult;
 	}
 
 	public T getResultHolder(){
 		return resultHolder;
 	}
-
-	public abstract SV get();
 
 	@SuppressWarnings("unchecked")
 	@Nullable

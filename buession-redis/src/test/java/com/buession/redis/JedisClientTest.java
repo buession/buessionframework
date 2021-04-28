@@ -63,7 +63,7 @@ public class JedisClientTest extends AbstractJedisRedisTest {
 		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
 		System.out.println(redisTemplate.get("info"));
 		System.out.println(redisTemplate.getObject("info", Info.class));
-		
+
 		redisTemplate.set("int", "1");
 		System.out.println(redisTemplate.getObject("int", Integer.class));
 	}
@@ -98,12 +98,12 @@ public class JedisClientTest extends AbstractJedisRedisTest {
 		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
 
 		Pipeline pipeline = redisTemplate.pipeline();
-		//redisTemplate.set("sg", new Server());
-		//redisTemplate.set("sg2", new Server());
+		redisTemplate.set("sg", "sg");
+		redisTemplate.set("sg2", "sg2");
 		//redisTemplate.set("t4", "T4");
 		//redisTemplate.type("test");
-		redisTemplate.getObject("sg", Info.Server.class);
-		redisTemplate.mGetObject(new String[]{"sg", "sg2"}, Info.Server.class);
+		redisTemplate.get("sg");
+		redisTemplate.mGet(new String[]{"sg", "sg2"});
 		List<Object> result = redisTemplate.exec();
 
 		if(result != null){

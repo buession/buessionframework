@@ -22,10 +22,76 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.utils;/**
- * 
- *
+package com.buession.redis.utils;
+
+import com.buession.core.converter.Converter;
+import com.buession.core.utils.ReflectUtils;
+import com.buession.redis.transaction.TxResult;
+
+import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
  * @author Yong.Teng
  * @since 1.2.1
- */public class TxResultsUtils {
+ */
+public class TxResultsUtils {
+
+	private final static ThreadLocal<Map<Integer, TxResult>> txResults = new ThreadLocal<>();
+
+	public final static void remove(){
+		txResults.remove();
+	}
+
+	public final static Map<Integer, TxResult> getTxResults(){
+		Map<Integer, TxResult> txResult = txResults.get();
+
+		if(txResult == null){
+			txResult = new LinkedHashMap<>(16, 0.8F);
+			txResults.set(txResult);
+		}
+
+		return txResult;
+	}
+
+	public final static <S, T> void put(AtomicInteger index, Converter<S, T> converter, Class... paramTypes){
+		put(index.get(), converter, paramTypes);
+	}
+
+	public final static <S, T> void put(int index, Converter<S, T> converter, Class... paramTypes){
+		getTxResults().put(index, new TxResult<>(converter, paramTypes));
+	}
+
+	public final static List<Object> deserializeMixedResults(AtomicInteger index, List<Object> result){
+		Map<Integer, TxResult> cache = txResults.get();
+
+		if(cache == null){
+			return result;
+		}
+
+		TxResult<?, ?> txResult;
+
+		for(int i = 0; i < index.get(); i++){
+			txResult = cache.get(i);
+			if(txResult == null){
+				continue;
+			}
+
+			Method method = ReflectUtils.findMethod(txResult.getConverter().getClass(), "convert",
+					txResult.getParamTypes());
+
+			if(method != null){
+				Object value = result.get(i);
+				Object ret = ReflectUtils.invokeMethod(method, txResult.getConverter(), value);
+
+				result.set(i, ret);
+			}
+		}
+
+		return result;
+	}
+
 }

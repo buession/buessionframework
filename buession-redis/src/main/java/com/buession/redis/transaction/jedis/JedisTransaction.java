@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.transaction.jedis;
 
+import com.buession.core.utils.Assert;
 import com.buession.redis.transaction.Transaction;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class JedisTransaction implements Transaction {
 	private redis.clients.jedis.Transaction transaction;
 
 	public JedisTransaction(redis.clients.jedis.Transaction transaction){
+		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
 		this.transaction = transaction;
 	}
 

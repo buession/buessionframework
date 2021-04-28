@@ -36,6 +36,7 @@ import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
+import com.buession.redis.pipeline.jedis.ShardedJedisPipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
@@ -204,7 +205,7 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	@Override
 	public Pipeline getPipeline(){
 		if(pipeline == null){
-			pipeline = new JedisPipeline<>(shardedJedis.pipelined());
+			pipeline = new JedisPipeline(new ShardedJedisPipeline(shardedJedis.pipelined()));
 		}
 
 		return pipeline;

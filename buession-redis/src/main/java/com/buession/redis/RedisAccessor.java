@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
@@ -154,7 +154,7 @@ public abstract class RedisAccessor implements Closeable {
 	}
 
 	protected <R> R execute(final Executor<RedisClient, R> executor, final ProtocolCommand command,
-			final CommandArguments arguments){
+							final CommandArguments arguments){
 		checkInitialized();
 
 		String argumentsString = logger.isDebugEnabled() && arguments != null ? arguments.toString() : null;
@@ -208,7 +208,8 @@ public abstract class RedisAccessor implements Closeable {
 
 	protected final void checkInitialized(){
 		if(client == null){
-			throw new RedisException("RedisClient is not initialized. You can call the afterPropertiesSet method for " + "initialize.");
+			throw new RedisException("RedisClient is not initialized. You can call the afterPropertiesSet method for " +
+					"initialize.");
 		}
 	}
 

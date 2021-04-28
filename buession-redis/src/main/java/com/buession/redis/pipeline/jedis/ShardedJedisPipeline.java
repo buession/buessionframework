@@ -22,10 +22,43 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.pipeline.jedis;/**
- * 
+package com.buession.redis.pipeline.jedis;
+
+import com.buession.redis.pipeline.Pipeline;
+
+import java.util.List;
+
+/**
+ * ShardedJedis 原生 Pipeline
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public class ShardedJedisPipeline {
+ */
+public class ShardedJedisPipeline implements JedisNativePipeline<redis.clients.jedis.ShardedJedisPipeline> {
+
+	private final redis.clients.jedis.ShardedJedisPipeline pipeline;
+
+	public ShardedJedisPipeline(final redis.clients.jedis.ShardedJedisPipeline pipeline){
+		this.pipeline = pipeline;
+	}
+
+	@Override
+	public redis.clients.jedis.ShardedJedisPipeline getNativeObject(){
+		return pipeline;
+	}
+
+	@Override
+	public void sync(){
+		pipeline.sync();
+	}
+
+	@Override
+	public List<Object> syncAndReturnAll(){
+		return pipeline.syncAndReturnAll();
+	}
+
+	@Override
+	public void close(){
+	}
+
 }

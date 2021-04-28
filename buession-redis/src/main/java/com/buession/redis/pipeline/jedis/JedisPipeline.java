@@ -19,56 +19,46 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.pipeline.jedis;
 
+import com.buession.core.utils.Assert;
 import com.buession.redis.pipeline.Pipeline;
-import redis.clients.jedis.ShardedJedisPipeline;
 
 import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public class JedisPipeline<T extends redis.clients.jedis.PipelineBase> implements Pipeline {
+public class JedisPipeline implements Pipeline {
 
-	private T pipeline;
+	private JedisNativePipeline<? extends redis.clients.jedis.PipelineBase> pipeline;
 
-	public JedisPipeline(T pipeline){
+	public JedisPipeline(JedisNativePipeline<? extends redis.clients.jedis.PipelineBase> pipeline){
+		Assert.isNull(pipeline, "Redis Pipeline cloud not be null.");
 		this.pipeline = pipeline;
 	}
 
-	public T primitive(){
-		return pipeline;
+	@SuppressWarnings({"unchecked"})
+	public <T extends redis.clients.jedis.PipelineBase> T primitive(){
+		return (T) pipeline.getNativeObject();
 	}
 
 	@Override
 	public void sync(){
-		if(pipeline instanceof redis.clients.jedis.Pipeline){
-			((redis.clients.jedis.Pipeline) pipeline).sync();
-		}else if(pipeline instanceof ShardedJedisPipeline){
-			((ShardedJedisPipeline) pipeline).sync();
-		}
+		pipeline.sync();
 	}
 
 	@Override
 	public List<Object> syncAndReturnAll(){
-		if(pipeline instanceof redis.clients.jedis.Pipeline){
-			return ((redis.clients.jedis.Pipeline) pipeline).syncAndReturnAll();
-		}else if(pipeline instanceof ShardedJedisPipeline){
-			return ((ShardedJedisPipeline) pipeline).syncAndReturnAll();
-		}else{
-			return null;
-		}
+		return pipeline.syncAndReturnAll();
 	}
 
 	@Override
 	public void close(){
-		if(pipeline instanceof redis.clients.jedis.Pipeline){
-			((redis.clients.jedis.Pipeline) pipeline).close();
-		}
+		pipeline.close();
 	}
 
 }

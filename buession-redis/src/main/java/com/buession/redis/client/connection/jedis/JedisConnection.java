@@ -34,6 +34,7 @@ import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
+import com.buession.redis.pipeline.jedis.StandaloneJedisPipeline;
 import com.buession.redis.transaction.jedis.JedisTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -198,7 +199,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	@Override
 	public Pipeline getPipeline(){
 		if(pipeline == null){
-			pipeline = new JedisPipeline<>(jedis.pipelined());
+			pipeline = new JedisPipeline(new StandaloneJedisPipeline(jedis.pipelined()));
 		}
 
 		return pipeline;

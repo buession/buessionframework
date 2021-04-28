@@ -22,10 +22,26 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.pipeline.jedis;/**
- * 
+package com.buession.redis.pipeline.jedis;
+
+import com.buession.redis.pipeline.Pipeline;
+
+/**
+ * Jedis 原生 Pipeline
+ *
+ * @param <T>
+ * 		jedis 原生 Pipeline 类型
  *
  * @author Yong.Teng
  * @since 1.2.1
- */public interface JedisNatiePipeline {
+ */
+public interface JedisNativePipeline<T extends redis.clients.jedis.PipelineBase> extends Pipeline {
+
+	/**
+	 * 获取 Jedis 原生 Pipeline
+	 *
+	 * @return Jedis 原生 Pipeline
+	 */
+	T getNativeObject();
+
 }
