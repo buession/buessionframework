@@ -35,6 +35,16 @@ public class Constants {
 
 	public final static char EMPTY_CHAR = '\0';
 
+	/**
+	 * @since 1.2.1
+	 */
+	public final static String SPACING_STRING = " ";
+
+	/**
+	 * @since 1.2.1
+	 */
+	public final static char SPACING_CHAR = ' ';
+
 	public final static char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e',
 			'f'};
 
