@@ -21,14 +21,18 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.tools;
 
 import com.buession.core.validator.Validate;
+import com.buession.lang.Constants;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.PrettyPrinter;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.core.util.Separators;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.velocity.tools.config.DefaultKey;
 import org.apache.velocity.tools.generic.SafeConfig;
@@ -45,29 +49,195 @@ import java.util.TimeZone;
 @DefaultKey("json")
 public class JsonTool extends SafeConfig {
 
+	private static PrettyPrinter prettyPrinter;
+
 	private final static Logger logger = LoggerFactory.getLogger(JsonTool.class);
 
+	/**
+	 * 将对象编码成字符串
+	 *
+	 * @param object
+	 * 		对象
+	 *
+	 * @return 对象编码后字符串
+	 */
 	public String encode(Object object){
-		return encode(object, null, null, null);
+		return encode(object, null, null, (TimeZone) null);
 	}
 
+	/**
+	 * 将对象编码成字符串
+	 *
+	 * @param object
+	 * 		对象
+	 * @param ignoreNullValue
+	 * 		是否忽略 null 值
+	 *
+	 * @return 对象编码后字符串
+	 */
 	public String encode(Object object, Boolean ignoreNullValue){
-		return encode(object, ignoreNullValue, null);
+		return encode(object, ignoreNullValue, (String) null);
 	}
 
+	/**
+	 * 将对象编码成字符串
+	 *
+	 * @param object
+	 * 		对象
+	 * @param dateFormat
+	 * 		日期时间格式
+	 *
+	 * @return 对象编码后字符串
+	 */
 	public String encode(Object object, String dateFormat){
 		return encode(object, null, dateFormat);
 	}
 
+	/**
+	 * 将对象编码成字符串
+	 *
+	 * @param object
+	 * 		对象
+	 * @param dateFormat
+	 * 		日期时间格式
+	 * @param timeZone
+	 * 		时区
+	 *
+	 * @return 对象编码后字符串
+	 */
 	public String encode(Object object, String dateFormat, TimeZone timeZone){
 		return encode(object, null, dateFormat, timeZone);
 	}
 
+	/**
+	 * 将对象编码成字符串
+	 *
+	 * @param object
+	 * 		对象
+	 * @param ignoreNullValue
+	 * 		是否忽略 null 值
+	 * @param dateFormat
+	 * 		日期时间格式
+	 *
+	 * @return 对象编码后字符串
+	 */
 	public String encode(Object object, Boolean ignoreNullValue, String dateFormat){
-		return encode(object, ignoreNullValue, dateFormat, null);
+		return encode(object, ignoreNullValue, dateFormat, (TimeZone) null);
 	}
 
+	/**
+	 * 将对象编码成字符串
+	 *
+	 * @param object
+	 * 		对象
+	 * @param ignoreNullValue
+	 * 		是否忽略 null 值
+	 * @param dateFormat
+	 * 		日期时间格式
+	 * @param timeZone
+	 * 		时区
+	 *
+	 * @return 对象编码后字符串
+	 */
 	public String encode(Object object, Boolean ignoreNullValue, String dateFormat, TimeZone timeZone){
+		return encode(object, ignoreNullValue, dateFormat, timeZone, false);
+	}
+
+	/**
+	 * 将对象编码成字符串
+	 *
+	 * @param object
+	 * 		对象
+	 * @param ignoreNullValue
+	 * 		是否忽略 null 值
+	 * @param pretty
+	 * 		是否格式化
+	 *
+	 * @return 对象编码后字符串
+	 *
+	 * @since 1.2.2
+	 */
+	public String encode(Object object, Boolean ignoreNullValue, Boolean pretty){
+		return encode(object, ignoreNullValue, null, pretty);
+	}
+
+	/**
+	 * 将对象编码成字符串
+	 *
+	 * @param object
+	 * 		对象
+	 * @param dateFormat
+	 * 		日期时间格式
+	 * @param pretty
+	 * 		是否格式化
+	 *
+	 * @return 对象编码后字符串
+	 *
+	 * @since 1.2.2
+	 */
+	public String encode(Object object, String dateFormat, Boolean pretty){
+		return encode(object, null, dateFormat, pretty);
+	}
+
+	/**
+	 * 将对象编码成字符串
+	 *
+	 * @param object
+	 * 		对象
+	 * @param dateFormat
+	 * 		日期时间格式
+	 * @param timeZone
+	 * 		时区
+	 * @param pretty
+	 * 		是否格式化
+	 *
+	 * @return 对象编码后字符串
+	 *
+	 * @since 1.2.2
+	 */
+	public String encode(Object object, String dateFormat, TimeZone timeZone, Boolean pretty){
+		return encode(object, null, dateFormat, timeZone, pretty);
+	}
+
+	/**
+	 * 将对象编码成字符串
+	 *
+	 * @param object
+	 * 		对象
+	 * @param ignoreNullValue
+	 * 		是否忽略 null 值
+	 * @param dateFormat
+	 * 		日期时间格式
+	 * @param pretty
+	 * 		是否格式化
+	 *
+	 * @return 对象编码后字符串
+	 *
+	 * @since 1.2.2
+	 */
+	public String encode(Object object, Boolean ignoreNullValue, String dateFormat, Boolean pretty){
+		return encode(object, ignoreNullValue, dateFormat, null, pretty);
+	}
+
+	/**
+	 * 将对象编码成字符串
+	 *
+	 * @param object
+	 * 		对象
+	 * @param ignoreNullValue
+	 * 		是否忽略 null 值
+	 * @param dateFormat
+	 * 		日期时间格式
+	 * @param timeZone
+	 * 		时区
+	 * @param pretty
+	 * 		是否格式化
+	 *
+	 * @return 对象编码后字符串
+	 *
+	 * @since 1.2.2
+	 */
+	public String encode(Object object, Boolean ignoreNullValue, String dateFormat, TimeZone timeZone, Boolean pretty){
 		ObjectMapper objectMapper = new ObjectMapper();
 
 		if(Boolean.TRUE.equals(ignoreNullValue)){
@@ -84,7 +254,11 @@ public class JsonTool extends SafeConfig {
 		}
 
 		try{
-			return objectMapper.writeValueAsString(object);
+			if(Boolean.TRUE.equals(pretty)){
+				return objectMapper.writer(getPrettyPrinter()).writeValueAsString(object);
+			}else{
+				return objectMapper.writeValueAsString(object);
+			}
 		}catch(JsonProcessingException e){
 			if(logger.isErrorEnabled()){
 				logger.warn("{} convert to string error.", Objects.toString(object, "<null>"), e);
@@ -92,6 +266,45 @@ public class JsonTool extends SafeConfig {
 		}
 
 		return null;
+	}
+
+	private static PrettyPrinter getPrettyPrinter(){
+		if(prettyPrinter == null){
+			prettyPrinter = new VelocityPrettyPrinter();
+		}
+
+		return prettyPrinter;
+	}
+
+	private final static class VelocityPrettyPrinter extends DefaultPrettyPrinter {
+
+		private final static long serialVersionUID = -2266232157759904063L;
+
+		public VelocityPrettyPrinter(){
+			super(Constants.EMPTY_STRING);
+		}
+
+		public VelocityPrettyPrinter(DefaultPrettyPrinter base){
+			super(base);
+		}
+
+		@Override
+		public DefaultPrettyPrinter withSeparators(Separators separators){
+			_separators = separators;
+			_objectFieldValueSeparatorWithSpaces =
+					separators.getObjectFieldValueSeparator() + Constants.SPACING_STRING;
+			return this;
+		}
+
+		@Override
+		public DefaultPrettyPrinter createInstance(){
+			if(getClass() != VelocityPrettyPrinter.class){ // since 2.10
+				throw new IllegalStateException("Failed `createInstance()`: " + getClass().getName() + " does not " +
+						"override method; it has to");
+			}
+			return new VelocityPrettyPrinter(this);
+		}
+
 	}
 
 }
