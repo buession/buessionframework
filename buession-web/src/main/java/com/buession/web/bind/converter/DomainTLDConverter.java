@@ -22,10 +22,23 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.bind.converter;/**
- * 
+package com.buession.web.bind.converter;
+
+import com.buession.lang.DomainTLD;
+
+/**
+ * 字符串忽略大小写转换为域名 TLD 枚举值 {@link DomainTLD}
  *
  * @author Yong.Teng
  * @since 1.2.2
- */public class DomainTLDConverter {
+ */
+public class DomainTLDConverter extends AbstractIgnoreCaseEnumConverter<DomainTLD> {
+
+	/**
+	 * 构造函数
+	 */
+	public DomainTLDConverter(){
+		super(DomainTLD.class);
+	}
+
 }

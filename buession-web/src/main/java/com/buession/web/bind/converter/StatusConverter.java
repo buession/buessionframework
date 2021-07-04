@@ -24,21 +24,21 @@
  */
 package com.buession.web.bind.converter;
 
-import com.buession.lang.Order;
+import com.buession.lang.Status;
 
 /**
- * 字符串忽略大小写转换为排序 {@link Order}
+ * 字符串忽略大小写转换为状态枚举值 {@link Status}
  *
  * @author Yong.Teng
  * @since 1.2.2
  */
-final public class OrderConverter extends AbstractIgnoreCaseEnumConverter<Order> {
+final public class StatusConverter extends AbstractIgnoreCaseEnumConverter<Status> {
 
 	/**
 	 * 构造函数
 	 */
-	public OrderConverter(){
-		super(Order.class);
+	public StatusConverter(){
+		super(Status.class);
 	}
 
 }

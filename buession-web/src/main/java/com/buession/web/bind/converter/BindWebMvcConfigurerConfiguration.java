@@ -24,6 +24,7 @@
  */
 package com.buession.web.bind.converter;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -31,7 +32,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author Yong.Teng
  * @since 1.2.2
  */
-public class BindWebMvcConfigurer implements WebMvcConfigurer {
+@Configuration
+public class BindWebMvcConfigurerConfiguration implements WebMvcConfigurer {
 
 	@Override
 	public void addFormatters(FormatterRegistry registry){

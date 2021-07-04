@@ -24,21 +24,21 @@
  */
 package com.buession.web.bind.converter;
 
-import com.buession.lang.DomainTLD;
+import com.buession.lang.DomainTLDType;
 
 /**
- * 字符串忽略大小写转换为域名 TLD {@link DomainTLD}
+ * 字符串忽略大小写转换为域名 TLD 类型枚举值 {@link DomainTLDType}
  *
  * @author Yong.Teng
  * @since 1.2.2
  */
-public class DomainTLDConverter extends AbstractIgnoreCaseEnumConverter<DomainTLD> {
+public class DomainTLDTypeConverter extends AbstractIgnoreCaseEnumConverter<DomainTLDType> {
 
 	/**
 	 * 构造函数
 	 */
-	public DomainTLDConverter(){
-		super(DomainTLD.class);
+	public DomainTLDTypeConverter(){
+		super(DomainTLDType.class);
 	}
 
 }

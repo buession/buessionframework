@@ -22,10 +22,23 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.bind.converter;/**
- * 
+package com.buession.web.bind.converter;
+
+import com.buession.lang.CaseType;
+
+/**
+ * 字符串忽略大小写转换为字母转换类型枚举值 {@link CaseType}
  *
  * @author Yong.Teng
  * @since 1.2.2
- */public class CaseTypeConverter {
+ */
+final public class CaseTypeConverter extends AbstractIgnoreCaseEnumConverter<CaseType> {
+
+	/**
+	 * 构造函数
+	 */
+	public CaseTypeConverter(){
+		super(CaseType.class);
+	}
+
 }

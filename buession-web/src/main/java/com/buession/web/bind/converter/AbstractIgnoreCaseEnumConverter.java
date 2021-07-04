@@ -24,24 +24,48 @@
  */
 package com.buession.web.bind.converter;
 
-import com.buession.core.utils.EnumUtils;
 import com.buession.core.validator.Validate;
-import com.buession.lang.Order;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.Nullable;
 
 /**
+ * 忽略大小写将字符串转换为枚举值
+ *
+ * @param <E>
+ * 		枚举类型
+ *
  * @author Yong.Teng
  * @since 1.2.2
  */
 public abstract class AbstractIgnoreCaseEnumConverter<E extends Enum<E>> implements Converter<String, E> {
 
+	/**
+	 * 枚举类型
+	 */
+	private final Class<E> enumType;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param enumType
+	 * 		枚举类型
+	 */
+	public AbstractIgnoreCaseEnumConverter(final Class<E> enumType){
+		this.enumType = enumType;
+	}
+
 	@Override
-	public E convert(String str){
-		if(str.isEmpty()){
+	@Nullable
+	public E convert(@Nullable String source){
+		if(Validate.isEmpty(source)){
 			return null;
 		}
 
-		return EnumUtils.valueOf(, str);
+		try{
+			return Enum.valueOf(enumType, source.trim().toUpperCase());
+		}catch(IllegalArgumentException e){
+			return null;
+		}
 	}
 
 }

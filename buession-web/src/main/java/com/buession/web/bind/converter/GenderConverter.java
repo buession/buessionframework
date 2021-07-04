@@ -24,21 +24,21 @@
  */
 package com.buession.web.bind.converter;
 
-import com.buession.lang.CaseType;
+import com.buession.lang.Gender;
 
 /**
- * 字符串忽略大小写转换为字母转换类型 {@link CaseType}
+ * 字符串忽略大小写转换为性别枚举值 {@link Gender}
  *
  * @author Yong.Teng
  * @since 1.2.2
  */
-final public class CaseTypeConverter extends AbstractIgnoreCaseEnumConverter<CaseType> {
+final public class GenderConverter extends AbstractIgnoreCaseEnumConverter<Gender> {
 
 	/**
 	 * 构造函数
 	 */
-	public CaseTypeConverter(){
-		super(CaseType.class);
+	public GenderConverter(){
+		super(Gender.class);
 	}
 
 }

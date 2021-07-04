@@ -24,21 +24,21 @@
  */
 package com.buession.web.bind.converter;
 
-import com.buession.lang.DomainTLDType;
+import com.buession.lang.ISBNType;
 
 /**
- * 字符串忽略大小写转换为域名 TLD 类型 {@link DomainTLDType}
+ * 字符串忽略大小写转换为 ISBN 类型枚举值 {@link ISBNType}
  *
  * @author Yong.Teng
  * @since 1.2.2
  */
-public class DomainTLDTypeConverter extends AbstractIgnoreCaseEnumConverter<DomainTLDType> {
+public class ISBNTypeConverter extends AbstractIgnoreCaseEnumConverter<ISBNType> {
 
 	/**
 	 * 构造函数
 	 */
-	public DomainTLDTypeConverter(){
-		super(DomainTLDType.class);
+	public ISBNTypeConverter(){
+		super(ISBNType.class);
 	}
 
 }
