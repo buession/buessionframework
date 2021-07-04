@@ -29,6 +29,8 @@ package com.buession.core.utils;
 import com.buession.lang.Constants;
 import org.apache.commons.lang3.CharSequenceUtils;
 
+import java.util.Locale;
+
 /**
  * 字符串工具
  * More {@link org.apache.commons.lang3.StringUtils}
@@ -356,6 +358,106 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			return regionMatches(cs1, true, 0, cs2, 0, length);
 		}else{
 			return false;
+		}
+	}
+
+	/**
+	 * 将字符串批量转换为小写字母
+	 *
+	 * @param sources
+	 * 		原始字符串
+	 *
+	 * @return 转换后的字符串
+	 */
+	public static String[] toLowerCase(String[] sources){
+		if(sources == null){
+			return null;
+		}else if(sources.length == 0){
+			return sources;
+		}else{
+			String[] result = new String[sources.length];
+
+			for(int i = 0; i < sources.length; i++){
+				result[i] = sources[i].toLowerCase();
+			}
+
+			return result;
+		}
+	}
+
+	/**
+	 * 将字符串批量转换为小写字母
+	 *
+	 * @param sources
+	 * 		原始字符串
+	 * @param locale
+	 * 		use the case transformation rules for this locale
+	 *
+	 * @return 转换后的字符串
+	 */
+	public static String[] toLowerCase(String[] sources, Locale locale){
+		if(sources == null){
+			return null;
+		}else if(sources.length == 0){
+			return sources;
+		}else{
+			String[] result = new String[sources.length];
+
+			for(int i = 0; i < sources.length; i++){
+				result[i] = sources[i].toLowerCase(locale);
+			}
+
+			return result;
+		}
+	}
+
+	/**
+	 * 将字符串批量转换为大写字母
+	 *
+	 * @param sources
+	 * 		原始字符串
+	 *
+	 * @return 转换后的字符串
+	 */
+	public static String[] toUpperCase(String[] sources){
+		if(sources == null){
+			return null;
+		}else if(sources.length == 0){
+			return sources;
+		}else{
+			String[] result = new String[sources.length];
+
+			for(int i = 0; i < sources.length; i++){
+				result[i] = sources[i].toUpperCase();
+			}
+
+			return result;
+		}
+	}
+
+	/**
+	 * 将字符串批量转换为大写字母
+	 *
+	 * @param sources
+	 * 		原始字符串
+	 * @param locale
+	 * 		use the case transformation rules for this locale
+	 *
+	 * @return 转换后的字符串
+	 */
+	public static String[] toUpperCase(String[] sources, Locale locale){
+		if(sources == null){
+			return null;
+		}else if(sources.length == 0){
+			return sources;
+		}else{
+			String[] result = new String[sources.length];
+
+			for(int i = 0; i < sources.length; i++){
+				result[i] = sources[i].toUpperCase(locale);
+			}
+
+			return result;
 		}
 	}
 
