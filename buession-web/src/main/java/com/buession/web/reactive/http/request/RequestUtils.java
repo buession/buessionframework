@@ -197,7 +197,8 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 * @since 1.2.0
 	 */
 	public final static String getAuthority(final ServerHttpRequest request){
-		return getAuthority(getScheme(request), getHost(request), getPort(request));
+		final String host = getHost(request);
+		return getAuthority(getScheme(request), host, host.contains(":") ? 0 : getPort(request));
 	}
 
 }
