@@ -32,7 +32,7 @@ import com.buession.lang.Status;
  * @author Yong.Teng
  * @since 1.2.1
  */
-public class StatusBooleanConvert implements Converter<Status, Boolean> {
+public class StatusBooleanConverter implements Converter<Status, Boolean> {
 
 	@Override
 	public Boolean convert(final Status source){

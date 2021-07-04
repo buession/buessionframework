@@ -24,20 +24,15 @@
  */
 package com.buession.core.converter;
 
-import com.buession.core.utils.StatusUtils;
 import com.buession.lang.Status;
 
 /**
- * 布尔值 {@link Boolean} 到 {@link Status} 转换器
+ * 布尔值 {@link Boolean} 到 {@link Status} 转换器，{@link BooleanStatusConverter}
  *
  * @author Yong.Teng
  * @since 1.2.1
  */
-public class BooleanStatusConvert implements Converter<Boolean, Status> {
-
-	@Override
-	public Status convert(final Boolean source){
-		return source == null ? Status.FAILURE : StatusUtils.valueOf(source);
-	}
+@Deprecated
+public class BooleanStatusConvert extends BooleanStatusConverter {
 
 }
