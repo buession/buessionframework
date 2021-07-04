@@ -40,8 +40,10 @@ public abstract class RequestUtils {
 	public final static String[] CLIENT_IP_HEADERS = new String[]{
 			/* 微信 */
 			"X-Forwarded-For-Pound",
+			/* 阿里云 */
+			"Ali-Cdn-Real-Ip",
 			/* 网宿 */
-			"X-Cdn-Src-Ip",
+			"Cdn-Src-Ip", "X-Cdn-Src-Ip",
 			/* 天翼云 */
 			"X-Original-Forwarded-For",
 			/* */
@@ -210,6 +212,10 @@ public abstract class RequestUtils {
 	}
 
 	protected final static String getAuthority(final String scheme, final String host, final int port){
+		if(port == 0){
+			return host;
+		}
+
 		final StringBuilder sb = new StringBuilder(host);
 
 		if("http".equals(scheme)){
