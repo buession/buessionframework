@@ -24,9 +24,8 @@
  */
 package com.buession.redis.core;
 
-import org.springframework.util.ObjectUtils;
-
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Redis 节点
@@ -114,8 +113,8 @@ public class RedisNode implements Serializable {
 		final int prime = 31;
 		int result = 1;
 
-		result = prime * result + ObjectUtils.nullSafeHashCode(host);
-		result = prime * result + ObjectUtils.nullSafeHashCode(port);
+		result = prime * result + Objects.hashCode(host);
+		result = prime * result + Objects.hashCode(port);
 
 		return result;
 	}
@@ -126,13 +125,13 @@ public class RedisNode implements Serializable {
 			return true;
 		}
 
-		if(obj == null || (obj instanceof RedisNode) == false){
+		if((obj instanceof RedisNode) == false){
 			return false;
 		}
 
 		RedisNode that = (RedisNode) obj;
 
-		return ObjectUtils.nullSafeEquals(this.host, that.host) && ObjectUtils.nullSafeEquals(this.port, that.port);
+		return Objects.equals(this.host, that.host) && Objects.equals(this.port, that.port);
 	}
 
 }

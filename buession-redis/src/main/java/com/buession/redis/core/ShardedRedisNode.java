@@ -26,6 +26,8 @@ package com.buession.redis.core;
 
 import com.buession.core.utils.Assert;
 
+import java.util.Objects;
+
 /**
  * Redis 分片节点
  *
@@ -258,6 +260,31 @@ public class ShardedRedisNode extends RedisNamedServer {
 	public void setWeight(int weight){
 		Assert.isNegative(weight, "Redis node weight cloud not be negative.");
 		this.weight = weight;
+	}
+
+	@Override
+	public int hashCode(){
+		final int prime = 31;
+		int result = super.hashCode();
+
+		result = prime * result + Objects.hashCode(weight);
+
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if((obj instanceof ShardedRedisNode) == false){
+			return false;
+		}
+
+		ShardedRedisNode that = (ShardedRedisNode) obj;
+
+		return Objects.equals(this.weight, that.weight) && super.equals(obj);
 	}
 
 }

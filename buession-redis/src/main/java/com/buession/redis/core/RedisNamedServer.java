@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core;
 
-import org.springframework.util.ObjectUtils;
+import java.util.Objects;
 
 /**
  * @author Yong.Teng
@@ -101,7 +101,9 @@ public class RedisNamedServer extends RedisServer implements RedisNamedNode {
 	@Override
 	public String asString(){
 		final StringBuilder sb = new StringBuilder(20);
+
 		sb.append(name).append("m ").append(super.asString());
+
 		return sb.toString();
 	}
 
@@ -110,9 +112,27 @@ public class RedisNamedServer extends RedisServer implements RedisNamedNode {
 		final int prime = 31;
 		int result = super.hashCode();
 
-		result = prime * result + ObjectUtils.nullSafeHashCode(name);
+		result = prime * result + Objects.hashCode(name);
 
 		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if((obj instanceof RedisNamedServer) == false){
+			return false;
+		}
+
+		if(super.equals(obj) == false){
+			return false;
+		}
+
+		RedisNamedServer that = (RedisNamedServer) obj;
+		return Objects.equals(this.name, that.name);
 	}
 
 }

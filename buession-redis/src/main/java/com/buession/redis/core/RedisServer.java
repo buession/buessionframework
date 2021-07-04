@@ -160,7 +160,7 @@ public class RedisServer extends RedisNode {
 			return true;
 		}
 
-		if(obj == null || (obj instanceof RedisServer) == false){
+		if((obj instanceof RedisServer) == false){
 			return false;
 		}
 
