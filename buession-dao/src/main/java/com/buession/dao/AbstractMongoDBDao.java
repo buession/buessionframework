@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -29,6 +29,7 @@ package com.buession.dao;
 import com.buession.core.Pagination;
 import com.buession.core.exception.OperationException;
 import com.buession.core.utils.Assert;
+import com.buession.core.utils.RandomUtils;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Order;
 import com.mongodb.BasicDBObject;
@@ -421,7 +422,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 			logger.error(e.getMessage());
 		}
 
-		return 0;
+		return 0L;
 	}
 
 	/**
@@ -495,7 +496,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		}else if(slaveMongoTemplates.size() == 1){
 			return getSlaveMongoTemplate(0);
 		}else{
-			int index = RANDOM.nextInt(slaveMongoTemplates.size());
+			int index = RandomUtils.nextInt(slaveMongoTemplates.size());
 			return getSlaveMongoTemplate(index);
 		}
 	}

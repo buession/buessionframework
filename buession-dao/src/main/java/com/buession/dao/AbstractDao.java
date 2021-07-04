@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -39,8 +39,6 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  */
 public abstract class AbstractDao<P, E> implements Dao<P, E> {
-
-	protected final static Random RANDOM = new Random();
 
 	/**
 	 * 批量插入数据

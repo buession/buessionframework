@@ -119,7 +119,7 @@ public class SpringResourceLoader extends ResourceLoader {
 
 	@Override
 	public long getLastModified(Resource resource){
-		return 0;
+		return 0L;
 	}
 
 }

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -39,6 +39,7 @@ import com.buession.beans.BeanResolver;
 import com.buession.beans.DefaultBeanResolver;
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.Assert;
+import com.buession.core.utils.RandomUtils;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Order;
 import org.apache.ibatis.mapping.ResultMap;
@@ -354,13 +355,12 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	@Override
 	public long count(){
 		try{
-			int count = getSlaveSqlSessionTemplate().selectOne(getStatement("count"));
-			return count * 1L;
+			return getSlaveSqlSessionTemplate().selectOne(getStatement("count"));
 		}catch(OperationException e){
 			logger.error(e.getMessage());
 		}
 
-		return 0;
+		return 0L;
 	}
 
 	/**
@@ -374,13 +374,12 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 	@Override
 	public long count(Map<String, Object> conditions){
 		try{
-			int count = getSlaveSqlSessionTemplate().selectOne(getStatement("count"), conditions);
-			return count * 1L;
+			return getSlaveSqlSessionTemplate().selectOne(getStatement("count"), conditions);
 		}catch(OperationException e){
 			logger.error(e.getMessage());
 		}
 
-		return 0;
+		return 0L;
 	}
 
 	/**
@@ -449,8 +448,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		}else if(slaveSqlSessionTemplates.size() == 1){
 			return getSlaveSqlSessionTemplate(0);
 		}else{
-			int index = RANDOM.nextInt(slaveSqlSessionTemplates.size());
-
+			int index = RandomUtils.nextInt(slaveSqlSessionTemplates.size());
 			return getSlaveSqlSessionTemplate(index);
 		}
 	}

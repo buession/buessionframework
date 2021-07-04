@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans;
@@ -135,7 +135,7 @@ public class DefaultBeanResolver implements BeanResolver {
 				final String[] values = (String[]) value;
 				sb.append('[').append(ArrayUtils.toString(values, ",")).append(']');
 			}else{
-				sb.append(value.toString());
+				sb.append(value);
 			}
 			sb.append(')');
 

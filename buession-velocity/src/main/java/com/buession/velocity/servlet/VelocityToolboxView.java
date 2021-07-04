@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.servlet;
@@ -55,7 +55,7 @@ public class VelocityToolboxView extends VelocityView {
 
 	@Override
 	protected Context createVelocityContext(Map<String, Object> model, HttpServletRequest request,
-			HttpServletResponse response) throws Exception{
+											HttpServletResponse response) throws Exception{
 		ViewToolContext velocityContext = new ViewToolContext(getVelocityEngine(), request, response,
 				getServletContext());
 
@@ -69,15 +69,9 @@ public class VelocityToolboxView extends VelocityView {
 
 			ToolboxFactory toolboxFactory = toolManager.getToolboxFactory();
 
-			if(toolboxFactory.hasTools(Scope.APPLICATION)){
-				velocityContext.addToolbox(toolboxFactory.createToolbox(Scope.APPLICATION));
-			}
-			if(toolboxFactory.hasTools(Scope.SESSION)){
-				velocityContext.addToolbox(toolboxFactory.createToolbox(Scope.SESSION));
-			}
-			if(toolboxFactory.hasTools(Scope.REQUEST)){
-				velocityContext.addToolbox(toolboxFactory.createToolbox(Scope.REQUEST));
-			}
+			addToolbox(velocityContext, toolboxFactory, Scope.APPLICATION);
+			addToolbox(velocityContext, toolboxFactory, Scope.SESSION);
+			addToolbox(velocityContext, toolboxFactory, Scope.REQUEST);
 		}
 
 		return velocityContext;
@@ -88,6 +82,13 @@ public class VelocityToolboxView extends VelocityView {
 		Method initMethod = ClassUtils.getMethodIfAvailable(tool.getClass(), "init", Object.class);
 		if(initMethod != null){
 			ReflectUtils.invokeMethod(initMethod, tool, velocityContext);
+		}
+	}
+
+	protected static void addToolbox(final ViewToolContext velocityContext, final ToolboxFactory toolboxFactory,
+									 final String scope){
+		if(toolboxFactory.hasTools(scope)){
+			velocityContext.addToolbox(toolboxFactory.createToolbox(scope));
 		}
 	}
 

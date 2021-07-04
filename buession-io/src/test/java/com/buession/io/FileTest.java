@@ -22,10 +22,24 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.io;/**
- * 
- *
+package com.buession.io;
+
+import com.buession.io.file.File;
+import org.junit.Test;
+
+import java.io.IOException;
+
+/**
  * @author Yong.Teng
  * @since 1.2.2
- */public class FileTest {
+ */
+public class FileTest {
+
+	@Test
+	public void write() throws IOException{
+		File readFile = new File("/Users/tengyong/Downloads/AndroidFileTransfer.dmg");
+		File writeFile = new File("/Users/tengyong/Downloads/AndroidFileTransfer1.dmg");
+		writeFile.write(readFile.read());
+	}
+
 }

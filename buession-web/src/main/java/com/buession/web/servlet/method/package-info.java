@@ -1,1 +1,1 @@
-package com.buession.web.method;
+package com.buession.web.servlet.method;

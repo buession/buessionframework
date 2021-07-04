@@ -19,10 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
+
+import java.util.Objects;
 
 /**
  * @author Yong.Teng
@@ -73,8 +75,17 @@ public class Geo {
 	}
 
 	@Override
+	public int hashCode(){
+		return Objects.hash(longitude, latitude);
+	}
+
+	@Override
 	public String toString(){
-		return longitude + ", " + latitude;
+		final StringBuilder sb = new StringBuilder();
+
+		sb.append(longitude).append(", ").append(latitude);
+
+		return sb.toString();
 	}
 
 }

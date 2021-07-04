@@ -21,11 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans.converters;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.lang.Status;
 
 /**
@@ -47,8 +48,8 @@ public final class StatusConverter extends AbstractConverter<Status> {
 
 	public StatusConverter(final String[] successStrings, final String[] falseStrings){
 		super();
-		this.successStrings = copyStrings(successStrings);
-		this.failureStrings = copyStrings(falseStrings);
+		this.successStrings = StringUtils.toLowerCase(successStrings);
+		this.failureStrings = StringUtils.toLowerCase(falseStrings);
 	}
 
 	@Override
@@ -68,16 +69,6 @@ public final class StatusConverter extends AbstractConverter<Status> {
 		}
 
 		throw conversionException(Status.class, value);
-	}
-
-	private final static String[] copyStrings(final String[] src){
-		final String[] dest = new String[src.length];
-
-		for(int i = 0; i < src.length; ++i){
-			dest[i] = src[i].toLowerCase();
-		}
-
-		return dest;
 	}
 
 }

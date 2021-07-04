@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.lang;
@@ -67,7 +67,7 @@ public class KeyValue<K, V> implements Serializable {
 
 	@Override
 	public int hashCode(){
-		return 32 * key.hashCode() + 32 * (value == null ? 1 : value.hashCode());
+		return Objects.hash(getKey(), getValue());
 	}
 
 	@Override

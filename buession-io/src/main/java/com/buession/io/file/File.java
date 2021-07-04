@@ -32,6 +32,8 @@ import com.buession.lang.Constants;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.tika.Tika;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
@@ -126,17 +128,17 @@ public class File extends java.io.File {
 	 */
 	public byte[] read() throws FileNotFoundException, IOException{
 		int size = 4096;
-		DataInputStream dis = new DataInputStream(new FileInputStream(this));
+		BufferedInputStream bis = new FileBufferedInputStream(this);
 		byte[] tempChars = new byte[size];
 		int num = 0;
 		ArrayList<Byte> bytes = new ArrayList<>();
 
-		while((num = dis.read(tempChars)) != -1){
+		while((num = bis.read(tempChars)) != -1){
 			for(int i = 0; i < num; i++){
 				bytes.add(tempChars[i]);
 			}
 		}
-		dis.close();
+		bis.close();
 
 		Byte[] oBytes = bytes.toArray(new Byte[0]);
 		byte[] result = new byte[oBytes.length];
@@ -171,18 +173,18 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 */
 	public void write(final char[] chars) throws IOException{
-		DataOutputStream dos = new DataOutputStream(new FileOutputStream(this));
+		BufferedOutputStream bos = new FileBufferedOutputStream(this);
 
 		for(char c : chars){
 			byte[] b = new byte[2];
 			b[0] = (byte) ((c & 0xFF00) >> 8);
 			b[1] = (byte) (c & 0xFF);
 
-			dos.write(b);
+			bos.write(b);
 		}
 
-		dos.flush();
-		dos.close();
+		bos.flush();
+		bos.close();
 	}
 
 	/**
@@ -195,11 +197,11 @@ public class File extends java.io.File {
 	 * 		IO 异常
 	 */
 	public void write(final byte[] bytes) throws IOException{
-		DataOutputStream dos = new DataOutputStream(new FileOutputStream(this));
+		BufferedOutputStream bos = new FileBufferedOutputStream(this);
 
-		dos.write(bytes);
-		dos.flush();
-		dos.close();
+		bos.write(bytes);
+		bos.flush();
+		bos.close();
 	}
 
 	/**
@@ -231,18 +233,18 @@ public class File extends java.io.File {
 	 * @since 1.2.0
 	 */
 	public void write(final char[] chars, boolean append) throws IOException{
-		DataOutputStream dos = new DataOutputStream(new FileOutputStream(this, append));
+		BufferedOutputStream bos = new FileBufferedOutputStream(this, append);
 
 		for(char c : chars){
 			byte[] b = new byte[2];
 			b[0] = (byte) ((c & 0xFF00) >> 8);
 			b[1] = (byte) (c & 0xFF);
 
-			dos.write(b);
+			bos.write(b);
 		}
 
-		dos.flush();
-		dos.close();
+		bos.flush();
+		bos.close();
 	}
 
 	/**
@@ -258,11 +260,11 @@ public class File extends java.io.File {
 	 * @since 1.2.0
 	 */
 	public void write(final byte[] bytes, boolean append) throws IOException{
-		DataOutputStream dos = new DataOutputStream(new FileOutputStream(this, append));
+		BufferedOutputStream bos = new FileBufferedOutputStream(this, append);
 
-		dos.write(bytes);
-		dos.flush();
-		dos.close();
+		bos.write(bytes);
+		bos.flush();
+		bos.close();
 	}
 
 	/**
@@ -348,6 +350,26 @@ public class File extends java.io.File {
 		}
 
 		return extension;
+	}
+
+	private final static class FileBufferedInputStream extends BufferedInputStream {
+
+		public FileBufferedInputStream(java.io.File file) throws FileNotFoundException{
+			super(new DataInputStream(new FileInputStream(file)));
+		}
+
+	}
+
+	private final static class FileBufferedOutputStream extends BufferedOutputStream {
+
+		public FileBufferedOutputStream(java.io.File file) throws FileNotFoundException{
+			super(new DataOutputStream(new FileOutputStream(file)));
+		}
+
+		public FileBufferedOutputStream(java.io.File file, boolean append) throws FileNotFoundException{
+			super(new DataOutputStream(new FileOutputStream(file, append)));
+		}
+
 	}
 
 }
