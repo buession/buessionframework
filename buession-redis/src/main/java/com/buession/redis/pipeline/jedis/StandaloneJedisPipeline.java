@@ -24,6 +24,8 @@
  */
 package com.buession.redis.pipeline.jedis;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Pipeline;
 
 import java.util.List;
@@ -38,6 +40,8 @@ public class StandaloneJedisPipeline implements JedisNativePipeline<redis.client
 
 	private final redis.clients.jedis.Pipeline pipeline;
 
+	private final static Logger logger = LoggerFactory.getLogger(StandaloneJedisPipeline.class);
+
 	public StandaloneJedisPipeline(final redis.clients.jedis.Pipeline pipeline){
 		this.pipeline = pipeline;
 	}
@@ -49,16 +53,19 @@ public class StandaloneJedisPipeline implements JedisNativePipeline<redis.client
 
 	@Override
 	public void sync(){
+		logger.info("Redis pipeline sync.");
 		pipeline.sync();
 	}
 
 	@Override
 	public List<Object> syncAndReturnAll(){
+		logger.info("Redis pipeline syncAndReturnAll.");
 		return pipeline.syncAndReturnAll();
 	}
 
 	@Override
 	public void close(){
+		logger.info("Redis pipeline close.");
 		pipeline.close();
 	}
 

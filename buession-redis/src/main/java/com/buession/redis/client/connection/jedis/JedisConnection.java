@@ -228,10 +228,12 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 		JedisPool pool;
 
 		if(sslConfiguration == null){
+			logger.debug("Create jedis pool with ssl.");
 			pool = new JedisPool(getPoolConfig(), dataSource.getHost(), dataSource.getPort(), getConnectTimeout(),
 					getSoTimeout(), redisPassword(dataSource.getPassword()), dataSource.getDatabase(),
 					dataSource.getClientName(), isUseSsl());
 		}else{
+			logger.debug("Create jedis pool.");
 			pool = new JedisPool(getPoolConfig(), dataSource.getHost(), dataSource.getPort(), getConnectTimeout(),
 					getSoTimeout(), redisPassword(dataSource.getPassword()), dataSource.getDatabase(),
 					dataSource.getClientName(), isUseSsl(), sslConfiguration.getSslSocketFactory(),
@@ -255,17 +257,22 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 			try{
 				jedis = pool.getResource();
 			}catch(Exception e){
+				logger.error("Create jedis from pool failure: {}", e.getMessage(), e);
 				throw RedisExceptionUtils.convert(e);
 			}
 
-			logger.info("Jedis initialize with pool success.");
+			if(logger.isInfoEnabled()){
+				logger.info("Jedis initialize with pool success.");
+			}
 		}else{
 			SslConfiguration sslConfiguration = getSslConfiguration();
 
 			if(sslConfiguration == null){
+				logger.debug("Create jedis.");
 				jedis = new Jedis(jedisDataSource.getHost(), jedisDataSource.getPort(), getConnectTimeout(),
 						getSoTimeout(), isUseSsl());
 			}else{
+				logger.debug("Create jedis with ssl.");
 				jedis = new Jedis(jedisDataSource.getHost(), jedisDataSource.getPort(), getConnectTimeout(),
 						getSoTimeout(), isUseSsl(), sslConfiguration.getSslSocketFactory(),
 						sslConfiguration.getSslParameters(), sslConfiguration.getHostnameVerifier());
@@ -274,6 +281,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 			try{
 				jedis.connect();
 			}catch(Exception e){
+				logger.error("Jedis connect failure: {}", e.getMessage(), e);
 				throw RedisExceptionUtils.convert(e);
 			}
 
@@ -284,7 +292,9 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 				jedis.clientSetname(jedisDataSource.getClientName());
 			}
 
-			logger.info("Jedis initialize success.");
+			if(logger.isInfoEnabled()){
+				logger.info("Jedis initialize success.");
+			}
 		}
 	}
 
@@ -307,6 +317,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	protected void doDisconnect() throws IOException{
 		super.doDisconnect();
 		if(jedis != null){
+			logger.info("Jedis disconnect.");
 			jedis.disconnect();
 		}
 	}
@@ -316,8 +327,10 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 		super.doClose();
 		if(jedis != null){
 			if(pool != null){
+				logger.info("Jedis close.");
 				jedis.close();
 			}else{
+				logger.info("Jedis quit.");
 				jedis.quit();
 				disconnect();
 			}

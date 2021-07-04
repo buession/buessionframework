@@ -26,6 +26,8 @@ package com.buession.redis.pipeline.jedis;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.pipeline.Pipeline;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -35,6 +37,8 @@ import java.util.List;
 public class JedisPipeline implements Pipeline {
 
 	private JedisNativePipeline<? extends redis.clients.jedis.PipelineBase> pipeline;
+
+	private final static Logger logger = LoggerFactory.getLogger(JedisPipeline.class);
 
 	public JedisPipeline(JedisNativePipeline<? extends redis.clients.jedis.PipelineBase> pipeline){
 		Assert.isNull(pipeline, "Redis Pipeline cloud not be null.");
@@ -48,16 +52,19 @@ public class JedisPipeline implements Pipeline {
 
 	@Override
 	public void sync(){
+		logger.info("Redis pipeline sync.");
 		pipeline.sync();
 	}
 
 	@Override
 	public List<Object> syncAndReturnAll(){
+		logger.info("Redis pipeline syncAndReturnAll.");
 		return pipeline.syncAndReturnAll();
 	}
 
 	@Override
 	public void close(){
+		logger.info("Redis pipeline close.");
 		pipeline.close();
 	}
 

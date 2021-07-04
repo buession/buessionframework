@@ -32,6 +32,8 @@ import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -71,6 +73,8 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 	 * 管道
 	 */
 	protected Pipeline pipeline;
+
+	private final static Logger logger = LoggerFactory.getLogger(AbstractRedisConnection.class);
 
 	/**
 	 * 构造函数
@@ -183,6 +187,7 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 	@Override
 	public Status connect() throws IOException{
 		if(isClosed()){
+			logger.info("Connection redis server.");
 			doConnect();
 		}
 
@@ -195,6 +200,7 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 		try{
 			return doExecute((Executor<T, R>) executor);
 		}catch(Exception e){
+			logger.error("Redis execute command failure: {}", e.getMessage(), e);
 			throw RedisExceptionUtils.convert(e);
 		}
 	}
@@ -221,6 +227,7 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 
 	@Override
 	public void disconnect() throws IOException{
+		logger.info("Disconnect redis server.");
 		doDisconnect();
 
 		if(pipeline != null){
@@ -236,6 +243,7 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 
 	@Override
 	public void close() throws IOException{
+		logger.info("Closing redis server.");
 		doClose();
 
 		if(pipeline != null){
@@ -250,7 +258,7 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 	}
 
 	protected final static String redisPassword(final String password){
-		return "".equals(password) ? null : password;
+		return com.buession.lang.Constants.EMPTY_STRING.equals(password) ? null : password;
 	}
 
 	protected abstract void doConnect() throws IOException;

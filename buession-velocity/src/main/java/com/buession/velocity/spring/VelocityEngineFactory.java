@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.velocity.spring;
@@ -184,8 +184,11 @@ public class VelocityEngineFactory {
 			velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_CACHE, isEnableCache());
 			velocityEngine.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, resolvedPath.toString());
 		}catch(IOException ex){
-			logger.debug("Cannot resolve resource loader path [{}] to [java.io.File]: using " + "SpringResourceLoader"
-					, resourceLoaderPath, ex);
+			if(logger.isDebugEnabled()){
+				logger.debug("Cannot resolve resource loader path [{}] to [{}]: using SpringResourceLoader",
+						resourceLoaderPath, File.class.getName(), ex);
+			}
+
 			initSpringResourceLoader(velocityEngine, resourceLoaderPath);
 		}
 	}

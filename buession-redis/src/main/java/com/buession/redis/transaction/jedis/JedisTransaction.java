@@ -26,6 +26,8 @@ package com.buession.redis.transaction.jedis;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.transaction.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -35,6 +37,8 @@ import java.util.List;
 public class JedisTransaction implements Transaction {
 
 	private redis.clients.jedis.Transaction transaction;
+
+	private final static Logger logger = LoggerFactory.getLogger(JedisTransaction.class);
 
 	public JedisTransaction(redis.clients.jedis.Transaction transaction){
 		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
@@ -47,16 +51,19 @@ public class JedisTransaction implements Transaction {
 
 	@Override
 	public List<Object> exec(){
+		logger.info("Redis transaction exec.");
 		return transaction.exec();
 	}
 
 	@Override
 	public String discard(){
+		logger.info("Redis transaction discard.");
 		return transaction.discard();
 	}
 
 	@Override
 	public void close(){
+		logger.info("Redis transaction close.");
 		transaction.close();
 	}
 

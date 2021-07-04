@@ -24,7 +24,8 @@
  */
 package com.buession.redis.pipeline.jedis;
 
-import com.buession.redis.pipeline.Pipeline;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -38,6 +39,8 @@ public class ShardedJedisPipeline implements JedisNativePipeline<redis.clients.j
 
 	private final redis.clients.jedis.ShardedJedisPipeline pipeline;
 
+	private final static Logger logger = LoggerFactory.getLogger(ShardedJedisPipeline.class);
+
 	public ShardedJedisPipeline(final redis.clients.jedis.ShardedJedisPipeline pipeline){
 		this.pipeline = pipeline;
 	}
@@ -49,11 +52,13 @@ public class ShardedJedisPipeline implements JedisNativePipeline<redis.clients.j
 
 	@Override
 	public void sync(){
+		logger.info("Redis pipeline sync.");
 		pipeline.sync();
 	}
 
 	@Override
 	public List<Object> syncAndReturnAll(){
+		logger.info("Redis pipeline syncAndReturnAll.");
 		return pipeline.syncAndReturnAll();
 	}
 

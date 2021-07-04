@@ -218,9 +218,11 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 
 		for(ShardedRedisNode node : nodes){
 			if(sslConfiguration == null){
+				logger.debug("Create JedisShardInfo, node: {}:{}.", node.getHost(), node.getPort());
 				shardInfo = new JedisShardInfo(node.getHost(), node.getName(), node.getPort(), 0, node.getWeight(),
 						isUseSsl());
 			}else{
+				logger.debug("Create JedisShardInfo with ssl, node: {}:{}.", node.getHost(), node.getPort());
 				shardInfo = new JedisShardInfo(node.getHost(), node.getName(), node.getPort(), 0, node.getWeight(),
 						isUseSsl(), sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
 						sslConfiguration.getHostnameVerifier());
@@ -233,6 +235,8 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 			try{
 				FieldUtils.writeDeclaredField(shardInfo, "db", node.getDatabase(), true);
 			}catch(IllegalAccessException e){
+				logger.error("Select db '{}' failure, node: {}:{}.", node.getDatabase(), node.getHost(),
+						node.getPort());
 			}
 
 			shardInfos.add(shardInfo);
@@ -242,10 +246,7 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	}
 
 	protected ShardedJedisPool createPool(final ShardedJedisDataSource dataSource){
-		final ShardedJedisPool pool = new ShardedJedisPool(getPoolConfig(),
-				createJedisShardInfo(dataSource.getNodes()));
-
-		return pool;
+		return new ShardedJedisPool(getPoolConfig(), createJedisShardInfo(dataSource.getNodes()));
 	}
 
 	@Override
@@ -266,6 +267,7 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 			try{
 				shardedJedis = pool.getResource();
 			}catch(Exception e){
+				logger.error("Create sharded jedis from pool failure: {}", e.getMessage(), e);
 				throw RedisExceptionUtils.convert(e);
 			}
 
@@ -279,10 +281,13 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 			try{
 				shardedJedis = new ShardedJedis(shardInfos);
 			}catch(Exception e){
+				logger.error("Create ShardedJedis instance failure: {}", e.getMessage(), e);
 				throw RedisExceptionUtils.convert(e);
 			}
 
-			logger.info("ShardedJedis initialize success, size: {}.", shardInfos.size());
+			if(logger.isInfoEnabled()){
+				logger.info("ShardedJedis initialize success, size: {}.", shardInfos.size());
+			}
 		}
 	}
 

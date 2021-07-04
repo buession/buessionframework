@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.aop.advice;
@@ -38,7 +38,10 @@ public abstract class AbstractAdvice<R> implements Advice<R> {
 
 	@Override
 	public R invoke(Object target, Method method, Object[] arguments) throws Throwable{
-		logger.debug("Invoke advice method {}::{}", target.getClass().getName(), method);
+		if(logger.isDebugEnabled()){
+			logger.debug("Invoke advice method {}::{}", target.getClass().getName(), method);
+		}
+
 		return doInvoke(target, method, arguments);
 	}
 

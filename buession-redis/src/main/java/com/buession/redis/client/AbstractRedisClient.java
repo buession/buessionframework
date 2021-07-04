@@ -35,8 +35,6 @@ import com.buession.redis.pipeline.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 /**
  * @author Yong.Teng
  */
@@ -115,6 +113,11 @@ public abstract class AbstractRedisClient implements RedisClient {
 	@Override
 	public <C, R> R execute(final Executor<C, R> executor){
 		RedisConnection connection;
+		
+		long start = 0;
+		if(logger.isDebugEnabled()){
+			start = System.nanoTime();
+		}
 
 		if(enableTransactionSupport){
 			// only bind resources in case of potential transaction synchronization
@@ -126,8 +129,14 @@ public abstract class AbstractRedisClient implements RedisClient {
 		try{
 			return connection.execute(executor);
 		}catch(RedisException e){
+			logger.error("Redis execute command failure: {}", e.getMessage(), e);
 			throw RedisExceptionUtils.convert(e);
 		}finally{
+			if(logger.isDebugEnabled()){
+				long finish = System.nanoTime();
+				logger.debug("Command execution time: {}", finish - start);
+			}
+
 			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
 	}
@@ -164,14 +173,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	protected boolean isPipeline(){
 		return getConnection().isPipeline();
-	}
-
-	protected void close(){
-		try{
-			connection.close();
-		}catch(IOException e){
-			logger.error("RedisConnection close error: {}", e.getMessage());
-		}
 	}
 
 }
