@@ -42,10 +42,6 @@ public class TxResultsUtils {
 
 	private final static ThreadLocal<Map<Integer, TxResult>> txResults = new ThreadLocal<>();
 
-	public final static void remove(){
-		txResults.remove();
-	}
-
 	public final static Map<Integer, TxResult> getTxResults(){
 		Map<Integer, TxResult> txResult = txResults.get();
 
@@ -92,6 +88,10 @@ public class TxResultsUtils {
 		}
 
 		return result;
+	}
+
+	public final static void remove(){
+		txResults.remove();
 	}
 
 }

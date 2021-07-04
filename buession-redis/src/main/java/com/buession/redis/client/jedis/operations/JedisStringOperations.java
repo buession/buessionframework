@@ -24,15 +24,14 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.BooleanStatusConvert;
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.core.BitOperation;
-import com.buession.redis.core.Constants;
+import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.BitOperationJedisConverter;
 import com.buession.redis.core.convert.jedis.SetArgumentJedisConverter;
-import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.BitOP;
 import redis.clients.jedis.BitPosParams;
@@ -182,14 +181,14 @@ public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipel
 
 	@Override
 	public Status getBit(final byte[] key, final long offset){
-		final BooleanStatusConvert convert = new BooleanStatusConvert();
+		final BooleanStatusConverter converter = new BooleanStatusConverter();
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().getbit(key, offset), convert));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().getbit(key, offset), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().getbit(key, offset), convert));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().getbit(key, offset), converter));
 		}else{
-			return execute((cmd)->cmd.getbit(key, offset), convert);
+			return execute((cmd)->cmd.getbit(key, offset), converter);
 		}
 	}
 
@@ -280,8 +279,7 @@ public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipel
 		});
 
 		final String[] keysValues = temp.stream().toArray(String[]::new);
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().mset(keysValues), converter));
@@ -315,8 +313,7 @@ public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipel
 
 	@Override
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().psetex(key, lifetime, value), converter));
@@ -329,20 +326,21 @@ public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipel
 
 	@Override
 	public Status set(final byte[] key, final byte[] value){
+		final OkStatusConverter converter = new OkStatusConverter();
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().set(key, value)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().set(key, value), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().set(key, value)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().set(key, value), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.set(key, value)));
+			return execute((cmd)->cmd.set(key, value), converter);
 		}
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
 		final SetParams setParams = new SetArgumentJedisConverter().convert(setArgument);
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().set(key, value, setParams), converter));
@@ -355,36 +353,35 @@ public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipel
 
 	@Override
 	public Status setBit(final byte[] key, final long offset, final byte[] value){
-		final BooleanStatusConvert convert = new BooleanStatusConvert();
+		final BooleanStatusConverter converter = new BooleanStatusConverter();
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().setbit(key, offset, value), convert));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().setbit(key, offset, value), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().setbit(key, offset, value), convert));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().setbit(key, offset, value), converter));
 		}else{
-			return execute((cmd)->cmd.setbit(key, offset, value), convert);
+			return execute((cmd)->cmd.setbit(key, offset, value), converter);
 		}
 	}
 
 	@Override
 	public Status setBit(final byte[] key, final long offset, final boolean value){
-		final BooleanStatusConvert convert = new BooleanStatusConvert();
+		final BooleanStatusConverter converter = new BooleanStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().setbit(SafeEncoder.encode(key), offset, value),
-					convert));
+					converter));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().setbit(SafeEncoder.encode(key), offset,
-					value), convert));
+					value), converter));
 		}else{
-			return execute((cmd)->cmd.setbit(key, offset, value), convert);
+			return execute((cmd)->cmd.setbit(key, offset, value), converter);
 		}
 	}
 
 	@Override
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().setex(key, lifetime, value), converter));

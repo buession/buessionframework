@@ -24,13 +24,11 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.Converter;
-import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClient;
-import com.buession.redis.core.Constants;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.utils.ReturnUtils;
+import com.buession.redis.core.convert.OkStatusConverter;
+import com.buession.redis.core.convert.PingResultConverter;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
@@ -47,7 +45,9 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 	@Override
 	public Status auth(final String password){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.AUTH);
-		return execute((cmd)->ReturnUtils.statusForOK(cmd.auth(password)));
+
+		final OkStatusConverter converter = new OkStatusConverter();
+		return execute((cmd)->cmd.auth(password), converter);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 
 	@Override
 	public Status ping(){
-		Converter<String, Status> converter = (source)->ReturnUtils.statusForBool("PONG".equalsIgnoreCase(source));
+		final PingResultConverter converter = new PingResultConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().ping(), converter));
@@ -82,13 +82,14 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 	@Override
 	public Status quit(){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.QUIT);
-		return execute((cmd)->ReturnUtils.statusForOK(cmd.quit()));
+
+		final OkStatusConverter converter = new OkStatusConverter();
+		return execute((cmd)->cmd.quit(), converter);
 	}
 
 	@Override
 	public Status select(final int db){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().select(db), converter));
@@ -101,8 +102,7 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 
 	@Override
 	public Status swapdb(final int db1, final int db2){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().swapDB(db1, db2), converter));

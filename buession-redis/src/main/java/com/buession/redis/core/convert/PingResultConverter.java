@@ -22,10 +22,24 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;/**
- * 
+package com.buession.redis.core.convert;
+
+import com.buession.core.converter.Converter;
+import com.buession.core.utils.StatusUtils;
+import com.buession.lang.Status;
+import com.buession.redis.core.Constants;
+
+/**
+ * Ping 结果转换器
  *
  * @author Yong.Teng
  * @since 1.2.2
- */public class PingResultConverter {
+ */
+public class PingResultConverter implements Converter<String, Status> {
+
+	@Override
+	public Status convert(final String source){
+		return StatusUtils.valueOf(Constants.PONG.equalsIgnoreCase(source));
+	}
+
 }

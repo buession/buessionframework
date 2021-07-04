@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.utils.ReturnUtils;
+import com.buession.redis.core.convert.OkStatusConverter;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 
@@ -210,13 +210,17 @@ public class JedisScriptingOperations extends AbstractScriptingOperations<Jedis,
 	@Override
 	public Status scriptFlush(){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCRIPT_FLUSH);
-		return execute((cmd)->ReturnUtils.statusForOK(cmd.scriptFlush()));
+
+		final OkStatusConverter converter = new OkStatusConverter();
+		return execute((cmd)->cmd.scriptFlush(), converter);
 	}
 
 	@Override
 	public Status scriptKill(){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCRIPT_KILL);
-		return execute((cmd)->ReturnUtils.statusForOK(cmd.scriptKill()));
+
+		final OkStatusConverter converter = new OkStatusConverter();
+		return execute((cmd)->cmd.scriptKill(), converter);
 	}
 
 	@Override

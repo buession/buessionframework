@@ -32,6 +32,7 @@ import com.buession.redis.client.operations.KeyOperations;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.Type;
+import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.SortArgumentJedisConverter;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.PipelineBase;
@@ -163,8 +164,7 @@ public abstract class AbstractKeyOperations<C extends JedisCommands, P extends P
 
 	@Override
 	public Status restore(final String key, final String serializedValue, final int ttl){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 		final byte[] serializedEncodeValue = SafeEncoder.encode(serializedValue);
 
 		if(isPipeline()){

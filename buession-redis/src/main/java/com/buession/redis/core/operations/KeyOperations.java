@@ -19,17 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
 import com.buession.core.utils.Assert;
+import com.buession.core.utils.StatusUtils;
 import com.buession.lang.Status;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.command.KeyCommands;
-import com.buession.redis.utils.ReturnUtils;
 
 import java.util.Date;
 
@@ -52,7 +52,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 当有 key 被删除时返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	default Status del(final String key){
-		return ReturnUtils.statusForBool(del(new String[]{key}) > 0);
+		return StatusUtils.valueOf(del(new String[]{key}) > 0);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 当有 key 被删除时返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	default Status del(final byte[] key){
-		return ReturnUtils.statusForBool(del(new byte[][]{key}) > 0);
+		return StatusUtils.valueOf(del(new byte[][]{key}) > 0);
 	}
 
 	/**
@@ -201,7 +201,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final String key, final String host, final int db, final int timeout,
-			final MigrateOperation operation){
+						   final MigrateOperation operation){
 		return migrate(key, host, RedisNode.DEFAULT_PORT, db, timeout, operation);
 	}
 
@@ -223,7 +223,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作结果
 	 */
 	default Status migrate(final byte[] key, final String host, final int db, final int timeout,
-			final MigrateOperation operation){
+						   final MigrateOperation operation){
 		return migrate(key, host, RedisNode.DEFAULT_PORT, db, timeout, operation);
 	}
 
@@ -324,7 +324,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作成功时返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	default Status touch(final String key){
-		return ReturnUtils.statusForBool(touch(new String[]{key}) > 0);
+		return StatusUtils.valueOf(touch(new String[]{key}) > 0);
 	}
 
 	/**
@@ -336,7 +336,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 操作成功时返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	default Status touch(final byte[] key){
-		return ReturnUtils.statusForBool(touch(new byte[][]{key}) > 0);
+		return StatusUtils.valueOf(touch(new byte[][]{key}) > 0);
 	}
 
 	/**
@@ -373,7 +373,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 当有 key 被删除时返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	default Status unlink(final String key){
-		return ReturnUtils.statusForBool(unlink(new String[]{key}) > 0);
+		return StatusUtils.valueOf(unlink(new String[]{key}) > 0);
 	}
 
 	/**
@@ -386,7 +386,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * @return 当有 key 被删除时返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	default Status unlink(final byte[] key){
-		return ReturnUtils.statusForBool(unlink(new byte[][]{key}) > 0);
+		return StatusUtils.valueOf(unlink(new byte[][]{key}) > 0);
 	}
 
 }

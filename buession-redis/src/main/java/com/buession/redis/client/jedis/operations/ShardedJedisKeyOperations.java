@@ -29,12 +29,12 @@ import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.ShardedJedisClient;
-import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.MigrateOperationJedisConverter;
 import com.buession.redis.core.convert.jedis.SortArgumentJedisConverter;
 import redis.clients.jedis.ShardedJedis;
@@ -142,8 +142,7 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 	@Override
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
@@ -159,8 +158,7 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 	@Override
 	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
@@ -178,8 +176,7 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
 						  final MigrateOperation operation){
 		final MigrateParams migrateParams = new MigrateOperationJedisConverter().convert(operation);
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
@@ -197,8 +194,7 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
 						  final MigrateOperation operation){
 		final MigrateParams migrateParams = new MigrateOperationJedisConverter().convert(operation);
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
@@ -320,8 +316,7 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().restore(key, ttl, serializedValue), converter));

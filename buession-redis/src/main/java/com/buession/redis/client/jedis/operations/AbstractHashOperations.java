@@ -29,10 +29,10 @@ import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.HashOperations;
-import com.buession.redis.core.Constants;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.MapScanResultExposeConverter;
 import com.buession.redis.core.jedis.JedisScanParams;
 import redis.clients.jedis.PipelineBase;
@@ -192,8 +192,7 @@ public abstract class AbstractHashOperations<C extends JedisCommands, P extends 
 
 	@Override
 	public Status hMSet(final String key, final Map<String, String> data){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmset(key, data), converter));

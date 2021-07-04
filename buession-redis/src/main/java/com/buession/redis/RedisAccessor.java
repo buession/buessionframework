@@ -157,7 +157,8 @@ public abstract class RedisAccessor implements Closeable {
 							final CommandArguments arguments){
 		checkInitialized();
 
-		String argumentsString = logger.isDebugEnabled() && arguments != null ? arguments.toString() : null;
+		String argumentsString = logger.isDebugEnabled() || logger.isErrorEnabled() && arguments != null ?
+				arguments.toString() : null;
 
 		if(logger.isDebugEnabled()){
 			if(arguments != null){
@@ -174,7 +175,7 @@ public abstract class RedisAccessor implements Closeable {
 		try{
 			return executor.execute(client);
 		}catch(Exception e){
-			if(logger.isDebugEnabled()){
+			if(logger.isErrorEnabled()){
 				if(arguments != null){
 					logger.error("Execute command '{}' with arguments: {}, failure: {}", command, argumentsString,
 							e.getMessage(), e);
@@ -191,14 +192,12 @@ public abstract class RedisAccessor implements Closeable {
 			JedisClient jedisClient = new JedisClient((JedisConnection) connection);
 
 			jedisClient.setEnableTransactionSupport(enableTransactionSupport);
-			jedisClient.setConnection(connection);
 
 			return jedisClient;
 		}else if(connection instanceof ShardedJedisConnection){
 			ShardedJedisClient shardedJedisClient = new ShardedJedisClient((ShardedJedisConnection) connection);
 
 			shardedJedisClient.setEnableTransactionSupport(enableTransactionSupport);
-			shardedJedisClient.setConnection(connection);
 
 			return shardedJedisClient;
 		}else{
@@ -208,8 +207,7 @@ public abstract class RedisAccessor implements Closeable {
 
 	protected final void checkInitialized(){
 		if(client == null){
-			throw new RedisException("RedisClient is not initialized. You can call the afterPropertiesSet method for " +
-					"initialize.");
+			throw new RedisException("RedisClient is not initialized. You can call the afterPropertiesSet method for " + "initialize.");
 		}
 	}
 

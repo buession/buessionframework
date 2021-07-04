@@ -1026,7 +1026,9 @@ public class RedisTemplate extends BaseRedisTemplate implements ConnectionOperat
 			result = super.exec();
 		}
 
-		result = Validate.isEmpty(result) ? result : TxResultsUtils.deserializeMixedResults(index, result);
+		if(Validate.isNotEmpty(result)){
+			result = TxResultsUtils.deserializeMixedResults(index, result);
+		}
 
 		if(isPipeline() || isTransaction()){
 			index.set(-1);

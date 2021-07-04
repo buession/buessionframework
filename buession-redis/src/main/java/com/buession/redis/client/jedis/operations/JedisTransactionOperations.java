@@ -28,10 +28,10 @@ import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.TransactionResultConverter;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.transaction.Transaction;
-import com.buession.redis.utils.ReturnUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 
@@ -76,17 +76,20 @@ public class JedisTransactionOperations extends AbstractTransactionOperations<Je
 
 	@Override
 	public Status watch(final String... keys){
-		return execute((cmd)->ReturnUtils.statusForOK(cmd.watch(keys)));
+		final OkStatusConverter converter = new OkStatusConverter();
+		return execute((cmd)->cmd.watch(keys), converter);
 	}
 
 	@Override
 	public Status watch(final byte[]... keys){
-		return execute((cmd)->ReturnUtils.statusForOK(cmd.watch(keys)));
+		final OkStatusConverter converter = new OkStatusConverter();
+		return execute((cmd)->cmd.watch(keys), converter);
 	}
 
 	@Override
 	public Status unwatch(){
-		return execute((cmd)->ReturnUtils.statusForOK(cmd.unwatch()));
+		final OkStatusConverter converter = new OkStatusConverter();
+		return execute((cmd)->cmd.unwatch(), converter);
 	}
 
 }

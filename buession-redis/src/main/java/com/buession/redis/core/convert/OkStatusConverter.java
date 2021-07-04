@@ -30,16 +30,16 @@ import com.buession.lang.Status;
 import com.buession.redis.core.Constants;
 
 /**
- * Ping 结果转换
+ * OK 结果转换器
  *
  * @author Yong.Teng
  * @since 1.2.2
  */
-public class PingResultConverter implements Converter<String, Status> {
+public class OkStatusConverter implements Converter<String, Status> {
 
 	@Override
 	public Status convert(final String source){
-		return StatusUtils.valueOf(Constants.PONG.equalsIgnoreCase(source));
+		return StatusUtils.valueOf(Constants.OK.equalsIgnoreCase(source));
 	}
 
 }

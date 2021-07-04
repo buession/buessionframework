@@ -25,11 +25,10 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClient;
-import com.buession.redis.core.Constants;
 import com.buession.redis.core.ListPosition;
+import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.ListPositionJedisConverter;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
@@ -206,8 +205,7 @@ public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline>
 
 	@Override
 	public Status lSet(final byte[] key, final long index, final byte[] value){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().lset(key, index, value), converter));
@@ -220,8 +218,7 @@ public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline>
 
 	@Override
 	public Status lTrim(final byte[] key, final long start, final long end){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().ltrim(key, start, end), converter));

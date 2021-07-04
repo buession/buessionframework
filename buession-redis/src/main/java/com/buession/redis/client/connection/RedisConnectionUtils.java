@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
@@ -49,7 +49,7 @@ public final class RedisConnectionUtils {
 	}
 
 	public final static RedisConnection bindConnection(final RedisConnectionFactory factory,
-			final boolean enableTransactionSupport){
+													   final boolean enableTransactionSupport){
 		return doGetConnection(factory, true, true, enableTransactionSupport);
 	}
 
@@ -58,19 +58,20 @@ public final class RedisConnectionUtils {
 	}
 
 	public final static RedisConnection getConnection(final RedisConnectionFactory factory,
-			final boolean enableTransactionSupport){
+													  final boolean enableTransactionSupport){
 		return doGetConnection(factory, true, false, enableTransactionSupport);
 	}
 
 	public final static boolean isConnectionTransactional(final RedisConnectionFactory factory,
-			final RedisConnection connection){
+														  final RedisConnection connection){
 		Assert.isNull(factory, "No RedisConnectionFactory specified");
 		RedisConnectionHolder connHolder = TransactionUtils.getResource(factory);
 		return (connHolder != null && connection == connHolder.getConnection());
 	}
 
 	public final static void releaseConnection(final RedisConnectionFactory factory,
-			final @Nullable RedisConnection connection, final boolean transactionSupport){
+											   final @Nullable RedisConnection connection,
+											   final boolean transactionSupport){
 		if(connection == null){
 			logger.error("Redis connection is null.");
 			return;
@@ -92,11 +93,7 @@ public final class RedisConnectionUtils {
 			}
 		}else{
 			logger.debug("Closing Redis Connection");
-			try{
-				connection.close();
-			}catch(IOException e){
-				logger.error("Closing Redis Connection error.", e);
-			}
+			connectionClose(connection);
 		}
 	}
 
@@ -110,17 +107,12 @@ public final class RedisConnectionUtils {
 			logger.debug("Redis Connection will be closed when outer transaction finished.");
 		}else{
 			logger.debug("Closing bound connection.");
-			RedisConnection connection = connectionHolder.getConnection();
-			try{
-				connection.close();
-			}catch(IOException e){
-				logger.error("Closing Redis Connection error.", e);
-			}
+			connectionClose(connectionHolder.getConnection());
 		}
 	}
 
 	private static RedisConnection doGetConnection(final RedisConnectionFactory factory, final boolean allowCreate,
-			final boolean bind, final boolean enableTransactionSupport){
+												   final boolean bind, final boolean enableTransactionSupport){
 		Assert.isNull(factory, "No RedisConnectionFactory specified");
 
 		RedisConnectionHolder connectionHolder = TransactionUtils.getResource(factory);
@@ -129,6 +121,8 @@ public final class RedisConnectionUtils {
 			if(enableTransactionSupport){
 				potentiallyRegisterTransactionSynchronisation(factory, connectionHolder);
 			}
+
+			logger.debug("Reopening Redis RedisConnection from transaction resource.");
 
 			return connectionHolder.getConnection();
 		}
@@ -139,12 +133,22 @@ public final class RedisConnectionUtils {
 
 		RedisConnection connection = factory.getConnection();
 
+		long start = 0;
+		if(logger.isDebugEnabled()){
+			start = System.nanoTime();
+		}
+
 		try{
 			if(connection.connect() == Status.FAILURE){
 				logger.error("Redis connection failure.");
 			}
 		}catch(IOException e){
 			logger.error("Redis connection failure: {}", e.getMessage());
+		}finally{
+			if(logger.isDebugEnabled()){
+				long finish = System.nanoTime();
+				logger.debug("Connection redis execution time: {}", finish - start);
+			}
 		}
 
 		if(bind){
@@ -169,7 +173,7 @@ public final class RedisConnectionUtils {
 	}
 
 	private static void potentiallyRegisterTransactionSynchronisation(final RedisConnectionFactory factory,
-			final RedisConnectionHolder connectionHolder){
+																	  final RedisConnectionHolder connectionHolder){
 		if(TransactionUtils.isActualNonReadonlyTransactionActive() && connectionHolder.isTransactionSyncronisationActive() == false){
 			connectionHolder.setTransactionSyncronisationActive(true);
 
@@ -182,12 +186,24 @@ public final class RedisConnectionUtils {
 	}
 
 	private static RedisConnection createConnectionProxy(final RedisConnectionFactory factory,
-			final RedisConnection connection){
+														 final RedisConnection connection){
 		ProxyFactory proxyFactory = new ProxyFactory(connection);
 		proxyFactory.addAdvice(new ConnectionSplittingInterceptor(factory));
 
 		logger.debug("Create Redis Connection Proxy.");
 		return RedisConnection.class.cast(proxyFactory.getProxy());
+	}
+
+	private static void connectionClose(final RedisConnection connection){
+		if(connection == null){
+			return;
+		}
+
+		try{
+			connection.close();
+		}catch(IOException e){
+			logger.error("Closing Redis Connection error.", e);
+		}
 	}
 
 }

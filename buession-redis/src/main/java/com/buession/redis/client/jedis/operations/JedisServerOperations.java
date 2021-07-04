@@ -38,11 +38,11 @@ import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.RedisServerTimeConverter;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.utils.ClientUtil;
 import com.buession.redis.utils.InfoUtil;
-import com.buession.redis.utils.ReturnUtils;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.DebugParams;
 import redis.clients.jedis.Jedis;
@@ -86,7 +86,9 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 	@Override
 	public Status clientKill(final String host, final int port){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.CLIENT_KILL);
-		return execute((cmd)->ReturnUtils.statusForOK(cmd.clientKill(host + ":" + port)));
+
+		final OkStatusConverter converter = new OkStatusConverter();
+		return execute((cmd)->cmd.clientKill(host + ":" + port), converter);
 	}
 
 	@Override
@@ -104,19 +106,25 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 	@Override
 	public Status clientPause(final long timeout){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.CLIENT_PAUSE);
-		return execute((cmd)->ReturnUtils.statusForOK(cmd.clientPause(timeout)));
+
+		final OkStatusConverter converter = new OkStatusConverter();
+		return execute((cmd)->cmd.clientPause(timeout), converter);
 	}
 
 	@Override
 	public Status clientSetName(final String name){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.CLIENT_SETNAME);
-		return execute((cmd)->ReturnUtils.statusForOK(cmd.clientSetname(name)));
+
+		final OkStatusConverter converter = new OkStatusConverter();
+		return execute((cmd)->cmd.clientSetname(name), converter);
 	}
 
 	@Override
 	public Status clientSetName(final byte[] name){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.CLIENT_SETNAME);
-		return execute((cmd)->ReturnUtils.statusForOK(cmd.clientSetname(name)));
+
+		final OkStatusConverter converter = new OkStatusConverter();
+		return execute((cmd)->cmd.clientSetname(name), converter);
 	}
 
 	@Override
@@ -146,25 +154,28 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 
 	@Override
 	public Status configResetStat(){
+		final OkStatusConverter converter = new OkStatusConverter();
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().configResetStat()));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().configResetStat(), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().configResetStat()));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().configResetStat(), converter));
 		}else{
-			return execute((cmd)->ReturnUtils.statusForOK(cmd.configResetStat()));
+			return execute((cmd)->cmd.configResetStat(), converter);
 		}
 	}
 
 	@Override
 	public Status configRewrite(){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.CONFIG_REWRITE);
-		return execute((cmd)->ReturnUtils.statusForOK(cmd.configRewrite()));
+
+		final OkStatusConverter converter = new OkStatusConverter();
+		return execute((cmd)->cmd.configRewrite(), converter);
 	}
 
 	@Override
 	public Status configSet(final String parameter, final String value){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().configSet(parameter, value), converter));
@@ -178,14 +189,12 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 	@Override
 	public Status configSet(final byte[] parameter, final byte[] value){
 		if(isPipeline()){
-			final PredicateStatusConverter<String> converter =
-					new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+			final OkStatusConverter converter = new OkStatusConverter();
 
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().configSet(SafeEncoder.encode(parameter),
 					SafeEncoder.encode(value)), converter));
 		}else if(isTransaction()){
-			final PredicateStatusConverter<String> converter =
-					new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+			final OkStatusConverter converter = new OkStatusConverter();
 
 			return transactionExecute((cmd)->newJedisResult(getTransaction().configSet(SafeEncoder.encode(parameter),
 					SafeEncoder.encode(value)), converter));
@@ -228,8 +237,7 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 
 	@Override
 	public Status flushAll(){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().flushAll(), converter));
@@ -242,8 +250,7 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 
 	@Override
 	public Status flushDb(){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().flushDB(), converter));
@@ -338,8 +345,7 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 
 	@Override
 	public Status save(){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().save(), converter));
@@ -362,7 +368,9 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 	@Override
 	public Status slaveOf(final String host, final int port){
 		pipelineAndTransactionNotSupportedException(ProtocolCommand.SLAVEOF);
-		return execute((cmd)->ReturnUtils.statusForOK(cmd.slaveof(host, port)));
+
+		final OkStatusConverter converter = new OkStatusConverter();
+		return execute((cmd)->cmd.slaveof(host, port), converter);
 	}
 
 	@Override

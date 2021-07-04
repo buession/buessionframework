@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClient;
-import com.buession.redis.core.Constants;
+import com.buession.redis.core.convert.OkStatusConverter;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 
@@ -55,8 +55,7 @@ public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Je
 
 	@Override
 	public Status pfMerge(final String destKey, final String... keys){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfmerge(destKey, keys), converter));
@@ -69,8 +68,7 @@ public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Je
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
-		final PredicateStatusConverter<String> converter =
-				new PredicateStatusConverter<>((val)->Constants.OK.equalsIgnoreCase(val));
+		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfmerge(destKey, keys), converter));

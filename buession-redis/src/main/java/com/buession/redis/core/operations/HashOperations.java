@@ -19,16 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
 import com.buession.core.serializer.type.TypeReference;
+import com.buession.core.utils.StatusUtils;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.command.HashCommands;
-import com.buession.redis.utils.ReturnUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -53,7 +53,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 操作结果，成功删除的域的数量 为 0 时，返回 Status.FAILURE；否则返回 Status.SUCCESS
 	 */
 	default Status hDel(final String key, final String field){
-		return ReturnUtils.statusForBool(hDel(key, new String[]{field}) > 0);
+		return StatusUtils.valueOf(hDel(key, new String[]{field}) > 0);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @return 操作结果，成功删除的域的数量 为 0 时，返回 Status.FAILURE；否则返回 Status.SUCCESS
 	 */
 	default Status hDel(final byte[] key, final byte[] field){
-		return ReturnUtils.statusForBool(hDel(key, new byte[][]{field}) > 0);
+		return StatusUtils.valueOf(hDel(key, new byte[][]{field}) > 0);
 	}
 
 	/**
