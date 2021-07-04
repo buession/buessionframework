@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans;
@@ -46,8 +46,11 @@ public interface BeanResolver {
 	 * @return Bean 描述
 	 *
 	 * @throws IllegalAccessException
+	 * 		无访问权限
 	 * @throws InvocationTargetException
+	 * 		反射异常，当被调用的方法的内部抛出了异常而没有被捕获时，将由此异常接收
 	 * @throws NoSuchMethodException
+	 * 		没法找到方法时
 	 */
 	Map<String, Object> describe(final Object bean) throws IllegalAccessException, InvocationTargetException,
 			NoSuchMethodException;
@@ -63,7 +66,9 @@ public interface BeanResolver {
 	 * 		属性值
 	 *
 	 * @throws IllegalAccessException
+	 * 		无访问权限
 	 * @throws InvocationTargetException
+	 * 		反射异常，当被调用的方法的内部抛出了异常而没有被捕获时，将由此异常接收
 	 */
 	void setProperty(final Object bean, String name, final Object value) throws IllegalAccessException,
 			InvocationTargetException;
@@ -79,8 +84,11 @@ public interface BeanResolver {
 	 * @return Bean 属性值
 	 *
 	 * @throws IllegalAccessException
+	 * 		无访问权限
 	 * @throws InvocationTargetException
+	 * 		反射异常，当被调用的方法的内部抛出了异常而没有被捕获时，将由此异常接收
 	 * @throws NoSuchMethodException
+	 * 		没法找到方法时
 	 */
 	Object getProperty(final Object bean, final String name) throws IllegalAccessException, InvocationTargetException,
 			NoSuchMethodException;
@@ -94,7 +102,9 @@ public interface BeanResolver {
 	 * 		源对象
 	 *
 	 * @throws IllegalAccessException
+	 * 		无访问权限
 	 * @throws InvocationTargetException
+	 * 		反射异常，当被调用的方法的内部抛出了异常而没有被捕获时，将由此异常接收
 	 */
 	void populate(final Object bean, final Object source) throws IllegalAccessException, InvocationTargetException;
 
