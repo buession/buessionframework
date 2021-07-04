@@ -22,23 +22,27 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.utils;
+package com.buession.web.bind.converter;
 
-import com.buession.core.utils.StatusUtils;
-import com.buession.lang.Status;
-import com.buession.redis.core.Constants;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author Yong.Teng
+ * @since 1.2.2
  */
-public class ReturnUtils {
+public class BindWebMvcConfigurer implements WebMvcConfigurer {
 
-	public final static Status statusForOK(final String str){
-		return StatusUtils.valueOf(Constants.OK.equalsIgnoreCase(str));
-	}
-
-	public final static Status statusForBool(final boolean value){
-		return StatusUtils.valueOf(value);
+	@Override
+	public void addFormatters(FormatterRegistry registry){
+		registry.addConverter(new CaseTypeConverter());
+		registry.addConverter(new DomainTLDConverter());
+		registry.addConverter(new DomainTLDTypeConverter());
+		registry.addConverter(new GenderConverter());
+		registry.addConverter(new IpTypeConverter());
+		registry.addConverter(new ISBNTypeConverter());
+		registry.addConverter(new OrderConverter());
+		registry.addConverter(new StatusConverter());
 	}
 
 }

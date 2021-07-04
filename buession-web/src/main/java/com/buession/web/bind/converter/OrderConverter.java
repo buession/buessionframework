@@ -19,34 +19,26 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection.datasource.jedis;
+package com.buession.web.bind.converter;
 
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.commands.JedisCommands;
+import com.buession.lang.Gender;
 
 /**
- * Redis 连接池数据源
+ * 字符串忽略大小写转换为性别 {@link Gender}
  *
  * @author Yong.Teng
+ * @since 1.2.2
  */
-public interface PoolJedisDataSource<T extends JedisCommands> extends JedisRedisDataSource<T> {
+final public class GenderConverter extends AbstractIgnoreCaseEnumConverter<Gender> {
 
 	/**
-	 * 获取连接池配置
-	 *
-	 * @return 连接池配置
+	 * 构造函数
 	 */
-	JedisPoolConfig getPoolConfig();
-
-	/**
-	 * 设置连接池配置
-	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 */
-	void setPoolConfig(JedisPoolConfig poolConfig);
+	public GenderConverter(){
+		super(Gender.class);
+	}
 
 }
