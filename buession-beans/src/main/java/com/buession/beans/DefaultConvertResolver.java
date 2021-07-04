@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans;
@@ -131,7 +131,10 @@ public class DefaultConvertResolver implements ConvertResolver {
 			converter = lookup(String.class);
 		}
 
-		logger.trace("  Using converter {}.", converter);
+		if(logger.isTraceEnabled()){
+			logger.trace("  Using converter {}.", converter);
+		}
+
 		return converter.convert(clazz, value);
 	}
 
@@ -150,7 +153,9 @@ public class DefaultConvertResolver implements ConvertResolver {
 			converter = lookup(String.class);
 		}
 
-		logger.trace("  Using converter {}.", converter);
+		if(logger.isTraceEnabled()){
+			logger.trace("  Using converter {}.", converter);
+		}
 
 		final Object array = Array.newInstance(type, values.length);
 
@@ -174,7 +179,9 @@ public class DefaultConvertResolver implements ConvertResolver {
 		Object converted = value;
 		Converter<?> converter = lookup(sourceType, clazz);
 		if(converter != null){
-			logger.trace("  Using converter {}", converter);
+			if(logger.isTraceEnabled()){
+				logger.trace("  Using converter {}", converter);
+			}
 			converted = converter.convert(clazz, value);
 		}
 
@@ -182,7 +189,9 @@ public class DefaultConvertResolver implements ConvertResolver {
 			converter = lookup(String.class);
 
 			if(converter != null){
-				logger.trace("  Using converter {}", converter);
+				if(logger.isTraceEnabled()){
+					logger.trace("  Using converter {}", converter);
+				}
 				converted = converter.convert(clazz, converted);
 			}
 
