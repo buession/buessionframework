@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.web.method;
+package com.buession.web.servlet.method;
 
 import org.springframework.core.MethodParameter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -54,7 +54,11 @@ public abstract class AbstractHandlerMethodArgumentResolver<A extends Annotation
 
 	@Override
 	public boolean supportsParameter(MethodParameter methodParameter){
-		return methodParameter.hasParameterAnnotation(type);
+		return methodParameter.hasParameterAnnotation(type) && checkAloneSupportsParameter(methodParameter);
+	}
+
+	protected boolean checkAloneSupportsParameter(final MethodParameter methodParameter){
+		return true;
 	}
 
 }

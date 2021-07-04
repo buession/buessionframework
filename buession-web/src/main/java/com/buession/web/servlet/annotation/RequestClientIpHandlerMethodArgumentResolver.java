@@ -21,47 +21,59 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.annotation;
 
+import com.buession.core.utils.Assert;
 import com.buession.net.utils.InetAddressUtils;
 import com.buession.web.http.request.annotation.RequestClientIp;
+import com.buession.web.servlet.method.AbstractHandlerMethodArgumentResolver;
 import com.buession.web.servlet.http.request.RequestUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * Resolves method arguments annotated with an {@link RequestClientIp}
+ *
  * @author Yong.Teng
  */
-public class RequestClientIpHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+public class RequestClientIpHandlerMethodArgumentResolver extends AbstractHandlerMethodArgumentResolver<RequestClientIp> {
 
-	@Override
-	public boolean supportsParameter(MethodParameter methodParameter){
-		return methodParameter.hasParameterAnnotation(RequestClientIp.class) && (String.class.isAssignableFrom(methodParameter.getParameterType()) || Long.class.isAssignableFrom(methodParameter.getParameterType()));
+	/**
+	 * 构造函数
+	 *
+	 * @since 1.2.2
+	 */
+	public RequestClientIpHandlerMethodArgumentResolver(){
+		super(RequestClientIp.class);
 	}
 
 	@Override
 	public Object resolveArgument(MethodParameter methodParameter, @Nullable ModelAndViewContainer mavContainer,
-			NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception{
+								  NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception{
 		HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
-		if(servletRequest == null){
-			return null;
-		}
+		Assert.isNull(servletRequest, "No HttpServletRequest");
 
+		Class<?> clazz = methodParameter.nestedIfOptional().getNestedParameterType();
 		final String ip = RequestUtils.getClientIp(servletRequest);
-		if(Long.class.isAssignableFrom(methodParameter.getParameterType())){
+		if(Long.class.isAssignableFrom(clazz)){
 			return InetAddressUtils.ip2long(ip);
 		}else{
 			return ip;
 		}
+	}
+
+	@Override
+	protected boolean checkAloneSupportsParameter(final MethodParameter methodParameter){
+		Class<?> clazz = methodParameter.nestedIfOptional().getNestedParameterType();
+		return String.class.isAssignableFrom(clazz) || Long.class.isAssignableFrom(clazz);
 	}
 
 }

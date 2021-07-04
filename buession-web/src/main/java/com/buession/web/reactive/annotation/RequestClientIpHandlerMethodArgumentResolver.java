@@ -21,45 +21,57 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.annotation;
 
+import com.buession.core.utils.Assert;
 import com.buession.net.utils.InetAddressUtils;
 import com.buession.web.http.request.annotation.RequestClientIp;
 import com.buession.web.reactive.http.request.RequestUtils;
+import com.buession.web.reactive.method.AbstractHandlerMethodArgumentResolver;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.reactive.BindingContext;
-import org.springframework.web.reactive.result.method.HandlerMethodArgumentResolver;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 /**
+ * Resolves method arguments annotated with an {@link RequestClientIp}
+ *
  * @author Yong.Teng
  */
-public class RequestClientIpHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+public class RequestClientIpHandlerMethodArgumentResolver extends AbstractHandlerMethodArgumentResolver<RequestClientIp> {
 
-	@Override
-	public boolean supportsParameter(MethodParameter methodParameter){
-		return methodParameter.hasParameterAnnotation(RequestClientIp.class) && (String.class.isAssignableFrom(methodParameter.getParameterType()) || Long.class.isAssignableFrom(methodParameter.getParameterType()));
+	/**
+	 * 构造函数
+	 *
+	 * @since 1.2.2
+	 */
+	public RequestClientIpHandlerMethodArgumentResolver(){
+		super(RequestClientIp.class);
 	}
 
 	@Override
 	public Mono<Object> resolveArgument(MethodParameter methodParameter, BindingContext bindingContext,
-			ServerWebExchange exchange){
+										ServerWebExchange exchange){
 		ServerHttpRequest serverHttpRequest = exchange.getRequest();
-		if(serverHttpRequest == null){
-			return Mono.empty();
-		}
+		Assert.isNull(serverHttpRequest, "No ServerHttpRequest");
 
+		Class<?> clazz = methodParameter.nestedIfOptional().getNestedParameterType();
 		final String ip = RequestUtils.getClientIp(serverHttpRequest);
-		if(Long.class.isAssignableFrom(methodParameter.getParameterType())){
+		if(Long.class.isAssignableFrom(clazz)){
 			return Mono.justOrEmpty(InetAddressUtils.ip2long(ip));
 		}else{
 			return Mono.justOrEmpty(ip);
 		}
+	}
+
+	@Override
+	protected boolean checkAloneSupportsParameter(final MethodParameter methodParameter){
+		Class<?> clazz = methodParameter.nestedIfOptional().getNestedParameterType();
+		return String.class.isAssignableFrom(clazz) || Long.class.isAssignableFrom(clazz);
 	}
 
 }
