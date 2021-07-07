@@ -252,7 +252,9 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 
 		JedisDataSource jedisDataSource = ((JedisDataSource) dataSource);
 		if(getPoolConfig() != null){
-			pool = createPool(jedisDataSource);
+			if(pool == null){
+				pool = createPool(jedisDataSource);
+			}
 
 			try{
 				jedis = pool.getResource();
@@ -267,15 +269,17 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 		}else{
 			SslConfiguration sslConfiguration = getSslConfiguration();
 
-			if(sslConfiguration == null){
-				logger.debug("Create jedis.");
-				jedis = new Jedis(jedisDataSource.getHost(), jedisDataSource.getPort(), getConnectTimeout(),
-						getSoTimeout(), isUseSsl());
-			}else{
-				logger.debug("Create jedis with ssl.");
-				jedis = new Jedis(jedisDataSource.getHost(), jedisDataSource.getPort(), getConnectTimeout(),
-						getSoTimeout(), isUseSsl(), sslConfiguration.getSslSocketFactory(),
-						sslConfiguration.getSslParameters(), sslConfiguration.getHostnameVerifier());
+			if(jedis == null){
+				if(sslConfiguration == null){
+					logger.debug("Create jedis.");
+					jedis = new Jedis(jedisDataSource.getHost(), jedisDataSource.getPort(), getConnectTimeout(),
+							getSoTimeout(), isUseSsl());
+				}else{
+					logger.debug("Create jedis with ssl.");
+					jedis = new Jedis(jedisDataSource.getHost(), jedisDataSource.getPort(), getConnectTimeout(),
+							getSoTimeout(), isUseSsl(), sslConfiguration.getSslSocketFactory(),
+							sslConfiguration.getSslParameters(), sslConfiguration.getHostnameVerifier());
+				}
 			}
 
 			try{

@@ -62,7 +62,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends AbstractRedisClient implements JedisRedisClient<C> {
+public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends AbstractRedisClient<C> implements JedisRedisClient<C> {
 
 	private Queue<FutureResult<Response<Object>, Object, Object>> txResults = new LinkedList<>();
 

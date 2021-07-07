@@ -262,7 +262,9 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 		}
 
 		if(getPoolConfig() != null){
-			pool = createPool(shardedJedisDataSource);
+			if(pool == null){
+				pool = createPool(shardedJedisDataSource);
+			}
 
 			try{
 				shardedJedis = pool.getResource();
@@ -276,17 +278,19 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 						shardedJedis.getAllShardInfo().size());
 			}
 		}else{
-			List<JedisShardInfo> shardInfos = createJedisShardInfo(shardedJedisDataSource.getNodes());
+			if(shardedJedis == null){
+				List<JedisShardInfo> shardInfos = createJedisShardInfo(shardedJedisDataSource.getNodes());
 
-			try{
-				shardedJedis = new ShardedJedis(shardInfos);
-			}catch(Exception e){
-				logger.error("Create ShardedJedis instance failure: {}", e.getMessage(), e);
-				throw RedisExceptionUtils.convert(e);
-			}
+				try{
+					shardedJedis = new ShardedJedis(shardInfos);
+				}catch(Exception e){
+					logger.error("Create ShardedJedis instance failure: {}", e.getMessage(), e);
+					throw RedisExceptionUtils.convert(e);
+				}
 
-			if(logger.isInfoEnabled()){
-				logger.info("ShardedJedis initialize success, size: {}.", shardInfos.size());
+				if(logger.isInfoEnabled()){
+					logger.info("ShardedJedis initialize success, size: {}.", shardInfos.size());
+				}
 			}
 		}
 	}
