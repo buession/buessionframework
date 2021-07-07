@@ -28,6 +28,8 @@ import com.buession.core.validator.Validate;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 
+import java.util.Locale;
+
 /**
  * 忽略大小写将字符串转换为枚举值
  *
@@ -64,7 +66,11 @@ public abstract class AbstractIgnoreCaseEnumConverter<E extends Enum<E>> impleme
 		try{
 			return Enum.valueOf(enumType, source.trim().toUpperCase());
 		}catch(IllegalArgumentException e){
-			return null;
+			try{
+				return Enum.valueOf(enumType, source.trim().toLowerCase());
+			}catch(IllegalArgumentException ex){
+				return null;
+			}
 		}
 	}
 
