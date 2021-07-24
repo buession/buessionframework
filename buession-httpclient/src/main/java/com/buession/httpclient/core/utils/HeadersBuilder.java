@@ -208,7 +208,7 @@ public class HeadersBuilder {
 	 */
 	public HeadersBuilder add(final List<Header> headers){
 		if(headers != null){
-			headers.addAll(headers);
+			this.headers.addAll(headers);
 		}
 
 		return this;
