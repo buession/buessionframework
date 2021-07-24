@@ -39,11 +39,275 @@ import java.util.stream.Collectors;
  *
  * @author Yong.Teng
  */
-public class ArrayUtils {
+public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 
 	public final static String DEFAULT_GLUE = ", ";
 
-	public final static int INDEX_NOT_FOUND = -1;
+	/**
+	 * 检查 byte 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final byte[] a, final byte value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 byte 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final byte[] a, final short value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 byte 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final byte[] a, final int value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 byte 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final byte[] a, final long value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 char 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final char[] a, final char value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 short 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final short[] a, final short value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 short 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final short[] a, final int value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 short 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final short[] a, final long value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 int 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final int[] a, final short value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 int 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final int[] a, final int value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 int 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final int[] a, final long value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 long 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final long[] a, final short value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 long 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final long[] a, final int value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 long 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final long[] a, final long value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 float 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final float[] a, final float value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 float 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final float[] a, final double value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 double 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final double[] a, final float value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 double 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final double[] a, final double value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 检查 boolean 数组中是否存在某个值
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
+	 */
+	public static boolean contains(final boolean[] a, final boolean value){
+		return indexOf(a, value) != INDEX_NOT_FOUND;
+	}
 
 	/**
 	 * 检查数组中是否存在某个值
@@ -52,33 +316,71 @@ public class ArrayUtils {
 	 * 		待搜索的数组
 	 * @param value
 	 * 		待搜索的值
-	 * @param <O>
-	 * 		数组类型
 	 *
-	 * @return 数组中否存在该值，则返回 true；否则，返回 false
+	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
-	public static <O> boolean contains(final O[] a, final Object value){
+	public static boolean contains(final Object[] a, final Object value){
 		return indexOf(a, value) != INDEX_NOT_FOUND;
 	}
 
 	/**
-	 * 获取指定值在数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 * 获取指定值在 byte 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
 	 *
 	 * @param a
 	 * 		待搜索的数组
 	 * @param value
 	 * 		待搜索的值
-	 * @param <O>
-	 * 		数组类型
 	 *
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
-	public static <O> int indexOf(final O[] a, final Object value){
+	public static int indexOf(final byte[] a, final byte value){
 		return indexOf(a, value, 0);
 	}
 
 	/**
-	 * 获取指定值在数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 * 获取指定值在 byte 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final byte[] a, final short value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 byte 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final byte[] a, final int value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 byte 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final byte[] a, final long value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 byte 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
 	 *
 	 * @param a
 	 * 		待搜索的数组
@@ -86,29 +388,17 @@ public class ArrayUtils {
 	 * 		待搜索的值
 	 * @param startIndex
 	 * 		开始位置
-	 * @param <O>
-	 * 		数组类型
 	 *
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
-	public static <O> int indexOf(final O[] a, final Object value, int startIndex){
-		if(a == null){
-			return INDEX_NOT_FOUND;
-		}
-
-		if(startIndex < 0){
-			startIndex = 0;
-		}
-
-		if(value == null){
-			for(int i = startIndex; i < a.length; i++){
-				if(a[i] == null){
-					return i;
-				}
+	public static int indexOf(final byte[] a, final byte value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
 			}
-		}else{
+
 			for(int i = startIndex; i < a.length; i++){
-				if(value.equals(a[i])){
+				if(value == a[i]){
 					return i;
 				}
 			}
@@ -118,23 +408,7 @@ public class ArrayUtils {
 	}
 
 	/**
-	 * 获取指定值在数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
-	 *
-	 * @param a
-	 * 		待搜索的数组
-	 * @param value
-	 * 		待搜索的值
-	 * @param <O>
-	 * 		数组类型
-	 *
-	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
-	 */
-	public static <O> int lastIndexOf(final O[] a, final Object value){
-		return lastIndexOf(a, value, 0);
-	}
-
-	/**
-	 * 获取指定值在数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 * 获取指定值在 byte 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
 	 *
 	 * @param a
 	 * 		待搜索的数组
@@ -142,29 +416,1373 @@ public class ArrayUtils {
 	 * 		待搜索的值
 	 * @param startIndex
 	 * 		开始位置
-	 * @param <O>
-	 * 		数组类型
 	 *
-	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
-	public static <O> int lastIndexOf(final O[] a, final Object value, int startIndex){
-		if(a == null){
-			return INDEX_NOT_FOUND;
+	public static int indexOf(final byte[] a, final short value, int startIndex){
+		return indexOf(a, (long) value, startIndex);
+	}
+
+	/**
+	 * 获取指定值在 byte 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final byte[] a, final int value, int startIndex){
+		return indexOf(a, (long) value, startIndex);
+	}
+
+	/**
+	 * 获取指定值在 byte 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final byte[] a, final long value, int startIndex){
+		if(a != null && a.length > 0){
+			if(value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE){
+				if(startIndex < 0){
+					startIndex = 0;
+				}
+
+				for(int i = startIndex; i < a.length; i++){
+					if(value == a[i]){
+						return i;
+					}
+				}
+			}
 		}
 
-		if(startIndex < 0){
-			startIndex = 0;
-		}
+		return INDEX_NOT_FOUND;
+	}
 
-		if(value == null){
-			for(int i = a.length - 1; i >= startIndex; i--){
-				if(a[i] == null){
+	/**
+	 * 获取指定值在 char 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final char[] a, final char value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 char 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final char[] a, final char value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = startIndex; i < a.length; i++){
+				if(value == a[i]){
 					return i;
 				}
 			}
-		}else{
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 short 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final short[] a, final short value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 short 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final short[] a, final int value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 short 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final short[] a, final long value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 short 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final short[] a, final short value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = startIndex; i < a.length; i++){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 short 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final short[] a, final int value, int startIndex){
+		return indexOf(a, (long) value, startIndex);
+	}
+
+	/**
+	 * 获取指定值在 short 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final short[] a, final long value, int startIndex){
+		if(a != null && a.length > 0){
+			if(value >= Short.MIN_VALUE && value <= Short.MAX_VALUE){
+				if(startIndex < 0){
+					startIndex = 0;
+				}
+
+				for(int i = startIndex; i < a.length; i++){
+					if(value == a[i]){
+						return i;
+					}
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 int 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final int[] a, final short value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 int 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final int[] a, final int value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 int 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final int[] a, final long value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 int 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final int[] a, final short value, int startIndex){
+		return indexOf(a, (int) value, startIndex);
+	}
+
+	/**
+	 * 获取指定值在 int 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final int[] a, final int value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = startIndex; i < a.length; i++){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 int 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final int[] a, final long value, int startIndex){
+		if(a != null && a.length > 0){
+			if(value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE){
+				if(startIndex < 0){
+					startIndex = 0;
+				}
+
+				for(int i = startIndex; i < a.length; i++){
+					if(value == a[i]){
+						return i;
+					}
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 long 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final long[] a, final short value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 long 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final long[] a, final int value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 long 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final long[] a, final long value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 long 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final long[] a, final short value, int startIndex){
+		return indexOf(a, (long) value, startIndex);
+	}
+
+	/**
+	 * 获取指定值在 long 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final long[] a, final int value, int startIndex){
+		return indexOf(a, (long) value, startIndex);
+	}
+
+	/**
+	 * 获取指定值在 long 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final long[] a, final long value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = startIndex; i < a.length; i++){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 float 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final float[] a, final float value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 float 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final float[] a, final double value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 float 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final float[] a, final float value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = startIndex; i < a.length; i++){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 float 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final float[] a, final double value, int startIndex){
+		if(a != null && a.length > 0){
+			if(value >= Float.MIN_VALUE && value <= Float.MAX_VALUE){
+				if(startIndex < 0){
+					startIndex = 0;
+				}
+
+				for(int i = startIndex; i < a.length; i++){
+					if(value == a[i]){
+						return i;
+					}
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 double 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final double[] a, final float value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 double 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final double[] a, final double value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 double 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final double[] a, final float value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = startIndex; i < a.length; i++){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 double 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final double[] a, final double value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = startIndex; i < a.length; i++){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 boolean 数组中第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final boolean[] a, final boolean value){
+		return indexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 boolean 数组中从 startIndex 位置开始，第一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
+	 */
+	public static int indexOf(final boolean[] a, final boolean value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = startIndex; i < a.length; i++){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 byte 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final byte[] a, final byte value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 byte 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final byte[] a, final short value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 byte 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final byte[] a, final int value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 byte 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final byte[] a, final long value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 byte 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final byte[] a, final byte value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
 			for(int i = a.length - 1; i >= startIndex; i--){
-				if(value.equals(a[i])){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 byte 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final byte[] a, final short value, int startIndex){
+		return lastIndexOf(a, (long) value, startIndex);
+	}
+
+	/**
+	 * 获取指定值在 byte 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final byte[] a, final int value, int startIndex){
+		return lastIndexOf(a, (long) value, startIndex);
+	}
+
+	/**
+	 * 获取指定值在 byte 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final byte[] a, final long value, int startIndex){
+		if(a != null && a.length > 0){
+			if(value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE){
+				if(startIndex < 0){
+					startIndex = 0;
+				}
+
+				for(int i = a.length - 1; i >= startIndex; i--){
+					if(value == a[i]){
+						return i;
+					}
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 char 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final char[] a, final char value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 char 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final char[] a, final char value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = a.length - 1; i >= startIndex; i--){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 short 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final short[] a, final short value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 short 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final short[] a, final int value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 short 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final short[] a, final long value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 short 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final short[] a, final short value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = a.length - 1; i >= startIndex; i--){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 short 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final short[] a, final int value, int startIndex){
+		return lastIndexOf(a, (long) value, startIndex);
+	}
+
+	/**
+	 * 获取指定值在 short 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final short[] a, final long value, int startIndex){
+		if(a != null && a.length > 0){
+			if(value >= Short.MIN_VALUE && value <= Short.MAX_VALUE){
+				if(startIndex < 0){
+					startIndex = 0;
+				}
+
+				for(int i = a.length - 1; i >= startIndex; i--){
+					if(value == a[i]){
+						return i;
+					}
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 int 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final int[] a, final short value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 int 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final int[] a, final int value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 int 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final int[] a, final long value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 int 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final int[] a, final short value, int startIndex){
+		return lastIndexOf(a, (int) value, startIndex);
+	}
+
+	/**
+	 * 获取指定值在 int 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final int[] a, final int value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = a.length - 1; i >= startIndex; i--){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 int 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final int[] a, final long value, int startIndex){
+		if(a != null && a.length > 0){
+			if(value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE){
+				if(startIndex < 0){
+					startIndex = 0;
+				}
+
+				for(int i = a.length - 1; i >= startIndex; i--){
+					if(value == a[i]){
+						return i;
+					}
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 long 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final long[] a, final short value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 long 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final long[] a, final int value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 long 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final long[] a, final long value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 long 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final long[] a, final short value, int startIndex){
+		return lastIndexOf(a, (long) value, startIndex);
+	}
+
+	/**
+	 * 获取指定值在 long 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final long[] a, final int value, int startIndex){
+		return lastIndexOf(a, (long) value, startIndex);
+	}
+
+	/**
+	 * 获取指定值在 long 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final long[] a, final long value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = a.length - 1; i >= startIndex; i--){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 float 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final float[] a, final float value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 float 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final float[] a, final double value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 float 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final float[] a, final float value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = a.length - 1; i >= startIndex; i--){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 float 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final float[] a, final double value, int startIndex){
+		if(a != null && a.length > 0){
+			if(value >= Float.MIN_VALUE && value <= Float.MAX_VALUE){
+				if(startIndex < 0){
+					startIndex = 0;
+				}
+
+				for(int i = a.length - 1; i >= startIndex; i--){
+					if(value == a[i]){
+						return i;
+					}
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 double 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final double[] a, final float value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 double 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final double[] a, final double value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 double 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final double[] a, final float value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = a.length - 1; i >= startIndex; i--){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 double 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final double[] a, final double value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = a.length - 1; i >= startIndex; i--){
+				if(value == a[i]){
+					return i;
+				}
+			}
+		}
+
+		return INDEX_NOT_FOUND;
+	}
+
+	/**
+	 * 获取指定值在 boolean 数组中最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final boolean[] a, final boolean value){
+		return lastIndexOf(a, value, 0);
+	}
+
+	/**
+	 * 获取指定值在 boolean 数组中从 startIndex 位置开始，最后一次出现处的索引，如果此数组中没有该值，则返回 -1
+	 *
+	 * @param a
+	 * 		待搜索的数组
+	 * @param value
+	 * 		待搜索的值
+	 * @param startIndex
+	 * 		开始位置
+	 *
+	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
+	 */
+	public static int lastIndexOf(final boolean[] a, final boolean value, int startIndex){
+		if(a != null && a.length > 0){
+			if(startIndex < 0){
+				startIndex = 0;
+			}
+
+			for(int i = a.length - 1; i >= startIndex; i--){
+				if(value == a[i]){
 					return i;
 				}
 			}
@@ -204,10 +1822,10 @@ public class ArrayUtils {
 			StringBuilder sb = new StringBuilder();
 
 			for(int i = 0; i < a.length; i++){
-				sb.append(a[i]);
-				if(i < a.length - 1){
+				if(i > 0){
 					sb.append(glue);
 				}
+				sb.append(a[i]);
 			}
 
 			return sb.toString();
@@ -242,13 +1860,13 @@ public class ArrayUtils {
 		}else if(a.length == 0){
 			return Constants.EMPTY_STRING;
 		}else{
-			StringBuilder sb = new StringBuilder(a.length << 1 - 1);
+			StringBuilder sb = new StringBuilder();
 
 			for(int i = 0; i < a.length; i++){
-				sb.append(a[i]);
-				if(i < a.length - 1){
+				if(i > 0){
 					sb.append(glue);
 				}
+				sb.append(a[i]);
 			}
 
 			return sb.toString();
@@ -286,10 +1904,10 @@ public class ArrayUtils {
 			StringBuilder sb = new StringBuilder();
 
 			for(int i = 0; i < a.length; i++){
-				sb.append(a[i]);
-				if(i < a.length - 1){
+				if(i > 0){
 					sb.append(glue);
 				}
+				sb.append(a[i]);
 			}
 
 			return sb.toString();
@@ -327,10 +1945,10 @@ public class ArrayUtils {
 			StringBuilder sb = new StringBuilder();
 
 			for(int i = 0; i < a.length; i++){
-				sb.append(a[i]);
-				if(i < a.length - 1){
+				if(i > 0){
 					sb.append(glue);
 				}
+				sb.append(a[i]);
 			}
 
 			return sb.toString();
@@ -368,10 +1986,10 @@ public class ArrayUtils {
 			StringBuilder sb = new StringBuilder();
 
 			for(int i = 0; i < a.length; i++){
-				sb.append(a[i]);
-				if(i < a.length - 1){
+				if(i > 0){
 					sb.append(glue);
 				}
+				sb.append(a[i]);
 			}
 
 			return sb.toString();
@@ -409,10 +2027,10 @@ public class ArrayUtils {
 			StringBuilder sb = new StringBuilder();
 
 			for(int i = 0; i < a.length; i++){
-				sb.append(a[i]);
-				if(i < a.length - 1){
+				if(i > 0){
 					sb.append(glue);
 				}
+				sb.append(a[i]);
 			}
 
 			return sb.toString();
@@ -450,10 +2068,10 @@ public class ArrayUtils {
 			StringBuilder sb = new StringBuilder();
 
 			for(int i = 0; i < a.length; i++){
-				sb.append(a[i]);
-				if(i < a.length - 1){
+				if(i > 0){
 					sb.append(glue);
 				}
+				sb.append(a[i]);
 			}
 
 			return sb.toString();
@@ -488,13 +2106,13 @@ public class ArrayUtils {
 		}else if(a.length == 0){
 			return Constants.EMPTY_STRING;
 		}else{
-			StringBuilder sb = new StringBuilder(a.length * 5);
+			StringBuilder sb = new StringBuilder();
 
 			for(int i = 0; i < a.length; i++){
-				sb.append(a[i]);
-				if(i < a.length - 1){
+				if(i > 0){
 					sb.append(glue);
 				}
+				sb.append(a[i]);
 			}
 
 			return sb.toString();
@@ -512,7 +2130,7 @@ public class ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static <O> String toString(final O[] a){
-		return toString(a, DEFAULT_GLUE);
+		return StringUtils.join(a, DEFAULT_GLUE);
 	}
 
 	/**
@@ -528,12 +2146,7 @@ public class ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static <O> String toString(final O[] a, final String glue){
-		if(a == null){
-			return null;
-		}
-
-		return a.length == 0 ? Constants.EMPTY_STRING :
-				Arrays.asList(a).stream().map(v->v.toString()).collect(Collectors.joining(glue));
+		return StringUtils.join(a, glue);
 	}
 
 	/**
@@ -547,7 +2160,7 @@ public class ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static <O> String toString(final List<O> data){
-		return toString(data, DEFAULT_GLUE);
+		return StringUtils.join(data, DEFAULT_GLUE);
 	}
 
 	/**
@@ -563,12 +2176,7 @@ public class ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static <O> String toString(final List<O> data, final String glue){
-		if(data == null){
-			return null;
-		}
-
-		return data.size() == 0 ? Constants.EMPTY_STRING :
-				data.stream().map(v->v.toString()).collect(Collectors.joining(glue));
+		return StringUtils.join(data, glue);
 	}
 
 	/**
@@ -582,7 +2190,7 @@ public class ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static <O> String toString(final Set<O> data){
-		return toString(data, DEFAULT_GLUE);
+		return StringUtils.join(data, DEFAULT_GLUE);
 	}
 
 	/**
@@ -598,12 +2206,7 @@ public class ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static <O> String toString(final Set<O> data, final String glue){
-		if(data == null){
-			return null;
-		}
-
-		return data.size() == 0 ? Constants.EMPTY_STRING :
-				data.stream().map(v->v.toString()).collect(Collectors.joining(glue));
+		return StringUtils.join(data, glue);
 	}
 
 	/**
@@ -757,7 +2360,7 @@ public class ArrayUtils {
 	 *
 	 * @return 转换结果
 	 */
-	public final static <O> List<O> toList(final O[] a){
+	public static <O> List<O> toList(final O[] a){
 		return a == null ? null : Arrays.asList(a);
 	}
 
@@ -867,164 +2470,104 @@ public class ArrayUtils {
 	 *
 	 * @return 转换结果
 	 */
-	public final static <O> Set<O> toSet(final O[] a){
-		return a == null ? null : Arrays.asList(a).stream().collect(Collectors.toCollection(LinkedHashSet::new));
+	public static <O> Set<O> toSet(final O[] a){
+		return a == null ? null : new LinkedHashSet<>(Arrays.asList(a));
+	}
+
+	/**
+	 * 将 byte 类型的数组转换成 String 类型的数组
+	 *
+	 * @param a
+	 * 		byte 类型的数组
+	 *
+	 * @return String 类型的数组
+	 */
+	public static String[] toStringArray(final byte[] a){
+		return toStringArray(toObject(a));
+	}
+
+	/**
+	 * 将 char 类型的数组转换成 String 类型的数组
+	 *
+	 * @param a
+	 * 		char 类型的数组
+	 *
+	 * @return String 类型的数组
+	 */
+	public static String[] toStringArray(final char[] a){
+		return toStringArray(toObject(a));
 	}
 
 	/**
 	 * 将 short 类型的数组转换成 String 类型的数组
 	 *
-	 * @param data
+	 * @param a
 	 * 		short 类型的数组
 	 *
 	 * @return String 类型的数组
 	 */
-	public final static String[] toStringArray(short[] data){
-		if(data == null){
-			return null;
-		}
-
-		String[] result = new String[data.length];
-
-		for(int i = 0; i < data.length; i++){
-			result[i] = Short.toString(data[i]);
-		}
-
-		return result;
+	public static String[] toStringArray(final short[] a){
+		return toStringArray(toObject(a));
 	}
 
 	/**
 	 * 将 int 类型的数组转换成 String 类型的数组
 	 *
-	 * @param data
+	 * @param a
 	 * 		int 类型的数组
 	 *
 	 * @return String 类型的数组
 	 */
-	public final static String[] toStringArray(int[] data){
-		if(data == null){
-			return null;
-		}
-
-		String[] result = new String[data.length];
-
-		for(int i = 0; i < data.length; i++){
-			result[i] = Integer.toString(data[i]);
-		}
-
-		return result;
+	public static String[] toStringArray(final int[] a){
+		return toStringArray(toObject(a));
 	}
 
 	/**
 	 * 将 long 类型的数组转换成 String 类型的数组
 	 *
-	 * @param data
+	 * @param a
 	 * 		long 类型的数组
 	 *
 	 * @return String 类型的数组
 	 */
-	public final static String[] toStringArray(long[] data){
-		if(data == null){
-			return null;
-		}
-
-		String[] result = new String[data.length];
-
-		for(int i = 0; i < data.length; i++){
-			result[i] = Long.toString(data[i]);
-		}
-
-		return result;
+	public static String[] toStringArray(final long[] a){
+		return toStringArray(toObject(a));
 	}
 
 	/**
 	 * 将 float 类型的数组转换成 String 类型的数组
 	 *
-	 * @param data
+	 * @param a
 	 * 		float 类型的数组
 	 *
 	 * @return String 类型的数组
 	 */
-	public final static String[] toStringArray(float[] data){
-		if(data == null){
-			return null;
-		}
-
-		String[] result = new String[data.length];
-
-		for(int i = 0; i < data.length; i++){
-			result[i] = Float.toString(data[i]);
-		}
-
-		return result;
+	public static String[] toStringArray(final float[] a){
+		return toStringArray(toObject(a));
 	}
 
 	/**
 	 * 将 double 类型的数组转换成 String 类型的数组
 	 *
-	 * @param data
+	 * @param a
 	 * 		float 类型的数组
 	 *
 	 * @return String 类型的数组
 	 */
-	public final static String[] toStringArray(double[] data){
-		if(data == null){
-			return null;
-		}
-
-		String[] result = new String[data.length];
-
-		for(int i = 0; i < data.length; i++){
-			result[i] = Double.toString(data[i]);
-		}
-
-		return result;
+	public static String[] toStringArray(final double[] a){
+		return toStringArray(toObject(a));
 	}
 
 	/**
-	 * 将 double 类型的数组转换成 String 类型的数组
+	 * 将 boolean 类型的数组转换成 String 类型的数组
 	 *
-	 * @param data
+	 * @param a
 	 * 		float 类型的数组
 	 *
 	 * @return String 类型的数组
 	 */
-	public final static String[] toStringArray(boolean[] data){
-		if(data == null){
-			return null;
-		}
-
-		String[] result = new String[data.length];
-
-		for(int i = 0; i < data.length; i++){
-			result[i] = Boolean.toString(data[i]);
-		}
-
-		return result;
-	}
-
-	/**
-	 * 将 O 类型的数组转换成 String 类型的数组
-	 *
-	 * @param data
-	 * 		O 类型的数组
-	 * @param <O>
-	 * 		类型
-	 *
-	 * @return String 类型的数组
-	 */
-	public final static <O> String[] toStringArray(O[] data){
-		if(data == null){
-			return null;
-		}
-
-		String[] result = new String[data.length];
-
-		for(int i = 0; i < data.length; i++){
-			result[i] = data[i] == null ? null : String.valueOf(data[i]);
-		}
-
-		return result;
+	public static String[] toStringArray(final boolean[] a){
+		return toStringArray(toObject(a));
 	}
 
 }
