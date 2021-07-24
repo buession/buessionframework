@@ -53,8 +53,8 @@ public abstract class AbstractResponseHeaderParse<T> implements ResponseHeaderPa
 		this.headers = headers;
 	}
 
-	protected final static Map<String, String> parseHeaders(final Map<String, String> headers, final String name,
-															final String oldValue, final String newValue){
+	protected static Map<String, String> parseHeaders(final Map<String, String> headers, final String name,
+													  final String oldValue, final String newValue){
 		if(oldValue == null){
 			headers.put(name, newValue);
 		}else{
@@ -64,7 +64,7 @@ public abstract class AbstractResponseHeaderParse<T> implements ResponseHeaderPa
 		return headers;
 	}
 
-	protected final static List<Header> convertList(final Map<String, String> headersMap){
+	protected static List<Header> convertList(final Map<String, String> headersMap){
 		if(headersMap == null){
 			return null;
 		}

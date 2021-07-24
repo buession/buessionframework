@@ -84,7 +84,7 @@ public abstract class AbstractRequestBuilder<T extends AbstractRequestBuilder, R
 		return request;
 	}
 
-	protected final static String determineRequestUrl(final String url, final Map<String, Object> parameters){
+	protected static String determineRequestUrl(final String url, final Map<String, Object> parameters){
 		final StringBuilder sb = new StringBuilder(url.length());
 
 		sb.append(url);

@@ -43,11 +43,11 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder {
 
 	private final static Logger logger = LoggerFactory.getLogger(OkHttpResponseBuilder.class);
 
-	public final static ResponseBuilder create(){
+	public static ResponseBuilder create(){
 		return new OkHttpResponseBuilder();
 	}
 
-	public final static ResponseBuilder create(okhttp3.Response httpResponse){
+	public static ResponseBuilder create(okhttp3.Response httpResponse){
 		final ResponseBuilder responseBuilder =
 				new OkHttpResponseBuilder().setStatusCode(httpResponse.code()).setStatusText(httpResponse.message());
 

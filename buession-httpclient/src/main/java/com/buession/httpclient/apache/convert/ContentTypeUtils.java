@@ -32,7 +32,7 @@ import org.apache.http.entity.ContentType;
  */
 class ContentTypeUtils {
 
-	public final static ContentType create(com.buession.httpclient.core.ContentType contentType){
+	public static ContentType create(com.buession.httpclient.core.ContentType contentType){
 		if(contentType == null){
 			return null;
 		}

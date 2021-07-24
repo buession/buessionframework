@@ -73,6 +73,7 @@ public abstract class BaseInputStreamRequestBodyConverter<S extends InputStreamR
 					oSource = Okio.source(source.getContent());
 					sink.writeAll(oSource);
 				}finally{
+					assert oSource != null;
 					Util.closeQuietly(oSource);
 				}
 			}

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert;
@@ -34,6 +34,7 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 /**
  * @author Yong.Teng
@@ -55,15 +56,7 @@ public class MultipartFormRequestBodyConverter implements ApacheRequestBodyConve
 		for(MultipartRequestBodyElement element : source.getContent()){
 			if(element.getFile() != null){
 				File file = new File(element.getFile());
-				MimeType mimeType = null;
-
-				try{
-					mimeType = file.getMimeType();
-				}catch(IOException e){
-				}
-
-				ContentType contentType = mimeType == null ? ContentType.APPLICATION_OCTET_STREAM :
-						ContentType.create(mimeType.toString(), source.getContentType().getCharset());
+				ContentType contentType = parseMultipartElementMimeType(file, source.getContentType().getCharset());
 
 				builder.addBinaryBody(element.getName(), file, contentType, file.getName());
 			}else{
@@ -72,6 +65,18 @@ public class MultipartFormRequestBodyConverter implements ApacheRequestBodyConve
 		}
 
 		return builder.build();
+	}
+
+	private static ContentType parseMultipartElementMimeType(final File file, final Charset charset){
+		MimeType mimeType = null;
+
+		try{
+			mimeType = file.getMimeType();
+		}catch(IOException e){
+		}
+
+		return mimeType == null ? ContentType.APPLICATION_OCTET_STREAM : ContentType.create(mimeType.toString(),
+				charset);
 	}
 
 }

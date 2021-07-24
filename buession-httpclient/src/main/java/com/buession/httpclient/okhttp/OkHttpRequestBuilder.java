@@ -91,25 +91,25 @@ public class OkHttpRequestBuilder extends AbstractRequestBuilder<OkHttpRequestBu
 	private OkHttpRequestBuilder(){
 	}
 
-	public final static OkHttpRequestBuilder create(){
+	public static OkHttpRequestBuilder create(){
 		final OkHttpRequestBuilder builder = new OkHttpRequestBuilder();
 		builder.request = new OkHttpRequest();
 		return builder;
 	}
 
-	public final static OkHttpRequestBuilder create(String url){
+	public static OkHttpRequestBuilder create(String url){
 		return create().setUrl(url);
 	}
 
-	public final static OkHttpRequestBuilder create(String url, Map<String, Object> parameters){
+	public static OkHttpRequestBuilder create(String url, Map<String, Object> parameters){
 		return create(url).setParameters(parameters);
 	}
 
-	public final static OkHttpRequestBuilder create(String url, List<Header> headers){
+	public static OkHttpRequestBuilder create(String url, List<Header> headers){
 		return create(url).setHeaders(headers);
 	}
 
-	public final static OkHttpRequestBuilder create(String url, Map<String, Object> parameters, List<Header> headers){
+	public static OkHttpRequestBuilder create(String url, Map<String, Object> parameters, List<Header> headers){
 		return create(url, parameters).setHeaders(headers);
 	}
 

@@ -43,11 +43,11 @@ public class ApacheResponseBuilder extends AbstractResponseBuilder {
 
 	private final static Logger logger = LoggerFactory.getLogger(ApacheResponseBuilder.class);
 
-	public final static ResponseBuilder create(){
+	public static ResponseBuilder create(){
 		return new ApacheResponseBuilder();
 	}
 
-	public final static ResponseBuilder create(org.apache.http.HttpResponse httpResponse){
+	public static ResponseBuilder create(org.apache.http.HttpResponse httpResponse){
 		final ApacheResponseBuilder responseBuilder = new ApacheResponseBuilder();
 		final org.apache.http.StatusLine responseStatusLine = httpResponse.getStatusLine();
 		final org.apache.http.ProtocolVersion responseProtocolVersion = responseStatusLine.getProtocolVersion();

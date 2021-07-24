@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp.convert;
@@ -52,15 +52,7 @@ public class MultipartFormRequestBodyConverter implements OkHttpRequestBodyConve
 		for(MultipartRequestBodyElement element : source.getContent()){
 			if(element.getFile() != null){
 				File file = new File(element.getFile());
-				MimeType mimeType = null;
-
-				try{
-					mimeType = file.getMimeType();
-				}catch(IOException e){
-				}
-
-				MediaType mediaType = mimeType == null ? MediaType.parse("application/octet-stream") :
-						MediaType.parse(mimeType.toString());
+				MediaType mediaType = parseMultipartElementMimeType(file);
 
 				builder.addFormDataPart(element.getName(), file.getName(), RequestBody.create(file, mediaType));
 			}else{
@@ -69,6 +61,17 @@ public class MultipartFormRequestBodyConverter implements OkHttpRequestBodyConve
 		}
 
 		return builder.build();
+	}
+
+	private static MediaType parseMultipartElementMimeType(final File file){
+		MimeType mimeType = null;
+
+		try{
+			mimeType = file.getMimeType();
+		}catch(IOException e){
+		}
+
+		return mimeType == null ? MediaType.parse("application/octet-stream") : MediaType.parse(mimeType.toString());
 	}
 
 }

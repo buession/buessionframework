@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
@@ -147,8 +147,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response post(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
+			, RequestAbortedException, RequestException{
 		return post(url, null, null, null);
 	}
 
@@ -159,8 +159,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response post(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
+			, ReadTimeoutException, RequestAbortedException, RequestException{
 		return post(url, null, null, headers);
 	}
 
@@ -177,16 +177,13 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response post(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response post(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return post(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response post(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response post(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
+			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return post(url, null, parameters, headers);
 	}
 
@@ -227,9 +224,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response post(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response post(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return post(url.toString(), data, parameters, headers);
 	}
@@ -271,22 +266,18 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response patch(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response patch(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return patch(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response patch(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response patch(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return patch(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response patch(String url, RequestBody data) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(String url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException
+			, ReadTimeoutException, RequestAbortedException, RequestException{
 		return patch(url, data, null, null);
 	}
 
@@ -309,9 +300,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response patch(String url, RequestBody data, Map<String, Object> parameters) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response patch(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException
+			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return patch(url, data, parameters, null);
 	}
 
@@ -322,9 +312,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response patch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response patch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return patch(url.toString(), data, parameters, headers);
 	}
@@ -366,9 +354,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response put(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response put(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return put(url, null, parameters, headers);
 	}
 
@@ -415,9 +401,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response put(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response put(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return put(url.toString(), data, parameters, headers);
 	}
@@ -459,9 +443,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response delete(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response delete(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return delete(url.toString(), parameters, headers);
 	}
@@ -503,9 +485,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response connect(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response connect(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return connect(url.toString(), parameters, headers);
 	}
@@ -547,9 +527,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response trace(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response trace(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return trace(url.toString(), parameters, headers);
 	}
@@ -561,8 +539,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response copy(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response copy(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
+			, RequestAbortedException, RequestException{
 		return copy(url, null, null);
 	}
 
@@ -573,8 +551,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response copy(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response copy(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
+			, ReadTimeoutException, RequestAbortedException, RequestException{
 		return copy(url, null, headers);
 	}
 
@@ -591,9 +569,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response copy(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response copy(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
+			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return copy(url.toString(), parameters, headers);
 	}
@@ -605,8 +582,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response move(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response move(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
+			, RequestAbortedException, RequestException{
 		return move(url, null, null);
 	}
 
@@ -617,8 +594,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response move(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response move(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
+			, ReadTimeoutException, RequestAbortedException, RequestException{
 		return move(url, null, headers);
 	}
 
@@ -635,9 +612,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response move(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response move(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
+			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return move(url.toString(), parameters, headers);
 	}
@@ -649,8 +625,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response head(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response head(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
+			, RequestAbortedException, RequestException{
 		return head(url, null, null);
 	}
 
@@ -661,8 +637,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response head(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response head(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
+			, ReadTimeoutException, RequestAbortedException, RequestException{
 		return head(url, null, headers);
 	}
 
@@ -679,9 +655,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response head(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response head(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
+			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return head(url.toString(), parameters, headers);
 	}
@@ -723,9 +698,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response options(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response options(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return options(url.toString(), parameters, headers);
 	}
@@ -737,8 +710,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response link(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response link(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
+			, RequestAbortedException, RequestException{
 		return link(url, null, null);
 	}
 
@@ -749,8 +722,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response link(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response link(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
+			, ReadTimeoutException, RequestAbortedException, RequestException{
 		return link(url, null, headers);
 	}
 
@@ -767,9 +740,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response link(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response link(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
+			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return link(url.toString(), parameters, headers);
 	}
@@ -811,9 +783,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response unlink(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response unlink(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return unlink(url.toString(), parameters, headers);
 	}
@@ -855,9 +825,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response purge(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response purge(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return purge(url.toString(), parameters, headers);
 	}
@@ -869,8 +837,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response lock(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response lock(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
+			, RequestAbortedException, RequestException{
 		return lock(url, null, null);
 	}
 
@@ -881,8 +849,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response lock(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response lock(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
+			, ReadTimeoutException, RequestAbortedException, RequestException{
 		return lock(url, null, headers);
 	}
 
@@ -899,9 +867,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response lock(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response lock(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
+			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return lock(url.toString(), parameters, headers);
 	}
@@ -943,9 +910,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response unlock(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response unlock(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return unlock(url.toString(), parameters, headers);
 	}
@@ -987,9 +952,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response propfind(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response propfind(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return propfind(url.toString(), parameters, headers);
 	}
@@ -1031,16 +994,12 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response proppatch(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response proppatch(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return proppatch(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return proppatch(url, null, parameters, headers);
 	}
 
@@ -1069,23 +1028,17 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response proppatch(String url, RequestBody data, Map<String, Object> parameters) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response proppatch(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return proppatch(url, data, parameters, null);
 	}
 
 	@Override
-	public Response proppatch(URL url, RequestBody data, Map<String, Object> parameters) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response proppatch(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return proppatch(url, data, parameters, null);
 	}
 
 	@Override
-	public Response proppatch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response proppatch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return proppatch(url.toString(), data, parameters, headers);
 	}
@@ -1127,16 +1080,12 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response report(String url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response report(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return report(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response report(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response report(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return report(url, null, parameters, headers);
 	}
 
@@ -1165,9 +1114,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response report(String url, RequestBody data, Map<String, Object> parameters) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response report(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return report(url, data, parameters, null);
 	}
 
@@ -1178,9 +1125,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response report(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response report(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return report(url.toString(), data, parameters, headers);
 	}
@@ -1192,8 +1137,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response view(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response view(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
+			, RequestAbortedException, RequestException{
 		return view(url, null, null);
 	}
 
@@ -1204,8 +1149,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response view(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response view(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
+			, ReadTimeoutException, RequestAbortedException, RequestException{
 		return view(url, null, headers);
 	}
 
@@ -1222,9 +1167,8 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response view(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response view(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
+			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return view(url.toString(), parameters, headers);
 	}
@@ -1266,9 +1210,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		validateURL(url);
 		return wrapped(url.toString(), parameters, headers);
 	}
@@ -1286,44 +1228,37 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response request(String url, RequestMethod requestMethod, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return request(url, requestMethod, null, null, headers);
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response request(URL url, RequestMethod requestMethod, List<Header> headers) throws ConnectTimeoutException
+			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return request(url, requestMethod, null, null, headers);
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return request(url, requestMethod, null, parameters, null);
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return request(url, requestMethod, null, parameters, null);
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header>
-			headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
-			RequestAbortedException, RequestException{
+	public Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters,
+							List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+			ReadTimeoutException, RequestAbortedException, RequestException{
 		return request(url, requestMethod, null, parameters, headers);
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters, List<Header>
-			headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
-			RequestAbortedException, RequestException{
+	public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters,
+							List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
+			ReadTimeoutException, RequestAbortedException, RequestException{
 		return request(url, requestMethod, null, parameters, headers);
 	}
 
@@ -1340,30 +1275,22 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, RequestBody data, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response request(String url, RequestMethod requestMethod, RequestBody data, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return request(url, requestMethod, data, null, headers);
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, RequestBody data, List<Header> headers) throws
-			ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException,
-			RequestException{
+	public Response request(URL url, RequestMethod requestMethod, RequestBody data, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return request(url, requestMethod, data, null, headers);
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters)
-			throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
-			RequestAbortedException, RequestException{
+	public Response request(String url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return request(url, requestMethod, data, parameters, null);
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters)
-			throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
-			RequestAbortedException, RequestException{
+	public Response request(URL url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		return request(url, requestMethod, data, parameters, null);
 	}
 
@@ -1463,7 +1390,7 @@ public abstract class AbstractHttpClient implements HttpClient {
 		}
 	}
 
-	protected final static void validateURL(final URL url){
+	protected static void validateURL(final URL url){
 		Assert.isNull(url, "Request URL cloud not be null.");
 	}
 
