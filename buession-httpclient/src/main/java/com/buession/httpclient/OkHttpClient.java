@@ -71,7 +71,18 @@ public class OkHttpClient extends AbstractHttpClient {
 	 * @param connectionManager
 	 * 		连接管理器
 	 */
+	@Deprecated
 	public OkHttpClient(ConnectionManager connectionManager){
+		super(connectionManager);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param connectionManager
+	 * 		连接管理器
+	 */
+	public OkHttpClient(OkHttpClientConnectionManager connectionManager){
 		super(connectionManager);
 	}
 

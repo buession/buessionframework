@@ -41,6 +41,7 @@ import com.buession.httpclient.exception.UnknownHostException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
@@ -73,11 +74,22 @@ public class ApacheHttpClient extends AbstractHttpClient {
 	/**
 	 * 构造函数
 	 *
-	 * @param httpClientConnectionManager
+	 * @param connectionManager
 	 * 		连接管理器
 	 */
-	public ApacheHttpClient(ConnectionManager httpClientConnectionManager){
-		super(httpClientConnectionManager);
+	@Deprecated
+	public ApacheHttpClient(ConnectionManager connectionManager){
+		super(connectionManager);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param connectionManager
+	 * 		连接管理器
+	 */
+	public ApacheHttpClient(ApacheClientConnectionManager connectionManager){
+		super(connectionManager);
 	}
 
 	/**
@@ -259,9 +271,10 @@ public class ApacheHttpClient extends AbstractHttpClient {
 			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
 		final ApacheRequestBuilder.HttpComponentsRequest request =
 				builder.setRequestConfig(getRequestConfig()).setProtocolVersion(getHttpVersion()).build();
+		HttpResponse httpResponse = null;
 
 		try{
-			HttpResponse httpResponse = getHttpClient().execute(request.getHttpRequest());
+			httpResponse = getHttpClient().execute(request.getHttpRequest());
 			return ApacheResponseBuilder.create(httpResponse).build();
 		}catch(IOException e){
 			logger.error("Request({}) url: {} error.", request.getMethod(), request.getUrl(), e);
@@ -279,9 +292,7 @@ public class ApacheHttpClient extends AbstractHttpClient {
 				throw new RequestException(e.getMessage(), e);
 			}
 		}finally{
-			if(request.getHttpRequest() != null){
-				request.getHttpRequest().releaseConnection();
-			}
+			request.getHttpRequest().releaseConnection();
 		}
 	}
 
