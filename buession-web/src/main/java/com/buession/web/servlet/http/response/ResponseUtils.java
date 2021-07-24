@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.http.response;
@@ -40,27 +40,27 @@ public class ResponseUtils {
 
 	}
 
-	public final static void httpCache(final HttpServletResponse response, final String value){
+	public static void httpCache(final HttpServletResponse response, final String value){
 		if(response != null){
 			response.setHeader(HttpHeader.CACHE_CONTROL.getValue(), value);
 		}
 	}
 
-	public final static void httpCache(final HttpServletResponse response, final int lifetime){
+	public static void httpCache(final HttpServletResponse response, final int lifetime){
 		if(response != null){
-			Date date = new Date(System.currentTimeMillis() + lifetime * 1000);
+			Date date = new Date(System.currentTimeMillis() + lifetime * 1000L);
 			httpCache(response, lifetime, date);
 		}
 	}
 
-	public final static void httpCache(final HttpServletResponse response, final Date date){
+	public static void httpCache(final HttpServletResponse response, final Date date){
 		if(response != null){
 			long maxAge = date.getTime() - System.currentTimeMillis();
 			httpCache(response, maxAge, date);
 		}
 	}
 
-	private final static void httpCache(final HttpServletResponse response, final long maxAge, final Date expires){
+	private static void httpCache(final HttpServletResponse response, final long maxAge, final Date expires){
 		if(maxAge <= 0){
 			response.setHeader(HttpHeader.CACHE_CONTROL.getValue(), "no-cache");
 		}else{

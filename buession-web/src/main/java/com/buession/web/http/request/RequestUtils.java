@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http.request;
@@ -175,7 +175,7 @@ public abstract class RequestUtils {
 	 *
 	 * @return 是否为 Ajax 请求
 	 */
-	protected final static boolean isAjaxRequest(final String xRequestedWith){
+	protected static boolean isAjaxRequest(final String xRequestedWith){
 		return "XMLHttpRequest".equalsIgnoreCase(xRequestedWith);
 	}
 
@@ -189,8 +189,8 @@ public abstract class RequestUtils {
 	 *
 	 * @return 是否为移动端请求
 	 */
-	protected final static boolean isMobile(final String userAgent, final String accept){
-		if(Validate.hasText(userAgent) == false){
+	protected static boolean isMobile(final String userAgent, final String accept){
+		if(Validate.isBlank(userAgent)){
 			return false;
 		}
 
@@ -211,7 +211,7 @@ public abstract class RequestUtils {
 		return accept.contains(wml) && accept.contains(html) == false || accept.indexOf(wml) > accept.indexOf(html);
 	}
 
-	protected final static String getAuthority(final String scheme, final String host, final int port){
+	protected static String getAuthority(final String scheme, final String host, final int port){
 		if(port == 0){
 			return host;
 		}

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.http.response;
@@ -34,39 +34,39 @@ import java.util.Date;
  */
 public class ResponseUtils {
 
-    private ResponseUtils(){
+	private ResponseUtils(){
 
-    }
+	}
 
-    public final static void httpCache(final ServerHttpResponse response, final String value){
-        if(response != null){
-            response.getHeaders().setCacheControl(value);
-        }
-    }
+	public static void httpCache(final ServerHttpResponse response, final String value){
+		if(response != null){
+			response.getHeaders().setCacheControl(value);
+		}
+	}
 
-    public final static void httpCache(final ServerHttpResponse response, final int lifetime){
-        if(response != null){
-            long expiresAt = System.currentTimeMillis() + lifetime;
-            httpCache(response, lifetime, expiresAt);
-        }
-    }
+	public static void httpCache(final ServerHttpResponse response, final int lifetime){
+		if(response != null){
+			long expiresAt = System.currentTimeMillis() + lifetime * 1000L;
+			httpCache(response, lifetime, expiresAt);
+		}
+	}
 
-    public final static void httpCache(final ServerHttpResponse response, final Date date){
-        if(response != null){
-            long maxAge = date.getTime() - System.currentTimeMillis();
-            httpCache(response, maxAge, date.getTime());
-        }
-    }
+	public static void httpCache(final ServerHttpResponse response, final Date date){
+		if(response != null){
+			long maxAge = date.getTime() - System.currentTimeMillis();
+			httpCache(response, maxAge, date.getTime());
+		}
+	}
 
-    private final static void httpCache(final ServerHttpResponse response, final long maxAge, final long expires){
-        HttpHeaders httpHeaders = response.getHeaders();
-        if(maxAge <= 0){
-            httpHeaders.setCacheControl("no-cache");
-        }else{
-            httpHeaders.setCacheControl("max-age=" + maxAge);
-        }
-        httpHeaders.setExpires(expires);
-        httpHeaders.setPragma(maxAge > 0 ? null : "no-cache");
-    }
+	private static void httpCache(final ServerHttpResponse response, final long maxAge, final long expires){
+		HttpHeaders httpHeaders = response.getHeaders();
+		if(maxAge <= 0){
+			httpHeaders.setCacheControl("no-cache");
+		}else{
+			httpHeaders.setCacheControl("max-age=" + maxAge);
+		}
+		httpHeaders.setExpires(expires);
+		httpHeaders.setPragma(maxAge > 0 ? null : "no-cache");
+	}
 
 }

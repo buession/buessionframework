@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop;
@@ -36,36 +36,31 @@ import java.lang.reflect.Method;
  */
 public class AopUtils {
 
-	public final static boolean hasClassAnnotationPresent(final Class<?> clazz,
-			final Class<? extends Annotation>[] annotations){
+	public static boolean hasClassAnnotationPresent(final Class<?> clazz,
+													final Class<? extends Annotation>[] annotations){
 		Assert.isNull(clazz, "Find annotation class cloud not be null.");
 
-		if(Validate.isEmpty(annotations)){
-			return false;
-		}
-
-		for(Class<? extends Annotation> annotationClazz : annotations){
-			Annotation annotation = AnnotationUtils.findAnnotation(clazz, annotationClazz);
-			if(annotation != null){
-				return true;
+		if(Validate.isNotEmpty(annotations)){
+			for(Class<? extends Annotation> annotationClazz : annotations){
+				Annotation annotation = AnnotationUtils.findAnnotation(clazz, annotationClazz);
+				if(annotation != null){
+					return true;
+				}
 			}
 		}
 
 		return false;
 	}
 
-	public final static boolean hasMethodAnnotationPresent(Method method,
-			final Class<? extends Annotation>[] annotations){
+	public static boolean hasMethodAnnotationPresent(Method method, final Class<? extends Annotation>[] annotations){
 		Assert.isNull(method, "Find annotation method cloud not be null.");
 
-		if(Validate.isEmpty(annotations)){
-			return false;
-		}
-
-		for(Class<? extends Annotation> annotationClazz : annotations){
-			Annotation annotation = AnnotationUtils.findAnnotation(method, annotationClazz);
-			if(annotation != null){
-				return true;
+		if(Validate.isNotEmpty(annotations)){
+			for(Class<? extends Annotation> annotationClazz : annotations){
+				Annotation annotation = AnnotationUtils.findAnnotation(method, annotationClazz);
+				if(annotation != null){
+					return true;
+				}
 			}
 		}
 

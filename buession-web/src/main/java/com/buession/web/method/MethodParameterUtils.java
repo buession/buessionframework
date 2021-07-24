@@ -36,7 +36,7 @@ import java.util.Optional;
  */
 public class MethodParameterUtils {
 
-	public final static Object adaptArgumentIfNecessary(MethodParameter methodParameter, @Nullable Object value){
+	public static Object adaptArgumentIfNecessary(MethodParameter methodParameter, @Nullable Object value){
 		if(methodParameter.getParameterType() == Optional.class){
 			if(value == null || (value instanceof Collection && ((Collection<?>) value).isEmpty()) || (value instanceof Object[] && ((Object[]) value).length == 0)){
 				return Optional.empty();

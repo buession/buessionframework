@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop;
@@ -37,7 +37,7 @@ public class AopUtils {
 
 	}
 
-	public final static HttpServlet getHttpServlet(final MethodInvocation mi){
+	public static HttpServlet getHttpServlet(final MethodInvocation mi){
 		if(mi == null || mi.getArguments() == null){
 			return null;
 		}else{
@@ -45,7 +45,7 @@ public class AopUtils {
 		}
 	}
 
-	public final static HttpServlet getHttpServlet(final JoinPoint joinPoint){
+	public static HttpServlet getHttpServlet(final JoinPoint joinPoint){
 		if(joinPoint == null || joinPoint.getArgs() == null){
 			return null;
 		}else{

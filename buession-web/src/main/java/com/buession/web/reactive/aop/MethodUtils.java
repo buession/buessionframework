@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop;
@@ -40,14 +40,13 @@ public class MethodUtils {
 
 	}
 
-	public final static ServerHttp createServerHttpFromArguments(final Object[] arguments){
+	public static ServerHttp createServerHttpFromArguments(final Object[] arguments){
 		if(arguments == null){
 			return null;
 		}
 
 		ServerHttp serverHttp = new ServerHttp();
 
-		RequestAttributes attributes = RequestContextHolder.currentRequestAttributes();
 		for(Object argument : arguments){
 			if(argument instanceof ServerHttpRequest){
 				serverHttp.setRequest((ServerHttpRequest) argument);
