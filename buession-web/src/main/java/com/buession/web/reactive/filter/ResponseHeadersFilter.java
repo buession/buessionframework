@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.filter;
@@ -39,32 +39,32 @@ import java.util.Map;
  */
 public class ResponseHeadersFilter implements WebFilter {
 
-    private Map<String, String> headers;
+	private Map<String, String> headers;
 
-    public Map<String, String> getHeaders(){
-        return headers;
-    }
+	public Map<String, String> getHeaders(){
+		return headers;
+	}
 
-    public Map<String, String> getHeaders(final ServerHttpRequest request){
-        return getHeaders();
-    }
+	public Map<String, String> getHeaders(final ServerHttpRequest request){
+		return getHeaders();
+	}
 
-    public void setHeaders(Map<String, String> headers){
-        this.headers = headers;
-    }
+	public void setHeaders(Map<String, String> headers){
+		this.headers = headers;
+	}
 
-    public void setHeaders(final ServerHttpRequest request, Map<String, String> headers){
-        setHeaders(headers);
-    }
+	public void setHeaders(final ServerHttpRequest request, Map<String, String> headers){
+		setHeaders(headers);
+	}
 
-    @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
-        Map<String, String> headers = getHeaders();
-        if(Validate.isEmpty(headers) == false){
-            HttpHeaders httpHeaders = exchange.getResponse().getHeaders();
-            httpHeaders.setAll(headers);
-        }
+	@Override
+	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
+		Map<String, String> headers = getHeaders();
+		if(Validate.isNotEmpty(headers)){
+			HttpHeaders httpHeaders = exchange.getResponse().getHeaders();
+			httpHeaders.setAll(headers);
+		}
 
-        return chain.filter(exchange);
-    }
+		return chain.filter(exchange);
+	}
 }

@@ -63,11 +63,7 @@ public class RequestClientIpHandlerMethodArgumentResolver extends AbstractHandle
 
 		Class<?> clazz = methodParameter.nestedIfOptional().getNestedParameterType();
 		final String ip = RequestUtils.getClientIp(servletRequest);
-		if(Long.class.isAssignableFrom(clazz)){
-			return InetAddressUtils.ip2long(ip);
-		}else{
-			return ip;
-		}
+		return Long.class.isAssignableFrom(clazz) ? InetAddressUtils.ip2long(ip) : ip;
 	}
 
 	@Override

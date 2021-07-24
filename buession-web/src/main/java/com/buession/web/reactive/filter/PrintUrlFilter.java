@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.filter;
@@ -41,13 +41,9 @@ public class PrintUrlFilter implements WebFilter {
 
 	@Override
 	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
-		if(exchange == null){
-			return chain.filter(exchange);
-		}
-
 		ServerHttpRequest request = exchange.getRequest();
 
-		logger.info("Request URL: {}", request.getURI().toString());
+		logger.info("Request URL: {}", request.getURI());
 
 		return chain.filter(exchange);
 	}

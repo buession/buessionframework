@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.handler;
@@ -64,7 +64,7 @@ public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHe
 		return null;
 	}
 
-	private final static void doExecute(final ServerHttp serverHttp, final ResponseHeaders responseHeaders){
+	private static void doExecute(final ServerHttp serverHttp, final ResponseHeaders responseHeaders){
 		if(serverHttp == null || serverHttp.getResponse() == null){
 			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
 			return;
@@ -72,12 +72,12 @@ public class ReactiveResponseHeadersAnnotationHandler extends AbstractResponseHe
 
 		ResponseHeader[] headers = responseHeaders.value();
 
-		if(Validate.isEmpty(headers) == false){
+		if(Validate.isNotEmpty(headers)){
 			ServerHttpResponse response = serverHttp.getResponse();
 			HttpHeaders httpHeaders = response.getHeaders();
 
 			for(ResponseHeader header : headers){
-				if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(header.name()) == true){
+				if(HttpHeader.EXPIRES.getValue().equalsIgnoreCase(header.name())){
 					if(Validate.isNumeric(header.value())){
 						ResponseUtils.httpCache(response, Integer.parseInt(header.value()));
 					}else{

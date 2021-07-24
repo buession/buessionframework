@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.handler;
@@ -34,19 +34,19 @@ import org.springframework.ui.Model;
  * @author Yong.Teng
  */
 public abstract class AbstractDocumentMetaDataAnnotationHandler extends AbstractAnnotationHandler<DocumentMetaData,
-        Void> implements DocumentMetaDataAnnotationHandler {
+		Void> implements DocumentMetaDataAnnotationHandler {
 
 	public AbstractDocumentMetaDataAnnotationHandler(){
 		super(DocumentMetaData.class);
 	}
 
-	protected final static void addModelAttribute(final Model model, final DocumentMetaData metaData){
+	protected static void addModelAttribute(final Model model, final DocumentMetaData metaData){
 		String attrName = Validate.hasText(metaData.attrName()) ? metaData.attrName() :
-                DocumentMetaData.DEFAULT_ATTR_NAME;
+				DocumentMetaData.DEFAULT_ATTR_NAME;
 		model.addAttribute(attrName, metaDataConvert(metaData));
 	}
 
-	private final static MetaData metaDataConvert(final DocumentMetaData documentMetaData){
+	private static MetaData metaDataConvert(final DocumentMetaData documentMetaData){
 		if(documentMetaData == null){
 			return null;
 		}

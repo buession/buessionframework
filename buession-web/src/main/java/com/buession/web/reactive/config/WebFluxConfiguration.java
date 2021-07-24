@@ -34,7 +34,7 @@ import org.springframework.web.reactive.result.method.annotation.ArgumentResolve
 /**
  * @author Yong.Teng
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class WebFluxConfiguration implements WebFluxConfigurer {
 
 	@Override

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.handler;
@@ -62,8 +62,7 @@ public class ServletPrimitiveCrossOriginAnnotationHandler extends AbstractPrimit
 		return null;
 	}
 
-	private final static void doExecute(final HttpServlet httpServlet,
-			final PrimitiveCrossOrigin primitiveCrossOrigin){
+	private static void doExecute(final HttpServlet httpServlet, final PrimitiveCrossOrigin primitiveCrossOrigin){
 		if(httpServlet == null || httpServlet.getRequest() == null || httpServlet.getResponse() == null){
 			if(httpServlet == null){
 				logger.debug("HttpServlet is null.");

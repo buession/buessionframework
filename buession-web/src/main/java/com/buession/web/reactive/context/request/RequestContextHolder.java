@@ -42,7 +42,7 @@ public class RequestContextHolder {
 	 *
 	 * @return 当前请求对象
 	 */
-	public final static Mono<ServerHttpRequest> getRequest(){
+	public static Mono<ServerHttpRequest> getRequest(){
 		return Mono.subscriberContext().map(context->context.get(CONTEXT_KEY));
 	}
 

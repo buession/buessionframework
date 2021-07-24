@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.filter;
@@ -36,16 +36,12 @@ import reactor.core.publisher.Mono;
  */
 public class MobileFilter implements WebFilter {
 
-    @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
-        if(exchange == null){
-            return chain.filter(exchange);
-        }
+	@Override
+	public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain){
+		ServerHttpRequest request = exchange.getRequest();
 
-        ServerHttpRequest request = exchange.getRequest();
-
-        exchange.getAttributes().put("isMobile", RequestUtils.isMobile(request));
-        return chain.filter(exchange);
-    }
+		exchange.getAttributes().put("isMobile", RequestUtils.isMobile(request));
+		return chain.filter(exchange);
+	}
 
 }

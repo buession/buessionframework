@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.handler;
@@ -60,7 +60,7 @@ public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnno
 		return null;
 	}
 
-	private final static void doExecute(final HttpServlet httpServlet, final ContentType contentType){
+	private static void doExecute(final HttpServlet httpServlet, final ContentType contentType){
 		if(httpServlet == null || httpServlet.getResponse() == null){
 			logger.debug("{} is null.", httpServlet == null ? "HttpServlet" : "HttpServletResponse");
 			return;
@@ -70,9 +70,8 @@ public class ServletContentTypeAnnotationHandler extends AbstractContentTypeAnno
 
 		sb.append(contentType.mime());
 
-		if(Validate.hasText(contentType.encoding()) == false){
-			sb.append("; charset=");
-			sb.append(contentType.encoding());
+		if(Validate.isNotEmpty(contentType.encoding())){
+			sb.append("; charset=").append(contentType.encoding());
 		}
 
 		httpServlet.getResponse().addHeader(HttpHeader.CONTENT_TYPE.getValue(), sb.toString());

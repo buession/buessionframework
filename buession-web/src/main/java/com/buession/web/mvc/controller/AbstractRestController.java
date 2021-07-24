@@ -19,11 +19,10 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.mvc.controller;
-
 
 import com.buession.web.mvc.Response;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -34,7 +33,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse;
  */
 public abstract class AbstractRestController extends AbstractController implements RestController {
 
-	protected Response pageNotFound(final ServerHttpRequest request, final ServerHttpResponse response){
+	protected Response<?> pageNotFound(final ServerHttpRequest request, final ServerHttpResponse response){
 		return response(false, PAGE_NOT_FOUND_ERROR_CODE, request.getPath().toString());
 	}
 

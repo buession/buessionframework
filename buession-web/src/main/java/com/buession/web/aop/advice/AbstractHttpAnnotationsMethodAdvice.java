@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.advice;
@@ -35,34 +35,34 @@ import java.util.Collection;
  */
 public abstract class AbstractHttpAnnotationsMethodAdvice implements HttpAnnotationsMethodAdvice {
 
-    private Collection<AnnotationMethodAdvice> methodAdvices;
+	private Collection<AnnotationMethodAdvice> methodAdvices;
 
-    public AbstractHttpAnnotationsMethodAdvice(){
-    }
+	public AbstractHttpAnnotationsMethodAdvice(){
+	}
 
-    public AbstractHttpAnnotationsMethodAdvice(Collection<AnnotationMethodAdvice> methodAdvices){
-        this.methodAdvices = methodAdvices;
-    }
+	public AbstractHttpAnnotationsMethodAdvice(Collection<AnnotationMethodAdvice> methodAdvices){
+		this.methodAdvices = methodAdvices;
+	}
 
-    public Collection<AnnotationMethodAdvice> getMethodAdvices(){
-        return methodAdvices;
-    }
+	public Collection<AnnotationMethodAdvice> getMethodAdvices(){
+		return methodAdvices;
+	}
 
-    public void setMethodAdvices(Collection<AnnotationMethodAdvice> methodAdvices){
-        this.methodAdvices = methodAdvices;
-    }
+	public void setMethodAdvices(Collection<AnnotationMethodAdvice> methodAdvices){
+		this.methodAdvices = methodAdvices;
+	}
 
-    @Override
-    public void before(Method method, Object[] args, Object target) throws Throwable{
-        Collection<AnnotationMethodAdvice> methodAdvices = getMethodAdvices();
+	@Override
+	public void before(Method method, Object[] args, Object target) throws Throwable{
+		Collection<AnnotationMethodAdvice> methodAdvices = getMethodAdvices();
 
-        if(Validate.isEmpty(methodAdvices) == false){
-            for(AnnotationMethodAdvice methodAdvice : methodAdvices){
-                if(methodAdvice.isSupport(target, method)){
-                    methodAdvice.invoke(target, method, args);
-                }
-            }
-        }
-    }
+		if(Validate.isNotEmpty(methodAdvices)){
+			for(AnnotationMethodAdvice methodAdvice : methodAdvices){
+				if(methodAdvice.isSupport(target, method)){
+					methodAdvice.invoke(target, method, args);
+				}
+			}
+		}
+	}
 
 }

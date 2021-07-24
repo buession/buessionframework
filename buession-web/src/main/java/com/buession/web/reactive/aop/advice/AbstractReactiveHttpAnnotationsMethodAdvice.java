@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.advice;
@@ -36,20 +36,20 @@ import java.util.List;
  */
 public abstract class AbstractReactiveHttpAnnotationsMethodAdvice extends AbstractHttpAnnotationsMethodAdvice {
 
-    public AbstractReactiveHttpAnnotationsMethodAdvice(){
-        this(null);
-    }
+	public AbstractReactiveHttpAnnotationsMethodAdvice(){
+		this(null);
+	}
 
-    public AbstractReactiveHttpAnnotationsMethodAdvice(final AnnotationResolver resolver){
-        List<AnnotationMethodAdvice> methodAdvices = new ArrayList<>(7);
+	public AbstractReactiveHttpAnnotationsMethodAdvice(final AnnotationResolver resolver){
+		List<AnnotationMethodAdvice> methodAdvices = new ArrayList<>(5);
 
-        methodAdvices.add(new ReactiveResponseHeadersAnnotationMethodAdvice(resolver));
-        methodAdvices.add(new ReactiveResponseHeaderAnnotationMethodAdvice(resolver));
-        methodAdvices.add(new ReactiveContentTypeAnnotationMethodAdvice(resolver));
-        methodAdvices.add(new ReactivePrimitiveCrossOriginAnnotationMethodAdvice(resolver));
-        methodAdvices.add(new ReactiveDocumentMetaDataAnnotationMethodAdvice(resolver));
+		methodAdvices.add(new ReactiveResponseHeadersAnnotationMethodAdvice(resolver));
+		methodAdvices.add(new ReactiveResponseHeaderAnnotationMethodAdvice(resolver));
+		methodAdvices.add(new ReactiveContentTypeAnnotationMethodAdvice(resolver));
+		methodAdvices.add(new ReactivePrimitiveCrossOriginAnnotationMethodAdvice(resolver));
+		methodAdvices.add(new ReactiveDocumentMetaDataAnnotationMethodAdvice(resolver));
 
-        setMethodAdvices(methodAdvices);
-    }
+		setMethodAdvices(methodAdvices);
+	}
 
 }

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.filter;
@@ -41,35 +41,34 @@ import java.util.Map;
  */
 public class ResponseHeadersFilter extends OncePerRequestFilter {
 
-    private Map<String, String> headers;
+	private Map<String, String> headers;
 
-    public Map<String, String> getHeaders(){
-        return headers;
-    }
+	public Map<String, String> getHeaders(){
+		return headers;
+	}
 
-    public Map<String, String> getHeaders(final HttpServletRequest request){
-        return getHeaders();
-    }
+	public Map<String, String> getHeaders(final HttpServletRequest request){
+		return getHeaders();
+	}
 
-    public void setHeaders(Map<String, String> headers){
-        this.headers = headers;
-    }
+	public void setHeaders(Map<String, String> headers){
+		this.headers = headers;
+	}
 
-    public void setHeaders(final HttpServletRequest request, Map<String, String> headers){
-        setHeaders(headers);
-    }
+	public void setHeaders(final HttpServletRequest request, Map<String, String> headers){
+		setHeaders(headers);
+	}
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain
-            filterChain) throws ServletException, IOException{
-        Map<String, String> headers = getHeaders();
-        if(Validate.isEmpty(headers) == false){
-            headers.forEach((name, value)->{
-                response.addHeader(name, value);
-            });
-        }
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
+		Map<String, String> headers = getHeaders();
+		if(Validate.isNotEmpty(headers)){
+			headers.forEach((name, value)->{
+				response.addHeader(name, value);
+			});
+		}
 
-        filterChain.doFilter(request, response);
-    }
+		filterChain.doFilter(request, response);
+	}
 
 }

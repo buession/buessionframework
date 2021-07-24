@@ -34,7 +34,7 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 	@Override

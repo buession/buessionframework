@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.aop.advice;
@@ -36,20 +36,20 @@ import java.util.List;
  */
 public abstract class AbstractServletHttpAnnotationsMethodAdvice extends AbstractHttpAnnotationsMethodAdvice {
 
-    public AbstractServletHttpAnnotationsMethodAdvice(){
-        this(null);
-    }
+	public AbstractServletHttpAnnotationsMethodAdvice(){
+		this(null);
+	}
 
-    public AbstractServletHttpAnnotationsMethodAdvice(final AnnotationResolver resolver){
-        List<AnnotationMethodAdvice> methodAdvices = new ArrayList<>(7);
+	public AbstractServletHttpAnnotationsMethodAdvice(final AnnotationResolver resolver){
+		List<AnnotationMethodAdvice> methodAdvices = new ArrayList<>(5);
 
-        methodAdvices.add(new ServletResponseHeadersAnnotationMethodAdvice(resolver));
-        methodAdvices.add(new ServletResponseHeaderAnnotationMethodAdvice(resolver));
-        methodAdvices.add(new ServletContentTypeAnnotationMethodAdvice(resolver));
-        methodAdvices.add(new ServletPrimitiveCrossOriginAnnotationMethodAdvice(resolver));
-        methodAdvices.add(new ServletDocumentMetaDataAnnotationMethodAdvice(resolver));
+		methodAdvices.add(new ServletResponseHeadersAnnotationMethodAdvice(resolver));
+		methodAdvices.add(new ServletResponseHeaderAnnotationMethodAdvice(resolver));
+		methodAdvices.add(new ServletContentTypeAnnotationMethodAdvice(resolver));
+		methodAdvices.add(new ServletPrimitiveCrossOriginAnnotationMethodAdvice(resolver));
+		methodAdvices.add(new ServletDocumentMetaDataAnnotationMethodAdvice(resolver));
 
-        setMethodAdvices(methodAdvices);
-    }
+		setMethodAdvices(methodAdvices);
+	}
 
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.aop.handler;
@@ -60,7 +60,7 @@ public class ReactiveContentTypeAnnotationHandler extends AbstractContentTypeAnn
 		return null;
 	}
 
-	private final static void doExecute(final ServerHttp serverHttp, final ContentType contentType){
+	private static void doExecute(final ServerHttp serverHttp, final ContentType contentType){
 		if(serverHttp == null || serverHttp.getResponse() == null){
 			logger.debug("{} is null.", serverHttp == null ? "ServerHttp" : "ServerHttpResponse");
 			return;
