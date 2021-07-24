@@ -71,13 +71,13 @@ public class KeyValue<K, V> implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object o){
-		if(this == o){
+	public boolean equals(Object obj){
+		if(this == obj){
 			return true;
 		}
 
-		if(o instanceof KeyValue){
-			KeyValue that = (KeyValue) o;
+		if(obj instanceof KeyValue){
+			KeyValue that = (KeyValue) obj;
 			return Objects.equals(key, that.key) && Objects.equals(value, that.value);
 		}
 

@@ -61,22 +61,22 @@ public class Geo {
 	}
 
 	@Override
-	public boolean equals(Object o){
-		if(this == o){
+	public int hashCode(){
+		return Objects.hash(longitude, latitude);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
 			return true;
 		}
 
-		if(o instanceof Geo){
-			Geo that = (Geo) o;
+		if(obj instanceof Geo){
+			Geo that = (Geo) obj;
 			return that.getLongitude() == longitude && that.getLatitude() == latitude;
 		}
 
 		return false;
-	}
-
-	@Override
-	public int hashCode(){
-		return Objects.hash(longitude, latitude);
 	}
 
 	@Override
