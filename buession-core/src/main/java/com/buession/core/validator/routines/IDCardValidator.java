@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -45,7 +45,7 @@ public class IDCardValidator {
 
 	}
 
-	public final static boolean isValid(final CharSequence charSequence, final boolean strict, final Date birthday){
+	public static boolean isValid(final CharSequence charSequence, final boolean strict, final Date birthday){
 		if(charSequence == null || charSequence.length() != IDCARD_LENGTH){
 			return false;
 		}else if(strict && birthday == null){

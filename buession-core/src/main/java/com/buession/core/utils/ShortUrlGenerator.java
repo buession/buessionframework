@@ -49,7 +49,7 @@ public class ShortUrlGenerator {
 
 	}
 
-	public final static String[] encode(final String url){
+	public static String[] encode(final String url){
 		Assert.isBlank(url, "Encode short url cloud not be null or empty");
 
 		String md5Str = doEncode(url);
@@ -80,7 +80,7 @@ public class ShortUrlGenerator {
 		return result;
 	}
 
-	private final static String doEncode(final String url){
+	private static String doEncode(final String url){
 		try{
 			MessageDigest messageDigest = MessageDigest.getInstance(ALGO);
 			messageDigest.update(url.getBytes(StandardCharsets.UTF_8));
@@ -90,7 +90,7 @@ public class ShortUrlGenerator {
 		}
 	}
 
-	private final static String getFormattedText(byte[] bytes){
+	private static String getFormattedText(byte[] bytes){
 		final StringBuilder buffer = new StringBuilder(bytes.length << 1);
 
 		for(byte b : bytes){

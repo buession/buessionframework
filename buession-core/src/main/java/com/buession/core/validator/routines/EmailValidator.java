@@ -84,11 +84,11 @@ public class EmailValidator {
 		return isValidUser(emailMatcher.group(1)) && isValidDomain(emailMatcher.group(2));
 	}
 
-	protected final static boolean isValidUser(final String user){
+	protected static boolean isValidUser(final String user){
 		return USER_PATTERN.matcher(user).matches();
 	}
 
-	protected final static boolean isValidDomain(final String domain){
+	protected static boolean isValidDomain(final String domain){
 		// see if domain is an IP address in brackets
 		Matcher ipDomainMatcher = IP_DOMAIN_PATTERN.matcher(domain);
 		return ipDomainMatcher.matches() ? IpValidator.isValid(ipDomainMatcher.group(1)) :

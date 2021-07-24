@@ -44,7 +44,7 @@ public class ObjectUtils extends org.apache.commons.lang3.ObjectUtils {
 	 *
 	 * @return 转换结果
 	 */
-	public final static byte[] toByte(Object o){
+	public static byte[] toByte(Object o){
 		if(o == null){
 			return null;
 		}
@@ -68,7 +68,7 @@ public class ObjectUtils extends org.apache.commons.lang3.ObjectUtils {
 	 *
 	 * @return 转换结果
 	 */
-	public final static byte[] toByte(Object o, final Charset charset){
+	public static byte[] toByte(Object o, final Charset charset){
 		if(o == null){
 			return null;
 		}

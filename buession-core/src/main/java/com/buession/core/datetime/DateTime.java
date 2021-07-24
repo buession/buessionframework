@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.datetime;
@@ -36,7 +36,7 @@ public class DateTime {
 	 *
 	 * @return 以 "msec sec" 的格式返回一个字符串
 	 */
-	public final static String microtime(){
+	public static String microtime(){
 		long timestamp = System.currentTimeMillis();
 
 		StringBuilder sb = new StringBuilder(24);

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.math;
@@ -39,7 +39,7 @@ public class Math {
 	 *
 	 * @return 两个数之间连续相加结果
 	 */
-	public final static long continuousSum(short start, short end){
+	public static long continuousSum(short start, short end){
 		return continuousSum((long) start, (long) end);
 	}
 
@@ -53,7 +53,7 @@ public class Math {
 	 *
 	 * @return 两个数之间连续相加结果
 	 */
-	public final static long continuousSum(int start, int end){
+	public static long continuousSum(int start, int end){
 		return continuousSum((long) start, (long) end);
 	}
 
@@ -67,7 +67,7 @@ public class Math {
 	 *
 	 * @return 两个数之间连续相加结果
 	 */
-	public final static long continuousSum(long start, long end){
+	public static long continuousSum(long start, long end){
 		if(start > end){
 			start = start ^ end;
 			end = start ^ end;
@@ -90,7 +90,7 @@ public class Math {
 	 *
 	 * @return 合法范围内的值
 	 */
-	public final static float rangeValue(float value, float min, float max){
+	public static float rangeValue(float value, float min, float max){
 		if(value < min){
 			return min;
 		}else if(value > max){
@@ -112,7 +112,7 @@ public class Math {
 	 *
 	 * @return 合法范围内的值
 	 */
-	public final static double rangeValue(double value, double min, double max){
+	public static double rangeValue(double value, double min, double max){
 		if(value < min){
 			return min;
 		}else if(value > max){
@@ -134,7 +134,7 @@ public class Math {
 	 *
 	 * @return 合法范围内的值
 	 */
-	public final static short rangeValue(short value, short min, short max){
+	public static short rangeValue(short value, short min, short max){
 		if(value < min){
 			return min;
 		}else if(value > max){
@@ -156,7 +156,7 @@ public class Math {
 	 *
 	 * @return 合法范围内的值
 	 */
-	public final static int rangeValue(int value, int min, int max){
+	public static int rangeValue(int value, int min, int max){
 		if(value < min){
 			return min;
 		}else if(value > max){
@@ -178,7 +178,7 @@ public class Math {
 	 *
 	 * @return 合法范围内的值
 	 */
-	public final static long rangeValue(long value, long min, long max){
+	public static long rangeValue(long value, long min, long max){
 		if(value < min){
 			return min;
 		}else if(value > max){

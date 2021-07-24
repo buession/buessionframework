@@ -75,7 +75,7 @@ public class VersionUtils {
 	 *
 	 * @return 当 version1 &lt; version2 时，返回 -1；当 version1 = version2 时，返回 0；当 version1 &gt; version2 时返回 1
 	 */
-	public final static int compare(final String version1, final String version2){
+	public static int compare(final String version1, final String version2){
 		char first1 = version1.charAt(0);
 		char first2 = version2.charAt(0);
 
@@ -124,7 +124,7 @@ public class VersionUtils {
 		return result;
 	}
 
-	public final static String determineClassVersion(final Class<?> clazz){
+	public static String determineClassVersion(final Class<?> clazz){
 		String implementationVersion = clazz.getPackage().getImplementationVersion();
 		if(implementationVersion != null){
 			return implementationVersion;
@@ -150,11 +150,11 @@ public class VersionUtils {
 		}
 	}
 
-	public final static String getJarFileImplementationVersion(final JarFile jarFile) throws IOException{
+	public static String getJarFileImplementationVersion(final JarFile jarFile) throws IOException{
 		return jarFile.getManifest().getMainAttributes().getValue(Attributes.Name.IMPLEMENTATION_VERSION);
 	}
 
-	private final static String cannibalizeVersion(final String version){
+	private static String cannibalizeVersion(final String version){
 		if(version == null){
 			return null;
 		}
@@ -188,7 +188,7 @@ public class VersionUtils {
 		return sb.toString();
 	}
 
-	private final static int compareSpecialVersion(final String version1, final String version2){
+	private static int compareSpecialVersion(final String version1, final String version2){
 		int found1 = -1;
 		int found2 = -1;
 
@@ -208,11 +208,11 @@ public class VersionUtils {
 		return normalize(found1 - found2);
 	}
 
-	private final static boolean isSpecialVer(final char c){
+	private static boolean isSpecialVer(final char c){
 		return c == '-' || c == '_' || c == '+';
 	}
 
-	private final static int normalize(final int value){
+	private static int normalize(final int value){
 		return value == 0 ? 0 : (value < 0 ? -1 : 1);
 	}
 

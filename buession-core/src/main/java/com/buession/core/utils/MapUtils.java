@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -52,7 +52,7 @@ public class MapUtils {
 	 *
 	 * @return 转换结果
 	 */
-	public final static <K, V> List<V> toList(final Map<K, V> map){
+	public static <K, V> List<V> toList(final Map<K, V> map){
 		return map == null ? null : new ArrayList<>(map.values());
 	}
 
@@ -68,7 +68,7 @@ public class MapUtils {
 	 *
 	 * @return 转换结果
 	 */
-	public final static <K, V> Set<V> toSet(final Map<K, V> map){
+	public static <K, V> Set<V> toSet(final Map<K, V> map){
 		return map == null ? null : new LinkedHashSet<>(map.values());
 	}
 

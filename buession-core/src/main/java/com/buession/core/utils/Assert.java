@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -40,158 +40,158 @@ public class Assert {
 
 	}
 
-	public final static void isTrue(final boolean expression, final String message){
+	public static void isTrue(final boolean expression, final String message){
 		if(expression){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isFalse(final boolean expression, final String message){
+	public static void isFalse(final boolean expression, final String message){
 		if(expression == false){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isNull(final Object object, final String message){
+	public static void isNull(final Object object, final String message){
 		if(object == null){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void notNull(final Object object, final String message){
+	public static void notNull(final Object object, final String message){
 		if(object != null){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isEmpty(final Object[] objects, final String message){
+	public static void isEmpty(final Object[] objects, final String message){
 		if(Validate.isEmpty(objects)){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isEmpty(final Collection<?> collection, final String message){
+	public static void isEmpty(final Collection<?> collection, final String message){
 		if(Validate.isEmpty(collection)){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isEmpty(final Map<?, ?> map, final String message){
+	public static void isEmpty(final Map<?, ?> map, final String message){
 		if(Validate.isEmpty(map)){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isEmpty(final Iterator iterator, final String message){
+	public static void isEmpty(final Iterator<?> iterator, final String message){
 		if(Validate.isEmpty(iterator)){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isEmpty(final Enumeration enumeration, final String message){
+	public static void isEmpty(final Enumeration<?> enumeration, final String message){
 		if(Validate.isEmpty(enumeration)){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void notEmpty(final Object[] objects, final String message){
+	public static void notEmpty(final Object[] objects, final String message){
 		if(Validate.isNotEmpty(objects)){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void notEmpty(final Collection<?> collection, final String message){
+	public static void notEmpty(final Collection<?> collection, final String message){
 		if(Validate.isNotEmpty(collection)){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void notEmpty(final Map<?, ?> map, final String message){
+	public static void notEmpty(final Map<?, ?> map, final String message){
 		if(Validate.isNotEmpty(map)){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void notEmpty(final Iterator iterator, final String message){
+	public static void notEmpty(final Iterator<?> iterator, final String message){
 		if(Validate.isNotEmpty(iterator)){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void notEmpty(final Enumeration enumeration, final String message){
+	public static void notEmpty(final Enumeration<?> enumeration, final String message){
 		if(Validate.isNotEmpty(enumeration)){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isBlank(final String str, final String message){
-		if(Validate.hasText(str) == false){
+	public static void isBlank(final String str, final String message){
+		if(Validate.isBlank(str)){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void notBlank(final String str, final String message){
+	public static void notBlank(final String str, final String message){
 		if(Validate.hasText(str)){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isNegative(final Long value, final String message){
-		if(value < 0){
+	public static void isNegative(final Short value, final String message){
+		if(value == null || value < 0){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isNegative(final Integer value, final String message){
-		if(value < 0){
+	public static void isNegative(final Integer value, final String message){
+		if(value == null || value < 0){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isNegative(final Short value, final String message){
-		if(value < 0){
+	public static void isNegative(final Long value, final String message){
+		if(value == null || value < 0){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isNegative(final Double value, final String message){
-		if(value < 0){
+	public static void isNegative(final Double value, final String message){
+		if(value == null || value < 0){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isNegative(final Float value, final String message){
-		if(value < 0){
+	public static void isNegative(final Float value, final String message){
+		if(value == null || value < 0){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isZeroNegative(final Long value, final String message){
-		if(value <= 0){
+	public static void isZeroNegative(final Short value, final String message){
+		if(value == null || value <= 0){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isZeroNegative(final Integer value, final String message){
-		if(value <= 0){
+	public static void isZeroNegative(final Integer value, final String message){
+		if(value == null || value <= 0){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isZeroNegative(final Short value, final String message){
-		if(value <= 0){
+	public static void isZeroNegative(final Long value, final String message){
+		if(value == null || value <= 0){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isZeroNegative(final Double value, final String message){
-		if(value <= 0){
+	public static void isZeroNegative(final Double value, final String message){
+		if(value == null || value <= 0){
 			throw new IllegalArgumentException(message);
 		}
 	}
 
-	public final static void isZeroNegative(final Float value, final String message){
-		if(value <= 0){
+	public static void isZeroNegative(final Float value, final String message){
+		if(value == null || value <= 0){
 			throw new IllegalArgumentException(message);
 		}
 	}

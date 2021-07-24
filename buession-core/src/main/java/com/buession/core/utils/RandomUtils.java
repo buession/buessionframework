@@ -46,7 +46,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static boolean nextBoolean(){
+	public static boolean nextBoolean(){
 		return RANDOM.nextBoolean();
 	}
 
@@ -60,7 +60,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static byte[] nextBytes(final int count){
+	public static byte[] nextBytes(final int count){
 		Assert.isZeroNegative(count, "Count cannot be negative.");
 
 		final byte[] result = new byte[count];
@@ -75,7 +75,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static int nextInt(){
+	public static int nextInt(){
 		return nextInt(0, Integer.MAX_VALUE);
 	}
 
@@ -89,7 +89,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static int nextInt(final int bound){
+	public static int nextInt(final int bound){
 		return RANDOM.nextInt(bound);
 	}
 
@@ -105,7 +105,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static int nextInt(final int start, final int end){
+	public static int nextInt(final int start, final int end){
 		Assert.isTrue(start < 0, "Both range values must be non-negative.");
 
 		if(start == end){
@@ -123,7 +123,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static long nextLong(){
+	public static long nextLong(){
 		return nextLong(0L, Long.MAX_VALUE);
 	}
 
@@ -137,7 +137,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static long nextLong(final long bound){
+	public static long nextLong(final long bound){
 		return nextLong(0, bound - 1L);
 	}
 
@@ -153,7 +153,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static long nextLong(final long start, final long end){
+	public static long nextLong(final long start, final long end){
 		Assert.isTrue(start < 0, "Both range values must be non-negative.");
 
 		if(start == end){
@@ -171,7 +171,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static float nextFloat(){
+	public static float nextFloat(){
 		return nextFloat(0L, Float.MAX_VALUE);
 	}
 
@@ -185,7 +185,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static float nextFloat(final float bound){
+	public static float nextFloat(final float bound){
 		return nextFloat(0, bound - 1F);
 	}
 
@@ -201,7 +201,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static float nextFloat(final float start, final float end){
+	public static float nextFloat(final float start, final float end){
 		Assert.isTrue(start < 0, "Both range values must be non-negative.");
 
 		if(start == end){
@@ -219,7 +219,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static double nextDouble(){
+	public static double nextDouble(){
 		return nextDouble(0L, Double.MAX_VALUE);
 	}
 
@@ -233,7 +233,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static double nextDouble(final double bound){
+	public static double nextDouble(final double bound){
 		return nextDouble(0, bound - 1);
 	}
 
@@ -249,7 +249,7 @@ public class RandomUtils {
 	 *
 	 * @since 1.2.0
 	 */
-	public final static double nextDouble(final double start, final double end){
+	public static double nextDouble(final double start, final double end){
 		Assert.isTrue(start < 0, "Both range values must be non-negative.");
 
 		if(start == end){

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -46,7 +46,7 @@ public class TelValidator {
 	private TelValidator(){
 	}
 
-	public final static boolean isValid(final CharSequence charSequence, final AreaCodeType areaCodeType){
+	public static boolean isValid(final CharSequence charSequence, final AreaCodeType areaCodeType){
 		if(charSequence == null || charSequence.length() < 7){
 			return false;
 		}
@@ -66,7 +66,7 @@ public class TelValidator {
 		return matcher.matches();
 	}
 
-	private final static boolean validNotHasAreaCode(final CharSequence charSequence){
+	private static boolean validNotHasAreaCode(final CharSequence charSequence){
 		Matcher matcher = Pattern.compile(WITHOUT_AREA_CODE_PATTERN).matcher(charSequence);
 		return matcher.matches();
 	}

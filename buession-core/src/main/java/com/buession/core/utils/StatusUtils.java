@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -33,19 +33,19 @@ import com.buession.lang.Status;
  */
 public class StatusUtils {
 
-	public final static Status valueOf(final boolean v){
+	public static Status valueOf(final boolean v){
 		return v ? Status.SUCCESS : Status.FAILURE;
 	}
 
-	public final static Status valueOf(final short v){
+	public static Status valueOf(final short v){
 		return (short) 0 == v ? Status.FAILURE : Status.SUCCESS;
 	}
 
-	public final static Status valueOf(final int v){
+	public static Status valueOf(final int v){
 		return v == 0 ? Status.FAILURE : Status.SUCCESS;
 	}
 
-	public final static Status valueOf(final long v){
+	public static Status valueOf(final long v){
 		return v == 0 ? Status.FAILURE : Status.SUCCESS;
 	}
 

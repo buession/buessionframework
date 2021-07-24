@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.validator.routines;
@@ -49,14 +49,13 @@ public class DomainValidator {
 			// RFC2606 defined
 			"localhost",
 			// Also widely used as localhost.localdomain
-			"localdomain"
-	};
+			"localdomain"};
 
 	private DomainValidator(){
 
 	}
 
-	public final static boolean isValid(final CharSequence charSequence){
+	public static boolean isValid(final CharSequence charSequence){
 		if(charSequence == null){
 			return false;
 		}
@@ -71,7 +70,7 @@ public class DomainValidator {
 		return matcher.matches() && isValidTld(matcher.group(1));
 	}
 
-	private final static boolean isValidTld(final String tld){
+	private static boolean isValidTld(final String tld){
 		try{
 			Enum.valueOf(DomainTLD.class, chompLeadingDot(tld.toLowerCase()).toUpperCase());
 			return true;
@@ -80,7 +79,7 @@ public class DomainValidator {
 		}
 	}
 
-	private final static String chompLeadingDot(final String str){
+	private static String chompLeadingDot(final String str){
 		return str.startsWith(".") ? str.substring(1) : str;
 	}
 

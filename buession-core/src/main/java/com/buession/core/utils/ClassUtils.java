@@ -49,7 +49,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 *
 	 * @return 类的所有声明的字段
 	 */
-	public final static Field[] getFields(final Class<?> clazz){
+	public static Field[] getFields(final Class<?> clazz){
 		Assert.isNull(clazz, "Class cloud not be null.");
 		return clazz.getDeclaredFields();
 	}
@@ -62,7 +62,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 *
 	 * @return 类的所有声明的字段
 	 */
-	public final static Field[] getAllFields(final Class<?> clazz){
+	public static Field[] getAllFields(final Class<?> clazz){
 		Assert.isNull(clazz, "Class cloud not be null.");
 		final List<Field> allFields = new ArrayList<>(16);
 		Class<?> currentClass = clazz;
@@ -90,7 +90,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 * @throws IllegalAccessException
 	 *        {@link IllegalAccessException}
 	 */
-	public final static Object invoke(final Object object, final Method method) throws InvocationTargetException,
+	public static Object invoke(final Object object, final Method method) throws InvocationTargetException,
 			IllegalAccessException{
 		Assert.isNull(object, "Object cloud not be null.");
 		Assert.isNull(method, "Object method cloud not be null.");
@@ -116,7 +116,7 @@ public class ClassUtils extends org.apache.commons.lang3.ClassUtils {
 	 * @throws IllegalAccessException
 	 *        {@link IllegalAccessException}
 	 */
-	public final static Object invoke(final Object object, final Method method, final Object... arguments) throws InvocationTargetException, IllegalAccessException{
+	public static Object invoke(final Object object, final Method method, final Object... arguments) throws InvocationTargetException, IllegalAccessException{
 		Assert.isNull(object, "Object cloud not be null.");
 		Assert.isNull(method, "Object method cloud not be null.");
 

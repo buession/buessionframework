@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -42,7 +42,7 @@ public class EnumUtils extends org.apache.commons.lang3.EnumUtils {
 	 *
 	 * @return 枚举字段的值为 $VALUES 返回 true；否则，返回 false
 	 */
-	public final static boolean isEnumValuesField(final Field field){
+	public static boolean isEnumValuesField(final Field field){
 		return field != null && (field.isEnumConstant() == false && "$VALUES".equals(field.getName()));
 	}
 
@@ -54,7 +54,7 @@ public class EnumUtils extends org.apache.commons.lang3.EnumUtils {
 	 *
 	 * @return 枚举字段的值不为 $VALUES 返回 true；否则，返回 false
 	 */
-	public final static boolean notEnumValuesField(final Field field){
+	public static boolean notEnumValuesField(final Field field){
 		return field != null && (field.isEnumConstant() == false && "$VALUES".equals(field.getName()) == false);
 	}
 
@@ -70,7 +70,7 @@ public class EnumUtils extends org.apache.commons.lang3.EnumUtils {
 	 *
 	 * @return 指定枚举类型的枚举常量
 	 */
-	public final static <E extends Enum<E>> E valueOf(final Class<E> enumClass, final String name){
+	public static <E extends Enum<E>> E valueOf(final Class<E> enumClass, final String name){
 		return getEnum(enumClass, name);
 	}
 
