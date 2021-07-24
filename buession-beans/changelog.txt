@@ -1,9 +1,9 @@
-Buession Framework Core Changelog
+Buession Framework Beans Changelog
 ===========================
 
 
-Changes in version 1.3.0 (2021-07-10)
+Changes in version 1.3.0 (2021-07-11)
 -------------------------------------
 *【变化】移除静态方法上的 final 关键字
-*【新增】完善 ArrayUtils contains、indexOf、lastIndexOf、toString 方法对基础类型的操作
+*【修复】默认 bean DefaultBeanResolver 解析器，处理对象拷贝时，源对象值为 null 时出现的异常
 *【管理】逐步规范化 changelog 和 测试用例

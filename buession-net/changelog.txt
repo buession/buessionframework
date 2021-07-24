@@ -1,8 +1,9 @@
-Buession Framework IO Changelog
+Buession Framework Net Changelog
 ===========================
 
 
 Changes in version 1.3.0 (2021-07-11)
 -------------------------------------
 *【变化】移除静态方法上的 final 关键字
+*【新增】URL 参数 pojo 类，构建 URL 参数
 *【管理】逐步规范化 changelog 和 测试用例

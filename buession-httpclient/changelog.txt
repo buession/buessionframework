@@ -1,9 +1,9 @@
-Buession Framework GeoIP Changelog
+Buession Framework HttpClient Changelog
 ===========================
 
 
-Changes in version 1.3.0 (2021-07-10)
+Changes in version 1.3.0 (2021-07-11)
 -------------------------------------
 *【变化】移除静态方法上的 final 关键字
-*【新增】Traits 增加 Network、ConnectionType、userType、userCount、staticIpScore 属性
+*【修复】HTTP 头构建器 HeadersBuilder 批量添加 HTTP 头无效的问题
 *【管理】逐步规范化 changelog 和 测试用例

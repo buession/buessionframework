@@ -1,6 +1,13 @@
-Buession Framework Aop Changelog
+Buession Framework Core Changelog
 ===========================
 
 
 Changes in version 1.3.0 (2021-07-10)
 -------------------------------------
+*【变化】移除静态方法上的 final 关键字
+*【新增】完善 ArrayUtils contains、indexOf、lastIndexOf、toString 方法对基础类型的操作
+*【变化】ArrayUtils 继承 org.apache.commons.lang3.ArrayUtils
+*【新增】StringUtils 新增 isBlank 验证字符串为 null、空字符串、空白字符
+*【新增】StringUtils 新增 isNotBlank 验证字符串不为 null 且空不为字符串且不为空白字符
+*【新增】Destroyable 接口
+*【管理】逐步规范化 changelog 和 测试用例

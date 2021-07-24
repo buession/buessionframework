@@ -1,9 +1,8 @@
-Buession Framework Core Changelog
+Buession Framework Aop Changelog
 ===========================
 
 
-Changes in version 1.3.0 (2021-07-10)
+Changes in version 1.3.0 (2021-07-11)
 -------------------------------------
 *【变化】移除静态方法上的 final 关键字
-*【新增】完善 ArrayUtils contains、indexOf、lastIndexOf、toString 方法对基础类型的操作
 *【管理】逐步规范化 changelog 和 测试用例
