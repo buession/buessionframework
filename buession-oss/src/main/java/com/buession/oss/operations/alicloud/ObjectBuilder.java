@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.oss.operations.alicloud;
@@ -84,7 +84,7 @@ abstract class ObjectBuilder implements Builder<String> {
 		 */
 		private String padColor;
 
-		public final static ObjectResizeBuilder getInstance(){
+		public static ObjectResizeBuilder getInstance(){
 			return new ObjectResizeBuilder();
 		}
 
@@ -253,7 +253,7 @@ abstract class ObjectBuilder implements Builder<String> {
 
 		private Integer y;
 
-		public final static ObjectCropBuilder getInstance(){
+		public static ObjectCropBuilder getInstance(){
 			return new ObjectCropBuilder();
 		}
 
@@ -312,7 +312,7 @@ abstract class ObjectBuilder implements Builder<String> {
 
 		private Boolean autoOrient;
 
-		public final static ObjectRotateBuilder getInstance(){
+		public static ObjectRotateBuilder getInstance(){
 			return new ObjectRotateBuilder();
 		}
 

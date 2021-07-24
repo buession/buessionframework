@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.oss.operations.alicloud;
@@ -82,11 +82,11 @@ public abstract class AbstractAliCloudOperations extends AbstractOperations impl
 		}
 	}
 
-	protected final static OSSException convertException(Exception e){
+	protected static OSSException convertException(Exception e){
 		return convertException(null, e);
 	}
 
-	protected final static OSSException convertException(String bucketName, Exception e){
+	protected static OSSException convertException(String bucketName, Exception e){
 		if(e instanceof ClientException){
 			ClientException ex = (ClientException) e;
 			return new OSSException(e.getMessage(), ex, ex.getRequestId(), ex.getErrorCode());
