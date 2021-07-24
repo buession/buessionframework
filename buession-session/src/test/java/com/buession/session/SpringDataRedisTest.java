@@ -33,6 +33,7 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
@@ -45,30 +46,13 @@ public class SpringDataRedisTest {
 	private JedisPoolConfig createJedisPoolConfig(){
 		JedisPoolConfig config = new JedisPoolConfig();
 
-		config.setLifo(BaseObjectPoolConfig.DEFAULT_LIFO);
-		config.setMaxWaitMillis(2 * 1000);
-		config.setMinEvictableIdleTimeMillis(2 * 1000);
-		config.setSoftMinEvictableIdleTimeMillis(BaseObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
-		config.setNumTestsPerEvictionRun(BaseObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN);
-		config.setEvictionPolicyClassName(BaseObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME);
-		config.setTestOnBorrow(true);
-		//  config.setTestOnReturn(true);
-		// config.setTestWhileIdle(true);
-		config.setTimeBetweenEvictionRunsMillis(2 * 1000);
-		config.setBlockWhenExhausted(BaseObjectPoolConfig.DEFAULT_BLOCK_WHEN_EXHAUSTED);
-		config.setJmxEnabled(BaseObjectPoolConfig.DEFAULT_JMX_ENABLE);
-		config.setJmxNamePrefix(BaseObjectPoolConfig.DEFAULT_JMX_NAME_PREFIX);
-		config.setMaxTotal(10);
-		config.setMinIdle(3);
-		config.setMaxIdle(5);
-
 		return config;
 	}
 
 	private JedisConnectionFactory createJedisConnectionFactory(){
-		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration("redis.host", 6379);
-		configuration.setPassword(RedisPassword.of("tQP!Vf7JxL-nrH-x"));
-		configuration.setDatabase(10);
+		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration("192.168.0.231", 6379);
+		configuration.setPassword(RedisPassword.of("rds_PWD"));
+		configuration.setDatabase(0);
 
 		JedisClientConfiguration jedisClientConfiguration =
 				JedisClientConfiguration.builder().usePooling().poolConfig(createJedisPoolConfig()).build();
@@ -98,9 +82,9 @@ public class SpringDataRedisTest {
 	}
 
 	private RedisTemplate redisTemplate(){
-		RedisTemplate redisTemplate = new RedisTemplate();
+		RedisTemplate redisTemplate = new StringRedisTemplate();
 
-		redisTemplate.setConnectionFactory(createJedisSentinelConnectionFactory());
+		redisTemplate.setConnectionFactory(createJedisConnectionFactory());
 
 		redisTemplate.afterPropertiesSet();
 
@@ -118,10 +102,17 @@ public class SpringDataRedisTest {
 	}
 
 	@Test
-	public void masters(){
+	public void set(){
 		RedisTemplate redisTemplate = redisTemplate();
-		//redisTemplate.getConnectionFactory().getSentinelConnection().masters();
 		redisTemplate.opsForValue().set("test_tx1", "A");
+		redisTemplate.opsForValue().set("test_tx2", "B");
+	}
+
+	@Test
+	public void get(){
+		RedisTemplate redisTemplate = redisTemplate();
+		System.out.println(redisTemplate.opsForValue().get("cms_demo:shiro_session:380ac518-bd56-4c2b-b7f3" +
+				"-f5c29296ee44"));
 	}
 
 }
