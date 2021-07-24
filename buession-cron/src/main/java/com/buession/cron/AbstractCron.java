@@ -21,13 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.cron;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.quartz.CronScheduleBuilder;
@@ -46,58 +45,58 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractCron implements Cron {
 
-    protected final static long DEFAULT_SLEEP_MILLISECONDS = 60000L;
+	protected final static long DEFAULT_SLEEP_MILLISECONDS = 60000L;
 
-    private long sleepMilliseconds = DEFAULT_SLEEP_MILLISECONDS;
+	private long sleepMilliseconds = DEFAULT_SLEEP_MILLISECONDS;
 
-    private final static Logger logger = LoggerFactory.getLogger(AbstractCron.class);
+	private final static Logger logger = LoggerFactory.getLogger(AbstractCron.class);
 
-    public long getSleepMilliseconds(){
-        return sleepMilliseconds;
-    }
+	public long getSleepMilliseconds(){
+		return sleepMilliseconds;
+	}
 
-    public void setSleepMilliseconds(long sleepMilliseconds){
-        this.sleepMilliseconds = sleepMilliseconds;
-    }
+	public void setSleepMilliseconds(long sleepMilliseconds){
+		this.sleepMilliseconds = sleepMilliseconds;
+	}
 
-    protected void run(final Set<Job> jobs) throws SchedulerException{
-        if(jobs == null){
-            logger.debug("Jobs is null.");
-            return;
-        }
+	protected void run(final Set<Job> jobs) throws SchedulerException{
+		if(jobs == null){
+			logger.debug("Jobs is null.");
+			return;
+		}
 
-        logger.debug("job size: {}", jobs.size());
+		logger.debug("job size: {}", jobs.size());
 
-        Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+		Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
 
-        Iterator<Job> iterator = jobs.iterator();
-        while(iterator.hasNext()){
-            Job job = iterator.next();
-            execute(scheduler, job);
-            logger.debug("Register job {} [{}]", job.getName(), job.getClass().getName());
-        }
+		for(Job job : jobs){
+			execute(scheduler, job);
+			logger.debug("Register job {} [{}]", job.getName(), job.getClass().getName());
+		}
 
-        scheduler.start();
+		scheduler.start();
 
-        try{
-            long sleepMilliseconds = getSleepMilliseconds();
-            Thread.sleep(sleepMilliseconds <= 0 ? DEFAULT_SLEEP_MILLISECONDS : sleepMilliseconds);
-        }catch(InterruptedException e){
-            logger.error("Thread sleep execute failure: {}", e.getMessage());
-        }
+		try{
+			long sleepMilliseconds = getSleepMilliseconds();
+			Thread.sleep(sleepMilliseconds <= 0 ? DEFAULT_SLEEP_MILLISECONDS : sleepMilliseconds);
+		}catch(InterruptedException e){
+			logger.error("Thread sleep execute failure: {}", e.getMessage());
+		}
 
-        // scheduler.shutdown(true);
-    }
+		// scheduler.shutdown(true);
+	}
 
-    private static void execute(final Scheduler scheduler, final Job job) throws SchedulerException{
-        JobDetail jobDetail = JobBuilder.newJob(job.getClazz()).withIdentity(job.getName(), job.getGroup()).build();
-        // 设置作业
-        CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(job.getName(), job.getGroup()).withSchedule
-                (CronScheduleBuilder.cronSchedule(job.getExpression())).build(); // 设置触发器
-        Date ft = scheduler.scheduleJob(jobDetail, trigger); // 设置调度作业
+	private static void execute(final Scheduler scheduler, final Job job) throws SchedulerException{
+		JobDetail jobDetail = JobBuilder.newJob(job.getClazz()).withIdentity(job.getName(), job.getGroup()).build();
+		// 设置作业
+		CronTrigger trigger =
+				TriggerBuilder.newTrigger().withIdentity(job.getName(), job.getGroup()).withSchedule(CronScheduleBuilder.cronSchedule(job.getExpression())).build(); // 设置触发器
+		Date ft = scheduler.scheduleJob(jobDetail, trigger); // 设置调度作业
 
-        logger.debug("{} has been scheduled to run at: {} and repeat based on expression: {}", jobDetail.getKey(),
-                ft, trigger.getCronExpression());
-    }
+		if(logger.isDebugEnabled()){
+			logger.debug("{} has been scheduled to run at: {} and repeat based on expression: {}", jobDetail.getKey(),
+					ft, trigger.getCronExpression());
+		}
+	}
 
 }
