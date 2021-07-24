@@ -24,14 +24,9 @@
  */
 package com.buession.redis;
 
-import com.buession.redis.core.Info;
-import com.buession.redis.pipeline.Pipeline;
-import com.buession.redis.spring.jedis.JedisConfiguration;
-import com.buession.redis.transaction.Transaction;
+import com.buession.lang.Status;
+import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
-import java.util.Properties;
 
 /**
  * @author Yong.Teng
@@ -39,102 +34,20 @@ import java.util.Properties;
 public class JedisClientTest extends AbstractJedisRedisTest {
 
 	@Test
-	public void info(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
-		Info info = redisTemplate.info();
-		System.out.println(info.getMemory().isActiveDefragRunning());
-		System.out.println(info);
-	}
-
-	@Test
-	public void clientGetName(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
-		System.out.println(redisTemplate.clientGetName());
-	}
-
-	@Test
 	public void set(){
 		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
-		redisTemplate.set("info", "info");
+
+		Assert.assertEquals(Status.SUCCESS, redisTemplate.set("str", "value"));
+		Assert.assertEquals(Status.SUCCESS, redisTemplate.set("long", Long.MAX_VALUE));
 	}
 
 	@Test
 	public void get(){
 		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
-		System.out.println(redisTemplate.get("info"));
-		System.out.println(redisTemplate.getObject("info", Info.class));
 
-		redisTemplate.set("int", "1");
-		System.out.println(redisTemplate.getObject("int", Integer.class));
-	}
-
-	@Test
-	public void transaction(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
-
-		Transaction transaction = redisTemplate.multi();
-
-		redisTemplate.set("server", new Info.Server(new Properties()));
-		redisTemplate.set("server2", new Info.Server(new Properties()));
-		redisTemplate.set("t1", "T1222333");
-		redisTemplate.set("user", new User(100, "admin"));
-		redisTemplate.set("JedisConfiguration", new JedisConfiguration());
-		redisTemplate.type("test");
-		redisTemplate.getObject("server", Info.Server.class);
-		redisTemplate.mGetObject(new String[]{"server", "server1"}, Info.Server.class);
-		redisTemplate.getObject("user", User.class);
-		redisTemplate.getObject("JedisConfiguration", JedisConfiguration.class);
-		List<Object> result = redisTemplate.exec();
-
-		if(result != null){
-			for(Object value : result){
-				System.out.println(value);
-			}
-		}
-	}
-
-	@Test
-	public void pipeline(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
-
-		Pipeline pipeline = redisTemplate.pipeline();
-		redisTemplate.set("sg", "sg");
-		redisTemplate.set("sg2", "sg2");
-		//redisTemplate.set("t4", "T4");
-		//redisTemplate.type("test");
-		redisTemplate.get("sg");
-		redisTemplate.mGet(new String[]{"sg", "sg2"});
-		List<Object> result = redisTemplate.exec();
-
-		if(result != null){
-			for(Object value : result){
-				System.out.println(value);
-			}
-		}
-	}
-
-	@Test
-	public void thread(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
-
-		Thread threadA = new Thread(new Runnable() {
-
-			@Override
-			public void run(){
-				redisTemplate.index.set(5);
-			}
-		});
-
-		Thread threadB = new Thread(new Runnable() {
-
-			@Override
-			public void run(){
-				System.out.println(redisTemplate.index.get());
-			}
-		});
-
-		threadA.start();
-		threadB.start();
+		Assert.assertEquals("value", redisTemplate.get("str"));
+		Assert.assertEquals(Long.toString(Long.MAX_VALUE), redisTemplate.get("long"));
+		Assert.assertEquals(new Long(Long.MAX_VALUE), redisTemplate.getObject("long", Long.class));
 	}
 
 }

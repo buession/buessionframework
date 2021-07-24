@@ -31,6 +31,7 @@ import com.buession.redis.core.ShardedRedisNode;
 import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
 import com.buession.redis.spring.jedis.JedisConfiguration;
 import com.buession.redis.spring.jedis.ShardedRedisConfiguration;
+import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -43,13 +44,14 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 	protected RedisConnection createJedisConnection(){
 		JedisConfiguration configuration = new JedisConfiguration();
 
-		configuration.setHost("r-2ze68fefa60d3d14pd.redis.rds.aliyuncs.com");
-		configuration.setPort(16379);
-		configuration.setPassword("BRAMvDI$HliJx9RJ");
-		configuration.setDatabase(10);
+		configuration.setHost("test.redis.server");
+		configuration.setPort(6379);
+		configuration.setPassword("rds_PWD");
+		configuration.setDatabase(63);
 		configuration.setClientName(StringUtils.random(6));
 
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean(configuration, null);
+		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean(configuration,
+				new JedisPoolConfig());
 
 		try{
 			factoryBean.afterPropertiesSet();
@@ -83,7 +85,7 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 
 		Options options = new Options();
 
-		options.setEnableTransactionSupport(true);
+		options.setPrefix("test:");
 
 		redisTemplate.setOptions(options);
 
