@@ -74,16 +74,16 @@ public class StatusLine {
 
 	@Override
 	public boolean equals(Object obj){
-		if(obj == this){
+		if(this == obj){
 			return true;
 		}
 
-		if((obj instanceof StatusLine) == false){
-			return false;
+		if(obj instanceof StatusLine){
+			StatusLine that = (StatusLine) obj;
+			return that.getStatusCode() == getStatusCode();
 		}
 
-		StatusLine that = (StatusLine) obj;
-		return that.getStatusCode() == getStatusCode();
+		return false;
 	}
 
 	@Override

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -65,13 +65,13 @@ public class Header {
 	}
 
 	@Override
-	public boolean equals(Object o){
-		if(o == this){
+	public boolean equals(Object obj){
+		if(this == obj){
 			return true;
 		}
 
-		if(o instanceof Header){
-			Header that = (Header) o;
+		if(obj instanceof Header){
+			Header that = (Header) obj;
 			return Objects.equals(name, that.name) && Objects.equals(value, that.value);
 		}
 

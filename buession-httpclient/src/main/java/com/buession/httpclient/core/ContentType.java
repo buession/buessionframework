@@ -19,13 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
+import com.buession.core.utils.StringUtils;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * @author Yong.Teng
@@ -78,6 +81,26 @@ public final class ContentType {
 	}
 
 	@Override
+	public int hashCode(){
+		return Objects.hash(mimeType, charset);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof ContentType){
+			ContentType that = (ContentType) obj;
+
+			return StringUtils.equalsIgnoreCase(mimeType, that.mimeType) && Objects.equals(charset, that.charset);
+		}
+
+		return false;
+	}
+
+	@Override
 	public String toString(){
 		StringBuilder sb = new StringBuilder(mimeType.length() + 16);
 
@@ -91,7 +114,7 @@ public final class ContentType {
 		return sb.toString();
 	}
 
-	public final static String valueOf(ContentType contentType){
+	public static String valueOf(ContentType contentType){
 		if(contentType == null){
 			return null;
 		}
