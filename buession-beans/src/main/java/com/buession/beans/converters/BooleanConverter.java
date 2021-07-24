@@ -21,10 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans.converters;
+
+import com.buession.core.utils.StringUtils;
 
 /**
  * {@link com.buession.beans.converters.Converter} 的布尔值对象的实现，处理 <b>{@link java.lang.Boolean}</b> 对象之间的转换的实现。
@@ -44,8 +46,8 @@ public final class BooleanConverter extends AbstractConverter<Boolean> {
 
 	public BooleanConverter(final String[] trueStrings, final String[] falseStrings){
 		super();
-		this.trueStrings = copyStrings(trueStrings);
-		this.falseStrings = copyStrings(falseStrings);
+		this.trueStrings = StringUtils.toLowerCase(trueStrings);
+		this.falseStrings = StringUtils.toLowerCase(falseStrings);
 	}
 
 	@Override
@@ -65,16 +67,6 @@ public final class BooleanConverter extends AbstractConverter<Boolean> {
 		}
 
 		throw conversionException(Boolean.TYPE, value);
-	}
-
-	private final static String[] copyStrings(final String[] src){
-		final String[] dest = new String[src.length];
-
-		for(int i = 0; i < src.length; ++i){
-			dest[i] = src[i].toLowerCase();
-		}
-
-		return dest;
 	}
 
 }

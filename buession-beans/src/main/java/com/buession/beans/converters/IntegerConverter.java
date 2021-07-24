@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans.converters;
@@ -43,7 +43,7 @@ public final class IntegerConverter extends AbstractNumberConverter<Integer> {
 	@Override
 	protected Integer toNumber(final Class<?> sourceType, final Class<?> targetType, final Number value) throws ConversionException{
 		if(Integer.class.equals(value.getClass())){
-			return Integer.class.cast(value);
+			return (Integer) value;
 		}
 
 		final long longValue = value.longValue();

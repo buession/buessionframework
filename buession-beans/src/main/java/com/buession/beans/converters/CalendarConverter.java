@@ -21,13 +21,12 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans.converters;
 
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * {@link com.buession.beans.converters.Converter} 的日历对象的实现，处理 <b>{@link java.util.Calendar}</b> 对象之间的转换的实现。
@@ -55,7 +54,7 @@ public final class CalendarConverter extends AbstractDateTimeConverter<Calendar>
 			calendar = Calendar.getInstance(getTimeZone(), getLocale());
 		}
 
-		calendar.setTime(new Date(value));
+		calendar.setTimeInMillis(value);
 		calendar.setLenient(false);
 
 		return calendar;

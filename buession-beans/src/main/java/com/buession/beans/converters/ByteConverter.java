@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans.converters;
@@ -43,7 +43,7 @@ public final class ByteConverter extends AbstractNumberConverter<Byte> {
 	@Override
 	protected Byte toNumber(final Class<?> sourceType, final Class<?> targetType, final Number value) throws ConversionException{
 		if(Byte.class.equals(value.getClass())){
-			return Byte.class.cast(value);
+			return (Byte) value;
 		}
 
 		final long longValue = value.longValue();
@@ -56,7 +56,7 @@ public final class ByteConverter extends AbstractNumberConverter<Byte> {
 			throw new ConversionException(toString(sourceType) + " value '" + value + "' is too small " + toString(Byte.TYPE) + ".");
 		}
 
-		return new Byte(value.byteValue());
+		return value.byteValue();
 	}
 
 	@Override

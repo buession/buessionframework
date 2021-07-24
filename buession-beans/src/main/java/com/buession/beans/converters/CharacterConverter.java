@@ -46,7 +46,7 @@ public final class CharacterConverter extends AbstractConverter<Character> {
 
 	@Override
 	protected Character convertToType(final Class<?> sourceType, final Class<?> targetType, final Object value) throws Throwable{
-		return new Character(value.toString().charAt(0));
+		return value.toString().charAt(0);
 	}
 
 }
