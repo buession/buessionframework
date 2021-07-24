@@ -22,10 +22,24 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package redis.clients.jedis;/**
- * 
- *
+package redis.clients.jedis;
+
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
+import java.time.Duration;
+
+/**
  * @author Yong.Teng
  * @since 1.3.0
- */public class ShardedJedisPoolConfig {
+ */
+public class ShardedJedisPoolConfig extends GenericObjectPoolConfig<ShardedJedis> {
+
+	public ShardedJedisPoolConfig(){
+		// defaults to make your life with connection pool easier :)
+		setTestWhileIdle(true);
+		setMinEvictableIdleTime(Duration.ofMillis(60000));
+		setTimeBetweenEvictionRuns(Duration.ofMillis(30000));
+		setNumTestsPerEvictionRun(-1);
+	}
+
 }
