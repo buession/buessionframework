@@ -103,9 +103,12 @@ public interface BeanResolver {
 	 *
 	 * @throws IllegalAccessException
 	 * 		无访问权限
+	 * @throws NoSuchMethodException
+	 * 		没法找到方法时
 	 * @throws InvocationTargetException
 	 * 		反射异常，当被调用的方法的内部抛出了异常而没有被捕获时，将由此异常接收
 	 */
-	void populate(final Object bean, final Object source) throws IllegalAccessException, InvocationTargetException;
+	void populate(final Object bean, final Object source) throws IllegalAccessException, NoSuchMethodException,
+			InvocationTargetException;
 
 }

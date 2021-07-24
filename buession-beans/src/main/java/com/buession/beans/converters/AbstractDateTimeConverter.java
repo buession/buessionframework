@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans.converters;
@@ -247,12 +247,13 @@ public abstract class AbstractDateTimeConverter<T> extends AbstractConverter<T> 
 		if(patterns.length > 1){
 			throw new ConversionException("Error converting '" + toString(sourceType) + "' to '" + toString(targetType) + "' using patterns '" + ArrayUtils.toString(patterns) + "'.");
 		}else{
+			assert firstEx != null;
 			throw firstEx;
 		}
 	}
 
 	protected Calendar parse(final Class<?> sourceType, final Class<?> targetType, final String value,
-			final DateFormat format){
+							 final DateFormat format){
 		logFormat("Parsing", format);
 		format.setLenient(false);
 		final ParsePosition pos = new ParsePosition(0);

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans;
@@ -35,24 +35,24 @@ import org.apache.commons.beanutils.NestedNullException;
  */
 class CommonHelper {
 
-	public final static void checkBeanNull(final Object bean){
+	public static void checkBeanNull(final Object bean){
 		Assert.isNull(bean, "No bean specified.");
 	}
 
-	public final static void checkBeanNameNull(final Object bean, final String name){
+	public static void checkBeanNameNull(final Object bean, final String name){
 		Assert.isNull(name, "No name specified for bean class '" + bean.getClass() + "'.");
 	}
 
-	public final static IllegalArgumentException invalidMappedProperty(final Object bean, final String name,
-			final String message){
+	public static IllegalArgumentException invalidMappedProperty(final Object bean, final String name,
+																 final String message){
 		return new IllegalArgumentException("Invalid mapped property '" + name + "' on bean class '" + bean.getClass() + "'" + (message == null ? "" : " " + message) + ".");
 	}
 
-	public final static NoSuchMethodException unknownProperty(final Object bean, final String name){
+	public static NoSuchMethodException unknownProperty(final Object bean, final String name){
 		return new NoSuchMethodException("Unknown property '" + name + "'+ on bean class '" + bean.getClass() + "'.");
 	}
 
-	public final static NestedNullException nullPropertyValue(final Object bean, final String name){
+	public static NestedNullException nullPropertyValue(final Object bean, final String name){
 		return new NestedNullException("Null property value for '" + name + "' on bean class '" + bean.getClass() +
 				"'" + ".");
 	}

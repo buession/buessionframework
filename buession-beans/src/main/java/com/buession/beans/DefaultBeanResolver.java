@@ -110,9 +110,8 @@ public class DefaultBeanResolver implements BeanResolver {
 		final Map<String, Object> description = new HashMap<>(descriptors.length);
 
 		for(PropertyDescriptor descriptor : descriptors){
-			final String name = descriptor.getName();
 			if(PropertyDescriptorUtils.getReadMethod(clazz, descriptor) != null){
-				description.put(name, getProperty(bean, name));
+				description.put(descriptor.getName(), getProperty(bean, descriptor.getName()));
 			}
 		}
 
@@ -160,21 +159,25 @@ public class DefaultBeanResolver implements BeanResolver {
 		type = descriptor.getPropertyType();
 
 		Object newValue;
-		if(type.isArray()){
-			if(value instanceof String || value == null){
-				newValue = convertResolver.convert(type.getComponentType(), new String[]{(String) value});
-			}else if(value instanceof String[]){
-				newValue = convertResolver.convert(type.getComponentType(), (String[]) value);
-			}else{
-				newValue = convertResolver.convert(type.getComponentType(), value);
-			}
+		if(value == null){
+			newValue = null;
 		}else{
-			if(value instanceof String){
-				newValue = convertResolver.convert(type, (String) value);
-			}else if(value instanceof String[]){
-				newValue = convertResolver.convert(type, ((String[]) value)[0]);
+			if(type.isArray()){
+				if(value instanceof String){
+					newValue = convertResolver.convert(type.getComponentType(), new String[]{(String) value});
+				}else if(value instanceof String[]){
+					newValue = convertResolver.convert(type.getComponentType(), (String[]) value);
+				}else{
+					newValue = convertResolver.convert(type.getComponentType(), value);
+				}
 			}else{
-				newValue = convertResolver.convert(type, value);
+				if(value instanceof String){
+					newValue = convertResolver.convert(type, (String) value);
+				}else if(value instanceof String[]){
+					newValue = convertResolver.convert(type, ((String[]) value)[0]);
+				}else{
+					newValue = convertResolver.convert(type, value);
+				}
 			}
 		}
 
@@ -193,7 +196,7 @@ public class DefaultBeanResolver implements BeanResolver {
 
 	@Override
 	@SuppressWarnings({"unchecked"})
-	public void populate(final Object bean, final Object source) throws IllegalAccessException,
+	public void populate(final Object bean, final Object source) throws IllegalAccessException, NoSuchMethodException,
 			InvocationTargetException{
 		Assert.isNull(bean, "No destination bean specified.");
 
@@ -219,7 +222,7 @@ public class DefaultBeanResolver implements BeanResolver {
 					final Object value = propertyResolver.getProperty(source, propertyName);
 					setProperty(bean, name, value);
 				}catch(NoSuchMethodException e){
-					CommonHelper.unknownProperty(bean, propertyName);
+					throw CommonHelper.unknownProperty(bean, propertyName);
 				}
 			}
 		}
