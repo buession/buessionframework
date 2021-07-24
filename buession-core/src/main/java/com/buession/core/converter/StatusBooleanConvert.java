@@ -32,6 +32,7 @@ import com.buession.lang.Status;
  * @author Yong.Teng
  * @since 1.2.1
  */
+@Deprecated
 public class StatusBooleanConvert extends StatusBooleanConverter {
 
 }

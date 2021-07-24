@@ -25,7 +25,9 @@
 package com.buession.core.converter;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * List 转换器
@@ -60,13 +62,7 @@ public class ListConverter<S, T> implements Converter<List<S>, List<T>> {
 		if(source == null){
 			return null;
 		}else{
-			List<T> result = new ArrayList<>(source.size());
-
-			for(S value : source){
-				result.add(itemConverter.convert(value));
-			}
-
-			return result;
+			return source.stream().map((value)->itemConverter.convert(value)).collect(Collectors.toCollection(source instanceof LinkedList ? LinkedList::new : ArrayList::new));
 		}
 	}
 
