@@ -50,7 +50,7 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
 	 */
 	@Override
 	public List<Integer> batchInsert(List<E> data){
-		return data == null ? null : data.stream().map(v->insert(v)).collect(Collectors.toList());
+		return data == null ? null : data.stream().map(this::insert).collect(Collectors.toList());
 	}
 
 	/**
@@ -63,7 +63,7 @@ public abstract class AbstractDao<P, E> implements Dao<P, E> {
 	 */
 	@Override
 	public List<Integer> batchReplace(List<E> data){
-		return data == null ? null : data.stream().map(v->replace(v)).collect(Collectors.toList());
+		return data == null ? null : data.stream().map(this::replace).collect(Collectors.toList());
 	}
 
 	/**

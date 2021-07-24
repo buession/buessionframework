@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -30,7 +30,7 @@ import com.buession.core.utils.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,26 +45,20 @@ public abstract class AbstractEnumSetTypeHandler<E extends Enum<E>> extends Abst
 
 	@Override
 	public void setNonNullParameter(PreparedStatement ps, int i, Set<E> parameter, JdbcType jdbcType) throws SQLException{
-		String result = parameter.stream().map(v->v.name()).collect(Collectors.joining(";"));
+		String result = parameter.stream().map(Enum::name).collect(Collectors.joining(";"));
 		ps.setString(i, result);
 	}
 
 	protected abstract E getValue(String str);
 
 	@Override
-	protected HashSet<E> parseResult(final String str){
+	protected Set<E> parseResult(final String str){
 		if(str == null){
 			return null;
 		}
 
 		String[] temp = StringUtils.splitByWholeSeparatorPreserveAllTokens(str, ",");
-		HashSet<E> data = new HashSet<>(temp.length);
-
-		for(String s : temp){
-			data.add(getValue(s));
-		}
-
-		return data;
+		return Arrays.stream(temp).map(this::getValue).collect(Collectors.toSet());
 	}
 
 }

@@ -165,6 +165,9 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 			}catch(IllegalAccessException ex){
 				logger.error("Execute update command error: {}", ex.getMessage(), ex);
 				return 0;
+			}catch(NoSuchMethodException ex){
+				logger.error("Execute update command error: {}", ex.getMessage(), ex);
+				return 0;
 			}catch(InvocationTargetException ex){
 				logger.error("Execute update command error: {}", ex.getMessage(), ex);
 				return 0;

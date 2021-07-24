@@ -537,7 +537,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 				}else if(MongoOperation.Operator.GTE.equals(operator)){
 					criteria.and(field).gte(mongoOperation.getValue());
 					/* IN */
-				}else if(MongoOperation.Operator.IN.equals(operator) == true){
+				}else if(MongoOperation.Operator.IN.equals(operator)){
 					criteria.and(field).in(mongoOperation.getValue());
 					/* NOT IN */
 				}else if(MongoOperation.Operator.NIN.equals(operator)){
@@ -570,7 +570,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		}
 	}
 
-	private <E> BasicDBObject toDbObject(E e){
+	private BasicDBObject toDbObject(E e){
 		BasicDBObject doc = new BasicDBObject();
 		masterMongoTemplate.getConverter().write(e, doc);
 		return doc;

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -32,7 +32,6 @@ import com.buession.core.utils.StringUtils;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
@@ -47,7 +46,7 @@ public class SimpleSetTypeHandler extends AbstractSetTypeHandler<String> {
 
 	@Override
 	public void setNonNullParameter(PreparedStatement ps, int i, Set<String> parameter, JdbcType jdbcType) throws SQLException{
-		ps.setString(i, parameter.stream().collect(Collectors.joining(DELIMITER)));
+		ps.setString(i, ArrayUtils.toString(parameter, DELIMITER));
 	}
 
 	@Override
