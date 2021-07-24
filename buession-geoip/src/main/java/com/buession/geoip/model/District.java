@@ -21,12 +21,13 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 与IP地址相关联的城市数据
@@ -35,70 +36,89 @@ import java.io.Serializable;
  */
 public final class District implements Serializable {
 
-    private final static long serialVersionUID = -8098424244620246891L;
+	private final static long serialVersionUID = -8098424244620246891L;
 
-    private final Integer geoNameId;
+	private final Integer geoNameId;
 
-    private final Integer code;
+	private final Integer code;
 
-    private final String originalName;
+	private final String originalName;
 
-    private final String name;
+	private final String name;
 
-    private final String fullName;
+	private final String fullName;
 
-    private final Postal postal;
+	private final Postal postal;
 
-    private final District parent;
+	private final District parent;
 
-    public District(final Integer geoNameId, final Integer code, final String originalName, final String name, final
-    Postal postal, final District parent){
-        this.geoNameId = geoNameId;
-        this.code = code;
-        this.originalName = originalName;
-        this.name = name;
-        this.postal = postal;
-        this.parent = parent;
+	public District(final Integer geoNameId, final Integer code, final String originalName, final String name,
+					final Postal postal, final District parent){
+		this.geoNameId = geoNameId;
+		this.code = code;
+		this.originalName = originalName;
+		this.name = name;
+		this.postal = postal;
+		this.parent = parent;
 
-        if(name != null){
-            this.fullName = parent != null ? parent.getName() + name : name;
-        }else{
-            this.fullName = null;
-        }
-    }
+		if(name != null){
+			this.fullName = parent != null ? parent.getName() + name : name;
+		}else{
+			this.fullName = null;
+		}
+	}
 
-    public Integer getGeoNameId(){
-        return geoNameId;
-    }
+	public Integer getGeoNameId(){
+		return geoNameId;
+	}
 
-    public Integer getCode(){
-        return code;
-    }
+	public Integer getCode(){
+		return code;
+	}
 
-    public String getOriginalName(){
-        return originalName;
-    }
+	public String getOriginalName(){
+		return originalName;
+	}
 
-    public String getName(){
-        return name;
-    }
+	public String getName(){
+		return name;
+	}
 
-    public String getFullName(){
-        return fullName;
-    }
+	public String getFullName(){
+		return fullName;
+	}
 
-    public Postal getPostal(){
-        return postal;
-    }
+	public Postal getPostal(){
+		return postal;
+	}
 
-    public District getParent(){
-        return parent;
-    }
+	public District getParent(){
+		return parent;
+	}
 
-    @Override
-    public String toString(){
-        return "District{" + "geoNameId=" + geoNameId + ", code=" + code + ", originalName='" + originalName + '\'' +
-                ", name='" + name + '\'' + ", fullName='" + fullName + '\'' + ", postal=" + postal + ", parent=" +
-                parent + '}';
-    }
+	@Override
+	public int hashCode(){
+		return Objects.hash(geoNameId, code, originalName, name, fullName, postal, parent);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof District){
+			District that = (District) obj;
+			return Objects.equals(geoNameId, that.geoNameId) && Objects.equals(code, that.code) && Objects.equals(originalName, that.originalName) && Objects.equals(name, that.name);
+		}
+
+		return false;
+	}
+
+	@Override
+	public String toString(){
+		return "District{" + "geoNameId=" + geoNameId + ", code=" + code + ", originalName='" + originalName + '\'' +
+				", name='" + name + '\'' + ", fullName='" + fullName + '\'' + ", postal=" + postal + ", parent=" + parent + '}';
+	}
+
 }

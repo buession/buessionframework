@@ -21,12 +21,13 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 包含与 IP 地址关联的特征记录的数据。
@@ -35,122 +36,247 @@ import java.io.Serializable;
  */
 public final class Traits implements Serializable {
 
-    private final static long serialVersionUID = 8560280121212334774L;
+	private final static long serialVersionUID = 8560280121212334774L;
 
-    private final String ipAddress;
+	private final String ipAddress;
 
-    private final String domain;
+	private final String domain;
 
-    private final String isp;
+	private final String isp;
 
-    private final Organization organization;
+	/**
+	 * 网络
+	 *
+	 * @since 1.3.0
+	 */
+	private final Network network;
 
-    private final Organization autonomousSystemOrganization;
+	/**
+	 * 连接方式
+	 *
+	 * @since 1.3.0
+	 */
+	private final ConnectionType connectionType;
 
-    private final Integer autonomousSystemNumber;
+	private final Organization organization;
 
-    private final boolean isAnonymous;
+	private final Organization autonomousSystemOrganization;
 
-    private final boolean isAnonymousProxy;
+	private final Integer autonomousSystemNumber;
 
-    private final boolean isAnonymousVpn;
+	private final boolean isAnonymous;
 
-    private final boolean isHostingProvider;
+	private final boolean isAnonymousProxy;
 
-    private final boolean isLegitimateProxy;
+	private final boolean isAnonymousVpn;
 
-    private final boolean isPublicProxy;
+	private final boolean isHostingProvider;
 
-    private final boolean isSatelliteProvider;
+	private final boolean isLegitimateProxy;
 
-    private final boolean isTorExitNode;
+	private final boolean isPublicProxy;
 
-    public Traits(final String ipAddress, final String domain, final String isp, final Organization organization,
-                  final Organization autonomousSystemOrganization, final Integer autonomousSystemNumber, final
-                  boolean isAnonymous, final boolean isAnonymousProxy, final boolean isAnonymousVpn, final boolean
-                          isHostingProvider, final boolean isLegitimateProxy, final boolean isPublicProxy, final
-                  boolean isSatelliteProvider, final boolean isTorExitNode){
-        this.ipAddress = ipAddress;
-        this.domain = domain;
-        this.isp = isp;
-        this.organization = organization;
-        this.autonomousSystemOrganization = autonomousSystemOrganization;
-        this.autonomousSystemNumber = autonomousSystemNumber;
-        this.isAnonymous = isAnonymous;
-        this.isAnonymousProxy = isAnonymousProxy;
-        this.isAnonymousVpn = isAnonymousVpn;
-        this.isHostingProvider = isHostingProvider;
-        this.isLegitimateProxy = isLegitimateProxy;
-        this.isPublicProxy = isPublicProxy;
-        this.isSatelliteProvider = isSatelliteProvider;
-        this.isTorExitNode = isTorExitNode;
-    }
+	private final boolean isResidentialProxy;
 
-    public String getIpAddress(){
-        return ipAddress;
-    }
+	private final boolean isSatelliteProvider;
 
-    public String getDomain(){
-        return domain;
-    }
+	private final boolean isTorExitNode;
 
-    public String getIsp(){
-        return isp;
-    }
+	/**
+	 * 用户类型
+	 *
+	 * @since 1.3.0
+	 */
+	private final String userType;
 
-    public Organization getOrganization(){
-        return organization;
-    }
+	/**
+	 * 用户数量
+	 *
+	 * @since 1.3.0
+	 */
+	private final Integer userCount;
 
-    public Organization getAutonomousSystemOrganization(){
-        return autonomousSystemOrganization;
-    }
+	/**
+	 * 静态 IP 评分
+	 *
+	 * @since 1.3.0
+	 */
+	private final Double staticIpScore;
 
-    public Integer getAutonomousSystemNumber(){
-        return autonomousSystemNumber;
-    }
+	public Traits(final String ipAddress, final String domain, final String isp, final Network network,
+				  final ConnectionType connectionType, final Organization organization,
+				  final Organization autonomousSystemOrganization, final Integer autonomousSystemNumber,
+				  final boolean isAnonymous, final boolean isAnonymousProxy, final boolean isAnonymousVpn,
+				  final boolean isHostingProvider, final boolean isLegitimateProxy, final boolean isPublicProxy,
+				  final boolean isResidentialProxy, final boolean isSatelliteProvider, final boolean isTorExitNode,
+				  final String userType, final Integer userCount, final Double staticIpScore){
+		this.ipAddress = ipAddress;
+		this.domain = domain;
+		this.isp = isp;
+		this.network = network;
+		this.connectionType = connectionType;
+		this.organization = organization;
+		this.autonomousSystemOrganization = autonomousSystemOrganization;
+		this.autonomousSystemNumber = autonomousSystemNumber;
+		this.isAnonymous = isAnonymous;
+		this.isAnonymousProxy = isAnonymousProxy;
+		this.isAnonymousVpn = isAnonymousVpn;
+		this.isHostingProvider = isHostingProvider;
+		this.isLegitimateProxy = isLegitimateProxy;
+		this.isPublicProxy = isPublicProxy;
+		this.isResidentialProxy = isResidentialProxy;
+		this.isSatelliteProvider = isSatelliteProvider;
+		this.isTorExitNode = isTorExitNode;
+		this.userType = userType;
+		this.userCount = userCount;
+		this.staticIpScore = staticIpScore;
+	}
 
-    public boolean isAnonymous(){
-        return isAnonymous;
-    }
+	public String getIpAddress(){
+		return ipAddress;
+	}
 
-    public boolean isAnonymousProxy(){
-        return isAnonymousProxy;
-    }
+	public String getDomain(){
+		return domain;
+	}
 
-    public boolean isAnonymousVpn(){
-        return isAnonymousVpn;
-    }
+	public String getIsp(){
+		return isp;
+	}
 
-    public boolean isHostingProvider(){
-        return isHostingProvider;
-    }
+	/**
+	 * 返回网络
+	 *
+	 * @return 网络
+	 *
+	 * @since 1.3.0
+	 */
+	public Network getNetwork(){
+		return network;
+	}
 
-    public boolean isLegitimateProxy(){
-        return isLegitimateProxy;
-    }
+	/**
+	 * 返回连接方式
+	 *
+	 * @return 连接方式
+	 *
+	 * @since 1.3.0
+	 */
+	public ConnectionType getConnectionType(){
+		return connectionType;
+	}
 
-    public boolean isPublicProxy(){
-        return isPublicProxy;
-    }
+	public Organization getOrganization(){
+		return organization;
+	}
 
-    public boolean isSatelliteProvider(){
-        return isSatelliteProvider;
-    }
+	public Organization getAutonomousSystemOrganization(){
+		return autonomousSystemOrganization;
+	}
 
-    public boolean isTorExitNode(){
-        return isTorExitNode;
-    }
+	public Integer getAutonomousSystemNumber(){
+		return autonomousSystemNumber;
+	}
 
-    @Override
-    public String toString(){
-        return "Traits{" + "ipAddress='" + ipAddress + '\'' + ", domain='" + domain + '\'' + ", isp='" + isp + '\'' +
-                ", organization=" + organization + ", autonomousSystemOrganization=" + autonomousSystemOrganization +
-                ", autonomousSystemNumber=" + autonomousSystemNumber + ", " + "isAnonymous=" + isAnonymous + ", " +
-                "isAnonymousProxy=" + isAnonymousProxy + ", isAnonymousVpn=" + isAnonymousVpn + ", " +
-                "isHostingProvider=" + isHostingProvider + ", isLegitimateProxy=" + isLegitimateProxy + ", " +
-                "isPublicProxy=" + isPublicProxy + ", isSatelliteProvider=" + isSatelliteProvider + ", " +
-                "isTorExitNode=" + isTorExitNode + '}';
-    }
+	public boolean isAnonymous(){
+		return isAnonymous;
+	}
+
+	public boolean isAnonymousProxy(){
+		return isAnonymousProxy;
+	}
+
+	public boolean isAnonymousVpn(){
+		return isAnonymousVpn;
+	}
+
+	public boolean isHostingProvider(){
+		return isHostingProvider;
+	}
+
+	public boolean isLegitimateProxy(){
+		return isLegitimateProxy;
+	}
+
+	public boolean isPublicProxy(){
+		return isPublicProxy;
+	}
+
+	public boolean isResidentialProxy(){
+		return isResidentialProxy;
+	}
+
+	public boolean isSatelliteProvider(){
+		return isSatelliteProvider;
+	}
+
+	public boolean isTorExitNode(){
+		return isTorExitNode;
+	}
+
+	/**
+	 * 返回用户类型
+	 *
+	 * @return 用户类型
+	 *
+	 * @since 1.3.0
+	 */
+	public String getUserType(){
+		return userType;
+	}
+
+	/**
+	 * 返回用户数量
+	 *
+	 * @return 用户数量
+	 *
+	 * @since 1.3.0
+	 */
+	public Integer getUserCount(){
+		return userCount;
+	}
+
+	/**
+	 * 返回静态 IP 评分
+	 *
+	 * @return 静态 IP 评分
+	 *
+	 * @since 1.3.0
+	 */
+	public Double getStaticIpScore(){
+		return staticIpScore;
+	}
+
+	@Override
+	public int hashCode(){
+		return Objects.hash(ipAddress, domain, isp, network, connectionType, organization,
+				autonomousSystemOrganization, autonomousSystemNumber, isAnonymous, isAnonymousProxy, isAnonymousVpn,
+				isHostingProvider, isLegitimateProxy, isPublicProxy, isResidentialProxy, isSatelliteProvider,
+				isTorExitNode, userType, userCount, staticIpScore);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof Traits){
+			Traits that = (Traits) obj;
+
+			if(isAnonymous == that.isAnonymous && isAnonymousProxy == that.isAnonymousProxy && isAnonymousVpn == that.isAnonymousVpn && isHostingProvider == that.isHostingProvider && isLegitimateProxy == that.isLegitimateProxy && isPublicProxy == that.isPublicProxy && isResidentialProxy == that.isResidentialProxy && isSatelliteProvider == that.isSatelliteProvider && isTorExitNode == that.isTorExitNode){
+				return Objects.equals(ipAddress, that.ipAddress) && Objects.equals(domain, that.domain) && Objects.equals(isp, that.isp) && Objects.equals(network, that.network) && connectionType == that.connectionType && Objects.equals(organization, that.organization) && Objects.equals(autonomousSystemOrganization, that.autonomousSystemOrganization) && Objects.equals(autonomousSystemNumber, that.autonomousSystemNumber) && Objects.equals(userType, that.userType) && Objects.equals(userCount, that.userCount) && Objects.equals(staticIpScore, that.staticIpScore);
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public String toString(){
+		return "Traits{" + "ipAddress='" + ipAddress + '\'' + ", domain='" + domain + '\'' + ", isp='" + isp + '\'' +
+				", network=" + network + ", connectionType=" + connectionType + ", organization=" + organization + ", "
+				+ "autonomousSystemOrganization" + "=" + autonomousSystemOrganization + ", autonomousSystemNumber=" + autonomousSystemNumber + ", " + "isAnonymous=" + isAnonymous + ", " + "isAnonymousProxy=" + isAnonymousProxy + ", isAnonymousVpn=" + isAnonymousVpn + ", " + "isHostingProvider=" + isHostingProvider + ", isLegitimateProxy=" + isLegitimateProxy + ", " + "isPublicProxy=" + isPublicProxy + ", isSatelliteProvider=" + isSatelliteProvider + ", " + "isTorExitNode=" + isTorExitNode + ", userType='" + isTorExitNode + '\'' + ", userCount=" + userCount + ", staticIpScore=" + staticIpScore + '}';
+	}
 
 }

@@ -21,12 +21,13 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 包含与IP地址关联的经纬度记录的数据。
@@ -35,35 +36,54 @@ import java.io.Serializable;
  */
 public final class Geo implements Serializable {
 
-    private final static long serialVersionUID = 3166412069316195061L;
+	private final static long serialVersionUID = 3166412069316195061L;
 
-    private final Double latitude;
+	private final Double latitude;
 
-    private final Double longitude;
+	private final Double longitude;
 
-    private final Integer accuracyRadius;
+	private final Integer accuracyRadius;
 
-    public Geo(final Double latitude, final Double longitude, final Integer accuracyRadius){
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.accuracyRadius = accuracyRadius;
-    }
+	public Geo(final Double latitude, final Double longitude, final Integer accuracyRadius){
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.accuracyRadius = accuracyRadius;
+	}
 
-    public Double getLatitude(){
-        return latitude;
-    }
+	public Double getLatitude(){
+		return latitude;
+	}
 
-    public Double getLongitude(){
-        return longitude;
-    }
+	public Double getLongitude(){
+		return longitude;
+	}
 
-    public Integer getAccuracyRadius(){
-        return accuracyRadius;
-    }
+	public Integer getAccuracyRadius(){
+		return accuracyRadius;
+	}
 
-    @Override
-    public String toString(){
-        return "Geo{" + "latitude=" + latitude + ", longitude=" + longitude + ", accuracyRadius=" + accuracyRadius +
-                '}';
-    }
+	@Override
+	public int hashCode(){
+		return Objects.hash(latitude, longitude, accuracyRadius);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof Geo){
+			Geo that = (Geo) obj;
+			return Objects.equals(latitude, that.latitude) && Objects.equals(longitude, that.longitude);
+		}
+
+		return false;
+	}
+
+	@Override
+	public String toString(){
+		return "Geo{" + "latitude=" + latitude + ", longitude=" + longitude + ", accuracyRadius=" + accuracyRadius + '}';
+	}
+
 }

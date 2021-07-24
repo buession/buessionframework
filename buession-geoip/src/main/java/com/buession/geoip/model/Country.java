@@ -21,12 +21,13 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 包含与IP地址关联的国家记录的数据。
@@ -35,58 +36,95 @@ import java.io.Serializable;
  */
 public final class Country implements Serializable {
 
-    private final static long serialVersionUID = -7665239490542479833L;
+	private final static long serialVersionUID = -7665239490542479833L;
 
-    private final Integer geoNameId;
+	private final Integer geoNameId;
 
-    private final Integer confidence;
+	private final Integer confidence;
 
-    private final String code;
+	private final String code;
 
-    private final String originalName;
+	private final String originalName;
 
-    private final String name;
+	private final String name;
 
-    private final String fullName;
+	private final String fullName;
 
-    public Country(final Integer geoNameId, final Integer confidence, final String code, final String originalName,
-                   final String name, final String fullName){
-        this.geoNameId = geoNameId;
-        this.confidence = confidence;
-        this.code = code;
-        this.originalName = originalName;
-        this.name = name;
-        this.fullName = fullName;
-    }
+	/**
+	 * IP 地址是否在欧盟
+	 *
+	 * @since 1.3.0
+	 */
+	private final boolean isInEuropeanUnion;
 
-    public Integer getGeoNameId(){
-        return geoNameId;
-    }
+	public Country(final Integer geoNameId, final Integer confidence, final String code, final String originalName,
+				   final String name, final String fullName, final boolean isInEuropeanUnion){
+		this.geoNameId = geoNameId;
+		this.confidence = confidence;
+		this.code = code;
+		this.originalName = originalName;
+		this.name = name;
+		this.fullName = fullName;
+		this.isInEuropeanUnion = isInEuropeanUnion;
+	}
 
-    public Integer getConfidence(){
-        return confidence;
-    }
+	public Integer getGeoNameId(){
+		return geoNameId;
+	}
 
-    public String getCode(){
-        return code;
-    }
+	public Integer getConfidence(){
+		return confidence;
+	}
 
-    public String getOriginalName(){
-        return originalName;
-    }
+	public String getCode(){
+		return code;
+	}
 
-    public String getName(){
-        return name;
-    }
+	public String getOriginalName(){
+		return originalName;
+	}
 
-    public String getFullName(){
-        return fullName;
-    }
+	public String getName(){
+		return name;
+	}
 
-    @Override
-    public String toString(){
-        return "Country{" + "geoNameId=" + geoNameId + ", confidence=" + confidence + ", code='" + code + '\'' + ", "
-                + "originalName='" + originalName + '\'' + ", name='" + name + '\'' + ", fullName='" + fullName +
-                '\'' + '}';
-    }
+	public String getFullName(){
+		return fullName;
+	}
+
+	/**
+	 * 返回 IP 地址是否在欧盟
+	 *
+	 * @return IP 在欧盟，返回 true；否则，返回 false
+	 *
+	 * @since 1.3.0
+	 */
+	public boolean isInEuropeanUnion(){
+		return isInEuropeanUnion;
+	}
+
+	@Override
+	public int hashCode(){
+		return Objects.hash(geoNameId, confidence, code, originalName, name, fullName, isInEuropeanUnion);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof Country){
+			Country that = (Country) obj;
+			return Objects.equals(geoNameId, that.geoNameId) && Objects.equals(confidence, that.confidence) && Objects.equals(code, that.code) && Objects.equals(originalName, that.originalName) && Objects.equals(name, that.name);
+		}
+
+		return false;
+	}
+
+	@Override
+	public String toString(){
+		return "Country{" + "geoNameId=" + geoNameId + ", confidence=" + confidence + ", code='" + code + '\'' + ", " + "originalName='" + originalName + '\'' + ", name='" + name + '\'' + ", fullName='" + fullName + '\'' + ", isInEuropeanUnion=" + isInEuropeanUnion + '}';
+	}
+
 }

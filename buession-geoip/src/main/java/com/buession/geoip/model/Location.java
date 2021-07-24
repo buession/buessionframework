@@ -21,12 +21,13 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.TimeZone;
 
 /**
@@ -34,57 +35,77 @@ import java.util.TimeZone;
  */
 public final class Location implements Serializable {
 
-    private final static long serialVersionUID = 4865138617078561823L;
+	private final static long serialVersionUID = 4865138617078561823L;
 
-    private final Continent continent;
+	private final Continent continent;
 
-    private final Country country;
+	private final Country country;
 
-    private final District district;
+	private final District district;
 
-    private final Traits traits;
+	private final Traits traits;
 
-    private final Geo geo;
+	private final Geo geo;
 
-    private final TimeZone timeZone;
+	private final TimeZone timeZone;
 
-    public Location(final Continent continent, final Country country, final District district, final Traits traits,
-                    final Geo geo, final TimeZone timeZone){
-        this.continent = continent;
-        this.country = country;
-        this.district = district;
-        this.traits = traits;
-        this.geo = geo;
-        this.timeZone = timeZone;
-    }
+	public Location(final Continent continent, final Country country, final District district, final Traits traits,
+					final Geo geo, final TimeZone timeZone){
+		this.continent = continent;
+		this.country = country;
+		this.district = district;
+		this.traits = traits;
+		this.geo = geo;
+		this.timeZone = timeZone;
+	}
 
-    public Continent getContinent(){
-        return continent;
-    }
+	public Continent getContinent(){
+		return continent;
+	}
 
-    public Country getCountry(){
-        return country;
-    }
+	public Country getCountry(){
+		return country;
+	}
 
-    public District getDistrict(){
-        return district;
-    }
+	public District getDistrict(){
+		return district;
+	}
 
-    public Traits getTraits(){
-        return traits;
-    }
+	public Traits getTraits(){
+		return traits;
+	}
 
-    public Geo getGeo(){
-        return geo;
-    }
+	public Geo getGeo(){
+		return geo;
+	}
 
-    public TimeZone getTimeZone(){
-        return timeZone;
-    }
+	public TimeZone getTimeZone(){
+		return timeZone;
+	}
 
-    @Override
-    public String toString(){
-        return "Location{" + "continent=" + continent + ", country=" + country + ", district=" + district + ", " +
-                "traits=" + traits + ", geo=" + geo + ", timeZone=" + timeZone + '}';
-    }
+	@Override
+	public int hashCode(){
+		return Objects.hash(continent, country, district, traits, geo, timeZone);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof Location){
+			Location that = (Location) obj;
+			return Objects.equals(continent, that.continent) && Objects.equals(country, that.country) && Objects.equals(district, that.district) && Objects.equals(traits, that.traits) && Objects.equals(geo, that.geo) && Objects.equals(timeZone, that.timeZone);
+		}
+
+		return false;
+	}
+
+	@Override
+	public String toString(){
+		return "Location{" + "continent=" + continent + ", country=" + country + ", district=" + district + ", " +
+				"traits=" + traits + ", geo=" + geo + ", timeZone=" + timeZone + '}';
+	}
+
 }

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -46,11 +46,11 @@ public class CountryConverter extends AbstractConverter<Country, com.maxmind.geo
 		}
 
 		final String name = getName(country.getNames(), locale);
-		final String fullName = country.getIsoCode() == null ? null : countryResource.getData().get(country.getIsoCode
-				());
+		final String fullName = country.getIsoCode() == null ? null :
+				countryResource.getData().get(country.getIsoCode());
 
 		return new Country(country.getGeoNameId(), country.getConfidence(), country.getIsoCode(), country.getName(),
-				name, fullName);
+				name, fullName, country.isInEuropeanUnion());
 	}
 
 }

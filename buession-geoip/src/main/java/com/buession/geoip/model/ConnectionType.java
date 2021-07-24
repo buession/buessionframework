@@ -22,10 +22,37 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.geoip.model;/**
- * 
+package com.buession.geoip.model;
+
+/**
+ * 网络连接类型
  *
  * @author Yong.Teng
- * @since 1.2.3
- */public enum ConnectionType {
+ * @since 1.3.0
+ */
+public enum ConnectionType {
+
+	DIALUP("Dialup"),
+
+	CABLE_DSL("Cable/DSL"),
+
+	CORPORATE("Corporate"),
+
+	CELLULAR("Cellular");
+
+	private String name;
+
+	ConnectionType(String name){
+		this.name = name;
+	}
+
+	public String getName(){
+		return name;
+	}
+
+	@Override
+	public String toString(){
+		return this.name;
+	}
+
 }

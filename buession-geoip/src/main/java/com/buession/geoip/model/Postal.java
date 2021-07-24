@@ -27,34 +27,54 @@
 package com.buession.geoip.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author Yong.Teng
  */
 public class Postal implements Serializable {
 
-    private final static long serialVersionUID = -570124317632308660L;
+	private final static long serialVersionUID = -570124317632308660L;
 
-    private final String code;
+	private final String code;
 
-    private final Integer confidence;
+	private final Integer confidence;
 
-    public Postal(final String code, final Integer confidence){
-        this.code = code;
-        this.confidence = confidence;
-    }
+	public Postal(final String code, final Integer confidence){
+		this.code = code;
+		this.confidence = confidence;
+	}
 
-    public String getCode(){
-        return code;
-    }
+	public String getCode(){
+		return code;
+	}
 
-    public Integer getConfidence(){
-        return confidence;
-    }
+	public Integer getConfidence(){
+		return confidence;
+	}
 
-    @Override
-    public String toString(){
-        return "Postal{" + "code='" + code + '\'' + ", confidence=" + confidence + '}';
-    }
+	@Override
+	public int hashCode(){
+		return Objects.hash(code, confidence);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof Postal){
+			Postal that = (Postal) obj;
+			return Objects.equals(code, that.code) && Objects.equals(confidence, that.confidence);
+		}
+
+		return false;
+	}
+
+	@Override
+	public String toString(){
+		return "Postal{" + "code='" + code + '\'' + ", confidence=" + confidence + '}';
+	}
 
 }

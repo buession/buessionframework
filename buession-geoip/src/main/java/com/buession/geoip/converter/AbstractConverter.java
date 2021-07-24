@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -80,7 +80,7 @@ public abstract class AbstractConverter<M, S extends AbstractRecord, R extends A
 		return null;
 	}
 
-	private final static String getLanguageTag(final Locale locale, final char separator){
+	private static String getLanguageTag(final Locale locale, final char separator){
 		final String language = locale.getLanguage();
 		final String country = locale.getCountry();
 		final StringBuilder sb = new StringBuilder(language.length() + country.length() + 1);

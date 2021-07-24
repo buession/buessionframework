@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
@@ -49,8 +49,8 @@ public class CityConverter extends AbstractConverter<District, com.maxmind.geoip
 
 		final String name = getName(city.getNames(), locale);
 		final Postal postal = postalConverter.converter(response.getPostal(), response, locale);
-		final District parent = response == null ? null : subdivisionConverter.converter(response
-				.getLeastSpecificSubdivision(), response, locale);
+		final District parent = subdivisionConverter.converter(response.getLeastSpecificSubdivision(), response,
+				locale);
 
 		return new District(city.getGeoNameId(), city.getConfidence(), city.getName(), name, postal, parent);
 	}

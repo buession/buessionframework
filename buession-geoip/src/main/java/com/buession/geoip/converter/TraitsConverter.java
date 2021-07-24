@@ -21,15 +21,19 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.converter;
 
+import com.buession.geoip.model.ConnectionType;
+import com.buession.geoip.model.Network;
 import com.buession.geoip.model.Organization;
 import com.buession.geoip.model.Traits;
 import com.maxmind.geoip2.model.AbstractResponse;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Locale;
 
 /**
@@ -44,15 +48,27 @@ public class TraitsConverter extends AbstractConverter<Traits, com.maxmind.geoip
 			return null;
 		}
 
-		final Organization organization = traits.getOrganization() == null ? null : new Organization(traits
-				.getOrganization());
+		InetAddress ipAddress = null;
+		try{
+			ipAddress = InetAddress.getByName(traits.getIpAddress());
+		}catch(UnknownHostException e){
+		}
+
+		final ConnectionTypeConverter connectionTypeConverter = new ConnectionTypeConverter();
+		final Network network = traits.getNetwork() == null ? null : new Network(ipAddress,
+				traits.getNetwork().getPrefixLength(), traits.getNetwork().getNetworkAddress());
+		final ConnectionType connectionType = connectionTypeConverter.convert(traits.getConnectionType());
+		final Organization organization = traits.getOrganization() == null ? null :
+				new Organization(traits.getOrganization());
 		final Organization autonomousSystemOrganization = traits.getAutonomousSystemOrganization() == null ? null :
 				new Organization(traits.getAutonomousSystemOrganization());
 
-		return new Traits(traits.getIpAddress(), traits.getDomain(), traits.getIsp(), organization,
-				autonomousSystemOrganization, traits.getAutonomousSystemNumber(), traits.isAnonymous(), traits
-				.isAnonymousProxy(), traits.isAnonymousVpn(), traits.isHostingProvider(), traits.isLegitimateProxy(),
-				traits.isPublicProxy(), traits.isSatelliteProvider(), traits.isTorExitNode());
+		return new Traits(traits.getIpAddress(), traits.getDomain(), traits.getIsp(), network, connectionType,
+				organization, autonomousSystemOrganization, traits.getAutonomousSystemNumber(), traits.isAnonymous(),
+				traits.isAnonymousProxy(), traits.isAnonymousVpn(), traits.isHostingProvider(),
+				traits.isLegitimateProxy(), traits.isPublicProxy(), traits.isPublicProxy(),
+				traits.isSatelliteProvider(), traits.isTorExitNode(), traits.getUserType(), traits.getUserCount(),
+				traits.getStaticIpScore());
 	}
 
 }

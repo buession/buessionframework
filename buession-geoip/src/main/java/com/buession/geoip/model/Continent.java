@@ -21,12 +21,13 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 包含与IP地址关联的洲记录的数据。
@@ -35,43 +36,61 @@ import java.io.Serializable;
  */
 public final class Continent implements Serializable {
 
-    private final static long serialVersionUID = -5463257987682894006L;
+	private final static long serialVersionUID = -5463257987682894006L;
 
-    private final Integer geoNameId;
+	private final Integer geoNameId;
 
-    private final String code;
+	private final String code;
 
-    private final String originalName;
+	private final String originalName;
 
-    private final String name;
+	private final String name;
 
-    public Continent(final Integer geoNameId, final String code, final String originalName, final String name){
-        this.geoNameId = geoNameId;
-        this.code = code;
-        this.originalName = originalName;
-        this.name = name;
-    }
+	public Continent(final Integer geoNameId, final String code, final String originalName, final String name){
+		this.geoNameId = geoNameId;
+		this.code = code;
+		this.originalName = originalName;
+		this.name = name;
+	}
 
-    public Integer getGeoNameId(){
-        return geoNameId;
-    }
+	public Integer getGeoNameId(){
+		return geoNameId;
+	}
 
-    public String getCode(){
-        return code;
-    }
+	public String getCode(){
+		return code;
+	}
 
-    public String getOriginalName(){
-        return originalName;
-    }
+	public String getOriginalName(){
+		return originalName;
+	}
 
-    public String getName(){
-        return name;
-    }
+	public String getName(){
+		return name;
+	}
 
-    @Override
-    public String toString(){
-        return "Continent{" + "geoNameId=" + geoNameId + ", code='" + code + '\'' + ", originalName='" + originalName
-                + '\'' + ", name='" + name + '\'' + '}';
-    }
+	@Override
+	public int hashCode(){
+		return Objects.hash(geoNameId, code, originalName, name);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof Continent){
+			Continent that = (Continent) obj;
+			return Objects.equals(geoNameId, that.geoNameId) && Objects.equals(code, that.code);
+		}
+
+		return false;
+	}
+
+	@Override
+	public String toString(){
+		return "Continent{" + "geoNameId=" + geoNameId + ", code='" + code + '\'' + ", originalName='" + originalName + '\'' + ", name='" + name + '\'' + '}';
+	}
 
 }

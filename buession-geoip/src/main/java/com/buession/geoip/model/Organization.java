@@ -21,12 +21,13 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 包含与 IP 地址关联的组织信息数据。
@@ -35,21 +36,40 @@ import java.io.Serializable;
  */
 public final class Organization implements Serializable {
 
-    private final static long serialVersionUID = 1780458868407500203L;
+	private final static long serialVersionUID = 1780458868407500203L;
 
-    private String name;
+	private String name;
 
-    public Organization(final String name){
-        this.name = name;
-    }
+	public Organization(final String name){
+		this.name = name;
+	}
 
-    public String getName(){
-        return name;
-    }
+	public String getName(){
+		return name;
+	}
 
-    @Override
-    public String toString(){
-        return "Organization{" + "name='" + name + '\'' + '}';
-    }
+	@Override
+	public int hashCode(){
+		return Objects.hash(name);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof Organization){
+			Organization that = (Organization) obj;
+			return Objects.equals(name, that.name);
+		}
+
+		return false;
+	}
+
+	@Override
+	public String toString(){
+		return "Organization{" + "name='" + name + '\'' + '}';
+	}
 
 }

@@ -22,10 +22,25 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.geoip;/**
- * 
- *
+package com.buession.geoip;
+
+import com.buession.geoip.spring.GeoIPResolverFactoryBean;
+import org.junit.Assert;
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
  * @since 1.3.0
- */public class DatabaseResolverTest {
+ */
+public class DatabaseResolverTest {
+
+	private final static GeoIPResolverFactoryBean resolver = new GeoIPResolverFactoryBean();
+
+	@Test
+	public void location() throws Exception{
+		resolver.afterPropertiesSet();
+		DatabaseResolver databaseResolver = resolver.getObject();
+		Assert.assertEquals("CN", databaseResolver.location("106.11.253.83").getCountry().getCode());
+	}
+
 }
