@@ -19,14 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
 
 import com.buession.core.utils.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -46,8 +44,6 @@ import java.nio.charset.StandardCharsets;
 public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 
 	private final static int BYTE_ARRAY_OUTPUT_STREAM_SIZE = 128;
-
-	private final static Logger logger = LoggerFactory.getLogger(DefaultByteArraySerializer.class);
 
 	@Override
 	public <V> String serialize(final V object, final String charsetName) throws SerializerException{
@@ -85,20 +81,8 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 			throw new SerializerException("serializer the instance of " + object.getClass().getName() + " " + "failure"
 					, e);
 		}finally{
-			if(byteArrayOutputStream != null){
-				try{
-					byteArrayOutputStream.close();
-				}catch(IOException e){
-					logger.error("{} close error.", ByteArrayOutputStream.class.getName(), e);
-				}
-			}
-			if(objectOutputStream != null){
-				try{
-					objectOutputStream.close();
-				}catch(IOException e){
-					logger.error("{} close error.", ObjectOutputStream.class.getName(), e);
-				}
-			}
+			closeStream(byteArrayOutputStream);
+			closeStream(objectOutputStream);
 		}
 	}
 
@@ -153,20 +137,8 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 		}catch(IOException e){
 			throw e;
 		}finally{
-			if(byteArrayOutputStream != null){
-				try{
-					byteArrayOutputStream.close();
-				}catch(IOException e){
-					logger.error("{} close error.", ObjectOutputStream.class.getName(), e);
-				}
-			}
-			if(objectOutputStream != null){
-				try{
-					objectOutputStream.close();
-				}catch(IOException e){
-					logger.error("{} close error.", ObjectOutputStream.class.getName(), e);
-				}
-			}
+			closeStream(byteArrayOutputStream);
+			closeStream(objectOutputStream);
 		}
 	}
 
@@ -187,20 +159,8 @@ public class DefaultByteArraySerializer extends AbstractByteArraySerializer {
 		}catch(IOException e){
 			throw new SerializerException("deserialize the " + sourceType + " " + bytes + " failure.", e);
 		}finally{
-			if(byteArrayInputStream != null){
-				try{
-					byteArrayInputStream.close();
-				}catch(IOException e){
-					logger.error("{} close error.", ByteArrayOutputStream.class.getName(), e);
-				}
-			}
-			if(objectInputStream != null){
-				try{
-					objectInputStream.close();
-				}catch(IOException e){
-					logger.error("{} close error.", ObjectInputStream.class.getName(), e);
-				}
-			}
+			closeStream(byteArrayInputStream);
+			closeStream(objectInputStream);
 		}
 	}
 

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.codec;
@@ -71,7 +71,7 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException{
-		Class clazz = bean.getClass();
+		Class<?> clazz = bean.getClass();
 		Field[] fields = ClassUtils.getAllFields(clazz);
 		Message message;
 
@@ -91,8 +91,8 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 		return bean;
 	}
 
-	private void handleMessageInjected(final Class clazz, final Object bean, final String beanName, final Field field,
-			final Message message) throws BeansException{
+	private void handleMessageInjected(final Class<?> clazz, final Object bean, final String beanName,
+									   final Field field, final Message message) throws BeansException{
 		final String key = message.value();
 		final String text = getEnvironment().getProperty(buildProperty(key, message.textField()));
 

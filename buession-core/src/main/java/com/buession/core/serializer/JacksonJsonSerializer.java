@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
@@ -125,7 +125,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 
 			});
 		}catch(IOException e){
-			final String s = bytes == null ? "null" : bytes.toString();
+			final String s = bytes.toString();
 			throw new SerializerException(s + " json deserialize to Object failure.", e);
 		}
 	}
@@ -137,7 +137,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 		try{
 			return getObjectMapper().readValue(bytes, clazz);
 		}catch(IOException e){
-			final String s = bytes == null ? "null" : bytes.toString();
+			final String s = bytes.toString();
 			final String className = clazz == null ? "null" : clazz.getName();
 
 			throw new SerializerException(s + " json deserialize to " + className + " failure.", e);
@@ -158,7 +158,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 
 			});
 		}catch(IOException e){
-			final String s = bytes == null ? "null" : bytes.toString();
+			final String s = bytes.toString();
 			final String typeName = type == null ? "null" : type.getType().getTypeName();
 
 			throw new SerializerException(s + " json deserialize to " + typeName + " failure.", e);

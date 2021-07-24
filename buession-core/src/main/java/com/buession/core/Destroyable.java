@@ -30,7 +30,7 @@ import java.io.IOException;
  * @author Yong.Teng
  * @since 1.3.0
  */
-public interface AutoDestroyable {
+public interface Destroyable {
 
 	void destroy() throws IOException;
 

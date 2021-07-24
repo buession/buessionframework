@@ -19,17 +19,24 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.Closeable;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
  * @author Yong.Teng
  */
 public abstract class AbstractByteArraySerializer extends AbstractSerializer implements ByteArraySerializer {
+
+	private final static Logger logger = LoggerFactory.getLogger(AbstractByteArraySerializer.class);
 
 	@Override
 	public <V> String serialize(final V object) throws SerializerException{
@@ -49,6 +56,16 @@ public abstract class AbstractByteArraySerializer extends AbstractSerializer imp
 	@Override
 	public <V> V deserialize(final byte[] bytes) throws SerializerException{
 		return deserialize(bytes, Charset.defaultCharset().name());
+	}
+
+	protected static void closeStream(final Closeable closeable){
+		if(closeable != null){
+			try{
+				closeable.close();
+			}catch(IOException e){
+				logger.error("{} close error.", closeable.getClass().getName(), e);
+			}
+		}
 	}
 
 }

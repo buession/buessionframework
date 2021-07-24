@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.utils;
@@ -93,7 +93,7 @@ public class PinyinUtils {
 
 			for(char c : chars){
 				// 如果包含有中文标点除号，需要使用正则表达式
-				if(Character.toString(c).matches("[\\u4E00-\\u9FA5]+") == true){
+				if(Character.toString(c).matches("[\\u4E00-\\u9FA5]+")){
 					sb.append(PinyinHelper.toHanyuPinyinStringArray(c, outputFormat)[0]);
 				}else{
 					sb.append(c);

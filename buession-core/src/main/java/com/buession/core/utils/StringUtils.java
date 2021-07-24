@@ -27,7 +27,6 @@
 package com.buession.core.utils;
 
 import com.buession.lang.Constants;
-import org.apache.commons.lang3.CharSequenceUtils;
 
 import java.util.Locale;
 
@@ -79,7 +78,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 			beginIndex = str.length() + beginIndex;
 		}
 
-		return length == 0 ? Constants.EMPTY_STRING : new String(str.toCharArray(), beginIndex, length);
+		return length == 0 ? EMPTY : new String(str.toCharArray(), beginIndex, length);
 	}
 
 	/**
@@ -103,7 +102,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 	 * @return 否为布尔 False
 	 */
 	public static boolean isFalse(final String str){
-		return Boolean.parseBoolean(str) == false || Constants.EMPTY_STRING.equals(str) || "0".equals(str) || "no".equalsIgnoreCase(str);
+		return Boolean.parseBoolean(str) == false || EMPTY.equals(str) || "0".equals(str) || "no".equalsIgnoreCase(str);
 	}
 
 	/**
@@ -118,7 +117,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 		Assert.isNegative(length, "Length could not be negative.");
 
 		if(length == 0){
-			return Constants.EMPTY_STRING;
+			return EMPTY;
 		}else{
 			StringBuilder sb = new StringBuilder(length);
 
