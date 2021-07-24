@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.spring.jedis;
 
 import com.buession.redis.core.ShardedRedisNode;
-import com.buession.redis.spring.AbstractRedisConfiguration;
 import com.buession.redis.spring.ShardedConfiguration;
+import redis.clients.jedis.ShardedJedisPoolConfig;
 
 import java.util.Set;
 
@@ -35,12 +35,19 @@ import java.util.Set;
  *
  * @author Yong.Teng
  */
-public class ShardedRedisConfiguration extends AbstractRedisConfiguration implements ShardedConfiguration {
+public class ShardedRedisConfiguration extends AbstractJedisRedisConfiguration implements ShardedConfiguration {
 
 	/**
 	 * Redis 分片节点
 	 */
 	private Set<ShardedRedisNode> nodes;
+
+	/**
+	 * 连接池配置
+	 *
+	 * @since 1.3.0
+	 */
+	private ShardedJedisPoolConfig poolConfig;
 
 	@Override
 	public Set<ShardedRedisNode> getNodes(){
@@ -50,6 +57,29 @@ public class ShardedRedisConfiguration extends AbstractRedisConfiguration implem
 	@Override
 	public void setNodes(Set<ShardedRedisNode> nodes){
 		this.nodes = nodes;
+	}
+
+	/**
+	 * 获取连接池配置
+	 *
+	 * @return 连接池配置
+	 *
+	 * @since 1.3.0
+	 */
+	public ShardedJedisPoolConfig getPoolConfig(){
+		return poolConfig;
+	}
+
+	/**
+	 * 设置连接池配置
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 *
+	 * @since 1.3.0
+	 */
+	public void setPoolConfig(ShardedJedisPoolConfig poolConfig){
+		this.poolConfig = poolConfig;
 	}
 
 }

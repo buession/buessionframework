@@ -22,10 +22,24 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.utils;/**
- * 
+package com.buession.redis.spring.jedis;
+
+/**
+ * Sharded Jedis Redis 连接器抽象类
  *
  * @author Yong.Teng
  * @since 1.3.0
- */public class ArrayUtilsTest {
+ */
+final class ShardedRedisConnector extends AbstractJedisRedisConnector<ShardedRedisConfiguration> {
+
+	/**
+	 * 构造函数
+	 *
+	 * @param configuration
+	 * 		Sharded Jedis Redis 工厂配置
+	 */
+	public ShardedRedisConnector(final ShardedRedisConfiguration configuration){
+		super(configuration);
+	}
+
 }

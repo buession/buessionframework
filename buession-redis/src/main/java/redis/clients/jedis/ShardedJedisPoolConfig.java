@@ -22,10 +22,10 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.utils;/**
+package redis.clients.jedis;/**
  * 
  *
  * @author Yong.Teng
  * @since 1.3.0
- */public class ArrayUtilsTest {
+ */public class ShardedJedisPoolConfig {
 }

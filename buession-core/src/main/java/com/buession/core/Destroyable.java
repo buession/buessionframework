@@ -22,10 +22,16 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.utils;/**
- * 
- *
+package com.buession.core;
+
+import java.io.IOException;
+
+/**
  * @author Yong.Teng
  * @since 1.3.0
- */public class ArrayUtilsTest {
+ */
+public interface AutoDestroyable {
+
+	void destroy() throws IOException;
+
 }

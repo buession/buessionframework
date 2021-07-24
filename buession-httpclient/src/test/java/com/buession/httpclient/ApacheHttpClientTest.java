@@ -22,10 +22,10 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.utils;/**
+package com.buession.httpclient;/**
  * 
  *
  * @author Yong.Teng
- * @since 1.3.0
- */public class ArrayUtilsTest {
+ * @since 1.13.0
+ */public class ApacheHttpClientTest {
 }
