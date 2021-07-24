@@ -22,10 +22,133 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.net;/**
- * 
+package com.buession.net;
+
+import com.buession.core.utils.Assert;
+import com.buession.core.validator.Validate;
+import com.buession.lang.Constants;
+
+import javax.validation.constraints.NotNull;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Objects;
+import java.util.Optional;
+
+/**
+ * URL 参数
  *
  * @author Yong.Teng
  * @since 1.3.0
- */public class UrlParameter {
+ */
+public class UrlParameter {
+
+	/**
+	 * 参数名称
+	 */
+	private String name;
+
+	/**
+	 * 参数值
+	 */
+	private String value;
+
+	/**
+	 * 构造函数
+	 */
+	public UrlParameter(){
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		参数名称
+	 * @param value
+	 * 		参数值
+	 */
+	public UrlParameter(@NotNull final String name, final String value){
+		setName(name);
+		setValue(value);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		参数名称
+	 * @param value
+	 * 		参数值
+	 * @param encode
+	 * 		是否编码
+	 */
+	public UrlParameter(@NotNull final String name, final String value, final boolean encode){
+		setName(name);
+		setValue(value, encode);
+	}
+
+	/**
+	 * 设置参数名称
+	 *
+	 * @param name
+	 * 		参数名称
+	 */
+	public void setName(@NotNull final String name){
+		Assert.isBlank(name, "Parameter name cloud not be null or empty.");
+		this.name = name;
+	}
+
+	/**
+	 * 设置参数值
+	 *
+	 * @param value
+	 * 		参数值
+	 */
+	public void setValue(final String value){
+		setValue(value, true);
+	}
+
+	/**
+	 * 设置参数值
+	 *
+	 * @param value
+	 * 		参数值
+	 * @param encode
+	 * 		是否编码
+	 */
+	public void setValue(final String value, final boolean encode){
+		if(encode){
+			try{
+				this.value = value == null ? Constants.EMPTY_STRING : URLEncoder.encode(value, "UTF-8");
+			}catch(UnsupportedEncodingException e){
+				throw new RuntimeException("UTF-8 encoding does not support.");
+			}
+		}else{
+			this.value = Optional.ofNullable(value).orElse(Constants.EMPTY_STRING);
+		}
+	}
+
+	@Override
+	public String toString(){
+		return Validate.hasText(name) ? name + '=' + value : Constants.EMPTY_STRING;
+	}
+
+	@Override
+	public int hashCode(){
+		return Objects.hash(name, value);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof UrlParameter){
+			UrlParameter that = (UrlParameter) obj;
+			return Objects.equals(name, that.name) && Objects.equals(value, that.value);
+		}
+
+		return false;
+	}
+
 }

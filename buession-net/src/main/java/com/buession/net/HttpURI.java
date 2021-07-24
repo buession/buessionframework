@@ -19,16 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net;
 
 import com.buession.lang.Constants;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.util.Map;
 
 /**
@@ -92,11 +90,11 @@ public class HttpURI extends AbstractUserInfoURI {
 		return URI.create(toString());
 	}
 
-	public final static String buildQuery(final Map<String, Object> data){
+	public static String buildQuery(final Map<String, Object> data){
 		return buildQuery(data, false);
 	}
 
-	public final static String buildQuery(final Map<String, Object> data, final boolean urlEncode){
+	public static String buildQuery(final Map<String, Object> data, final boolean urlEncode){
 		if(data == null){
 			return null;
 		}else if(data.size() == 0){
@@ -110,28 +108,17 @@ public class HttpURI extends AbstractUserInfoURI {
 				sb.append('&');
 			}
 
-			sb.append(name);
-			sb.append('=');
-
-			if(urlEncode && value != null){
-				try{
-					sb.append(URLEncoder.encode(value.toString(), "UTF-8"));
-				}catch(UnsupportedEncodingException e){
-					sb.append(value);
-				}
-			}else{
-				sb.append(value);
-			}
+			sb.append(new UrlParameter(name, value == null ? null : value.toString(), urlEncode));
 		});
 
 		return sb.toString();
 	}
 
-	public final static String toQueryString(final Map<String, Object> data){
+	public static String toQueryString(final Map<String, Object> data){
 		return buildQuery(data);
 	}
 
-	public final static String toQueryString(final Map<String, Object> data, final boolean urlEncode){
+	public static String toQueryString(final Map<String, Object> data, final boolean urlEncode){
 		return buildQuery(data, urlEncode);
 	}
 
@@ -194,7 +181,7 @@ public class HttpURI extends AbstractUserInfoURI {
 			super();
 		}
 
-		public final static Builder getInstance(){
+		public static Builder getInstance(){
 			return new Builder();
 		}
 

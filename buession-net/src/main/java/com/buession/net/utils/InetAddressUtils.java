@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net.utils;
@@ -48,7 +48,7 @@ public class InetAddressUtils {
 	 *
 	 * @return IPV4 地址
 	 */
-	public final static String long2ip(long l){
+	public static String long2ip(long l){
 		long[] result = new long[4];
 		for(int i = 4; i > 0; i--){
 			result[i - 1] = (l & 0xff);
@@ -66,7 +66,7 @@ public class InetAddressUtils {
 	 *
 	 * @return IPV4 地址的 InetAddress 对象
 	 */
-	public final static InetAddress long2InetAddress(long l){
+	public static InetAddress long2InetAddress(long l){
 		String ip = long2ip(l);
 
 		try{
@@ -84,7 +84,7 @@ public class InetAddressUtils {
 	 *
 	 * @return IPV4 地址的长整型
 	 */
-	public final static long ip2long(String ip){
+	public static long ip2long(String ip){
 		if(Validate.isIpV4(ip) == false){
 			throw new IllegalArgumentException("Illegal ip: " + ip);
 		}
