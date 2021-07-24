@@ -221,31 +221,31 @@ public class Info implements Serializable {
 		return sb.toString();
 	}
 
-	protected final static String get(final Properties properties, final String key){
+	protected static String get(final Properties properties, final String key){
 		return properties.getProperty(key);
 	}
 
-	protected final static Integer getInt(final Properties properties, final String key){
+	protected static Integer getInt(final Properties properties, final String key){
 		String str = properties.getProperty(key);
 		return Validate.hasText(str) ? Integer.parseInt(str) : null;
 	}
 
-	protected final static Long getLong(final Properties properties, final String key){
+	protected static Long getLong(final Properties properties, final String key){
 		String str = properties.getProperty(key);
 		return Validate.hasText(str) ? Long.parseLong(str) : null;
 	}
 
-	protected final static Double getDouble(final Properties properties, final String key){
+	protected static Double getDouble(final Properties properties, final String key){
 		String str = properties.getProperty(key);
 		return Validate.hasText(str) ? Double.parseDouble(str) : null;
 	}
 
-	protected final static Double getPercent(final Properties properties, final String key){
+	protected static Double getPercent(final Properties properties, final String key){
 		String str = properties.getProperty(key);
 		return Validate.hasText(str) ? Double.parseDouble(str.substring(0, str.length() - 1)) : null;
 	}
 
-	protected final static Boolean getBoolean(final Properties properties, final String key){
+	protected static Boolean getBoolean(final Properties properties, final String key){
 		String str = properties.getProperty(key);
 
 		if(Validate.hasText(str) == false){
@@ -259,7 +259,7 @@ public class Info implements Serializable {
 		return "0".equals(str) == false || Validate.isNumeric(str) && Integer.parseInt(str) != 0;
 	}
 
-	protected final static Date getDate(final Properties properties, final String key, final boolean isUnixTimestamp){
+	protected static Date getDate(final Properties properties, final String key, final boolean isUnixTimestamp){
 		String str = properties.getProperty(key);
 
 		if(Validate.hasText(str) == false){
@@ -276,11 +276,11 @@ public class Info implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected final static <E> E getObject(final Properties properties, final String key){
+	protected static <E> E getObject(final Properties properties, final String key){
 		return (E) properties.get(key);
 	}
 
-	protected final static String toString(final Properties properties){
+	protected static String toString(final Properties properties){
 		int max = properties.size() - 1;
 		if(max == -1){
 			return Constants.EMPTY_STRING;

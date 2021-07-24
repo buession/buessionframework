@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author Yong.Teng
@@ -60,6 +61,25 @@ public class RedisServerTime implements Serializable {
 
 	public void setUsec(long usec){
 		this.usec = usec;
+	}
+
+	@Override
+	public int hashCode(){
+		return Objects.hash(date, usec);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof RedisServerTime){
+			RedisServerTime that = (RedisServerTime) obj;
+			return usec == that.usec && Objects.equals(date, that.date);
+		}
+
+		return false;
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class RedisNamedServer extends RedisServer implements RedisNamedNode {
 	 * @param host
 	 * 		Redis 节点地址
 	 */
-	public RedisNamedServer(String host){
+	public RedisNamedServer(final String host){
 		super(host);
 	}
 
@@ -56,7 +56,7 @@ public class RedisNamedServer extends RedisServer implements RedisNamedNode {
 	 * @param port
 	 * 		Redis 端口
 	 */
-	public RedisNamedServer(String host, int port){
+	public RedisNamedServer(final String host, final int port){
 		super(host, port);
 	}
 
@@ -68,7 +68,7 @@ public class RedisNamedServer extends RedisServer implements RedisNamedNode {
 	 * @param name
 	 * 		节点名称
 	 */
-	public RedisNamedServer(String host, String name){
+	public RedisNamedServer(final String host, final String name){
 		super(host);
 		this.name = name;
 	}
@@ -83,8 +83,74 @@ public class RedisNamedServer extends RedisServer implements RedisNamedNode {
 	 * @param name
 	 * 		节点名称
 	 */
-	public RedisNamedServer(String host, int port, String name){
+	public RedisNamedServer(final String host, final int port, final String name){
 		super(host, port);
+		this.name = name;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param role
+	 * 		节点角色
+	 *
+	 * @since 1.3.0
+	 */
+	public RedisNamedServer(final String host, final Role role){
+		super(host, role);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param role
+	 * 		节点角色
+	 *
+	 * @since 1.3.0
+	 */
+	public RedisNamedServer(final String host, final int port, final Role role){
+		super(host, port, role);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param name
+	 * 		节点名称
+	 * @param role
+	 * 		节点角色
+	 *
+	 * @since 1.3.0
+	 */
+	public RedisNamedServer(final String host, final String name, final Role role){
+		super(host, role);
+		this.name = name;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 端口
+	 * @param name
+	 * 		节点名称
+	 * @param role
+	 * 		节点角色
+	 *
+	 * @since 1.3.0
+	 */
+	public RedisNamedServer(final String host, final int port, final String name, final Role role){
+		super(host, port, role);
 		this.name = name;
 	}
 
@@ -123,16 +189,14 @@ public class RedisNamedServer extends RedisServer implements RedisNamedNode {
 			return true;
 		}
 
-		if((obj instanceof RedisNamedServer) == false){
-			return false;
+		if(obj instanceof RedisNamedServer){
+			if(super.equals(obj)){
+				RedisNamedServer that = (RedisNamedServer) obj;
+				return Objects.equals(name, that.name);
+			}
 		}
 
-		if(super.equals(obj) == false){
-			return false;
-		}
-
-		RedisNamedServer that = (RedisNamedServer) obj;
-		return Objects.equals(this.name, that.name);
+		return false;
 	}
 
 }

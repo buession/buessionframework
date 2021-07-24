@@ -24,8 +24,6 @@
  */
 package com.buession.redis.core;
 
-import org.springframework.util.ObjectUtils;
-
 /**
  * @author Yong.Teng
  */
@@ -49,7 +47,7 @@ public class RedisServer extends RedisNode {
 	 * @param host
 	 * 		Redis 节点地址
 	 */
-	public RedisServer(String host){
+	public RedisServer(final String host){
 		super(host);
 		this.ip = host;
 	}
@@ -62,7 +60,7 @@ public class RedisServer extends RedisNode {
 	 * @param port
 	 * 		Redis 端口
 	 */
-	public RedisServer(String host, int port){
+	public RedisServer(final String host, final int port){
 		super(host, port);
 		this.ip = host;
 	}
@@ -75,8 +73,8 @@ public class RedisServer extends RedisNode {
 	 * @param role
 	 * 		节点角色
 	 */
-	public RedisServer(String host, Role role){
-		this(host);
+	public RedisServer(final String host, final Role role){
+		super(host);
 		this.role = role;
 	}
 
@@ -90,8 +88,8 @@ public class RedisServer extends RedisNode {
 	 * @param role
 	 * 		节点角色
 	 */
-	public RedisServer(String host, int port, Role role){
-		this(host, port);
+	public RedisServer(final String host, final int port, final Role role){
+		super(host, port);
 		this.role = role;
 	}
 
@@ -119,7 +117,7 @@ public class RedisServer extends RedisNode {
 	 * @return 节点为 Master 节点，返回 true；否则，返回 false
 	 */
 	public boolean isMaster(){
-		return ObjectUtils.nullSafeEquals(getRole(), Role.MASTER);
+		return getRole() == Role.MASTER;
 	}
 
 	/**
@@ -128,7 +126,7 @@ public class RedisServer extends RedisNode {
 	 * @return 节点为 Slave 节点，返回 true；否则，返回 false
 	 */
 	public boolean isSlave(){
-		return ObjectUtils.nullSafeEquals(getRole(), Role.SLAVE);
+		return getRole() == Role.SLAVE;
 	}
 
 	/**
@@ -160,11 +158,11 @@ public class RedisServer extends RedisNode {
 			return true;
 		}
 
-		if((obj instanceof RedisServer) == false){
-			return false;
+		if(obj instanceof RedisServer){
+			return super.equals(obj);
 		}
 
-		return super.equals(obj);
+		return false;
 	}
 
 }

@@ -47,8 +47,10 @@ public interface Constants {
 
 	String OK = "OK";
 
+	byte[] OK_BYTE = OK.getBytes();
+
 	String PONG = "PONG";
 
-	byte[] OK_BYTE = OK.getBytes();
+	byte[] PONG_BYTE = PONG.getBytes();
 
 }

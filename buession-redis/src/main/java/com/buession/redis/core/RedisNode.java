@@ -60,7 +60,7 @@ public class RedisNode implements Serializable {
 	 * @param host
 	 * 		Redis 节点地址
 	 */
-	public RedisNode(String host){
+	public RedisNode(final String host){
 		this.host = host;
 	}
 
@@ -72,7 +72,7 @@ public class RedisNode implements Serializable {
 	 * @param port
 	 * 		Redis 节点端口
 	 */
-	public RedisNode(String host, int port){
+	public RedisNode(final String host, final int port){
 		this.host = host;
 		this.port = port;
 	}
@@ -125,13 +125,12 @@ public class RedisNode implements Serializable {
 			return true;
 		}
 
-		if((obj instanceof RedisNode) == false){
-			return false;
+		if(obj instanceof RedisNode){
+			RedisNode that = (RedisNode) obj;
+			return port == that.port && Objects.equals(host, that.host);
 		}
 
-		RedisNode that = (RedisNode) obj;
-
-		return Objects.equals(this.host, that.host) && Objects.equals(this.port, that.port);
+		return false;
 	}
 
 }

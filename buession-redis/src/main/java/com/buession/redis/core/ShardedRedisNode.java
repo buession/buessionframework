@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -57,10 +57,22 @@ public class ShardedRedisNode extends RedisNamedServer {
 	 *
 	 * @param host
 	 * 		Redis 节点地址
+	 *
+	 * @since 1.3.0
+	 */
+	public ShardedRedisNode(final String host){
+		super(host);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
 	 * @param port
 	 * 		Redis 节点端口
 	 */
-	public ShardedRedisNode(String host, int port){
+	public ShardedRedisNode(final String host, final int port){
 		super(host, port);
 	}
 
@@ -71,11 +83,29 @@ public class ShardedRedisNode extends RedisNamedServer {
 	 * 		Redis 节点地址
 	 * @param port
 	 * 		Redis 节点端口
+	 * @param database
+	 * 		数据库
+	 */
+	public ShardedRedisNode(final String host, final int port, final int database){
+		super(host, port);
+		this.database = database;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param database
+	 * 		数据库
 	 * @param name
 	 * 		节点名称
 	 */
-	public ShardedRedisNode(String host, int port, String name){
+	public ShardedRedisNode(final String host, final int port, final int database, final String name){
 		super(host, port, name);
+		this.database = database;
 	}
 
 	/**
@@ -87,44 +117,15 @@ public class ShardedRedisNode extends RedisNamedServer {
 	 * 		Redis 节点端口
 	 * @param password
 	 * 		密码
+	 * @param database
+	 * 		数据库
 	 * @param name
 	 * 		节点名称
 	 */
-	public ShardedRedisNode(String host, int port, String password, String name){
-		super(host, port, name);
+	public ShardedRedisNode(final String host, final int port, final String password, final int database,
+							final String name){
+		this(host, port, database, name);
 		this.password = password;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 * @param port
-	 * 		Redis 节点端口
-	 * @param database
-	 * 		数据库
-	 */
-	public ShardedRedisNode(String host, int port, int database){
-		super(host, port);
-		this.database = database;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 * @param port
-	 * 		Redis 节点端口
-	 * @param database
-	 * 		数据库
-	 * @param name
-	 * 		节点名称
-	 */
-	public ShardedRedisNode(String host, int port, int database, String name){
-		super(host, port, name);
-		this.database = database;
 	}
 
 	/**
@@ -139,7 +140,7 @@ public class ShardedRedisNode extends RedisNamedServer {
 	 * @param weight
 	 * 		权重
 	 */
-	public ShardedRedisNode(String host, int port, int database, int weight){
+	public ShardedRedisNode(final String host, final int port, final int database, final int weight){
 		this(host, port, database);
 		this.weight = weight;
 	}
@@ -157,29 +158,12 @@ public class ShardedRedisNode extends RedisNamedServer {
 	 * 		数据库
 	 * @param name
 	 * 		节点名称
-	 */
-	public ShardedRedisNode(String host, int port, String password, int database, String name){
-		this(host, port, database, name);
-		this.password = password;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 * @param port
-	 * 		Redis 节点端口
-	 * @param password
-	 * 		密码
-	 * @param database
-	 * 		数据库
 	 * @param weight
 	 * 		权重
 	 */
-	public ShardedRedisNode(String host, int port, String password, int database, int weight){
-		this(host, port, password);
-		this.database = database;
+	public ShardedRedisNode(final String host, final int port, final String password, final int database,
+							final String name, final int weight){
+		this(host, port, password, database, name);
 		this.weight = weight;
 	}
 
@@ -194,13 +178,120 @@ public class ShardedRedisNode extends RedisNamedServer {
 	 * 		密码
 	 * @param database
 	 * 		数据库
+	 * @param weight
+	 * 		权重
+	 */
+	public ShardedRedisNode(final String host, final int port, final String password, final int database,
+							final int weight){
+		this(host, port, password);
+		this.database = database;
+		this.weight = weight;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param password
+	 * 		密码
+	 * @param name
+	 * 		节点名称
+	 *
+	 * @since 1.3.0
+	 */
+	public ShardedRedisNode(final String host, final int port, final String password, final String name){
+		super(host, port, name);
+		this.password = password;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param name
+	 * 		节点名称
+	 */
+	public ShardedRedisNode(final String host, final int port, final String name){
+		super(host, port, name);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param name
+	 * 		节点名称
+	 *
+	 * @since 1.3.0
+	 */
+	public ShardedRedisNode(final String host, final String name){
+		super(host, name);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param password
+	 * 		密码
+	 * @param name
+	 * 		节点名称
+	 *
+	 * @since 1.3.0
+	 */
+	public ShardedRedisNode(final String host, final String password, final String name){
+		super(host, name);
+		this.password = password;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		Redis 节点端口
+	 * 		数据库
+	 * @param weight
+	 * 		权重
+	 *
+	 * @since 1.3.0
+	 */
+	public ShardedRedisNode(final String host, final String password, final int database, final int weight){
+		super(host);
+		this.password = password;
+		this.database = database;
+		this.weight = weight;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param password
+	 * 		密码
+	 * @param database
+	 * 		数据库
 	 * @param name
 	 * 		节点名称
 	 * @param weight
 	 * 		权重
 	 */
-	public ShardedRedisNode(String host, int port, String password, int database, String name, int weight){
-		this(host, port, password, database, name);
+	public ShardedRedisNode(final String host, final String password, final int database, final String name,
+							final int weight){
+		super(host, database, name);
+		this.password = password;
 		this.weight = weight;
 	}
 
@@ -278,13 +369,12 @@ public class ShardedRedisNode extends RedisNamedServer {
 			return true;
 		}
 
-		if((obj instanceof ShardedRedisNode) == false){
-			return false;
+		if(obj instanceof ShardedRedisNode){
+			ShardedRedisNode that = (ShardedRedisNode) obj;
+			return this.weight == that.weight && super.equals(obj);
 		}
 
-		ShardedRedisNode that = (ShardedRedisNode) obj;
-
-		return Objects.equals(this.weight, that.weight) && super.equals(obj);
+		return false;
 	}
 
 }

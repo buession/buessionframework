@@ -29,6 +29,7 @@ import com.buession.redis.core.Constants;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author Yong.Teng
@@ -78,6 +79,27 @@ public class GeoRadius implements Serializable {
 
 	public void setGeo(Geo geo){
 		this.geo = geo;
+	}
+
+	@Override
+	public int hashCode(){
+		int result = Objects.hash(distance, geo);
+		result = 31 * result + Arrays.hashCode(member);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof GeoRadius){
+			GeoRadius geoRadius = (GeoRadius) obj;
+			return Double.compare(geoRadius.distance, distance) == 0 && Arrays.equals(member, geoRadius.member) && Objects.equals(geo, geoRadius.geo);
+		}
+
+		return false;
 	}
 
 	@Override

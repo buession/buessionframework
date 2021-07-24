@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -33,22 +33,229 @@ public class ClusterRedisNode extends RedisNamedServer {
 
 	private String masterId;
 
-	public ClusterRedisNode(String host, int port){
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 *
+	 * @since 1.3.0
+	 */
+	public ClusterRedisNode(final String host){
+		super(host);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 */
+	public ClusterRedisNode(final String host, final int port){
 		super(host, port);
 	}
 
-	public ClusterRedisNode(String host, int port, String name){
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param name
+	 * 		节点名称
+	 */
+	public ClusterRedisNode(final String host, final int port, final String name){
 		super(host, port, name);
 	}
 
-	public ClusterRedisNode(String host, int port, Role role){
-		super(host, port);
-		//setRole(role);
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param name
+	 * 		节点名称
+	 * @param masterId
+	 * 		Master Id
+	 *
+	 * @since 1.3.0
+	 */
+	public ClusterRedisNode(final String host, final int port, final String name, final String masterId){
+		super(host, port, name);
+		this.masterId = masterId;
 	}
 
-	public ClusterRedisNode(String host, int port, String name, Role role){
-		super(host, port, name);
-		//setRole(role);
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param role
+	 * 		节点角色
+	 * @param masterId
+	 * 		Master Id
+	 *
+	 * @since 1.3.0
+	 */
+	public ClusterRedisNode(final String host, final int port, final Role role, final String masterId){
+		super(host, port, role);
+		this.masterId = masterId;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param name
+	 * 		节点名称
+	 * @param role
+	 * 		节点角色
+	 * @param masterId
+	 * 		Master Id
+	 *
+	 * @since 1.3.0
+	 */
+	public ClusterRedisNode(final String host, final int port, final String name, final Role role,
+							final String masterId){
+		super(host, port, name, role);
+		this.masterId = masterId;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param role
+	 * 		节点角色
+	 */
+	public ClusterRedisNode(final String host, final int port, final Role role){
+		super(host, port, role);
+	}
+	
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param port
+	 * 		Redis 节点端口
+	 * @param name
+	 * 		节点名称
+	 * @param role
+	 * 		节点角色
+	 */
+	public ClusterRedisNode(final String host, final int port, final String name, final Role role){
+		super(host, port, name, role);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param name
+	 * 		节点名称
+	 *
+	 * @since 1.3.0
+	 */
+	public ClusterRedisNode(final String host, final String name){
+		super(host, name);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param name
+	 * 		节点名称
+	 * @param masterId
+	 * 		Master Id
+	 *
+	 * @since 1.3.0
+	 */
+	public ClusterRedisNode(final String host, final String name, final String masterId){
+		super(host, name);
+		this.masterId = masterId;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param role
+	 * 		节点角色
+	 * @param masterId
+	 * 		Master Id
+	 *
+	 * @since 1.3.0
+	 */
+	public ClusterRedisNode(final String host, final Role role, final String masterId){
+		super(host, role);
+		this.masterId = masterId;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param name
+	 * 		节点名称
+	 * @param role
+	 * 		节点角色
+	 * @param masterId
+	 * 		Master Id
+	 *
+	 * @since 1.3.0
+	 */
+	public ClusterRedisNode(final String host, final String name, final Role role, final String masterId){
+		super(host, name, role);
+		this.masterId = masterId;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param role
+	 * 		节点角色
+	 *
+	 * @since 1.3.0
+	 */
+	public ClusterRedisNode(final String host, final Role role){
+		super(host, role);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		Redis 节点地址
+	 * @param name
+	 * 		节点名称
+	 * @param role
+	 * 		节点角色
+	 *
+	 * @since 1.3.0
+	 */
+	public ClusterRedisNode(final String host, final String name, final Role role){
+		super(host, name, role);
 	}
 
 	public Role getNodeType(){

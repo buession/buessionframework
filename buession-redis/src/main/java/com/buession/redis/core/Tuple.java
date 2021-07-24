@@ -85,16 +85,14 @@ public class Tuple implements Comparable<Tuple>, Serializable {
 	public boolean equals(Object obj){
 		if(this == obj){
 			return true;
-		}else if(obj == null){
-			return false;
 		}
 
-		if(getClass() != obj.getClass()){
-			return false;
+		if(obj instanceof Tuple){
+			Tuple that = (Tuple) obj;
+			return Arrays.equals(element, that.element) && Objects.equals(score, that.score);
 		}
 
-		Tuple that = (Tuple) obj;
-		return Arrays.equals(element, that.element) && Objects.equals(score, that.score);
+		return false;
 	}
 
 	@Override
