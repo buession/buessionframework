@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip;
@@ -35,6 +35,8 @@ import com.buession.geoip.converter.CountryConverter;
 import com.buession.geoip.converter.TraitsConverter;
 import com.buession.net.utils.InetAddressUtils;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -56,6 +58,8 @@ public abstract class AbstractResolver implements Resolver {
 
 	protected final static TraitsConverter traitsConverter = new TraitsConverter();
 
+	private final static Logger logger = LoggerFactory.getLogger(AbstractResolver.class);
+
 	@Override
 	public Country country(String ipAddress) throws IOException, GeoIp2Exception{
 		return country(ipAddress, locale);
@@ -68,6 +72,7 @@ public abstract class AbstractResolver implements Resolver {
 		try{
 			addr = InetAddress.getByName(ipAddress);
 		}catch(UnknownHostException e){
+			logger.error("InetAddress.getByName({}) failure: {}", ipAddress, e.getMessage());
 			return null;
 		}
 
@@ -101,6 +106,7 @@ public abstract class AbstractResolver implements Resolver {
 		try{
 			addr = InetAddress.getByName(ipAddress);
 		}catch(UnknownHostException e){
+			logger.error("InetAddress.getByName({}) failure: {}", ipAddress, e.getMessage());
 			return null;
 		}
 
@@ -134,6 +140,7 @@ public abstract class AbstractResolver implements Resolver {
 		try{
 			addr = InetAddress.getByName(ipAddress);
 		}catch(UnknownHostException e){
+			logger.error("InetAddress.getByName({}) failure: {}", ipAddress, e.getMessage());
 			return null;
 		}
 

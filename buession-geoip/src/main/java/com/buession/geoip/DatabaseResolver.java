@@ -167,11 +167,11 @@ public class DatabaseResolver extends AbstractResolver {
 		}
 	}
 
-	private final static DatabaseReader.Builder databaseReaderBuilder(final File database){
+	private static DatabaseReader.Builder databaseReaderBuilder(final File database){
 		return new DatabaseReader.Builder(database);
 	}
 
-	private final static DatabaseReader.Builder databaseReaderBuilder(final InputStream source){
+	private static DatabaseReader.Builder databaseReaderBuilder(final InputStream source){
 		return new DatabaseReader.Builder(source);
 	}
 
