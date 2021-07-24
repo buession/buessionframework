@@ -44,34 +44,33 @@ public final class RedisConnectionUtils {
 	private RedisConnectionUtils(){
 	}
 
-	public final static RedisConnection bindConnection(final RedisConnectionFactory factory){
+	public static RedisConnection bindConnection(final RedisConnectionFactory factory){
 		return bindConnection(factory, false);
 	}
 
-	public final static RedisConnection bindConnection(final RedisConnectionFactory factory,
-													   final boolean enableTransactionSupport){
+	public static RedisConnection bindConnection(final RedisConnectionFactory factory,
+												 final boolean enableTransactionSupport){
 		return doGetConnection(factory, true, true, enableTransactionSupport);
 	}
 
-	public final static RedisConnection getConnection(final RedisConnectionFactory factory){
+	public static RedisConnection getConnection(final RedisConnectionFactory factory){
 		return getConnection(factory, false);
 	}
 
-	public final static RedisConnection getConnection(final RedisConnectionFactory factory,
-													  final boolean enableTransactionSupport){
+	public static RedisConnection getConnection(final RedisConnectionFactory factory,
+												final boolean enableTransactionSupport){
 		return doGetConnection(factory, true, false, enableTransactionSupport);
 	}
 
-	public final static boolean isConnectionTransactional(final RedisConnectionFactory factory,
-														  final RedisConnection connection){
+	public static boolean isConnectionTransactional(final RedisConnectionFactory factory,
+													final RedisConnection connection){
 		Assert.isNull(factory, "No RedisConnectionFactory specified");
 		RedisConnectionHolder connHolder = TransactionUtils.getResource(factory);
 		return (connHolder != null && connection == connHolder.getConnection());
 	}
 
-	public final static void releaseConnection(final RedisConnectionFactory factory,
-											   final @Nullable RedisConnection connection,
-											   final boolean transactionSupport){
+	public static void releaseConnection(final RedisConnectionFactory factory,
+										 final @Nullable RedisConnection connection, final boolean transactionSupport){
 		if(connection == null){
 			logger.error("Redis connection is null.");
 			return;
@@ -97,7 +96,7 @@ public final class RedisConnectionUtils {
 		}
 	}
 
-	public final static void unbindConnection(final RedisConnectionFactory factory){
+	public static void unbindConnection(final RedisConnectionFactory factory){
 		RedisConnectionHolder connectionHolder = TransactionUtils.unbindResourceIfPossible(factory);
 		if(connectionHolder == null){
 			return;
@@ -133,9 +132,9 @@ public final class RedisConnectionUtils {
 
 		RedisConnection connection = factory.getConnection();
 
-		long start = 0;
+		long startTime = 0;
 		if(logger.isDebugEnabled()){
-			start = System.nanoTime();
+			startTime = System.nanoTime();
 		}
 
 		try{
@@ -146,8 +145,8 @@ public final class RedisConnectionUtils {
 			logger.error("Redis connection failure: {}", e.getMessage());
 		}finally{
 			if(logger.isDebugEnabled()){
-				long finish = System.nanoTime();
-				logger.debug("Connection redis execution time: {}", finish - start);
+				long finishTime = System.nanoTime();
+				logger.debug("Connection redis execution time: {}", finishTime - startTime);
 			}
 		}
 

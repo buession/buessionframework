@@ -19,14 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.client.connection.datasource.ShardedDataSource;
 import com.buession.redis.core.ShardedRedisNode;
-import redis.clients.jedis.ShardedJedis;
 
 import java.util.Set;
 
@@ -35,7 +34,7 @@ import java.util.Set;
  *
  * @author Yong.Teng
  */
-public class ShardedJedisDataSource extends AbstractJedisDataSource<ShardedJedis> implements ShardedDataSource {
+public class ShardedJedisDataSource extends AbstractJedisDataSource implements ShardedDataSource {
 
 	/**
 	 * 分片主机节点

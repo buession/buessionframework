@@ -19,14 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.TransactionOperations;
-import com.buession.redis.core.RedisMode;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 
@@ -35,8 +34,8 @@ import redis.clients.jedis.commands.JedisCommands;
  */
 public abstract class AbstractTransactionOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements TransactionOperations<C> {
 
-	public AbstractTransactionOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
-		super(client, redisMode);
+	public AbstractTransactionOperations(final JedisRedisClient client){
+		super(client);
 	}
 
 }

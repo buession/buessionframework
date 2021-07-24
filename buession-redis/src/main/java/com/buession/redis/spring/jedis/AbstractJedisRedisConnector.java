@@ -22,10 +22,32 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.spring.jedis;/**
- * 
+package com.buession.redis.spring.jedis;
+
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.spring.AbstractConnector;
+
+/**
+ * Jedis Redis 连接器抽象类
+ *
+ * @param <C>
+ * 		Jedis Redis 工厂配置
+ * @param <T>
+ * 		Jedis 连接对象类型
  *
  * @author Yong.Teng
  * @since 1.3.0
- */public class AbstractJedisRedisConnector {
+ */
+abstract class AbstractJedisRedisConnector<C extends JedisRedisConfiguration, T extends JedisRedisConnection> extends AbstractConnector<C, T> implements JedisRedisConnector<C, T> {
+
+	/**
+	 * 构造函数
+	 *
+	 * @param configuration
+	 * 		Jedis Redis 工厂配置
+	 */
+	public AbstractJedisRedisConnector(final C configuration){
+		super(configuration);
+	}
+
 }

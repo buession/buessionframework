@@ -19,15 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.ShardedJedisClient;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
 
@@ -37,7 +37,7 @@ import redis.clients.jedis.ShardedJedisPipeline;
 public class ShardedJedisConnectionOperations extends AbstractConnectionOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisConnectionOperations(final ShardedJedisClient client){
-		super(client, RedisMode.SHARDED);
+		super(client);
 	}
 
 	@Override
@@ -53,37 +53,37 @@ public class ShardedJedisConnectionOperations extends AbstractConnectionOperatio
 
 	@Override
 	public Status auth(final String password){
-		commandAllNotSupportedException(ProtocolCommand.AUTH);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.AUTH, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status auth(final byte[] password){
-		commandAllNotSupportedException(ProtocolCommand.AUTH);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.AUTH, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status ping(){
-		commandAllNotSupportedException(ProtocolCommand.PING);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PING, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status quit(){
-		commandAllNotSupportedException(ProtocolCommand.QUIT);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.QUIT, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status select(final int db){
-		commandAllNotSupportedException(ProtocolCommand.SELECT);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SELECT, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status swapdb(final int db1, final int db2){
-		commandAllNotSupportedException(ProtocolCommand.SWAPDB);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SWAPDB, client.getConnection());
 		return null;
 	}
 

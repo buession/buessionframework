@@ -19,22 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.spring.jedis;
 
 import com.buession.core.utils.Assert;
 import com.buession.redis.core.RedisNode;
-import com.buession.redis.spring.AbstractRedisConfiguration;
 import com.buession.redis.spring.StandaloneConfiguration;
+import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * Jedis Redis 工厂配置
  *
  * @author Yong.Teng
  */
-public class JedisConfiguration extends AbstractRedisConfiguration implements StandaloneConfiguration {
+public class JedisConfiguration extends AbstractJedisRedisConfiguration implements StandaloneConfiguration {
 
 	/**
 	 * Redis 主机地址
@@ -60,6 +60,13 @@ public class JedisConfiguration extends AbstractRedisConfiguration implements St
 	 * Client Name
 	 */
 	private String clientName;
+
+	/**
+	 * 连接池配置
+	 *
+	 * @since 1.3.0
+	 */
+	private JedisPoolConfig poolConfig;
 
 	@Override
 	public String getHost(){
@@ -110,6 +117,29 @@ public class JedisConfiguration extends AbstractRedisConfiguration implements St
 	@Override
 	public void setClientName(String clientName){
 		this.clientName = clientName;
+	}
+
+	/**
+	 * 获取连接池配置
+	 *
+	 * @return 连接池配置
+	 *
+	 * @since 1.3.0
+	 */
+	public JedisPoolConfig getPoolConfig(){
+		return poolConfig;
+	}
+
+	/**
+	 * 设置连接池配置
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 *
+	 * @since 1.3.0
+	 */
+	public void setPoolConfig(JedisPoolConfig poolConfig){
+		this.poolConfig = poolConfig;
 	}
 
 }

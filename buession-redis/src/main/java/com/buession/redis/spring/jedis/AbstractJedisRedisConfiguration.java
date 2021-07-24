@@ -22,10 +22,17 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.spring.jedis;/**
- * 
+package com.buession.redis.spring.jedis;
+
+import com.buession.redis.spring.AbstractRedisConfiguration;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
+
+/**
+ * Jedis Redis 工厂配置抽象类
  *
  * @author Yong.Teng
  * @since 1.3.0
- */public class AbstractJedisRedisConfiguration {
+ */
+public abstract class AbstractJedisRedisConfiguration extends AbstractRedisConfiguration implements JedisRedisConfiguration {
+
 }

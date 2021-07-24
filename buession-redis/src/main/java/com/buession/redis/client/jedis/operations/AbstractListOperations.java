@@ -27,7 +27,6 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ListOperations;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.ListPositionJedisConverter;
@@ -41,8 +40,8 @@ import java.util.List;
  */
 public abstract class AbstractListOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements ListOperations<C> {
 
-	public AbstractListOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
-		super(client, redisMode);
+	public AbstractListOperations(final JedisRedisClient client){
+		super(client);
 	}
 
 	@Override

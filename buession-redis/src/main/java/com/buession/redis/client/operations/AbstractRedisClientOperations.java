@@ -24,84 +24,13 @@
  */
 package com.buession.redis.client.operations;
 
-import com.buession.redis.core.RedisMode;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.NotSupportedCommandException;
-import com.buession.redis.exception.NotSupportedPipelineCommandException;
-import com.buession.redis.exception.NotSupportedTransactionCommandException;
-
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRedisClientOperations<T> implements RedisClientOperations<T> {
-
-	private RedisMode redisMode;
-
-	public RedisMode getRedisMode(){
-		return redisMode;
-	}
-
-	public void setRedisMode(RedisMode redisMode){
-		this.redisMode = redisMode;
-	}
+public abstract class AbstractRedisClientOperations<C> implements RedisClientOperations<C> {
 
 	protected abstract boolean isTransaction();
 
 	protected abstract boolean isPipeline();
-
-	protected void pipelineAndTransactionNotSupportedException(final ProtocolCommand command){
-		if(getRedisMode() == null){
-			if(isPipeline()){
-				throw new NotSupportedPipelineCommandException(command);
-			}else if(isTransaction()){
-				throw new NotSupportedTransactionCommandException(command);
-			}
-		}else{
-			if(isPipeline()){
-				throw new NotSupportedPipelineCommandException(commandNotSupportedMessage(command, getRedisMode(),
-						"pipeline"));
-			}else if(isTransaction()){
-				throw new NotSupportedTransactionCommandException(commandNotSupportedMessage(command, getRedisMode(),
-						"transaction"));
-			}
-		}
-	}
-
-	protected void commandAllNotSupportedException(final ProtocolCommand command){
-		if(getRedisMode() == null){
-			if(isPipeline()){
-				throw new NotSupportedPipelineCommandException(command);
-			}else if(isTransaction()){
-				throw new NotSupportedTransactionCommandException(command);
-			}else{
-				throw new NotSupportedCommandException(command);
-			}
-		}else{
-			if(isPipeline()){
-				throw new NotSupportedPipelineCommandException(commandNotSupportedMessage(command, getRedisMode(),
-						"pipeline"));
-			}else if(isTransaction()){
-				throw new NotSupportedTransactionCommandException(commandNotSupportedMessage(command, getRedisMode(),
-						"transaction"));
-			}else{
-				throw new NotSupportedCommandException(commandNotSupportedMessage(command, getRedisMode(), null));
-			}
-		}
-	}
-
-	private final static String commandNotSupportedMessage(final ProtocolCommand command, final RedisMode mode,
-														   final String s){
-		final StringBuilder sb = new StringBuilder(64);
-
-		sb.append("Not supported command: ").append(command);
-
-		if(s != null){
-			sb.append(" in ").append(s);
-		}
-
-		sb.append(" with ").append(mode).append(" mode.");
-
-		return sb.toString();
-	}
 
 }

@@ -27,12 +27,12 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.ShardedJedisClient;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.MapScanResultExposeConverter;
 import com.buession.redis.core.jedis.JedisScanParams;
+import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
 
@@ -48,7 +48,7 @@ import java.util.Set;
 public class ShardedJedisHashOperations extends AbstractHashOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisHashOperations(final ShardedJedisClient client){
-		super(client, RedisMode.SHARDED);
+		super(client);
 	}
 
 	@Override
@@ -165,20 +165,23 @@ public class ShardedJedisHashOperations extends AbstractHashOperations<ShardedJe
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.HSCAN,
+				client.getConnection());
 		return execute((cmd)->new MapScanResultExposeConverter<byte[], byte[]>().convert(cmd.hscan(key, cursor)));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.HSCAN,
+				client.getConnection());
 		return execute((cmd)->new MapScanResultExposeConverter<byte[], byte[]>().convert(cmd.hscan(key, cursor,
 				new JedisScanParams(pattern))));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.HSCAN,
+				client.getConnection());
 		return execute((cmd)->new MapScanResultExposeConverter<byte[], byte[]>().convert(cmd.hscan(key, cursor,
 				new JedisScanParams(count))));
 	}
@@ -186,7 +189,8 @@ public class ShardedJedisHashOperations extends AbstractHashOperations<ShardedJe
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 												 final int count){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.HSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.HSCAN,
+				client.getConnection());
 		return execute((cmd)->new MapScanResultExposeConverter<byte[], byte[]>().convert(cmd.hscan(key, cursor,
 				new JedisScanParams(pattern, count))));
 	}

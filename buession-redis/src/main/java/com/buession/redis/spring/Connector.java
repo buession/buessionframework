@@ -22,10 +22,28 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.spring;/**
- * 
+package com.buession.redis.spring;
+
+import com.buession.redis.client.connection.RedisConnection;
+
+/**
+ * Redis 连接器
+ *
+ * @param <C>
+ * 		Redis 工厂配置
+ * @param <T>
+ * 		连接对象类型
  *
  * @author Yong.Teng
  * @since 1.3.0
- */public interface Connector {
+ */
+public interface Connector<C extends RedisConfiguration, T extends RedisConnection> {
+
+	/**
+	 * 创建连接对象
+	 *
+	 * @return 连接对象
+	 */
+	T create();
+
 }

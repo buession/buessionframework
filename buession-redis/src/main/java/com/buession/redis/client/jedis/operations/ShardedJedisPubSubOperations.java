@@ -19,15 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.redis.client.jedis.ShardedJedisClient;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
 
@@ -40,110 +40,110 @@ import java.util.Map;
 public class ShardedJedisPubSubOperations extends AbstractPubSubOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisPubSubOperations(final ShardedJedisClient client){
-		super(client, RedisMode.SHARDED);
+		super(client);
 	}
 
 	@Override
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
-		commandAllNotSupportedException(ProtocolCommand.PSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PSUBSCRIBE, client.getConnection());
 	}
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
-		commandAllNotSupportedException(ProtocolCommand.PSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PSUBSCRIBE, client.getConnection());
 	}
 
 	@Override
 	public List<String> pubsubChannels(){
-		commandAllNotSupportedException(ProtocolCommand.PUBSUB);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PUBSUB, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public List<String> pubsubChannels(final String pattern){
-		commandAllNotSupportedException(ProtocolCommand.PUBSUB);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PUBSUB, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public List<byte[]> pubsubChannels(final byte[] pattern){
-		commandAllNotSupportedException(ProtocolCommand.PUBSUB);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PUBSUB, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long pubsubNumPat(){
-		commandAllNotSupportedException(ProtocolCommand.PUBSUB);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PUBSUB, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Map<String, String> pubsubNumSub(final String... channels){
-		commandAllNotSupportedException(ProtocolCommand.PUBSUB);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PUBSUB, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
-		commandAllNotSupportedException(ProtocolCommand.PUBSUB);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PUBSUB, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long publish(final String channel, final String message){
-		commandAllNotSupportedException(ProtocolCommand.PUBLISH);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PUBLISH, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long publish(final byte[] channel, final byte[] message){
-		commandAllNotSupportedException(ProtocolCommand.PUBLISH);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PUBLISH, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object pUnSubscribe(){
-		commandAllNotSupportedException(ProtocolCommand.PUNSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PUNSUBSCRIBE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object pUnSubscribe(final String... patterns){
-		commandAllNotSupportedException(ProtocolCommand.PUNSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PUNSUBSCRIBE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns){
-		commandAllNotSupportedException(ProtocolCommand.PUNSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PUNSUBSCRIBE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
-		commandAllNotSupportedException(ProtocolCommand.SUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SUBSCRIBE, client.getConnection());
 	}
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
-		commandAllNotSupportedException(ProtocolCommand.SUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SUBSCRIBE, client.getConnection());
 	}
 
 	@Override
 	public Object unSubscribe(){
-		commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object unSubscribe(final String... channels){
-		commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels){
-		commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE, client.getConnection());
 		return null;
 	}
 

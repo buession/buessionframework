@@ -19,19 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.client.connection.datasource.AbstractDataSource;
-import redis.clients.jedis.commands.JedisCommands;
 
 /**
  * Jedis 数据源抽象类
  *
  * @author Yong.Teng
  */
-public abstract class AbstractJedisDataSource<T extends JedisCommands> extends AbstractDataSource implements JedisRedisDataSource<T> {
+public abstract class AbstractJedisDataSource extends AbstractDataSource implements JedisRedisDataSource {
 
 }

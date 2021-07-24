@@ -19,22 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.spring;
 
-import com.buession.core.utils.FieldUtils;
-import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
-import com.buession.redis.client.connection.datasource.jedis.ShardedJedisDataSource;
-import com.buession.redis.client.connection.jedis.JedisConnection;
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
-import com.buession.redis.client.connection.jedis.ShardedJedisConnection;
-import com.buession.redis.exception.PoolException;
-import com.buession.redis.spring.jedis.JedisConfiguration;
-import com.buession.redis.spring.jedis.ShardedRedisConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.buession.redis.spring.jedis.JedisRedisConfiguration;
 import redis.clients.jedis.JedisPoolConfig;
 
 /**
@@ -42,14 +32,7 @@ import redis.clients.jedis.JedisPoolConfig;
  *
  * @author Yong.Teng
  */
-public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<JedisRedisConnection> {
-
-	/**
-	 * 连接池配置
-	 */
-	private JedisPoolConfig poolConfig = new JedisPoolConfig();
-
-	private final static Logger logger = LoggerFactory.getLogger(JedisRedisConnectionFactoryBean.class);
+public class JedisRedisConnectionFactoryBean extends com.buession.redis.spring.jedis.JedisRedisConnectionFactoryBean {
 
 	/**
 	 * 构造函数
@@ -57,7 +40,7 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 	 * @param configuration
 	 * 		连接配置
 	 */
-	public JedisRedisConnectionFactoryBean(final RedisConfiguration configuration){
+	public JedisRedisConnectionFactoryBean(final JedisRedisConfiguration configuration){
 		super(configuration);
 	}
 
@@ -69,71 +52,10 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 	 * @param poolConfig
 	 * 		连接池配置
 	 */
-	public JedisRedisConnectionFactoryBean(final RedisConfiguration configuration, final JedisPoolConfig poolConfig){
-		this(configuration);
-		this.poolConfig = poolConfig;
+	@Deprecated
+	public JedisRedisConnectionFactoryBean(final JedisRedisConfiguration configuration,
+										   final JedisPoolConfig poolConfig){
+		super(configuration, poolConfig);
 	}
-
-	public JedisPoolConfig getPoolConfig(){
-		return poolConfig;
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception{
-		if(isShardedConnection()){
-			final ShardedJedisDataSource dataSource = createShardedJedisDataSource();
-			final ShardedJedisConnection connection = new ShardedJedisConnection(dataSource,
-					getConfiguration().getConnectTimeout(), getConfiguration().getSoTimeout(),
-					getConfiguration().getSslConfiguration());
-
-			if(getPoolConfig() != null){
-				connection.setPoolConfig(getPoolConfig());
-				logger.debug("Initialize sharded connection with pool.");
-			}else{
-				logger.debug("Initialize sharded connection.");
-			}
-
-			setConnection(connection);
-		}else{
-			final JedisDataSource dataSource = createJedisDataSource();
-			final JedisConnection connection = new JedisConnection(dataSource, getConfiguration().getConnectTimeout(),
-					getConfiguration().getSoTimeout(), getConfiguration().getSslConfiguration());
-
-			if(getPoolConfig() != null){
-				connection.setPoolConfig(getPoolConfig());
-				logger.debug("Initialize connection with pool.");
-			}else{
-				logger.debug("Initialize connection.");
-			}
-
-			setConnection(connection);
-		}
-	}
-
-	protected JedisDataSource createJedisDataSource(){
-		JedisConfiguration configuration = (JedisConfiguration) getConfiguration();
-		return new JedisDataSource(configuration.getHost(), configuration.getPort(), configuration.getPassword(),
-				configuration.getDatabase(), configuration.getClientName());
-	}
-
-	protected ShardedJedisDataSource createShardedJedisDataSource(){
-		ShardedRedisConfiguration configuration = (ShardedRedisConfiguration) getConfiguration();
-		return new ShardedJedisDataSource(configuration.getNodes());
-	}
-
-	@Override
-	protected void afterDestroy(JedisRedisConnection connection){
-		if(connection == null || connection.getPool() == null){
-			return;
-		}
-
-		try{
-			connection.getPool().destroy();
-			FieldUtils.writeDeclaredField(connection, "pool", null, true);
-		}catch(Exception e){
-			logger.warn("Cannot properly close ShardedJedis pool", e);
-			throw new PoolException(e.getMessage(), e);
-		}
-	}
-
+	
 }

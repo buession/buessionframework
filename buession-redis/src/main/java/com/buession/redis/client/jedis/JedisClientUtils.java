@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis;
@@ -42,11 +42,11 @@ public class JedisClientUtils extends RedisClientUtils {
 	private JedisClientUtils(){
 	}
 
-	public final static Jedis getShard(final ShardedJedis shardedJedis, final String key){
+	public static Jedis getShard(final ShardedJedis shardedJedis, final String key){
 		return shardedJedis.getShard(key);
 	}
 
-	public final static Jedis getShard(final ShardedJedis shardedJedis, final byte[] key){
+	public static Jedis getShard(final ShardedJedis shardedJedis, final byte[] key){
 		return shardedJedis.getShard(key);
 	}
 
@@ -58,7 +58,7 @@ public class JedisClientUtils extends RedisClientUtils {
 		return false;
 	}
 
-	public final static Object objectDebug(final ObjectCommand command, final Jedis jedis, final String key){
+	public static Object objectDebug(final ObjectCommand command, final Jedis jedis, final String key){
 		switch(command){
 			case ENCODING:
 				return jedis.objectEncoding(key);
@@ -71,7 +71,7 @@ public class JedisClientUtils extends RedisClientUtils {
 		}
 	}
 
-	public final static Object objectDebug(final ObjectCommand command, final Jedis jedis, final byte[] key){
+	public static Object objectDebug(final ObjectCommand command, final Jedis jedis, final byte[] key){
 		switch(command){
 			case ENCODING:
 				return jedis.objectEncoding(key);
@@ -84,8 +84,7 @@ public class JedisClientUtils extends RedisClientUtils {
 		}
 	}
 
-	public final static Object objectDebug(final ObjectCommand command, final ShardedJedis shardedJedis,
-			final String key){
+	public static Object objectDebug(final ObjectCommand command, final ShardedJedis shardedJedis, final String key){
 		switch(command){
 			case ENCODING:
 				return SafeEncoder.encode(shardedJedis.objectEncoding(SafeEncoder.encode(key)));
@@ -98,8 +97,7 @@ public class JedisClientUtils extends RedisClientUtils {
 		}
 	}
 
-	public final static Object objectDebug(final ObjectCommand command, final ShardedJedis shardedJedis,
-			final byte[] key){
+	public static Object objectDebug(final ObjectCommand command, final ShardedJedis shardedJedis, final byte[] key){
 		switch(command){
 			case ENCODING:
 				return shardedJedis.objectEncoding(key);
@@ -112,8 +110,7 @@ public class JedisClientUtils extends RedisClientUtils {
 		}
 	}
 
-	public final static Response<?> objectDebug(final ObjectCommand command, final RedisPipeline pipeline,
-			final String key){
+	public static Response<?> objectDebug(final ObjectCommand command, final RedisPipeline pipeline, final String key){
 		switch(command){
 			case ENCODING:
 				return pipeline.objectEncoding(key);
@@ -126,8 +123,8 @@ public class JedisClientUtils extends RedisClientUtils {
 		}
 	}
 
-	public final static Response<?> objectDebug(final ObjectCommand command, final BinaryRedisPipeline binaryPipeline,
-			final byte[] key){
+	public static Response<?> objectDebug(final ObjectCommand command, final BinaryRedisPipeline binaryPipeline,
+										  final byte[] key){
 		switch(command){
 			case ENCODING:
 				return binaryPipeline.objectEncoding(key);
@@ -140,7 +137,7 @@ public class JedisClientUtils extends RedisClientUtils {
 		}
 	}
 
-	public final static Object slowLog(final SlowLogCommand command, final Jedis jedis, final String... arguments){
+	public static Object slowLog(final SlowLogCommand command, final Jedis jedis, final String... arguments){
 		switch(command){
 			case GET:
 				return jedis.slowlogGet();
@@ -153,7 +150,7 @@ public class JedisClientUtils extends RedisClientUtils {
 		}
 	}
 
-	public final static Object slowLog(final SlowLogCommand command, final Jedis jedis, final byte[]... arguments){
+	public static Object slowLog(final SlowLogCommand command, final Jedis jedis, final byte[]... arguments){
 		switch(command){
 			case GET:
 				return jedis.slowlogGet();

@@ -26,11 +26,12 @@ package com.buession.redis.client.connection.jedis;
 
 import com.buession.core.Executor;
 import com.buession.core.validator.Validate;
-import com.buession.redis.client.connection.StandaloneConnection;
+import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.redis.client.connection.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
 import com.buession.redis.client.jedis.JedisClientUtils;
+import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
@@ -50,11 +51,17 @@ import java.util.List;
  *
  * @author Yong.Teng
  */
-public class JedisConnection extends AbstractJedisRedisConnection<Jedis> implements JedisRedisConnection<Jedis>,
-		StandaloneConnection {
+public class JedisConnection extends AbstractJedisRedisConnection implements RedisStandaloneConnection {
 
 	/**
-	 * Jedis 连接池
+	 * 连接池配置
+	 *
+	 * @since 1.3.0
+	 */
+	private JedisPoolConfig poolConfig;
+
+	/**
+	 * 连接池
 	 */
 	private JedisPool pool;
 
@@ -63,7 +70,7 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	 */
 	private Jedis jedis;
 
-	private static Logger logger = LoggerFactory.getLogger(JedisConnection.class);
+	private final static Logger logger = LoggerFactory.getLogger(JedisConnection.class);
 
 	/**
 	 * 构造函数
@@ -134,7 +141,8 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	 * 		连接池配置
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig){
-		super(dataSource, poolConfig);
+		super(dataSource);
+		this.poolConfig = poolConfig;
 	}
 
 	/**
@@ -150,7 +158,8 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	 * 		读取超时
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout, int soTimeout){
-		super(dataSource, poolConfig, connectTimeout, soTimeout);
+		super(dataSource, connectTimeout, soTimeout);
+		this.poolConfig = poolConfig;
 	}
 
 	/**
@@ -164,7 +173,8 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	 * 		SSL 配置
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, SslConfiguration sslConfiguration){
-		super(dataSource, poolConfig, sslConfiguration);
+		super(dataSource, sslConfiguration);
+		this.poolConfig = poolConfig;
 	}
 
 	/**
@@ -183,12 +193,37 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 	 */
 	public JedisConnection(JedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout, int soTimeout,
 						   SslConfiguration sslConfiguration){
-		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
+		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 返回连接池配置 {@link JedisPoolConfig}
+	 *
+	 * @return 连接池配置
+	 */
+	public JedisPoolConfig getPoolConfig(){
+		return poolConfig;
+	}
+
+	/**
+	 * 设置连接池配置 {@link JedisPoolConfig}
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
+	public void setPoolConfig(JedisPoolConfig poolConfig){
+		this.poolConfig = poolConfig;
 	}
 
 	@Override
-	public JedisPool getPool(){
-		return pool;
+	public <C, R> R execute(Executor<C, R> executor) throws RedisException{
+		try{
+			return executor.execute((C) jedis);
+		}catch(Exception e){
+			logger.error("Redis execute command failure: ", e);
+			throw RedisExceptionUtils.convert(e);
+		}
 	}
 
 	@Override
@@ -223,120 +258,157 @@ public class JedisConnection extends AbstractJedisRedisConnection<Jedis> impleme
 		}
 	}
 
-	protected JedisPool createPool(final JedisDataSource dataSource){
-		final SslConfiguration sslConfiguration = getSslConfiguration();
-		JedisPool pool;
-
-		if(sslConfiguration == null){
-			logger.debug("Create jedis pool with ssl.");
-			pool = new JedisPool(getPoolConfig(), dataSource.getHost(), dataSource.getPort(), getConnectTimeout(),
-					getSoTimeout(), redisPassword(dataSource.getPassword()), dataSource.getDatabase(),
-					dataSource.getClientName(), isUseSsl());
-		}else{
-			logger.debug("Create jedis pool.");
-			pool = new JedisPool(getPoolConfig(), dataSource.getHost(), dataSource.getPort(), getConnectTimeout(),
-					getSoTimeout(), redisPassword(dataSource.getPassword()), dataSource.getDatabase(),
-					dataSource.getClientName(), isUseSsl(), sslConfiguration.getSslSocketFactory(),
-					sslConfiguration.getSslParameters(), sslConfiguration.getHostnameVerifier());
-		}
-
-		return pool;
+	@Override
+	public boolean isConnect(){
+		return jedis != null && jedis.isConnected();
 	}
 
 	@Override
-	protected void doConnect() throws IOException{
+	public boolean isClosed(){
+		return jedis == null || jedis.isConnected() == false;
+	}
+
+	@Override
+	protected void internalInit(){
 		DataSource dataSource = getDataSource();
 		if(dataSource == null){
 			return;
 		}
 
-		JedisDataSource jedisDataSource = ((JedisDataSource) dataSource);
-		if(getPoolConfig() != null){
-			if(pool == null){
-				pool = createPool(jedisDataSource);
-			}
-
-			try{
-				jedis = pool.getResource();
-			}catch(Exception e){
-				logger.error("Create jedis from pool failure: {}", e.getMessage(), e);
-				throw RedisExceptionUtils.convert(e);
-			}
-
-			if(logger.isInfoEnabled()){
-				logger.info("Jedis initialize with pool success.");
-			}
+		JedisDataSource jedisDataSource = (JedisDataSource) dataSource;
+		if(isUsePool()){
+			pool = createPool(jedisDataSource);
 		}else{
-			SslConfiguration sslConfiguration = getSslConfiguration();
+			jedis = createJedis(jedisDataSource);
+		}
+	}
 
-			if(jedis == null){
-				if(sslConfiguration == null){
-					logger.debug("Create jedis.");
-					jedis = new Jedis(jedisDataSource.getHost(), jedisDataSource.getPort(), getConnectTimeout(),
-							getSoTimeout(), isUseSsl());
+	protected JedisPool createPool(final JedisDataSource dataSource){
+		final SslConfiguration sslConfiguration = getSslConfiguration();
+
+		if(sslConfiguration == null){
+			logger.debug("Create jedis pool.");
+			return new JedisPool(getPoolConfig(), dataSource.getHost(), dataSource.getPort(), getConnectTimeout(),
+					getSoTimeout(), redisPassword(dataSource.getPassword()), dataSource.getDatabase(),
+					dataSource.getClientName(), isUseSsl());
+		}else{
+			logger.debug("Create jedis pool with ssl.");
+			return new JedisPool(getPoolConfig(), dataSource.getHost(), dataSource.getPort(), getConnectTimeout(),
+					getSoTimeout(), redisPassword(dataSource.getPassword()), dataSource.getDatabase(),
+					dataSource.getClientName(), isUseSsl(), sslConfiguration.getSslSocketFactory(),
+					sslConfiguration.getSslParameters(), sslConfiguration.getHostnameVerifier());
+		}
+	}
+
+	protected Jedis createJedis(final JedisDataSource dataSource){
+		SslConfiguration sslConfiguration = getSslConfiguration();
+
+		if(sslConfiguration == null){
+			logger.debug("Create jedis.");
+			return new Jedis(dataSource.getHost(), dataSource.getPort(), getConnectTimeout(), getSoTimeout(),
+					isUseSsl());
+		}else{
+			logger.debug("Create jedis with ssl.");
+			return new Jedis(dataSource.getHost(), dataSource.getPort(), getConnectTimeout(), getSoTimeout(),
+					isUseSsl(), sslConfiguration.getSslSocketFactory(), sslConfiguration.getSslParameters(),
+					sslConfiguration.getHostnameVerifier());
+		}
+	}
+
+	protected boolean isUsePool(){
+		return getPoolConfig() != null;
+	}
+
+	@Override
+	protected void doConnect() throws IOException{
+		boolean usePool = isUsePool();
+
+		try{
+			if(usePool){
+				jedis = pool.getResource();
+
+				if(logger.isInfoEnabled()){
+					logger.info("Jedis initialized with pool success.");
+				}
+			}else{
+				JedisDataSource dataSource = (JedisDataSource) getDataSource();
+
+				if(jedis.isConnected() == false){
+					jedis.connect();
+
+					if(Validate.hasText(dataSource.getPassword())){
+						jedis.auth(dataSource.getPassword());
+					}
+
+					if(dataSource.getDatabase() != DEFAULT_DB){
+						jedis.select(dataSource.getDatabase());
+					}
+
+					if(Validate.hasText(dataSource.getClientName())){
+						jedis.clientSetname(dataSource.getClientName());
+					}
+				}
+
+				if(logger.isInfoEnabled()){
+					logger.info("Jedis initialized success.");
+				}
+			}
+		}catch(Exception e){
+			if(logger.isErrorEnabled()){
+				if(usePool){
+					logger.error("Jedis initialized with pool failure: {}", e.getMessage(), e);
 				}else{
-					logger.debug("Create jedis with ssl.");
-					jedis = new Jedis(jedisDataSource.getHost(), jedisDataSource.getPort(), getConnectTimeout(),
-							getSoTimeout(), isUseSsl(), sslConfiguration.getSslSocketFactory(),
-							sslConfiguration.getSslParameters(), sslConfiguration.getHostnameVerifier());
+					logger.error("Jedis initialized failure: {}", e.getMessage(), e);
 				}
 			}
 
-			try{
-				jedis.connect();
-			}catch(Exception e){
-				logger.error("Jedis connect failure: {}", e.getMessage(), e);
-				throw RedisExceptionUtils.convert(e);
-			}
-
-			jedis.auth(redisPassword(jedisDataSource.getPassword()));
-			jedis.select(jedisDataSource.getDatabase());
-
-			if(Validate.hasText(jedisDataSource.getClientName())){
-				jedis.clientSetname(jedisDataSource.getClientName());
-			}
-
-			if(logger.isInfoEnabled()){
-				logger.info("Jedis initialize success.");
-			}
+			throw RedisExceptionUtils.convert(e);
 		}
 	}
 
 	@Override
-	protected <R> R doExecute(Executor<Jedis, R> executor) throws Exception{
-		return executor.execute(jedis);
-	}
+	protected void doDestroy() throws IOException{
+		super.doDestroy();
 
-	@Override
-	protected boolean checkConnect(){
-		return jedis != null && jedis.isConnected();
-	}
+		logger.info("Jedis destroy.");
+		if(pool != null){
+			logger.info("Jedis Pool for {} destroy.", pool.getClass().getName());
 
-	@Override
-	protected boolean checkClosed(){
-		return jedis == null || jedis.isConnected() == false;
+			try{
+				pool.destroy();
+			}catch(Exception ex){
+				logger.warn("Cannot properly close Jedis pool.", ex);
+			}
+
+			pool = null;
+		}
 	}
 
 	@Override
 	protected void doDisconnect() throws IOException{
 		super.doDisconnect();
-		if(jedis != null){
-			logger.info("Jedis disconnect.");
-			jedis.disconnect();
-		}
+
+		logger.info("Jedis disconnect.");
+		jedis.disconnect();
 	}
 
 	@Override
 	protected void doClose() throws IOException{
 		super.doClose();
-		if(jedis != null){
-			if(pool != null){
-				logger.info("Jedis close.");
+
+		logger.info("Jedis close.");
+		if(isUsePool()){
+			logger.info("Jedis close.");
+
+			if(jedis != null){
 				jedis.close();
-			}else{
-				logger.info("Jedis quit.");
+			}
+		}else{
+			logger.info("Jedis quit and disconnect.");
+
+			if(jedis != null){
 				jedis.quit();
-				disconnect();
+				jedis.disconnect();
 			}
 		}
 	}

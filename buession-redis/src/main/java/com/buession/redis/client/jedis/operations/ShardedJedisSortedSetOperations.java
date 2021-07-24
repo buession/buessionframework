@@ -26,7 +26,6 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.redis.client.jedis.ShardedJedisClient;
 import com.buession.redis.core.Aggregate;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -34,6 +33,7 @@ import com.buession.redis.core.convert.jedis.ListTupleScanResultExposeConverter;
 import com.buession.redis.core.convert.jedis.SetTupleExposeConverter;
 import com.buession.redis.core.convert.jedis.TupleExposeConverter;
 import com.buession.redis.core.jedis.JedisScanParams;
+import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
 
@@ -48,7 +48,7 @@ import java.util.Set;
 public class ShardedJedisSortedSetOperations extends AbstractSortedSetOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisSortedSetOperations(final ShardedJedisClient client){
-		super(client, RedisMode.SHARDED);
+		super(client);
 	}
 
 	@Override
@@ -112,51 +112,51 @@ public class ShardedJedisSortedSetOperations extends AbstractSortedSetOperations
 
 	@Override
 	public Long zInterStore(final String destKey, final String... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zInterStore(final String destKey, final Aggregate aggregate, final String... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zInterStore(final String destKey, final double[] weights, final String... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final double[] weights, final byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zInterStore(final String destKey, final Aggregate aggregate, final double[] weights,
 							final String... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double[] weights,
 							final byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZINTERSTORE, client.getConnection());
 		return null;
 	}
 
@@ -622,27 +622,31 @@ public class ShardedJedisSortedSetOperations extends AbstractSortedSetOperations
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.ZSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor)));
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.ZSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor,
 				new JedisScanParams(pattern))));
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.ZSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor,
 				new JedisScanParams(count))));
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.ZSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor,
 				new JedisScanParams(pattern, count))));
 	}
@@ -660,49 +664,49 @@ public class ShardedJedisSortedSetOperations extends AbstractSortedSetOperations
 
 	@Override
 	public Long zUnionStore(String destKey, String... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zUnionStore(byte[] destKey, byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zUnionStore(String destKey, Aggregate aggregate, String... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zUnionStore(byte[] destKey, Aggregate aggregate, byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zUnionStore(String destKey, double[] weights, String... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zUnionStore(byte[] destKey, double[] weights, byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zUnionStore(String destKey, Aggregate aggregate, double[] weights, String... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long zUnionStore(byte[] destKey, Aggregate aggregate, double[] weights, byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ZUNIONSTORE, client.getConnection());
 		return null;
 	}
 

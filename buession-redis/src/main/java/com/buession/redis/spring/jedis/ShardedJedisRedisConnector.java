@@ -24,10 +24,48 @@
  */
 package com.buession.redis.spring.jedis;
 
+import com.buession.redis.client.connection.datasource.jedis.ShardedJedisDataSource;
+import com.buession.redis.client.connection.jedis.ShardedJedisConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
+ * Sharded Jedis Redis 连接器抽象类
+ *
  * @author Yong.Teng
  * @since 1.3.0
  */
-public class ShardedRedisJedisRedisConnector extends AbstractJedisRedisConnector<ShardedRedisConfiguration> {
+class ShardedJedisRedisConnector extends AbstractJedisRedisConnector<ShardedRedisConfiguration,
+		ShardedJedisConnection> {
+
+	private final static Logger logger = LoggerFactory.getLogger(ShardedJedisRedisConnector.class);
+
+	/**
+	 * 构造函数
+	 *
+	 * @param configuration
+	 * 		Sharded Jedis Redis 工厂配置
+	 */
+	public ShardedJedisRedisConnector(final ShardedRedisConfiguration configuration){
+		super(configuration);
+	}
+
+	@Override
+	public ShardedJedisConnection create(){
+		final ShardedJedisDataSource dataSource = new ShardedJedisDataSource(getConfiguration().getNodes());
+
+		final ShardedJedisConnection connection = new ShardedJedisConnection(dataSource,
+				getConfiguration().getConnectTimeout(), getConfiguration().getSoTimeout(),
+				getConfiguration().getSslConfiguration());
+
+		if(getConfiguration().getPoolConfig() != null){
+			connection.setPoolConfig(getConfiguration().getPoolConfig());
+			logger.debug("Initialize sharded connection with pool.");
+		}else{
+			logger.debug("Initialize sharded connection.");
+		}
+
+		return connection;
+	}
 
 }

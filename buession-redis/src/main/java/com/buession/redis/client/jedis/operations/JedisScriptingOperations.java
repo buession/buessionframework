@@ -28,6 +28,7 @@ import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.OkStatusConverter;
+import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 
@@ -41,7 +42,7 @@ import java.util.stream.Collectors;
 public class JedisScriptingOperations extends AbstractScriptingOperations<Jedis, Pipeline> {
 
 	public JedisScriptingOperations(final JedisClient client){
-		super(client, null);
+		super(client);
 	}
 
 	@Override
@@ -194,13 +195,15 @@ public class JedisScriptingOperations extends AbstractScriptingOperations<Jedis,
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCRIPT_EXISTS);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_EXISTS,
+				client.getConnection());
 		return execute((cmd)->cmd.scriptExists(sha1));
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final byte[]... sha1){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCRIPT_EXISTS);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_EXISTS,
+				client.getConnection());
 		return execute((cmd)->{
 			List<Long> result = cmd.scriptExists(sha1);
 			return result == null ? null : result.stream().map((v)->v == 1).collect(Collectors.toList());
@@ -209,29 +212,29 @@ public class JedisScriptingOperations extends AbstractScriptingOperations<Jedis,
 
 	@Override
 	public Status scriptFlush(){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCRIPT_FLUSH);
-
-		final OkStatusConverter converter = new OkStatusConverter();
-		return execute((cmd)->cmd.scriptFlush(), converter);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_FLUSH,
+				client.getConnection());
+		return execute((cmd)->cmd.scriptFlush(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status scriptKill(){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCRIPT_KILL);
-
-		final OkStatusConverter converter = new OkStatusConverter();
-		return execute((cmd)->cmd.scriptKill(), converter);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_KILL,
+				client.getConnection());
+		return execute((cmd)->cmd.scriptKill(), new OkStatusConverter());
 	}
 
 	@Override
 	public String scriptLoad(final String script){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCRIPT_LOAD);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_LOAD,
+				client.getConnection());
 		return execute((cmd)->cmd.scriptLoad(script));
 	}
 
 	@Override
 	public byte[] scriptLoad(final byte[] script){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SCRIPT_LOAD);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_LOAD,
+				client.getConnection());
 		return execute((cmd)->cmd.scriptLoad(script));
 	}
 

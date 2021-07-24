@@ -35,6 +35,7 @@ import com.buession.redis.core.convert.jedis.SetTupleExposeConverter;
 import com.buession.redis.core.convert.jedis.TupleExposeConverter;
 import com.buession.redis.core.jedis.JedisScanParams;
 import com.buession.redis.core.jedis.JedisZParams;
+import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 
@@ -49,7 +50,7 @@ import java.util.Set;
 public class JedisSortedSetOperations extends AbstractSortedSetOperations<Jedis, Pipeline> {
 
 	public JedisSortedSetOperations(final JedisClient client){
-		super(client, null);
+		super(client);
 	}
 
 	@Override
@@ -675,27 +676,31 @@ public class JedisSortedSetOperations extends AbstractSortedSetOperations<Jedis,
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.ZSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor)));
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.ZSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor,
 				new JedisScanParams(pattern))));
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.ZSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor,
 				new JedisScanParams(count))));
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.ZSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor,
 				new JedisScanParams(pattern, count))));
 	}

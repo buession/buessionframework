@@ -28,7 +28,6 @@ import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.AbstractRedisClientOperations;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -44,11 +43,10 @@ import redis.clients.jedis.commands.JedisCommands;
  */
 public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractRedisClientOperations<C> implements JedisRedisClientOperations<C, P> {
 
-	protected JedisRedisClient<C> client;
+	protected JedisRedisClient client;
 
-	public AbstractJedisRedisClientOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
+	public AbstractJedisRedisClientOperations(final JedisRedisClient client){
 		this.client = client;
-		setRedisMode(redisMode);
 	}
 
 	@Override

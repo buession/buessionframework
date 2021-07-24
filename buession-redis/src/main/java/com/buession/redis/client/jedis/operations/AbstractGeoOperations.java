@@ -27,7 +27,6 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Geo;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.GeoOperations;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.convert.jedis.GeoRadiusArgumentJedisConverter;
@@ -48,8 +47,8 @@ import java.util.Map;
  */
 public abstract class AbstractGeoOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements GeoOperations<C> {
 
-	public AbstractGeoOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
-		super(client, redisMode);
+	public AbstractGeoOperations(final JedisRedisClient client){
+		super(client);
 	}
 
 	@Override

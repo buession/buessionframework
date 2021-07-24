@@ -19,15 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.ShardedJedisClient;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.transaction.Transaction;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
@@ -41,41 +41,41 @@ public class ShardedJedisTransactionOperations extends AbstractTransactionOperat
 		ShardedJedisPipeline> {
 
 	public ShardedJedisTransactionOperations(final ShardedJedisClient client){
-		super(client, RedisMode.SHARDED);
+		super(client);
 	}
 
 	@Override
 	public void discard(){
-		commandAllNotSupportedException(ProtocolCommand.DISCARD);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.DISCARD, client.getConnection());
 	}
 
 	@Override
 	public List<Object> exec(){
-		commandAllNotSupportedException(ProtocolCommand.EXEC);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.EXEC, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Transaction multi(){
-		commandAllNotSupportedException(ProtocolCommand.MULTI);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.MULTI, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status unwatch(){
-		commandAllNotSupportedException(ProtocolCommand.UNWATCH);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.UNWATCH, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status watch(final String... keys){
-		commandAllNotSupportedException(ProtocolCommand.WATCH);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.WATCH, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status watch(final byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.WATCH);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.WATCH, client.getConnection());
 		return null;
 	}
 

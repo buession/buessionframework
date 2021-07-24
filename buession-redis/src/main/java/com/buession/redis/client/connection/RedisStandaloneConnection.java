@@ -22,10 +22,14 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection;/**
- * 
+package com.buession.redis.client.connection;
+
+/**
+ * Redis 单机连接器
  *
  * @author Yong.Teng
  * @since 1.3.0
- */public interface RedisStandaloneConnection {
+ */
+public interface RedisStandaloneConnection extends StandaloneConnection, RedisConnection {
+
 }

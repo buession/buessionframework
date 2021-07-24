@@ -29,6 +29,7 @@ import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.PingResultConverter;
+import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
@@ -39,12 +40,13 @@ import redis.clients.jedis.Pipeline;
 public class JedisConnectionOperations extends AbstractConnectionOperations<Jedis, Pipeline> {
 
 	public JedisConnectionOperations(final JedisClient client){
-		super(client, null);
+		super(client);
 	}
 
 	@Override
 	public Status auth(final String password){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.AUTH);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.AUTH,
+				client.getConnection());
 
 		final OkStatusConverter converter = new OkStatusConverter();
 		return execute((cmd)->cmd.auth(password), converter);
@@ -81,7 +83,8 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 
 	@Override
 	public Status quit(){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.QUIT);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.QUIT,
+				client.getConnection());
 
 		final OkStatusConverter converter = new OkStatusConverter();
 		return execute((cmd)->cmd.quit(), converter);

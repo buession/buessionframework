@@ -19,21 +19,20 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.client.connection.datasource.StandaloneDataSource;
 import com.buession.redis.core.RedisNode;
-import redis.clients.jedis.Jedis;
 
 /**
  * Jedis 单机模式数据源
  *
  * @author Yong.Teng
  */
-public class JedisDataSource extends AbstractJedisDataSource<Jedis> implements StandaloneDataSource {
+public class JedisDataSource extends AbstractJedisDataSource implements StandaloneDataSource {
 
 	/**
 	 * Redis 主机地址
@@ -139,7 +138,7 @@ public class JedisDataSource extends AbstractJedisDataSource<Jedis> implements S
 	 * 		Client Name
 	 */
 	public JedisDataSource(final String host, final int port, final String password, final int database,
-			final String clientName){
+						   final String clientName){
 		this(host, port, password, database);
 		this.clientName = clientName;
 	}

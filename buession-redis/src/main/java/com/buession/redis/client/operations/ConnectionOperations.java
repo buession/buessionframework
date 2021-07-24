@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.operations;
@@ -29,6 +29,6 @@ import com.buession.redis.core.command.ConnectionCommands;
 /**
  * @author Yong.Teng
  */
-public interface ConnectionOperations<T> extends ConnectionCommands, RedisClientOperations<T> {
+public interface ConnectionOperations<C> extends ConnectionCommands, RedisClientOperations<C> {
 
 }

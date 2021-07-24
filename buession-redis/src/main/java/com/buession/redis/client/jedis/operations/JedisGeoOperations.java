@@ -47,7 +47,7 @@ import java.util.Map;
 public class JedisGeoOperations extends AbstractGeoOperations<Jedis, Pipeline> {
 
 	public JedisGeoOperations(final JedisClient client){
-		super(client, null);
+		super(client);
 	}
 
 	@Override

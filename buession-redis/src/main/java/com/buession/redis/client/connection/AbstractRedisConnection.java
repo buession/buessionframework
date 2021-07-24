@@ -24,12 +24,9 @@
  */
 package com.buession.redis.client.connection;
 
-import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.redis.core.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
-import com.buession.redis.exception.RedisException;
-import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.transaction.Transaction;
 import org.slf4j.Logger;
@@ -42,7 +39,9 @@ import java.io.IOException;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisConnection<T> implements RedisConnection {
+public abstract class AbstractRedisConnection implements RedisConnection {
+
+	protected final static int DEFAULT_DB = 0;
 
 	/**
 	 * Redis 数据源
@@ -73,6 +72,8 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 	 * 管道
 	 */
 	protected Pipeline pipeline;
+
+	private volatile boolean initialized = false;
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractRedisConnection.class);
 
@@ -186,23 +187,11 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 
 	@Override
 	public Status connect() throws IOException{
-		if(isClosed()){
-			logger.info("Connection redis server.");
-			doConnect();
-		}
+		logger.info("Connection redis server.");
+		initialized();
+		doConnect();
 
 		return Status.SUCCESS;
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <C, R> R execute(final Executor<C, R> executor) throws RedisException{
-		try{
-			return doExecute((Executor<T, R>) executor);
-		}catch(Exception e){
-			logger.error("Redis execute command failure: {}", e.getMessage(), e);
-			throw RedisExceptionUtils.convert(e);
-		}
 	}
 
 	@Override
@@ -216,13 +205,19 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 	}
 
 	@Override
-	public boolean isConnect(){
-		return getDataSource() != null && checkConnect();
-	}
+	public void destroy() throws IOException{
+		logger.info("Destroy redis server.");
+		doDestroy();
 
-	@Override
-	public boolean isClosed(){
-		return getDataSource() == null || checkClosed();
+		if(pipeline != null){
+			pipeline.close();
+			pipeline = null;
+		}
+
+		if(transaction != null){
+			transaction.close();
+			transaction = null;
+		}
 	}
 
 	@Override
@@ -257,17 +252,26 @@ public abstract class AbstractRedisConnection<T> implements RedisConnection {
 		}
 	}
 
-	protected final static String redisPassword(final String password){
+	protected void initialized(){
+		if(initialized == false){
+			synchronized(this){
+				if(initialized == false){
+					internalInit();
+					initialized = true;
+				}
+			}
+		}
+	}
+
+	protected abstract void internalInit();
+
+	protected static String redisPassword(final String password){
 		return com.buession.lang.Constants.EMPTY_STRING.equals(password) ? null : password;
 	}
 
 	protected abstract void doConnect() throws IOException;
 
-	protected abstract <R> R doExecute(final Executor<T, R> executor) throws Exception;
-
-	protected abstract boolean checkConnect();
-
-	protected abstract boolean checkClosed();
+	protected abstract void doDestroy() throws IOException;
 
 	protected abstract void doDisconnect() throws IOException;
 

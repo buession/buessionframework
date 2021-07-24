@@ -36,35 +36,35 @@ import java.util.List;
  */
 public class JedisTransaction implements Transaction {
 
-	private redis.clients.jedis.Transaction transaction;
+	private redis.clients.jedis.Transaction delegate;
 
 	private final static Logger logger = LoggerFactory.getLogger(JedisTransaction.class);
 
 	public JedisTransaction(redis.clients.jedis.Transaction transaction){
 		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
-		this.transaction = transaction;
+		this.delegate = transaction;
 	}
 
 	public redis.clients.jedis.Transaction primitive(){
-		return transaction;
+		return delegate;
 	}
 
 	@Override
 	public List<Object> exec(){
 		logger.info("Redis transaction exec.");
-		return transaction.exec();
+		return delegate.exec();
 	}
 
 	@Override
 	public String discard(){
 		logger.info("Redis transaction discard.");
-		return transaction.discard();
+		return delegate.discard();
 	}
 
 	@Override
 	public void close(){
 		logger.info("Redis transaction close.");
-		transaction.close();
+		delegate.close();
 	}
 
 }

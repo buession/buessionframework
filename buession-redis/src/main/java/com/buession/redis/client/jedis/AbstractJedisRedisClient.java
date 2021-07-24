@@ -51,7 +51,6 @@ import com.buession.redis.pipeline.jedis.JedisPipeline;
 import com.buession.redis.transaction.Transaction;
 import com.buession.redis.transaction.jedis.JedisTransaction;
 import redis.clients.jedis.Response;
-import redis.clients.jedis.commands.JedisCommands;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -62,7 +61,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisClient<C extends JedisCommands> extends AbstractRedisClient<C> implements JedisRedisClient<C> {
+public abstract class AbstractJedisRedisClient extends AbstractRedisClient implements JedisRedisClient {
 
 	private Queue<FutureResult<Response<Object>, Object, Object>> txResults = new LinkedList<>();
 

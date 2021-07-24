@@ -38,35 +38,35 @@ import java.util.List;
  */
 public class StandaloneJedisPipeline implements JedisNativePipeline<redis.clients.jedis.Pipeline> {
 
-	private final redis.clients.jedis.Pipeline pipeline;
+	private final redis.clients.jedis.Pipeline delegate;
 
 	private final static Logger logger = LoggerFactory.getLogger(StandaloneJedisPipeline.class);
 
 	public StandaloneJedisPipeline(final redis.clients.jedis.Pipeline pipeline){
-		this.pipeline = pipeline;
+		this.delegate = pipeline;
 	}
 
 	@Override
 	public Pipeline getNativeObject(){
-		return pipeline;
+		return delegate;
 	}
 
 	@Override
 	public void sync(){
 		logger.info("Redis pipeline sync.");
-		pipeline.sync();
+		delegate.sync();
 	}
 
 	@Override
 	public List<Object> syncAndReturnAll(){
 		logger.info("Redis pipeline syncAndReturnAll.");
-		return pipeline.syncAndReturnAll();
+		return delegate.syncAndReturnAll();
 	}
 
 	@Override
 	public void close(){
 		logger.info("Redis pipeline close.");
-		pipeline.close();
+		delegate.close();
 	}
 
 }

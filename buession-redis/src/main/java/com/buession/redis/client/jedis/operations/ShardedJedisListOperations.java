@@ -26,11 +26,11 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.ShardedJedisClient;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.ListPositionJedisConverter;
+import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
 
@@ -42,42 +42,42 @@ import java.util.List;
 public class ShardedJedisListOperations extends AbstractListOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisListOperations(final ShardedJedisClient client){
-		super(client, RedisMode.SHARDED);
+		super(client);
 	}
 
 	@Override
 	public List<String> blPop(final String[] keys, final int timeout){
-		commandAllNotSupportedException(ProtocolCommand.BLPOP);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.BLPOP, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public List<byte[]> blPop(final byte[][] keys, final int timeout){
-		commandAllNotSupportedException(ProtocolCommand.BLPOP);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.BLPOP, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public List<String> brPop(final String[] keys, final int timeout){
-		commandAllNotSupportedException(ProtocolCommand.BRPOP);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.BRPOP, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public List<byte[]> brPop(final byte[][] keys, final int timeout){
-		commandAllNotSupportedException(ProtocolCommand.BRPOP);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.BRPOP, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public String brPoplPush(final String source, final String destKey, final int timeout){
-		commandAllNotSupportedException(ProtocolCommand.BRPOPLPUSH);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.BRPOPLPUSH, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public byte[] brPoplPush(final byte[] source, final byte[] destKey, final int timeout){
-		commandAllNotSupportedException(ProtocolCommand.BRPOPLPUSH);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.BRPOPLPUSH, client.getConnection());
 		return null;
 	}
 
@@ -210,13 +210,13 @@ public class ShardedJedisListOperations extends AbstractListOperations<ShardedJe
 
 	@Override
 	public String rPoplPush(final String source, final String destKey){
-		commandAllNotSupportedException(ProtocolCommand.RPOPLPUSH);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.RPOPLPUSH, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public byte[] rPoplPush(final byte[] source, final byte[] destKey){
-		commandAllNotSupportedException(ProtocolCommand.RPOPLPUSH);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.RPOPLPUSH, client.getConnection());
 		return null;
 	}
 

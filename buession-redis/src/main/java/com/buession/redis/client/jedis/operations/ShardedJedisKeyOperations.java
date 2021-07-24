@@ -29,7 +29,6 @@ import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.ShardedJedisClient;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
@@ -37,6 +36,7 @@ import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.MigrateOperationJedisConverter;
 import com.buession.redis.core.convert.jedis.SortArgumentJedisConverter;
+import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
 import redis.clients.jedis.SortingParams;
@@ -51,7 +51,7 @@ import java.util.Set;
 public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisKeyOperations(final ShardedJedisClient client){
-		super(client, RedisMode.SHARDED);
+		super(client);
 	}
 
 	@Override
@@ -223,13 +223,13 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 	@Override
 	public Set<String> keys(final String pattern){
-		commandAllNotSupportedException(ProtocolCommand.KEYS);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.KEYS, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Set<byte[]> keys(final byte[] pattern){
-		commandAllNotSupportedException(ProtocolCommand.KEYS);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.KEYS, client.getConnection());
 		return null;
 	}
 
@@ -286,31 +286,31 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 	@Override
 	public String randomKey(){
-		commandAllNotSupportedException(ProtocolCommand.PTTL);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PTTL, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status rename(final String key, final String newKey){
-		commandAllNotSupportedException(ProtocolCommand.RENAME);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.RENAME, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey){
-		commandAllNotSupportedException(ProtocolCommand.RENAME);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.RENAME, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status renameNx(final String key, final String newKey){
-		commandAllNotSupportedException(ProtocolCommand.RENAMENX);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.RENAMENX, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey){
-		commandAllNotSupportedException(ProtocolCommand.RENAMENX);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.RENAMENX, client.getConnection());
 		return null;
 	}
 
@@ -330,121 +330,121 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 	@Override
 	public ScanResult<List<String>> scan(final int cursor){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final long cursor){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final int cursor, final String pattern){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final long cursor, final String pattern){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final int cursor, final int count){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final long cursor, final int count){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final int count){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final int cursor, final String pattern, final int count){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern, final int count){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final long cursor, final String pattern, final int count){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count){
-		commandAllNotSupportedException(ProtocolCommand.SCAN);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCAN, client.getConnection());
 		return null;
 	}
 
@@ -474,25 +474,25 @@ public class ShardedJedisKeyOperations extends AbstractKeyOperations<ShardedJedi
 
 	@Override
 	public Long sort(final String key, final String destKey){
-		commandAllNotSupportedException(ProtocolCommand.SORT);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SORT, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey){
-		commandAllNotSupportedException(ProtocolCommand.SORT);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SORT, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey, final SortArgument sortArgument){
-		commandAllNotSupportedException(ProtocolCommand.SORT);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SORT, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
-		commandAllNotSupportedException(ProtocolCommand.SORT);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SORT, client.getConnection());
 		return null;
 	}
 

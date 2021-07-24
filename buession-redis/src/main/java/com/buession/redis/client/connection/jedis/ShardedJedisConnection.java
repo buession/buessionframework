@@ -33,6 +33,7 @@ import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.ShardedJedisDataSource;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.core.ShardedRedisNode;
+import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
@@ -40,10 +41,10 @@ import com.buession.redis.pipeline.jedis.ShardedJedisPipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPool;
+import redis.clients.jedis.ShardedJedisPoolConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -55,10 +56,17 @@ import java.util.Set;
  *
  * @author Yong.Teng
  */
-public class ShardedJedisConnection extends AbstractJedisRedisConnection<ShardedJedis> implements JedisRedisConnection<ShardedJedis>, RedisShardedConnection {
+public class ShardedJedisConnection extends AbstractJedisRedisConnection implements RedisShardedConnection {
 
 	/**
-	 * Sharded Jedis 连接池
+	 * 连接池配置
+	 *
+	 * @since 1.3.0
+	 */
+	private ShardedJedisPoolConfig poolConfig;
+
+	/**
+	 * 连接池
 	 */
 	private ShardedJedisPool pool;
 
@@ -137,8 +145,9 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	 * @param poolConfig
 	 * 		连接池配置
 	 */
-	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig){
-		super(dataSource, poolConfig);
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, ShardedJedisPoolConfig poolConfig){
+		super(dataSource);
+		this.poolConfig = poolConfig;
 	}
 
 	/**
@@ -153,9 +162,10 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	 * @param soTimeout
 	 * 		读取超时
 	 */
-	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
-								  int soTimeout){
-		super(dataSource, poolConfig, connectTimeout, soTimeout);
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, ShardedJedisPoolConfig poolConfig,
+								  int connectTimeout, int soTimeout){
+		super(dataSource, connectTimeout, soTimeout);
+		this.poolConfig = poolConfig;
 	}
 
 	/**
@@ -168,9 +178,10 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig,
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, ShardedJedisPoolConfig poolConfig,
 								  SslConfiguration sslConfiguration){
-		super(dataSource, poolConfig, sslConfiguration);
+		super(dataSource, sslConfiguration);
+		this.poolConfig = poolConfig;
 	}
 
 	/**
@@ -187,14 +198,39 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	 * @param sslConfiguration
 	 * 		SSL 配置
 	 */
-	public ShardedJedisConnection(ShardedJedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
-								  int soTimeout, SslConfiguration sslConfiguration){
-		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
+	public ShardedJedisConnection(ShardedJedisDataSource dataSource, ShardedJedisPoolConfig poolConfig,
+								  int connectTimeout, int soTimeout, SslConfiguration sslConfiguration){
+		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 返回连接池配置 {@link ShardedJedisPoolConfig}
+	 *
+	 * @return 连接池配置
+	 */
+	public ShardedJedisPoolConfig getPoolConfig(){
+		return poolConfig;
+	}
+
+	/**
+	 * 设置连接池配置 {@link ShardedJedisPoolConfig}
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
+	public void setPoolConfig(ShardedJedisPoolConfig poolConfig){
+		this.poolConfig = poolConfig;
 	}
 
 	@Override
-	public ShardedJedisPool getPool(){
-		return pool;
+	public <C, R> R execute(Executor<C, R> executor) throws RedisException{
+		try{
+			return executor.execute((C) shardedJedis);
+		}catch(Exception e){
+			logger.error("Redis execute command failure: ", e);
+			throw RedisExceptionUtils.convert(e);
+		}
 	}
 
 	@Override
@@ -209,6 +245,43 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 		}
 
 		return pipeline;
+	}
+
+	@Override
+	public boolean isConnect(){
+		if(shardedJedis != null){
+			for(Jedis jedis : shardedJedis.getAllShards()){
+				if(jedis.isConnected()){
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean isClosed(){
+		return isConnect() == false;
+	}
+
+	@Override
+	protected void internalInit(){
+		DataSource dataSource = getDataSource();
+		if(dataSource == null){
+			return;
+		}
+
+		ShardedJedisDataSource shardedJedisDataSource = (ShardedJedisDataSource) dataSource;
+		if(Validate.isEmpty(shardedJedisDataSource.getNodes())){
+			return;
+		}
+
+		if(isUsePool()){
+			pool = createPool(shardedJedisDataSource);
+		}else{
+			shardedJedis = createShardedJedis(shardedJedisDataSource);
+		}
 	}
 
 	protected List<JedisShardInfo> createJedisShardInfo(final Set<ShardedRedisNode> nodes){
@@ -232,11 +305,13 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 			shardInfo.setConnectionTimeout(getConnectTimeout());
 			shardInfo.setSoTimeout(getSoTimeout());
 
-			try{
-				FieldUtils.writeDeclaredField(shardInfo, "db", node.getDatabase(), true);
-			}catch(IllegalAccessException e){
-				logger.error("Select db '{}' failure, node: {}:{}.", node.getDatabase(), node.getHost(),
-						node.getPort());
+			if(node.getDatabase() != DEFAULT_DB){
+				try{
+					FieldUtils.writeDeclaredField(shardInfo, "db", node.getDatabase(), true);
+				}catch(IllegalAccessException e){
+					logger.error("Select db '{}' failure, node: {}:{}.", node.getDatabase(), node.getHost(),
+							node.getPort());
+				}
 			}
 
 			shardInfos.add(shardInfo);
@@ -249,78 +324,67 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 		return new ShardedJedisPool(getPoolConfig(), createJedisShardInfo(dataSource.getNodes()));
 	}
 
+	protected ShardedJedis createShardedJedis(final ShardedJedisDataSource dataSource){
+		return new ShardedJedis(createJedisShardInfo(dataSource.getNodes()));
+	}
+
+	protected boolean isUsePool(){
+		return getPoolConfig() != null;
+	}
+
 	@Override
 	protected void doConnect() throws IOException{
-		DataSource dataSource = getDataSource();
-		if(dataSource == null){
-			return;
-		}
+		boolean usePool = isUsePool();
 
-		ShardedJedisDataSource shardedJedisDataSource = (ShardedJedisDataSource) dataSource;
-		if(Validate.isEmpty(shardedJedisDataSource.getNodes())){
-			return;
-		}
-
-		if(getPoolConfig() != null){
-			if(pool == null){
-				pool = createPool(shardedJedisDataSource);
+		try{
+			if(usePool){
+				shardedJedis = pool.getResource();
+				if(logger.isInfoEnabled()){
+					logger.info("ShardedJedis initialize with pool success, size: {}.",
+							shardedJedis.getAllShardInfo().size());
+				}
+			}else{
+				if(logger.isInfoEnabled()){
+					logger.info("ShardedJedis initialize success, size: {}.", shardedJedis.getAllShardInfo().size());
+				}
 			}
+		}catch(Exception e){
+			if(logger.isErrorEnabled()){
+				if(usePool){
+					logger.error("Create sharded jedis from pool failure: {}", e.getMessage(), e);
+				}else{
+					logger.error("Create ShardedJedis instance failure: {}", e.getMessage(), e);
+				}
+			}
+
+			throw RedisExceptionUtils.convert(e);
+		}
+	}
+
+	@Override
+	protected void doDestroy() throws IOException{
+		super.doDestroy();
+
+		logger.info("Sharded Jedis destroy.");
+		if(pool != null){
+			logger.info("Jedis Pool for {} destroy.", pool.getClass().getName());
 
 			try{
-				shardedJedis = pool.getResource();
-			}catch(Exception e){
-				logger.error("Create sharded jedis from pool failure: {}", e.getMessage(), e);
-				throw RedisExceptionUtils.convert(e);
+				pool.destroy();
+			}catch(Exception ex){
+				logger.warn("Cannot properly close Jedis pool.", ex);
 			}
 
-			if(logger.isInfoEnabled()){
-				logger.info("ShardedJedis initialize with pool success, size: {}.",
-						shardedJedis.getAllShardInfo().size());
-			}
-		}else{
-			if(shardedJedis == null){
-				List<JedisShardInfo> shardInfos = createJedisShardInfo(shardedJedisDataSource.getNodes());
-
-				try{
-					shardedJedis = new ShardedJedis(shardInfos);
-				}catch(Exception e){
-					logger.error("Create ShardedJedis instance failure: {}", e.getMessage(), e);
-					throw RedisExceptionUtils.convert(e);
-				}
-
-				if(logger.isInfoEnabled()){
-					logger.info("ShardedJedis initialize success, size: {}.", shardInfos.size());
-				}
-			}
+			pool = null;
 		}
-	}
-
-	@Override
-	protected <R> R doExecute(Executor<ShardedJedis, R> executor) throws Exception{
-		return executor.execute(shardedJedis);
-	}
-
-	@Override
-	protected boolean checkConnect(){
-		if(shardedJedis != null){
-			for(Jedis jedis : shardedJedis.getAllShards()){
-				if(jedis.isConnected()){
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	@Override
-	protected boolean checkClosed(){
-		return shardedJedis == null || checkConnect() == false;
 	}
 
 	@Override
 	protected void doDisconnect() throws IOException{
 		super.doDisconnect();
+
+		logger.info("Sharded Jedis disconnect.");
+
 		if(shardedJedis != null){
 			shardedJedis.disconnect();
 		}
@@ -329,8 +393,18 @@ public class ShardedJedisConnection extends AbstractJedisRedisConnection<Sharded
 	@Override
 	protected void doClose() throws IOException{
 		super.doClose();
-		if(shardedJedis != null){
-			shardedJedis.close();
+
+		logger.info("Sharded Jedis close.");
+		if(isUsePool()){
+			logger.info("Sharded Jedis close.");
+			if(shardedJedis != null){
+				shardedJedis.close();
+			}
+		}else{
+			logger.info("Sharded Jedis disconnect.");
+			if(shardedJedis != null){
+				shardedJedis.disconnect();
+			}
 		}
 	}
 

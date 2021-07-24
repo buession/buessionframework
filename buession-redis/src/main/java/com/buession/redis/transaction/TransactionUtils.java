@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.transaction;
@@ -38,30 +38,31 @@ public class TransactionUtils {
 
 	}
 
-	public final static boolean isActualNonReadonlyTransactionActive(){
+	public static boolean isActualNonReadonlyTransactionActive(){
 		return TransactionSynchronizationManager.isActualTransactionActive() && !TransactionSynchronizationManager.isCurrentTransactionReadOnly();
 	}
 
-	public final static void bindResource(final RedisConnectionFactory factory,
-			final RedisConnectionHolder connectionHolder){
+	public static void bindResource(final RedisConnectionFactory factory,
+									final RedisConnectionHolder connectionHolder){
 		TransactionSynchronizationManager.bindResource(factory, connectionHolder);
 	}
 
-	public final static RedisConnectionHolder getResource(final RedisConnectionFactory factory){
+	public static RedisConnectionHolder getResource(final RedisConnectionFactory factory){
 		return (RedisConnectionHolder) TransactionSynchronizationManager.getResource(factory);
 	}
 
-	public final static RedisConnectionHolder unbindResourceIfPossible(final RedisConnectionFactory factory){
+	public static RedisConnectionHolder unbindResourceIfPossible(final RedisConnectionFactory factory){
 		return (RedisConnectionHolder) TransactionSynchronizationManager.unbindResourceIfPossible(factory);
 	}
 
-	public final static void registerSynchronization(final RedisConnectionFactory factory,
-			final RedisConnectionHolder connectionHolder, final RedisConnection connection){
+	public static void registerSynchronization(final RedisConnectionFactory factory,
+											   final RedisConnectionHolder connectionHolder,
+											   final RedisConnection connection){
 		TransactionSynchronizationManager.registerSynchronization(new RedisTransactionSynchronizationAdapter(factory,
 				connectionHolder, connection));
 	}
 
-	public final static boolean isCurrentTransactionReadOnly(){
+	public static boolean isCurrentTransactionReadOnly(){
 		return TransactionSynchronizationManager.isCurrentTransactionReadOnly();
 	}
 

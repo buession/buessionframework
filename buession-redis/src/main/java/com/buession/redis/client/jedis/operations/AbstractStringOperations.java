@@ -29,7 +29,6 @@ import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.StringOperations;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.SetArgumentJedisConverter;
 import com.buession.redis.utils.SafeEncoder;
@@ -45,8 +44,8 @@ import java.util.List;
  */
 public abstract class AbstractStringOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements StringOperations<C> {
 
-	public AbstractStringOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
-		super(client, redisMode);
+	public AbstractStringOperations(final JedisRedisClient client){
+		super(client);
 	}
 
 	@Override

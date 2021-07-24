@@ -25,37 +25,12 @@
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.RedisConnection;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.commands.JedisCommands;
-import redis.clients.jedis.util.Pool;
 
 /**
  * Jedis Redis 连接对象
  *
  * @author Yong.Teng
  */
-public interface JedisRedisConnection<T extends JedisCommands> extends RedisConnection {
-
-	/**
-	 * 获取连接池配置
-	 *
-	 * @return 连接池配置
-	 */
-	JedisPoolConfig getPoolConfig();
-
-	/**
-	 * 设置连接池配置
-	 *
-	 * @param poolConfig
-	 * 		连接池配置
-	 */
-	void setPoolConfig(JedisPoolConfig poolConfig);
-
-	/**
-	 * 获取 Redis 连接池
-	 *
-	 * @return 连接池
-	 */
-	Pool<T> getPool();
+public interface JedisRedisConnection extends RedisConnection {
 
 }

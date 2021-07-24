@@ -22,18 +22,10 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.spring;
+package com.buession.redis.spring.jedis;
 
-import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
-import com.buession.redis.client.connection.datasource.jedis.ShardedJedisDataSource;
-import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
-import com.buession.redis.client.connection.jedis.ShardedJedisConnection;
-import com.buession.redis.spring.jedis.JedisConfiguration;
-import com.buession.redis.spring.jedis.JedisRedisConfiguration;
-import com.buession.redis.spring.jedis.ShardedRedisConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.buession.redis.spring.RedisConnectionFactoryBean;
 import org.springframework.beans.BeanUtils;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.ShardedJedisPoolConfig;
@@ -50,8 +42,6 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 	 */
 	@Deprecated
 	private JedisPoolConfig poolConfig = new JedisPoolConfig();
-
-	private final static Logger logger = LoggerFactory.getLogger(JedisRedisConnectionFactoryBean.class);
 
 	/**
 	 * 构造函数
@@ -95,36 +85,13 @@ public class JedisRedisConnectionFactoryBean extends RedisConnectionFactoryBean<
 	@Override
 	public void afterPropertiesSet() throws Exception{
 		if(isShardedConnection()){
-			final ShardedRedisConfiguration configuration = (ShardedRedisConfiguration) getConfiguration();
-			final ShardedJedisDataSource dataSource = new ShardedJedisDataSource(configuration.getNodes());
-
-			final ShardedJedisConnection connection = new ShardedJedisConnection(dataSource,
-					configuration.getConnectTimeout(), configuration.getSoTimeout(),
-					configuration.getSslConfiguration());
-
-			if(configuration.getPoolConfig() != null){
-				connection.setPoolConfig(configuration.getPoolConfig());
-				logger.debug("Initialize sharded connection with pool.");
-			}else{
-				logger.debug("Initialize sharded connection.");
-			}
-
-			setConnection(connection);
+			final ShardedJedisRedisConnector shardedJedisRedisConnector =
+					new ShardedJedisRedisConnector((ShardedRedisConfiguration) getConfiguration());
+			setConnection(shardedJedisRedisConnector.create());
 		}else{
-			final JedisConfiguration configuration = (JedisConfiguration) getConfiguration();
-			final JedisDataSource dataSource = new JedisDataSource(configuration.getHost(), configuration.getPort(),
-					configuration.getPassword(), configuration.getDatabase(), configuration.getClientName());
-			final JedisConnection connection = new JedisConnection(dataSource, configuration.getConnectTimeout(),
-					configuration.getSoTimeout(), configuration.getSslConfiguration());
-
-			if(configuration.getPoolConfig() != null){
-				connection.setPoolConfig(configuration.getPoolConfig());
-				logger.debug("Initialize connection with pool.");
-			}else{
-				logger.debug("Initialize connection.");
-			}
-
-			setConnection(connection);
+			final StandaloneJedisRedisConnector standaloneJedisRedisConnector =
+					new StandaloneJedisRedisConnector((JedisConfiguration) getConfiguration());
+			setConnection(standaloneJedisRedisConnector.create());
 		}
 	}
 

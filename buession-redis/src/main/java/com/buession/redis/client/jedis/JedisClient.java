@@ -62,7 +62,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class JedisClient extends AbstractJedisRedisClient<Jedis> implements GenericRedisClient {
+public class JedisClient extends AbstractJedisRedisClient implements GenericRedisClient {
 
 	public JedisClient(){
 		super();

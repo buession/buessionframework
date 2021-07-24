@@ -27,11 +27,11 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.utils.NumberUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.SetOperations;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.jedis.ListScanResultExposeConverter;
 import com.buession.redis.core.jedis.JedisScanParams;
+import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 
@@ -43,8 +43,8 @@ import java.util.Set;
  */
 public abstract class AbstractSetOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements SetOperations<C> {
 
-	public AbstractSetOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
-		super(client, redisMode);
+	public AbstractSetOperations(final JedisRedisClient client){
+		super(client);
 	}
 
 	@Override
@@ -167,7 +167,8 @@ public abstract class AbstractSetOperations<C extends JedisCommands, P extends P
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListScanResultExposeConverter<String>().convert(cmd.sscan(key, cursor)));
 	}
 
@@ -193,7 +194,8 @@ public abstract class AbstractSetOperations<C extends JedisCommands, P extends P
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListScanResultExposeConverter<String>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(pattern))));
 	}
@@ -220,7 +222,8 @@ public abstract class AbstractSetOperations<C extends JedisCommands, P extends P
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final int count){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListScanResultExposeConverter<String>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(count))));
 	}
@@ -248,7 +251,8 @@ public abstract class AbstractSetOperations<C extends JedisCommands, P extends P
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
 										  final int count){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListScanResultExposeConverter<String>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(pattern, count))));
 	}

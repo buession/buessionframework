@@ -19,18 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.ShardedJedisClient;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.jedis.ListScanResultExposeConverter;
 import com.buession.redis.core.jedis.JedisScanParams;
+import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
 
@@ -43,7 +43,7 @@ import java.util.Set;
 public class ShardedJedisSetOperations extends AbstractSetOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisSetOperations(final ShardedJedisClient client){
-		super(client, RedisMode.SHARDED);
+		super(client);
 	}
 
 	@Override
@@ -70,49 +70,49 @@ public class ShardedJedisSetOperations extends AbstractSetOperations<ShardedJedi
 
 	@Override
 	public Set<String> sDiff(final String... keys){
-		commandAllNotSupportedException(ProtocolCommand.SDIFF);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SDIFF, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Set<byte[]> sDiff(final byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.SDIFF);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SDIFF, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long sDiffStore(final String destKey, final String... keys){
-		commandAllNotSupportedException(ProtocolCommand.SDIFFSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SDIFFSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long sDiffStore(final byte[] destKey, final byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.SDIFFSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SDIFFSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Set<String> sInter(final String... keys){
-		commandAllNotSupportedException(ProtocolCommand.SINTER);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SINTER, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Set<byte[]> sInter(final byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.SINTER);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SINTER, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long sInterStore(final String destKey, final String... keys){
-		commandAllNotSupportedException(ProtocolCommand.SINTERSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SINTERSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long sInterStore(final byte[] destKey, final byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.SINTERSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SINTERSTORE, client.getConnection());
 		return null;
 	}
 
@@ -140,13 +140,13 @@ public class ShardedJedisSetOperations extends AbstractSetOperations<ShardedJedi
 
 	@Override
 	public Status sMove(final String source, final String destKey, final String member){
-		commandAllNotSupportedException(ProtocolCommand.SMOVE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SMOVE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status sMove(final byte[] source, final byte[] destKey, final byte[] member){
-		commandAllNotSupportedException(ProtocolCommand.SMOVE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SMOVE, client.getConnection());
 		return null;
 	}
 
@@ -196,20 +196,23 @@ public class ShardedJedisSetOperations extends AbstractSetOperations<ShardedJedi
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor)));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(pattern))));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(count))));
 	}
@@ -217,32 +220,33 @@ public class ShardedJedisSetOperations extends AbstractSetOperations<ShardedJedi
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 										  final int count){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor,
 				new JedisScanParams(pattern, count))));
 	}
 
 	@Override
 	public Set<String> sUnion(final String... keys){
-		commandAllNotSupportedException(ProtocolCommand.SUNION);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SUNION, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Set<byte[]> sUnion(final byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.SUNION);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SUNION, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long sUnionStore(final String destKey, final String... keys){
-		commandAllNotSupportedException(ProtocolCommand.SUNIONSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SUNIONSTORE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.SUNIONSTORE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SUNIONSTORE, client.getConnection());
 		return null;
 	}
 

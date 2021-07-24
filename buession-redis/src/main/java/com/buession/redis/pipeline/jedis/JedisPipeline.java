@@ -36,36 +36,36 @@ import java.util.List;
  */
 public class JedisPipeline implements Pipeline {
 
-	private JedisNativePipeline<? extends redis.clients.jedis.PipelineBase> pipeline;
+	private JedisNativePipeline<? extends redis.clients.jedis.PipelineBase> delegate;
 
 	private final static Logger logger = LoggerFactory.getLogger(JedisPipeline.class);
 
 	public JedisPipeline(JedisNativePipeline<? extends redis.clients.jedis.PipelineBase> pipeline){
 		Assert.isNull(pipeline, "Redis Pipeline cloud not be null.");
-		this.pipeline = pipeline;
+		this.delegate = pipeline;
 	}
 
 	@SuppressWarnings({"unchecked"})
 	public <T extends redis.clients.jedis.PipelineBase> T primitive(){
-		return (T) pipeline.getNativeObject();
+		return (T) delegate.getNativeObject();
 	}
 
 	@Override
 	public void sync(){
 		logger.info("Redis pipeline sync.");
-		pipeline.sync();
+		delegate.sync();
 	}
 
 	@Override
 	public List<Object> syncAndReturnAll(){
 		logger.info("Redis pipeline syncAndReturnAll.");
-		return pipeline.syncAndReturnAll();
+		return delegate.syncAndReturnAll();
 	}
 
 	@Override
 	public void close(){
 		logger.info("Redis pipeline close.");
-		pipeline.close();
+		delegate.close();
 	}
 
 }

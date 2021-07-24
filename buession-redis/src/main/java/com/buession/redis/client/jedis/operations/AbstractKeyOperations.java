@@ -30,7 +30,6 @@ import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.KeyOperations;
 import com.buession.redis.core.Constants;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.SortArgumentJedisConverter;
@@ -46,8 +45,8 @@ import java.util.List;
  */
 public abstract class AbstractKeyOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements KeyOperations<C> {
 
-	public AbstractKeyOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
-		super(client, redisMode);
+	public AbstractKeyOperations(final JedisRedisClient client){
+		super(client);
 	}
 
 	@Override

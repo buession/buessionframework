@@ -19,15 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.ShardedJedisClient;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.ShardedJedis;
 import redis.clients.jedis.ShardedJedisPipeline;
 
@@ -39,114 +39,114 @@ import java.util.List;
 public class ShardedJedisScriptingOperations extends AbstractScriptingOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisScriptingOperations(final ShardedJedisClient client){
-		super(client, RedisMode.SHARDED);
+		super(client);
 	}
 
 	@Override
 	public Object eval(final String script){
-		commandAllNotSupportedException(ProtocolCommand.EVAL);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.EVAL, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object eval(final byte[] script){
-		commandAllNotSupportedException(ProtocolCommand.EVAL);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.EVAL, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object eval(final String script, final String... params){
-		commandAllNotSupportedException(ProtocolCommand.EVAL);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.EVAL, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... params){
-		commandAllNotSupportedException(ProtocolCommand.EVAL);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.EVAL, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments){
-		commandAllNotSupportedException(ProtocolCommand.EVAL);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.EVAL, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments){
-		commandAllNotSupportedException(ProtocolCommand.EVAL);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.EVAL, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object evalSha(final String digest){
-		commandAllNotSupportedException(ProtocolCommand.EVALSHA);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.EVALSHA, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest){
-		commandAllNotSupportedException(ProtocolCommand.EVALSHA);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.EVALSHA, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String... params){
-		commandAllNotSupportedException(ProtocolCommand.EVALSHA);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.EVALSHA, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... params){
-		commandAllNotSupportedException(ProtocolCommand.EVALSHA);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.EVALSHA, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
-		commandAllNotSupportedException(ProtocolCommand.EVALSHA);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.EVALSHA, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments){
-		commandAllNotSupportedException(ProtocolCommand.EVALSHA);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.EVALSHA, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1){
-		commandAllNotSupportedException(ProtocolCommand.SCRIPT_EXISTS);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCRIPT_EXISTS, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final byte[]... sha1){
-		commandAllNotSupportedException(ProtocolCommand.SCRIPT_EXISTS);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCRIPT_EXISTS, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status scriptFlush(){
-		commandAllNotSupportedException(ProtocolCommand.SCRIPT_FLUSH);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCRIPT_FLUSH, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status scriptKill(){
-		commandAllNotSupportedException(ProtocolCommand.SCRIPT_KILL);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCRIPT_KILL, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public String scriptLoad(final String script){
-		commandAllNotSupportedException(ProtocolCommand.SCRIPT_LOAD);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCRIPT_LOAD, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public byte[] scriptLoad(final byte[] script){
-		commandAllNotSupportedException(ProtocolCommand.SCRIPT_LOAD);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.SCRIPT_LOAD, client.getConnection());
 		return null;
 	}
 

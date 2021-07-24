@@ -28,7 +28,6 @@ import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.HyperLogLogOperations;
-import com.buession.redis.core.RedisMode;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 
@@ -37,8 +36,8 @@ import redis.clients.jedis.commands.JedisCommands;
  */
 public abstract class AbstractHyperLogLogOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements HyperLogLogOperations<C> {
 
-	public AbstractHyperLogLogOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
-		super(client, redisMode);
+	public AbstractHyperLogLogOperations(final JedisRedisClient client){
+		super(client);
 	}
 
 	@Override

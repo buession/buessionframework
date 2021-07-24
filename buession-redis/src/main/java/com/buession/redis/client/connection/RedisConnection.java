@@ -19,11 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
 
+import com.buession.core.Destroyable;
 import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.datasource.DataSource;
@@ -40,7 +41,7 @@ import java.util.List;
  *
  * @author Yong.Teng
  */
-public interface RedisConnection extends Closeable {
+public interface RedisConnection extends Destroyable, Closeable {
 
 	/**
 	 * 获取 Redis 数据源
@@ -125,7 +126,7 @@ public interface RedisConnection extends Closeable {
 	 * @param executor
 	 * 		命令执行器
 	 * @param <C>
-	 * 		执行命令
+	 * 		命令执行器源类型
 	 * @param <R>
 	 * 		返回值类型
 	 *

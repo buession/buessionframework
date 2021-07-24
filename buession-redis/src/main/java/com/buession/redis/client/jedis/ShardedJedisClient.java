@@ -62,7 +62,7 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class ShardedJedisClient extends AbstractJedisRedisClient<ShardedJedis> implements ShardedRedisClient {
+public class ShardedJedisClient extends AbstractJedisRedisClient implements ShardedRedisClient {
 
 	public ShardedJedisClient(){
 		super();

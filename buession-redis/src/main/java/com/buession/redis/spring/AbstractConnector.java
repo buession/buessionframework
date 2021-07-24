@@ -22,10 +22,44 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.spring;/**
- * 
+package com.buession.redis.spring;
+
+import com.buession.core.utils.Assert;
+import com.buession.redis.client.connection.RedisConnection;
+
+/**
+ * Redis 连接器抽象类
+ *
+ * @param <C>
+ * 		Redis 工厂配置
+ * @param <T>
+ * 		连接对象类型
  *
  * @author Yong.Teng
  * @since 1.3.0
- */public class AbstractConnector {
+ */
+public abstract class AbstractConnector<C extends RedisConfiguration, T extends RedisConnection> implements Connector<C, T> {
+
+	private final C configuration;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param configuration
+	 * 		Redis 工厂配置
+	 */
+	public AbstractConnector(final C configuration){
+		Assert.isNull(configuration, "Redis configuration cloud not be null.");
+		this.configuration = configuration;
+	}
+
+	/**
+	 * 获取 Redis 工厂配置
+	 *
+	 * @return Redis 工厂配置
+	 */
+	public C getConfiguration(){
+		return configuration;
+	}
+
 }

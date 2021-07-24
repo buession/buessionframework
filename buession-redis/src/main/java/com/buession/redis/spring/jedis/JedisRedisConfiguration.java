@@ -22,10 +22,16 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.spring.jedis;/**
- * 
+package com.buession.redis.spring.jedis;
+
+import com.buession.redis.spring.RedisConfiguration;
+
+/**
+ * Jedis Redis 工厂配置
  *
  * @author Yong.Teng
  * @since 1.3.0
- */public interface JedisRedisConfiguration {
+ */
+public interface JedisRedisConfiguration extends RedisConfiguration {
+
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.pubsub.jedis;
@@ -33,46 +33,46 @@ import redis.clients.jedis.JedisPubSub;
  */
 public class DefaultJedisPubSub extends JedisPubSub {
 
-	private PubSubListener<String> pubSubListener;
+	private PubSubListener<String> delegate;
 
 	public DefaultJedisPubSub(PubSubListener<String> pubSubListener){
 		Assert.isNull(pubSubListener, "Pubsub listener cloud not be null.");
-		this.pubSubListener = pubSubListener;
+		this.delegate = pubSubListener;
 	}
 
 	@Override
 	public void onMessage(String channel, String message){
-		pubSubListener.onMessage(channel, message);
+		delegate.onMessage(channel, message);
 	}
 
 	@Override
 	public void onPMessage(String pattern, String channel, String message){
-		pubSubListener.onPMessage(pattern, channel, message);
+		delegate.onPMessage(pattern, channel, message);
 	}
 
 	@Override
 	public void onSubscribe(String channel, int subscribedChannels){
-		pubSubListener.onSubscribe(channel, subscribedChannels);
+		delegate.onSubscribe(channel, subscribedChannels);
 	}
 
 	@Override
 	public void onUnsubscribe(String channel, int subscribedChannels){
-		pubSubListener.onUnsubscribe(channel, subscribedChannels);
+		delegate.onUnsubscribe(channel, subscribedChannels);
 	}
 
 	@Override
 	public void onPUnsubscribe(String pattern, int subscribedChannels){
-		pubSubListener.onPUnsubscribe(pattern, subscribedChannels);
+		delegate.onPUnsubscribe(pattern, subscribedChannels);
 	}
 
 	@Override
 	public void onPSubscribe(String pattern, int subscribedChannels){
-		pubSubListener.onPSubscribe(pattern, subscribedChannels);
+		delegate.onPSubscribe(pattern, subscribedChannels);
 	}
 
 	@Override
 	public void onPong(String pattern){
-		pubSubListener.onPong(pattern);
+		delegate.onPong(pattern);
 	}
 
 }

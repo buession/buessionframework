@@ -49,7 +49,7 @@ import java.util.Map;
 public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipeline> {
 
 	public JedisStringOperations(final JedisClient client){
-		super(client, null);
+		super(client);
 	}
 
 	@Override

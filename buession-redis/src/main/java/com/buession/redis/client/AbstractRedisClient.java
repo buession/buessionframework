@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRedisClient<T> implements RedisClient {
+public abstract class AbstractRedisClient implements RedisClient {
 
 	private RedisConnectionFactory connectionFactory;
 
@@ -46,31 +46,31 @@ public abstract class AbstractRedisClient<T> implements RedisClient {
 
 	private boolean enableTransactionSupport = false;
 
-	protected ConnectionOperations<T> connectionOperations = createConnectionOperations();
+	protected ConnectionOperations connectionOperations = createConnectionOperations();
 
-	protected GeoOperations<T> geoOperations = createGeoOperations();
+	protected GeoOperations geoOperations = createGeoOperations();
 
-	protected HashOperations<T> hashOperations = createHashOperations();
+	protected HashOperations hashOperations = createHashOperations();
 
-	protected HyperLogLogOperations<T> hyperLogLogOperations = createHyperLogLogOperations();
+	protected HyperLogLogOperations hyperLogLogOperations = createHyperLogLogOperations();
 
-	protected KeyOperations<T> keyOperations = createKeyOperations();
+	protected KeyOperations keyOperations = createKeyOperations();
 
-	protected ListOperations<T> listOperations = createListOperations();
+	protected ListOperations listOperations = createListOperations();
 
-	protected PubSubOperations<T> pubSubOperations = createPubSubOperations();
+	protected PubSubOperations pubSubOperations = createPubSubOperations();
 
-	protected ScriptingOperations<T> scriptingOperations = createScriptingOperations();
+	protected ScriptingOperations scriptingOperations = createScriptingOperations();
 
-	protected ServerOperations<T> serverOperations = createServerOperations();
+	protected ServerOperations serverOperations = createServerOperations();
 
-	protected SetOperations<T> setOperations = createSetOperations();
+	protected SetOperations setOperations = createSetOperations();
 
-	protected SortedSetOperations<T> sortedSetOperations = createSortedSetOperations();
+	protected SortedSetOperations sortedSetOperations = createSortedSetOperations();
 
-	protected StringOperations<T> stringOperations = createStringOperations();
+	protected StringOperations stringOperations = createStringOperations();
 
-	protected TransactionOperations<T> transactionOperations = createTransactionOperations();
+	protected TransactionOperations transactionOperations = createTransactionOperations();
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractRedisClient.class);
 
@@ -114,9 +114,9 @@ public abstract class AbstractRedisClient<T> implements RedisClient {
 	public <C, R> R execute(final Executor<C, R> executor){
 		RedisConnection connection;
 
-		long start = 0;
+		long startTime = 0;
 		if(logger.isDebugEnabled()){
-			start = System.nanoTime();
+			startTime = System.nanoTime();
 		}
 
 		if(enableTransactionSupport){
@@ -133,39 +133,39 @@ public abstract class AbstractRedisClient<T> implements RedisClient {
 			throw RedisExceptionUtils.convert(e);
 		}finally{
 			if(logger.isDebugEnabled()){
-				long finish = System.nanoTime();
-				logger.debug("Command execution time: {}", finish - start);
+				long finishTime = System.nanoTime();
+				logger.debug("Command execution time: {}", finishTime - startTime);
 			}
 
 			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
 	}
 
-	protected abstract ConnectionOperations<T> createConnectionOperations();
+	protected abstract ConnectionOperations createConnectionOperations();
 
-	protected abstract GeoOperations<T> createGeoOperations();
+	protected abstract GeoOperations createGeoOperations();
 
-	protected abstract HashOperations<T> createHashOperations();
+	protected abstract HashOperations createHashOperations();
 
-	protected abstract HyperLogLogOperations<T> createHyperLogLogOperations();
+	protected abstract HyperLogLogOperations createHyperLogLogOperations();
 
-	protected abstract KeyOperations<T> createKeyOperations();
+	protected abstract KeyOperations createKeyOperations();
 
-	protected abstract ListOperations<T> createListOperations();
+	protected abstract ListOperations createListOperations();
 
-	protected abstract PubSubOperations<T> createPubSubOperations();
+	protected abstract PubSubOperations createPubSubOperations();
 
-	protected abstract ScriptingOperations<T> createScriptingOperations();
+	protected abstract ScriptingOperations createScriptingOperations();
 
-	protected abstract ServerOperations<T> createServerOperations();
+	protected abstract ServerOperations createServerOperations();
 
-	protected abstract SetOperations<T> createSetOperations();
+	protected abstract SetOperations createSetOperations();
 
-	protected abstract SortedSetOperations<T> createSortedSetOperations();
+	protected abstract SortedSetOperations createSortedSetOperations();
 
-	protected abstract StringOperations<T> createStringOperations();
+	protected abstract StringOperations createStringOperations();
 
-	protected abstract TransactionOperations<T> createTransactionOperations();
+	protected abstract TransactionOperations createTransactionOperations();
 
 	protected boolean isTransaction(){
 		return getConnection().isTransaction();

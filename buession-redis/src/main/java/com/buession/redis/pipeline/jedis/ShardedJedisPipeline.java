@@ -37,29 +37,29 @@ import java.util.List;
  */
 public class ShardedJedisPipeline implements JedisNativePipeline<redis.clients.jedis.ShardedJedisPipeline> {
 
-	private final redis.clients.jedis.ShardedJedisPipeline pipeline;
+	private final redis.clients.jedis.ShardedJedisPipeline delegate;
 
 	private final static Logger logger = LoggerFactory.getLogger(ShardedJedisPipeline.class);
 
 	public ShardedJedisPipeline(final redis.clients.jedis.ShardedJedisPipeline pipeline){
-		this.pipeline = pipeline;
+		this.delegate = pipeline;
 	}
 
 	@Override
 	public redis.clients.jedis.ShardedJedisPipeline getNativeObject(){
-		return pipeline;
+		return delegate;
 	}
 
 	@Override
 	public void sync(){
 		logger.info("Redis pipeline sync.");
-		pipeline.sync();
+		delegate.sync();
 	}
 
 	@Override
 	public List<Object> syncAndReturnAll(){
 		logger.info("Redis pipeline syncAndReturnAll.");
-		return pipeline.syncAndReturnAll();
+		return delegate.syncAndReturnAll();
 	}
 
 	@Override

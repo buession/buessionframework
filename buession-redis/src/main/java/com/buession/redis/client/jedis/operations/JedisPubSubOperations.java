@@ -29,6 +29,7 @@ import com.buession.core.converter.MapConverter;
 import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pubsub.jedis.DefaultBinaryJedisPubSub;
 import com.buession.redis.pubsub.jedis.DefaultJedisPubSub;
 import com.buession.redis.utils.SafeEncoder;
@@ -44,12 +45,13 @@ import java.util.Map;
 public class JedisPubSubOperations extends AbstractPubSubOperations<Jedis, Pipeline> {
 
 	public JedisPubSubOperations(final JedisClient client){
-		super(client, null);
+		super(client);
 	}
 
 	@Override
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.PSUBSCRIBE);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.PSUBSCRIBE,
+				client.getConnection());
 		execute((cmd)->{
 			cmd.psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
 			return null;
@@ -58,7 +60,8 @@ public class JedisPubSubOperations extends AbstractPubSubOperations<Jedis, Pipel
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.PSUBSCRIBE);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.PSUBSCRIBE,
+				client.getConnection());
 		execute((cmd)->{
 			cmd.psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
 			return null;
@@ -67,13 +70,15 @@ public class JedisPubSubOperations extends AbstractPubSubOperations<Jedis, Pipel
 
 	@Override
 	public List<String> pubsubChannels(){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.PUBSUB);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.PUBSUB,
+				client.getConnection());
 		return execute((cmd)->cmd.pubsubChannels(null));
 	}
 
 	@Override
 	public List<String> pubsubChannels(final String pattern){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.PUBSUB);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.PUBSUB,
+				client.getConnection());
 		return execute((cmd)->cmd.pubsubChannels(pattern));
 	}
 
@@ -85,19 +90,22 @@ public class JedisPubSubOperations extends AbstractPubSubOperations<Jedis, Pipel
 
 	@Override
 	public Long pubsubNumPat(){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.PUBSUB);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.PUBSUB,
+				client.getConnection());
 		return execute((cmd)->cmd.pubsubNumPat());
 	}
 
 	@Override
 	public Map<String, String> pubsubNumSub(final String... channels){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.PUBSUB);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.PUBSUB,
+				client.getConnection());
 		return execute((cmd)->cmd.pubsubNumSub(channels));
 	}
 
 	@Override
 	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.PSUBSCRIBE);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.PSUBSCRIBE,
+				client.getConnection());
 		return execute((cmd)->{
 			String[] sChannels = new String[channels.length];
 
@@ -135,25 +143,26 @@ public class JedisPubSubOperations extends AbstractPubSubOperations<Jedis, Pipel
 
 	@Override
 	public Object pUnSubscribe(){
-		commandAllNotSupportedException(ProtocolCommand.PUNSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PUNSUBSCRIBE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object pUnSubscribe(final String... patterns){
-		commandAllNotSupportedException(ProtocolCommand.PUNSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PUNSUBSCRIBE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns){
-		commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SUBSCRIBE);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SUBSCRIBE,
+				client.getConnection());
 		execute((cmd)->{
 			cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
 			return null;
@@ -162,7 +171,8 @@ public class JedisPubSubOperations extends AbstractPubSubOperations<Jedis, Pipel
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.SUBSCRIBE);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SUBSCRIBE,
+				client.getConnection());
 		execute((cmd)->{
 			cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
 			return null;
@@ -171,19 +181,19 @@ public class JedisPubSubOperations extends AbstractPubSubOperations<Jedis, Pipel
 
 	@Override
 	public Object unSubscribe(){
-		commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object unSubscribe(final String... channels){
-		commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels){
-		commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.UNSUBSCRIBE, client.getConnection());
 		return null;
 	}
 

@@ -28,7 +28,6 @@ import com.buession.core.converter.Converter;
 import com.buession.core.utils.NumberUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.SortedSetOperations;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -36,6 +35,7 @@ import com.buession.redis.core.convert.jedis.ListTupleScanResultExposeConverter;
 import com.buession.redis.core.convert.jedis.SetTupleExposeConverter;
 import com.buession.redis.core.convert.jedis.TupleExposeConverter;
 import com.buession.redis.core.jedis.JedisScanParams;
+import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.commands.JedisCommands;
 
@@ -49,8 +49,8 @@ import java.util.Set;
  */
 public abstract class AbstractSortedSetOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements SortedSetOperations<C> {
 
-	public AbstractSortedSetOperations(final JedisRedisClient<C> client, final RedisMode redisMode){
-		super(client, redisMode);
+	public AbstractSortedSetOperations(final JedisRedisClient client){
+		super(client);
 	}
 
 	@Override
@@ -1269,7 +1269,8 @@ public abstract class AbstractSortedSetOperations<C extends JedisCommands, P ext
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.ZSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor)));
 	}
 
@@ -1295,7 +1296,8 @@ public abstract class AbstractSortedSetOperations<C extends JedisCommands, P ext
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.ZSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor,
 				new JedisScanParams(pattern))));
 	}
@@ -1322,7 +1324,8 @@ public abstract class AbstractSortedSetOperations<C extends JedisCommands, P ext
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final int count){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.ZSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor,
 				new JedisScanParams(count))));
 	}
@@ -1349,7 +1352,8 @@ public abstract class AbstractSortedSetOperations<C extends JedisCommands, P ext
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final int count){
-		pipelineAndTransactionNotSupportedException(ProtocolCommand.ZSCAN);
+		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
+				client.getConnection());
 		return execute((cmd)->new ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor,
 				new JedisScanParams(pattern, count))));
 	}

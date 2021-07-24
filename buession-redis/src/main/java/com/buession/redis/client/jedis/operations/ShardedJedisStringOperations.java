@@ -29,10 +29,10 @@ import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.ShardedJedisClient;
 import com.buession.redis.core.BitOperation;
-import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.SetArgumentJedisConverter;
+import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.BitPosParams;
 import redis.clients.jedis.ShardedJedis;
@@ -48,7 +48,7 @@ import java.util.Map;
 public class ShardedJedisStringOperations extends AbstractStringOperations<ShardedJedis, ShardedJedisPipeline> {
 
 	public ShardedJedisStringOperations(final ShardedJedisClient client){
-		super(client, RedisMode.SHARDED);
+		super(client);
 	}
 
 	@Override
@@ -97,13 +97,13 @@ public class ShardedJedisStringOperations extends AbstractStringOperations<Shard
 
 	@Override
 	public Long bitOp(BitOperation operation, String destKey, String... keys){
-		commandAllNotSupportedException(ProtocolCommand.BITOP);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.BITOP, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Long bitOp(BitOperation operation, byte[] destKey, byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.BITOP);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.BITOP, client.getConnection());
 		return null;
 	}
 
@@ -234,25 +234,25 @@ public class ShardedJedisStringOperations extends AbstractStringOperations<Shard
 
 	@Override
 	public List<String> mGet(String... keys){
-		commandAllNotSupportedException(ProtocolCommand.MGET);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.MGET, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public List<byte[]> mGet(byte[]... keys){
-		commandAllNotSupportedException(ProtocolCommand.MGET);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.MGET, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status mSet(Map<String, String> values){
-		commandAllNotSupportedException(ProtocolCommand.MSET);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.MSET, client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status mSetNx(Map<String, String> values){
-		commandAllNotSupportedException(ProtocolCommand.MSETNX);
+		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.MSETNX, client.getConnection());
 		return null;
 	}
 

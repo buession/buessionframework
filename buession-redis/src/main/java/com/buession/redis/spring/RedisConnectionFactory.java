@@ -19,17 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.spring;
+
+import org.springframework.beans.factory.DisposableBean;
 
 /**
  * Redis 连接工厂
  *
  * @author Yong.Teng
  */
-public class RedisConnectionFactory implements AutoCloseable {
+public class RedisConnectionFactory implements DisposableBean, AutoCloseable {
 
 	/**
 	 * Redis 连接配置
@@ -39,7 +41,7 @@ public class RedisConnectionFactory implements AutoCloseable {
 	/**
 	 * 是否是单机模式连接
 	 */
-	private boolean isGenericConnection = true;
+	private boolean isStandaloneConnection = true;
 
 	/**
 	 * 是否是分片模式连接
@@ -73,7 +75,13 @@ public class RedisConnectionFactory implements AutoCloseable {
 	 */
 	public void setConfiguration(RedisConfiguration configuration){
 		this.configuration = configuration;
+		this.isStandaloneConnection = configuration instanceof StandaloneConfiguration;
 		this.isShardedConnection = configuration instanceof ShardedConfiguration;
+	}
+
+	@Override
+	public void destroy() throws Exception{
+
 	}
 
 	@Override
@@ -81,8 +89,8 @@ public class RedisConnectionFactory implements AutoCloseable {
 
 	}
 
-	protected boolean isGenericConnection(){
-		return isGenericConnection;
+	protected boolean isStandaloneConnection(){
+		return isStandaloneConnection;
 	}
 
 	protected boolean isShardedConnection(){
