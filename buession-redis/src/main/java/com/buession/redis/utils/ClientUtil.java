@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.utils;
@@ -44,7 +44,7 @@ public class ClientUtil {
 	private ClientUtil(){
 	}
 
-	public final static List<Client> parse(final String str){
+	public static List<Client> parse(final String str){
 		if(Validate.hasText(str) == false){
 			return null;
 		}
@@ -65,7 +65,7 @@ public class ClientUtil {
 		return result;
 	}
 
-	private final static Client doParse(final String str){
+	private static Client doParse(final String str){
 		String[] properties = StringUtils.splitByWholeSeparatorPreserveAllTokens(str, " ");
 
 		if(Validate.isEmpty(properties)){

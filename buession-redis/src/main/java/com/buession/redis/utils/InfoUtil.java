@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.utils;
@@ -52,7 +52,7 @@ public class InfoUtil {
 
 	private final static String ROW_SEPARATOR = "\r\n";
 
-	public final static Info convert(final String str){
+	public static Info convert(final String str){
 		Info.Server server = null;
 		Info.Clients clients = null;
 		Info.Memory memory = null;
@@ -404,7 +404,7 @@ public class InfoUtil {
 			return new Info.Sentinel(properties);
 		}
 
-		private final static Info.Sentinel.Master parseMaster(final String str){
+		private static Info.Sentinel.Master parseMaster(final String str){
 			String[] groups = StringUtils.splitByWholeSeparatorPreserveAllTokens(str, ",");
 			Properties properties = new Properties();
 			KeyValueParser keyValueParser;
@@ -465,7 +465,7 @@ public class InfoUtil {
 
 	}
 
-	protected final static String[] parseRows(final String str){
+	protected static String[] parseRows(final String str){
 		return StringUtils.split(str, ROW_SEPARATOR);
 	}
 

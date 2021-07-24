@@ -42,7 +42,7 @@ public class TxResultsUtils {
 
 	private final static ThreadLocal<Map<Integer, TxResult>> txResults = new ThreadLocal<>();
 
-	public final static Map<Integer, TxResult> getTxResults(){
+	public static Map<Integer, TxResult> getTxResults(){
 		Map<Integer, TxResult> txResult = txResults.get();
 
 		if(txResult == null){
@@ -53,15 +53,15 @@ public class TxResultsUtils {
 		return txResult;
 	}
 
-	public final static <S, T> void put(AtomicInteger index, Converter<S, T> converter, Class... paramTypes){
+	public static <S, T> void put(AtomicInteger index, Converter<S, T> converter, Class... paramTypes){
 		put(index.get(), converter, paramTypes);
 	}
 
-	public final static <S, T> void put(int index, Converter<S, T> converter, Class... paramTypes){
+	public static <S, T> void put(int index, Converter<S, T> converter, Class... paramTypes){
 		getTxResults().put(index, new TxResult<>(converter, paramTypes));
 	}
 
-	public final static List<Object> deserializeMixedResults(AtomicInteger index, List<Object> result){
+	public static List<Object> deserializeMixedResults(AtomicInteger index, List<Object> result){
 		Map<Integer, TxResult> cache = txResults.get();
 
 		if(cache == null){
@@ -90,7 +90,7 @@ public class TxResultsUtils {
 		return result;
 	}
 
-	public final static void remove(){
+	public static void remove(){
 		txResults.remove();
 	}
 

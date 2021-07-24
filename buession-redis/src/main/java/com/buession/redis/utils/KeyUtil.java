@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.utils;
@@ -35,7 +35,7 @@ public class KeyUtil {
 
 	}
 
-	public final static String makeRawKey(final String prefix, final String key){
+	public static String makeRawKey(final String prefix, final String key){
 		if(Validate.isEmpty(prefix)){
 			return key;
 		}
@@ -47,7 +47,7 @@ public class KeyUtil {
 		return sb.toString();
 	}
 
-	public final static String[] makeRawKeys(final String prefix, final String... keys){
+	public static String[] makeRawKeys(final String prefix, final String... keys){
 		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
 			return keys;
 		}
@@ -61,7 +61,7 @@ public class KeyUtil {
 		return rawKeys;
 	}
 
-	public final static byte[] makeByteKey(final String prefix, final byte[] key){
+	public static byte[] makeByteKey(final String prefix, final byte[] key){
 		if(prefix != null){
 			byte[] prefixByte = SafeEncoder.encode(prefix);
 			byte[] result = new byte[prefixByte.length + key.length];
@@ -75,7 +75,7 @@ public class KeyUtil {
 		return key;
 	}
 
-	public final static byte[] makeByteKey(final byte[] prefix, final byte[] key){
+	public static byte[] makeByteKey(final byte[] prefix, final byte[] key){
 		if(prefix != null){
 			byte[] result = new byte[prefix.length + key.length];
 
@@ -88,7 +88,7 @@ public class KeyUtil {
 		return key;
 	}
 
-	public final static byte[][] makeByteKeys(final String prefix, final byte[]... keys){
+	public static byte[][] makeByteKeys(final String prefix, final byte[]... keys){
 		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
 			return keys;
 		}

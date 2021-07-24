@@ -19,10 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.utils;
+
+import com.buession.redis.client.connection.RedisClusterConnection;
+import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.RedisShardedConnection;
+import com.buession.redis.core.RedisMode;
 
 /**
  * @author Yong.Teng
@@ -31,6 +36,26 @@ public class RedisClientUtils {
 
 	protected RedisClientUtils(){
 
+	}
+
+	/**
+	 * 根据连接器获取 Redis 模式
+	 *
+	 * @param connection
+	 * 		连接器
+	 *
+	 * @return Redis 模式
+	 */
+	public static RedisMode getRedisMode(final RedisConnection connection){
+		if(connection instanceof RedisShardedConnection){
+			return RedisMode.SHARDED;
+		}else if(connection instanceof RedisClusterConnection){
+			return RedisMode.CLUSTER;
+		}else if(connection instanceof RedisShardedConnection){
+			return RedisMode.SHARDED;
+		}else{
+			return RedisMode.STANDALONE;
+		}
 	}
 
 }
