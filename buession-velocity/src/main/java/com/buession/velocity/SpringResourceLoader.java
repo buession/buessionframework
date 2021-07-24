@@ -74,7 +74,7 @@ public class SpringResourceLoader extends ResourceLoader {
 			throw new PresentException("'resourceLoader' application attribute", LOADER_NAME);
 		}
 
-		if(Validate.hasText(resourceLoaderPath) == false){
+		if(Validate.isBlank(resourceLoaderPath)){
 			throw new PresentException("'resourceLoaderPath' application attribute", LOADER_NAME);
 		}
 
