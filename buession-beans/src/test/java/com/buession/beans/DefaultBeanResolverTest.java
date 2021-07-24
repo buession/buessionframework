@@ -22,10 +22,64 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.beans;/**
- * 
- *
+package com.buession.beans;
+
+import org.junit.Test;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
  * @author Yong.Teng
  * @since 1.3.0
- */public class DefaultBeanResolverTest {
+ */
+public class DefaultBeanResolverTest {
+
+	@Test
+	public void describe(){
+		DefaultBeanResolver resolver = new DefaultBeanResolver();
+
+		User user = new User();
+		user.setHeight(2);
+		user.setUsername("username");
+		user.setAge(null);
+
+		try{
+			resolver.describe(user).forEach((key, value)->{
+				System.out.println(key + ": " + value);
+			});
+		}catch(IllegalAccessException e){
+			e.printStackTrace();
+		}catch(InvocationTargetException e){
+			e.printStackTrace();
+		}catch(NoSuchMethodException e){
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void populate(){
+		Map<String, Object> data = new HashMap<>();
+		data.put("age", null);
+		data.put("username", "username");
+		data.put("height", 3L);
+		data.put("enable", "on");
+
+		DefaultBeanResolver resolver = new DefaultBeanResolver();
+
+		User user = new User();
+		try{
+			resolver.populate(user, data);
+
+			System.out.println(user);
+		}catch(IllegalAccessException e){
+			e.printStackTrace();
+		}catch(NoSuchMethodException e){
+			e.printStackTrace();
+		}catch(InvocationTargetException e){
+			e.printStackTrace();
+		}
+	}
+
 }

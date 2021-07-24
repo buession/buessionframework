@@ -31,6 +31,7 @@ import com.buession.beans.annotations.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -51,7 +52,6 @@ public class User {
 
 	private boolean disable;
 
-	@DateFormat(pattern = "HH:mm:ss, yyyy-MM-dd")
 	private Date lastLoginTime;
 
 	private Status status;
@@ -150,7 +150,7 @@ public class User {
 
 	@Override
 	public String toString(){
-		return "User{" + "id=" + id + ", username='" + username + '\'' + ", age=" + age + ", weight=" + weight + ", " + "height=" + height + ", enable=" + enable + ", disable=" + disable + ", lastLoginTime=" + lastLoginTime + ", status=" + status + ", map=" + map + ", arr=" + Arrays.toString(arr) + '}';
+		return new StringJoiner(", ", User.class.getSimpleName() + "[", "]").add("id=" + id).add("username='" + username + "'").add("age=" + age).add("weight=" + weight).add("height=" + height).add("enable=" + enable).add("disable=" + disable).add("lastLoginTime=" + lastLoginTime).add("status=" + status).add("map=" + map).add("arr=" + Arrays.toString(arr)).toString();
 	}
 
 	public enum Status {
