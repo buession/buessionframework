@@ -123,7 +123,7 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 		return null;
 	}
 
-	private final static String parseCacheKey(final Class<?> clazz, final Field field, final JsonNode node){
+	private static String parseCacheKey(final Class<?> clazz, final Field field, final JsonNode node){
 		final String className = clazz.getName();
 		final String fieldName = field.getName();
 		final String nodeName = node.toString();
@@ -134,7 +134,7 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 		return sb.toString();
 	}
 
-	private final static Map<String, JsonNode> getNodeMapValues(final JsonNode node){
+	private static Map<String, JsonNode> getNodeMapValues(final JsonNode node){
 		if(node == null || node.isObject() == false){
 			return null;
 		}
@@ -151,7 +151,7 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 		return result;
 	}
 
-	private final static boolean comparatorMap(final Map<String, Object> map1, final Map<String, JsonNode> map2){
+	private static boolean comparatorMap(final Map<String, Object> map1, final Map<String, JsonNode> map2){
 		Iterator<Map.Entry<String, Object>> iterator1 = map1.entrySet().iterator();
 		Map.Entry<String, Object> entry1;
 
@@ -165,7 +165,7 @@ public class Map2EnumDeserializer extends JsonDeserializer<Enum<?>> {
 		return true;
 	}
 
-	private final static boolean checkEquals(Object value, JsonNode node){
+	private static boolean checkEquals(Object value, JsonNode node){
 		if(node.isBigDecimal()){
 			return value.equals(node.decimalValue());
 		}else if(node.isBigInteger()){

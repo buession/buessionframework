@@ -22,10 +22,27 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.json;/**
- * 
- *
+package com.buession.json;
+
+import org.junit.Test;
+
+import java.util.Objects;
+
+/**
  * @author Yong.Teng
- * @since 1.2.3
- */public class ObjectsTest {
+ * @since 1.3.0
+ */
+public class ObjectsTest {
+
+	@Test
+	public void equals(){
+		long l = 1L;
+		int i = 1;
+		short s = (short) 1;
+
+		System.out.println(Objects.equals(l, i));
+		System.out.println(Objects.equals(l, s));
+		System.out.println(Objects.equals(i, s));
+	}
+
 }
