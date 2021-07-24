@@ -22,10 +22,44 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient;/**
- * 
- *
+package com.buession.httpclient;
+
+import com.buession.httpclient.core.Response;
+import com.buession.httpclient.exception.ConnectTimeoutException;
+import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
+import com.buession.httpclient.exception.ReadTimeoutException;
+import com.buession.httpclient.exception.RequestAbortedException;
+import com.buession.httpclient.exception.RequestException;
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
  * @since 1.13.0
- */public class ApacheHttpClientTest {
+ */
+public class ApacheHttpClientTest {
+
+	@Test
+	public void largeNumberRequest(){
+		ApacheHttpClient httpClient = new ApacheHttpClient();
+
+		for(int i = 0; i < 5; i++){
+			try{
+				Response response = httpClient.get("https://www.baidu.com");
+
+				System.out.println(response.getBody());
+				System.out.println(response.getInputStream());
+			}catch(ConnectTimeoutException e){
+				e.printStackTrace();
+			}catch(ConnectionPoolTimeoutException e){
+				e.printStackTrace();
+			}catch(ReadTimeoutException e){
+				e.printStackTrace();
+			}catch(RequestAbortedException e){
+				e.printStackTrace();
+			}catch(RequestException e){
+				e.printStackTrace();
+			}
+		}
+	}
+
 }
