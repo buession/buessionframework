@@ -27,6 +27,8 @@
 package com.buession.thesaurus.core;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * @author Yong.Teng
@@ -129,6 +131,32 @@ public class Word implements Serializable {
 	 */
 	public void setValue(String value){
 		this.value = value;
+	}
+
+	@Override
+	public int hashCode(){
+		int result = Objects.hash(initial, pinyin, value);
+		result = 31 * result + Arrays.hashCode(initials);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(this == obj){
+			return true;
+		}
+
+		if(obj instanceof Word){
+			Word word = (Word) obj;
+			return Objects.equals(value, word.value);
+		}
+
+		return false;
+	}
+
+	@Override
+	public String toString(){
+		return value;
 	}
 
 }
