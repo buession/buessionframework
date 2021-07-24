@@ -51,7 +51,7 @@ public class BeanData {
 	}
 
 	public BeanData(final PropertyDescriptor[] descriptors, final Map<String, String> readMethodNames,
-			final Map<String, String> writeMethodNames){
+					final Map<String, String> writeMethodNames){
 		this.descriptors = descriptors;
 		this.readMethodNames = readMethodNames;
 		this.writeMethodNames = writeMethodNames;
@@ -69,6 +69,36 @@ public class BeanData {
 		}
 
 		return null;
+	}
+
+	/**
+	 * 获取 bean 指定属性的 read 方法
+	 *
+	 * @param beanClazz
+	 * 		bean class
+	 * @param descriptor
+	 *
+	 * @return
+	 */
+	public Method getReadMethod(final Class<?> beanClazz, final PropertyDescriptor descriptor){
+		Method method = descriptor.getReadMethod();
+
+		if(method == null){
+			final String methodName = readMethodNames.get(descriptor.getName());
+
+			if(methodName != null){
+				method = MethodUtils.getAccessibleMethod(beanClazz, methodName, descriptor.getPropertyType());
+
+				if(method != null){
+					try{
+						descriptor.setReadMethod(method);
+					}catch(IntrospectionException e){
+					}
+				}
+			}
+		}
+
+		return method;
 	}
 
 	public Method getWriteMethod(final Class<?> beanClazz, final PropertyDescriptor descriptor){
