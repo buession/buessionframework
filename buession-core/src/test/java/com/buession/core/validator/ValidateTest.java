@@ -22,10 +22,33 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator;/**
- * 
- *
+package com.buession.core.validator;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
  * @since 1.3.0
- */public class ValidateTest {
+ */
+public class ValidateTest {
+
+	@Test
+	public void isBlank(){
+		Assert.assertEquals(true, Validate.isBlank(""));
+		Assert.assertEquals(true, Validate.isBlank(null));
+		Assert.assertEquals(true, Validate.isBlank("\r\n"));
+		Assert.assertEquals(true, Validate.isBlank(" "));
+		Assert.assertEquals(false, Validate.isBlank("\na"));
+	}
+
+	@Test
+	public void isNotBlank(){
+		Assert.assertEquals(false, Validate.isNotBlank(""));
+		Assert.assertEquals(false, Validate.isNotBlank(null));
+		Assert.assertEquals(false, Validate.isNotBlank("\r\n"));
+		Assert.assertEquals(false, Validate.isNotBlank(" "));
+		Assert.assertEquals(true, Validate.isNotBlank("\na"));
+	}
+
 }
