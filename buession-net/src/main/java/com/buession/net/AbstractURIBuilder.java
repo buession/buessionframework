@@ -76,7 +76,7 @@ public abstract class AbstractURIBuilder<T, B extends AbstractURIBuilder> {
 	public abstract T build();
 
 	protected static Map<String, String> parseParameters(final String queryString){
-		if(Validate.hasText(queryString) == false){
+		if(Validate.isBlank(queryString)){
 			return null;
 		}
 

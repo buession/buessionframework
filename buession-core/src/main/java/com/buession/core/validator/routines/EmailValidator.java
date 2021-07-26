@@ -62,7 +62,7 @@ public class EmailValidator {
 	private final static Pattern USER_PATTERN = Pattern.compile(USER_REGEX);
 
 	public static boolean isValid(final CharSequence charSequence){
-		if(Validate.hasText(charSequence) == false){
+		if(Validate.isBlank(charSequence)){
 			return false;
 		}
 

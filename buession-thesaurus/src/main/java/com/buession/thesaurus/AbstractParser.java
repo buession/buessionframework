@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2019 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.thesaurus;
@@ -69,8 +69,8 @@ public abstract class AbstractParser implements Parser {
 
 	protected abstract Set<Word> doParse(InputStream inputStream) throws IOException;
 
-	protected final static char[] parseInitials(final String str, final char delimiter){
-		if(Validate.hasText(str) == false){
+	protected static char[] parseInitials(final String str, final char delimiter){
+		if(Validate.isBlank(str)){
 			return null;
 		}
 

@@ -45,7 +45,7 @@ public class ClientUtil {
 	}
 
 	public static List<Client> parse(final String str){
-		if(Validate.hasText(str) == false){
+		if(Validate.isBlank(str)){
 			return null;
 		}
 
