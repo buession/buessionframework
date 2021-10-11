@@ -47,6 +47,7 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
+
 			<groupId>com.buession</groupId>
 			<artifactId>buession-net</artifactId>
 			<version>${project.version}</version>
