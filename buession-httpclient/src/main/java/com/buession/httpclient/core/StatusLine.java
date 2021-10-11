@@ -27,6 +27,8 @@ package com.buession.httpclient.core;
 import com.buession.core.utils.Assert;
 import com.buession.lang.Constants;
 
+import java.util.Objects;
+
 /**
  * @author Yong.Teng
  */
@@ -80,7 +82,7 @@ public class StatusLine {
 
 		if(obj instanceof StatusLine){
 			StatusLine that = (StatusLine) obj;
-			return that.getStatusCode() == getStatusCode();
+			return Objects.equals(statusCode, that.getStatusCode());
 		}
 
 		return false;

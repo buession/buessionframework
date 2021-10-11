@@ -78,7 +78,7 @@ public class KeyValue<K, V> implements Serializable {
 
 		if(obj instanceof KeyValue){
 			KeyValue that = (KeyValue) obj;
-			return Objects.equals(key, that.key) && Objects.equals(value, that.value);
+			return Objects.equals(key, that.key) && Objects.deepEquals(value, that.value);
 		}
 
 		return false;
