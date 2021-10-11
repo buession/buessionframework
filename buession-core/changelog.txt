@@ -4,6 +4,13 @@ Buession Framework Core Changelog
 
 Changes in version 1.3.1 (2021-07-27)
 -------------------------------------
+*【新增】DateTime 新增获取当前 Unix Timestamp 方法
+*【新增】List 构建器 ListBuilder、Map 构建器 MapBuilder、Set 构建器 SetBuilder、Queue 构建器 QueueBuilder
+*【变化】移除静态方法上的 final 关键字
+*【变化】MapUtils.toSet 当为 LinkedHashMap 实例时，返回 LinkedHashSet；其它 Map 实例时，返回 HashSet
+*【新增】manager 层注解 @Manager
+*【新增】基于 mapstruct 的 Pojo 映射接口
+*【新增】ID 生成器
 
 
 Changes in version 1.3.0 (2021-07-10)

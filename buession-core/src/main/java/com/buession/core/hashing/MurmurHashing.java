@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.hashing;
@@ -37,11 +37,11 @@ public class MurmurHashing extends AbstractHashing {
 		return hash64A(key, 0x1234ABCD);
 	}
 
-	private final static long hash64A(byte[] data, int seed){
+	private static long hash64A(byte[] data, int seed){
 		return hash64A(ByteBuffer.wrap(data), seed);
 	}
 
-	private final static long hash64A(ByteBuffer buffer, int seed){
+	private static long hash64A(ByteBuffer buffer, int seed){
 		ByteOrder byteOrder = buffer.order();
 		buffer.order(ByteOrder.LITTLE_ENDIAN);
 
