@@ -26,6 +26,7 @@ package com.buession.httpclient.conn;
 
 import com.buession.httpclient.core.Configuration;
 import okhttp3.ConnectionPool;
+import okhttp3.HttpClientConnectionManager;
 
 import java.util.concurrent.TimeUnit;
 
@@ -34,64 +35,61 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Yong.Teng
  */
-public class OkHttpClientConnectionManager extends AbstractConnectionManager<com.buession.httpclient.okhttp
-        .OkHttpClientConnectionManager> {
+public class OkHttpClientConnectionManager extends AbstractConnectionManager<HttpClientConnectionManager> {
 
-    /**
-     * 构造函数，创建驱动默认连接管理器
-     */
-    public OkHttpClientConnectionManager(){
-        super();
-    }
+	/**
+	 * 构造函数，创建驱动默认连接管理器
+	 */
+	public OkHttpClientConnectionManager(){
+		super();
+	}
 
-    /**
-     * 构造函数，创建驱动默认连接管理器
-     *
-     * @param configuration
-     *         连接对象
-     */
-    public OkHttpClientConnectionManager(Configuration configuration){
-        super(configuration);
-    }
+	/**
+	 * 构造函数，创建驱动默认连接管理器
+	 *
+	 * @param configuration
+	 * 		连接对象
+	 */
+	public OkHttpClientConnectionManager(Configuration configuration){
+		super(configuration);
+	}
 
-    /**
-     * 构造函数
-     *
-     * @param clientConnectionManager
-     *         驱动连接管理器
-     */
-    public OkHttpClientConnectionManager(com.buession.httpclient.okhttp.OkHttpClientConnectionManager
-                                                 clientConnectionManager){
-        super(clientConnectionManager);
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param clientConnectionManager
+	 * 		驱动连接管理器
+	 */
+	public OkHttpClientConnectionManager(HttpClientConnectionManager clientConnectionManager){
+		super(clientConnectionManager);
+	}
 
-    /**
-     * 构造函数
-     *
-     * @param configuration
-     *         连接对象
-     * @param clientConnectionManager
-     *         驱动连接管理器
-     */
-    public OkHttpClientConnectionManager(Configuration configuration, com.buession.httpclient.okhttp
-            .OkHttpClientConnectionManager clientConnectionManager){
-        super(configuration, clientConnectionManager);
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param configuration
+	 * 		连接对象
+	 * @param clientConnectionManager
+	 * 		驱动连接管理器
+	 */
+	public OkHttpClientConnectionManager(Configuration configuration,
+										 HttpClientConnectionManager clientConnectionManager){
+		super(configuration, clientConnectionManager);
+	}
 
-    /**
-     * 创建驱动默认连接管理器
-     *
-     * @return 连接管理器
-     */
-    @Override
-    public com.buession.httpclient.okhttp.OkHttpClientConnectionManager createDefaultClientConnectionManager(){
-        com.buession.httpclient.okhttp.OkHttpClientConnectionManager connectionManager = new com.buession.httpclient
-                .okhttp.OkHttpClientConnectionManager();
+	/**
+	 * 创建驱动默认连接管理器
+	 *
+	 * @return 连接管理器
+	 */
+	@Override
+	public HttpClientConnectionManager createDefaultClientConnectionManager(){
+		HttpClientConnectionManager connectionManager = new HttpClientConnectionManager();
 
-        connectionManager.setConnectionPool(new ConnectionPool(getConfiguration().getMaxConnections(),
-                getConfiguration().getIdleConnectionTime(), TimeUnit.MILLISECONDS));
+		connectionManager.setConnectionPool(new ConnectionPool(getConfiguration().getMaxConnections(),
+				getConfiguration().getIdleConnectionTime(), TimeUnit.MILLISECONDS));
 
-        return connectionManager;
-    }
+		return connectionManager;
+	}
 
 }

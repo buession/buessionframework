@@ -31,15 +31,15 @@ import java.io.IOException;
  * @author Yong.Teng
  * @since 1.3.1
  */
-public class OkHttpClientConnectionManager implements Closeable {
+public class HttpClientConnectionManager implements Closeable {
 
 	private ConnectionPool connectionPool;
 
-	public OkHttpClientConnectionManager(){
+	public HttpClientConnectionManager(){
 		connectionPool = new ConnectionPool();
 	}
 
-	public OkHttpClientConnectionManager(ConnectionPool connectionPool){
+	public HttpClientConnectionManager(ConnectionPool connectionPool){
 		this.connectionPool = connectionPool;
 	}
 

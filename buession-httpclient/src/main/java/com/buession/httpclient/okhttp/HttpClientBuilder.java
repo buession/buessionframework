@@ -24,6 +24,7 @@
  */
 package com.buession.httpclient.okhttp;
 
+import okhttp3.HttpClientConnectionManager;
 import okhttp3.OkHttpClient;
 
 import java.util.concurrent.TimeUnit;
@@ -33,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class HttpClientBuilder {
 
-	private OkHttpClientConnectionManager connectionManager;
+	private HttpClientConnectionManager connectionManager;
 
 	private long connectTimeout = -1;
 
@@ -48,7 +49,7 @@ public class HttpClientBuilder {
 		return new HttpClientBuilder();
 	}
 
-	public HttpClientBuilder setConnectionManager(OkHttpClientConnectionManager connectionManager){
+	public HttpClientBuilder setConnectionManager(HttpClientConnectionManager connectionManager){
 		this.connectionManager = connectionManager;
 		return this;
 	}

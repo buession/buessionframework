@@ -29,6 +29,7 @@ import com.buession.httpclient.core.Header;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 响应头解析器抽象类
@@ -55,25 +56,16 @@ public abstract class AbstractResponseHeaderParse<T> implements ResponseHeaderPa
 
 	protected static Map<String, String> parseHeaders(final Map<String, String> headers, final String name,
 													  final String oldValue, final String newValue){
-		if(oldValue == null){
-			headers.put(name, newValue);
-		}else{
-			headers.put(name, oldValue + ", " + newValue);
-		}
-
+		headers.put(name, oldValue == null ? newValue : oldValue + ", " + newValue);
 		return headers;
 	}
 
-	protected static List<Header> convertList(final Map<String, String> headersMap){
-		if(headersMap == null){
+	protected static List<Header> convertList(final Map<String, String> headers){
+		if(headers == null){
 			return null;
 		}
 
-		List<Header> headers = new ArrayList<>(headersMap.size());
-
-		headersMap.forEach((name, value)->headers.add(new Header(name, value)));
-
-		return headers;
+		return headers.entrySet().stream().map((e)->new Header(e.getKey(), e.getValue())).collect(Collectors.toList());
 	}
 
 }

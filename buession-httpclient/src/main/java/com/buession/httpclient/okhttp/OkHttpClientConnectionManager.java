@@ -25,6 +25,7 @@
 package com.buession.httpclient.okhttp;
 
 import okhttp3.ConnectionPool;
+import okhttp3.HttpClientConnectionManager;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -32,29 +33,15 @@ import java.io.IOException;
 /**
  * @author Yong.Teng
  */
-public class OkHttpClientConnectionManager implements Closeable {
-
-	private ConnectionPool connectionPool;
+@Deprecated
+public class OkHttpClientConnectionManager extends HttpClientConnectionManager {
 
 	public OkHttpClientConnectionManager(){
-		connectionPool = new ConnectionPool();
+		super();
 	}
 
 	public OkHttpClientConnectionManager(ConnectionPool connectionPool){
-		this.connectionPool = connectionPool;
-	}
-
-	public ConnectionPool getConnectionPool(){
-		return connectionPool;
-	}
-
-	public void setConnectionPool(ConnectionPool connectionPool){
-		this.connectionPool = connectionPool;
-	}
-
-	@Override
-	public void close() throws IOException{
-
+		super(connectionPool);
 	}
 
 }

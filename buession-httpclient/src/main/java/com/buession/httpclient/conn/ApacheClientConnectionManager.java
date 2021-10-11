@@ -35,61 +35,61 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
  */
 public class ApacheClientConnectionManager extends AbstractConnectionManager<HttpClientConnectionManager> {
 
-    /**
-     * 构造函数，创建驱动默认连接管理器
-     */
-    public ApacheClientConnectionManager(){
-        super();
-    }
+	/**
+	 * 构造函数，创建驱动默认连接管理器
+	 */
+	public ApacheClientConnectionManager(){
+		super();
+	}
 
-    /**
-     * 构造函数，创建驱动默认连接管理器
-     *
-     * @param configuration
-     *         连接对象
-     */
-    public ApacheClientConnectionManager(Configuration configuration){
-        super(configuration);
-    }
+	/**
+	 * 构造函数，创建驱动默认连接管理器
+	 *
+	 * @param configuration
+	 * 		连接对象
+	 */
+	public ApacheClientConnectionManager(Configuration configuration){
+		super(configuration);
+	}
 
-    /**
-     * 构造函数
-     *
-     * @param clientConnectionManager
-     *         驱动连接管理器
-     */
-    public ApacheClientConnectionManager(HttpClientConnectionManager clientConnectionManager){
-        super(clientConnectionManager);
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param clientConnectionManager
+	 * 		驱动连接管理器
+	 */
+	public ApacheClientConnectionManager(HttpClientConnectionManager clientConnectionManager){
+		super(clientConnectionManager);
+	}
 
-    /**
-     * 构造函数
-     *
-     * @param configuration
-     *         连接对象
-     * @param clientConnectionManager
-     *         驱动连接管理器
-     */
-    public ApacheClientConnectionManager(Configuration configuration, HttpClientConnectionManager
-            clientConnectionManager){
-        super(configuration, clientConnectionManager);
-    }
+	/**
+	 * 构造函数
+	 *
+	 * @param configuration
+	 * 		连接对象
+	 * @param clientConnectionManager
+	 * 		驱动连接管理器
+	 */
+	public ApacheClientConnectionManager(Configuration configuration,
+										 HttpClientConnectionManager clientConnectionManager){
+		super(configuration, clientConnectionManager);
+	}
 
-    /**
-     * 创建驱动默认连接管理器
-     *
-     * @return 连接管理器
-     */
-    @Override
-    public org.apache.http.conn.HttpClientConnectionManager createDefaultClientConnectionManager(){
-        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+	/**
+	 * 创建驱动默认连接管理器
+	 *
+	 * @return 连接管理器
+	 */
+	@Override
+	public HttpClientConnectionManager createDefaultClientConnectionManager(){
+		PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
 
-        //最大连接数
-        connectionManager.setMaxTotal(getConfiguration().getMaxConnections());
-        //并发数
-        connectionManager.setDefaultMaxPerRoute(getConfiguration().getMaxPerRoute());
+		//最大连接数
+		connectionManager.setMaxTotal(getConfiguration().getMaxConnections());
+		//并发数
+		connectionManager.setDefaultMaxPerRoute(getConfiguration().getMaxPerRoute());
 
-        return connectionManager;
-    }
+		return connectionManager;
+	}
 
 }

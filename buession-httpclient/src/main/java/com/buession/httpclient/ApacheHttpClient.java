@@ -278,10 +278,10 @@ public class ApacheHttpClient extends AbstractHttpClient {
 			return ApacheResponseBuilder.create(httpResponse).build();
 		}catch(IOException e){
 			logger.error("Request({}) url: {} error.", request.getMethod(), request.getUrl(), e);
-			if(e instanceof org.apache.http.conn.ConnectTimeoutException){
-				throw new ConnectTimeoutException(e.getMessage());
-			}else if(e instanceof org.apache.http.conn.ConnectionPoolTimeoutException){
+			if(e instanceof org.apache.http.conn.ConnectionPoolTimeoutException){
 				throw new ConnectionPoolTimeoutException(e.getMessage());
+			}else if(e instanceof org.apache.http.conn.ConnectTimeoutException){
+				throw new ConnectTimeoutException(e.getMessage());
 			}else if(e instanceof SocketTimeoutException){
 				throw new ReadTimeoutException(e.getMessage());
 			}else if(e instanceof org.apache.http.impl.execchain.RequestAbortedException){

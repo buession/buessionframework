@@ -24,10 +24,10 @@
  */
 package com.buession.httpclient.core.utils;
 
+import com.buession.core.utils.ListBuilder;
 import com.buession.httpclient.core.Header;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -41,13 +41,12 @@ import java.util.TimeZone;
  */
 public class HeadersBuilder {
 
-	private List<Header> headers = new ArrayList<>();
+	private final ListBuilder<Header> builder = ListBuilder.create();
 
 	/**
 	 * 构造函数
 	 */
 	public HeadersBuilder(){
-
 	}
 
 	/**
@@ -131,7 +130,7 @@ public class HeadersBuilder {
 	 * @return HTTP 头构建器
 	 */
 	public HeadersBuilder add(final String name, final String value){
-		headers.add(new Header(name, value));
+		builder.add(new Header(name, value));
 		return this;
 	}
 
@@ -146,7 +145,7 @@ public class HeadersBuilder {
 	 * @return HTTP 头构建器
 	 */
 	public HeadersBuilder add(final String name, final short value){
-		headers.add(new Header(name, Short.toString(value)));
+		builder.add(new Header(name, Short.toString(value)));
 		return this;
 	}
 
@@ -161,7 +160,7 @@ public class HeadersBuilder {
 	 * @return HTTP 头构建器
 	 */
 	public HeadersBuilder add(final String name, final int value){
-		headers.add(new Header(name, Integer.toString(value)));
+		builder.add(new Header(name, Integer.toString(value)));
 		return this;
 	}
 
@@ -176,7 +175,7 @@ public class HeadersBuilder {
 	 * @return HTTP 头构建器
 	 */
 	public HeadersBuilder add(final String name, final long value){
-		headers.add(new Header(name, Long.toString(value)));
+		builder.add(new Header(name, Long.toString(value)));
 		return this;
 	}
 
@@ -207,10 +206,7 @@ public class HeadersBuilder {
 	 * @return HTTP 头构建器
 	 */
 	public HeadersBuilder add(final List<Header> headers){
-		if(headers != null){
-			this.headers.addAll(headers);
-		}
-
+		builder.addAll(headers);
 		return this;
 	}
 
@@ -220,7 +216,7 @@ public class HeadersBuilder {
 	 * @return HTTP 头
 	 */
 	public List<Header> build(){
-		return headers;
+		return builder.build();
 	}
 
 }

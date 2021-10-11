@@ -41,7 +41,6 @@ public class Configuration {
 	 */
 	private int maxPerRoute = 500;
 
-
 	private int idleConnectionTime = 60 * 1000;
 
 	/**
