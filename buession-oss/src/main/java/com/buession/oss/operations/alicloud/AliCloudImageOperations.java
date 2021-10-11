@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.oss.operations.alicloud;
@@ -47,7 +47,7 @@ public class AliCloudImageOperations extends AbstractAliCloudOperations implemen
 
 	protected final static String PERSISTENT_FORMAT = "%s|sys/saveas,o_%s,b_%s";
 
-	public AliCloudImageOperations(OSS ossClient){
+	public AliCloudImageOperations(final OSS ossClient){
 		super(ossClient);
 	}
 
@@ -131,7 +131,7 @@ public class AliCloudImageOperations extends AbstractAliCloudOperations implemen
 
 	@Override
 	public File resize(String bucketName, String path, int width, int height, int l, int s, boolean limit,
-			String padColor) throws OSSException{
+					   String padColor) throws OSSException{
 		Assert.isBlank(bucketName, "Bucket name cloud not be null or empty.");
 		Assert.isBlank(path, "Resize image path cloud not be null or empty.");
 
@@ -175,7 +175,7 @@ public class AliCloudImageOperations extends AbstractAliCloudOperations implemen
 
 	@Override
 	public File resize(String bucketName, String path, ImageResizeMode mode, int width, int height, boolean limit,
-			String padColor) throws OSSException{
+					   String padColor) throws OSSException{
 		Assert.isBlank(bucketName, "Bucket name cloud not be null or empty.");
 		Assert.isBlank(path, "Resize image path cloud not be null or empty.");
 		Assert.isNull(mode, "Resize mode cloud not be null or empty.");
@@ -198,7 +198,7 @@ public class AliCloudImageOperations extends AbstractAliCloudOperations implemen
 
 	@Override
 	public File resize(String bucketName, String path, ImageResizeMode mode, int width, int height, int l, int s,
-			String padColor) throws OSSException{
+					   String padColor) throws OSSException{
 		Assert.isBlank(bucketName, "Bucket name cloud not be null or empty.");
 		Assert.isBlank(path, "Resize image path cloud not be null or empty.");
 		Assert.isNull(mode, "Resize mode cloud not be null or empty.");
@@ -210,7 +210,7 @@ public class AliCloudImageOperations extends AbstractAliCloudOperations implemen
 
 	@Override
 	public File resize(String bucketName, String path, ImageResizeMode mode, int width, int height, int l, int s,
-			boolean limit) throws OSSException{
+					   boolean limit) throws OSSException{
 		Assert.isBlank(bucketName, "Bucket name cloud not be null or empty.");
 		Assert.isBlank(path, "Resize image path cloud not be null or empty.");
 		Assert.isNull(mode, "Resize mode cloud not be null or empty.");
@@ -222,7 +222,7 @@ public class AliCloudImageOperations extends AbstractAliCloudOperations implemen
 
 	@Override
 	public File resize(String bucketName, String path, ImageResizeMode mode, int width, int height, int l, int s,
-			boolean limit, String padColor) throws OSSException{
+					   boolean limit, String padColor) throws OSSException{
 		Assert.isBlank(bucketName, "Bucket name cloud not be null or empty.");
 		Assert.isBlank(path, "Resize image path cloud not be null or empty.");
 		Assert.isNull(mode, "Resize mode cloud not be null or empty.");
@@ -288,7 +288,7 @@ public class AliCloudImageOperations extends AbstractAliCloudOperations implemen
 	}
 
 	protected static Formatter buildFormatter(final String style, final String format, final String bucketName,
-			final String path){
+											  final String path){
 		final Formatter formatter = new Formatter();
 
 		formatter.format(format, style, BinaryUtil.toBase64String(path.getBytes()),

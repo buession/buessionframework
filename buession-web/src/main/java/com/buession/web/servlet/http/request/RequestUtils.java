@@ -77,7 +77,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 *
 	 * @return 是否为 Ajax 请求
 	 */
-	public final static boolean isAjaxRequest(final HttpServletRequest request){
+	public static boolean isAjaxRequest(final HttpServletRequest request){
 		return isAjaxRequest(request.getHeader(HttpHeader.X_REQUESTED_WITH.getValue()));
 	}
 

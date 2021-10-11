@@ -48,7 +48,7 @@ public abstract class AbstractAliCloudOperations extends AbstractOperations impl
 
 	protected OSS ossClient = null;
 
-	public AbstractAliCloudOperations(OSS ossClient){
+	public AbstractAliCloudOperations(final OSS ossClient){
 		Assert.isNull(ossClient, "OSS client cloud not be null.");
 		this.ossClient = ossClient;
 	}

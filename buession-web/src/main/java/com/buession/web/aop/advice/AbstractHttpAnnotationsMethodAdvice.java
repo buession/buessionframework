@@ -26,6 +26,7 @@ package com.buession.web.aop.advice;
 
 import com.buession.aop.advice.AnnotationMethodAdvice;
 import com.buession.core.validator.Validate;
+import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -53,7 +54,7 @@ public abstract class AbstractHttpAnnotationsMethodAdvice implements HttpAnnotat
 	}
 
 	@Override
-	public void before(Method method, Object[] args, Object target) throws Throwable{
+	public void before(@Nullable Method method, Object[] args, @Nullable Object target) throws Throwable{
 		Collection<AnnotationMethodAdvice> methodAdvices = getMethodAdvices();
 
 		if(Validate.isNotEmpty(methodAdvices)){

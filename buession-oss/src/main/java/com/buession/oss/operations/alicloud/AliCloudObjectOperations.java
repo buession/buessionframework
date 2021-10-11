@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.oss.operations.alicloud;
@@ -44,7 +44,7 @@ import java.nio.file.Path;
  */
 public class AliCloudObjectOperations extends AbstractAliCloudOperations implements ObjectOperations {
 
-	public AliCloudObjectOperations(OSS ossClient){
+	public AliCloudObjectOperations(final OSS ossClient){
 		super(ossClient);
 	}
 
