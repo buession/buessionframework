@@ -22,10 +22,24 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.id;/**
- * 
+package com.buession.core.id;
+
+import com.buession.core.utils.StringUtils;
+import com.buession.lang.Constants;
+
+import java.util.UUID;
+
+/**
+ * 简单 ID 生成器
  *
  * @author Yong.Teng
  * @since 1.3.1
- */public class SimpleIdGenerator {
+ */
+public class SimpleIdGenerator implements IdGenerator<String> {
+
+	@Override
+	public String nextId(){
+		return StringUtils.replace(UUID.randomUUID().toString(), "-", Constants.EMPTY_STRING);
+	}
+
 }

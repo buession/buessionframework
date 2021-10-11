@@ -22,10 +22,24 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.id;/**
- * 
+package com.buession.core.id;
+
+/**
+ * ID 生成器
+ *
+ * @param <T>
+ * 		ID 类型
  *
  * @author Yong.Teng
  * @since 1.3.1
- */public interface IdGenerator {
+ */
+public interface IdGenerator<T> {
+
+	/**
+	 * 获取下一个 ID
+	 *
+	 * @return ID
+	 */
+	T nextId();
+
 }

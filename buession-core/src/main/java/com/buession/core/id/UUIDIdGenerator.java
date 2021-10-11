@@ -27,16 +27,16 @@ package com.buession.core.id;
 import java.util.UUID;
 
 /**
- * 简单 ID 生成器
+ * UUID ID 生成器
  *
  * @author Yong.Teng
  * @since 1.3.1
  */
-public class SimpleIdGenerator implements IdGenerator<String> {
+public class UUIDIdGenerator implements IdGenerator<String> {
 
-    @Override
-    public String nextId() {
-        return UUID.randomUUID().toString();
-    }
+	@Override
+	public String nextId(){
+		return UUID.randomUUID().toString();
+	}
 
 }

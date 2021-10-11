@@ -28,12 +28,12 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * 原子简单 ID 生成器
+ * 原子 UUID ID 生成器
  *
  * @author Yong.Teng
  * @since 1.3.1
  */
-public class AtomicSimpleIdGenerator implements IdGenerator<String> {
+public class AtomicUUIDIdGenerator implements IdGenerator<String> {
 
 	private final AtomicLong leastSigBits = new AtomicLong(0L);
 

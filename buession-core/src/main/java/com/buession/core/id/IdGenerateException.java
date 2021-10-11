@@ -22,10 +22,35 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.id;/**
- * 
+package com.buession.core.id;
+
+/**
+ * Id 生成异常
  *
  * @author Yong.Teng
  * @since 1.3.1
- */public class IdGenerateException {
+ */
+public class IdGenerateException extends RuntimeException {
+
+    private final static long serialVersionUID = -2603224860347439426L;
+
+    public IdGenerateException() {
+        super();
+    }
+
+    public IdGenerateException(String message) {
+        super(message);
+    }
+
+    public IdGenerateException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public IdGenerateException(Throwable cause) {
+        super(cause);
+    }
+
+    public IdGenerateException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

@@ -22,10 +22,44 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.id;/**
- * 
+package com.buession.core.id;
+
+import com.buession.core.utils.Assert;
+import com.buession.core.utils.StringUtils;
+
+/**
+ * 随机 ID 生成器
  *
  * @author Yong.Teng
  * @since 1.3.1
- */public class RandomIdGenerator {
+ */
+public class RandomIdGenerator implements IdGenerator<String> {
+
+	/**
+	 * 随机长度
+	 */
+	private int length = 16;
+
+	/**
+	 * 构造函数，生成 16 位随机 ID
+	 */
+	public RandomIdGenerator(){
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param length
+	 * 		ID 长度
+	 */
+	public RandomIdGenerator(final int length){
+		Assert.isNegative(length, "Id length can't be less than 0");
+		this.length = length;
+	}
+
+	@Override
+	public String nextId(){
+		return StringUtils.random(length);
+	}
+
 }

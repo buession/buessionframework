@@ -22,10 +22,27 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.id;/**
- * 
+package com.buession.core.id;
+
+import com.buession.core.utils.StringUtils;
+import com.buession.lang.Constants;
+
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
+
+/**
+ * 原子简单 ID 生成器
  *
  * @author Yong.Teng
  * @since 1.3.1
- */public class AtomicSimpleIdGenerator {
+ */
+public class AtomicSimpleIdGenerator implements IdGenerator<String> {
+
+	private final AtomicLong leastSigBits = new AtomicLong(0L);
+
+	@Override
+	public String nextId(){
+		return StringUtils.replace(new UUID(0L, leastSigBits.incrementAndGet()).toString(), "-", Constants.EMPTY_STRING);
+	}
+
 }
