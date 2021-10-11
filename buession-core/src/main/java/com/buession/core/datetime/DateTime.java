@@ -46,4 +46,15 @@ public class DateTime {
 		return sb.toString();
 	}
 
+	/**
+	 * 获取当前 Unix Timestamp
+	 *
+	 * @return 当前 Unix Timestamp
+	 *
+	 * @since 1.3.1
+	 */
+	public static long unixtime(){
+		return System.currentTimeMillis() / 1000L;
+	}
+
 }
