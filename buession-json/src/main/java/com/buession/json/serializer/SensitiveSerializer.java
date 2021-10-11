@@ -22,10 +22,65 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.json.serializer;/**
- * 
- *
+package com.buession.json.serializer;
+
+import com.buession.core.validator.Validate;
+import com.buession.json.annotation.Sensitive;
+import com.buession.json.strategy.SensitiveStrategy;
+import com.buession.lang.Constants;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.BeanProperty;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.ser.ContextualSerializer;
+
+import java.io.IOException;
+import java.util.Objects;
+import java.util.Optional;
+
+/**
  * @author Yong.Teng
  * @since 1.3.1
- */public class SensitiveSerializer {
+ */
+public class SensitiveSerializer extends JsonSerializer<CharSequence> implements ContextualSerializer {
+
+	private SensitiveStrategy strategy;
+
+	private String format;
+
+	private String replacement;
+
+	@Override
+	public void serialize(CharSequence value, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException{
+		if(value == null){
+			jsonGenerator.writeNull();
+		}else if(value.length() == 0){
+			jsonGenerator.writeString(Constants.EMPTY_STRING);
+		}else{
+			String str;
+			if(Validate.hasText(format)){
+				str = value.toString().replaceAll(format,
+						Optional.ofNullable(replacement).orElse(Constants.EMPTY_STRING));
+			}else{
+				str = strategy.getFunction().apply(value.toString());
+			}
+			jsonGenerator.writeString(str);
+		}
+	}
+
+	@Override
+	public JsonSerializer<?> createContextual(SerializerProvider provider, BeanProperty property) throws JsonMappingException{
+		Sensitive annotation = property.getAnnotation(Sensitive.class);
+
+		if(Objects.nonNull(annotation) && CharSequence.class.isAssignableFrom(property.getType().getRawClass())){
+			this.strategy = annotation.strategy();
+			this.format = annotation.format();
+			this.replacement = annotation.replacement();
+			return this;
+		}
+
+		return provider.findValueSerializer(property.getType(), property);
+	}
+
 }

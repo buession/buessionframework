@@ -22,10 +22,49 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.json.annotation;/**
- * 
+package com.buession.json.annotation;
+
+import com.buession.json.serializer.SensitiveSerializer;
+import com.buession.json.strategy.SensitiveStrategy;
+import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * 数据脱敏
  *
  * @author Yong.Teng
  * @since 1.3.1
- */public enum Sensitive {
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.METHOD})
+@JacksonAnnotationsInside
+@JsonSerialize(using = SensitiveSerializer.class)
+public @interface Sensitive {
+
+	/**
+	 * 脱敏策略
+	 *
+	 * @return 脱敏策略
+	 */
+	SensitiveStrategy strategy() default SensitiveStrategy.NONE;
+
+	/**
+	 * 自定义脱敏格式
+	 *
+	 * @return 自定义脱敏格式
+	 */
+	String format() default "";
+
+	/**
+	 * 自定义脱敏替换内容
+	 *
+	 * @return 自定义脱敏替换内容
+	 */
+	String replacement() default "";
+
 }
