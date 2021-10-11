@@ -38,7 +38,7 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 1.3.1
  */
-public interface BaseMapper<S, T> {
+public interface Mapper<S, T> {
 
 	/**
 	 * 将源对象映射到目标对象
@@ -79,46 +79,6 @@ public interface BaseMapper<S, T> {
 	 * @return 目标对象 set 实例
 	 */
 	Set<T> mapping(Set<S> object);
-
-	/**
-	 * 将目标对象反转映射到源对象
-	 *
-	 * @param object
-	 * 		目标对象
-	 *
-	 * @return 源对象实例
-	 */
-	S reverse(T object);
-
-	/**
-	 * 将目标对象数组映射到源对象数组
-	 *
-	 * @param object
-	 * 		目标对象数组
-	 *
-	 * @return 源对象实例数组
-	 */
-	S[] reverse(T[] object);
-
-	/**
-	 * 将目标 list 对象映射到源 list 对象
-	 *
-	 * @param object
-	 * 		目标 list 对象
-	 *
-	 * @return 源对象 list 实例
-	 */
-	List<S> reverse(List<T> object);
-
-	/**
-	 * 将目标 set 对象映射到源 set 对象
-	 *
-	 * @param object
-	 * 		目标 set 对象
-	 *
-	 * @return 源对象 set 实例
-	 */
-	Set<S> reverse(Set<T> object);
 
 }
 
