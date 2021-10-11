@@ -27,6 +27,8 @@
 package com.buession.core.utils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +71,13 @@ public class MapUtils {
 	 * @return 转换结果
 	 */
 	public static <K, V> Set<V> toSet(final Map<K, V> map){
-		return map == null ? null : new LinkedHashSet<>(map.values());
+		if(map == null){
+			return null;
+		}else if(map instanceof LinkedHashMap){
+			return new LinkedHashSet<>(map.values());
+		}else{
+			return new HashSet<>(map.values());
+		}
 	}
 
 }
