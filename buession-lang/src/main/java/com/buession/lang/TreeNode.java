@@ -22,10 +22,34 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.lang;/**
- * 
+package com.buession.lang;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * 树节点
+ *
+ * @param <E>
+ * 		节点数据类型
  *
  * @author Yong.Teng
  * @since 1.3.1
- */public interface TreeNode {
+ */
+public interface TreeNode<E> extends Serializable {
+
+	/**
+	 * 返回父节点
+	 *
+	 * @return 父节点
+	 */
+	E getParent();
+
+	/**
+	 * 返回子节点
+	 *
+	 * @return 子节点
+	 */
+	List<E> getChildren();
+
 }
