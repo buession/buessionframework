@@ -518,33 +518,47 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 				MongoOperation mongoOperation = (MongoOperation) value;
 				MongoOperation.Operator operator = mongoOperation.getOperator();
 
-				/* 等于 */
-				if(MongoOperation.Operator.EQUAL.equals(operator)){
-					criteria.and(field).is(mongoOperation.getValue());
-					/* 不等于 */
-				}else if(MongoOperation.Operator.NOT_EQUAL.equals(operator)){
-					criteria.and(field).ne(mongoOperation.getValue());
-					/* 小于 */
-				}else if(MongoOperation.Operator.LT.equals(operator)){
-					criteria.and(field).lt(mongoOperation.getValue());
-					/* 小于等于 */
-				}else if(MongoOperation.Operator.LTE.equals(operator)){
-					criteria.and(field).lte(mongoOperation.getValue());
-					/* 大于 */
-				}else if(MongoOperation.Operator.GT.equals(operator)){
-					criteria.and(field).gt(mongoOperation.getValue());
-					/* 大于等于 */
-				}else if(MongoOperation.Operator.GTE.equals(operator)){
-					criteria.and(field).gte(mongoOperation.getValue());
-					/* IN */
-				}else if(MongoOperation.Operator.IN.equals(operator)){
-					criteria.and(field).in(mongoOperation.getValue());
-					/* NOT IN */
-				}else if(MongoOperation.Operator.NIN.equals(operator)){
-					criteria.and(field).nin(mongoOperation.getValue());
-					/* 正则 */
-				}else if(MongoOperation.Operator.LIKE.equals(operator)){
-					criteria.and(field).regex((String) mongoOperation.getValue());
+				if(operator != null){
+					switch(operator){
+						/* 等于 */
+						case EQUAL:
+							criteria.and(field).is(mongoOperation.getValue());
+							break;
+						/* 不等于 */
+						case NOT_EQUAL:
+							criteria.and(field).ne(mongoOperation.getValue());
+							break;
+						/* 小于 */
+						case LT:
+							criteria.and(field).lt(mongoOperation.getValue());
+							break;
+						/* 小于等于 */
+						case LTE:
+							criteria.and(field).lte(mongoOperation.getValue());
+							break;
+						/* 大于 */
+						case GT:
+							criteria.and(field).gt(mongoOperation.getValue());
+							break;
+						/* 大于等于 */
+						case GTE:
+							criteria.and(field).gte(mongoOperation.getValue());
+							break;
+						/* IN */
+						case IN:
+							criteria.and(field).in(mongoOperation.getValue());
+							break;
+						/* NOT IN */
+						case NIN:
+							criteria.and(field).nin(mongoOperation.getValue());
+							break;
+						/* 正则 */
+						case LIKE:
+							criteria.and(field).regex((String) mongoOperation.getValue());
+							break;
+						default:
+							break;
+					}
 				}
 			}else{
 				criteria.and(field).is(value);
