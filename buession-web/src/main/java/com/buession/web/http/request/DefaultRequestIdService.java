@@ -26,7 +26,9 @@
  */
 package com.buession.web.http.request;
 
-import java.util.UUID;
+import com.buession.core.id.IdGenerator;
+import com.buession.core.id.UUIDIdGenerator;
+import com.buession.core.utils.Assert;
 
 /**
  * 默认请求 ID 服务
@@ -36,9 +38,34 @@ import java.util.UUID;
  */
 public class DefaultRequestIdService extends AbstractRequestIdService {
 
+	/**
+	 * ID 生成器
+	 *
+	 * @since 1.3.1
+	 */
+	private final IdGenerator<String> idGenerator;
+
+	/**
+	 * 构造函数，默认使用 {@link UUIDIdGenerator}
+	 */
+	public DefaultRequestIdService(){
+		idGenerator = new UUIDIdGenerator();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param idGenerator
+	 * 		ID 生成器
+	 */
+	public DefaultRequestIdService(final IdGenerator<String> idGenerator){
+		Assert.isNull(idGenerator, "IdGenerator cloud not be null.");
+		this.idGenerator = idGenerator;
+	}
+
 	@Override
 	public String generate(){
-		return UUID.randomUUID().toString();
+		return idGenerator.nextId();
 	}
 
 }
