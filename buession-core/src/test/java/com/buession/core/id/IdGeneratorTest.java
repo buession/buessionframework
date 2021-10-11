@@ -22,10 +22,19 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.id;/**
- * 
- *
+package com.buession.core.id;
+
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
  * @since 1.3.1
- */public class IdGeneratorTest {
+ */
+public class IdGeneratorTest {
+
+	@Test
+	public void snowflake(){
+		SnowflakeIdGenerator idGenerator = new SnowflakeIdGenerator();
+		System.out.println(idGenerator.nextId());
+	}
 }
