@@ -22,81 +22,103 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.net.utils;
+package com.buession.core.converter.mapper;
 
-import com.buession.core.utils.ArrayUtils;
-import com.buession.core.utils.StringUtils;
-import com.buession.core.validator.Validate;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 /**
+ * POJO 映射
+ *
+ * @param <S>
+ * 		源类型
+ * @param <T>
+ * 		目标类型
+ *
  * @author Yong.Teng
+ * @since 1.3.1
  */
-public class InetAddressUtils {
-
-	private InetAddressUtils(){
-	}
+public interface BaseMapper<S, T> {
 
 	/**
-	 * 将长整型转化为字符串形式带点的 IPV4 地址
+	 * 将源对象映射到目标对象
 	 *
-	 * @param l
-	 * 		合格的地址的长整型的表达形式
+	 * @param object
+	 * 		源对象
 	 *
-	 * @return IPV4 地址
+	 * @return 目标对象实例
 	 */
-	public static String long2ip(long l){
-		long[] result = new long[4];
-		for(int i = 4; i > 0; i--){
-			result[i - 1] = (l & 0xff);
-			l = l >> 8;
-		}
-
-		return ArrayUtils.toString(result, ".");
-	}
+	T mapping(S object);
 
 	/**
-	 * 将长整型转化为字符串形式带点的 IPV4 地址的 InetAddress 对象
+	 * 将源对象数组映射到目标对象数组
 	 *
-	 * @param l
-	 * 		合格的地址的长整型的表达形式
+	 * @param object
+	 * 		源对象数组
 	 *
-	 * @return IPV4 地址的 InetAddress 对象
+	 * @return 目标对象实例数组
 	 */
-	public static InetAddress long2InetAddress(long l){
-		String ip = long2ip(l);
-
-		try{
-			return InetAddress.getByName(ip);
-		}catch(UnknownHostException e){
-			return null;
-		}
-	}
+	T[] mapping(S[] object);
 
 	/**
-	 * 将字符串形式带点的 IPV4 地址转化为长整型
+	 * 将源 list 对象映射到目标 list 对象
 	 *
-	 * @param ip
-	 * 		字符串形式带点的 IPV4 地址
+	 * @param object
+	 * 		源 list 对象
 	 *
-	 * @return IPV4 地址的长整型
+	 * @return 目标对象 list 实例
 	 */
-	public static long ip2long(String ip){
-		if(Validate.isIpV4(ip) == false){
-			throw new IllegalArgumentException("Illegal ip: " + ip + ", must be ipv4.");
-		}
+	List<T> mapping(List<S> object);
 
-		String[] numbers = StringUtils.splitByWholeSeparatorPreserveAllTokens(ip, ".");
-		long result = 0L;
+	/**
+	 * 将源 set 对象映射到目标 set 对象
+	 *
+	 * @param object
+	 * 		源 set 对象
+	 *
+	 * @return 目标对象 set 实例
+	 */
+	Set<T> mapping(Set<S> object);
 
-		for(int i = 0; i < 4; ++i){
-			result = result << 8 | Integer.parseInt(numbers[i]);
-		}
+	/**
+	 * 将目标对象反转映射到源对象
+	 *
+	 * @param object
+	 * 		目标对象
+	 *
+	 * @return 源对象实例
+	 */
+	S reverse(T object);
 
-		return result;
-	}
+	/**
+	 * 将目标对象数组映射到源对象数组
+	 *
+	 * @param object
+	 * 		目标对象数组
+	 *
+	 * @return 源对象实例数组
+	 */
+	S[] reverse(T[] object);
+
+	/**
+	 * 将目标 list 对象映射到源 list 对象
+	 *
+	 * @param object
+	 * 		目标 list 对象
+	 *
+	 * @return 源对象 list 实例
+	 */
+	List<S> reverse(List<T> object);
+
+	/**
+	 * 将目标 set 对象映射到源 set 对象
+	 *
+	 * @param object
+	 * 		目标 set 对象
+	 *
+	 * @return 源对象 set 实例
+	 */
+	Set<S> reverse(Set<T> object);
 
 }
+

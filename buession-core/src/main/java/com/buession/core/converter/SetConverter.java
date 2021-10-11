@@ -45,7 +45,7 @@ public class SetConverter<S, T> implements Converter<Set<S>, Set<T>> {
 	/**
 	 * Set item 转换器
 	 */
-	private Converter<S, T> itemConverter;
+	private final Converter<S, T> itemConverter;
 
 	/**
 	 * 构造函数
@@ -62,7 +62,7 @@ public class SetConverter<S, T> implements Converter<Set<S>, Set<T>> {
 		if(source == null){
 			return null;
 		}else{
-			return source.stream().map((value)->itemConverter.convert(value)).collect(Collectors.toCollection(source instanceof LinkedHashSet ? LinkedHashSet::new : HashSet::new));
+			return source.stream().map(itemConverter::convert).collect(Collectors.toCollection(source instanceof LinkedHashSet ? LinkedHashSet::new : HashSet::new));
 		}
 	}
 

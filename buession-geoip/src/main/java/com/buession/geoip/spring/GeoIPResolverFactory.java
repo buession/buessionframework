@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.geoip.spring;
@@ -37,78 +37,78 @@ import java.nio.file.Path;
  */
 public class GeoIPResolverFactory {
 
-    private File dbPath;
+	private File dbPath;
 
-    private InputStream stream;
+	private InputStream stream;
 
-    private LoadMode loadMode = LoadMode.STREAM;
+	private LoadMode loadMode = LoadMode.STREAM;
 
-    private boolean enableCache = true;
+	private boolean enableCache = true;
 
-    public File getDbPath(){
-        return dbPath;
-    }
+	public File getDbPath(){
+		return dbPath;
+	}
 
-    public void setDbPath(Resource dbPath) throws IOException{
-        Assert.isNull(dbPath, "Ip database path cloud not be null.");
+	public void setDbPath(Resource dbPath) throws IOException{
+		Assert.isNull(dbPath, "Ip database path cloud not be null.");
 
-        this.dbPath = dbPath.getFile();
-        this.loadMode = LoadMode.FILE;
-    }
+		this.dbPath = dbPath.getFile();
+		this.loadMode = LoadMode.FILE;
+	}
 
-    public void setDbPath(File dbPath) throws IOException{
-        Assert.isNull(dbPath, "Ip database path cloud not be null.");
+	public void setDbPath(File dbPath) throws IOException{
+		Assert.isNull(dbPath, "Ip database path cloud not be null.");
 
-        this.dbPath = dbPath;
-        this.loadMode = LoadMode.FILE;
-    }
+		this.dbPath = dbPath;
+		this.loadMode = LoadMode.FILE;
+	}
 
-    public void setDbPath(Path dbPath) throws IOException{
-        Assert.isNull(dbPath, "Ip database path cloud not be null.");
+	public void setDbPath(Path dbPath) throws IOException{
+		Assert.isNull(dbPath, "Ip database path cloud not be null.");
 
-        this.dbPath = dbPath.toFile();
-        this.loadMode = LoadMode.FILE;
-    }
+		this.dbPath = dbPath.toFile();
+		this.loadMode = LoadMode.FILE;
+	}
 
-    public void setDbPath(String dbPath) throws IOException{
-        Assert.isBlank(dbPath, "Ip database path cloud not be null or empty.");
+	public void setDbPath(String dbPath) throws IOException{
+		Assert.isBlank(dbPath, "Ip database path cloud not be null or empty.");
 
-        setDbPath(new File(dbPath));
-    }
+		setDbPath(new File(dbPath));
+	}
 
-    public InputStream getStream(){
-        if(stream == null){
-            stream = GeoIPResolverFactory.class.getResourceAsStream("/maxmind/City.mmdb");
-        }
+	public InputStream getStream(){
+		if(stream == null){
+			stream = GeoIPResolverFactory.class.getResourceAsStream("/maxmind/City.mmdb");
+		}
 
-        return stream;
-    }
+		return stream;
+	}
 
-    public void setStream(InputStream stream){
-        Assert.isNull(dbPath, "Ip database stream cloud not be null.");
+	public void setStream(InputStream stream){
+		Assert.isNull(stream, "Ip database stream cloud not be null.");
 
-        this.stream = stream;
-        this.loadMode = LoadMode.STREAM;
-    }
+		this.stream = stream;
+		this.loadMode = LoadMode.STREAM;
+	}
 
-    public LoadMode getLoadMode(){
-        return loadMode;
-    }
+	public LoadMode getLoadMode(){
+		return loadMode;
+	}
 
-    public boolean isEnableCache(){
-        return enableCache;
-    }
+	public boolean isEnableCache(){
+		return enableCache;
+	}
 
-    public void setEnableCache(boolean enableCache){
-        this.enableCache = enableCache;
-    }
+	public void setEnableCache(boolean enableCache){
+		this.enableCache = enableCache;
+	}
 
-    protected enum LoadMode {
+	protected enum LoadMode {
 
-        STREAM,
+		STREAM,
 
-        FILE
+		FILE
 
-    }
+	}
 
 }

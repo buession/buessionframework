@@ -320,7 +320,7 @@ public class InfoUtil {
 			return new Info.Replication(properties);
 		}
 
-		private final static Info.Replication.Slave parseSlave(final String str){
+		private static Info.Replication.Slave parseSlave(final String str){
 			String[] groups = StringUtils.splitByWholeSeparatorPreserveAllTokens(str, ",");
 			Properties properties = new Properties();
 			KeyValueParser keyValueParser;
@@ -469,7 +469,7 @@ public class InfoUtil {
 		return StringUtils.split(str, ROW_SEPARATOR);
 	}
 
-	protected static class KeyValueParser extends com.buession.core.utils.KeyValueParser {
+	protected final static class KeyValueParser extends com.buession.core.utils.KeyValueParser {
 
 		private Double percentValue;
 

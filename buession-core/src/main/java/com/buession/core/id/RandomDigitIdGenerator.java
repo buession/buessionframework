@@ -22,81 +22,41 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.net.utils;
+package com.buession.core.id;
 
-import com.buession.core.utils.ArrayUtils;
+import com.buession.core.utils.Assert;
 import com.buession.core.utils.StringUtils;
-import com.buession.core.validator.Validate;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
 
 /**
+ * 随机 ID 生成器
+ *
  * @author Yong.Teng
+ * @since 1.3.1
  */
-public class InetAddressUtils {
+public class RandomIdGenerator implements IdGenerator<String> {
 
-	private InetAddressUtils(){
+	private int length = 16;
+
+	/**
+	 * 构造函数
+	 */
+	public RandomIdGenerator(){
 	}
 
 	/**
-	 * 将长整型转化为字符串形式带点的 IPV4 地址
+	 * 构造函数
 	 *
-	 * @param l
-	 * 		合格的地址的长整型的表达形式
-	 *
-	 * @return IPV4 地址
+	 * @param length
+	 * 		ID 长度
 	 */
-	public static String long2ip(long l){
-		long[] result = new long[4];
-		for(int i = 4; i > 0; i--){
-			result[i - 1] = (l & 0xff);
-			l = l >> 8;
-		}
-
-		return ArrayUtils.toString(result, ".");
+	public RandomIdGenerator(final int length){
+		Assert.isNegative(length, "Id length can't be less than 0");
+		this.length = length;
 	}
 
-	/**
-	 * 将长整型转化为字符串形式带点的 IPV4 地址的 InetAddress 对象
-	 *
-	 * @param l
-	 * 		合格的地址的长整型的表达形式
-	 *
-	 * @return IPV4 地址的 InetAddress 对象
-	 */
-	public static InetAddress long2InetAddress(long l){
-		String ip = long2ip(l);
-
-		try{
-			return InetAddress.getByName(ip);
-		}catch(UnknownHostException e){
-			return null;
-		}
-	}
-
-	/**
-	 * 将字符串形式带点的 IPV4 地址转化为长整型
-	 *
-	 * @param ip
-	 * 		字符串形式带点的 IPV4 地址
-	 *
-	 * @return IPV4 地址的长整型
-	 */
-	public static long ip2long(String ip){
-		if(Validate.isIpV4(ip) == false){
-			throw new IllegalArgumentException("Illegal ip: " + ip + ", must be ipv4.");
-		}
-
-		String[] numbers = StringUtils.splitByWholeSeparatorPreserveAllTokens(ip, ".");
-		long result = 0L;
-
-		for(int i = 0; i < 4; ++i){
-			result = result << 8 | Integer.parseInt(numbers[i]);
-		}
-
-		return result;
+	@Override
+	public String nextId(){
+		return StringUtils.random(length);
 	}
 
 }

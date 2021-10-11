@@ -22,62 +22,24 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.converter;
+package com.buession.core.id;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Map 转换器
- *
- * @param <SK>
- * 		Map 原 key 类型
- * @param <SV>
- * 		Map 原 value 类型
- * @param <TK>
- * 		Map 目标 key 类型
- * @param <TV>
- * 		Map 目标 value 类型
+ * 原子简单 ID 生成器
  *
  * @author Yong.Teng
- * @since 1.3.0
+ * @since 1.3.1
  */
-public class MapConverter<SK, SV, TK, TV> implements Converter<Map<SK, SV>, Map<TK, TV>> {
+public class AtomicSimpleIdGenerator implements IdGenerator<String> {
 
-	/**
-	 * Map key 转换器
-	 */
-	private final Converter<SK, TK> keyConverter;
-
-	/**
-	 * Map value 转换器
-	 */
-	private final Converter<SV, TV> valueConverter;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param keyConverter
-	 * 		Map key 转换器
-	 * @param valueConverter
-	 * 		Map value 转换器
-	 */
-	public MapConverter(final Converter<SK, TK> keyConverter, final Converter<SV, TV> valueConverter){
-		this.keyConverter = keyConverter;
-		this.valueConverter = valueConverter;
-	}
+	private final AtomicLong leastSigBits = new AtomicLong(0L);
 
 	@Override
-	public Map<TK, TV> convert(final Map<SK, SV> source){
-		if(source == null){
-			return null;
-		}else{
-			return source.entrySet().stream().collect(Collectors.toMap(e->keyConverter.convert(e.getKey()),
-					e->valueConverter.convert(e.getValue()), (a, b)->a, source instanceof LinkedHashMap ?
-							LinkedHashMap::new : HashMap::new));
-		}
+	public String nextId(){
+		return new UUID(0L, leastSigBits.incrementAndGet()).toString();
 	}
 
 }

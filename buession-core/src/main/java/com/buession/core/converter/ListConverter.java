@@ -45,7 +45,7 @@ public class ListConverter<S, T> implements Converter<List<S>, List<T>> {
 	/**
 	 * List item 转换器
 	 */
-	private Converter<S, T> itemConverter;
+	private final Converter<S, T> itemConverter;
 
 	/**
 	 * 构造函数
@@ -62,7 +62,7 @@ public class ListConverter<S, T> implements Converter<List<S>, List<T>> {
 		if(source == null){
 			return null;
 		}else{
-			return source.stream().map((value)->itemConverter.convert(value)).collect(Collectors.toCollection(source instanceof LinkedList ? LinkedList::new : ArrayList::new));
+			return source.stream().map(itemConverter::convert).collect(Collectors.toCollection(source instanceof LinkedList ? LinkedList::new : ArrayList::new));
 		}
 	}
 
