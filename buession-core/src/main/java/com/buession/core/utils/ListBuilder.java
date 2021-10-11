@@ -4,12 +4,12 @@ import com.buession.core.validator.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
- * Set 构建器
+ * List 构建器
  *
  * @param <V>
  * 		Value 类型
@@ -19,19 +19,22 @@ import java.util.Set;
  */
 public class ListBuilder<V> {
 
-	private final Set<V> data;
+	private final List<V> data;
 
 	private final static Logger logger = LoggerFactory.getLogger(ListBuilder.class);
 
 	/**
 	 * 构造函数
+	 *
+	 * @param data
+	 * 		List 数据
 	 */
-	private ListBuilder(final Set<V> data){
+	private ListBuilder(final List<V> data){
 		this.data = data;
 	}
 
 	/**
-	 * 创建实例
+	 * 创建默认为 {@link ArrayList} 类型的 {@link ListBuilder} 实例
 	 *
 	 * @param <V>
 	 * 		Value 类型
@@ -39,31 +42,33 @@ public class ListBuilder<V> {
 	 * @return {@link ListBuilder} 实例
 	 */
 	public static <V> ListBuilder<V> create(){
-		return new ListBuilder<>(new HashSet<>(16));
+		return new ListBuilder<>(new ArrayList<>(16));
 	}
 
 	/**
 	 * 创建实例
 	 *
+	 * @param clazz
+	 * 		List Class
 	 * @param <V>
 	 * 		Value 类型
 	 * @param <S>
-	 * 		Set 类型
+	 * 		List 类型
 	 *
 	 * @return {@link ListBuilder} 实例
 	 */
-	public static <V, S extends Set<V>> ListBuilder<V> create(Class<S> clazz){
-		Assert.isNull(clazz, "java.util.Set class cloud not be null.");
+	public static <V, S extends List<V>> ListBuilder<V> create(Class<S> clazz){
+		Assert.isNull(clazz, "java.util.List class cloud not be null.");
 
-		Set<V> data;
+		List<V> data;
 		try{
 			data = clazz.newInstance();
 		}catch(InstantiationException e){
 			logger.error("Create {} instance error: {}", clazz.getName(), e.getMessage());
-			data = new HashSet<>(16);
+			data = new ArrayList<>(16);
 		}catch(IllegalAccessException e){
 			logger.error("Create {} instance error: {}", clazz.getName(), e.getMessage());
-			data = new HashSet<>(16);
+			data = new ArrayList<>(16);
 		}
 
 		return new ListBuilder<>(data);
@@ -86,7 +91,7 @@ public class ListBuilder<V> {
 	 * 批量添加元素
 	 *
 	 * @param data
-	 * 		Map
+	 * 		Collection
 	 *
 	 * @return {@link ListBuilder} 实例
 	 */
@@ -121,11 +126,11 @@ public class ListBuilder<V> {
 	}
 
 	/**
-	 * 构建 Set 数据
+	 * 构建 List 数据
 	 *
-	 * @return Map 数据
+	 * @return List 数据
 	 */
-	public Set<V> build(){
+	public List<V> build(){
 		return data;
 	}
 
@@ -137,21 +142,21 @@ public class ListBuilder<V> {
 	 *
 	 * @return 空 Set
 	 */
-	public static <V> Set<V> of(){
+	public static <V> List<V> of(){
 		return ListBuilder.<V>create().build();
 	}
 
 	/**
-	 * 创建单一元素 Set
+	 * 创建单一元素 List
 	 *
 	 * @param value
 	 * 		值
 	 * @param <V>
 	 * 		Value 类型
 	 *
-	 * @return 单一元素 Set
+	 * @return 单一元素 List
 	 */
-	public static <V> Set<V> of(final V value){
+	public static <V> List<V> of(final V value){
 		return ListBuilder.<V>create().add(value).build();
 	}
 
