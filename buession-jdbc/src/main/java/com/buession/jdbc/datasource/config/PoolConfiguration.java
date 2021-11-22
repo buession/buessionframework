@@ -21,10 +21,32 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.jdbc.datasource.config;/**
- * 
+ */
+package com.buession.jdbc.datasource.config;
+
+import java.util.Properties;
+
+/**
+ * 连接池配置
  *
  * @author Yong.Teng
  * @since 1.3.2
- */public interface PoolConfiguration {
+ */
+public interface PoolConfiguration {
+
+	/**
+	 * 返回连接池其它属性
+	 *
+	 * @return 连接池其它属性
+	 */
+	Properties getProperties();
+
+	/**
+	 * 设置连接池其它属性
+	 *
+	 * @param properties
+	 * 		连接池其它属性
+	 */
+	void setProperties(Properties properties);
+
 }

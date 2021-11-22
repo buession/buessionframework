@@ -22,11 +22,13 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.springboot.datasource.core.datasource;
+package com.buession.jdbc.datasource;
 
+import com.buession.core.validator.Validate;
+import com.buession.jdbc.datasource.config.Dbcp2PoolConfiguration;
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * DBCP2 DataSource 抽象类
@@ -34,7 +36,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 1.3.2
  */
-public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource> {
+public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2PoolConfiguration> {
 
 	/**
 	 * 构造函数
@@ -46,18 +48,111 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource> {
 	/**
 	 * 构造函数
 	 *
-	 * @param master
-	 * 		Master 数据源
-	 * @param slaves
-	 * 		Slave 数据源
+	 * @param poolConfiguration
+	 * 		连接池配置
 	 */
-	public Dbcp2DataSource(BasicDataSource master, List<BasicDataSource> slaves){
-		super(master, slaves);
+	public Dbcp2DataSource(Dbcp2PoolConfiguration poolConfiguration){
+		super(poolConfiguration);
 	}
 
 	@Override
-	public Class<BasicDataSource> getPrimitive(){
-		return BasicDataSource.class;
+	public BasicDataSource createDataSource(){
+		BasicDataSource dataSource = new BasicDataSource();
+
+		applyPoolConfiguration(dataSource, getPoolConfiguration());
+
+		return dataSource;
+	}
+
+	@Override
+	protected void applyPoolConfiguration(final BasicDataSource dataSource, final Dbcp2PoolConfiguration poolConfiguration){
+		if(poolConfiguration.getDriverClassName() != null){
+			dataSource.setDriverClassName(poolConfiguration.getDriverClassName());
+		}
+
+		if(poolConfiguration.getUrl() != null){
+			dataSource.setUrl(poolConfiguration.getUrl());
+		}
+
+		if(poolConfiguration.getUsername() != null){
+			dataSource.setUsername(poolConfiguration.getUsername());
+		}
+
+		if(poolConfiguration.getPassword() != null){
+			dataSource.setPassword(poolConfiguration.getPassword());
+		}
+
+		if(poolConfiguration.getDefaultCatalog() != null){
+			dataSource.setDefaultCatalog(poolConfiguration.getDefaultCatalog());
+		}
+
+		dataSource.setMaxConnLifetimeMillis(poolConfiguration.getMaxConnLifetime());
+
+		if(poolConfiguration.getDefaultQueryTimeout() != null){
+			dataSource.setDefaultQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getDefaultQueryTimeout()));
+		}
+
+		dataSource.setInitialSize(poolConfiguration.getInitialSize());
+		dataSource.setMinIdle(poolConfiguration.getMinIdle());
+		dataSource.setMaxIdle(poolConfiguration.getMaxIdle());
+		dataSource.setMaxTotal(poolConfiguration.getMaxTotal());
+		dataSource.setMaxWaitMillis(poolConfiguration.getMaxWait());
+		dataSource.setTestOnCreate(poolConfiguration.isTestOnCreate());
+		dataSource.setTestOnBorrow(poolConfiguration.isTestOnBorrow());
+		dataSource.setTestOnReturn(poolConfiguration.isTestOnReturn());
+		dataSource.setTestWhileIdle(poolConfiguration.isTestWhileIdle());
+
+		if(Validate.hasText(poolConfiguration.getConnectionFactoryClassName())){
+			dataSource.setConnectionFactoryClassName(poolConfiguration.getConnectionFactoryClassName());
+		}
+
+		if(poolConfiguration.getConnectionInitSqls() != null){
+			dataSource.setConnectionInitSqls(poolConfiguration.getConnectionInitSqls());
+		}
+
+		if(poolConfiguration.getValidationQuery() != null){
+			dataSource.setValidationQuery(poolConfiguration.getValidationQuery());
+		}
+
+		dataSource.setValidationQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getValidationQueryTimeout()));
+
+		if(poolConfiguration.getDefaultSchema() != null){
+			dataSource.setDefaultSchema(poolConfiguration.getDefaultSchema());
+		}
+
+		if(poolConfiguration.getDefaultTransactionIsolation() != null){
+			dataSource.setDefaultTransactionIsolation(poolConfiguration.getDefaultTransactionIsolation().getValue());
+		}
+
+		dataSource.setDefaultAutoCommit(poolConfiguration.isDefaultAutoCommit());
+		dataSource.setAutoCommitOnReturn(poolConfiguration.isAutoCommitOnReturn());
+		dataSource.setRollbackOnReturn(poolConfiguration.isRollbackOnReturn());
+		dataSource.setDefaultReadOnly(poolConfiguration.isDefaultReadOnly());
+		dataSource.setLogExpiredConnections(poolConfiguration.isLogExpiredConnections());
+		dataSource.setAccessToUnderlyingConnectionAllowed(poolConfiguration.isAccessToUnderlyingConnectionAllowed());
+		dataSource.setCacheState(poolConfiguration.isCacheState());
+		dataSource.setPoolPreparedStatements(poolConfiguration.isPoolPreparedStatements());
+		dataSource.setMaxOpenPreparedStatements(poolConfiguration.getMaxOpenPreparedStatements());
+		dataSource.setClearStatementPoolOnReturn(poolConfiguration.isClearStatementPoolOnReturn());
+
+		if(poolConfiguration.getEvictionPolicyClassName() != null){
+			dataSource.setEvictionPolicyClassName(poolConfiguration.getEvictionPolicyClassName());
+		}
+
+		dataSource.setTimeBetweenEvictionRunsMillis(poolConfiguration.getTimeBetweenEvictionRuns());
+		dataSource.setNumTestsPerEvictionRun(poolConfiguration.getNumTestsPerEvictionRun());
+		dataSource.setMinEvictableIdleTimeMillis(poolConfiguration.getMinEvictableIdleTime());
+		dataSource.setSoftMinEvictableIdleTimeMillis(poolConfiguration.getSoftMinEvictableIdleTime());
+		dataSource.setLifo(poolConfiguration.isLifo());
+		dataSource.setFastFailValidation(poolConfiguration.isFastFailValidation());
+
+		if(poolConfiguration.getDisconnectionSqlCodes() != null){
+			dataSource.setDisconnectionSqlCodes(poolConfiguration.getDisconnectionSqlCodes());
+		}
+
+		if(poolConfiguration.getJmxName() != null){
+			dataSource.setJmxName(poolConfiguration.getJmxName());
+		}
 	}
 
 }

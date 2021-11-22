@@ -38,7 +38,7 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 1.3.2
  */
-public class Dhcp2PoolConfiguration extends AbstractPoolConfiguration {
+public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 
 	/**
 	 * 为支持 catalog 概念的数据库设置默认 catalog

@@ -22,9 +22,16 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.springboot.datasource.core.datasource;
+package com.buession.jdbc.datasource;
 
-import java.util.List;
+import com.buession.core.utils.ArrayUtils;
+import com.buession.core.validator.Validate;
+import com.buession.jdbc.datasource.config.DruidPoolConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Druid DataSource 抽象类
@@ -32,7 +39,9 @@ import java.util.List;
  * @author Yong.Teng
  * @since 1.3.2
  */
-public class DruidDataSource extends AbstractDataSource<com.alibaba.druid.pool.DruidDataSource> {
+public class DruidDataSource extends AbstractDataSource<com.alibaba.druid.pool.DruidDataSource, DruidPoolConfiguration> {
+
+	private final static Logger logger = LoggerFactory.getLogger(DruidDataSource.class);
 
 	/**
 	 * 构造函数
@@ -44,18 +53,162 @@ public class DruidDataSource extends AbstractDataSource<com.alibaba.druid.pool.D
 	/**
 	 * 构造函数
 	 *
-	 * @param master
-	 * 		Master 数据源
-	 * @param slaves
-	 * 		Slave 数据源
+	 * @param poolConfiguration
+	 * 		连接池配置
 	 */
-	public DruidDataSource(com.alibaba.druid.pool.DruidDataSource master, List<com.alibaba.druid.pool.DruidDataSource> slaves){
-		super(master, slaves);
+	public DruidDataSource(DruidPoolConfiguration poolConfiguration){
+		super(poolConfiguration);
 	}
 
 	@Override
-	public Class<com.alibaba.druid.pool.DruidDataSource> getPrimitive(){
-		return com.alibaba.druid.pool.DruidDataSource.class;
+	public com.alibaba.druid.pool.DruidDataSource createDataSource(){
+		com.alibaba.druid.pool.DruidDataSource dataSource = new com.alibaba.druid.pool.DruidDataSource();
+
+		applyPoolConfiguration(dataSource, getPoolConfiguration());
+
+		return dataSource;
 	}
 
+	@Override
+	protected void applyPoolConfiguration(final com.alibaba.druid.pool.DruidDataSource dataSource, final DruidPoolConfiguration poolConfiguration){
+		if(poolConfiguration.getDriverClassName() != null){
+			dataSource.setDriverClassName(poolConfiguration.getDriverClassName());
+		}
+
+		if(poolConfiguration.getUrl() != null){
+			dataSource.setUrl(poolConfiguration.getUrl());
+		}
+
+		if(poolConfiguration.getUsername() != null){
+			dataSource.setUsername(poolConfiguration.getUsername());
+		}
+
+		if(poolConfiguration.getPassword() != null){
+			dataSource.setPassword(poolConfiguration.getPassword());
+		}
+
+		if(poolConfiguration.getName() != null){
+			dataSource.setName(poolConfiguration.getName());
+		}
+
+		if(poolConfiguration.getDefaultCatalog() != null){
+			dataSource.setDefaultCatalog(poolConfiguration.getDefaultCatalog());
+		}
+
+		if(poolConfiguration.getDbTypeName() != null){
+			dataSource.setDbType(poolConfiguration.getDbTypeName());
+		}
+
+		if(poolConfiguration.getCreateScheduler() != null){
+			dataSource.setCreateScheduler(poolConfiguration.getCreateScheduler());
+		}
+
+		if(poolConfiguration.getDestroyScheduler() != null){
+			dataSource.setDestroyScheduler(poolConfiguration.getDestroyScheduler());
+		}
+
+		dataSource.setInitExceptionThrow(poolConfiguration.isInitExceptionThrow());
+		dataSource.setMaxCreateTaskCount(poolConfiguration.getMaxCreateTaskCount());
+		dataSource.setMaxWaitThreadCount(poolConfiguration.getMaxWaitThreadCount());
+		dataSource.setInitialSize(poolConfiguration.getInitialSize());
+		dataSource.setMaxActive(poolConfiguration.getMaxActive());
+		dataSource.setMinIdle(poolConfiguration.getMinIdle());
+		dataSource.setMaxIdle(poolConfiguration.getMaxIdle());
+		dataSource.setMaxWait(poolConfiguration.getMaxWait());
+		dataSource.setTimeBetweenConnectErrorMillis(poolConfiguration.getTimeBetweenConnectError());
+		dataSource.setConnectionErrorRetryAttempts(poolConfiguration.getConnectionErrorRetryAttempts());
+
+		if(poolConfiguration.getConnectionInitSqls() != null){
+			dataSource.setConnectionInitSqls(poolConfiguration.getConnectionInitSqls());
+		}
+
+		dataSource.setAsyncCloseConnectionEnable(poolConfiguration.isAsyncCloseConnectionEnable());
+		dataSource.setAccessToUnderlyingConnectionAllowed(poolConfiguration.isAccessToUnderlyingConnectionAllowed());
+
+		if(poolConfiguration.getValidationQuery() != null){
+			dataSource.setValidationQuery(poolConfiguration.getValidationQuery());
+		}
+
+		if(poolConfiguration.getValidConnectionCheckerClassName() != null){
+			try{
+				dataSource.setValidConnectionCheckerClassName(poolConfiguration.getValidConnectionCheckerClassName());
+			}catch(Exception e){
+				if(logger.isErrorEnabled()){
+					logger.error("Set valid connection checker error: {}", e.getMessage());
+				}
+			}
+		}
+
+		dataSource.setValidationQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getValidationQueryTimeout()));
+		dataSource.setQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getQueryTimeout()));
+		dataSource.setNotFullTimeoutRetryCount(poolConfiguration.getNotFullTimeoutRetryCount());
+		dataSource.setTestOnBorrow(poolConfiguration.isTestOnBorrow());
+		dataSource.setTestOnReturn(poolConfiguration.isTestOnReturn());
+		dataSource.setTestWhileIdle(poolConfiguration.isTestWhileIdle());
+		dataSource.setTimeBetweenEvictionRunsMillis(poolConfiguration.getTimeBetweenEvictionRuns());
+		dataSource.setNumTestsPerEvictionRun(poolConfiguration.getNumTestsPerEvictionRun());
+		dataSource.setMinEvictableIdleTimeMillis(poolConfiguration.getMinEvictableIdleTime());
+		dataSource.setMaxEvictableIdleTimeMillis(poolConfiguration.getMaxEvictableIdleTime());
+		dataSource.setKeepAliveBetweenTimeMillis(poolConfiguration.getKeepAliveBetweenTime());
+		dataSource.setPhyTimeoutMillis(poolConfiguration.getPhyTimeout());
+		dataSource.setPhyMaxUseCount(poolConfiguration.getPhyMaxUseCount());
+
+		if(poolConfiguration.getDefaultTransactionIsolation() != null){
+			dataSource.setDefaultTransactionIsolation(poolConfiguration.getDefaultTransactionIsolation().getValue());
+		}
+
+		dataSource.setTransactionThresholdMillis(poolConfiguration.getTransactionThreshold());
+		dataSource.setTransactionQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getTransactionQueryTimeout()));
+		dataSource.setDefaultAutoCommit(poolConfiguration.isDefaultAutoCommit());
+		dataSource.setDefaultReadOnly(poolConfiguration.isDefaultReadOnly());
+		dataSource.setPoolPreparedStatements(poolConfiguration.isPoolPreparedStatements());
+		dataSource.setMaxOpenPreparedStatements(poolConfiguration.getMaxOpenPreparedStatements());
+		dataSource.setSharePreparedStatements(poolConfiguration.isSharePreparedStatements());
+		dataSource.setMaxPoolPreparedStatementPerConnectionSize(poolConfiguration.getMaxPoolPreparedStatementPerConnectionSize());
+
+		if(Validate.isNotEmpty(poolConfiguration.getFilters())){
+			try{
+				dataSource.setFilters(ArrayUtils.toString(poolConfiguration.getFilters().toArray(new String[]{}), ","));
+			}catch(SQLException e){
+				if(logger.isErrorEnabled()){
+					logger.error("Set filters error: {}(errorCode: {}, sqlState: {})", e.getMessage(), e.getErrorCode(), e.getSQLState());
+				}
+			}
+		}
+
+		dataSource.setClearFiltersEnable(poolConfiguration.isClearFiltersEnable());
+
+		try{
+			dataSource.setExceptionSorterClassName(poolConfiguration.getExceptionSorterClassName());
+		}catch(Exception e){
+			if(logger.isErrorEnabled()){
+				logger.error("Set exception sorter error: {}", e.getMessage());
+			}
+		}
+
+		if(poolConfiguration.getStatLogger() != null){
+			dataSource.setStatLogger(poolConfiguration.getStatLogger());
+		}
+
+		dataSource.setTimeBetweenLogStatsMillis(poolConfiguration.getTimeBetweenLogStats());
+
+		dataSource.setRemoveAbandoned(poolConfiguration.isRemoveAbandoned());
+		dataSource.setRemoveAbandonedTimeoutMillis(poolConfiguration.getRemoveAbandonedTimeout());
+		dataSource.setLogAbandoned(poolConfiguration.isLogAbandoned());
+		dataSource.setUseOracleImplicitCache(poolConfiguration.isUseOracleImplicitCache());
+		dataSource.setInitVariants(poolConfiguration.isInitVariants());
+		dataSource.setInitGlobalVariants(poolConfiguration.isInitGlobalVariants());
+		dataSource.setFailFast(poolConfiguration.isFailFast());
+		dataSource.setOnFatalErrorMaxActive(poolConfiguration.getOnFatalErrorMaxActive());
+		dataSource.setBreakAfterAcquireFailure(poolConfiguration.isBreakAfterAcquireFailure());
+		dataSource.setDupCloseLogEnable(poolConfiguration.isDupCloseLogEnable());
+
+		if(poolConfiguration.getUseUnfairLock() != null){
+			dataSource.setUseUnfairLock(poolConfiguration.getUseUnfairLock());
+		}
+
+		dataSource.setUseLocalSessionState(poolConfiguration.isUseLocalSessionState());
+
+		dataSource.setObjectName(poolConfiguration.getObjectName());
+	}
 }

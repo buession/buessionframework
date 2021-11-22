@@ -22,10 +22,11 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.springboot.datasource.core.datasource;
+package com.buession.jdbc.datasource;
+
+import com.buession.jdbc.datasource.config.GenericPoolConfiguration;
 
 import javax.sql.DataSource;
-import java.util.List;
 
 /**
  * 常规 DataSource 抽象类
@@ -33,7 +34,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 1.3.2
  */
-public class GenericDataSource extends AbstractDataSource<javax.sql.DataSource> {
+public class GenericDataSource extends AbstractDataSource<DataSource, GenericPoolConfiguration> {
 
 	/**
 	 * 构造函数
@@ -45,18 +46,15 @@ public class GenericDataSource extends AbstractDataSource<javax.sql.DataSource> 
 	/**
 	 * 构造函数
 	 *
-	 * @param master
-	 * 		Master 数据源
-	 * @param slaves
-	 * 		Slave 数据源
+	 * @param poolConfiguration
+	 * 		连接池配置
 	 */
-	public GenericDataSource(DataSource master, List<DataSource> slaves){
-		super(master, slaves);
+	public GenericDataSource(GenericPoolConfiguration poolConfiguration){
+		super(poolConfiguration);
 	}
 
 	@Override
-	public Class<DataSource> getPrimitive(){
-		return javax.sql.DataSource.class;
+	public DataSource createDataSource(){
+		return null;
 	}
-
 }

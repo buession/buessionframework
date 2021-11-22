@@ -21,10 +21,49 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.jdbc.core;/**
- * 
+ */
+package com.buession.jdbc.core;
+
+/**
+ * 事务隔离级别
  *
  * @author Yong.Teng
  * @since 1.3.2
- */public enum TransactionIsolation {
+ */
+public enum TransactionIsolation {
+
+	/**
+	 * 默认隔离级别
+	 */
+	DEFAULT(-1),
+
+	/**
+	 * 读未提交，即能够读取到没有被提交的数据
+	 */
+	READ_UNCOMMITTED(1),
+
+	/**
+	 * 读已提交，即能够读到那些已经提交的数据
+	 */
+	READ_COMMITTED(2),
+
+	/**
+	 * 重复读取，即在数据读出来之后加锁
+	 */
+	REPEATABLE_READ(4),
+
+	/**
+	 * 串行化，最高的事务隔离级别
+	 */
+	SERIALIZABLE(8);
+
+	private final int value;
+
+	TransactionIsolation(final int value){
+		this.value = value;
+	}
+
+	public int getValue(){
+		return value;
+	}
 }

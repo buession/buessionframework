@@ -22,9 +22,9 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.springboot.datasource.core.datasource;
+package com.buession.jdbc.datasource;
 
-import java.util.List;
+import com.buession.jdbc.datasource.config.HikariPoolConfiguration;
 
 /**
  * Hikari DataSource 抽象类
@@ -32,7 +32,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 1.3.2
  */
-public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.HikariDataSource> {
+public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.HikariDataSource, HikariPoolConfiguration> {
 
 	/**
 	 * 构造函数
@@ -44,18 +44,111 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 	/**
 	 * 构造函数
 	 *
-	 * @param master
-	 * 		Master 数据源
-	 * @param slaves
-	 * 		Slave 数据源
+	 * @param poolConfiguration
+	 * 		连接池配置
 	 */
-	public HikariDataSource(com.zaxxer.hikari.HikariDataSource master, List<com.zaxxer.hikari.HikariDataSource> slaves){
-		super(master, slaves);
+	public HikariDataSource(HikariPoolConfiguration poolConfiguration){
+		super(poolConfiguration);
 	}
 
 	@Override
-	public Class<com.zaxxer.hikari.HikariDataSource> getPrimitive(){
-		return com.zaxxer.hikari.HikariDataSource.class;
+	public com.zaxxer.hikari.HikariDataSource createDataSource(){
+		com.zaxxer.hikari.HikariDataSource dataSource = new com.zaxxer.hikari.HikariDataSource();
+
+		applyPoolConfiguration(dataSource, getPoolConfiguration());
+
+		return dataSource;
+	}
+
+	@Override
+	protected void applyPoolConfiguration(final com.zaxxer.hikari.HikariDataSource dataSource, final HikariPoolConfiguration poolConfiguration){
+		if(poolConfiguration.getDriverClassName() != null){
+			dataSource.setDriverClassName(poolConfiguration.getDriverClassName());
+		}
+
+		if(poolConfiguration.getUrl() != null){
+			dataSource.setJdbcUrl(poolConfiguration.getUrl());
+		}
+
+		if(poolConfiguration.getUsername() != null){
+			dataSource.setUsername(poolConfiguration.getUsername());
+		}
+
+		if(poolConfiguration.getPassword() != null){
+			dataSource.setPassword(poolConfiguration.getPassword());
+		}
+
+		if(poolConfiguration.getCatalog() != null){
+			dataSource.setCatalog(poolConfiguration.getCatalog());
+		}
+
+		dataSource.setConnectionTimeout(poolConfiguration.getConnectionTimeout());
+		dataSource.setIdleTimeout(poolConfiguration.getIdleTimeout());
+		dataSource.setLeakDetectionThreshold(poolConfiguration.getLeakDetectionThreshold());
+		dataSource.setMaxLifetime(poolConfiguration.getMaxLifetime());
+		dataSource.setKeepaliveTime(poolConfiguration.getKeepaliveTime());
+
+		if(poolConfiguration.getMinIdle() >= 0){
+			dataSource.setMinimumIdle(poolConfiguration.getMinIdle());
+		}
+
+		if(poolConfiguration.getMaxPoolSize() >= 1){
+			dataSource.setMaximumPoolSize(poolConfiguration.getMaxPoolSize());
+		}
+		
+		dataSource.setInitializationFailTimeout(poolConfiguration.getInitializationFailTimeout());
+
+		if(poolConfiguration.getConnectionInitSql() != null){
+			dataSource.setConnectionInitSql(poolConfiguration.getConnectionInitSql());
+		}
+
+		if(poolConfiguration.getConnectionTestQuery() != null){
+			dataSource.setConnectionTestQuery(poolConfiguration.getConnectionTestQuery());
+		}
+
+		dataSource.setValidationTimeout(poolConfiguration.getValidationTimeout());
+
+		if(poolConfiguration.getPoolName() != null){
+			dataSource.setPoolName(poolConfiguration.getPoolName());
+		}
+
+		if(poolConfiguration.getTransactionIsolation() != null){
+			dataSource.setTransactionIsolation("TRANSACTION_" + poolConfiguration.getTransactionIsolation().name());
+		}
+
+		dataSource.setAutoCommit(poolConfiguration.isAutoCommit());
+		dataSource.setReadOnly(poolConfiguration.isReadOnly());
+		dataSource.setIsolateInternalQueries(poolConfiguration.isIsolateInternalQueries());
+		dataSource.setRegisterMbeans(poolConfiguration.isRegisterMbeans());
+		dataSource.setAllowPoolSuspension(poolConfiguration.isAllowPoolSuspension());
+
+		if(poolConfiguration.getThreadFactory() != null){
+			dataSource.setThreadFactory(poolConfiguration.getThreadFactory());
+		}
+
+		if(poolConfiguration.getScheduledExecutor() != null){
+			dataSource.setScheduledExecutor(poolConfiguration.getScheduledExecutor());
+		}
+
+		if(poolConfiguration.getMetricsTrackerFactory() != null){
+			dataSource.setMetricsTrackerFactory(poolConfiguration.getMetricsTrackerFactory());
+		}
+
+		if(poolConfiguration.getMetricRegistry() != null){
+			dataSource.setMetricRegistry(poolConfiguration.getMetricRegistry());
+		}
+
+		if(poolConfiguration.getHealthCheckRegistry() != null){
+			dataSource.setHealthCheckRegistry(poolConfiguration.getHealthCheckRegistry());
+		}
+
+		if(poolConfiguration.getHealthCheckProperties() != null){
+			dataSource.setHealthCheckProperties(poolConfiguration.getHealthCheckProperties());
+		}
+
+		if(poolConfiguration.getProperties() != null){
+			dataSource.setDataSourceProperties(poolConfiguration.getProperties());
+		}
 	}
 
 }

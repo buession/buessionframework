@@ -21,10 +21,70 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.jdbc.datasource;/**
- * 
+ */
+package com.buession.jdbc.datasource;
+
+/**
+ * 角色
  *
  * @author Yong.Teng
  * @since 1.3.2
- */public enum Role {
+ */
+public enum Role {
+
+	/**
+	 * 主库
+	 */
+	MASTER("master", false),
+
+	/**
+	 * 从库
+	 */
+	SLAVE("slave", true);
+
+	/**
+	 * 角色名称
+	 */
+	private final String name;
+
+	/**
+	 * 是否只读
+	 */
+	private final boolean isReadOnly;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		角色名称
+	 * @param isReadOnly
+	 * 		是否只读
+	 */
+	Role(final String name, final boolean isReadOnly){
+		this.name = name;
+		this.isReadOnly = isReadOnly;
+	}
+
+	/**
+	 * 返回角色名称
+	 *
+	 * @return 角色名称
+	 */
+	public String getName(){
+		return name;
+	}
+
+	/**
+	 * 返回是否只读
+	 *
+	 * @return 是否只读
+	 */
+	public boolean isReadOnly(){
+		return isReadOnly;
+	}
+
+	@Override
+	public String toString(){
+		return "name: " + name + '\'' + ", isReadOnly: " + isReadOnly;
+	}
 }

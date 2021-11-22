@@ -22,27 +22,27 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.springboot.datasource.core.datasource;
+package com.buession.jdbc.datasource;
 
-import java.util.List;
+import com.buession.jdbc.datasource.config.PoolConfiguration;
 
 /**
  * DataSource 抽象类
  *
+ * @param <T>
+ *        {@link javax.sql.DataSource} 数据源类型
+ * @param <P>
+ * 		连接池配置 {@link PoolConfiguration} 实现
+ *
  * @author Yong.Teng
  * @since 1.3.2
  */
-public abstract class AbstractDataSource<T extends javax.sql.DataSource> implements DataSource<T> {
+public abstract class AbstractDataSource<T extends javax.sql.DataSource, P extends PoolConfiguration> implements DataSource<T, P> {
 
 	/**
-	 * Master 数据源
+	 * 连接池配置
 	 */
-	private T master;
-
-	/**
-	 * Slave 数据源
-	 */
-	private List<T> slaves;
+	private P poolConfiguration;
 
 	/**
 	 * 构造函数
@@ -53,34 +53,25 @@ public abstract class AbstractDataSource<T extends javax.sql.DataSource> impleme
 	/**
 	 * 构造函数
 	 *
-	 * @param master
-	 * 		Master 数据源
-	 * @param slaves
-	 * 		Slave 数据源
+	 * @param poolConfiguration
+	 * 		连接池配置
 	 */
-	public AbstractDataSource(T master, List<T> slaves){
-		this.master = master;
-		this.slaves = slaves;
+	public AbstractDataSource(P poolConfiguration){
+		this.poolConfiguration = poolConfiguration;
 	}
 
 	@Override
-	public T getMaster(){
-		return master;
+	public P getPoolConfiguration(){
+		return poolConfiguration;
 	}
 
 	@Override
-	public void setMaster(T master){
-		this.master = master;
+	public void setPoolConfiguration(P poolConfiguration){
+		this.poolConfiguration = poolConfiguration;
 	}
 
-	@Override
-	public List<T> getSlaves(){
-		return slaves;
-	}
+	protected void applyPoolConfiguration(final T dataSource, final P poolConfiguration){
 
-	@Override
-	public void setSlaves(List<T> slaves){
-		this.slaves = slaves;
 	}
 
 }

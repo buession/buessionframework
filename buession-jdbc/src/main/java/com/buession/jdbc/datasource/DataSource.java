@@ -22,55 +22,42 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.springboot.datasource.core.datasource;
+package com.buession.jdbc.datasource;
 
-import java.util.List;
+import com.buession.jdbc.datasource.config.PoolConfiguration;
 
 /**
  * 数据源接口
  *
  * @param <T>
  *        {@link javax.sql.DataSource} 数据源类型
+ * @param <P>
+ * 		连接池配置
  *
  * @author Yong.Teng
  */
-public interface DataSource<T extends javax.sql.DataSource> {
+public interface DataSource<T extends javax.sql.DataSource, P extends PoolConfiguration> {
 
 	/**
-	 * 获取 Master 数据源
+	 * 获取连接池配置
 	 *
-	 * @return Master 数据源
+	 * @return 连接池配置
 	 */
-	T getMaster();
+	P getPoolConfiguration();
 
 	/**
-	 * 设置 Master 数据源
+	 * 设置连接池配置
 	 *
-	 * @param master
-	 * 		Master 数据源
+	 * @param poolConfiguration
+	 * 		连接池配置
 	 */
-	void setMaster(T master);
+	void setPoolConfiguration(P poolConfiguration);
 
 	/**
-	 * 返回 Slave 数据源
+	 * 初始化原始 {@link javax.sql.DataSource} 实例
 	 *
-	 * @return Slave 数据源
+	 * @return 原始 {@link javax.sql.DataSource} 实例
 	 */
-	List<T> getSlaves();
-
-	/**
-	 * 设置 Slave 数据源
-	 *
-	 * @param slaves
-	 * 		Slave 数据源
-	 */
-	void setSlaves(List<T> slaves);
-
-	/**
-	 * 返回原始 {@link javax.sql.DataSource} 类型
-	 *
-	 * @return 原始 {@link javax.sql.DataSource} 类型
-	 */
-	Class<T> getPrimitive();
+	T createDataSource();
 
 }

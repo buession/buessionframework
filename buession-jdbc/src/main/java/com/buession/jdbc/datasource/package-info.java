@@ -26,4 +26,4 @@
  * @author Yong.Teng
  * @since 1.3.2
  */
-package com.buession.jdbc;
+package com.buession.jdbc.datasource;
