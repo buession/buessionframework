@@ -27,6 +27,8 @@
 package com.buession.beans;
 
 import org.apache.commons.beanutils.MethodUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -46,12 +48,13 @@ public class BeanData {
 
 	private final Map<String, String> writeMethodNames;
 
+	private final static Logger logger = LoggerFactory.getLogger(BeanData.class);
+
 	public BeanData(final PropertyDescriptor[] descriptors){
 		this(descriptors, setReadMethodNames(descriptors), setWriteMethodNames(descriptors));
 	}
 
-	public BeanData(final PropertyDescriptor[] descriptors, final Map<String, String> readMethodNames,
-					final Map<String, String> writeMethodNames){
+	public BeanData(final PropertyDescriptor[] descriptors, final Map<String, String> readMethodNames, final Map<String, String> writeMethodNames){
 		this.descriptors = descriptors;
 		this.readMethodNames = readMethodNames;
 		this.writeMethodNames = writeMethodNames;
@@ -93,6 +96,7 @@ public class BeanData {
 					try{
 						descriptor.setReadMethod(method);
 					}catch(IntrospectionException e){
+						logger.error("Call PropertyDescriptor.setReadMethod() with method: {}::{} failure: {}.", beanClazz.getName(), methodName, e.getMessage(), e);
 					}
 				}
 			}
@@ -114,6 +118,7 @@ public class BeanData {
 					try{
 						descriptor.setWriteMethod(method);
 					}catch(IntrospectionException e){
+						logger.error("Call PropertyDescriptor.setWriteMethod() with method: {}::{} failure: {}.", beanClazz.getName(), methodName, e.getMessage(), e);
 					}
 				}
 			}

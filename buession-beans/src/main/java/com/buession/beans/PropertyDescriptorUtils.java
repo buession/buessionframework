@@ -77,11 +77,7 @@ public class PropertyDescriptorUtils {
 			return false;
 		}
 
-		if(pd.isBound() != otherPd.isBound()){
-			return false;
-		}
-
-		return true;
+		return pd.isBound() == otherPd.isBound();
 	}
 
 }

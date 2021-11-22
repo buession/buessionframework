@@ -87,8 +87,7 @@ public class DefaultPropertyResolver implements PropertyResolver {
 	}
 
 	@Override
-	public Object getProperty(final Object bean, final String name) throws IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException{
+	public Object getProperty(final Object bean, final String name) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException{
 		CommonHelper.checkBeanNull(bean);
 		CommonHelper.checkBeanNameNull(bean, name);
 
@@ -106,8 +105,7 @@ public class DefaultPropertyResolver implements PropertyResolver {
 	}
 
 	@Override
-	public void setProperty(final Object bean, final String name, final Object value) throws IllegalAccessException,
-			InvocationTargetException, NoSuchMethodException{
+	public void setProperty(final Object bean, final String name, final Object value) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException{
 		CommonHelper.checkBeanNull(bean);
 		CommonHelper.checkBeanNameNull(bean, name);
 
@@ -122,8 +120,7 @@ public class DefaultPropertyResolver implements PropertyResolver {
 		}
 
 		if(logger.isDebugEnabled()){
-			logger.debug("Invoking method {} with value {} (class {}).", writeMethod, value, value == null ? "<null>"
-					: value.getClass().getName());
+			logger.debug("Invoking method {} with value {} (class {}).", writeMethod, value, value == null ? "<null>" : value.getClass().getName());
 		}
 
 		invokeMethod(writeMethod, bean, new Object[]{value});
@@ -161,7 +158,7 @@ public class DefaultPropertyResolver implements PropertyResolver {
 	}
 
 	private Object invokeMethod(final Method method, final Object bean, final Object[] values) throws IllegalAccessException, InvocationTargetException{
-		Assert.isNull(bean, "No bean specified this should have been checked before reaching" + " this method.");
+		Assert.isNull(bean, "No bean specified this should have been checked before reaching this method.");
 
 		try{
 			return method.invoke(bean, values);
@@ -193,15 +190,15 @@ public class DefaultPropertyResolver implements PropertyResolver {
 
 			sb.append(" but expected signature ");
 			sb.append('"');
-			if(parameterTypes != null){
-				for(int i = 0; i < parameterTypes.length; i++){
-					if(i > 0){
-						sb.append(", ");
-					}
 
-					sb.append(parameterTypes[i].getName());
+			for(int i = 0; i < parameterTypes.length; i++){
+				if(i > 0){
+					sb.append(", ");
 				}
+
+				sb.append(parameterTypes[i].getName());
 			}
+
 			sb.append("\".");
 
 			throw new IllegalArgumentException(sb.toString());
