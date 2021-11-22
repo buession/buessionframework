@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.mvc.view;
@@ -41,56 +41,55 @@ import java.util.regex.Pattern;
  */
 public abstract class AbstractJsonpResponseBodyAdvice extends AbstractMappingJacksonResponseBodyAdvice {
 
-    protected final static Pattern CALLBACK_PARAM_PATTERN = Pattern.compile("[\\dA-Za-z_\\.]*");
+	protected final static Pattern CALLBACK_PARAM_PATTERN = Pattern.compile("[\\dA-Za-z_\\.]*");
 
-    protected final static MediaType CONTENT_TYPE = new MediaType("application", "javascript");
+	protected final static MediaType CONTENT_TYPE = new MediaType("application", "javascript");
 
-    private MediaType mediaType = CONTENT_TYPE;
+	private MediaType mediaType = CONTENT_TYPE;
 
-    private String[] jsonpQueryParamNames = {"callback"};
+	private String[] jsonpQueryParamNames = {"callback"};
 
-    public AbstractJsonpResponseBodyAdvice(String... queryParamNames){
-        super();
+	public AbstractJsonpResponseBodyAdvice(String... queryParamNames){
+		super();
 
-        if(Validate.isEmpty(queryParamNames) == false){
-            this.jsonpQueryParamNames = queryParamNames;
-        }
-    }
+		if(Validate.isNotEmpty(queryParamNames)){
+			this.jsonpQueryParamNames = queryParamNames;
+		}
+	}
 
-    public MediaType getMediaType(){
-        return mediaType;
-    }
+	public MediaType getMediaType(){
+		return mediaType;
+	}
 
-    public void setMediaType(final MediaType mediaType){
-        this.mediaType = mediaType;
-    }
+	public void setMediaType(final MediaType mediaType){
+		this.mediaType = mediaType;
+	}
 
-    public String[] getJsonpQueryParamNames(){
-        return jsonpQueryParamNames;
-    }
+	public String[] getJsonpQueryParamNames(){
+		return jsonpQueryParamNames;
+	}
 
-    public void setJsonpQueryParamNames(final String[] jsonpQueryParamNames){
-        this.jsonpQueryParamNames = jsonpQueryParamNames;
-    }
+	public void setJsonpQueryParamNames(final String[] jsonpQueryParamNames){
+		this.jsonpQueryParamNames = jsonpQueryParamNames;
+	}
 
-    @Override
-    protected void beforeBodyWriteInternal(MappingJacksonValue bodyContainer, MediaType contentType, MethodParameter
-            returnType, ServerHttpRequest request, ServerHttpResponse response){
-        HttpServletRequest servletRequest = ((ServletServerHttpRequest) request).getServletRequest();
+	@Override
+	protected void beforeBodyWriteInternal(MappingJacksonValue bodyContainer, MediaType contentType, MethodParameter returnType, ServerHttpRequest request, ServerHttpResponse response){
+		HttpServletRequest servletRequest = ((ServletServerHttpRequest) request).getServletRequest();
 
-        for(String name : getJsonpQueryParamNames()){
-            String value = servletRequest.getParameter(name);
+		for(String name : getJsonpQueryParamNames()){
+			String value = servletRequest.getParameter(name);
 
-            if(Validate.hasText(value) && isValidJsonpQueryParam(value)){
-                response.getHeaders().setContentType(getMediaType());
-                bodyContainer.setValue(value);
-                break;
-            }
-        }
-    }
+			if(Validate.hasText(value) && isValidJsonpQueryParam(value)){
+				response.getHeaders().setContentType(getMediaType());
+				bodyContainer.setValue(value);
+				break;
+			}
+		}
+	}
 
-    protected boolean isValidJsonpQueryParam(String value){
-        return CALLBACK_PARAM_PATTERN.matcher(value).matches();
-    }
+	protected boolean isValidJsonpQueryParam(String value){
+		return CALLBACK_PARAM_PATTERN.matcher(value).matches();
+	}
 
 }

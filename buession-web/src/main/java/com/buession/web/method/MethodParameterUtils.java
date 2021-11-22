@@ -38,14 +38,20 @@ public class MethodParameterUtils {
 
 	public static Object adaptArgumentIfNecessary(MethodParameter methodParameter, @Nullable Object value){
 		if(methodParameter.getParameterType() == Optional.class){
-			if(value == null || (value instanceof Collection && ((Collection<?>) value).isEmpty()) || (value instanceof Object[] && ((Object[]) value).length == 0)){
-				return Optional.empty();
-			}else{
-				return Optional.of(value);
-			}
+			return value == null || isEmpty(value) ? Optional.empty() : Optional.of(value);
 		}
 
 		return value;
+	}
+
+	private static boolean isEmpty(@Nullable Object value){
+		if(value instanceof Collection && ((Collection<?>) value).isEmpty()){
+			return true;
+		}else if(value instanceof Object[] && ((Object[]) value).length == 0){
+			return true;
+		}
+		
+		return false;
 	}
 
 }

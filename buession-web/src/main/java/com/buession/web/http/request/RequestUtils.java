@@ -218,14 +218,8 @@ public abstract class RequestUtils {
 
 		final StringBuilder sb = new StringBuilder(host);
 
-		if("http".equals(scheme)){
-			if(port != 80){
-				sb.append(':').append(port);
-			}
-		}else if("https".equals(scheme)){
-			if(port != 443){
-				sb.append(':').append(port);
-			}
+		if("http".equals(scheme) && port != 80 || "https".equals(scheme) && port != 443){
+			sb.append(':').append(port);
 		}
 
 		return sb.toString();

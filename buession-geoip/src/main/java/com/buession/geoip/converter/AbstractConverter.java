@@ -73,11 +73,8 @@ public abstract class AbstractConverter<M, S extends AbstractRecord, R extends A
 		}
 
 		result = names.get(getLanguageTag(locale, '_'));
-		if(result != null){
-			return result;
-		}
 
-		return null;
+		return result;
 	}
 
 	private static String getLanguageTag(final Locale locale, final char separator){
