@@ -27,6 +27,7 @@
 package org.apache.ibatis.type;
 
 import com.buession.core.utils.Assert;
+import com.buession.core.utils.EnumUtils;
 import com.buession.core.validator.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,28 +75,17 @@ public class IgnoreCaseEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandle
 		return convert(cs.getString(columnIndex));
 	}
 
-	private final E convert(final String str){
+	private E convert(final String str){
 		if(Validate.hasText(str) == false){
 			return null;
 		}
 
-		try{
-			logger.info("{} convert {} success.", str, type.getName());
-			return Enum.valueOf(type, str);
-		}catch(IllegalArgumentException e){
-			try{
-				if(logger.isInfoEnabled()){
-					logger.info("{} after toUpperCase convert {} success.", str, type.getName());
-				}
-				return Enum.valueOf(type, str.toUpperCase());
-			}catch(IllegalArgumentException ex){
-				if(logger.isWarnEnabled()){
-					logger.warn("{} convert {} failure: {}.", str, type.getName(), ex.getMessage());
-				}
-			}
+		E result = EnumUtils.getEnumIgnoreCase(type, str);
+		if(result == null && logger.isErrorEnabled()){
+			logger.error("Database value '{}' convert to '{}' failure: No enum constant.", str, type.getName());
 		}
 
-		return null;
+		return result;
 	}
 
 }

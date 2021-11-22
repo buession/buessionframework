@@ -24,6 +24,7 @@
  */
 package org.apache.ibatis.type;
 
+import com.buession.core.utils.EnumUtils;
 import com.buession.core.validator.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,13 +43,9 @@ public class DefaultEnumSetTypeHandler<E extends Enum<E>> extends AbstractEnumSe
 	@Override
 	protected E getValue(String str){
 		if(Validate.hasText(str)){
-			try{
-				return Enum.valueOf(type, str.toUpperCase());
-			}catch(IllegalArgumentException e){
-				if(logger.isErrorEnabled()){
-					logger.error("Database value '{}' convert to '{}' failure: {}", str, type.getName(),
-							e.getMessage());
-				}
+			E result = EnumUtils.getEnumIgnoreCase(type, str);
+			if(result == null && logger.isErrorEnabled()){
+				logger.error("Database value '{}' convert to '{}' failure: No enum constant.", str, type.getName());
 			}
 		}
 
