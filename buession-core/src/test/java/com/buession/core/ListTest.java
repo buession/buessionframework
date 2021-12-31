@@ -21,10 +21,26 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core;/**
- * 
- *
+ */
+package com.buession.core;
+
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
  * @author Yong.Teng
  * @since 1.3.2
- */public class ListTest {
+ */
+public class ListTest {
+
+	@Test
+	public void test(){
+		List<Object> list = new ArrayList<>(2);
+
+		list.add("A");
+		list.add("B");
+	}
+
 }
