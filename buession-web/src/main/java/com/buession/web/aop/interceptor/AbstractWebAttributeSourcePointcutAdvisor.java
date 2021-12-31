@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2018 Buession.com Inc.														|
+ * | Copyright @ 2013-2021 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.aop.interceptor;
@@ -59,15 +59,12 @@ public abstract class AbstractWebAttributeSourcePointcutAdvisor extends StaticMe
 			return true;
 		}
 
-		if(targetClass != null){
-			try{
-				m = targetClass.getMethod(m.getName(), m.getParameterTypes());
-				return AopUtils.hasMethodAnnotationPresent(m, WEB_ANNOTATION_CLASSES) || AopUtils.hasClassAnnotationPresent(targetClass, WEB_ANNOTATION_CLASSES);
-			}catch(NoSuchMethodException e){
-			}
+		try{
+			m = targetClass.getMethod(m.getName(), m.getParameterTypes());
+			return AopUtils.hasMethodAnnotationPresent(m, WEB_ANNOTATION_CLASSES) || AopUtils.hasClassAnnotationPresent(targetClass, WEB_ANNOTATION_CLASSES);
+		}catch(NoSuchMethodException e){
+			return false;
 		}
-
-		return false;
 	}
 
 }

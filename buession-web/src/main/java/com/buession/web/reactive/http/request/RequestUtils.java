@@ -55,27 +55,20 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	public static String getClientIp(final ServerHttpRequest request){
 		Assert.isNull(request, "HttpServletRequest cloud not be null.");
 		HttpHeaders httpHeaders = request.getHeaders();
-		List<String> values;
 
-		for(String header : CLIENT_IP_HEADERS){
-			values = httpHeaders.get(header);
-			if(values == null){
-				continue;
-			}
+		return getClientIp((headerName)->{
+			List<String> values = httpHeaders.get(headerName);
 
-			for(String ip : values){
-				if(Validate.hasText(ip) && "unknown".equalsIgnoreCase(ip) == false){
-					return ip;
+			if(values != null){
+				for(String ip : values){
+					if(Validate.hasText(ip) && "unknown".equalsIgnoreCase(ip) == false){
+						return ip;
+					}
 				}
 			}
-		}
 
-		String ip = request.getRemoteAddress().getAddress().getHostAddress();
-		if(Validate.isBlank(ip) || "unknown".equalsIgnoreCase(ip)){
-			ip = DEFAULT_IP;
-		}
-
-		return ip;
+			return null;
+		}, request.getRemoteAddress() == null ? null : request.getRemoteAddress().getAddress().getHostAddress());
 	}
 
 	/**
@@ -101,8 +94,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 */
 	public static boolean isMobile(final ServerHttpRequest request){
 		HttpHeaders httpHeaders = request.getHeaders();
-		return isMobile(httpHeaders.getFirst(HttpHeader.USER_AGENT.getValue()),
-				httpHeaders.getFirst(HttpHeader.ACCEPT.getValue()));
+		return isMobile(httpHeaders.getFirst(HttpHeader.USER_AGENT.getValue()), httpHeaders.getFirst(HttpHeader.ACCEPT.getValue()));
 	}
 
 	/**
@@ -115,17 +107,8 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 */
 	public static String getScheme(final ServerHttpRequest request){
 		HttpHeaders httpHeaders = request.getHeaders();
-		String scheme = httpHeaders.getFirst(HttpHeader.X_FORWARDED_PROTOCOL.getValue());
-		if(Validate.hasText(scheme)){
-			return scheme;
-		}
-
-		scheme = httpHeaders.getFirst(HttpHeader.X_FORWARDED_PROTO.getValue());
-		if(Validate.hasText(scheme)){
-			return scheme;
-		}
-
-		return request.getURI().getScheme();
+		String scheme = getScheme(httpHeaders::getFirst);
+		return Validate.hasText(scheme) ? scheme : request.getURI().getScheme();
 	}
 
 	/**
@@ -140,17 +123,8 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 */
 	public static String getHost(final ServerHttpRequest request){
 		HttpHeaders httpHeaders = request.getHeaders();
-		String host = httpHeaders.getFirst(HttpHeader.X_FORWARDED_HOST.getValue());
-		if(Validate.hasText(host)){
-			return host;
-		}
-
-		host = httpHeaders.getFirst(HttpHeader.HOST.getValue());
-		if(Validate.hasText(host)){
-			return host;
-		}
-
-		return request.getURI().getHost();
+		String host = getScheme(httpHeaders::getFirst);
+		return Validate.hasText(host) ? host : request.getURI().getHost();
 	}
 
 	/**

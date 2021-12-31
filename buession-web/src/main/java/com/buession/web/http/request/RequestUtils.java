@@ -25,8 +25,9 @@
 package com.buession.web.http.request;
 
 import com.buession.core.validator.Validate;
+import com.buession.web.http.HttpHeader;
 
-import java.util.UUID;
+import java.util.function.Function;
 
 /**
  * HTTP 请求工具基类
@@ -166,6 +167,82 @@ public abstract class RequestUtils {
 			"ZTE",
 			/* 小米 */
 			"Xiaomi"};
+
+	/**
+	 * 遍历获取指定请求头值
+	 *
+	 * @param function
+	 * 		Function
+	 * @param validator
+	 * 		验证器
+	 * @param headerNames
+	 * 		请求头名称数组
+	 * @param <T>
+	 * 		返回值类型
+	 *
+	 * @return
+	 */
+	protected static <T> T iteratorRequestHeader(final Function<String, T> function, final Function<T, Boolean> validator, final String... headerNames){
+		T result;
+
+		for(String headerName : headerNames){
+			result = function.apply(headerName);
+			if(validator.apply(result)){
+				return result;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * 获取请求的真实 Scheme
+	 *
+	 * @param function
+	 * 		Function
+	 *
+	 * @return 请求的真实 Scheme
+	 */
+	protected static String getScheme(final Function<String, String> function){
+		return iteratorRequestHeader(function, Validate::hasText, HttpHeader.X_FORWARDED_PROTOCOL.getValue(), HttpHeader.X_FORWARDED_PROTO.getValue());
+	}
+
+	/**
+	 * 获取请求的真实主机地址
+	 *
+	 * @param function
+	 * 		Function
+	 *
+	 * @return 请求的真实主机地址
+	 */
+	protected static String getHost(final Function<String, String> function){
+		return iteratorRequestHeader(function, Validate::hasText, HttpHeader.X_FORWARDED_HOST.getValue(), HttpHeader.HOST.getValue());
+	}
+
+	/**
+	 * 获取客户端真实 IP 地址
+	 *
+	 * @param function
+	 * 		Function
+	 * @param remoteAddr
+	 * 		Remote Addr
+	 *
+	 * @return 客户端真实 IP 地址
+	 */
+	protected static String getClientIp(final Function<String, String> function, final String remoteAddr){
+		String ip = iteratorRequestHeader(function, (value)->Validate.hasText(value) && "unknown".equalsIgnoreCase(value) == false, CLIENT_IP_HEADERS);
+
+		if(ip != null){
+			return ip;
+		}
+
+		ip = remoteAddr;
+		if(Validate.isBlank(ip) || "unknown".equalsIgnoreCase(ip)){
+			ip = DEFAULT_IP;
+		}
+
+		return ip;
+	}
 
 	/**
 	 * 判断是否为 Ajax 请求

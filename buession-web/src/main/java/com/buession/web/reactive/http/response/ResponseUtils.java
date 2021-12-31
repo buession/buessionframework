@@ -60,11 +60,7 @@ public class ResponseUtils {
 
 	private static void httpCache(final ServerHttpResponse response, final long maxAge, final long expires){
 		HttpHeaders httpHeaders = response.getHeaders();
-		if(maxAge <= 0){
-			httpHeaders.setCacheControl("no-cache");
-		}else{
-			httpHeaders.setCacheControl("max-age=" + maxAge);
-		}
+		httpHeaders.setCacheControl(maxAge < 0 ? "no-cache" : "max-age=" + maxAge);
 		httpHeaders.setExpires(expires);
 		httpHeaders.setPragma(maxAge > 0 ? null : "no-cache");
 	}

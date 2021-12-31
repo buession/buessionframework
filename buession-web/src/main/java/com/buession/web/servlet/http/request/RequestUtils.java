@@ -52,21 +52,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 */
 	public static String getClientIp(final HttpServletRequest request){
 		Assert.isNull(request, "HttpServletRequest cloud not be null.");
-
-		String ip;
-		for(String header : CLIENT_IP_HEADERS){
-			ip = request.getHeader(header);
-			if(Validate.hasText(ip) && "unknown".equalsIgnoreCase(ip) == false){
-				return ip;
-			}
-		}
-
-		ip = request.getRemoteAddr();
-		if(Validate.isBlank(ip) || "unknown".equalsIgnoreCase(ip)){
-			ip = DEFAULT_IP;
-		}
-
-		return ip;
+		return getClientIp(request::getHeader, request.getRemoteAddr());
 	}
 
 	/**
@@ -90,8 +76,7 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 * @return 是否为移动端请求
 	 */
 	public static boolean isMobile(final HttpServletRequest request){
-		return isMobile(request.getHeader(HttpHeader.USER_AGENT.getValue()),
-				request.getHeader(HttpHeader.ACCEPT.getValue()));
+		return isMobile(request.getHeader(HttpHeader.USER_AGENT.getValue()), request.getHeader(HttpHeader.ACCEPT.getValue()));
 	}
 
 	/**
@@ -103,17 +88,8 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 * @return 请求的真实 Scheme
 	 */
 	public static String getScheme(final HttpServletRequest request){
-		String scheme = request.getHeader(HttpHeader.X_FORWARDED_PROTOCOL.getValue());
-		if(Validate.hasText(scheme)){
-			return scheme;
-		}
-
-		scheme = request.getHeader(HttpHeader.X_FORWARDED_PROTO.getValue());
-		if(Validate.hasText(scheme)){
-			return scheme;
-		}
-
-		return request.getScheme();
+		String scheme = getScheme(request::getHeader);
+		return Validate.hasText(scheme) ? scheme : request.getScheme();
 	}
 
 	/**
@@ -127,17 +103,8 @@ public class RequestUtils extends com.buession.web.http.request.RequestUtils {
 	 * @since 1.2.0
 	 */
 	public static String getHost(final HttpServletRequest request){
-		String host = request.getHeader(HttpHeader.X_FORWARDED_HOST.getValue());
-		if(Validate.hasText(host)){
-			return host;
-		}
-
-		host = request.getHeader(HttpHeader.HOST.getValue());
-		if(Validate.hasText(host)){
-			return host;
-		}
-
-		return request.getServerName();
+		String host = getHost(request::getHeader);
+		return Validate.hasText(host) ? host : request.getServerName();
 	}
 
 	/**
