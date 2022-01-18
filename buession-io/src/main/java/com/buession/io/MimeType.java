@@ -19,18 +19,21 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io;
 
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.KeyValueParser;
+import com.buession.core.validator.Validate;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
 
 /**
+ * MimeType
+ *
  * @author Yong.Teng
  */
 public final class MimeType {
@@ -39,9 +42,76 @@ public final class MimeType {
 
 	private String subtype;
 
+	/**
+	 * MimeType 描述
+	 *
+	 * @since 1.3.2
+	 */
+	private String description;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param mimeType
+	 * 		字符串形式 MimeType
+	 *
+	 * @since 1.3.2
+	 */
+	public MimeType(@NotEmpty String mimeType){
+		Assert.isBlank(mimeType, "MimeType string cloud empty or null.");
+
+		if(Validate.isMimeType(mimeType)){
+			KeyValueParser keyValueParser = new KeyValueParser(mimeType, '/');
+
+			this.type = keyValueParser.getKey().toLowerCase();
+			this.subtype = keyValueParser.getValue().toLowerCase();
+		}else{
+			throw new IllegalArgumentException("Illegal MimeType: " + mimeType);
+		}
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * 		Type
+	 * @param subtype
+	 * 		子 Type
+	 */
 	public MimeType(@NotEmpty String type, @NotEmpty String subtype){
 		this.type = type.toLowerCase();
 		this.subtype = subtype.toLowerCase();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param type
+	 * 		Type
+	 * @param subtype
+	 * 		子 Type
+	 * @param description
+	 * 		MimeType 描述
+	 *
+	 * @since 1.3.2
+	 */
+	public MimeType(@NotEmpty String type, @NotEmpty String subtype, String description){
+		this(type, subtype);
+		this.description = description;
+	}
+
+	/**
+	 * 将字符串解析为 MimeType
+	 *
+	 * @param mimeType
+	 * 		代解析字符串
+	 *
+	 * @return MimeType
+	 */
+	public static MimeType parse(String mimeType){
+		Assert.isBlank(mimeType, "MimeType string cloud empty or null.");
+		KeyValueParser keyValueParser = new KeyValueParser(mimeType, '/');
+		return new MimeType(keyValueParser.getKey(), keyValueParser.getValue());
 	}
 
 	public String getType(){
@@ -52,10 +122,25 @@ public final class MimeType {
 		return subtype;
 	}
 
-	public static MimeType parse(String str){
-		Assert.isBlank(str, "MimeType string cloud empty or null.");
-		KeyValueParser keyValueParser = new KeyValueParser(str, '/');
-		return new MimeType(keyValueParser.getKey(), keyValueParser.getValue());
+	/**
+	 * 返回 MimeType 描述
+	 *
+	 * @return MimeType 描述
+	 *
+	 * @since 1.3.2
+	 */
+	public String getDescription(){
+		return description;
+	}
+
+	/**
+	 * 设置 MimeType 描述
+	 *
+	 * @param description
+	 * 		MimeType 描述
+	 */
+	public void setDescription(String description){
+		this.description = description;
 	}
 
 	@Override
@@ -79,7 +164,7 @@ public final class MimeType {
 
 	@Override
 	public String toString(){
-		StringBuilder sb = new StringBuilder(type.length() + subtype.length() + 1);
+		final StringBuilder sb = new StringBuilder(type.length() + subtype.length() + 1);
 
 		sb.append(type).append('/').append(subtype);
 

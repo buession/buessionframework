@@ -21,10 +21,31 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.io.json.annotation;/**
- * 
+ */
+package com.buession.io.json.annotation;
+
+import com.buession.io.json.deserializer.MimeTypeStringDeserializer;
+import com.buession.io.json.serializer.MimeTypeStringSerializer;
+import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ * MimeType 字符串序列化、反序列化
  *
  * @author Yong.Teng
  * @since 1.3.2
- */public @interface MimeTypeString {
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.FIELD, ElementType.METHOD})
+@JacksonAnnotationsInside
+@JsonSerialize(using = MimeTypeStringSerializer.class)
+@JsonDeserialize(using = MimeTypeStringDeserializer.class)
+public @interface MimeTypeString {
+
 }

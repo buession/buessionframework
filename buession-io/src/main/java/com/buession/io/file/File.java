@@ -30,7 +30,6 @@ import com.buession.core.utils.StringUtils;
 import com.buession.io.MimeType;
 import com.buession.lang.Constants;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.tika.Tika;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -49,6 +48,8 @@ import java.util.ArrayList;
 public class File extends java.io.File {
 
 	private final static long serialVersionUID = 1512573860637989192L;
+
+	private static MimeTypeDetector mimeTypeDetector;
 
 	private MimeType mimeType;
 
@@ -109,8 +110,11 @@ public class File extends java.io.File {
 	 */
 	public MimeType getMimeType() throws IOException{
 		if(mimeType == null){
-			Tika tika = new Tika();
-			mimeType = MimeType.parse(tika.detect(this));
+			if(mimeTypeDetector == null){
+				mimeTypeDetector = new DefaultMimeTypeDetector();
+			}
+
+			mimeType = mimeTypeDetector.probe(this.toPath());
 		}
 
 		return mimeType;
@@ -344,8 +348,7 @@ public class File extends java.io.File {
 				extension = "tar.gz";
 			}else{
 				int i = fileName.lastIndexOf('.');
-				extension = i == fileName.length() - 1 ? Constants.EMPTY_STRING :
-						fileName.substring(i + 1).toLowerCase();
+				extension = i == fileName.length() - 1 ? Constants.EMPTY_STRING : fileName.substring(i + 1).toLowerCase();
 			}
 		}
 

@@ -21,10 +21,60 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.io.file;/**
- * 
+ */
+package com.buession.io.file;
+
+import com.buession.io.MimeType;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+
+/**
+ * MimeType 探测器
  *
  * @author Yong.Teng
  * @since 1.3.2
- */public interface MimeTypeDetector {
+ */
+public interface MimeTypeDetector {
+
+	/**
+	 * 探测文件 MimeType
+	 *
+	 * @param path
+	 * 		文件路径
+	 *
+	 * @return 文件 MimeType
+	 *
+	 * @throws IOException
+	 * 		IOException
+	 */
+	MimeType probe(String path) throws IOException;
+
+	/**
+	 * 探测文件 MimeType
+	 *
+	 * @param file
+	 * 		文件对象 {@link File} 实例
+	 *
+	 * @return 文件 MimeType
+	 *
+	 * @throws IOException
+	 * 		IOException
+	 */
+	MimeType probe(File file) throws IOException;
+
+	/**
+	 * 探测文件 MimeType
+	 *
+	 * @param path
+	 * 		文件路径对象 {@link File} 实例
+	 *
+	 * @return 文件 MimeType
+	 *
+	 * @throws IOException
+	 * 		IOException
+	 */
+	MimeType probe(Path path) throws IOException;
+
 }

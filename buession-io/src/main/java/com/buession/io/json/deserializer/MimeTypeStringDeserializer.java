@@ -21,10 +21,43 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.io.json.deserializer;/**
- * 
+ */
+package com.buession.io.json.deserializer;
+
+import com.buession.io.MimeType;
+import com.fasterxml.jackson.core.JacksonException;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+
+import java.io.IOException;
+
+/**
+ * 字符串反序列化为 {@link MimeType}
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public class MimeTypeStringDeserializer {
+ */
+public class MimeTypeStringDeserializer extends JsonDeserializer<MimeType> {
+
+	public MimeTypeStringDeserializer(){
+		super();
+	}
+
+	@Override
+	public MimeType deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException, JacksonException{
+		Object currentValue = jsonParser.getCurrentValue();
+		Class<?> clazz = currentValue.getClass();
+
+		if(clazz.isAssignableFrom(String.class)){
+			try{
+				return MimeType.parse(currentValue.toString());
+			}catch(Exception e){
+				throw new JsonParseException(jsonParser, e.getMessage(), jsonParser.getCurrentLocation(), e);
+			}
+		}
+
+		throw new JsonParseException(jsonParser, clazz.getName() + " cloud not deserialize to: " + MimeType.class.getName(), jsonParser.getCurrentLocation());
+	}
 }

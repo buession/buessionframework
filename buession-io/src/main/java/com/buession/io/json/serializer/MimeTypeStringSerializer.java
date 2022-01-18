@@ -21,10 +21,34 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.io.json.serializer;/**
- * 
+ */
+package com.buession.io.json.serializer;
+
+import com.buession.io.MimeType;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+
+import java.io.IOException;
+
+/**
+ * {@link MimeType} 序列化为字符串
  *
  * @author Yong.Teng
  * @since 1.3.2
- */public class MimeTypeStringSerializer {
+ */
+public class MimeTypeStringSerializer extends JsonSerializer<MimeType> {
+
+	public MimeTypeStringSerializer(){
+		super();
+	}
+
+	@Override
+	public void serialize(MimeType value, JsonGenerator jsonGenerator, SerializerProvider serializers) throws IOException{
+		if(value == null){
+			jsonGenerator.writeNull();
+		}else{
+			jsonGenerator.writeString(value.toString());
+		}
+	}
 }

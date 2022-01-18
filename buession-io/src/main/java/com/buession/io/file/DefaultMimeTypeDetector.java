@@ -24,13 +24,16 @@
  */
 package com.buession.io.file;
 
-import java.io.File;
+import com.buession.core.validator.Validate;
+import com.buession.io.MimeType;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * MimeType 探测器
@@ -38,69 +41,86 @@ import java.util.Optional;
  * @author Yong.Teng
  * @since 1.3.2
  */
-public class MimeTypeDetector {
-
-	private volatile boolean initialized = false;
-
-	private HashMap<String, String> internalMimetypes = new HashMap<>();
+public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 
 	/**
 	 * 构造函数
 	 */
-	public MimeTypeDetector(){
+	public DefaultMimeTypeDetector(){
 		initialize();
 	}
 
-	public final String probeContentType(File file) throws IOException{
-		if(file == null){
-			throw new NullPointerException("'file' is null");
-		}else{
-			String contentType = implProbeContentType(file);
+	@Override
+	protected void initialize(){
 
-			/*
-			if(contentType == null){
-				Path fileName = path.getFileName();
-
-				if(fileName != null){
-					FileNameMap fileNameMap = URLConnection.getFileNameMap();
-					contentType = fileNameMap.getContentTypeFor(fileName.toString());
-				}
-			}
-			 */
-
-			return Optional.ofNullable(contentType).orElse(parse(contentType));
-		}
 	}
 
-	public final String probeContentType(Path path) throws IOException{
-		if(path == null){
-			throw new NullPointerException("'file' is null");
-		}else{
-			String contentType = implProbeContentType(path);
-
-			/*
-			if(contentType == null){
-				Path fileName = path.getFileName();
-
-				if(fileName != null){
-					FileNameMap fileNameMap = URLConnection.getFileNameMap();
-					contentType = fileNameMap.getContentTypeFor(fileName.toString());
-				}
-			}
-			 */
-
-			return Optional.ofNullable(contentType).orElse(parse(contentType));
+	@Override
+	protected MimeType implProbeMimeType(final String path) throws IOException{
+		if(Validate.hasText(path) == false){
+			return null;
 		}
+
+		String extension = getExtension(path);
+		if(extension.isEmpty()){
+			return null;
+		}
+
+		loadMimetypes();
+
+		if(Validate.isEmpty(internalMimetypes)){
+			return null;
+		}
+
+		// Case-sensitive search
+		MimeType mimeType;
+		do{
+			mimeType = internalMimetypes.get(extension);
+			if(mimeType == null){
+				extension = getExtension(extension);
+			}
+		}while(mimeType == null && extension.isEmpty() == false);
+
+		return mimeType;
 	}
 
-	private void initialize(){
+	@Override
+	protected MimeType implProbeMimeType(final Path path) throws IOException{
+		Path fn = path.getFileName();
+
+		if(fn == null){
+			return null;
+		}
+
+		return implProbeMimeType(fn.toString());
+	}
+
+	private void loadMimetypes() throws IOException{
 		if(initialized == false){
 			synchronized(this){
 				if(initialized == false){
-					InputStream is = MimeTypeDetector.class.getResourceAsStream("/mime.conf");
+					InputStream is = DefaultMimeTypeDetector.class.getResourceAsStream("/mime.conf");
 
 					try{
-						loadMimetypes(is);
+						BufferedReader br = new BufferedReader(new InputStreamReader(is));
+						String line = null;
+						String entry = "";
+
+						while((line = br.readLine()) != null){
+							entry += line;
+
+							if(entry.endsWith("\\")){
+								entry = entry.substring(0, entry.length() - 1);
+								continue;
+							}
+
+							parseMimeEntry(entry);
+							entry = "";
+						}
+
+						if(entry.isEmpty() == false){
+							parseMimeEntry(entry);
+						}
 					}catch(Exception e){
 
 					}finally{
@@ -118,8 +138,53 @@ public class MimeTypeDetector {
 		}
 	}
 
-	private void loadMimetypes(final InputStream is) throws IOException{
+	private void parseMimeEntry(String entry){
+		entry = entry.trim();
+		if(entry.isEmpty() || entry.charAt(0) == '#'){
+			return;
+		}
 
+		entry = entry.replaceAll("\\s*#.*", "");
+		int equalIdx = entry.indexOf('=');
+		if(equalIdx > 0){
+			Pattern typePattern = Pattern.compile("\\b(\"\\p{Graph}+?/\\p{Graph}+?\"|\\p{Graph}+/\\p{Graph" + "}+\\b)");
+
+			// Parse a mime-types command having the key-value pair format
+			Matcher typeMatcher = typePattern.matcher(entry);
+
+			if(typeMatcher.find()){
+				String type = typeMatcher.group();
+				if(type.charAt(0) == '"'){
+					type = type.substring(1, type.length() - 1);
+				}
+
+				final String EXTEQUAL = "extensions=";
+
+				String extRegex = "\\b" + EXTEQUAL + "(\"[\\p{Graph}\\p{Blank}]+?\"|\\p{Graph}+\\b)";
+				Pattern extPattern = Pattern.compile(extRegex);
+				Matcher extMatcher = extPattern.matcher(entry);
+
+				if(extMatcher.find()){
+					String exts = extMatcher.group().substring(EXTEQUAL.length());
+
+					if(exts.charAt(0) == '"'){
+						exts = exts.substring(1, exts.length() - 1);
+					}
+
+					final String DESCRIPTIONEQUAL = "description=";
+					String descriptionRegex = "\\b" + DESCRIPTIONEQUAL + "([\\s\\S]*;)";
+					Pattern descriptionPattern = Pattern.compile(descriptionRegex);
+					Matcher descriptionMatcher = descriptionPattern.matcher(entry);
+
+					String description = descriptionMatcher.find() ? descriptionMatcher.group() : null;
+
+					String[] extList = exts.split("[\\p{Blank}\\p{Punct}]+");
+					for(String ext : extList){
+						putIfAbsent(ext, type, description);
+					}
+				}
+			}
+		}
 	}
 
 }

@@ -23,8 +23,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  */
 /**
- * 
- *
  * @author Yong.Teng
  * @since 1.3.2
- */package com.buession.io.json;
+ */
+package com.buession.io.json;
