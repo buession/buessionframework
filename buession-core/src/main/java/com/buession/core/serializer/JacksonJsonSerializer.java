@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.serializer;
@@ -45,8 +45,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 		try{
 			return getObjectMapper().writeValueAsString(object);
 		}catch(JsonProcessingException e){
-			final String s = object == null ? "null" : object.getClass().getName();
-			throw new SerializerException(s + " json serialize failure.", e);
+			throw new SerializerException(object.getClass().getName() + " json serialize failure.", e);
 		}
 	}
 
@@ -62,8 +61,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 		try{
 			return getObjectMapper().writeValueAsBytes(object);
 		}catch(JsonProcessingException e){
-			final String s = object == null ? "null" : object.getClass().getName();
-			throw new SerializerException(s + " json serialize failure.", e);
+			throw new SerializerException(object.getClass().getName() + " json serialize failure.", e);
 		}
 	}
 
@@ -76,8 +74,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 
 			});
 		}catch(IOException e){
-			final String s = str == null ? "null" : str;
-			throw new SerializerException(s + " json deserialize to Object failure.", e);
+			throw new SerializerException(str + " json deserialize to Object failure.", e);
 		}
 	}
 
@@ -88,10 +85,9 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 		try{
 			return getObjectMapper().readValue(str, clazz);
 		}catch(IOException e){
-			final String s = str == null ? "null" : str;
 			final String className = clazz == null ? "null" : clazz.getName();
 
-			throw new SerializerException(s + " json deserialize to " + className + " failure.", e);
+			throw new SerializerException(str + " json deserialize to " + className + " failure.", e);
 		}
 	}
 
@@ -109,10 +105,9 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 
 			});
 		}catch(IOException e){
-			final String s = str == null ? "null" : str;
 			final String typeName = type == null ? "null" : type.getType().getTypeName();
 
-			throw new SerializerException(s + " json deserialize to " + typeName + " failure.", e);
+			throw new SerializerException(str + " json deserialize to " + typeName + " failure.", e);
 		}
 	}
 

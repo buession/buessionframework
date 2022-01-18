@@ -38,7 +38,7 @@ import java.util.Date;
  */
 public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.DateDeserializers {
 
-	protected final static Date operatorTime(Date date){
+	protected static Date operatorTime(Date date){
 		if(date != null){
 			date.setTime(date.getTime() * 1000L);
 		}
@@ -48,6 +48,8 @@ public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.
 
 	@JacksonStdImpl
 	public static class DateUnixTimestampDeserializer extends DateDeserializer {
+
+		private static final long serialVersionUID = -6750692952981588777L;
 
 		public DateUnixTimestampDeserializer(){
 			super();
@@ -72,12 +74,13 @@ public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.
 	@JacksonStdImpl
 	public static class SqlDateUnixTimestampDeserializer extends SqlDateDeserializer {
 
+		private static final long serialVersionUID = 4255599559201979615L;
+
 		public SqlDateUnixTimestampDeserializer(){
 			super();
 		}
 
-		public SqlDateUnixTimestampDeserializer(SqlDateUnixTimestampDeserializer base, DateFormat df, String
-				formatString){
+		public SqlDateUnixTimestampDeserializer(SqlDateUnixTimestampDeserializer base, DateFormat df, String formatString){
 			super(base, df, formatString);
 		}
 
@@ -95,6 +98,8 @@ public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.
 
 	@JacksonStdImpl
 	public static class CalendarUnixTimestampDeserializer extends CalendarDeserializer {
+
+		private static final long serialVersionUID = 4711172144147773042L;
 
 		public CalendarUnixTimestampDeserializer(){
 			super();
@@ -123,12 +128,13 @@ public class DateDeserializers extends com.fasterxml.jackson.databind.deser.std.
 	@JacksonStdImpl
 	public static class TimestampUnixTimestampDeserializer extends TimestampDeserializer {
 
+		private static final long serialVersionUID = 5780827423514223079L;
+
 		public TimestampUnixTimestampDeserializer(){
 			super();
 		}
 
-		public TimestampUnixTimestampDeserializer(TimestampUnixTimestampDeserializer src, DateFormat df, String
-				formatString){
+		public TimestampUnixTimestampDeserializer(TimestampUnixTimestampDeserializer src, DateFormat df, String formatString){
 			super(src, df, formatString);
 		}
 
