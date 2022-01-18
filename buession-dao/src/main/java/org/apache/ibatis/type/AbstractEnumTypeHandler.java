@@ -19,37 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package org.apache.ibatis.type;
-
-import com.buession.core.utils.EnumUtils;
-import com.buession.core.validator.Validate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
+ */package org.apache.ibatis.type;/**
+ * 
+ *
  * @author Yong.Teng
- */
-public class DefaultEnumSetTypeHandler<E extends Enum<E>> extends AbstractEnumSetTypeHandler<E> {
-
-	private final static Logger logger = LoggerFactory.getLogger(DefaultEnumSetTypeHandler.class);
-
-	public DefaultEnumSetTypeHandler(Class<E> type){
-		super(type);
-	}
-
-	@Override
-	protected E getValue(String str){
-		if(Validate.hasText(str)){
-			E result = EnumUtils.getEnumIgnoreCase(type, str);
-			if(result == null && logger.isErrorEnabled()){
-				logger.error("Database value '{}' convert to '{}' failure: No enum constant.", str, type.getName());
-			}
-		}
-
-		return null;
-	}
-
+ * @since 1.2.0
+ */public class AbstractEnumTypeHandler {
 }

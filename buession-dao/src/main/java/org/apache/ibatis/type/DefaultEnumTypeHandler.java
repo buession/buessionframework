@@ -26,39 +26,34 @@
  */
 package org.apache.ibatis.type;
 
-import com.buession.core.utils.StringUtils;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
+import com.buession.core.utils.EnumUtils;
+import com.buession.core.validator.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractEnumSetTypeHandler<E extends Enum<E>> extends AbstractSetTypeHandler<E> {
+public class IgnoreCaseEnumTypeHandler<E extends Enum<E>> extends AbstractEnumTypeHandler<E> {
 
-	public AbstractEnumSetTypeHandler(Class<E> type){
+	private final static Logger logger = LoggerFactory.getLogger(IgnoreCaseEnumTypeHandler.class);
+
+	public IgnoreCaseEnumTypeHandler(Class<E> type){
 		super(type);
 	}
 
 	@Override
-	public void setNonNullParameter(PreparedStatement ps, int i, Set<E> parameter, JdbcType jdbcType) throws SQLException{
-		String result = parameter.stream().map(Enum::name).collect(Collectors.joining(";"));
-		ps.setString(i, result);
-	}
-
-	protected abstract E getValue(String str);
-
-	@Override
-	protected Set<E> parseResult(final String str){
-		if(str == null){
+	protected E convert(final String str){
+		if(Validate.hasText(str) == false){
 			return null;
 		}
 
-		String[] temp = StringUtils.splitByWholeSeparatorPreserveAllTokens(str, ",");
-		return Arrays.stream(temp).map(this::getValue).collect(Collectors.toSet());
+		E result = EnumUtils.getEnumIgnoreCase(type, str);
+		if(result == null && logger.isErrorEnabled()){
+			logger.error("Database value '{}' convert to '{}' failure: No enum constant.", str, type.getName());
+		}
+
+		return result;
 	}
 
 }

@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.buession.core.validator.routines.EmailValidator;
 import com.buession.core.validator.routines.IDCardValidator;
@@ -48,6 +49,8 @@ import com.buession.lang.IpType;
  * @author Yong.Teng
  */
 public class Validate {
+
+	private final static Pattern MIME_TYPE_PATTERN = Pattern.compile("[a-zA-Z\\d]+/[a-zA-Z\\d]+([.-][a-zA-Z\\d]+)*");
 
 	private Validate(){
 
@@ -985,6 +988,18 @@ public class Validate {
 	 */
 	public static boolean isPort(final int port){
 		return isBetween(port, 0, 65535, true);
+	}
+
+	/**
+	 * 验证字符串是否为合法的 MimeType
+	 *
+	 * @param charSequence
+	 * 		待验证的字符串
+	 *
+	 * @return Boolean
+	 */
+	public static boolean isMimeType(final CharSequence charSequence){
+		return MIME_TYPE_PATTERN.matcher(charSequence).matches();
 	}
 
 }

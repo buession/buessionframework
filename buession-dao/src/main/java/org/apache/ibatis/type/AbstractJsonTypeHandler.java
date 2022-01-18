@@ -19,48 +19,24 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.validator;
+package org.apache.ibatis.type;
 
-import org.junit.Assert;
-import org.junit.Test;
+import com.buession.core.utils.Assert;
 
 /**
  * @author Yong.Teng
- * @since 1.3.0
+ * @since 1.3.2
  */
-public class ValidateTest {
+public class JsonTypeHandler<E> extends BaseTypeHandler<E> {
 
-	@Test
-	public void isBlank(){
-		Assert.assertEquals(true, Validate.isBlank(""));
-		Assert.assertEquals(true, Validate.isBlank(null));
-		Assert.assertEquals(true, Validate.isBlank("\r\n"));
-		Assert.assertEquals(true, Validate.isBlank(" "));
-		Assert.assertEquals(false, Validate.isBlank("\na"));
-	}
+	protected final Class<E> type;
 
-	@Test
-	public void isNotBlank(){
-		Assert.assertEquals(false, Validate.isNotBlank(""));
-		Assert.assertEquals(false, Validate.isNotBlank(null));
-		Assert.assertEquals(false, Validate.isNotBlank("\r\n"));
-		Assert.assertEquals(false, Validate.isNotBlank(" "));
-		Assert.assertEquals(true, Validate.isNotBlank("\na"));
-	}
-
-	@Test
-	public void isMimeType(){
-		Assert.assertEquals(true, Validate.isMimeType("application/rtf"));
-		Assert.assertEquals(true, Validate.isMimeType("application/vnd.wap.wmlc"));
-		Assert.assertEquals(true, Validate.isMimeType("application/x-rar-compressed"));
-		Assert.assertEquals(true, Validate.isMimeType("application/vnd.openxmlformats-officedocument.wordprocessingml.document"));
-		Assert.assertEquals(true, Validate.isMimeType("video/3gpp"));
-		Assert.assertEquals(false, Validate.isMimeType("video/-3gpp"));
-		Assert.assertEquals(false, Validate.isMimeType("video/3gpp-"));
-		Assert.assertEquals(false, Validate.isMimeType("application/x-rar--compressed"));
+	public JsonTypeHandler(Class<E> type){
+		Assert.isNull(type, "Type argument cannot be null.");
+		this.type = type;
 	}
 
 }
