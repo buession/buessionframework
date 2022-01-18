@@ -4,7 +4,8 @@ Buession Framework Dao Changelog
 
 Changes in version 1.3.2 (2021-11-10)
 -------------------------------------
-*【变化】DefaultEnumSetTypeHandler 不区分大小写转换为枚举
+*【变化】重构 Enum、Set TypeHandler（具有不兼容性）
+*【新增】JsonTypeHandler，默认：DefaultJsonTypeHandler，使用 jackson 进行序列化和反序列化
 
 
 Changes in version 1.3.1 (2021-07-27)

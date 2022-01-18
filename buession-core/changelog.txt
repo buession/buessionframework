@@ -4,6 +4,7 @@ Buession Framework Core Changelog
 
 Changes in version 1.3.2 (2021-11-10)
 -------------------------------------
+*【新增】Validate 新增 isMimeType 方法，验证是否为合法的 MimeType 格式
 
 
 Changes in version 1.3.1 (2021-07-27)
