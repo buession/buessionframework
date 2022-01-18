@@ -26,17 +26,38 @@ package org.apache.ibatis.type;
 
 import com.buession.core.utils.Assert;
 
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 /**
  * @author Yong.Teng
  * @since 1.3.2
  */
-public class JsonTypeHandler<E> extends BaseTypeHandler<E> {
+public abstract class AbstractJsonTypeHandler<E> extends BaseTypeHandler<E> {
 
 	protected final Class<E> type;
 
-	public JsonTypeHandler(Class<E> type){
+	public AbstractJsonTypeHandler(Class<E> type){
 		Assert.isNull(type, "Type argument cannot be null.");
 		this.type = type;
 	}
+
+	@Override
+	public E getNullableResult(ResultSet rs, String columnName) throws SQLException{
+		return parseResult(rs.getString(columnName));
+	}
+
+	@Override
+	public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException{
+		return parseResult(rs.getString(columnIndex));
+	}
+
+	@Override
+	public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException{
+		return parseResult(cs.getString(columnIndex));
+	}
+
+	protected abstract E parseResult(final String str) throws SQLException;
 
 }

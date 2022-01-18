@@ -21,71 +21,47 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
 
-import com.buession.core.utils.Assert;
 import com.buession.core.utils.EnumUtils;
 import com.buession.core.validator.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * 忽略大小写 Enum {@link TypeHandler}，将值忽略大小写转换为枚举字段
+ *
+ * @param <E>
+ * 		枚举类型
+ *
  * @author Yong.Teng
+ * @since 1.3.2
  */
-public class IgnoreCaseEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
-
-	private final Class<E> type;
+public class IgnoreCaseEnumTypeHandler<E extends Enum<E>> extends AbstractEnumTypeHandler<E> {
 
 	private final static Logger logger = LoggerFactory.getLogger(IgnoreCaseEnumTypeHandler.class);
 
 	public IgnoreCaseEnumTypeHandler(Class<E> type){
-		Assert.isNull(type, "Type argument cannot be null.");
-		this.type = type;
+		super(type);
 	}
 
 	@Override
-	public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException{
-		if(jdbcType == null){
-			ps.setString(i, parameter.name());
-		}else{
-			ps.setObject(i, parameter.name(), jdbcType.TYPE_CODE);
-		}
-	}
+	protected E parseResult(final String str) throws SQLException{
+		if(Validate.hasText(str)){
+			E result = EnumUtils.getEnumIgnoreCase(type, str);
+			if(result == null && logger.isErrorEnabled()){
+				logger.error("Database value '{}' convert to '{}' failure: No enum constant.", str, type.getName());
+			}
 
-	@Override
-	public E getNullableResult(ResultSet rs, String columnName) throws SQLException{
-		return convert(rs.getString(columnName));
-	}
-
-	@Override
-	public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException{
-		return convert(rs.getString(columnIndex));
-	}
-
-	@Override
-	public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException{
-		return convert(cs.getString(columnIndex));
-	}
-
-	private E convert(final String str){
-		if(Validate.hasText(str) == false){
-			return null;
+			return result;
 		}
 
-		E result = EnumUtils.getEnumIgnoreCase(type, str);
-		if(result == null && logger.isErrorEnabled()){
-			logger.error("Database value '{}' convert to '{}' failure: No enum constant.", str, type.getName());
-		}
-
-		return result;
+		return null;
 	}
 
 }

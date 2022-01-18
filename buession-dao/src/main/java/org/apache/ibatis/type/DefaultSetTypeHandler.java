@@ -21,38 +21,37 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
 
 import com.buession.core.utils.ArrayUtils;
 import com.buession.core.utils.StringUtils;
+import com.buession.core.validator.Validate;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Set;
 
 /**
+ * 默认 Set {@link TypeHandler}，将值以 "," 拆分转换为 Set&lt;String&gt;
+ *
  * @author Yong.Teng
+ * @since 1.3.2
  */
-public class SimpleSetTypeHandler extends AbstractSetTypeHandler<String> {
+public class DefaultSetTypeHandler extends AbstractSetTypeHandler<String> {
 
-	private final static String DELIMITER = ",";
-
-	public SimpleSetTypeHandler(Class<String> type){
+	public DefaultSetTypeHandler(Class<String> type){
 		super(type);
 	}
 
 	@Override
-	public void setNonNullParameter(PreparedStatement ps, int i, Set<String> parameter, JdbcType jdbcType) throws SQLException{
-		ps.setString(i, ArrayUtils.toString(parameter, DELIMITER));
-	}
+	protected Set<String> parseResult(final String str) throws SQLException{
+		if(Validate.hasText(str)){
+			return ArrayUtils.toSet(StringUtils.splitByWholeSeparatorPreserveAllTokens(str, DELIMITER));
+		}
 
-	@Override
-	protected Set<String> parseResult(final String str){
-		return str == null ? null : ArrayUtils.toSet(StringUtils.splitByWholeSeparatorPreserveAllTokens(str,
-				DELIMITER));
+		return null;
 	}
 
 }

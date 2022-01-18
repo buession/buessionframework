@@ -21,10 +21,47 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package org.apache.ibatis.type;/**
- * 
- *
+ */
+package org.apache.ibatis.type;
+
+import com.buession.core.serializer.JacksonJsonSerializer;
+import com.buession.core.serializer.SerializerException;
+
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+/**
  * @author Yong.Teng
  * @since 1.3.2
- */public class DefaultJsonTypeHandler {
+ */
+public class DefaultJsonTypeHandler<E> extends AbstractJsonTypeHandler<E> {
+
+	public DefaultJsonTypeHandler(Class<E> type){
+		super(type);
+	}
+
+	@Override
+	public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException{
+		JacksonJsonSerializer jsonSerializer = new JacksonJsonSerializer();
+
+		try{
+			if(jdbcType == null){
+				ps.setString(i, jsonSerializer.serialize(parameter));
+			}else{
+				ps.setObject(i, jsonSerializer.serialize(parameter), jdbcType.TYPE_CODE);
+			}
+		}catch(SerializerException e){
+			throw new SQLException(parameter + " cloud not be serialize to JSON String: " + e.getMessage());
+		}
+	}
+
+	@Override
+	protected E parseResult(final String str) throws SQLException{
+		JacksonJsonSerializer jsonSerializer = new JacksonJsonSerializer();
+		try{
+			return jsonSerializer.deserialize(str, type);
+		}catch(SerializerException e){
+			throw new SQLException(str + " cloud not be deserialize to " + type.getName() + ": " + e.getMessage());
+		}
+	}
 }

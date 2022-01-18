@@ -19,28 +19,43 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
 
+import com.buession.core.utils.ArrayUtils;
 import com.buession.core.utils.Assert;
 
 import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
 
 /**
+ * Set {@link TypeHandler} 基类
+ *
+ * @param <E>
+ *        {@link Set} 元素类型
+ *
  * @author Yong.Teng
+ * @since 1.3.2
  */
 public abstract class AbstractSetTypeHandler<E> extends BaseTypeHandler<Set<E>> {
+
+	protected final static String DELIMITER = ",";
 
 	protected Class<E> type;
 
 	public AbstractSetTypeHandler(Class<E> type){
 		Assert.isNull(type, "Type argument cannot be null.");
 		this.type = type;
+	}
+
+	@Override
+	public void setNonNullParameter(PreparedStatement ps, int i, Set<E> parameter, JdbcType jdbcType) throws SQLException{
+		ps.setString(i, ArrayUtils.toString(parameter, DELIMITER));
 	}
 
 	@Override
@@ -58,6 +73,6 @@ public abstract class AbstractSetTypeHandler<E> extends BaseTypeHandler<Set<E>> 
 		return parseResult(cs.getString(columnIndex));
 	}
 
-	protected abstract Set<E> parseResult(final String str);
+	protected abstract Set<E> parseResult(final String str) throws SQLException;
 
 }

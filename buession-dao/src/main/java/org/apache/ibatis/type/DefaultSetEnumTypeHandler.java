@@ -21,10 +21,46 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package org.apache.ibatis.type;/**
- * 
+ */
+package org.apache.ibatis.type;
+
+import com.buession.core.utils.EnumUtils;
+import com.buession.core.utils.StringUtils;
+import com.buession.core.validator.Validate;
+
+import java.sql.SQLException;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+/**
+ * 默认 Enum 型 Set {@link TypeHandler} 基类，将值直接转换为枚举字段作为 Set 的元素
+ *
+ * @param <E>
+ * 		枚举类型
  *
  * @author Yong.Teng
  * @since 1.3.2
- */public class DefaultSetEnumTypeHandler {
+ */
+public class DefaultSetEnumTypeHandler<E extends Enum<E>> extends AbstractSetEnumTypeHandler<E> {
+
+	public DefaultSetEnumTypeHandler(Class<E> type){
+		super(type);
+	}
+
+	@Override
+	protected Set<E> parseResult(final String str) throws SQLException{
+		if(Validate.hasText(str)){
+			String[] elements = StringUtils.splitByWholeSeparatorPreserveAllTokens(str, DELIMITER);
+			Set<E> result = new LinkedHashSet<>(elements.length);
+
+			for(String element : elements){
+				result.add(EnumUtils.getEnum(type, element));
+			}
+
+			return result;
+		}
+
+		return null;
+	}
+
 }

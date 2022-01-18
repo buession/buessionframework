@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package org.apache.ibatis.type;
@@ -31,29 +31,37 @@ import com.buession.core.validator.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
+
 /**
+ * 默认 Enum {@link TypeHandler}，将值直接转换为枚举字段
+ *
+ * @param <E>
+ * 		枚举类型
+ *
  * @author Yong.Teng
+ * @since 1.3.2
  */
-public class IgnoreCaseEnumTypeHandler<E extends Enum<E>> extends AbstractEnumTypeHandler<E> {
+public class DefaultEnumTypeHandler<E extends Enum<E>> extends AbstractEnumTypeHandler<E> {
 
-	private final static Logger logger = LoggerFactory.getLogger(IgnoreCaseEnumTypeHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(DefaultEnumTypeHandler.class);
 
-	public IgnoreCaseEnumTypeHandler(Class<E> type){
+	public DefaultEnumTypeHandler(Class<E> type){
 		super(type);
 	}
 
 	@Override
-	protected E convert(final String str){
-		if(Validate.hasText(str) == false){
-			return null;
+	protected E parseResult(final String str) throws SQLException{
+		if(Validate.hasText(str)){
+			E result = EnumUtils.getEnum(type, str);
+			if(result == null && logger.isErrorEnabled()){
+				logger.error("Database value '{}' convert to '{}' failure: No enum constant.", str, type.getName());
+			}
+
+			return result;
 		}
 
-		E result = EnumUtils.getEnumIgnoreCase(type, str);
-		if(result == null && logger.isErrorEnabled()){
-			logger.error("Database value '{}' convert to '{}' failure: No enum constant.", str, type.getName());
-		}
-
-		return result;
+		return null;
 	}
 
 }
