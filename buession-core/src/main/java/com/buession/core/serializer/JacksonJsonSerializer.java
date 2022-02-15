@@ -32,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 
 /**
  * @author Yong.Teng
@@ -86,7 +87,6 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 			return getObjectMapper().readValue(str, clazz);
 		}catch(IOException e){
 			final String className = clazz == null ? "null" : clazz.getName();
-
 			throw new SerializerException(str + " json deserialize to " + className + " failure.", e);
 		}
 	}
@@ -106,7 +106,6 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 			});
 		}catch(IOException e){
 			final String typeName = type == null ? "null" : type.getType().getTypeName();
-
 			throw new SerializerException(str + " json deserialize to " + typeName + " failure.", e);
 		}
 	}
@@ -120,8 +119,7 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 
 			});
 		}catch(IOException e){
-			final String s = bytes.toString();
-			throw new SerializerException(s + " json deserialize to Object failure.", e);
+			throw new SerializerException(Arrays.toString(bytes) + " json deserialize to Object failure.", e);
 		}
 	}
 
@@ -132,10 +130,8 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 		try{
 			return getObjectMapper().readValue(bytes, clazz);
 		}catch(IOException e){
-			final String s = bytes.toString();
 			final String className = clazz == null ? "null" : clazz.getName();
-
-			throw new SerializerException(s + " json deserialize to " + className + " failure.", e);
+			throw new SerializerException(Arrays.toString(bytes) + " json deserialize to " + className + " failure.", e);
 		}
 	}
 
@@ -153,10 +149,8 @@ public class JacksonJsonSerializer extends AbstractJsonSerializer {
 
 			});
 		}catch(IOException e){
-			final String s = bytes.toString();
 			final String typeName = type == null ? "null" : type.getType().getTypeName();
-
-			throw new SerializerException(s + " json deserialize to " + typeName + " failure.", e);
+			throw new SerializerException(Arrays.toString(bytes) + " json deserialize to " + typeName + " failure.", e);
 		}
 	}
 
