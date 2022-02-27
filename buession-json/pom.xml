@@ -7,7 +7,7 @@
 		<groupId>com.buession</groupId>
 		<artifactId>buession-parent</artifactId>
 		<relativePath>../buession-parent</relativePath>
-		<version>1.3.2</version>
+		<version>1.3.3</version>
 	</parent>
 	<artifactId>buession-json</artifactId>
 	<url>https://github.com/buession/buessionframework</url>

@@ -2,10 +2,12 @@ Buession Framework Core Changelog
 ===========================
 
 
+Changes in version 1.3.3 (2022-02-22)
+-------------------------------------
+
 Changes in version 1.3.2 (2021-11-10)
 -------------------------------------
 *【新增】Validate 新增 isMimeType 方法，验证是否为合法的 MimeType 格式
-
 
 Changes in version 1.3.1 (2021-07-27)
 -------------------------------------
@@ -16,7 +18,6 @@ Changes in version 1.3.1 (2021-07-27)
 *【新增】manager 层注解 @Manager
 *【新增】基于 mapstruct 的 Pojo 映射接口
 *【新增】ID 生成器
-
 
 Changes in version 1.3.0 (2021-07-10)
 -------------------------------------
