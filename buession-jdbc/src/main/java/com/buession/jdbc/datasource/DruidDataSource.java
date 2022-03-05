@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -114,7 +114,11 @@ public class DruidDataSource extends AbstractDataSource<com.alibaba.druid.pool.D
 		dataSource.setMaxActive(poolConfiguration.getMaxActive());
 		dataSource.setMinIdle(poolConfiguration.getMinIdle());
 		dataSource.setMaxIdle(poolConfiguration.getMaxIdle());
-		dataSource.setMaxWait(poolConfiguration.getMaxWait());
+
+		if(poolConfiguration.getMaxWait() != null){
+			dataSource.setMaxWait(poolConfiguration.getMaxWait().toMillis());
+		}
+
 		dataSource.setTimeBetweenConnectErrorMillis(poolConfiguration.getTimeBetweenConnectError());
 		dataSource.setConnectionErrorRetryAttempts(poolConfiguration.getConnectionErrorRetryAttempts());
 
@@ -139,18 +143,41 @@ public class DruidDataSource extends AbstractDataSource<com.alibaba.druid.pool.D
 			}
 		}
 
-		dataSource.setValidationQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getValidationQueryTimeout()));
-		dataSource.setQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getQueryTimeout()));
+		if(poolConfiguration.getValidationQueryTimeout() != null){
+			dataSource.setValidationQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getValidationQueryTimeout().toMillis()));
+		}
+
+		if(poolConfiguration.getQueryTimeout() != null){
+			dataSource.setQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getQueryTimeout().toMillis()));
+		}
+
 		dataSource.setNotFullTimeoutRetryCount(poolConfiguration.getNotFullTimeoutRetryCount());
 		dataSource.setTestOnBorrow(poolConfiguration.isTestOnBorrow());
 		dataSource.setTestOnReturn(poolConfiguration.isTestOnReturn());
 		dataSource.setTestWhileIdle(poolConfiguration.isTestWhileIdle());
-		dataSource.setTimeBetweenEvictionRunsMillis(poolConfiguration.getTimeBetweenEvictionRuns());
+
+		if(poolConfiguration.getTimeBetweenEvictionRuns() != null){
+			dataSource.setTimeBetweenEvictionRunsMillis(poolConfiguration.getTimeBetweenEvictionRuns().toMillis());
+		}
+
 		dataSource.setNumTestsPerEvictionRun(poolConfiguration.getNumTestsPerEvictionRun());
-		dataSource.setMinEvictableIdleTimeMillis(poolConfiguration.getMinEvictableIdleTime());
-		dataSource.setMaxEvictableIdleTimeMillis(poolConfiguration.getMaxEvictableIdleTime());
-		dataSource.setKeepAliveBetweenTimeMillis(poolConfiguration.getKeepAliveBetweenTime());
-		dataSource.setPhyTimeoutMillis(poolConfiguration.getPhyTimeout());
+
+		if(poolConfiguration.getMinEvictableIdleTime() != null){
+			dataSource.setMinEvictableIdleTimeMillis(poolConfiguration.getMinEvictableIdleTime().toMillis());
+		}
+
+		if(poolConfiguration.getMaxEvictableIdleTime() != null){
+			dataSource.setMaxEvictableIdleTimeMillis(poolConfiguration.getMaxEvictableIdleTime().toMillis());
+		}
+
+		if(poolConfiguration.getKeepAliveBetweenTime() != null){
+			dataSource.setKeepAliveBetweenTimeMillis(poolConfiguration.getKeepAliveBetweenTime().toMillis());
+		}
+
+		if(poolConfiguration.getPhyTimeout() != null){
+			dataSource.setPhyTimeoutMillis(poolConfiguration.getPhyTimeout().toMillis());
+		}
+
 		dataSource.setPhyMaxUseCount(poolConfiguration.getPhyMaxUseCount());
 
 		if(poolConfiguration.getDefaultTransactionIsolation() != null){
@@ -158,7 +185,11 @@ public class DruidDataSource extends AbstractDataSource<com.alibaba.druid.pool.D
 		}
 
 		dataSource.setTransactionThresholdMillis(poolConfiguration.getTransactionThreshold());
-		dataSource.setTransactionQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getTransactionQueryTimeout()));
+
+		if(poolConfiguration.getTransactionQueryTimeout() != null){
+			dataSource.setTransactionQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getTransactionQueryTimeout().toMillis()));
+		}
+
 		dataSource.setDefaultAutoCommit(poolConfiguration.isDefaultAutoCommit());
 		dataSource.setDefaultReadOnly(poolConfiguration.isDefaultReadOnly());
 		dataSource.setPoolPreparedStatements(poolConfiguration.isPoolPreparedStatements());
@@ -193,7 +224,11 @@ public class DruidDataSource extends AbstractDataSource<com.alibaba.druid.pool.D
 		dataSource.setTimeBetweenLogStatsMillis(poolConfiguration.getTimeBetweenLogStats());
 
 		dataSource.setRemoveAbandoned(poolConfiguration.isRemoveAbandoned());
-		dataSource.setRemoveAbandonedTimeoutMillis(poolConfiguration.getRemoveAbandonedTimeout());
+
+		if(poolConfiguration.getRemoveAbandonedTimeout() != null){
+			dataSource.setRemoveAbandonedTimeoutMillis(poolConfiguration.getRemoveAbandonedTimeout().toMillis());
+		}
+
 		dataSource.setLogAbandoned(poolConfiguration.isLogAbandoned());
 		dataSource.setUseOracleImplicitCache(poolConfiguration.isUseOracleImplicitCache());
 		dataSource.setInitVariants(poolConfiguration.isInitVariants());
@@ -211,4 +246,5 @@ public class DruidDataSource extends AbstractDataSource<com.alibaba.druid.pool.D
 
 		dataSource.setObjectName(poolConfiguration.getObjectName());
 	}
+
 }

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource.config;
@@ -28,10 +28,10 @@ import com.buession.jdbc.core.TransactionIsolation;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.metrics.MetricsTrackerFactory;
 
+import java.time.Duration;
 import java.util.Properties;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Hikari 数据源连接池配置 {@link HikariConfig}
@@ -47,14 +47,14 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	private String catalog;
 
 	/**
-	 * 从连接池获取连接时最大等待时间，单位：毫秒
+	 * 从连接池获取连接时最大等待时间
 	 */
-	private long connectionTimeout = TimeUnit.MINUTES.toMillis(30);
+	private Duration connectionTimeout = Duration.ofMillis(30000L);
 
 	/**
 	 * 连接允许在池中闲置的最长时间，仅适用于 minimumIdle 定义为小于 maximumPoolSize，值为 0 时空闲连接永远不会从池中删除
 	 */
-	private long idleTimeout = TimeUnit.MINUTES.toMillis(10);
+	private Duration idleTimeout = Duration.ofMillis(10000L);
 
 	/**
 	 * 控制在记录消息之前连接可能离开池的时间量，表明可能存在连接泄漏，值为 0 时泄漏检测被禁用
@@ -62,15 +62,15 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	private long leakDetectionThreshold;
 
 	/**
-	 * 池中连接的最大生存期，值为 0 时表示无限寿命, 推荐设置的比数据库的 wait_timeout 小几秒到几分钟，单位：毫秒
+	 * 池中连接的最大生存期，值为 0 时表示无限寿命, 推荐设置的比数据库的 wait_timeout 小几秒到几分钟
 	 */
-	private long maxLifetime = TimeUnit.MINUTES.toMillis(10);
+	private Duration maxLifetime = Duration.ofMillis(10000L);
 
 	/**
 	 * 连接存活时间，值必须小于 maxLifetime 值
 	 * 只会发生在空闲的连接上，当对一个给定的连接进行 "keepalive "的时间到了，该连接将从池中移除
 	 */
-	private long keepaliveTime = 0L;
+	private Duration keepaliveTime = Duration.ofMillis(0L);
 
 	/**
 	 * 最小空闲连接数量
@@ -82,7 +82,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 */
 	private int maxPoolSize = -1;
 
-	private long initializationFailTimeout = 1L;
+	private Duration initializationFailTimeout = Duration.ofMillis(1000L);
 
 	/**
 	 * 设置一个SQL语句，在将每个新连接创建后，将其添加到池中之前执行该语句
@@ -96,9 +96,9 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	private String connectionTestQuery;
 
 	/**
-	 * 检测连接是否有效的超时时间，单位：毫秒
+	 * 检测连接是否有效的超时时间
 	 */
-	private long validationTimeout = TimeUnit.MINUTES.toMillis(5);
+	private Duration validationTimeout = Duration.ofMillis(5000L);
 
 	/**
 	 * 用户定义连接池的名称，主要出现在日志记录和 JMX 管理控制台中以识别池和池配置
@@ -175,21 +175,21 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回从连接池获取连接时最大等待时间，单位：毫秒
+	 * 返回从连接池获取连接时最大等待时间
 	 *
 	 * @return 从连接池获取连接时最大等待时间
 	 */
-	public long getConnectionTimeout(){
+	public Duration getConnectionTimeout(){
 		return connectionTimeout;
 	}
 
 	/**
-	 * 设置从连接池获取连接时最大等待时间，单位：毫秒
+	 * 设置从连接池获取连接时最大等待时间
 	 *
 	 * @param connectionTimeout
 	 * 		从连接池获取连接时最大等待时间
 	 */
-	public void setConnectionTimeout(long connectionTimeout){
+	public void setConnectionTimeout(Duration connectionTimeout){
 		this.connectionTimeout = connectionTimeout;
 	}
 
@@ -198,7 +198,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接允许在池中闲置的最长时间
 	 */
-	public long getIdleTimeout(){
+	public Duration getIdleTimeout(){
 		return idleTimeout;
 	}
 
@@ -210,7 +210,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param idleTimeout
 	 * 		连接允许在池中闲置的最长时间
 	 */
-	public void setIdleTimeout(long idleTimeout){
+	public void setIdleTimeout(Duration idleTimeout){
 		this.idleTimeout = idleTimeout;
 	}
 
@@ -238,17 +238,17 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 池中连接的最大生存期
 	 */
-	public long getMaxLifetime(){
+	public Duration getMaxLifetime(){
 		return maxLifetime;
 	}
 
 	/**
-	 * 设置池中连接的最大生存期，值为 0 时表示无限寿命, 推荐设置的比数据库的 wait_timeout 小几秒到几分钟，单位：毫秒
+	 * 设置池中连接的最大生存期，值为 0 时表示无限寿命, 推荐设置的比数据库的 wait_timeout 小几秒到几分钟
 	 *
 	 * @param maxLifetime
 	 * 		池中连接的最大生存期
 	 */
-	public void setMaxLifetime(long maxLifetime){
+	public void setMaxLifetime(Duration maxLifetime){
 		this.maxLifetime = maxLifetime;
 	}
 
@@ -257,7 +257,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 *
 	 * @return 连接存活时间
 	 */
-	public long getKeepaliveTime(){
+	public Duration getKeepaliveTime(){
 		return keepaliveTime;
 	}
 
@@ -267,7 +267,7 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	 * @param keepaliveTime
 	 * 		连接存活时间
 	 */
-	public void setKeepaliveTime(long keepaliveTime){
+	public void setKeepaliveTime(Duration keepaliveTime){
 		this.keepaliveTime = keepaliveTime;
 	}
 
@@ -309,11 +309,11 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 		this.maxPoolSize = maxPoolSize;
 	}
 
-	public long getInitializationFailTimeout(){
+	public Duration getInitializationFailTimeout(){
 		return initializationFailTimeout;
 	}
 
-	public void setInitializationFailTimeout(long initializationFailTimeout){
+	public void setInitializationFailTimeout(Duration initializationFailTimeout){
 		this.initializationFailTimeout = initializationFailTimeout;
 	}
 
@@ -356,21 +356,21 @@ public class HikariPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回检测连接是否有效的超时时间，单位：毫秒
+	 * 返回检测连接是否有效的超时时间
 	 *
 	 * @return 检测连接是否有效的超时时间
 	 */
-	public long getValidationTimeout(){
+	public Duration getValidationTimeout(){
 		return validationTimeout;
 	}
 
 	/**
-	 * 设置检测连接是否有效的超时时间，不能大于 {@link connectionTimeout} 单位：毫秒
+	 * 设置检测连接是否有效的超时时间，不能大于 {@link connectionTimeout}
 	 *
 	 * @param validationTimeout
 	 * 		检测连接是否有效的超时时间
 	 */
-	public void setValidationTimeout(long validationTimeout){
+	public void setValidationTimeout(Duration validationTimeout){
 		this.validationTimeout = validationTimeout;
 	}
 

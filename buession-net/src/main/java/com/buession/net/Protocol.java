@@ -57,9 +57,9 @@ public enum Protocol {
 
 	MONGODB(27017);
 
-	private int port;
+	private final int port;
 
-	Protocol(int port){
+	Protocol(final int port){
 		this.port = port;
 	}
 

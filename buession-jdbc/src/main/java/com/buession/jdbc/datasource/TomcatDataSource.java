@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -77,7 +77,11 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 		dataSource.setMaxActive(poolConfiguration.getMaxActive());
 		dataSource.setMinIdle(poolConfiguration.getMinIdle());
 		dataSource.setMaxIdle(poolConfiguration.getMaxIdle());
-		dataSource.setMaxWait(poolConfiguration.getMaxWait());
+
+		if(poolConfiguration.getMaxWait() != null){
+			dataSource.setMaxWait((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getMaxWait().toMillis()));
+		}
+
 		dataSource.setMaxAge(poolConfiguration.getMaxAge());
 
 		if(poolConfiguration.getInitSQL() != null){
@@ -88,8 +92,13 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 			dataSource.setValidationQuery(poolConfiguration.getValidationQuery());
 		}
 
-		dataSource.setValidationInterval(poolConfiguration.getValidationInterval());
-		dataSource.setValidationQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getValidationQueryTimeout()));
+		if(poolConfiguration.getValidationInterval() != null){
+			dataSource.setValidationInterval(poolConfiguration.getValidationInterval().toMillis());
+		}
+
+		if(poolConfiguration.getValidationQueryTimeout() != null){
+			dataSource.setValidationQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getValidationQueryTimeout().toMillis()));
+		}
 
 		if(poolConfiguration.getValidatorClassName() != null){
 			dataSource.setValidatorClassName(poolConfiguration.getValidatorClassName());
@@ -101,9 +110,16 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 		dataSource.setTestOnBorrow(poolConfiguration.isTestOnBorrow());
 		dataSource.setTestOnReturn(poolConfiguration.isTestOnReturn());
 		dataSource.setTestWhileIdle(poolConfiguration.isTestWhileIdle());
-		dataSource.setTimeBetweenEvictionRunsMillis(poolConfiguration.getTimeBetweenEvictionRuns());
+
+		if(poolConfiguration.getTimeBetweenEvictionRuns() != null){
+			dataSource.setTimeBetweenEvictionRunsMillis((int) poolConfiguration.getTimeBetweenEvictionRuns().toMillis());
+		}
+
 		dataSource.setNumTestsPerEvictionRun(poolConfiguration.getNumTestsPerEvictionRun());
-		dataSource.setMinEvictableIdleTimeMillis(poolConfiguration.getMinEvictableIdleTime());
+
+		if(poolConfiguration.getMinEvictableIdleTime() != null){
+			dataSource.setMinEvictableIdleTimeMillis((int) poolConfiguration.getMinEvictableIdleTime().toMillis());
+		}
 
 		if(poolConfiguration.getDefaultTransactionIsolation() != null){
 			dataSource.setDefaultTransactionIsolation(poolConfiguration.getDefaultTransactionIsolation().getValue());
@@ -121,10 +137,18 @@ public class TomcatDataSource extends AbstractDataSource<DataSource, TomcatPoolC
 		}
 
 		dataSource.setRemoveAbandoned(poolConfiguration.isRemoveAbandoned());
-		dataSource.setRemoveAbandonedTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getRemoveAbandonedTimeout()));
+
+		if(poolConfiguration.getRemoveAbandonedTimeout() != null){
+			dataSource.setRemoveAbandonedTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getRemoveAbandonedTimeout().toMillis()));
+		}
+
 		dataSource.setLogAbandoned(poolConfiguration.isLogAbandoned());
 		dataSource.setAbandonWhenPercentageFull(poolConfiguration.getAbandonWhenPercentageFull());
-		dataSource.setSuspectTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getSuspectTimeout()));
+
+		if(poolConfiguration.getSuspectTimeout() != null){
+			dataSource.setSuspectTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getSuspectTimeout().toMillis()));
+		}
+
 		dataSource.setAlternateUsernameAllowed(poolConfiguration.isAlternateUsernameAllowed());
 
 		if(poolConfiguration.getJdbcInterceptors() != null){

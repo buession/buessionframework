@@ -1,8 +1,11 @@
 Buession Framework HttpClient Changelog
 ===========================
 
-Changes in version 1.3.3 (2022-02-22)
+Changes in version 2.0.0 (2022-02-22)
 -------------------------------------
+*【移除】ObjectRequestBodyConverter
+*【移除】okhttp 连接管理器 com.buession.httpclient.okhttp.OkHttpClientConnectionManager 类，使用 okhttp3.HttpClientConnectionManager，API okhttp 保持一致
+*【移除】okhttp 连接管理器 com.buession.httpclient.okhttp.RequestBuilder 类，使用 okhttp3.RequestBuilder，API okhttp 保持一致
 
 Changes in version 1.3.2 (2021-11-10)
 -------------------------------------

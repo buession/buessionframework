@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -294,8 +294,7 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 		}
 
 		try{
-			return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters, new RowBounds(offset,
-					size));
+			return getSlaveSqlSessionTemplate().selectList(getStatement(DML.SELECT), parameters, new RowBounds(offset, size));
 		}catch(OperationException e){
 			logger.error(e.getMessage());
 		}

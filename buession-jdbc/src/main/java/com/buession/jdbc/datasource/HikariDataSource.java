@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -82,11 +82,23 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 			dataSource.setCatalog(poolConfiguration.getCatalog());
 		}
 
-		dataSource.setConnectionTimeout(poolConfiguration.getConnectionTimeout());
-		dataSource.setIdleTimeout(poolConfiguration.getIdleTimeout());
+		if(poolConfiguration.getConnectionTimeout() != null){
+			dataSource.setConnectionTimeout(poolConfiguration.getConnectionTimeout().toMillis());
+		}
+
+		if(poolConfiguration.getIdleTimeout() != null){
+			dataSource.setIdleTimeout(poolConfiguration.getIdleTimeout().toMillis());
+		}
+
 		dataSource.setLeakDetectionThreshold(poolConfiguration.getLeakDetectionThreshold());
-		dataSource.setMaxLifetime(poolConfiguration.getMaxLifetime());
-		dataSource.setKeepaliveTime(poolConfiguration.getKeepaliveTime());
+
+		if(poolConfiguration.getMaxLifetime() != null){
+			dataSource.setMaxLifetime(poolConfiguration.getMaxLifetime().toMillis());
+		}
+
+		if(poolConfiguration.getKeepaliveTime() != null){
+			dataSource.setKeepaliveTime(poolConfiguration.getKeepaliveTime().toMillis());
+		}
 
 		if(poolConfiguration.getMinIdle() >= 0){
 			dataSource.setMinimumIdle(poolConfiguration.getMinIdle());
@@ -95,8 +107,10 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 		if(poolConfiguration.getMaxPoolSize() >= 1){
 			dataSource.setMaximumPoolSize(poolConfiguration.getMaxPoolSize());
 		}
-		
-		dataSource.setInitializationFailTimeout(poolConfiguration.getInitializationFailTimeout());
+
+		if(poolConfiguration.getInitializationFailTimeout() != null){
+			dataSource.setInitializationFailTimeout(poolConfiguration.getInitializationFailTimeout().toMillis());
+		}
 
 		if(poolConfiguration.getConnectionInitSql() != null){
 			dataSource.setConnectionInitSql(poolConfiguration.getConnectionInitSql());
@@ -106,7 +120,9 @@ public class HikariDataSource extends AbstractDataSource<com.zaxxer.hikari.Hikar
 			dataSource.setConnectionTestQuery(poolConfiguration.getConnectionTestQuery());
 		}
 
-		dataSource.setValidationTimeout(poolConfiguration.getValidationTimeout());
+		if(poolConfiguration.getValidationTimeout() != null){
+			dataSource.setValidationTimeout(poolConfiguration.getValidationTimeout().toMillis());
+		}
 
 		if(poolConfiguration.getPoolName() != null){
 			dataSource.setPoolName(poolConfiguration.getPoolName());

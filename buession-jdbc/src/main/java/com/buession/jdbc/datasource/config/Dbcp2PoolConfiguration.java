@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource.config;
@@ -29,6 +29,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Set;
 
@@ -46,15 +47,15 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	private String defaultCatalog;
 
 	/**
-	 * 连接的最大存活时间，单位：毫秒；
+	 * 连接的最大存活时间；
 	 * 如果超过这个时间，则连接在下次激活、钝化、校验时都将会失败。如果设置为0或小于0的值，则连接的存活时间是无限的
 	 */
-	private long maxConnLifetime = -1L;
+	private Duration maxConnLifetime = Duration.ofMillis(-1L);
 
 	/**
-	 * 查询超时时间，单位：毫秒
+	 * 查询超时时间
 	 */
-	private Integer defaultQueryTimeout;
+	private Duration defaultQueryTimeout;
 
 	/**
 	 * 初始连接数，池被启动时初始化的创建的连接个数
@@ -77,9 +78,9 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	private int maxTotal = GenericObjectPoolConfig.DEFAULT_MAX_TOTAL;
 
 	/**
-	 * 从连接池获取一个连接时，最大的等待时间，设置为-1时，如果没有可用连接，连接池会一直无限期等待，直到获取到连接为止，单位：毫秒
+	 * 从连接池获取一个连接时，最大的等待时间，设置为-1时，如果没有可用连接，连接池会一直无限期等待，直到获取到连接为止
 	 */
-	private long maxWait = GenericObjectPoolConfig.DEFAULT_MAX_WAIT_MILLIS;
+	private Duration maxWait = GenericObjectPoolConfig.DEFAULT_MAX_WAIT;
 
 	/**
 	 * 连接创建后，马上验证有效性；
@@ -120,9 +121,9 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	private String validationQuery;
 
 	/**
-	 * 连接有效SQL的执行查询超时时间，单位：毫秒
+	 * 连接有效SQL的执行查询超时时间
 	 */
-	private int validationQueryTimeout = -1;
+	private Duration validationQueryTimeout = Duration.ofMillis(-1L);
 
 	/**
 	 * 设置的默认模式为支持模式的概念数据库
@@ -191,9 +192,9 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	private String evictionPolicyClassName = GenericObjectPoolConfig.DEFAULT_EVICTION_POLICY_CLASS_NAME;
 
 	/**
-	 * 空闲对象驱逐线程运行时的休眠时间，单位：毫秒
+	 * 空闲对象驱逐线程运行时的休眠时间
 	 */
-	private long timeBetweenEvictionRuns = GenericObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
+	private Duration timeBetweenEvictionRuns = GenericObjectPoolConfig.DEFAULT_TIME_BETWEEN_EVICTION_RUNS;
 
 	/**
 	 * 在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
@@ -201,18 +202,18 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	private int numTestsPerEvictionRun = GenericObjectPoolConfig.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
 
 	/**
-	 * 空闲的连接被释放最低要待时间，单位：毫秒
+	 * 空闲的连接被释放最低要待时间
 	 */
-	private long minEvictableIdleTime = GenericObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+	private Duration minEvictableIdleTime = GenericObjectPoolConfig.DEFAULT_MIN_EVICTABLE_IDLE_TIME;
 
 	/**
-	 * 空闲的连接被释放最低要待时间，但有额外条件，单位：毫秒
+	 * 空闲的连接被释放最低要待时间，但有额外条件
 	 * 额外的条件是池中至少保留有 minIdle 所指定的个数的连接；
 	 * 当 miniEvictableIdleTime 被设置为一个正数，空闲连接驱逐者首先检测 miniEvictableIdleTime ，
 	 * 当空闲连接被驱逐者访问时，首先与 miniEvictableIdleTime 所指定的值进行比较（而不考虑当前池中的空闲连接数），
 	 * 然后比较 softMinEvictableIdleTime 所指定的连接数，包括 minIdle 条件
 	 */
-	private long softMinEvictableIdleTime = GenericObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+	private Duration softMinEvictableIdleTime = GenericObjectPoolConfig.DEFAULT_SOFT_MIN_EVICTABLE_IDLE_TIME;
 
 	/**
 	 * 后进先出，设置为true表明连接池（如果池中有可用的空闲连接时）将返回最后一次使用的租借对象（最后进入），
@@ -249,40 +250,40 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回连接的最大存活时间，单位：毫秒
+	 * 返回连接的最大存活时间
 	 *
 	 * @return 连接的最大存活时间
 	 */
-	public long getMaxConnLifetime(){
+	public Duration getMaxConnLifetime(){
 		return maxConnLifetime;
 	}
 
 	/**
-	 * 设置连接的最大存活时间，单位：毫秒
+	 * 设置连接的最大存活时间
 	 *
 	 * @param maxConnLifetime
 	 * 		连接的最大存活时间
 	 */
-	public void setMaxConnLifetime(long maxConnLifetime){
+	public void setMaxConnLifetime(Duration maxConnLifetime){
 		this.maxConnLifetime = maxConnLifetime;
 	}
 
 	/**
-	 * 返回查询超时时间，单位：毫秒
+	 * 返回查询超时时间
 	 *
 	 * @return 查询超时时间
 	 */
-	public Integer getDefaultQueryTimeout(){
+	public Duration getDefaultQueryTimeout(){
 		return defaultQueryTimeout;
 	}
 
 	/**
-	 * 设置查询超时时间，单位：毫秒
+	 * 设置查询超时时间
 	 *
 	 * @param defaultQueryTimeout
 	 * 		查询超时时间
 	 */
-	public void setDefaultQueryTimeout(Integer defaultQueryTimeout){
+	public void setDefaultQueryTimeout(Duration defaultQueryTimeout){
 		this.defaultQueryTimeout = defaultQueryTimeout;
 	}
 
@@ -363,21 +364,21 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回从连接池获取一个连接时，最大的等待时间，单位：毫秒
+	 * 返回从连接池获取一个连接时，最大的等待时间
 	 *
 	 * @return 从连接池获取一个连接时，最大的等待时间
 	 */
-	public long getMaxWait(){
+	public Duration getMaxWait(){
 		return maxWait;
 	}
 
 	/**
-	 * 设置从连接池获取一个连接时，最大的等待时间，单位：毫秒
+	 * 设置从连接池获取一个连接时，最大的等待时间
 	 *
 	 * @param maxWait
 	 * 		从连接池获取一个连接时，最大的等待时间
 	 */
-	public void setMaxWait(long maxWait){
+	public void setMaxWait(Duration maxWait){
 		this.maxWait = maxWait;
 	}
 
@@ -551,21 +552,21 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回连接有效SQL的执行查询超时时间，单位：毫秒
+	 * 返回连接有效SQL的执行查询超时时间
 	 *
 	 * @return 连接有效SQL的执行查询超时时间
 	 */
-	public int getValidationQueryTimeout(){
+	public Duration getValidationQueryTimeout(){
 		return validationQueryTimeout;
 	}
 
 	/**
-	 * 设置连接有效SQL的执行查询超时时间，单位：毫秒
+	 * 设置连接有效SQL的执行查询超时时间
 	 *
 	 * @param validationQueryTimeout
 	 * 		连接有效SQL的执行查询超时时间
 	 */
-	public void setValidationQueryTimeout(int validationQueryTimeout){
+	public void setValidationQueryTimeout(Duration validationQueryTimeout){
 		this.validationQueryTimeout = validationQueryTimeout;
 	}
 
@@ -882,21 +883,21 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回空闲对象驱逐线程运行时的休眠时间，单位：毫秒
+	 * 返回空闲对象驱逐线程运行时的休眠时间
 	 *
 	 * @return 空闲对象驱逐线程运行时的休眠时间
 	 */
-	public long getTimeBetweenEvictionRuns(){
+	public Duration getTimeBetweenEvictionRuns(){
 		return timeBetweenEvictionRuns;
 	}
 
 	/**
-	 * 设置空闲对象驱逐线程运行时的休眠时间，单位：毫秒
+	 * 设置空闲对象驱逐线程运行时的休眠时间
 	 *
 	 * @param timeBetweenEvictionRuns
 	 * 		空闲对象驱逐线程运行时的休眠时间
 	 */
-	public void setTimeBetweenEvictionRuns(long timeBetweenEvictionRuns){
+	public void setTimeBetweenEvictionRuns(Duration timeBetweenEvictionRuns){
 		this.timeBetweenEvictionRuns = timeBetweenEvictionRuns;
 	}
 
@@ -920,40 +921,40 @@ public class Dbcp2PoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回空闲的连接被释放最低要待时间，单位：毫秒
+	 * 返回空闲的连接被释放最低要待时间
 	 *
 	 * @return 空闲的连接被释放最低要待时间
 	 */
-	public long getMinEvictableIdleTime(){
+	public Duration getMinEvictableIdleTime(){
 		return minEvictableIdleTime;
 	}
 
 	/**
-	 * 设置空闲的连接被释放最低要待时间，单位：毫秒
+	 * 设置空闲的连接被释放最低要待时间
 	 *
 	 * @param minEvictableIdleTime
 	 * 		空闲的连接被释放最低要待时间
 	 */
-	public void setMinEvictableIdleTime(long minEvictableIdleTime){
+	public void setMinEvictableIdleTime(Duration minEvictableIdleTime){
 		this.minEvictableIdleTime = minEvictableIdleTime;
 	}
 
 	/**
-	 * 返回空闲的连接被释放最低要待时间，但有额外条件，单位：毫秒
+	 * 返回空闲的连接被释放最低要待时间，但有额外条件
 	 *
 	 * @return 空闲的连接被释放最低要待时间
 	 */
-	public long getSoftMinEvictableIdleTime(){
+	public Duration getSoftMinEvictableIdleTime(){
 		return softMinEvictableIdleTime;
 	}
 
 	/**
-	 * 设置空闲的连接被释放最低要待时间，单位：毫秒
+	 * 设置空闲的连接被释放最低要待时间
 	 *
 	 * @param softMinEvictableIdleTime
 	 * 		空闲的连接被释放最低要待时间
 	 */
-	public void setSoftMinEvictableIdleTime(long softMinEvictableIdleTime){
+	public void setSoftMinEvictableIdleTime(Duration softMinEvictableIdleTime){
 		this.softMinEvictableIdleTime = softMinEvictableIdleTime;
 	}
 

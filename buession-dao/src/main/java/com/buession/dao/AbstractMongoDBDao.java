@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.dao;
@@ -31,6 +31,8 @@ import com.buession.core.exception.OperationException;
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.RandomUtils;
 import com.buession.core.validator.Validate;
+import com.buession.dao.mongodb.MongoDBOperatorUtils;
+import com.buession.dao.mongodb.OrderToMongoDBSortDirectionConverter;
 import com.buession.lang.Order;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.result.DeleteResult;
@@ -516,50 +518,7 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 		conditions.forEach((field, value)->{
 			if(value instanceof MongoOperation){
 				MongoOperation mongoOperation = (MongoOperation) value;
-				MongoOperation.Operator operator = mongoOperation.getOperator();
-
-				if(operator != null){
-					switch(operator){
-						/* 等于 */
-						case EQUAL:
-							criteria.and(field).is(mongoOperation.getValue());
-							break;
-						/* 不等于 */
-						case NOT_EQUAL:
-							criteria.and(field).ne(mongoOperation.getValue());
-							break;
-						/* 小于 */
-						case LT:
-							criteria.and(field).lt(mongoOperation.getValue());
-							break;
-						/* 小于等于 */
-						case LTE:
-							criteria.and(field).lte(mongoOperation.getValue());
-							break;
-						/* 大于 */
-						case GT:
-							criteria.and(field).gt(mongoOperation.getValue());
-							break;
-						/* 大于等于 */
-						case GTE:
-							criteria.and(field).gte(mongoOperation.getValue());
-							break;
-						/* IN */
-						case IN:
-							criteria.and(field).in(mongoOperation.getValue());
-							break;
-						/* NOT IN */
-						case NIN:
-							criteria.and(field).nin(mongoOperation.getValue());
-							break;
-						/* 正则 */
-						case LIKE:
-							criteria.and(field).regex((String) mongoOperation.getValue());
-							break;
-						default:
-							break;
-					}
-				}
+				MongoDBOperatorUtils.operator(criteria, field, mongoOperation);
 			}else{
 				criteria.and(field).is(value);
 			}
@@ -570,13 +529,14 @@ public abstract class AbstractMongoDBDao<P, E> extends AbstractDao<P, E> impleme
 
 	protected void buildSort(final Query query, final Map<String, Order> orders){
 		if(Validate.isNotEmpty(orders)){
+			final OrderToMongoDBSortDirectionConverter orderToMongoDBSortDirectionConverter = new OrderToMongoDBSortDirectionConverter();
 			final List<Sort.Order> sortOrders = new ArrayList<>(orders.size());
 
 			orders.forEach((field, order)->{
-				if(order == Order.ASC){
-					sortOrders.add(new Sort.Order(Sort.Direction.ASC, field));
-				}else if(order == Order.DESC){
-					sortOrders.add(new Sort.Order(Sort.Direction.DESC, field));
+				Sort.Direction direction = orderToMongoDBSortDirectionConverter.convert(order);
+
+				if(direction != null){
+					sortOrders.add(new Sort.Order(direction, field));
 				}
 			});
 

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource;
@@ -86,17 +86,23 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 			dataSource.setDefaultCatalog(poolConfiguration.getDefaultCatalog());
 		}
 
-		dataSource.setMaxConnLifetimeMillis(poolConfiguration.getMaxConnLifetime());
+		if(poolConfiguration.getMaxConnLifetime() != null){
+			dataSource.setMaxConnLifetimeMillis(poolConfiguration.getMaxConnLifetime().toMillis());
+		}
 
 		if(poolConfiguration.getDefaultQueryTimeout() != null){
-			dataSource.setDefaultQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getDefaultQueryTimeout()));
+			dataSource.setDefaultQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getDefaultQueryTimeout().toMillis()));
 		}
 
 		dataSource.setInitialSize(poolConfiguration.getInitialSize());
 		dataSource.setMinIdle(poolConfiguration.getMinIdle());
 		dataSource.setMaxIdle(poolConfiguration.getMaxIdle());
 		dataSource.setMaxTotal(poolConfiguration.getMaxTotal());
-		dataSource.setMaxWaitMillis(poolConfiguration.getMaxWait());
+
+		if(poolConfiguration.getMaxWait() != null){
+			dataSource.setMaxWaitMillis(poolConfiguration.getMaxWait().toMillis());
+		}
+
 		dataSource.setTestOnCreate(poolConfiguration.isTestOnCreate());
 		dataSource.setTestOnBorrow(poolConfiguration.isTestOnBorrow());
 		dataSource.setTestOnReturn(poolConfiguration.isTestOnReturn());
@@ -114,7 +120,9 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 			dataSource.setValidationQuery(poolConfiguration.getValidationQuery());
 		}
 
-		dataSource.setValidationQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getValidationQueryTimeout()));
+		if(poolConfiguration.getValidationQueryTimeout() != null){
+			dataSource.setValidationQueryTimeout((int) TimeUnit.MILLISECONDS.toSeconds(poolConfiguration.getValidationQueryTimeout().toMillis()));
+		}
 
 		if(poolConfiguration.getDefaultSchema() != null){
 			dataSource.setDefaultSchema(poolConfiguration.getDefaultSchema());
@@ -139,10 +147,20 @@ public class Dbcp2DataSource extends AbstractDataSource<BasicDataSource, Dbcp2Po
 			dataSource.setEvictionPolicyClassName(poolConfiguration.getEvictionPolicyClassName());
 		}
 
-		dataSource.setTimeBetweenEvictionRunsMillis(poolConfiguration.getTimeBetweenEvictionRuns());
+		if(poolConfiguration.getTimeBetweenEvictionRuns() != null){
+			dataSource.setTimeBetweenEvictionRunsMillis(poolConfiguration.getTimeBetweenEvictionRuns().toMillis());
+		}
+
 		dataSource.setNumTestsPerEvictionRun(poolConfiguration.getNumTestsPerEvictionRun());
-		dataSource.setMinEvictableIdleTimeMillis(poolConfiguration.getMinEvictableIdleTime());
-		dataSource.setSoftMinEvictableIdleTimeMillis(poolConfiguration.getSoftMinEvictableIdleTime());
+
+		if(poolConfiguration.getMinEvictableIdleTime() != null){
+			dataSource.setMinEvictableIdleTimeMillis(poolConfiguration.getMinEvictableIdleTime().toMillis());
+		}
+
+		if(poolConfiguration.getSoftMinEvictableIdleTime() != null){
+			dataSource.setSoftMinEvictableIdleTimeMillis(poolConfiguration.getSoftMinEvictableIdleTime().toMillis());
+		}
+
 		dataSource.setLifo(poolConfiguration.isLifo());
 		dataSource.setFastFailValidation(poolConfiguration.isFastFailValidation());
 

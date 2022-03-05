@@ -19,13 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource.config;
 
 import com.buession.jdbc.core.TransactionIsolation;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
+
+import java.time.Duration;
 
 /**
  * Tomcat 数据源连接池配置 {@link PoolProperties}
@@ -66,9 +68,9 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	private int maxIdle = maxActive;
 
 	/**
-	 * 获取连接时最大等待时间，-1 表示不限制，单位：毫秒
+	 * 获取连接时最大等待时间，-1 表示不限制
 	 */
-	private int maxWait = 30000;
+	private Duration maxWait = Duration.ofMillis(30000L);
 
 	/**
 	 * 以毫秒为单位的时间，以重新建立连接。
@@ -92,14 +94,14 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	private String validationQuery;
 
 	/**
-	 * 验证连接时间间隔，单位：毫秒
+	 * 验证连接时间间隔
 	 */
-	private long validationInterval = 3000L;
+	private Duration validationInterval = Duration.ofMillis(3000L);
 
 	/**
-	 * 验证SQL的执行超时时间，单位：毫秒，为负数表示关闭连接验证超时
+	 * 验证SQL的执行超时时间，为负数表示关闭连接验证超时
 	 */
-	private int validationQueryTimeout = -1;
+	private Duration validationQueryTimeout = Duration.ofMillis(-1L);
 
 	/**
 	 * 实现 {@link org.apache.tomcat.jdbc.pool.Validator} 接口并提供无参构造方法的实现类，用来替代连接验证SQL，对连接进行验证
@@ -134,16 +136,16 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	private boolean testWhileIdle = false;
 
 	/**
-	 * 空闲连接验证/清除线程的运行之间休眠时间，单位：毫秒
+	 * 空闲连接验证/清除线程的运行之间休眠时间
 	 */
-	private int timeBetweenEvictionRuns = 5000;
+	private Duration timeBetweenEvictionRuns = Duration.ofMillis(5000L);
 
 	private int numTestsPerEvictionRun;
 
 	/**
-	 * 个对象在有资格被驱逐之前可以在池中空闲的最短时间，单位：毫秒
+	 * 个对象在有资格被驱逐之前可以在池中空闲的最短时间
 	 */
-	private int minEvictableIdleTime = 60000;
+	private Duration minEvictableIdleTime = Duration.ofMillis(60000L);
 
 	/**
 	 * 默认事务隔离级别
@@ -177,9 +179,9 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	private boolean removeAbandoned = false;
 
 	/**
-	 * 一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间，单位：毫秒
+	 * 一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
 	 */
-	private int removeAbandonedTimeout = 6000;
+	private Duration removeAbandonedTimeout = Duration.ofMillis(6000L);
 
 	/**
 	 * 记录抛弃连接的应用的堆栈信息；
@@ -197,9 +199,9 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	/**
 	 * 与 removeAbandonedTimeout 值类似，但是不是将连接视为已放弃并可能关，而是将警告（如果 logAbandoned 设置为 true）记录下来。
 	 * 如果该值等于或小于0，将不执行任何可疑检查；仅当超时值大于0并且未放弃连接或禁用放弃检查时，才进行可疑检查；
-	 * 如果怀疑连接，则记录 WARN 消息，并发送一次 JMX 通知，单位：毫秒
+	 * 如果怀疑连接，则记录 WARN 消息，并发送一次 JMX 通知
 	 */
-	private int suspectTimeout = 0;
+	private Duration suspectTimeout = Duration.ofMillis(0L);
 
 	private boolean alternateUsernameAllowed = false;
 
@@ -366,21 +368,21 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回获取连接时最大等待时间，单位：毫秒
+	 * 返回获取连接时最大等待时间
 	 *
 	 * @return 获取连接时最大等待时间
 	 */
-	public int getMaxWait(){
+	public Duration getMaxWait(){
 		return maxWait;
 	}
 
 	/**
-	 * 设置获取连接时最大等待时间，单位：毫秒
+	 * 设置获取连接时最大等待时间
 	 *
 	 * @param maxWait
 	 * 		获取连接时最大等待时间
 	 */
-	public void setMaxWait(int maxWait){
+	public void setMaxWait(Duration maxWait){
 		this.maxWait = maxWait;
 	}
 
@@ -431,40 +433,40 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回验证连接时间间隔，单位：毫秒
+	 * 返回验证连接时间间隔
 	 *
 	 * @return 验证连接时间间隔
 	 */
-	public long getValidationInterval(){
+	public Duration getValidationInterval(){
 		return validationInterval;
 	}
 
 	/**
-	 * 设置验证连接时间间隔，单位：毫秒
+	 * 设置验证连接时间间隔
 	 *
 	 * @param validationInterval
 	 * 		验证连接时间间隔
 	 */
-	public void setValidationInterval(long validationInterval){
+	public void setValidationInterval(Duration validationInterval){
 		this.validationInterval = validationInterval;
 	}
 
 	/**
-	 * 返回验证SQL的执行超时时间，单位：毫秒，为负数表示关闭连接验证超时
+	 * 返回验证SQL的执行超时时间，为负数表示关闭连接验证超时
 	 *
 	 * @return 验证SQL的执行超时时间
 	 */
-	public int getValidationQueryTimeout(){
+	public Duration getValidationQueryTimeout(){
 		return validationQueryTimeout;
 	}
 
 	/**
-	 * 设置验证SQL的执行超时时间，单位：毫秒，为负数表示关闭连接验证超时
+	 * 设置验证SQL的执行超时时间，为负数表示关闭连接验证超时
 	 *
 	 * @param validationQueryTimeout
 	 * 		验证SQL的执行超时时间
 	 */
-	public void setValidationQueryTimeout(int validationQueryTimeout){
+	public void setValidationQueryTimeout(Duration validationQueryTimeout){
 		this.validationQueryTimeout = validationQueryTimeout;
 	}
 
@@ -628,21 +630,21 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回空闲连接验证/清除线程的运行之间休眠时间，单位：毫秒
+	 * 返回空闲连接验证/清除线程的运行之间休眠时间
 	 *
 	 * @return 空闲连接验证/清除线程的运行之间休眠时间
 	 */
-	public int getTimeBetweenEvictionRuns(){
+	public Duration getTimeBetweenEvictionRuns(){
 		return timeBetweenEvictionRuns;
 	}
 
 	/**
-	 * 设置空闲连接验证/清除线程的运行之间休眠时间，单位：毫秒
+	 * 设置空闲连接验证/清除线程的运行之间休眠时间
 	 *
 	 * @param timeBetweenEvictionRuns
 	 * 		空闲连接验证/清除线程的运行之间休眠时间
 	 */
-	public void setTimeBetweenEvictionRuns(int timeBetweenEvictionRuns){
+	public void setTimeBetweenEvictionRuns(Duration timeBetweenEvictionRuns){
 		this.timeBetweenEvictionRuns = timeBetweenEvictionRuns;
 	}
 
@@ -655,21 +657,21 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回一个对象在有资格被驱逐之前可以在池中空闲的最短时间，单位：毫秒
+	 * 返回一个对象在有资格被驱逐之前可以在池中空闲的最短时间
 	 *
 	 * @return 一个对象在有资格被驱逐之前可以在池中空闲的最短时间
 	 */
-	public int getMinEvictableIdleTime(){
+	public Duration getMinEvictableIdleTime(){
 		return minEvictableIdleTime;
 	}
 
 	/**
-	 * 设置一个对象在有资格被驱逐之前可以在池中空闲的最短时间，单位：毫秒
+	 * 设置一个对象在有资格被驱逐之前可以在池中空闲的最短时间
 	 *
 	 * @param minEvictableIdleTime
 	 * 		一个对象在有资格被驱逐之前可以在池中空闲的最短时间
 	 */
-	public void setMinEvictableIdleTime(int minEvictableIdleTime){
+	public void setMinEvictableIdleTime(Duration minEvictableIdleTime){
 		this.minEvictableIdleTime = minEvictableIdleTime;
 	}
 
@@ -833,21 +835,21 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回一个连接使用超过多久就视为抛弃的，单位：毫秒
+	 * 返回一个连接使用超过多久就视为抛弃的
 	 *
 	 * @return 一个连接使用超过多久就视为抛弃的
 	 */
-	public int getRemoveAbandonedTimeout(){
+	public Duration getRemoveAbandonedTimeout(){
 		return removeAbandonedTimeout;
 	}
 
 	/**
-	 * 设置一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间，单位：毫秒
+	 * 设置一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
 	 *
 	 * @param removeAbandonedTimeout
 	 * 		一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
 	 */
-	public void setRemoveAbandonedTimeout(int removeAbandonedTimeout){
+	public void setRemoveAbandonedTimeout(Duration removeAbandonedTimeout){
 		this.removeAbandonedTimeout = removeAbandonedTimeout;
 	}
 
@@ -899,21 +901,21 @@ public class TomcatPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 超时，单位：毫秒
+	 * 超时
 	 *
 	 * @return 超时
 	 */
-	public int getSuspectTimeout(){
+	public Duration getSuspectTimeout(){
 		return suspectTimeout;
 	}
 
 	/**
-	 * 超时，单位：毫秒
+	 * 超时
 	 *
 	 * @param suspectTimeout
 	 * 		超时
 	 */
-	public void setSuspectTimeout(int suspectTimeout){
+	public void setSuspectTimeout(Duration suspectTimeout){
 		this.suspectTimeout = suspectTimeout;
 	}
 

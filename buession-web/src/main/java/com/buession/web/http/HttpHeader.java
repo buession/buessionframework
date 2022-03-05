@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.http;
@@ -633,9 +633,9 @@ public enum HttpHeader {
 	 */
 	X_XSS_PROTECTION("X-XSS-Protection");
 
-	private String value;
+	private final String value;
 
-	HttpHeader(String value){
+	HttpHeader(final String value){
 		this.value = value;
 	}
 

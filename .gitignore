@@ -3,6 +3,7 @@
 *.class
 *.iml
 .DS_Store
+node_modules
 .settings/
 target/
 .idea/

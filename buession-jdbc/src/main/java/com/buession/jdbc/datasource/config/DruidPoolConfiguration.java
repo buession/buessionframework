@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.jdbc.datasource.config;
@@ -29,6 +29,7 @@ import com.alibaba.druid.pool.DruidDataSourceStatLogger;
 import com.buession.jdbc.core.TransactionIsolation;
 
 import javax.management.ObjectName;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
@@ -87,10 +88,10 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	private int maxIdle = DruidAbstractDataSource.DEFAULT_MAX_IDLE;
 
 	/**
-	 * 获取连接时最大等待时间，单位：毫秒
+	 * 获取连接时最大等待时间
 	 * 配置了 maxWait 之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置 useUnfairLock 属性为 true 使用非公平锁
 	 */
-	private long maxWait = DruidAbstractDataSource.DEFAULT_MAX_WAIT;
+	private Duration maxWait = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_MAX_WAIT);
 
 	private long timeBetweenConnectError = DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_CONNECT_ERROR_MILLIS;
 
@@ -116,11 +117,11 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	private String validConnectionCheckerClassName;
 
 	/**
-	 * 验证SQL的执行超时时间，单位：毫秒，为负数表示关闭连接验证超时
+	 * 验证SQL的执行超时时间，为负数表示关闭连接验证超时
 	 */
-	private int validationQueryTimeout = -1;
+	private Duration validationQueryTimeout = Duration.ofMillis(-1L);
 
-	private int queryTimeout;
+	private Duration queryTimeout;
 
 	private int notFullTimeoutRetryCount = 0;
 
@@ -142,9 +143,9 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	private boolean testWhileIdle = DruidAbstractDataSource.DEFAULT_WHILE_IDLE;
 
 	/**
-	 * 空闲对象驱逐线程运行时的休眠时间，单位：毫秒
+	 * 空闲对象驱逐线程运行时的休眠时间
 	 */
-	private long timeBetweenEvictionRuns = DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS;
+	private Duration timeBetweenEvictionRuns = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS);
 
 	/**
 	 * 在每个空闲对象驱逐线程运行过程中中进行检查的对象个数
@@ -152,15 +153,15 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	private int numTestsPerEvictionRun = DruidAbstractDataSource.DEFAULT_NUM_TESTS_PER_EVICTION_RUN;
 
 	/**
-	 * 空闲的连接被释放最低要待时间，单位：毫秒
+	 * 空闲的连接被释放最低要待时间
 	 */
-	private long minEvictableIdleTime = DruidAbstractDataSource.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS;
+	private Duration minEvictableIdleTime = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_MIN_EVICTABLE_IDLE_TIME_MILLIS);
 
-	private long maxEvictableIdleTime = DruidAbstractDataSource.DEFAULT_MAX_EVICTABLE_IDLE_TIME_MILLIS;
+	private Duration maxEvictableIdleTime = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_MAX_EVICTABLE_IDLE_TIME_MILLIS);
 
-	private long keepAliveBetweenTime = DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS * 2;
+	private Duration keepAliveBetweenTime = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_TIME_BETWEEN_EVICTION_RUNS_MILLIS * 2L);
 
-	private long phyTimeout = DruidAbstractDataSource.DEFAULT_PHY_TIMEOUT_MILLIS;
+	private Duration phyTimeout = Duration.ofMillis(DruidAbstractDataSource.DEFAULT_PHY_TIMEOUT_MILLIS);
 
 	private long phyMaxUseCount = -1;
 
@@ -171,7 +172,7 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 
 	private long transactionThreshold = 0L;
 
-	private int transactionQueryTimeout;
+	private Duration transactionQueryTimeout;
 
 	/**
 	 * 默认是否自动提交事务
@@ -221,9 +222,9 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	private boolean removeAbandoned;
 
 	/**
-	 * 一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间，单位：毫秒
+	 * 一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
 	 */
-	private long removeAbandonedTimeout = 300 * 1000L;
+	private Duration removeAbandonedTimeout = Duration.ofMillis(300 * 1000L);
 
 	/**
 	 * 记录抛弃连接的应用的堆栈信息；
@@ -429,21 +430,21 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回获取连接时最大等待时间，单位：毫秒
+	 * 返回获取连接时最大等待时间
 	 *
 	 * @return 获取连接时最大等待时间
 	 */
-	public long getMaxWait(){
+	public Duration getMaxWait(){
 		return maxWait;
 	}
 
 	/**
-	 * 设置获取连接时最大等待时间，单位：毫秒
+	 * 设置获取连接时最大等待时间
 	 *
 	 * @param maxWait
 	 * 		获取连接时最大等待时间
 	 */
-	public void setMaxWait(long maxWait){
+	public void setMaxWait(Duration maxWait){
 		this.maxWait = maxWait;
 	}
 
@@ -545,29 +546,29 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回验证SQL的执行超时时间，单位：毫秒，为负数表示关闭连接验证超时
+	 * 返回验证SQL的执行超时时间，为负数表示关闭连接验证超时
 	 *
 	 * @return 验证SQL的执行超时时间
 	 */
-	public int getValidationQueryTimeout(){
+	public Duration getValidationQueryTimeout(){
 		return validationQueryTimeout;
 	}
 
 	/**
-	 * 设置验证SQL的执行超时时间，单位：毫秒，为负数表示关闭连接验证超时
+	 * 设置验证SQL的执行超时时间，为负数表示关闭连接验证超时
 	 *
 	 * @param validationQueryTimeout
 	 * 		验证SQL的执行超时时间
 	 */
-	public void setValidationQueryTimeout(int validationQueryTimeout){
+	public void setValidationQueryTimeout(Duration validationQueryTimeout){
 		this.validationQueryTimeout = validationQueryTimeout;
 	}
 
-	public int getQueryTimeout(){
+	public Duration getQueryTimeout(){
 		return queryTimeout;
 	}
 
-	public void setQueryTimeout(int queryTimeout){
+	public void setQueryTimeout(Duration queryTimeout){
 		this.queryTimeout = queryTimeout;
 	}
 
@@ -664,21 +665,21 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回空闲对象驱逐线程运行时的休眠时间，单位：毫秒
+	 * 返回空闲对象驱逐线程运行时的休眠时间
 	 *
 	 * @return 空闲对象驱逐线程运行时的休眠时间
 	 */
-	public long getTimeBetweenEvictionRuns(){
+	public Duration getTimeBetweenEvictionRuns(){
 		return timeBetweenEvictionRuns;
 	}
 
 	/**
-	 * 设置空闲对象驱逐线程运行时的休眠时间，单位：毫秒
+	 * 设置空闲对象驱逐线程运行时的休眠时间
 	 *
 	 * @param timeBetweenEvictionRuns
 	 * 		空闲对象驱逐线程运行时的休眠时间
 	 */
-	public void setTimeBetweenEvictionRuns(long timeBetweenEvictionRuns){
+	public void setTimeBetweenEvictionRuns(Duration timeBetweenEvictionRuns){
 		this.timeBetweenEvictionRuns = timeBetweenEvictionRuns;
 	}
 
@@ -702,45 +703,45 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回空闲的连接被释放最低要待时间，单位：毫秒
+	 * 返回空闲的连接被释放最低要待时间
 	 *
 	 * @return 空闲的连接被释放最低要待时间
 	 */
-	public long getMinEvictableIdleTime(){
+	public Duration getMinEvictableIdleTime(){
 		return minEvictableIdleTime;
 	}
 
 	/**
-	 * 设置空闲的连接被释放最低要待时间，单位：毫秒
+	 * 设置空闲的连接被释放最低要待时间
 	 *
 	 * @param minEvictableIdleTime
 	 * 		空闲的连接被释放最低要待时间
 	 */
-	public void setMinEvictableIdleTime(long minEvictableIdleTime){
+	public void setMinEvictableIdleTime(Duration minEvictableIdleTime){
 		this.minEvictableIdleTime = minEvictableIdleTime;
 	}
 
-	public long getMaxEvictableIdleTime(){
+	public Duration getMaxEvictableIdleTime(){
 		return maxEvictableIdleTime;
 	}
 
-	public void setMaxEvictableIdleTime(long maxEvictableIdleTime){
+	public void setMaxEvictableIdleTime(Duration maxEvictableIdleTime){
 		this.maxEvictableIdleTime = maxEvictableIdleTime;
 	}
 
-	public long getKeepAliveBetweenTime(){
+	public Duration getKeepAliveBetweenTime(){
 		return keepAliveBetweenTime;
 	}
 
-	public void setKeepAliveBetweenTime(long keepAliveBetweenTime){
+	public void setKeepAliveBetweenTime(Duration keepAliveBetweenTime){
 		this.keepAliveBetweenTime = keepAliveBetweenTime;
 	}
 
-	public long getPhyTimeout(){
+	public Duration getPhyTimeout(){
 		return phyTimeout;
 	}
 
-	public void setPhyTimeout(long phyTimeout){
+	public void setPhyTimeout(Duration phyTimeout){
 		this.phyTimeout = phyTimeout;
 	}
 
@@ -779,11 +780,11 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 		this.transactionThreshold = transactionThreshold;
 	}
 
-	public int getTransactionQueryTimeout(){
+	public Duration getTransactionQueryTimeout(){
 		return transactionQueryTimeout;
 	}
 
-	public void setTransactionQueryTimeout(int transactionQueryTimeout){
+	public void setTransactionQueryTimeout(Duration transactionQueryTimeout){
 		this.transactionQueryTimeout = transactionQueryTimeout;
 	}
 
@@ -1005,21 +1006,21 @@ public class DruidPoolConfiguration extends AbstractPoolConfiguration {
 	}
 
 	/**
-	 * 返回一个连接使用超过多久就视为抛弃的，单位：毫秒
+	 * 返回一个连接使用超过多久就视为抛弃的
 	 *
 	 * @return 一个连接使用超过多久就视为抛弃的
 	 */
-	public long getRemoveAbandonedTimeout(){
+	public Duration getRemoveAbandonedTimeout(){
 		return removeAbandonedTimeout;
 	}
 
 	/**
-	 * 设置一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间，单位：毫秒
+	 * 设置一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
 	 *
 	 * @param removeAbandonedTimeout
 	 * 		一个连接使用超过多久就视为抛弃的，该值应该超过你的应用中最长的SQL可能运行的时间
 	 */
-	public void setRemoveAbandonedTimeout(long removeAbandonedTimeout){
+	public void setRemoveAbandonedTimeout(Duration removeAbandonedTimeout){
 		this.removeAbandonedTimeout = removeAbandonedTimeout;
 	}
 

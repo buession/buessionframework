@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.json.strategy;
@@ -67,8 +67,7 @@ public enum SensitiveStrategy {
 	/**
 	 * IP 地址脱敏策略
 	 */
-	IP(str->str.replaceAll("((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}",
-			"$1." + "****.$2")),
+	IP(str->str.replaceAll("((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(\\.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}", "$1." + "****.$2")),
 	/**
 	 * 地址脱敏策略
 	 */
@@ -76,7 +75,7 @@ public enum SensitiveStrategy {
 
 	private final Function<String, String> function;
 
-	SensitiveStrategy(Function<String, String> function){
+	SensitiveStrategy(final Function<String, String> function){
 		this.function = function;
 	}
 

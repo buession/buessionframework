@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.thesaurus.core;
@@ -29,23 +29,23 @@ package com.buession.thesaurus.core;
  */
 public enum Type {
 
-    SOGOU("sogou", "搜狗词库");
+	SOGOU("sogou", "搜狗词库");
 
-    private String id;
+	private final String id;
 
-    private String name;
+	private final String name;
 
-    Type(String id, String name){
-        this.id = id;
-        this.name = name;
-    }
+	Type(final String id, final String name){
+		this.id = id;
+		this.name = name;
+	}
 
-    public String getId(){
-        return id;
-    }
+	public String getId(){
+		return id;
+	}
 
-    public String getName(){
-        return name;
-    }
+	public String getName(){
+		return name;
+	}
 
 }

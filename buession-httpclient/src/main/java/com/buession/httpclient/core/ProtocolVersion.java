@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -29,21 +29,33 @@ package com.buession.httpclient.core;
  */
 public enum ProtocolVersion {
 
+	/**
+	 * HTTP/0.9
+	 */
 	HTTP_0_9("http", 0, 9),
 
+	/**
+	 * HTTP/1.0
+	 */
 	HTTP_1_0("http", 1, 0),
 
+	/**
+	 * HTTP/1.1
+	 */
 	HTTP_1_1("http", 1, 1),
 
+	/**
+	 * HTTP/2.0
+	 */
 	HTTP_2_0("http", 2, 0);
 
-	protected String protocol;
+	private final String protocol;
 
-	protected int major;
+	private final int major;
 
-	protected int minor;
+	private final int minor;
 
-	ProtocolVersion(String protocol, int major, int minor){
+	ProtocolVersion(final String protocol, final int major, final int minor){
 		this.protocol = protocol;
 		this.major = major;
 		this.minor = minor;

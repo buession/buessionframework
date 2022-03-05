@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.io.file;
@@ -34,34 +34,31 @@ public enum FilePermission {
 	/**
 	 * 可读
 	 */
-	READ('r', "r"),
+	READ('r'),
 
 	/**
 	 * 可写
 	 */
-	WRITE('w', "w"),
+	WRITE('w'),
 
 	/**
 	 * 可执行
 	 */
-	EXECUTE('x', "x"),
+	EXECUTE('x'),
 
-	SGUID('s', "s"),
+	SGUID('s'),
 
-	STICKY('t', "t"),
+	STICKY('t'),
 
 	/**
 	 * 无
 	 */
-	NONE('-', "-");
+	NONE('-');
 
-	char value;
+	private final char value;
 
-	String strValue;
-
-	FilePermission(char value, String strValue){
+	FilePermission(final char value){
 		this.value = value;
-		this.strValue = strValue;
 	}
 
 	public char getValue(){
@@ -70,7 +67,7 @@ public enum FilePermission {
 
 	@Override
 	public String toString(){
-		return strValue;
+		return Character.toString(value);
 	}
 
 }
