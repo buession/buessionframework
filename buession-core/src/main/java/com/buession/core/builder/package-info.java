@@ -23,8 +23,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  */
 /**
- * 
- *
  * @author Yong.Teng
  * @since 2.0.0
- */package com.buession.core.builder;
+ */
+package com.buession.core.builder;

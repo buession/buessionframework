@@ -22,8 +22,9 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.core.utils;
+package com.buession.core.builder;
 
+import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,7 @@ import java.util.List;
  * 		Value 类型
  *
  * @author Yong.Teng
- * @since 1.3.1
+ * @since 2.0.0
  */
 public class ListBuilder<V> {
 
