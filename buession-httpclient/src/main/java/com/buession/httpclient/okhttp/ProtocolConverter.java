@@ -21,10 +21,39 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.httpclient.okhttp;/**
- * 
- *
+ */
+package com.buession.httpclient.okhttp;
+
+import com.buession.core.converter.Converter;
+import com.buession.httpclient.core.ProtocolVersion;
+
+/**
  * @author Yong.Teng
  * @since 2.0.0
- */public class ProtocolConverter {
+ */
+public class ProtocolConverter implements Converter<okhttp3.Protocol, ProtocolVersion> {
+
+	@Override
+	public ProtocolVersion convert(final okhttp3.Protocol source){
+		if(source == null){
+			return null;
+		}
+
+		switch(source){
+			case HTTP_1_0:
+				return ProtocolVersion.HTTP_1_0;
+			case HTTP_1_1:
+				return ProtocolVersion.HTTP_1_1;
+			case HTTP_2:
+			case H2_PRIOR_KNOWLEDGE:
+				return ProtocolVersion.HTTP_2_0;
+			case QUIC:
+				return ProtocolVersion.QUIC;
+			case SPDY_3:
+				return ProtocolVersion.SPDY_3_1;
+			default:
+				return null;
+		}
+	}
+
 }

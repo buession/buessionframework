@@ -22,14 +22,14 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.response;
+package com.buession.httpclient.core;
 
 import com.buession.core.utils.StringUtils;
-import com.buession.httpclient.core.Header;
 import com.google.common.collect.Multimap;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 响应头解析器抽象类
@@ -47,13 +47,9 @@ public abstract class AbstractResponseHeaderParse<T> implements ResponseHeaderPa
 			return null;
 		}
 
-		final List<Header> headers = new ArrayList<>();
-
-		for(String name : headersMap.keySet()){
-			headers.add(new Header(name, StringUtils.join(headersMap.get(name), ", ")));
-		}
-
-		return headers;
+		return Collections.unmodifiableList(
+				headersMap.keySet().stream().map((name)->new Header(name, StringUtils.join(headersMap.get(name), ", ")))
+						.collect(Collectors.toList()));
 	}
 
 }

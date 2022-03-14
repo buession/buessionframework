@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.exception;
@@ -29,26 +29,29 @@ package com.buession.httpclient.exception;
  */
 public class HttpResponseErrorException extends Exception {
 
-    private int code;
+	private static final long serialVersionUID = -6551864323972298702L;
 
-    private String text;
+	private final int code;
 
-    public HttpResponseErrorException(int code, String text){
-        super("code=" + code + ", text='" + text + "'");
-        this.code = code;
-        this.text = text;
-    }
+	private final String text;
 
-    public int getCode(){
-        return code;
-    }
+	public HttpResponseErrorException(final int code, final String text){
+		super("HttpResponseError[code=" + code + ", text='" + text + "']");
+		this.code = code;
+		this.text = text;
+	}
 
-    public String getText(){
-        return text;
-    }
+	public int getCode(){
+		return code;
+	}
 
-    @Override
-    public String toString(){
-        return "HttpResponseErrorException{" + "code=" + code + ", text='" + text + '\'' + '}';
-    }
+	public String getText(){
+		return text;
+	}
+
+	@Override
+	public String toString(){
+		return "HttpResponseErrorException{" + "code=" + code + ", text='" + text + '\'' + '}';
+	}
+
 }

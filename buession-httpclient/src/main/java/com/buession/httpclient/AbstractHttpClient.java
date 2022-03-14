@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient;
@@ -31,12 +31,9 @@ import com.buession.httpclient.core.ProtocolVersion;
 import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.Response;
-import com.buession.httpclient.exception.ConnectTimeoutException;
-import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
-import com.buession.httpclient.exception.ReadTimeoutException;
-import com.buession.httpclient.exception.RequestAbortedException;
 import com.buession.httpclient.exception.RequestException;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -98,1206 +95,1089 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response get(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response get(String url) throws IOException, RequestException{
 		return get(url, null, null);
 	}
 
 	@Override
-	public Response get(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
-			RequestAbortedException, RequestException{
+	public Response get(URL url) throws IOException, RequestException{
 		return get(url, null, null);
 	}
 
 	@Override
-	public Response get(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response get(String url, List<Header> headers) throws IOException, RequestException{
 		return get(url, null, headers);
 	}
 
 	@Override
-	public Response get(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response get(URL url, List<Header> headers) throws IOException, RequestException{
 		return get(url, null, headers);
 	}
 
 	@Override
-	public Response get(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response get(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return get(url, parameters, null);
 	}
 
 	@Override
-	public Response get(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response get(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return get(url, parameters, null);
 	}
 
 	@Override
-	public Response get(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response get(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return get(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response post(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(String url) throws IOException, RequestException{
 		return post(url, null, null, null);
 	}
 
 	@Override
-	public Response post(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
-			, RequestAbortedException, RequestException{
+	public Response post(URL url) throws IOException, RequestException{
 		return post(url, null, null, null);
 	}
 
 	@Override
-	public Response post(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(String url, List<Header> headers) throws IOException, RequestException{
 		return post(url, null, null, headers);
 	}
 
 	@Override
-	public Response post(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
-			, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(URL url, List<Header> headers) throws IOException, RequestException{
 		return post(url, null, null, headers);
 	}
 
 	@Override
-	public Response post(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return post(url, null, parameters, null);
 	}
 
 	@Override
-	public Response post(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return post(url, null, parameters, null);
 	}
 
 	@Override
-	public Response post(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return post(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response post(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
-			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return post(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response post(String url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(String url, RequestBody<?> data)
+			throws IOException, RequestException{
 		return post(url, data, null, null);
 	}
 
 	@Override
-	public Response post(URL url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(URL url, RequestBody<?> data) throws IOException, RequestException{
 		return post(url, data, null, null);
 	}
 
 	@Override
-	public Response post(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
 		return post(url, data, null, headers);
 	}
 
 	@Override
-	public Response post(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
 		return post(url, data, null, headers);
 	}
 
 	@Override
-	public Response post(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(String url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return post(url, data, parameters);
 	}
 
 	@Override
-	public Response post(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(URL url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return post(url, data, parameters);
 	}
 
 	@Override
-	public Response post(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response post(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return post(url.toString(), data, parameters, headers);
 	}
 
 	@Override
-	public Response patch(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(String url) throws IOException, RequestException{
 		return patch(url, null, null, null);
 	}
 
 	@Override
-	public Response patch(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(URL url) throws IOException, RequestException{
 		return patch(url, null, null, null);
 	}
 
 	@Override
-	public Response patch(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(String url, List<Header> headers) throws IOException, RequestException{
 		return patch(url, null, null, headers);
 	}
 
 	@Override
-	public Response patch(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(URL url, List<Header> headers) throws IOException, RequestException{
 		return patch(url, null, null, headers);
 	}
 
 	@Override
-	public Response patch(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return patch(url, null, parameters, null);
 	}
 
 	@Override
-	public Response patch(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return patch(url, null, parameters, null);
 	}
 
 	@Override
-	public Response patch(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return patch(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response patch(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return patch(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response patch(String url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException
-			, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(String url, RequestBody<?> data) throws IOException, RequestException{
 		return patch(url, data, null, null);
 	}
 
 	@Override
-	public Response patch(URL url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(URL url, RequestBody<?> data) throws IOException, RequestException{
 		return patch(url, data, null, null);
 	}
 
 	@Override
-	public Response patch(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
 		return patch(url, data, null, headers);
 	}
 
 	@Override
-	public Response patch(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
 		return patch(url, data, null, headers);
 	}
 
 	@Override
-	public Response patch(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException
-			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(String url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return patch(url, data, parameters, null);
 	}
 
 	@Override
-	public Response patch(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return patch(url, data, parameters, null);
 	}
 
 	@Override
-	public Response patch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response patch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return patch(url.toString(), data, parameters, headers);
 	}
 
 	@Override
-	public Response put(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(String url) throws IOException, RequestException{
 		return put(url, null, null, null);
 	}
 
 	@Override
-	public Response put(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException,
-			RequestAbortedException, RequestException{
+	public Response put(URL url) throws IOException, RequestException{
 		return put(url, null, null, null);
 	}
 
 	@Override
-	public Response put(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(String url, List<Header> headers) throws IOException, RequestException{
 		return put(url, null, null, headers);
 	}
 
 	@Override
-	public Response put(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(URL url, List<Header> headers) throws IOException, RequestException{
 		return put(url, null, null, headers);
 	}
 
 	@Override
-	public Response put(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return put(url, null, parameters, null);
 	}
 
 	@Override
-	public Response put(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return put(url, null, parameters, null);
 	}
 
 	@Override
-	public Response put(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return put(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response put(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return put(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response put(String url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(String url, RequestBody<?> data) throws IOException, RequestException{
 		return put(url, data, null, null);
 	}
 
 	@Override
-	public Response put(URL url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(URL url, RequestBody<?> data) throws IOException, RequestException{
 		return put(url, data, null, null);
 	}
 
 	@Override
-	public Response put(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
 		return put(url, data, null, headers);
 	}
 
 	@Override
-	public Response put(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
 		return put(url, data, null, headers);
 	}
 
 	@Override
-	public Response put(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(String url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return put(url, data, parameters, null);
 	}
 
 	@Override
-	public Response put(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(URL url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return put(url, data, parameters, null);
 	}
 
 	@Override
-	public Response put(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response put(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return put(url.toString(), data, parameters, headers);
 	}
 
 	@Override
-	public Response delete(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response delete(String url) throws IOException, RequestException{
 		return delete(url, null, null);
 	}
 
 	@Override
-	public Response delete(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response delete(URL url) throws IOException, RequestException{
 		return delete(url, null, null);
 	}
 
 	@Override
-	public Response delete(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response delete(String url, List<Header> headers) throws IOException, RequestException{
 		return delete(url, null, headers);
 	}
 
 	@Override
-	public Response delete(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response delete(URL url, List<Header> headers) throws IOException, RequestException{
 		return delete(url, null, headers);
 	}
 
 	@Override
-	public Response delete(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response delete(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return delete(url, parameters, null);
 	}
 
 	@Override
-	public Response delete(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response delete(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return delete(url, parameters, null);
 	}
 
 	@Override
-	public Response delete(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response delete(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return delete(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response connect(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response connect(String url) throws IOException, RequestException{
 		return connect(url, null, null);
 	}
 
 	@Override
-	public Response connect(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response connect(URL url) throws IOException, RequestException{
 		return connect(url, null, null);
 	}
 
 	@Override
-	public Response connect(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response connect(String url, List<Header> headers) throws IOException, RequestException{
 		return connect(url, null, headers);
 	}
 
 	@Override
-	public Response connect(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response connect(URL url, List<Header> headers) throws IOException, RequestException{
 		return connect(url, null, headers);
 	}
 
 	@Override
-	public Response connect(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response connect(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return connect(url, parameters, null);
 	}
 
 	@Override
-	public Response connect(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response connect(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return connect(url, parameters, null);
 	}
 
 	@Override
-	public Response connect(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response connect(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return connect(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response trace(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response trace(String url) throws IOException, RequestException{
 		return trace(url, null, null);
 	}
 
 	@Override
-	public Response trace(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response trace(URL url) throws IOException, RequestException{
 		return trace(url, null, null);
 	}
 
 	@Override
-	public Response trace(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response trace(String url, List<Header> headers) throws IOException, RequestException{
 		return trace(url, null, headers);
 	}
 
 	@Override
-	public Response trace(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response trace(URL url, List<Header> headers) throws IOException, RequestException{
 		return trace(url, null, headers);
 	}
 
 	@Override
-	public Response trace(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response trace(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return trace(url, parameters, null);
 	}
 
 	@Override
-	public Response trace(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response trace(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return trace(url, parameters, null);
 	}
 
 	@Override
-	public Response trace(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response trace(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return trace(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response copy(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response copy(String url) throws IOException, RequestException{
 		return copy(url, null, null);
 	}
 
 	@Override
-	public Response copy(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
-			, RequestAbortedException, RequestException{
+	public Response copy(URL url) throws IOException, RequestException{
 		return copy(url, null, null);
 	}
 
 	@Override
-	public Response copy(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response copy(String url, List<Header> headers) throws IOException, RequestException{
 		return copy(url, null, headers);
 	}
 
 	@Override
-	public Response copy(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
-			, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response copy(URL url, List<Header> headers) throws IOException, RequestException{
 		return copy(url, null, headers);
 	}
 
 	@Override
-	public Response copy(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response copy(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return copy(url, parameters, null);
 	}
 
 	@Override
-	public Response copy(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response copy(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return copy(url, parameters, null);
 	}
 
 	@Override
-	public Response copy(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
-			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response copy(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return copy(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response move(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response move(String url) throws IOException, RequestException{
 		return move(url, null, null);
 	}
 
 	@Override
-	public Response move(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
-			, RequestAbortedException, RequestException{
+	public Response move(URL url) throws IOException, RequestException{
 		return move(url, null, null);
 	}
 
 	@Override
-	public Response move(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response move(String url, List<Header> headers) throws IOException, RequestException{
 		return move(url, null, headers);
 	}
 
 	@Override
-	public Response move(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
-			, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response move(URL url, List<Header> headers) throws IOException, RequestException{
 		return move(url, null, headers);
 	}
 
 	@Override
-	public Response move(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response move(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return move(url, parameters, null);
 	}
 
 	@Override
-	public Response move(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response move(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return move(url, parameters, null);
 	}
 
 	@Override
-	public Response move(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
-			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response move(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return move(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response head(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response head(String url) throws IOException, RequestException{
 		return head(url, null, null);
 	}
 
 	@Override
-	public Response head(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
-			, RequestAbortedException, RequestException{
+	public Response head(URL url) throws IOException, RequestException{
 		return head(url, null, null);
 	}
 
 	@Override
-	public Response head(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response head(String url, List<Header> headers) throws IOException, RequestException{
 		return head(url, null, headers);
 	}
 
 	@Override
-	public Response head(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
-			, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response head(URL url, List<Header> headers) throws IOException, RequestException{
 		return head(url, null, headers);
 	}
 
 	@Override
-	public Response head(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response head(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return head(url, parameters, null);
 	}
 
 	@Override
-	public Response head(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response head(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return head(url, parameters, null);
 	}
 
 	@Override
-	public Response head(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
-			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response head(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return head(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response options(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response options(String url) throws IOException, RequestException{
 		return options(url, null, null);
 	}
 
 	@Override
-	public Response options(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response options(URL url) throws IOException, RequestException{
 		return options(url, null, null);
 	}
 
 	@Override
-	public Response options(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response options(String url, List<Header> headers) throws IOException, RequestException{
 		return options(url, null, headers);
 	}
 
 	@Override
-	public Response options(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response options(URL url, List<Header> headers) throws IOException, RequestException{
 		return options(url, null, headers);
 	}
 
 	@Override
-	public Response options(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response options(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return options(url, parameters, null);
 	}
 
 	@Override
-	public Response options(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response options(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return options(url, parameters, null);
 	}
 
 	@Override
-	public Response options(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response options(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return options(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response link(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response link(String url) throws IOException, RequestException{
 		return link(url, null, null);
 	}
 
 	@Override
-	public Response link(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
-			, RequestAbortedException, RequestException{
+	public Response link(URL url) throws IOException, RequestException{
 		return link(url, null, null);
 	}
 
 	@Override
-	public Response link(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response link(String url, List<Header> headers) throws IOException, RequestException{
 		return link(url, null, headers);
 	}
 
 	@Override
-	public Response link(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
-			, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response link(URL url, List<Header> headers) throws IOException, RequestException{
 		return link(url, null, headers);
 	}
 
 	@Override
-	public Response link(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response link(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return link(url, parameters, null);
 	}
 
 	@Override
-	public Response link(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response link(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return link(url, parameters, null);
 	}
 
 	@Override
-	public Response link(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
-			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response link(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return link(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response unlink(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlink(String url) throws IOException, RequestException{
 		return unlink(url, null, null);
 	}
 
 	@Override
-	public Response unlink(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlink(URL url) throws IOException, RequestException{
 		return unlink(url, null, null);
 	}
 
 	@Override
-	public Response unlink(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlink(String url, List<Header> headers) throws IOException, RequestException{
 		return unlink(url, null, headers);
 	}
 
 	@Override
-	public Response unlink(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlink(URL url, List<Header> headers) throws IOException, RequestException{
 		return unlink(url, null, headers);
 	}
 
 	@Override
-	public Response unlink(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlink(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return unlink(url, parameters, null);
 	}
 
 	@Override
-	public Response unlink(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlink(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return unlink(url, parameters, null);
 	}
 
 	@Override
-	public Response unlink(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlink(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return unlink(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response purge(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response purge(String url) throws IOException, RequestException{
 		return purge(url, null, null);
 	}
 
 	@Override
-	public Response purge(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response purge(URL url) throws IOException, RequestException{
 		return purge(url, null, null);
 	}
 
 	@Override
-	public Response purge(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response purge(String url, List<Header> headers) throws IOException, RequestException{
 		return purge(url, null, headers);
 	}
 
 	@Override
-	public Response purge(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response purge(URL url, List<Header> headers) throws IOException, RequestException{
 		return purge(url, null, headers);
 	}
 
 	@Override
-	public Response purge(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response purge(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return purge(url, parameters, null);
 	}
 
 	@Override
-	public Response purge(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response purge(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return purge(url, parameters, null);
 	}
 
 	@Override
-	public Response purge(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response purge(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return purge(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response lock(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response lock(String url) throws IOException, RequestException{
 		return lock(url, null, null);
 	}
 
 	@Override
-	public Response lock(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
-			, RequestAbortedException, RequestException{
+	public Response lock(URL url) throws IOException, RequestException{
 		return lock(url, null, null);
 	}
 
 	@Override
-	public Response lock(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response lock(String url, List<Header> headers) throws IOException, RequestException{
 		return lock(url, null, headers);
 	}
 
 	@Override
-	public Response lock(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
-			, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response lock(URL url, List<Header> headers) throws IOException, RequestException{
 		return lock(url, null, headers);
 	}
 
 	@Override
-	public Response lock(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response lock(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return lock(url, parameters, null);
 	}
 
 	@Override
-	public Response lock(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response lock(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return lock(url, parameters, null);
 	}
 
 	@Override
-	public Response lock(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
-			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response lock(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return lock(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response unlock(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlock(String url) throws IOException, RequestException{
 		return unlock(url, null, null);
 	}
 
 	@Override
-	public Response unlock(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlock(URL url) throws IOException, RequestException{
 		return unlock(url, null, null);
 	}
 
 	@Override
-	public Response unlock(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlock(String url, List<Header> headers) throws IOException, RequestException{
 		return unlock(url, null, headers);
 	}
 
 	@Override
-	public Response unlock(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlock(URL url, List<Header> headers) throws IOException, RequestException{
 		return unlock(url, null, headers);
 	}
 
 	@Override
-	public Response unlock(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlock(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return unlock(url, parameters, null);
 	}
 
 	@Override
-	public Response unlock(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlock(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return unlock(url, parameters, null);
 	}
 
 	@Override
-	public Response unlock(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response unlock(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return unlock(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response propfind(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response propfind(String url) throws IOException, RequestException{
 		return propfind(url, null, null);
 	}
 
 	@Override
-	public Response propfind(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response propfind(URL url) throws IOException, RequestException{
 		return propfind(url, null, null);
 	}
 
 	@Override
-	public Response propfind(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response propfind(String url, List<Header> headers) throws IOException, RequestException{
 		return propfind(url, null, headers);
 	}
 
 	@Override
-	public Response propfind(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response propfind(URL url, List<Header> headers) throws IOException, RequestException{
 		return propfind(url, null, headers);
 	}
 
 	@Override
-	public Response propfind(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response propfind(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return propfind(url, parameters, null);
 	}
 
 	@Override
-	public Response propfind(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response propfind(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return propfind(url, parameters, null);
 	}
 
 	@Override
-	public Response propfind(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response propfind(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return propfind(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response proppatch(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(String url) throws IOException, RequestException{
 		return proppatch(url, null, null, null);
 	}
 
 	@Override
-	public Response proppatch(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(URL url) throws IOException, RequestException{
 		return proppatch(url, null, null, null);
 	}
 
 	@Override
-	public Response proppatch(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(String url, List<Header> headers) throws IOException, RequestException{
 		return proppatch(url, null, null, headers);
 	}
 
 	@Override
-	public Response proppatch(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(URL url, List<Header> headers) throws IOException, RequestException{
 		return proppatch(url, null, null, headers);
 	}
 
 	@Override
-	public Response proppatch(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return proppatch(url, null, parameters, null);
 	}
 
 	@Override
-	public Response proppatch(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return proppatch(url, null, parameters, null);
 	}
 
 	@Override
-	public Response proppatch(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return proppatch(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return proppatch(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response proppatch(String url, RequestBody data) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(String url, RequestBody<?> data) throws IOException, RequestException{
 		return proppatch(url, data, null, null);
 	}
 
 	@Override
-	public Response proppatch(URL url, RequestBody data) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(URL url, RequestBody<?> data) throws IOException, RequestException{
 		return proppatch(url, data, null, null);
 	}
 
 	@Override
-	public Response proppatch(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(String url, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
 		return proppatch(url, data, null, headers);
 	}
 
 	@Override
-	public Response proppatch(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
 		return proppatch(url, data, null, headers);
 	}
 
 	@Override
-	public Response proppatch(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(String url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return proppatch(url, data, parameters, null);
 	}
 
 	@Override
-	public Response proppatch(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return proppatch(url, data, parameters, null);
 	}
 
 	@Override
-	public Response proppatch(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response proppatch(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return proppatch(url.toString(), data, parameters, headers);
 	}
 
 	@Override
-	public Response report(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(String url) throws IOException, RequestException{
 		return report(url, null, null, null);
 	}
 
 	@Override
-	public Response report(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(URL url) throws IOException, RequestException{
 		return report(url, null, null, null);
 	}
 
 	@Override
-	public Response report(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(String url, List<Header> headers) throws IOException, RequestException{
 		return report(url, null, null, headers);
 	}
 
 	@Override
-	public Response report(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(URL url, List<Header> headers) throws IOException, RequestException{
 		return report(url, null, null, headers);
 	}
 
 	@Override
-	public Response report(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return report(url, null, parameters, null);
 	}
 
 	@Override
-	public Response report(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return report(url, null, parameters, null);
 	}
 
 	@Override
-	public Response report(String url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(String url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return report(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response report(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		return report(url, null, parameters, headers);
 	}
 
 	@Override
-	public Response report(String url, RequestBody data) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(String url, RequestBody<?> data) throws IOException, RequestException{
 		return report(url, data, null, null);
 	}
 
 	@Override
-	public Response report(URL url, RequestBody data) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(URL url, RequestBody<?> data) throws IOException, RequestException{
 		return report(url, data, null, null);
 	}
 
 	@Override
-	public Response report(String url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(String url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
 		return report(url, data, null, headers);
 	}
 
 	@Override
-	public Response report(URL url, RequestBody data, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(URL url, RequestBody<?> data, List<Header> headers) throws IOException, RequestException{
 		return report(url, data, null, headers);
 	}
 
 	@Override
-	public Response report(String url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(String url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return report(url, data, parameters, null);
 	}
 
 	@Override
-	public Response report(URL url, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(URL url, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return report(url, data, parameters, null);
 	}
 
 	@Override
-	public Response report(URL url, RequestBody data, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response report(URL url, RequestBody<?> data, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return report(url.toString(), data, parameters, headers);
 	}
 
 	@Override
-	public Response view(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response view(String url) throws IOException, RequestException{
 		return view(url, null, null);
 	}
 
 	@Override
-	public Response view(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException
-			, RequestAbortedException, RequestException{
+	public Response view(URL url) throws IOException, RequestException{
 		return view(url, null, null);
 	}
 
 	@Override
-	public Response view(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response view(String url, List<Header> headers) throws IOException, RequestException{
 		return view(url, null, headers);
 	}
 
 	@Override
-	public Response view(URL url, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException
-			, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response view(URL url, List<Header> headers) throws IOException, RequestException{
 		return view(url, null, headers);
 	}
 
 	@Override
-	public Response view(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response view(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return view(url, parameters, null);
 	}
 
 	@Override
-	public Response view(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response view(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return view(url, parameters, null);
 	}
 
 	@Override
-	public Response view(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException
-			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response view(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return view(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response wrapped(String url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response wrapped(String url) throws IOException, RequestException{
 		return wrapped(url, null, null);
 	}
 
 	@Override
-	public Response wrapped(URL url) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response wrapped(URL url) throws IOException, RequestException{
 		return wrapped(url, null, null);
 	}
 
 	@Override
-	public Response wrapped(String url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response wrapped(String url, List<Header> headers) throws IOException, RequestException{
 		return wrapped(url, null, headers);
 	}
 
 	@Override
-	public Response wrapped(URL url, List<Header> headers) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response wrapped(URL url, List<Header> headers) throws IOException, RequestException{
 		return wrapped(url, null, headers);
 	}
 
 	@Override
-	public Response wrapped(String url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response wrapped(String url, Map<String, Object> parameters) throws IOException, RequestException{
 		return wrapped(url, parameters, null);
 	}
 
 	@Override
-	public Response wrapped(URL url, Map<String, Object> parameters) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response wrapped(URL url, Map<String, Object> parameters) throws IOException, RequestException{
 		return wrapped(url, parameters, null);
 	}
 
 	@Override
-	public Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response wrapped(URL url, Map<String, Object> parameters, List<Header> headers)
+			throws IOException, RequestException{
 		validateURL(url);
 		return wrapped(url.toString(), parameters, headers);
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(String url, RequestMethod requestMethod) throws IOException, RequestException{
 		return request(url, requestMethod, null, null, null);
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(URL url, RequestMethod requestMethod) throws IOException, RequestException{
 		return request(url, requestMethod, null, null, null);
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(String url, RequestMethod requestMethod, List<Header> headers)
+			throws IOException, RequestException{
 		return request(url, requestMethod, null, null, headers);
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, List<Header> headers) throws ConnectTimeoutException
-			, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(URL url, RequestMethod requestMethod, List<Header> headers)
+			throws IOException, RequestException{
 		return request(url, requestMethod, null, null, headers);
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return request(url, requestMethod, null, parameters, null);
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return request(url, requestMethod, null, parameters, null);
 	}
 
 	@Override
 	public Response request(String url, RequestMethod requestMethod, Map<String, Object> parameters,
-							List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+							List<Header> headers) throws IOException, RequestException{
 		return request(url, requestMethod, null, parameters, headers);
 	}
 
 	@Override
 	public Response request(URL url, RequestMethod requestMethod, Map<String, Object> parameters,
-							List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+							List<Header> headers) throws IOException, RequestException{
 		return request(url, requestMethod, null, parameters, headers);
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, RequestBody data) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(String url, RequestMethod requestMethod, RequestBody<?> data)
+			throws IOException, RequestException{
 		return request(url, requestMethod, data, null, null);
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, RequestBody data) throws ConnectTimeoutException,
-			ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data)
+			throws IOException, RequestException{
 		return request(url, requestMethod, data, null, null);
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, RequestBody data, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(String url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
 		return request(url, requestMethod, data, null, headers);
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, RequestBody data, List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, List<Header> headers)
+			throws IOException, RequestException{
 		return request(url, requestMethod, data, null, headers);
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(String url, RequestMethod requestMethod, RequestBody<?> data,
+							Map<String, Object> parameters) throws IOException, RequestException{
 		return request(url, requestMethod, data, parameters, null);
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters) throws ConnectTimeoutException, ConnectionPoolTimeoutException, ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters)
+			throws IOException, RequestException{
 		return request(url, requestMethod, data, parameters, null);
 	}
 
 	@Override
-	public Response request(String url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters,
-							List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(String url, RequestMethod requestMethod, RequestBody<?> data,
+							Map<String, Object> parameters, List<Header> headers) throws IOException, RequestException{
 		Assert.isBlank(url, "Request url could not be null or empty.");
 
 		switch(requestMethod){
@@ -1343,51 +1223,10 @@ public abstract class AbstractHttpClient implements HttpClient {
 	}
 
 	@Override
-	public Response request(URL url, RequestMethod requestMethod, RequestBody data, Map<String, Object> parameters,
-							List<Header> headers) throws ConnectTimeoutException, ConnectionPoolTimeoutException,
-			ReadTimeoutException, RequestAbortedException, RequestException{
+	public Response request(URL url, RequestMethod requestMethod, RequestBody<?> data, Map<String, Object> parameters,
+							List<Header> headers) throws IOException, RequestException{
 		Assert.isNull(url, "Request url could not be null.");
-
-		switch(requestMethod){
-			case POST:
-				return post(url, data, parameters, headers);
-			case PUT:
-				return put(url, data, parameters, headers);
-			case PATCH:
-				return patch(url, data, parameters, headers);
-			case DELETE:
-				return delete(url, parameters, headers);
-			case CONNECT:
-				return connect(url, parameters, headers);
-			case TRACE:
-				return trace(url, parameters, headers);
-			case COPY:
-				return copy(url, parameters, headers);
-			case MOVE:
-				return move(url, parameters, headers);
-			case HEAD:
-				return head(url, parameters, headers);
-			case OPTIONS:
-				return options(url, parameters, headers);
-			case LINK:
-				return link(url, parameters, headers);
-			case UNLINK:
-				return unlink(url, parameters, headers);
-			case PURGE:
-				return purge(url, parameters, headers);
-			case LOCK:
-				return lock(url, parameters, headers);
-			case UNLOCK:
-				return unlock(url, parameters, headers);
-			case PROPFIND:
-				return propfind(url, parameters, headers);
-			case VIEW:
-				return view(url, parameters, headers);
-			case WRAPPED:
-				return wrapped(url, parameters, headers);
-			default:
-				return get(url, parameters, headers);
-		}
+		return request(url.toString(), requestMethod, data, parameters, headers);
 	}
 
 	protected static void validateURL(final URL url){

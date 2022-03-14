@@ -22,9 +22,8 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.okhttp;
+package okhttp3;
 
-import okhttp3.MediaType;
 import okhttp3.internal.Util;
 import okio.BufferedSink;
 import okio.Okio;
@@ -36,20 +35,46 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * 流请求体
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public class StreamRequestBody extends okhttp3.RequestBody {
 
+	/**
+	 * {@link MediaType}
+	 */
 	private final MediaType contentType;
 
+	/**
+	 * 输入流
+	 */
 	private final InputStream inputStream;
 
-	private StreamRequestBody(final @Nullable MediaType contentType, final @Nullable InputStream inputStream){
+	/**
+	 * 构造函数
+	 *
+	 * @param contentType
+	 *        {@link MediaType}
+	 * @param inputStream
+	 * 		输入流
+	 */
+	protected StreamRequestBody(final @Nullable MediaType contentType, final @Nullable InputStream inputStream){
 		this.inputStream = inputStream;
 		this.contentType = contentType;
 	}
 
+	/**
+	 * 创建流请求体
+	 *
+	 * @param inputStream
+	 * 		输入流
+	 * @param contentType
+	 *        {@link MediaType}
+	 *
+	 * @return 流请求体
+	 */
 	public static StreamRequestBody create(final @Nullable InputStream inputStream,
 										   final @Nullable MediaType contentType){
 		return new StreamRequestBody(contentType, inputStream);

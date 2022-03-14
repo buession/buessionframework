@@ -22,12 +22,7 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.request;
-
-import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.core.RequestBody;
-import com.buession.httpclient.core.Request;
+package com.buession.httpclient.core;
 
 import java.util.List;
 import java.util.Map;

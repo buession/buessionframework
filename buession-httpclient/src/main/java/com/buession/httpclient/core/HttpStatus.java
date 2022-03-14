@@ -25,6 +25,8 @@
 package com.buession.httpclient.core;
 
 /**
+ * 状态码 <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html" target="_blank">https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html</a>
+ *
  * @author Yong.Teng
  */
 public enum HttpStatus {
@@ -321,7 +323,7 @@ public enum HttpStatus {
 
 	@Override
 	public String toString(){
-		StringBuilder sb = new StringBuilder(32);
+		final StringBuilder sb = new StringBuilder(32);
 
 		sb.append(code).append(" ").append(text);
 

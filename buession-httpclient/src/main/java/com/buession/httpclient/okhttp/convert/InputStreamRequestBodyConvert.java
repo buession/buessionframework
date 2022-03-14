@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp.convert;
@@ -33,7 +33,7 @@ import com.buession.httpclient.core.InputStreamRequestBody;
 public class InputStreamRequestBodyConvert extends BaseInputStreamRequestBodyConverter<InputStreamRequestBody> {
 
 	@Override
-	protected okhttp3.RequestBody afterConvert(okhttp3.RequestBody requestBody){
+	protected okhttp3.RequestBody afterConvert(final okhttp3.RequestBody requestBody){
 		return requestBody;
 	}
 

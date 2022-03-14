@@ -21,10 +21,49 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.httpclient;/**
- * 
- *
+ */
+package com.buession.httpclient;
+
+import com.buession.core.utils.StringUtils;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import org.junit.Test;
+
+import java.util.Collections;
+import java.util.Iterator;
+
+/**
  * @author Yong.Teng
  * @since 2.0.0
- */public class GuavaTest {
+ */
+public class GuavaTest {
+
+	@Test
+	public void testMultimap(){
+		Multimap<String, String> map = HashMultimap.create();
+
+		map.put("a", "A1");
+		map.put("a", "A2");
+	}
+
+	@Test
+	public void forEach(){
+		Multimap<String, String> map = HashMultimap.create();
+
+		map.put("a", "A1");
+		map.put("a", "A2");
+		map.put("b", "B1");
+
+		Iterator<String> it = map.keySet().iterator();
+
+		while(it.hasNext()){
+			String name = it.next();
+			System.out.println(name + ": " + StringUtils.join(map.get(name), "|"));
+		}
+
+		map.forEach((name, value)->{
+			System.out.println(name + ": " + value);
+		});
+	}
+
 }

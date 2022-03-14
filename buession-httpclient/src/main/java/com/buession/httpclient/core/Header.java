@@ -19,42 +19,86 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
+import com.buession.core.utils.StringUtils;
+
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
+ * HTTP 头
+ *
  * @author Yong.Teng
  */
 public class Header {
 
+	/**
+	 * HTTP 头名称
+	 */
 	private String name;
 
+	/**
+	 * HTTP 头值
+	 */
 	private String value;
 
+	/**
+	 * 构造函数
+	 */
 	public Header(){
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 * @param value
+	 * 		HTTP 头值
+	 */
 	public Header(String name, String value){
 		this.name = name;
 		this.value = value;
 	}
 
+	/**
+	 * 返回 HTTP 头名称
+	 *
+	 * @return HTTP 头名称
+	 */
 	public String getName(){
 		return name;
 	}
 
+	/**
+	 * 设置 HTTP 头名称
+	 *
+	 * @param name
+	 * 		HTTP 头名称
+	 */
 	public void setName(final String name){
 		this.name = name;
 	}
 
+	/**
+	 * 返回 HTTP 头值
+	 *
+	 * @return HTTP 头值
+	 */
 	public String getValue(){
 		return value;
 	}
 
+	/**
+	 * 设置 HTTP 头值
+	 *
+	 * @param value
+	 * 		HTTP 头值
+	 */
 	public void setValue(final String value){
 		this.value = value;
 	}
@@ -72,7 +116,7 @@ public class Header {
 
 		if(obj instanceof Header){
 			Header that = (Header) obj;
-			return Objects.equals(name, that.name) && Objects.equals(value, that.value);
+			return StringUtils.equalsIgnoreCase(name, that.name) && Objects.equals(value, that.value);
 		}
 
 		return false;
@@ -80,10 +124,11 @@ public class Header {
 
 	@Override
 	public String toString(){
-		final StringBuilder sb = new StringBuilder((name == null ? 0 : name.length()) + (value == null ? 0 :
-				value.length()) + 2);
-		sb.append(name).append(": ").append(value);
-		return sb.toString();
+		final StringJoiner stringJoiner = new StringJoiner(": ");
+
+		stringJoiner.add(name).add(value);
+
+		return stringJoiner.toString();
 	}
 
 }

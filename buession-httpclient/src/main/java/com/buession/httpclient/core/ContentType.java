@@ -93,7 +93,6 @@ public final class ContentType {
 
 		if(obj instanceof ContentType){
 			ContentType that = (ContentType) obj;
-
 			return StringUtils.equalsIgnoreCase(mimeType, that.mimeType) && Objects.equals(charset, that.charset);
 		}
 
@@ -102,7 +101,7 @@ public final class ContentType {
 
 	@Override
 	public String toString(){
-		StringBuilder sb = new StringBuilder(mimeType.length() + 16);
+		final StringBuilder sb = new StringBuilder(mimeType.length() + (charset == null ? 0 : 16));
 
 		sb.append(mimeType);
 
@@ -115,20 +114,7 @@ public final class ContentType {
 	}
 
 	public static String valueOf(ContentType contentType){
-		if(contentType == null){
-			return null;
-		}
-
-		StringBuilder sb = new StringBuilder(contentType.getMimeType().length() + 16);
-
-		sb.append(contentType.getMimeType());
-
-		if(contentType.getCharset() != null){
-			sb.append("; charset=");
-			sb.append(contentType.getCharset().name());
-		}
-
-		return sb.toString();
+		return contentType == null ? null : contentType.toString();
 	}
 
 }

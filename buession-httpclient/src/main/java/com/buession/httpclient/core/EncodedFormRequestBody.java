@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -34,7 +34,7 @@ import java.util.Map;
  *
  * @author Yong.Teng
  */
-public class EncodedFormRequestBody extends AbstractRequestBody<List<RequestBodyElement>> {
+public class EncodedFormRequestBody extends AbstractFormRequestBody<RequestBodyElement> {
 
 	/**
 	 * 构造函数
@@ -74,7 +74,7 @@ public class EncodedFormRequestBody extends AbstractRequestBody<List<RequestBody
 	 * 		请求体编码
 	 */
 	public EncodedFormRequestBody(List<RequestBodyElement> content, Charset charset){
-		super(new ContentType(ContentType.APPLICATION_FORM_URLENCODED.getMimeType(), charset), content);
+		super(ContentType.APPLICATION_FORM_URLENCODED, content, charset);
 	}
 
 	/**
@@ -88,21 +88,97 @@ public class EncodedFormRequestBody extends AbstractRequestBody<List<RequestBody
 	 * 		请求体编码
 	 */
 	public EncodedFormRequestBody(List<RequestBodyElement> content, long contentLength, Charset charset){
-		super(new ContentType(ContentType.APPLICATION_FORM_URLENCODED.getMimeType(), charset), content, contentLength);
+		super(ContentType.APPLICATION_FORM_URLENCODED, content, contentLength, charset);
 	}
 
 	/**
 	 * 添加表单元素
 	 *
-	 * @param requestBodyElement
-	 * 		表单元素
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 *
+	 * @since 2.0.0
 	 */
-	public void addRequestBodyElement(RequestBodyElement requestBodyElement){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
-		}
+	public void addRequestBodyElement(String name, short value){
+		ensureNotNull();
+		getContent().add(new RequestBodyElement(name, value));
+	}
 
-		getContent().add(requestBodyElement);
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 *
+	 * @since 2.0.0
+	 */
+	public void addRequestBodyElement(String name, int value){
+		ensureNotNull();
+		getContent().add(new RequestBodyElement(name, value));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 *
+	 * @since 2.0.0
+	 */
+	public void addRequestBodyElement(String name, long value){
+		ensureNotNull();
+		getContent().add(new RequestBodyElement(name, value));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 *
+	 * @since 2.0.0
+	 */
+	public void addRequestBodyElement(String name, float value){
+		ensureNotNull();
+		getContent().add(new RequestBodyElement(name, value));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 *
+	 * @since 2.0.0
+	 */
+	public void addRequestBodyElement(String name, double value){
+		ensureNotNull();
+		getContent().add(new RequestBodyElement(name, value));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param name
+	 * 		表单元素名称
+	 * @param value
+	 * 		表单元素值
+	 *
+	 * @since 2.0.0
+	 */
+	public void addRequestBodyElement(String name, boolean value){
+		ensureNotNull();
+		getContent().add(new RequestBodyElement(name, value));
 	}
 
 	/**
@@ -114,11 +190,19 @@ public class EncodedFormRequestBody extends AbstractRequestBody<List<RequestBody
 	 * 		表单元素值
 	 */
 	public void addRequestBodyElement(String name, String value){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
-		}
-
+		ensureNotNull();
 		getContent().add(new RequestBodyElement(name, value));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param requestBodyElement
+	 * 		表单元素
+	 */
+	public void addRequestBodyElement(RequestBodyElement requestBodyElement){
+		ensureNotNull();
+		getContent().add(requestBodyElement);
 	}
 
 	/**
@@ -130,11 +214,10 @@ public class EncodedFormRequestBody extends AbstractRequestBody<List<RequestBody
 	 * @since 1.2.1
 	 */
 	public void addRequestBodyElements(List<RequestBodyElement> requestBodyElements){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
+		if(requestBodyElements != null){
+			ensureNotNull();
+			getContent().addAll(requestBodyElements);
 		}
-
-		getContent().addAll(requestBodyElements);
 	}
 
 	/**
@@ -146,14 +229,15 @@ public class EncodedFormRequestBody extends AbstractRequestBody<List<RequestBody
 	 * @since 1.2.1
 	 */
 	public void addRequestBodyElements(Map<String, String> requestBodyElements){
+		if(requestBodyElements != null){
+			ensureNotNull();
+			requestBodyElements.forEach((name, value)->getContent().add(new RequestBodyElement(name, value)));
+		}
+	}
+
+	private void ensureNotNull(){
 		if(getContent() == null){
 			setContent(new ArrayList<>());
-		}
-
-		if(requestBodyElements != null){
-			requestBodyElements.forEach((name, value)->{
-				getContent().add(new RequestBodyElement(name, value));
-			});
 		}
 	}
 

@@ -21,10 +21,86 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.httpclient.core;/**
- * 
+ */
+package com.buession.httpclient.core;
+
+import java.nio.charset.Charset;
+import java.util.List;
+
+/**
+ * 表单请求体抽象类
+ *
+ * @param <V>
+ * 		表单请求元素
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public class AbstractFormRequestBody {
+ */
+public abstract class AbstractFormRequestBody<V extends RequestBodyElement> extends AbstractRequestBody<List<V>> {
+
+	/**
+	 * 构造函数
+	 */
+	public AbstractFormRequestBody(){
+		super();
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param contentType
+	 * 		请求体 Content-Type
+	 * @param content
+	 * 		请求体
+	 */
+	public AbstractFormRequestBody(ContentType contentType, List<V> content){
+		super(contentType, content);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param contentType
+	 * 		请求体 Content-Type
+	 * @param content
+	 * 		请求体
+	 * @param charset
+	 * 		字符集
+	 *
+	 * @since 2.0.0
+	 */
+	public AbstractFormRequestBody(ContentType contentType, List<V> content, Charset charset){
+		super(new ContentType(contentType.getMimeType(), charset), content);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param contentType
+	 * 		请求体 Content-Type
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 */
+	public AbstractFormRequestBody(ContentType contentType, List<V> content, long contentLength){
+		super(contentType, content, contentLength);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param contentType
+	 * 		请求体 Content-Type
+	 * @param content
+	 * 		请求体
+	 * @param contentLength
+	 * 		请求体大小
+	 * @param charset
+	 * 		字符集
+	 */
+	public AbstractFormRequestBody(ContentType contentType, List<V> content, long contentLength, Charset charset){
+		super(new ContentType(contentType.getMimeType(), charset), content, contentLength);
+	}
+
 }

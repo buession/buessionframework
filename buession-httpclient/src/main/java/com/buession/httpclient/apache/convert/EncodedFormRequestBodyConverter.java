@@ -38,12 +38,14 @@ import java.util.stream.Collectors;
 public class EncodedFormRequestBodyConverter implements ApacheRequestBodyConverter<EncodedFormRequestBody> {
 
 	@Override
-	public UrlEncodedFormEntity convert(EncodedFormRequestBody source){
+	public UrlEncodedFormEntity convert(final EncodedFormRequestBody source){
 		if(source == null || source.getContent() == null){
 			return null;
 		}
 
-		List<NameValuePair> data = source.getContent().stream().map((element)->new BasicNameValuePair(element.getName(), element.getValue())).collect(Collectors.toList());
+		List<NameValuePair> data = source.getContent().stream()
+				.map((element)->new BasicNameValuePair(element.getName(), element.getValue()))
+				.collect(Collectors.toList());
 
 		return new UrlEncodedFormEntity(data, source.getContentType().getCharset());
 	}

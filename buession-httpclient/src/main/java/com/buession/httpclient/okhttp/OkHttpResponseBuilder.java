@@ -22,11 +22,10 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.okhttp.response;
+package com.buession.httpclient.okhttp;
 
-import com.buession.httpclient.okhttp.ProtocolConverter;
-import com.buession.httpclient.response.AbstractResponseBuilder;
-import com.buession.httpclient.response.ResponseBuilder;
+import com.buession.httpclient.core.AbstractResponseBuilder;
+import com.buession.httpclient.core.ResponseBuilder;
 import okhttp3.ResponseBody;
 import okio.BufferedSource;
 import org.slf4j.Logger;

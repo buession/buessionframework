@@ -33,7 +33,7 @@ import com.buession.httpclient.core.RequestBodyElement;
 public class EncodedFormRequestBodyConverter implements OkHttpRequestBodyConverter<EncodedFormRequestBody> {
 
 	@Override
-	public okhttp3.FormBody convert(EncodedFormRequestBody source){
+	public okhttp3.FormBody convert(final EncodedFormRequestBody source){
 		if(source == null || source.getContent() == null){
 			return null;
 		}

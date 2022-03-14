@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -35,7 +35,7 @@ import java.util.Map;
  *
  * @author Yong.Teng
  */
-public class MultipartFormRequestBody extends AbstractRequestBody<List<MultipartRequestBodyElement>> {
+public class MultipartFormRequestBody extends AbstractFormRequestBody<MultipartRequestBodyElement> {
 
 	/**
 	 * 构造函数
@@ -75,7 +75,7 @@ public class MultipartFormRequestBody extends AbstractRequestBody<List<Multipart
 	 * 		请求体编码
 	 */
 	public MultipartFormRequestBody(List<MultipartRequestBodyElement> content, Charset charset){
-		super(new ContentType(ContentType.MULTIPART_FORM_DATA.getMimeType(), charset), content);
+		super(ContentType.MULTIPART_FORM_DATA, content, charset);
 	}
 
 	/**
@@ -89,21 +89,7 @@ public class MultipartFormRequestBody extends AbstractRequestBody<List<Multipart
 	 * 		请求体编码
 	 */
 	public MultipartFormRequestBody(List<MultipartRequestBodyElement> content, long contentLength, Charset charset){
-		super(new ContentType(ContentType.MULTIPART_FORM_DATA.getMimeType(), charset), content, contentLength);
-	}
-
-	/**
-	 * 添加表单元素
-	 *
-	 * @param requestBodyElement
-	 * 		表单元素
-	 */
-	public void addRequestBodyElement(MultipartRequestBodyElement requestBodyElement){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
-		}
-
-		getContent().add(requestBodyElement);
+		super(ContentType.MULTIPART_FORM_DATA, content, contentLength, charset);
 	}
 
 	/**
@@ -117,10 +103,7 @@ public class MultipartFormRequestBody extends AbstractRequestBody<List<Multipart
 	 * @since 1.2.1
 	 */
 	public void addRequestBodyElement(String name, File value){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
-		}
-
+		ensureNotNull();
 		getContent().add(new MultipartRequestBodyElement(name, value));
 	}
 
@@ -135,10 +118,7 @@ public class MultipartFormRequestBody extends AbstractRequestBody<List<Multipart
 	 * @since 1.2.1
 	 */
 	public void addRequestBodyElement(String name, short value){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
-		}
-
+		ensureNotNull();
 		getContent().add(new MultipartRequestBodyElement(name, value));
 	}
 
@@ -153,10 +133,7 @@ public class MultipartFormRequestBody extends AbstractRequestBody<List<Multipart
 	 * @since 1.2.1
 	 */
 	public void addRequestBodyElement(String name, int value){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
-		}
-
+		ensureNotNull();
 		getContent().add(new MultipartRequestBodyElement(name, value));
 	}
 
@@ -171,10 +148,7 @@ public class MultipartFormRequestBody extends AbstractRequestBody<List<Multipart
 	 * @since 1.2.1
 	 */
 	public void addRequestBodyElement(String name, long value){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
-		}
-
+		ensureNotNull();
 		getContent().add(new MultipartRequestBodyElement(name, value));
 	}
 
@@ -189,10 +163,7 @@ public class MultipartFormRequestBody extends AbstractRequestBody<List<Multipart
 	 * @since 1.2.1
 	 */
 	public void addRequestBodyElement(String name, float value){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
-		}
-
+		ensureNotNull();
 		getContent().add(new MultipartRequestBodyElement(name, value));
 	}
 
@@ -207,10 +178,7 @@ public class MultipartFormRequestBody extends AbstractRequestBody<List<Multipart
 	 * @since 1.2.1
 	 */
 	public void addRequestBodyElement(String name, double value){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
-		}
-
+		ensureNotNull();
 		getContent().add(new MultipartRequestBodyElement(name, value));
 	}
 
@@ -225,10 +193,7 @@ public class MultipartFormRequestBody extends AbstractRequestBody<List<Multipart
 	 * @since 1.2.1
 	 */
 	public void addRequestBodyElement(String name, boolean value){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
-		}
-
+		ensureNotNull();
 		getContent().add(new MultipartRequestBodyElement(name, value));
 	}
 
@@ -241,10 +206,7 @@ public class MultipartFormRequestBody extends AbstractRequestBody<List<Multipart
 	 * 		表单元素值
 	 */
 	public void addRequestBodyElement(String name, String value){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
-		}
-
+		ensureNotNull();
 		getContent().add(new MultipartRequestBodyElement(name, value));
 	}
 
@@ -259,11 +221,23 @@ public class MultipartFormRequestBody extends AbstractRequestBody<List<Multipart
 	 * @since 1.2.1
 	 */
 	public void addRequestBodyElement(String name, Object value){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
+		if(value == null){
+			return;
 		}
 
-		getContent().add(new MultipartRequestBodyElement(name, value));
+		ensureNotNull();
+		getContent().add(new MultipartRequestBodyElement(name, value.toString()));
+	}
+
+	/**
+	 * 添加表单元素
+	 *
+	 * @param requestBodyElement
+	 * 		表单元素
+	 */
+	public void addRequestBodyElement(MultipartRequestBodyElement requestBodyElement){
+		ensureNotNull();
+		getContent().add(requestBodyElement);
 	}
 
 	/**
@@ -275,10 +249,7 @@ public class MultipartFormRequestBody extends AbstractRequestBody<List<Multipart
 	 * @since 1.2.1
 	 */
 	public void addRequestBodyElements(List<MultipartRequestBodyElement> requestBodyElements){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
-		}
-
+		ensureNotNull();
 		getContent().addAll(requestBodyElements);
 	}
 
@@ -291,18 +262,25 @@ public class MultipartFormRequestBody extends AbstractRequestBody<List<Multipart
 	 * @since 1.2.1
 	 */
 	public void addRequestBodyElements(Map<String, Object> requestBodyElements){
-		if(getContent() == null){
-			setContent(new ArrayList<>());
-		}
-
 		if(requestBodyElements != null){
+			ensureNotNull();
 			requestBodyElements.forEach((name, value)->{
+				if(value == null){
+					return;
+				}
+
 				if(value instanceof File){
 					getContent().add(new MultipartRequestBodyElement(name, (File) value));
 				}else{
-					getContent().add(new MultipartRequestBodyElement(name, value));
+					getContent().add(new MultipartRequestBodyElement(name, value.toString()));
 				}
 			});
+		}
+	}
+
+	private void ensureNotNull(){
+		if(getContent() == null){
+			setContent(new ArrayList<>());
 		}
 	}
 

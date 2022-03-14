@@ -24,7 +24,7 @@
  */
 package com.buession.httpclient.core.utils;
 
-import com.buession.core.utils.ListBuilder;
+import com.buession.core.builder.ListBuilder;
 import com.buession.httpclient.core.Header;
 
 import java.text.SimpleDateFormat;

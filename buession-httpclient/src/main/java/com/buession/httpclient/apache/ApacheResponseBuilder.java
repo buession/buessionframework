@@ -22,11 +22,11 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache.response;
+package com.buession.httpclient.apache;
 
 import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.response.AbstractResponseBuilder;
-import com.buession.httpclient.response.ResponseBuilder;
+import com.buession.httpclient.core.AbstractResponseBuilder;
+import com.buession.httpclient.core.ResponseBuilder;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.entity.BufferedHttpEntity;

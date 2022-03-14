@@ -22,10 +22,10 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache.response;
+package com.buession.httpclient.apache;
 
 import com.buession.httpclient.core.Header;
-import com.buession.httpclient.response.AbstractResponseHeaderParse;
+import com.buession.httpclient.core.AbstractResponseHeaderParse;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 

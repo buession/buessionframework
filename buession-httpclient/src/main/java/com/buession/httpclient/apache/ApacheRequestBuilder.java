@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache.request;
+package com.buession.httpclient.apache;
 
 import com.buession.core.utils.EnumUtils;
 import com.buession.httpclient.apache.convert.ChunkedInputStreamRequestBodyConverter;
@@ -44,7 +44,7 @@ import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.TextRawRequestBody;
 import com.buession.httpclient.core.XmlRawRequestBody;
-import com.buession.httpclient.request.AbstractRequestBuilder;
+import com.buession.httpclient.core.AbstractRequestBuilder;
 import com.buession.httpclient.apache.convert.EncodedFormRequestBodyConverter;
 import com.buession.httpclient.apache.convert.HtmlRawRequestBodyConverter;
 import com.buession.httpclient.apache.convert.ApacheRequestBodyConverter;

@@ -19,19 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp.convert;
 
 import com.buession.httpclient.core.InputStreamRequestBody;
 import okhttp3.MediaType;
-import okhttp3.internal.Util;
-import okio.BufferedSink;
-import okio.Okio;
-import okio.Source;
-
-import java.io.IOException;
+import okhttp3.StreamRequestBody;
 
 /**
  * 流式请求体转换器基类
@@ -42,46 +37,20 @@ import java.io.IOException;
  * @author Yong.Teng
  * @since 1.2.1
  */
-public abstract class BaseInputStreamRequestBodyConverter<S extends InputStreamRequestBody> implements OkHttpRequestBodyConverter<S> {
+public abstract class BaseInputStreamRequestBodyConverter<S extends InputStreamRequestBody>
+		implements OkHttpRequestBodyConverter<S> {
 
 	@Override
-	public okhttp3.RequestBody convert(S source){
+	public okhttp3.RequestBody convert(final S source){
 		if(source == null || source.getContent() == null){
 			return null;
 		}
 
-		okhttp3.RequestBody requestBody = new okhttp3.RequestBody() {
-
-			@Override
-			public MediaType contentType(){
-				return MediaType.parse(source.getContentType().getMimeType());
-			}
-
-			@Override
-			public long contentLength(){
-				try{
-					return source.getContent().available();
-				}catch(IOException e){
-					return 0;
-				}
-			}
-
-			@Override
-			public void writeTo(BufferedSink sink) throws IOException{
-				Source oSource = null;
-				try{
-					oSource = Okio.source(source.getContent());
-					sink.writeAll(oSource);
-				}finally{
-					assert oSource != null;
-					Util.closeQuietly(oSource);
-				}
-			}
-		};
-
+		okhttp3.RequestBody requestBody = StreamRequestBody.create(source.getContent(),
+				MediaType.parse(source.getContentType().getMimeType()));
 		return afterConvert(requestBody);
 	}
 
-	protected abstract okhttp3.RequestBody afterConvert(okhttp3.RequestBody requestBody);
+	protected abstract okhttp3.RequestBody afterConvert(final okhttp3.RequestBody requestBody);
 
 }

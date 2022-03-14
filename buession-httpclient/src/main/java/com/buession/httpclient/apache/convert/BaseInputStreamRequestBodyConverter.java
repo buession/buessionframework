@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert;
 
 import com.buession.httpclient.core.InputStreamRequestBody;
 import org.apache.http.HttpEntity;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 
 /**
@@ -37,16 +38,17 @@ import org.apache.http.entity.InputStreamEntity;
  * @author Yong.Teng
  * @since 1.2.1
  */
-public abstract class BaseInputStreamRequestBodyConverter<S extends InputStreamRequestBody> implements ApacheRequestBodyConverter<S> {
+public abstract class BaseInputStreamRequestBodyConverter<S extends InputStreamRequestBody>
+		implements ApacheRequestBodyConverter<S> {
 
 	@Override
-	public HttpEntity convert(S source){
+	public HttpEntity convert(final S source){
 		if(source == null || source.getContent() == null){
 			return null;
 		}
 
 		InputStreamEntity streamEntity = new InputStreamEntity(source.getContent(), source.getContentLength(),
-				ContentTypeUtils.create(source.getContentType()));
+				ContentType.create(source.getContentType().getMimeType(), source.getContentType().getCharset()));
 		return afterConvert(streamEntity);
 	}
 

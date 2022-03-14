@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -34,7 +34,8 @@ import java.nio.charset.Charset;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractRawRequestBody<C extends ContentType, V> extends AbstractRequestBody<V> implements RawRequestBody<C, V> {
+public abstract class AbstractRawRequestBody<V> extends AbstractRequestBody<V>
+		implements RawRequestBody<ContentType, V> {
 
 	/**
 	 * 构造函数
@@ -62,6 +63,22 @@ public abstract class AbstractRawRequestBody<C extends ContentType, V> extends A
 	 * 		请求体 Content-Type
 	 * @param content
 	 * 		请求体
+	 * @param charset
+	 * 		字符集
+	 *
+	 * @since 2.0.0
+	 */
+	public AbstractRawRequestBody(ContentType contentType, V content, Charset charset){
+		super(new ContentType(contentType.getMimeType(), charset), content);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param contentType
+	 * 		请求体 Content-Type
+	 * @param content
+	 * 		请求体
 	 * @param contentLength
 	 * 		请求体大小
 	 */
@@ -70,22 +87,10 @@ public abstract class AbstractRawRequestBody<C extends ContentType, V> extends A
 	}
 
 	/**
-	 * 构造函数，ContentType 为 text/plain
+	 * 构造函数
 	 *
-	 * @param content
-	 * 		请求体
-	 * @param charset
-	 * 		字符集
-	 *
-	 * @since 1.2.1
-	 */
-	public AbstractRawRequestBody(V content, Charset charset){
-		super(content, charset);
-	}
-
-	/**
-	 * 构造函数，ContentType 为 text/plain
-	 *
+	 * @param contentType
+	 * 		请求体 Content-Type
 	 * @param content
 	 * 		请求体
 	 * @param contentLength
@@ -93,10 +98,10 @@ public abstract class AbstractRawRequestBody<C extends ContentType, V> extends A
 	 * @param charset
 	 * 		字符集
 	 *
-	 * @since 1.2.1
+	 * @since 2.0.0
 	 */
-	public AbstractRawRequestBody(V content, long contentLength, Charset charset){
-		super(content, contentLength, charset);
+	public AbstractRawRequestBody(ContentType contentType, V content, long contentLength, Charset charset){
+		super(new ContentType(contentType.getMimeType(), charset), content, contentLength);
 	}
 
 }

@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert;
 
 import com.buession.httpclient.core.AbstractRawRequestBody;
-import com.buession.httpclient.core.ContentType;
 import org.apache.http.entity.StringEntity;
 
 /**
@@ -37,15 +36,18 @@ import org.apache.http.entity.StringEntity;
  * @author Yong.Teng
  * @since 1.2.1
  */
-public abstract class BaseRawRequestBodyConverter<S extends AbstractRawRequestBody<ContentType, String>> implements ApacheRequestBodyConverter<S> {
+public abstract class BaseRawRequestBodyConverter<S extends AbstractRawRequestBody<String>>
+		implements ApacheRequestBodyConverter<S> {
 
 	@Override
-	public StringEntity convert(S source){
+	public StringEntity convert(final S source){
 		if(source == null || source.getContent() == null){
 			return null;
 		}
 
-		return new StringEntity(source.getContent(), ContentTypeUtils.create(source.getContentType()));
+		final org.apache.http.entity.ContentType contentType = org.apache.http.entity.ContentType.create(
+				source.getContentType().getMimeType(), source.getContentType().getCharset());
+		return new StringEntity(source.getContent(), contentType);
 	}
 
 }

@@ -24,17 +24,14 @@
  */
 package com.buession.httpclient.okhttp.convert;
 
-import com.buession.core.validator.Validate;
 import com.buession.httpclient.core.MultipartFormRequestBody;
-import com.buession.httpclient.core.MultipartInputStreamRequestBodyElement;
 import com.buession.httpclient.core.MultipartRequestBodyElement;
 import com.buession.io.MimeType;
 import com.buession.io.file.File;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-
-import java.nio.charset.StandardCharsets;
+import okhttp3.StreamRequestBody;
 
 /**
  * @author Yong.Teng
@@ -42,7 +39,7 @@ import java.nio.charset.StandardCharsets;
 public class MultipartFormRequestBodyConverter implements OkHttpRequestBodyConverter<MultipartFormRequestBody> {
 
 	@Override
-	public RequestBody convert(MultipartFormRequestBody source){
+	public RequestBody convert(final MultipartFormRequestBody source){
 		if(source == null || source.getContent() == null){
 			return null;
 		}
@@ -58,35 +55,18 @@ public class MultipartFormRequestBodyConverter implements OkHttpRequestBodyConve
 		return builder.build();
 	}
 
-	private static void addBody(final MultipartFormRequestBody requestBody, final MultipartBody.Builder builder, final MultipartRequestBodyElement element){
-		if(element instanceof MultipartInputStreamRequestBodyElement){
-			MultipartInputStreamRequestBodyElement multipartInputStreamRequestBodyElement = (MultipartInputStreamRequestBodyElement) element;
+	private static void addBody(final MultipartFormRequestBody requestBody, final MultipartBody.Builder builder,
+								final MultipartRequestBodyElement element){
+		if(element.getFile() != null){
+			File file = new File(element.getFile());
+			MediaType mediaType = parseMultipartElementMimeType(file);
 
-			if(multipartInputStreamRequestBodyElement.getInputStream() != null){
-				okhttp3.RequestBody okRequestBody;
-				MediaType mediaType;
-
-				if(Validate.hasText(multipartInputStreamRequestBodyElement.getFileName())){
-					File file = new File(multipartInputStreamRequestBodyElement.getFileName());
-					mediaType = parseMultipartElementMimeType(file);
-				}else{
-					mediaType = MediaType.parse("application/octet-stream");
-				}
-
-				okRequestBody = okhttp3.RequestBody.create(multipartInputStreamRequestBodyElement.getFileName().getBytes(StandardCharsets.UTF_8), mediaType);
-				builder.addFormDataPart(element.getName(), multipartInputStreamRequestBodyElement.getFileName(), okRequestBody);
-			}else{
-				builder.addFormDataPart(element.getName(), element.getValue());
-			}
+			builder.addFormDataPart(element.getName(), file.getName(), RequestBody.create(file, mediaType));
+		}else if(element.getInputStream() != null){
+			builder.addFormDataPart(element.getName(), element.getFileName(),
+					StreamRequestBody.create(element.getInputStream(), MediaType.parse("application/octet-stream")));
 		}else{
-			if(element.getFile() != null){
-				File file = new File(element.getFile());
-				MediaType mediaType = parseMultipartElementMimeType(file);
-
-				builder.addFormDataPart(element.getName(), file.getName(), RequestBody.create(file, mediaType));
-			}else{
-				builder.addFormDataPart(element.getName(), element.getValue());
-			}
+			builder.addFormDataPart(element.getName(), element.getValue());
 		}
 	}
 

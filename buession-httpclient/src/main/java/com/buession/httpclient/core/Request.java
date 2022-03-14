@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -37,7 +37,7 @@ public class Request {
 
 	private List<Header> headers;
 
-	private RequestBody requestBody;
+	private RequestBody<?> requestBody;
 
 	public RequestMethod getMethod(){
 		return method;
@@ -63,17 +63,18 @@ public class Request {
 		this.headers = headers;
 	}
 
-	public RequestBody getRequestBody(){
+	public RequestBody<?> getRequestBody(){
 		return requestBody;
 	}
 
-	public void setRequestBody(RequestBody requestBody){
+	public void setRequestBody(RequestBody<?> requestBody){
 		this.requestBody = requestBody;
 	}
 
 	@Override
 	public String toString(){
-		return "Request{" + "method=" + method + ", url='" + url + '\'' + ", headers=" + headers + ", requestBody=" + requestBody + '}';
+		return "Request{" + "method=" + method + ", url='" + url + '\'' + ", headers=" + headers + ", requestBody=" +
+				requestBody + '}';
 	}
 
 }

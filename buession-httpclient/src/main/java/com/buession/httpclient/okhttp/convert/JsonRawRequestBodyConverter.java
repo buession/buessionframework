@@ -25,7 +25,7 @@
 package com.buession.httpclient.okhttp.convert;
 
 import com.buession.httpclient.core.JsonRawRequestBody;
-import com.buession.httpclient.request.RequestBodyConverter;
+import com.buession.httpclient.core.RequestBodyConverters;
 import okhttp3.MediaType;
 
 /**
@@ -34,8 +34,9 @@ import okhttp3.MediaType;
 public class JsonRawRequestBodyConverter implements OkHttpRequestBodyConverter<JsonRawRequestBody<?>> {
 
 	@Override
-	public okhttp3.RequestBody convert(JsonRawRequestBody<?> source){
-		RequestBodyConverter.JsonRawRequestBodyConverter<okhttp3.RequestBody> jsonRawRequestBodyConverter = new RequestBodyConverter.JsonRawRequestBodyConverter<>((str)->okhttp3.RequestBody.create(str, MediaType.parse(source.getContentType().valueOf())));
+	public okhttp3.RequestBody convert(final JsonRawRequestBody<?> source){
+		RequestBodyConverters.JsonRawRequestBodyConverter<okhttp3.RequestBody> jsonRawRequestBodyConverter = new RequestBodyConverters.JsonRawRequestBodyConverter<>(
+				(str)->okhttp3.RequestBody.create(str, MediaType.parse(source.getContentType().valueOf())));
 		return jsonRawRequestBodyConverter.convert(source);
 	}
 

@@ -26,27 +26,47 @@ package com.buession.httpclient;
 
 import com.buession.httpclient.core.Header;
 import com.buession.httpclient.core.Response;
-import com.buession.httpclient.exception.ConnectTimeoutException;
-import com.buession.httpclient.exception.ConnectionPoolTimeoutException;
-import com.buession.httpclient.exception.ReadTimeoutException;
-import com.buession.httpclient.exception.RequestAbortedException;
 import com.buession.httpclient.exception.RequestException;
+import com.google.common.io.CharStreams;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author Yong.Teng
- * @since 1.13.0
+ * @since 2.0.0
  */
-public class ApacheHttpClientTest {
+public class OkHttpHttpClientTest {
 
 	@Test
-	public void responseHeaders() throws ConnectionPoolTimeoutException, ReadTimeoutException, RequestException, RequestAbortedException, ConnectTimeoutException{
-		ApacheHttpClient httpClient = new ApacheHttpClient();
+	public void responseHeaders() throws IOException, RequestException{
+		OkHttpClient httpClient = new OkHttpClient();
 
 		Response response = httpClient.get("https://shirojs.buession.com/manual/1.1/index.html");
 		for(Header header : response.getHeaders()){
 			System.out.println(header.toString());
 		}
+	}
+
+	@Test
+	public void responseBody() throws IOException, RequestException{
+		OkHttpClient httpClient = new OkHttpClient();
+
+		Response response = httpClient.get("https://shirojs.buession.com/support.html");
+		System.out.println(response.getBody());
+
+		String result = CharStreams.toString(new InputStreamReader(response.getInputStream(), StandardCharsets.UTF_8));
+		System.out.println(result);
+	}
+
+	@Test
+	public void unknowHost() throws IOException, RequestException{
+		OkHttpClient httpClient = new OkHttpClient();
+
+		Response response = httpClient.get("https://aaa.buession.cn/support.html");
+		System.out.println(response.getBody());
 	}
 
 }

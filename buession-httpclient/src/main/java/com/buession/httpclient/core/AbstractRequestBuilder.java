@@ -24,13 +24,10 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.request;
+package com.buession.httpclient.core;
 
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
-import com.buession.httpclient.core.Header;
-import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.core.Request;
 import com.buession.net.HttpURI;
 
 import java.util.List;

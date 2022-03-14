@@ -19,12 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert;
 
 import com.buession.httpclient.core.XmlRawRequestBody;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 
 /**
@@ -33,12 +34,13 @@ import org.apache.http.entity.StringEntity;
 public class XmlRawRequestBodyConverter implements ApacheRequestBodyConverter<XmlRawRequestBody> {
 
 	@Override
-	public StringEntity convert(XmlRawRequestBody source){
+	public StringEntity convert(final XmlRawRequestBody source){
 		if(source == null || source.getContent() == null){
 			return null;
 		}
 
-		return new StringEntity(source.getContent().asXML(), ContentTypeUtils.create(source.getContentType()));
+		return new StringEntity(source.getContent().asXML(),
+				ContentType.create(source.getContentType().getMimeType(), source.getContentType().getCharset()));
 	}
 
 }

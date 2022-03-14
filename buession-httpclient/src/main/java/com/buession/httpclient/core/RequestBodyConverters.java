@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.request;
+package com.buession.httpclient.core;
 
 import com.buession.core.converter.Converter;
 import com.buession.httpclient.core.JsonRawRequestBody;
@@ -37,7 +37,7 @@ import java.util.function.Function;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class RequestBodyConverter {
+public class RequestBodyConverters {
 
 	public final static class JsonRawRequestBodyConverter<R> implements Converter<JsonRawRequestBody<?>, R> {
 

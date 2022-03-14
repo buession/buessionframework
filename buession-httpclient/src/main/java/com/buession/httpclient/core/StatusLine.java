@@ -30,6 +30,8 @@ import com.buession.lang.Constants;
 import java.util.Objects;
 
 /**
+ * 状态行 <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html" target="_blank">https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html</a>
+ *
  * @author Yong.Teng
  */
 public class StatusLine {

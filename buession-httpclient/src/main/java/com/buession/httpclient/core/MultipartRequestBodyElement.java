@@ -19,12 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Objects;
 
 /**
@@ -32,57 +33,83 @@ import java.util.Objects;
  */
 public class MultipartRequestBodyElement extends RequestBodyElement {
 
-	private static final long serialVersionUID = 5534971168870221225L;
+	private final static long serialVersionUID = 5534971168870221225L;
 
-	private final File file;
+	private File file;
 
-	public MultipartRequestBodyElement(final String name, final File file){
-		super(name, (Object) null);
-		this.file = file;
-	}
+	private InputStream inputStream;
+
+	private String fileName;
 
 	public MultipartRequestBodyElement(final String name, final short value){
 		super(name, value);
-		this.file = null;
 	}
 
 	public MultipartRequestBodyElement(final String name, final int value){
 		super(name, value);
-		this.file = null;
 	}
 
 	public MultipartRequestBodyElement(final String name, final long value){
 		super(name, value);
-		this.file = null;
 	}
 
 	public MultipartRequestBodyElement(final String name, final float value){
 		super(name, value);
-		this.file = null;
 	}
 
 	public MultipartRequestBodyElement(final String name, final double value){
 		super(name, value);
-		this.file = null;
 	}
 
 	public MultipartRequestBodyElement(final String name, final boolean value){
 		super(name, value);
-		this.file = null;
 	}
 
 	public MultipartRequestBodyElement(final String name, final String value){
 		super(name, value);
-		this.file = null;
 	}
 
-	public MultipartRequestBodyElement(final String name, final Object value){
-		super(name, value);
-		this.file = null;
+	public MultipartRequestBodyElement(final String name, final File file){
+		super(name, null);
+		this.file = file;
+	}
+
+	public MultipartRequestBodyElement(final String name, final InputStream inputStream){
+		super(name, null);
+		this.inputStream = inputStream;
+	}
+
+	public MultipartRequestBodyElement(final String name, final InputStream inputStream, final String fileName){
+		this(name, inputStream);
+		this.fileName = fileName;
 	}
 
 	public File getFile(){
 		return file;
+	}
+
+	public InputStream getInputStream(){
+		return inputStream;
+	}
+
+	public String getFileName(){
+		return fileName;
+	}
+
+	@Override
+	public String toString(){
+		final StringBuilder sb = new StringBuilder(getName().length() + 1);
+
+		sb.append(getName()).append('=');
+		if(getValue() != null){
+			sb.append(getValue());
+		}else if(file != null){
+			sb.append(file);
+		}else if(inputStream != null){
+			sb.append(inputStream).append("; fileName=").append(fileName);
+		}
+
+		return sb.toString();
 	}
 
 	@Override
@@ -92,10 +119,11 @@ public class MultipartRequestBodyElement extends RequestBodyElement {
 		}
 
 		if(object instanceof MultipartRequestBodyElement){
-			if(super.equals(object)){
-				final MultipartRequestBodyElement that = (MultipartRequestBodyElement) object;
-				return Objects.equals(file, that.file);
-			}
+			final MultipartRequestBodyElement that = (MultipartRequestBodyElement) object;
+			return Objects.equals(getName(), that.getName()) && Objects.equals(getValue(), that.getValue()) &&
+					Objects.equals(getFile(), that.getFile()) &&
+					Objects.equals(getInputStream(), that.getInputStream()) &&
+					Objects.equals(getFileName(), that.getFileName());
 		}
 
 		return false;
@@ -105,7 +133,9 @@ public class MultipartRequestBodyElement extends RequestBodyElement {
 	public int hashCode(){
 		int hash = super.hashCode();
 
-		hash = hashCode(hash, file);
+		hash = hashCode(hash, getFile());
+		hash = hashCode(hash, getInputStream());
+		hash = hashCode(hash, getFileName());
 
 		return hash;
 	}

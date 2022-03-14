@@ -25,7 +25,8 @@
 package com.buession.httpclient.apache.convert;
 
 import com.buession.httpclient.core.JsonRawRequestBody;
-import com.buession.httpclient.request.RequestBodyConverter;
+import com.buession.httpclient.core.RequestBodyConverters;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 
 /**
@@ -34,8 +35,10 @@ import org.apache.http.entity.StringEntity;
 public class JsonRawRequestBodyConverter implements ApacheRequestBodyConverter<JsonRawRequestBody<?>> {
 
 	@Override
-	public StringEntity convert(JsonRawRequestBody<?> source){
-		RequestBodyConverter.JsonRawRequestBodyConverter<StringEntity> jsonRawRequestBodyConverter = new RequestBodyConverter.JsonRawRequestBodyConverter<>((str)->new StringEntity(str, ContentTypeUtils.create(source.getContentType())));
+	public StringEntity convert(final JsonRawRequestBody<?> source){
+		RequestBodyConverters.JsonRawRequestBodyConverter<StringEntity> jsonRawRequestBodyConverter = new RequestBodyConverters.JsonRawRequestBodyConverter<>(
+				(str)->new StringEntity(str, ContentType.create(source.getContentType().getMimeType(),
+						source.getContentType().getCharset())));
 		return jsonRawRequestBodyConverter.convert(source);
 	}
 

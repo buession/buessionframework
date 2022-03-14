@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.core;
@@ -33,7 +33,7 @@ import java.nio.charset.Charset;
  *
  * @author Yong.Teng
  */
-public class XmlRawRequestBody extends AbstractRawRequestBody<ContentType, Node> {
+public class XmlRawRequestBody extends AbstractRawRequestBody<Node> {
 
 	/**
 	 * 构造函数
@@ -75,7 +75,7 @@ public class XmlRawRequestBody extends AbstractRawRequestBody<ContentType, Node>
 	 * @since 1.2.1
 	 */
 	public XmlRawRequestBody(Node content, Charset charset){
-		super(new ContentType(ContentType.TEXT_XML.getMimeType(), charset), content);
+		super(ContentType.TEXT_XML, content, charset);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class XmlRawRequestBody extends AbstractRawRequestBody<ContentType, Node>
 	 * @since 1.2.1
 	 */
 	public XmlRawRequestBody(Node content, long contentLength, Charset charset){
-		super(new ContentType(ContentType.TEXT_XML.getMimeType(), charset), content, contentLength);
+		super(ContentType.TEXT_XML, content, contentLength, charset);
 	}
 
 }

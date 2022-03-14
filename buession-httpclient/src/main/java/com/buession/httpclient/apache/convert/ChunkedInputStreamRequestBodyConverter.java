@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert;
@@ -32,10 +32,11 @@ import org.apache.http.entity.InputStreamEntity;
  * @author Yong.Teng
  * @since 1.2.0
  */
-public class ChunkedInputStreamRequestBodyConverter extends BaseInputStreamRequestBodyConverter<ChunkedInputStreamRequestBody> {
+public class ChunkedInputStreamRequestBodyConverter
+		extends BaseInputStreamRequestBodyConverter<ChunkedInputStreamRequestBody> {
 
 	@Override
-	protected HttpEntity afterConvert(InputStreamEntity streamEntity){
+	protected HttpEntity afterConvert(final InputStreamEntity streamEntity){
 		streamEntity.setChunked(true);
 		return streamEntity;
 	}

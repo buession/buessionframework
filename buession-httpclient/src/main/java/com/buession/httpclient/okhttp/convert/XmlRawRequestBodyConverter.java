@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp.convert;
@@ -34,7 +34,7 @@ import okhttp3.RequestBody;
 public class XmlRawRequestBodyConverter implements OkHttpRequestBodyConverter<XmlRawRequestBody> {
 
 	@Override
-	public RequestBody convert(XmlRawRequestBody source){
+	public RequestBody convert(final XmlRawRequestBody source){
 		if(source == null || source.getContent() == null){
 			return null;
 		}

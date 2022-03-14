@@ -24,7 +24,11 @@
  */
 package com.buession.httpclient.core;
 
+import com.buession.core.utils.Assert;
+
 /**
+ * 协议及版本
+ *
  * @author Yong.Teng
  */
 public enum ProtocolVersion {
@@ -47,7 +51,17 @@ public enum ProtocolVersion {
 	/**
 	 * HTTP/2.0
 	 */
-	HTTP_2_0("http", 2, 0);
+	HTTP_2_0("http", 2, 0),
+
+	/**
+	 * SPDY/3.1
+	 */
+	SPDY_3_1("spdy", 3, 1),
+
+	/**
+	 * QUIC
+	 */
+	QUIC("quic", -1, -1);
 
 	private final String protocol;
 
@@ -73,21 +87,27 @@ public enum ProtocolVersion {
 		return minor;
 	}
 
-	public final static ProtocolVersion createInstance(String protocol, int major, int minor){
-		if("http".equalsIgnoreCase(protocol) == false){
-			throw new IllegalArgumentException("Unknown protocol: " + protocol);
-		}
+	public static ProtocolVersion createInstance(String protocol, int major, int minor){
+		Assert.isBlank(protocol, "Protocol cloud not be empty or null.");
 
-		switch(major){
-			case 0:
-				return createProtocolVersion0(minor);
-			case 1:
-				return createProtocolVersion1(minor);
-			case 2:
-				return createProtocolVersion2(minor);
-			default:
-				throw new IllegalArgumentException("Unknown protocol major: " + major);
+		for(ProtocolVersion protocolVersion : ProtocolVersion.values()){
+			if(protocolVersion.getProtocol().equalsIgnoreCase(protocol)){
+				if(protocolVersion.getMajor() == major){
+					if(protocolVersion.getMinor() == minor){
+						return protocolVersion;
+					}else{
+						throw new IllegalArgumentException(
+								"Unknown protocol minor version: " + minor + " for " + protocolVersion.getProtocol() +
+										".");
+					}
+				}else{
+					throw new IllegalArgumentException(
+							"Unknown protocol major version: " + minor + " for " + protocolVersion.getProtocol() + ".");
+				}
+			}
 		}
+		
+		throw new IllegalArgumentException("Unknown protocol: " + protocol);
 	}
 
 	@Override
@@ -97,35 +117,6 @@ public enum ProtocolVersion {
 		sb.append(protocol).append('/').append(major).append('.').append(minor);
 
 		return sb.toString();
-	}
-
-	private static ProtocolVersion createProtocolVersion0(final int minor){
-		switch(minor){
-			case 9:
-				return HTTP_0_9;
-			default:
-				throw new IllegalArgumentException("Unknown protocol minor: " + minor);
-		}
-	}
-
-	private static ProtocolVersion createProtocolVersion1(final int minor){
-		switch(minor){
-			case 0:
-				return HTTP_1_0;
-			case 1:
-				return HTTP_1_1;
-			default:
-				throw new IllegalArgumentException("Unknown protocol minor: " + minor);
-		}
-	}
-
-	private static ProtocolVersion createProtocolVersion2(final int minor){
-		switch(minor){
-			case 0:
-				return HTTP_2_0;
-			default:
-				throw new IllegalArgumentException("Unknown protocol minor: " + minor);
-		}
 	}
 
 }
