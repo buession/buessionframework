@@ -19,14 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.filter;
 
 import com.buession.core.validator.Validate;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -45,16 +44,8 @@ public class ResponseHeadersFilter implements WebFilter {
 		return headers;
 	}
 
-	public Map<String, String> getHeaders(final ServerHttpRequest request){
-		return getHeaders();
-	}
-
 	public void setHeaders(Map<String, String> headers){
 		this.headers = headers;
-	}
-
-	public void setHeaders(final ServerHttpRequest request, Map<String, String> headers){
-		setHeaders(headers);
 	}
 
 	@Override

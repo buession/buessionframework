@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.filter;
@@ -42,9 +42,11 @@ public class PrintUrlFilter extends OncePerRequestFilter {
 	private final static Logger logger = LoggerFactory.getLogger(PrintUrlFilter.class);
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException{
-		logger.info("Request URL: {}", request.getRequestURL());
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException{
+		if(logger.isInfoEnabled()){
+			logger.info("Request URL: {}", request.getRequestURL());
+		}
+
 		filterChain.doFilter(request, response);
 	}
 

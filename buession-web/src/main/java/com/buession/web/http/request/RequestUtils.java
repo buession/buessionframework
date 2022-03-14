@@ -180,7 +180,7 @@ public abstract class RequestUtils {
 	 * @param <T>
 	 * 		返回值类型
 	 *
-	 * @return
+	 * @return 请求头值
 	 */
 	protected static <T> T iteratorRequestHeader(final Function<String, T> function, final Function<T, Boolean> validator, final String... headerNames){
 		T result;

@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.reactive.annotation;
@@ -54,17 +54,19 @@ public class RequestClientIpHandlerMethodArgumentResolver extends AbstractHandle
 	}
 
 	@Override
-	public Mono<Object> resolveArgument(MethodParameter methodParameter, BindingContext bindingContext,
-										ServerWebExchange exchange){
+	public Mono<Object> resolveArgument(MethodParameter methodParameter, BindingContext bindingContext, ServerWebExchange exchange){
 		ServerHttpRequest serverHttpRequest = exchange.getRequest();
 		Assert.isNull(serverHttpRequest, "No ServerHttpRequest");
 
 		Class<?> clazz = methodParameter.nestedIfOptional().getNestedParameterType();
-		final String ip = RequestUtils.getClientIp(serverHttpRequest);
 		if(Long.class.isAssignableFrom(clazz)){
+			final String ip = RequestUtils.getClientIp(serverHttpRequest);
 			return Mono.justOrEmpty(InetAddressUtils.ip2long(ip));
-		}else{
+		}else if(CharSequence.class.isAssignableFrom(clazz)){
+			final String ip = RequestUtils.getClientIp(serverHttpRequest);
 			return Mono.justOrEmpty(ip);
+		}else{
+			return Mono.empty();
 		}
 	}
 

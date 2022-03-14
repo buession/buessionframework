@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.web.servlet.annotation;
@@ -56,14 +56,19 @@ public class RequestClientIpHandlerMethodArgumentResolver extends AbstractHandle
 	}
 
 	@Override
-	public Object resolveArgument(MethodParameter methodParameter, @Nullable ModelAndViewContainer mavContainer,
-								  NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception{
+	public Object resolveArgument(MethodParameter methodParameter, @Nullable ModelAndViewContainer mavContainer, NativeWebRequest webRequest, @Nullable WebDataBinderFactory binderFactory) throws Exception{
 		HttpServletRequest servletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
 		Assert.isNull(servletRequest, "No HttpServletRequest");
 
 		Class<?> clazz = methodParameter.nestedIfOptional().getNestedParameterType();
-		final String ip = RequestUtils.getClientIp(servletRequest);
-		return Long.class.isAssignableFrom(clazz) ? InetAddressUtils.ip2long(ip) : ip;
+		if(Long.class.isAssignableFrom(clazz)){
+			final String ip = RequestUtils.getClientIp(servletRequest);
+			return InetAddressUtils.ip2long(ip);
+		}else if(CharSequence.class.isAssignableFrom(clazz)){
+			return RequestUtils.getClientIp(servletRequest);
+		}else{
+			return null;
+		}
 	}
 
 	@Override
