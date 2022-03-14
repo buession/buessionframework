@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.thesaurus;
@@ -63,8 +63,7 @@ public class SogouParser extends AbstractParser {
 	protected Set<Word> doParse(InputStream inputStream) throws IOException{
 		SogouScelModel model = read(inputStream);
 
-		logger.debug("words entry info is: name => {}, type => {}, description => {}, sample => {}.", model.getName(),
-				model.getType(), model.getDescription(), model.getSample());
+		logger.debug("words entry info is: name => {}, type => {}, description => {}, sample => {}.", model.getName(), model.getType(), model.getDescription(), model.getSample());
 
 		Map<String, Set<String>> tempWords = model.getWordMap();
 
@@ -85,7 +84,6 @@ public class SogouParser extends AbstractParser {
 			final String pinyin = StringUtils.replace(key, "'", "");
 			final char[] initials = parseInitials(key, '\'');
 
-			Object[] a = null;
 			value.forEach((val)->{
 				Word word = new Word();
 
@@ -93,7 +91,7 @@ public class SogouParser extends AbstractParser {
 				word.setValue(val);
 				word.setInitials(initials);
 
-				if(Validate.isEmpty(a) == false){
+				if(Validate.isNotEmpty(initials)){
 					word.setInitial(initials[0]);
 				}
 
@@ -106,7 +104,7 @@ public class SogouParser extends AbstractParser {
 		return words;
 	}
 
-	private final SogouScelModel read(InputStream inputStream) throws IOException{
+	private SogouScelModel read(InputStream inputStream) throws IOException{
 		SogouScelModel model = new SogouScelModel();
 		DataInputStream input = new DataInputStream(inputStream);
 		byte[] bytes = new byte[4];
@@ -249,7 +247,7 @@ public class SogouParser extends AbstractParser {
 		return new String(output.toByteArray(), ENCODING);
 	}
 
-	protected final static int readUnsignedShort(InputStream in) throws IOException{
+	protected static int readUnsignedShort(InputStream in) throws IOException{
 		int ch1 = in.read();
 		int ch2 = in.read();
 
