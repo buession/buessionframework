@@ -27,36 +27,15 @@ package com.buession.beans;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Yong.Teng
- * @since 1.3.0
+ * @since 2.0.0
  */
-public class DefaultBeanResolverTest {
-
-	@Test
-	public void describe(){
-		DefaultBeanResolver resolver = new DefaultBeanResolver();
-
-		User user = new User();
-		user.setHeight(2);
-		user.setUsername("username");
-		user.setAge(null);
-
-		try{
-			resolver.describe(user).forEach((key, value)->{
-				System.out.println(key + ": " + value);
-			});
-		}catch(IllegalAccessException e){
-			e.printStackTrace();
-		}catch(InvocationTargetException e){
-			e.printStackTrace();
-		}catch(NoSuchMethodException e){
-			e.printStackTrace();
-		}
-	}
+public class BeanUtilsTest {
 
 	@Test
 	public void populate(){
@@ -65,19 +44,45 @@ public class DefaultBeanResolverTest {
 		data.put("username", "username");
 		data.put("height", 3L);
 		data.put("enable", "on");
-
-		DefaultBeanResolver resolver = new DefaultBeanResolver();
+		data.put("last_login_time", new Date());
 
 		User user = new User();
-		try{
-			resolver.populate(user, data);
+		BeanUtils.populate(user, data);
 
-			System.out.println(user);
+		System.out.println(user);
+	}
+
+	@Test
+	public void copy(){
+		Map<String, Object> data = new HashMap<>();
+		data.put("age", null);
+		data.put("username", "username");
+		data.put("height", 3L);
+		data.put("enable", "on");
+		data.put("last_login_time", new Date());
+
+		User user = new User();
+		BeanUtils.copyProperties(user, data);
+
+		System.out.println(user);
+	}
+
+	@Test
+	public void copy1(){
+		Map<String, Object> data = new HashMap<>();
+
+		User user = new User();
+
+		user.setAge(100);
+		user.setUsername("username");
+
+		try{
+			System.out.println(org.apache.commons.beanutils.BeanUtils.describe(user));
 		}catch(IllegalAccessException e){
 			e.printStackTrace();
-		}catch(NoSuchMethodException e){
-			e.printStackTrace();
 		}catch(InvocationTargetException e){
+			e.printStackTrace();
+		}catch(NoSuchMethodException e){
 			e.printStackTrace();
 		}
 	}

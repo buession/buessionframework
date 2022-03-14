@@ -4,6 +4,7 @@ Buession Framework Beans Changelog
 
 Changes in version 2.0.0 (2022-02-22)
 -------------------------------------
+*【移除】废弃众多 Bean 操作类，请使用 common-beans 或 spring 操作
 
 Changes in version 1.3.2 (2021-11-10)
 -------------------------------------

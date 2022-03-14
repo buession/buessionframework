@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.beans;
@@ -30,7 +30,6 @@ import org.apache.commons.beanutils.MethodUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
-import java.util.Objects;
 
 /**
  * {@link java.beans.PropertyDescriptor} 工具类
@@ -54,30 +53,6 @@ public class PropertyDescriptorUtils {
 
 	public static Method getWriteMethod(final Class<?> clazz, final PropertyDescriptor descriptor){
 		return MethodUtils.getAccessibleMethod(clazz, descriptor.getWriteMethod());
-	}
-
-	public static boolean equals(final PropertyDescriptor pd, final PropertyDescriptor otherPd){
-		if(Objects.equals(pd.getPropertyType(), otherPd.getPropertyType()) == false){
-			return false;
-		}
-
-		if(Objects.equals(pd.getPropertyEditorClass(), otherPd.getPropertyEditorClass()) == false){
-			return false;
-		}
-
-		if(Objects.equals(pd.getReadMethod(), otherPd.getReadMethod()) == false){
-			return false;
-		}
-
-		if(Objects.equals(pd.getWriteMethod(), otherPd.getWriteMethod()) == false){
-			return false;
-		}
-
-		if(pd.isConstrained() != otherPd.isConstrained()){
-			return false;
-		}
-
-		return pd.isBound() == otherPd.isBound();
 	}
 
 }
