@@ -104,11 +104,9 @@ public class File extends java.io.File {
 	 *
 	 * @return MimeType
 	 *
-	 * @throws IOException
-	 * 		IO 异常
 	 * @since 1.2.0
 	 */
-	public MimeType getMimeType() throws IOException{
+	public MimeType getMimeType(){
 		if(mimeType == null){
 			if(mimeTypeDetector == null){
 				mimeTypeDetector = new DefaultMimeTypeDetector();

@@ -71,7 +71,7 @@ public abstract class AbstractMimeTypeDetector implements MimeTypeDetector {
 	}
 
 	@Override
-	public final MimeType probe(Path path) throws IOException{
+	public final MimeType probe(Path path){
 		if(path == null){
 			throw new NullPointerException("'file' is null");
 		}else{
@@ -94,9 +94,9 @@ public abstract class AbstractMimeTypeDetector implements MimeTypeDetector {
 		return extension;
 	}
 
-	protected abstract MimeType implProbeMimeType(final String path) throws IOException;
+	protected abstract MimeType implProbeMimeType(final String path);
 
-	protected abstract MimeType implProbeMimeType(final Path path) throws IOException;
+	protected abstract MimeType implProbeMimeType(final Path path);
 
 	protected void putIfAbsent(final String extension, final String contentType, final String description){
 		if(Validate.isNotEmpty(extension) && Validate.isNotEmpty(contentType) && internalMimetypes.containsKey(extension) == false){

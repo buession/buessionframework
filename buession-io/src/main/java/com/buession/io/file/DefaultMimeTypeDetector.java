@@ -56,7 +56,7 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 	}
 
 	@Override
-	protected MimeType implProbeMimeType(final String path) throws IOException{
+	protected MimeType implProbeMimeType(final String path){
 		if(Validate.hasText(path) == false){
 			return null;
 		}
@@ -85,7 +85,7 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 	}
 
 	@Override
-	protected MimeType implProbeMimeType(final Path path) throws IOException{
+	protected MimeType implProbeMimeType(final Path path){
 		Path fn = path.getFileName();
 
 		if(fn == null){
@@ -95,14 +95,15 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 		return implProbeMimeType(fn.toString());
 	}
 
-	private void loadMimetypes() throws IOException{
+	private void loadMimetypes(){
 		if(initialized == false){
 			synchronized(this){
 				if(initialized == false){
 					InputStream is = DefaultMimeTypeDetector.class.getResourceAsStream("/mime.conf");
+					BufferedReader br = null;
 
 					try{
-						BufferedReader br = new BufferedReader(new InputStreamReader(is));
+						br = new BufferedReader(new InputStreamReader(is));
 						String line = null;
 						String entry = "";
 
@@ -127,6 +128,13 @@ public class DefaultMimeTypeDetector extends AbstractMimeTypeDetector {
 						if(is != null){
 							try{
 								is.close();
+							}catch(IOException e){
+							}
+						}
+
+						if(br != null){
+							try{
+								br.close();
 							}catch(IOException e){
 							}
 						}

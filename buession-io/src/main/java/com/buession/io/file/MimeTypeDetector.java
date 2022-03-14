@@ -71,10 +71,7 @@ public interface MimeTypeDetector {
 	 * 		文件路径对象 {@link File} 实例
 	 *
 	 * @return 文件 MimeType
-	 *
-	 * @throws IOException
-	 * 		IOException
 	 */
-	MimeType probe(Path path) throws IOException;
+	MimeType probe(Path path);
 
 }
