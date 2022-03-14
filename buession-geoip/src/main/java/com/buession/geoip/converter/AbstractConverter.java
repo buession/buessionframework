@@ -39,11 +39,6 @@ import java.util.Map;
 public abstract class AbstractConverter<M, S extends AbstractRecord, R extends AbstractResponse> implements Converter<M, S, R> {
 
 	@Override
-	public M converter(S s){
-		return converter(s, (Locale) null);
-	}
-
-	@Override
 	public M converter(S s, R response){
 		return converter(s, response, null);
 	}
