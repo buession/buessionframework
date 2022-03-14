@@ -19,16 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.okhttp;
+package com.buession.httpclient.okhttp.response;
 
-import com.buession.core.utils.KeyValueParser;
-import com.buession.core.utils.StringUtils;
-import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.helper.AbstractResponseBuilder;
-import com.buession.httpclient.helper.ResponseBuilder;
+import com.buession.httpclient.okhttp.ProtocolConverter;
+import com.buession.httpclient.response.AbstractResponseBuilder;
+import com.buession.httpclient.response.ResponseBuilder;
 import okhttp3.ResponseBody;
 import okio.BufferedSource;
 import org.slf4j.Logger;
@@ -48,19 +46,13 @@ public class OkHttpResponseBuilder extends AbstractResponseBuilder {
 	}
 
 	public static ResponseBuilder create(okhttp3.Response httpResponse){
-		final ResponseBuilder responseBuilder =
-				new OkHttpResponseBuilder().setStatusCode(httpResponse.code()).setStatusText(httpResponse.message());
+		final ResponseBuilder responseBuilder = new OkHttpResponseBuilder().setStatusCode(httpResponse.code()).setStatusText(httpResponse.message());
 
-		KeyValueParser keyValueParser = new KeyValueParser(httpResponse.protocol().toString(), '/');
-		String protocolName = keyValueParser.getKey();
-		String[] versionTemp = StringUtils.splitByWholeSeparatorPreserveAllTokens(keyValueParser.getValue(), ".");
-		int majorVersion = Integer.parseInt(versionTemp[0]);
-		int minorVersion = versionTemp.length > 1 ? Integer.parseInt(versionTemp[1]) : 0;
+		final ProtocolConverter protocolConverter = new ProtocolConverter();
+		responseBuilder.setProtocolVersion(protocolConverter.convert(httpResponse.protocol()));
 
-		responseBuilder.setProtocolVersion(ProtocolVersion.createInstance(protocolName, majorVersion, minorVersion));
-
-		OkHttpResponseHeaderParse okHttpResponseHeaderParse = new OkHttpResponseHeaderParse(httpResponse.headers());
-		responseBuilder.setHeaders(okHttpResponseHeaderParse.parse());
+		OkHttpResponseHeaderParse okHttpResponseHeaderParse = new OkHttpResponseHeaderParse();
+		responseBuilder.setHeaders(okHttpResponseHeaderParse.parse(httpResponse.headers()));
 
 		final ResponseBody responseBody = httpResponse.body();
 

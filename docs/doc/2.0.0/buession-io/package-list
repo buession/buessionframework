@@ -1,0 +1,6 @@
+com.buession.io
+com.buession.io.file
+com.buession.io.json
+com.buession.io.json.annotation
+com.buession.io.json.deserializer
+com.buession.io.json.serializer

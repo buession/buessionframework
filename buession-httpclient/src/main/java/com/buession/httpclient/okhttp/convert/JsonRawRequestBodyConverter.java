@@ -19,42 +19,24 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.okhttp.convert;
 
 import com.buession.httpclient.core.JsonRawRequestBody;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.buession.httpclient.request.RequestBodyConverter;
 import okhttp3.MediaType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
-public class JsonRawRequestBodyConverter implements OkHttpRequestBodyConverter<JsonRawRequestBody> {
-
-	private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-	private final static Logger logger = LoggerFactory.getLogger(JsonRawRequestBodyConverter.class);
+public class JsonRawRequestBodyConverter implements OkHttpRequestBodyConverter<JsonRawRequestBody<?>> {
 
 	@Override
-	public okhttp3.RequestBody convert(JsonRawRequestBody source){
-		if(source == null || source.getContent() == null){
-			return null;
-		}
-
-		try{
-			String str = OBJECT_MAPPER.writeValueAsString(source.getContent());
-			return okhttp3.RequestBody.create(str, MediaType.parse(source.getContentType().valueOf()));
-		}catch(JsonProcessingException e){
-			logger.error("{} convert to JSON String error.", com.buession.httpclient.core.RequestBody.class.getName(),
-					e);
-		}
-
-		return null;
+	public okhttp3.RequestBody convert(JsonRawRequestBody<?> source){
+		RequestBodyConverter.JsonRawRequestBodyConverter<okhttp3.RequestBody> jsonRawRequestBodyConverter = new RequestBodyConverter.JsonRawRequestBodyConverter<>((str)->okhttp3.RequestBody.create(str, MediaType.parse(source.getContentType().valueOf())));
+		return jsonRawRequestBodyConverter.convert(source);
 	}
 
 }

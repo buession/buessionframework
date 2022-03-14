@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache;
+package com.buession.httpclient.apache.request;
 
 import com.buession.core.utils.EnumUtils;
 import com.buession.httpclient.apache.convert.ChunkedInputStreamRequestBodyConverter;
@@ -44,7 +44,7 @@ import com.buession.httpclient.core.RequestBody;
 import com.buession.httpclient.core.RequestMethod;
 import com.buession.httpclient.core.TextRawRequestBody;
 import com.buession.httpclient.core.XmlRawRequestBody;
-import com.buession.httpclient.helper.AbstractRequestBuilder;
+import com.buession.httpclient.request.AbstractRequestBuilder;
 import com.buession.httpclient.apache.convert.EncodedFormRequestBodyConverter;
 import com.buession.httpclient.apache.convert.HtmlRawRequestBodyConverter;
 import com.buession.httpclient.apache.convert.ApacheRequestBodyConverter;
@@ -67,7 +67,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBuilder, ApacheRequestBuilder.HttpComponentsRequest> {
+public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBuilder.HttpComponentsRequest> {
 
 	private final static HttpEntity DEFAULT_HTTP_ENTITY = new UrlEncodedFormEntity(new ArrayList<>(), StandardCharsets.ISO_8859_1);
 
@@ -149,24 +149,15 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 	}
 
 	@Override
-	public ApacheRequestBuilder post(){
-		request.setHttpRequest(url == null ? new HttpPost() : new HttpPost(url));
-		return this;
-	}
-
-	@Override
 	public ApacheRequestBuilder post(RequestBody body){
 		HttpPost httpPost = url == null ? new HttpPost() : new HttpPost(url);
 
-		httpPost.setEntity(parseEntity(body));
+		if(body != null){
+			httpPost.setEntity(parseEntity(body));
+		}
+
 		request.setHttpRequest(httpPost);
 
-		return this;
-	}
-
-	@Override
-	public ApacheRequestBuilder patch(){
-		request.setHttpRequest(url == null ? new HttpPatch() : new HttpPatch(url));
 		return this;
 	}
 
@@ -174,15 +165,12 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 	public ApacheRequestBuilder patch(RequestBody body){
 		HttpPatch httpPatch = url == null ? new HttpPatch() : new HttpPatch(url);
 
-		httpPatch.setEntity(parseEntity(body));
+		if(body != null){
+			httpPatch.setEntity(parseEntity(body));
+		}
+
 		request.setHttpRequest(httpPatch);
 
-		return this;
-	}
-
-	@Override
-	public ApacheRequestBuilder put(){
-		request.setHttpRequest(url == null ? new HttpPut() : new HttpPut(url));
 		return this;
 	}
 
@@ -190,7 +178,10 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 	public ApacheRequestBuilder put(RequestBody body){
 		HttpPut httpPut = url == null ? new HttpPut() : new HttpPut(url);
 
-		httpPut.setEntity(parseEntity(body));
+		if(body != null){
+			httpPut.setEntity(parseEntity(body));
+		}
+
 		request.setHttpRequest(httpPut);
 
 		return this;
@@ -275,32 +266,26 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 	}
 
 	@Override
-	public ApacheRequestBuilder proppatch(){
-		request.setHttpRequest(url == null ? new HttpPropPatch() : new HttpPropPatch(url));
-		return this;
-	}
-
-	@Override
-	public ApacheRequestBuilder proppatch(RequestBody body){
+	public ApacheRequestBuilder proppatch(RequestBody<?> body){
 		HttpPropPatch httpPropPatch = url == null ? new HttpPropPatch() : new HttpPropPatch(url);
 
-		httpPropPatch.setEntity(parseEntity(body));
+		if(body != null){
+			httpPropPatch.setEntity(parseEntity(body));
+		}
+
 		request.setHttpRequest(httpPropPatch);
 
 		return this;
 	}
 
 	@Override
-	public ApacheRequestBuilder report(){
-		request.setHttpRequest(url == null ? new HttpReport() : new HttpReport(url));
-		return this;
-	}
-
-	@Override
-	public ApacheRequestBuilder report(RequestBody body){
+	public ApacheRequestBuilder report(RequestBody<?> body){
 		HttpReport httpReport = url == null ? new HttpReport() : new HttpReport(url);
 
-		httpReport.setEntity(parseEntity(body));
+		if(body != null){
+			httpReport.setEntity(parseEntity(body));
+		}
+
 		request.setHttpRequest(httpReport);
 
 		return this;
@@ -338,12 +323,12 @@ public class ApacheRequestBuilder extends AbstractRequestBuilder<ApacheRequestBu
 		return request;
 	}
 
-	private HttpEntity parseEntity(RequestBody data){
+	private HttpEntity parseEntity(RequestBody<?> data){
 		if(data == null){
 			return null;
 		}
 
-		ApacheRequestBodyConverter<RequestBody> convert = REQUEST_BODY_CONVERTS.get(data.getClass());
+		ApacheRequestBodyConverter<RequestBody<?>> convert = REQUEST_BODY_CONVERTS.get(data.getClass());
 		return convert == null ? DEFAULT_HTTP_ENTITY : convert.convert(data);
 	}
 

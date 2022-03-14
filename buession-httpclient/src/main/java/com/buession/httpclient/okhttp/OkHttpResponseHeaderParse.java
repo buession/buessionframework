@@ -19,18 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.okhttp;
+package com.buession.httpclient.okhttp.response;
 
 import com.buession.httpclient.core.Header;
-import com.buession.httpclient.helper.AbstractResponseHeaderParse;
+import com.buession.httpclient.response.AbstractResponseHeaderParse;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import okhttp3.Headers;
 
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * OKHTTP 响应头解析器
@@ -38,37 +39,23 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 1.2.1
  */
-public class OkHttpResponseHeaderParse extends AbstractResponseHeaderParse<okhttp3.Headers> {
-
-	/**
-	 * 构造函数
-	 *
-	 * @param headers
-	 * 		原始响应头
-	 */
-	public OkHttpResponseHeaderParse(final okhttp3.Headers headers){
-		super(headers);
-	}
+class OkHttpResponseHeaderParse extends AbstractResponseHeaderParse<Headers> {
 
 	@Override
-	public List<Header> parse(){
+	public List<Header> parse(final okhttp3.Headers headers){
 		if(headers == null){
 			return null;
-		}
-
-		int headerSize = headers.size();
-		if(headerSize == 0){
+		}else if(headers.size() == 0){
 			return Collections.emptyList();
 		}
 
-		final Map<String, String> temp = new LinkedHashMap<>(headerSize);
+		final Multimap<String, String> headerMaps = HashMultimap.create();
 
 		for(String name : headers.names()){
-			String oldValue = temp.get(name);
-			parseHeaders(temp, name, oldValue, headers.get(name));
+			headerMaps.put(name, headers.get(name));
 		}
 
-		return convertList(temp);
+		return convertList(headerMaps);
 	}
 
 }

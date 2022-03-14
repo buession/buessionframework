@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert;
@@ -43,8 +43,7 @@ public class EncodedFormRequestBodyConverter implements ApacheRequestBodyConvert
 			return null;
 		}
 
-		List<NameValuePair> data = source.getContent().stream().map(element->new BasicNameValuePair(element.getName(),
-				element.getOptionalValue())).collect(Collectors.toList());
+		List<NameValuePair> data = source.getContent().stream().map((element)->new BasicNameValuePair(element.getName(), element.getValue())).collect(Collectors.toList());
 
 		return new UrlEncodedFormEntity(data, source.getContentType().getCharset());
 	}

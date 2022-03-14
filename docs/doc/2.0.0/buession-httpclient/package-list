@@ -1,0 +1,12 @@
+com.buession.httpclient
+com.buession.httpclient.apache
+com.buession.httpclient.apache.convert
+com.buession.httpclient.conn
+com.buession.httpclient.core
+com.buession.httpclient.core.io
+com.buession.httpclient.core.utils
+com.buession.httpclient.exception
+com.buession.httpclient.okhttp
+com.buession.httpclient.okhttp.convert
+okhttp3
+org.apache.http.client.methods

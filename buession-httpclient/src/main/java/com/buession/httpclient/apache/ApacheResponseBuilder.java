@@ -22,11 +22,11 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.httpclient.apache;
+package com.buession.httpclient.apache.response;
 
 import com.buession.httpclient.core.ProtocolVersion;
-import com.buession.httpclient.helper.AbstractResponseBuilder;
-import com.buession.httpclient.helper.ResponseBuilder;
+import com.buession.httpclient.response.AbstractResponseBuilder;
+import com.buession.httpclient.response.ResponseBuilder;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.entity.BufferedHttpEntity;
@@ -52,13 +52,12 @@ public class ApacheResponseBuilder extends AbstractResponseBuilder {
 		final org.apache.http.StatusLine responseStatusLine = httpResponse.getStatusLine();
 		final org.apache.http.ProtocolVersion responseProtocolVersion = responseStatusLine.getProtocolVersion();
 
-		responseBuilder.setProtocolVersion(ProtocolVersion.createInstance(responseProtocolVersion.getProtocol(),
-				responseProtocolVersion.getMajor(), responseProtocolVersion.getMinor()));
+		responseBuilder.setProtocolVersion(ProtocolVersion.createInstance(responseProtocolVersion.getProtocol(), responseProtocolVersion.getMajor(), responseProtocolVersion.getMinor()));
 		responseBuilder.setStatusCode(responseStatusLine.getStatusCode());
 		responseBuilder.setStatusText(responseStatusLine.getReasonPhrase());
 
-		ApacheResponseHeaderParse responseHeaderParse = new ApacheResponseHeaderParse(httpResponse.getAllHeaders());
-		responseBuilder.setHeaders(responseHeaderParse.parse());
+		ApacheResponseHeaderParse responseHeaderParse = new ApacheResponseHeaderParse();
+		responseBuilder.setHeaders(responseHeaderParse.parse(httpResponse.getAllHeaders()));
 
 		if(httpResponse.getEntity() != null){
 			responseBuilder.setContentLength(httpResponse.getEntity().getContentLength());

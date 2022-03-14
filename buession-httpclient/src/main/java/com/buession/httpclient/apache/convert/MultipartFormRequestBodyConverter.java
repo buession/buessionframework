@@ -19,12 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert;
 
+import com.buession.core.validator.Validate;
 import com.buession.httpclient.core.MultipartFormRequestBody;
+import com.buession.httpclient.core.MultipartInputStreamRequestBodyElement;
 import com.buession.httpclient.core.MultipartRequestBodyElement;
 import com.buession.io.MimeType;
 import com.buession.io.file.File;
@@ -33,7 +35,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 
 /**
@@ -54,29 +55,44 @@ public class MultipartFormRequestBodyConverter implements ApacheRequestBodyConve
 		builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
 		for(MultipartRequestBodyElement element : source.getContent()){
-			if(element.getFile() != null){
-				File file = new File(element.getFile());
-				ContentType contentType = parseMultipartElementMimeType(file, source.getContentType().getCharset());
-
-				builder.addBinaryBody(element.getName(), file, contentType, file.getName());
-			}else{
-				builder.addTextBody(element.getName(), element.getOptionalValue());
-			}
+			addBody(source, builder, element);
 		}
 
 		return builder.build();
 	}
 
-	private static ContentType parseMultipartElementMimeType(final File file, final Charset charset){
-		MimeType mimeType = null;
+	private static void addBody(final MultipartFormRequestBody requestBody, final MultipartEntityBuilder builder, final MultipartRequestBodyElement element){
+		if(element instanceof MultipartInputStreamRequestBodyElement){
+			MultipartInputStreamRequestBodyElement multipartInputStreamRequestBodyElement = (MultipartInputStreamRequestBodyElement) element;
 
-		try{
-			mimeType = file.getMimeType();
-		}catch(IOException e){
+			if(multipartInputStreamRequestBodyElement.getInputStream() != null){
+				if(Validate.hasText(multipartInputStreamRequestBodyElement.getFileName())){
+					File file = new File(multipartInputStreamRequestBodyElement.getFileName());
+					ContentType contentType = parseMultipartElementMimeType(file, requestBody.getContentType().getCharset());
+
+					builder.addBinaryBody(element.getName(), multipartInputStreamRequestBodyElement.getInputStream(), contentType, multipartInputStreamRequestBodyElement.getFileName());
+				}else{
+					builder.addBinaryBody(element.getName(), multipartInputStreamRequestBodyElement.getInputStream());
+				}
+			}else{
+				builder.addTextBody(element.getName(), element.getValue());
+			}
+		}else{
+			if(element.getFile() != null){
+				File file = new File(element.getFile());
+				ContentType contentType = parseMultipartElementMimeType(file, requestBody.getContentType().getCharset());
+
+				builder.addBinaryBody(element.getName(), element.getFile(), contentType, file.getName());
+			}else{
+				builder.addTextBody(element.getName(), element.getValue());
+			}
 		}
+	}
 
-		return mimeType == null ? ContentType.APPLICATION_OCTET_STREAM : ContentType.create(mimeType.toString(),
-				charset);
+	private static ContentType parseMultipartElementMimeType(final File file, final Charset charset){
+		MimeType mimeType = file.getMimeType();
+
+		return mimeType == null ? ContentType.APPLICATION_OCTET_STREAM : ContentType.create(mimeType.toString(), charset);
 	}
 
 }

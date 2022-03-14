@@ -32,7 +32,4 @@ import okhttp3.RequestBody;
  */
 public interface OkHttpRequestBodyConverter<S> extends RequestBodyConverter<S, RequestBody> {
 
-	@Override
-	RequestBody convert(S source);
-
 }

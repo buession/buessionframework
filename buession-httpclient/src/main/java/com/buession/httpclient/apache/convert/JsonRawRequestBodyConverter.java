@@ -19,42 +19,24 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.httpclient.apache.convert;
 
 import com.buession.httpclient.core.JsonRawRequestBody;
-import com.buession.httpclient.core.RequestBody;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.buession.httpclient.request.RequestBodyConverter;
 import org.apache.http.entity.StringEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
-public class JsonRawRequestBodyConverter implements ApacheRequestBodyConverter<JsonRawRequestBody> {
-
-	protected final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-	private final static Logger logger = LoggerFactory.getLogger(JsonRawRequestBodyConverter.class);
+public class JsonRawRequestBodyConverter implements ApacheRequestBodyConverter<JsonRawRequestBody<?>> {
 
 	@Override
-	public StringEntity convert(JsonRawRequestBody source){
-		if(source == null || source.getContent() == null){
-			return null;
-		}
-
-		try{
-			String str = OBJECT_MAPPER.writeValueAsString(source.getContent());
-			return new StringEntity(str, ContentTypeUtils.create(source.getContentType()));
-		}catch(JsonProcessingException e){
-			logger.error("{} convert to JSON String error.", RequestBody.class.getName(), e);
-		}
-
-		return null;
+	public StringEntity convert(JsonRawRequestBody<?> source){
+		RequestBodyConverter.JsonRawRequestBodyConverter<StringEntity> jsonRawRequestBodyConverter = new RequestBodyConverter.JsonRawRequestBodyConverter<>((str)->new StringEntity(str, ContentTypeUtils.create(source.getContentType())));
+		return jsonRawRequestBodyConverter.convert(source);
 	}
 
 }
