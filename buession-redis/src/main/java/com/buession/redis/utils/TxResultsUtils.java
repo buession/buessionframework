@@ -19,14 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.utils;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.utils.ReflectUtils;
 import com.buession.redis.transaction.TxResult;
+import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
@@ -76,12 +76,11 @@ public class TxResultsUtils {
 				continue;
 			}
 
-			Method method = ReflectUtils.findMethod(txResult.getConverter().getClass(), "convert",
-					txResult.getParamTypes());
+			Method method = ReflectionUtils.findMethod(txResult.getConverter().getClass(), "convert", txResult.getParamTypes());
 
 			if(method != null){
 				Object value = result.get(i);
-				Object ret = ReflectUtils.invokeMethod(method, txResult.getConverter(), value);
+				Object ret = ReflectionUtils.invokeMethod(method, txResult.getConverter(), value);
 
 				result.set(i, ret);
 			}
