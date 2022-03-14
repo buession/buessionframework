@@ -26,7 +26,6 @@
  */
 package com.buession.dao;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -35,8 +34,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.buession.beans.BeanResolver;
-import com.buession.beans.DefaultBeanResolver;
+import com.buession.beans.BeanUtils;
 import com.buession.core.utils.FieldUtils;
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.RandomUtils;
@@ -64,8 +62,6 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 
 	@Resource
 	protected List<SqlSessionTemplate> slaveSqlSessionTemplates;
-
-	protected BeanResolver beanResolver = new DefaultBeanResolver();
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractMyBatisDao.class);
 
@@ -153,26 +149,17 @@ public abstract class AbstractMyBatisDao<P, E> extends AbstractDao<P, E> impleme
 			data.putAll(conditions);
 		}
 
+		Map<Object, Object> eMap;
 		if(e instanceof Map){
-			Map<Object, Object> eMap = (Map<Object, Object>) e;
-
-			eMap.forEach((key, value)->{
-				data.put(key.toString(), value);
-			});
+			eMap = (Map<Object, Object>) e;
 		}else{
-			try{
-				beanResolver.populate(data, e);
-			}catch(IllegalAccessException ex){
-				logger.error("Execute update command error: {}", ex.getMessage(), ex);
-				return 0;
-			}catch(NoSuchMethodException ex){
-				logger.error("Execute update command error: {}", ex.getMessage(), ex);
-				return 0;
-			}catch(InvocationTargetException ex){
-				logger.error("Execute update command error: {}", ex.getMessage(), ex);
-				return 0;
-			}
+			eMap = new HashMap<>();
+			BeanUtils.copyProperties(eMap, e);
 		}
+
+		eMap.forEach((key, value)->{
+			data.put(key.toString(), value);
+		});
 
 		return getMasterSqlSessionTemplate().update(getStatement(DML.UPDATE), data);
 	}
