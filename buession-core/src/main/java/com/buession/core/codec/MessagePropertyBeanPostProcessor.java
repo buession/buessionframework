@@ -21,7 +21,7 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.core.codec;
@@ -37,6 +37,7 @@ import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.env.Environment;
+import org.springframework.lang.Nullable;
 
 import java.lang.reflect.Field;
 
@@ -64,13 +65,9 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 		this.environment = environment;
 	}
 
+	@Nullable
 	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException{
-		return bean;
-	}
-
-	@Override
-	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException{
+	public Object postProcessAfterInitialization(Object bean, @Nullable String beanName) throws BeansException{
 		Class<?> clazz = bean.getClass();
 		Field[] fields = ClassUtils.getAllFields(clazz);
 		Message message;
@@ -91,14 +88,12 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 		return bean;
 	}
 
-	private void handleMessageInjected(final Class<?> clazz, final Object bean, final String beanName,
-									   final Field field, final Message message) throws BeansException{
+	private void handleMessageInjected(final Class<?> clazz, final Object bean, final String beanName, final Field field, final Message message) throws BeansException{
 		final String key = message.value();
 		final String text = getEnvironment().getProperty(buildProperty(key, message.textField()));
 
 		if(message.required() && text == null){
-			throw new IllegalArgumentException("Could not resolve placeholder '" + key + "' in value \"${" + key +
-					"}\", on: " + beanName + "(" + bean.getClass().getName() + ").");
+			throw new IllegalArgumentException("Could not resolve placeholder '" + key + "' in value \"${" + key + "}\", on: " + beanName + "(" + bean.getClass().getName() + ").");
 		}
 
 		final int code = getEnvironment().getProperty(buildProperty(key, message.codeField()), Integer.class);
@@ -126,7 +121,7 @@ public class MessagePropertyBeanPostProcessor implements BeanPostProcessor {
 	}
 
 	private static String buildProperty(final String prefix, final String value){
-		StringBuilder sb = new StringBuilder(prefix.length() + value.length() + 1);
+		final StringBuilder sb = new StringBuilder(prefix.length() + value.length() + 1);
 
 		sb.append(prefix).append('.').append(value);
 

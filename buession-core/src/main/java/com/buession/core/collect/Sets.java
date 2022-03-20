@@ -27,27 +27,46 @@ package com.buession.core.collect;
 import com.buession.core.utils.StringUtils;
 
 import java.util.List;
+import java.util.Set;
 
 /**
- * List 工具类
+ * Set 工具类
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class Lists {
+public class Sets {
+
+	public final static String DEFAULT_GLUE = ", ";
 
 	/**
-	 * 将 O 型 List 拼接成字符串
+	 * 将 O 型 Set 拼接成字符串
 	 *
 	 * @param data
-	 * 		需要拼接的 List
+	 * 		需要拼接的 Set
 	 * @param <O>
 	 * 		类
 	 *
 	 * @return 拼接后的字符串
 	 */
-	public static <O> String toString(final List<O> data){
+	public static <O> String toString(final Set<O> data){
 		return StringUtils.join(data, DEFAULT_GLUE);
+	}
+
+	/**
+	 * 将 O 型 Set 拼接成字符串
+	 *
+	 * @param data
+	 * 		需要拼接的 Set
+	 * @param glue
+	 * 		拼接字符串
+	 * @param <O>
+	 * 		类
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static <O> String toString(final Set<O> data, final String glue){
+		return StringUtils.join(data, glue);
 	}
 
 }

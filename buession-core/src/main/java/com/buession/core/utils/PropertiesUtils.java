@@ -21,10 +21,146 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core.utils;/**
- * 
+ */
+package com.buession.core.utils;
+
+import com.buession.core.validator.Validate;
+
+import java.util.Properties;
+
+/**
+ * Properties 工具类
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public class PropertiesUtils {
+ */
+public class PropertiesUtils {
+
+	/**
+	 * 获取 {@link Properties} 指定 key 的值
+	 *
+	 * @param properties
+	 *        {@link Properties}
+	 * @param key
+	 * 		key
+	 *
+	 * @return {@link Properties} 指定 key 的值
+	 */
+	public static String get(final Properties properties, final String key){
+		return properties.getProperty(key);
+	}
+
+	/**
+	 * 获取 {@link Properties} 指定 key 的 Short 类型值
+	 *
+	 * @param properties
+	 *        {@link Properties}
+	 * @param key
+	 * 		key
+	 *
+	 * @return {@link Properties} 指定 key 的 Short 类型值
+	 */
+	public static Short getShort(final Properties properties, final String key){
+		String str = properties.getProperty(key);
+		return Validate.hasText(str) ? Short.parseShort(str) : null;
+	}
+
+	/**
+	 * 获取 {@link Properties} 指定 key 的 Integer 类型值
+	 *
+	 * @param properties
+	 *        {@link Properties}
+	 * @param key
+	 * 		key
+	 *
+	 * @return {@link Properties} 指定 key 的 Integer 类型值
+	 */
+	public static Integer getInt(final Properties properties, final String key){
+		return getInteger(properties, key);
+	}
+
+	/**
+	 * 获取 {@link Properties} 指定 key 的 Integer 类型值
+	 *
+	 * @param properties
+	 *        {@link Properties}
+	 * @param key
+	 * 		key
+	 *
+	 * @return {@link Properties} 指定 key 的 Integer 类型值
+	 */
+	public static Integer getInteger(final Properties properties, final String key){
+		String str = properties.getProperty(key);
+		return Validate.hasText(str) ? Integer.parseInt(str) : null;
+	}
+
+	/**
+	 * 获取 {@link Properties} 指定 key 的 Long 类型值
+	 *
+	 * @param properties
+	 *        {@link Properties}
+	 * @param key
+	 * 		key
+	 *
+	 * @return {@link Properties} 指定 key 的 Long 类型值
+	 */
+	public static Long getLong(final Properties properties, final String key){
+		String str = properties.getProperty(key);
+		return Validate.hasText(str) ? Long.parseLong(str) : null;
+	}
+
+	/**
+	 * 获取 {@link Properties} 指定 key 的 Float 类型值
+	 *
+	 * @param properties
+	 *        {@link Properties}
+	 * @param key
+	 * 		key
+	 *
+	 * @return {@link Properties} 指定 key 的 Float 类型值
+	 */
+	public static Float getFloat(final Properties properties, final String key){
+		String str = properties.getProperty(key);
+		return Validate.hasText(str) ? Float.parseFloat(str) : null;
+	}
+
+	/**
+	 * 获取 {@link Properties} 指定 key 的 Double 类型值
+	 *
+	 * @param properties
+	 *        {@link Properties}
+	 * @param key
+	 * 		key
+	 *
+	 * @return {@link Properties} 指定 key 的 Double 类型值
+	 */
+	public static Double getDouble(final Properties properties, final String key){
+		String str = properties.getProperty(key);
+		return Validate.hasText(str) ? Double.parseDouble(str) : null;
+	}
+
+	/**
+	 * 获取 {@link Properties} 指定 key 的 Boolean 类型值
+	 *
+	 * @param properties
+	 *        {@link Properties}
+	 * @param key
+	 * 		key
+	 *
+	 * @return {@link Properties} 指定 key 的 Boolean 类型值
+	 */
+	public static Boolean getBoolean(final Properties properties, final String key){
+		String str = properties.getProperty(key);
+
+		if(Validate.hasText(str) == false){
+			return null;
+		}
+
+		if(Boolean.parseBoolean(str)){
+			return true;
+		}
+
+		return "0".equals(str) == false || Validate.isNumeric(str) && Integer.parseInt(str) != 0;
+	}
+
 }

@@ -21,10 +21,35 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core.exception;/**
- * 
- *
+ */
+package com.buession.core.exception;
+
+/**
  * @author Yong.Teng
- * @since 2.00
- */public class NestedRuntimeException {
+ * @since 2.0.0
+ */
+public class NestedRuntimeException extends RuntimeException {
+
+	private final static long serialVersionUID = -1165918720723049728L;
+
+	public NestedRuntimeException(){
+		super();
+	}
+
+	public NestedRuntimeException(String message){
+		super(message);
+	}
+
+	public NestedRuntimeException(String message, Throwable cause){
+		super(message, cause);
+	}
+
+	public NestedRuntimeException(Throwable cause){
+		super(cause);
+	}
+
+	public NestedRuntimeException(String message, Throwable cause, boolean enableSuppression,
+								  boolean writableStackTrace){
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
 }

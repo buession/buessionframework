@@ -21,10 +21,35 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core.utils;/**
- * 
+ */
+package com.buession.core.utils;
+
+import java.util.Arrays;
+
+/**
+ * Byte 工具类
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public class ByteUtils {
+ */
+public class ByteUtils {
+
+	/**
+	 * Byte 连接
+	 *
+	 * @param dest
+	 * 		目标对象
+	 * @param source
+	 * 		源对象
+	 *
+	 * @return 连接结果
+	 */
+	public static byte[] concat(byte[] dest, byte[] source){
+		byte[] result = Arrays.copyOf(dest, dest.length + source.length);
+
+		System.arraycopy(source, 0, result, dest.length, source.length);
+
+		return result;
+	}
+
 }

@@ -6,8 +6,10 @@ Changes in version 2.0.0 (2022-02-22)
 -------------------------------------
 *【移除】布尔值转换 Status 转换器 BooleanStatusConvert ，使用 BooleanStatusConverter
 *【移除】Status 转换布尔值换器 StatusBooleanConvert ，使用 StatusBooleanConverter
+*【移除】反射工具类 com.buession.core.utils.ReflectUtils
 *【新增】ListBuilder 增加 addIfPresent 方法，值为 null，不添加到 List 中
 *【新增】System Property 工具类
+*【变化】ListBuilder、MapBuilder、SetBuilder、QueueBuilder 从包 com.buession.core.utils 迁移至包 com.buession.core.builder
 
 Changes in version 1.3.2 (2021-11-10)
 -------------------------------------

@@ -26,22 +26,18 @@
  */
 package com.buession.core.utils;
 
-import com.buession.lang.Constants;
+import com.buession.core.collect.Arrays;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 数组工具类
  *
  * @author Yong.Teng
  */
+@Deprecated
 public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
-
-	public final static String DEFAULT_GLUE = ", ";
 
 	/**
 	 * 检查 byte 数组中是否存在某个值
@@ -54,7 +50,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final byte[] a, final byte value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -68,7 +64,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final byte[] a, final short value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -82,7 +78,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final byte[] a, final int value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -96,7 +92,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final byte[] a, final long value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -110,7 +106,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final char[] a, final char value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -124,7 +120,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final short[] a, final short value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -138,7 +134,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final short[] a, final int value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -152,7 +148,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final short[] a, final long value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -166,7 +162,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final int[] a, final short value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -180,7 +176,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final int[] a, final int value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -194,7 +190,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final int[] a, final long value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -208,7 +204,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final long[] a, final short value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -222,7 +218,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final long[] a, final int value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -236,7 +232,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final long[] a, final long value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -250,7 +246,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final float[] a, final float value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -264,7 +260,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final float[] a, final double value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -278,7 +274,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final double[] a, final float value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -292,7 +288,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final double[] a, final double value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -306,7 +302,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final boolean[] a, final boolean value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -320,7 +316,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 数组中存在该值，则返回 true；否则，返回 false
 	 */
 	public static boolean contains(final Object[] a, final Object value){
-		return indexOf(a, value) != INDEX_NOT_FOUND;
+		return Arrays.contains(a, value);
 	}
 
 	/**
@@ -334,7 +330,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final byte[] a, final byte value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -348,7 +344,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final byte[] a, final short value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -362,7 +358,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final byte[] a, final int value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -376,7 +372,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final byte[] a, final long value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -392,19 +388,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final byte[] a, final byte value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = startIndex; i < a.length; i++){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -420,7 +404,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final byte[] a, final short value, int startIndex){
-		return indexOf(a, (long) value, startIndex);
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -436,7 +420,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final byte[] a, final int value, int startIndex){
-		return indexOf(a, (long) value, startIndex);
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -452,21 +436,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final byte[] a, final long value, int startIndex){
-		if(a != null && a.length > 0){
-			if(value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE){
-				if(startIndex < 0){
-					startIndex = 0;
-				}
-
-				for(int i = startIndex; i < a.length; i++){
-					if(value == a[i]){
-						return i;
-					}
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -480,7 +450,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final char[] a, final char value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -496,19 +466,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final char[] a, final char value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = startIndex; i < a.length; i++){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -522,7 +480,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final short[] a, final short value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -536,7 +494,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final short[] a, final int value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -550,7 +508,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final short[] a, final long value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -566,19 +524,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final short[] a, final short value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = startIndex; i < a.length; i++){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -594,7 +540,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final short[] a, final int value, int startIndex){
-		return indexOf(a, (long) value, startIndex);
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -610,21 +556,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final short[] a, final long value, int startIndex){
-		if(a != null && a.length > 0){
-			if(value >= Short.MIN_VALUE && value <= Short.MAX_VALUE){
-				if(startIndex < 0){
-					startIndex = 0;
-				}
-
-				for(int i = startIndex; i < a.length; i++){
-					if(value == a[i]){
-						return i;
-					}
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -638,7 +570,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final int[] a, final short value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -652,7 +584,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final int[] a, final int value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -666,7 +598,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final int[] a, final long value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -682,7 +614,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final int[] a, final short value, int startIndex){
-		return indexOf(a, (int) value, startIndex);
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -698,19 +630,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final int[] a, final int value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = startIndex; i < a.length; i++){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -726,21 +646,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final int[] a, final long value, int startIndex){
-		if(a != null && a.length > 0){
-			if(value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE){
-				if(startIndex < 0){
-					startIndex = 0;
-				}
-
-				for(int i = startIndex; i < a.length; i++){
-					if(value == a[i]){
-						return i;
-					}
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -754,7 +660,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final long[] a, final short value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -768,7 +674,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final long[] a, final int value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -782,7 +688,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final long[] a, final long value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -798,7 +704,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final long[] a, final short value, int startIndex){
-		return indexOf(a, (long) value, startIndex);
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -814,7 +720,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final long[] a, final int value, int startIndex){
-		return indexOf(a, (long) value, startIndex);
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -830,19 +736,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final long[] a, final long value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = startIndex; i < a.length; i++){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -856,7 +750,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final float[] a, final float value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -870,7 +764,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final float[] a, final double value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -886,19 +780,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final float[] a, final float value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = startIndex; i < a.length; i++){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -914,21 +796,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final float[] a, final double value, int startIndex){
-		if(a != null && a.length > 0){
-			if(value >= Float.MIN_VALUE && value <= Float.MAX_VALUE){
-				if(startIndex < 0){
-					startIndex = 0;
-				}
-
-				for(int i = startIndex; i < a.length; i++){
-					if(value == a[i]){
-						return i;
-					}
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -942,7 +810,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final double[] a, final float value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -956,7 +824,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final double[] a, final double value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -972,19 +840,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final double[] a, final float value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = startIndex; i < a.length; i++){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1000,19 +856,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final double[] a, final double value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = startIndex; i < a.length; i++){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1026,7 +870,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final boolean[] a, final boolean value){
-		return indexOf(a, value, 0);
+		return Arrays.indexOf(a, value, 0);
 	}
 
 	/**
@@ -1042,19 +886,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中第一次出现处的索引，未找到则返回 -1
 	 */
 	public static int indexOf(final boolean[] a, final boolean value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = startIndex; i < a.length; i++){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.indexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1068,7 +900,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final byte[] a, final byte value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1082,7 +914,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final byte[] a, final short value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1096,7 +928,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final byte[] a, final int value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1110,7 +942,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final byte[] a, final long value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1126,19 +958,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final byte[] a, final byte value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = a.length - 1; i >= startIndex; i--){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1154,7 +974,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final byte[] a, final short value, int startIndex){
-		return lastIndexOf(a, (long) value, startIndex);
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1170,7 +990,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final byte[] a, final int value, int startIndex){
-		return lastIndexOf(a, (long) value, startIndex);
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1186,21 +1006,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final byte[] a, final long value, int startIndex){
-		if(a != null && a.length > 0){
-			if(value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE){
-				if(startIndex < 0){
-					startIndex = 0;
-				}
-
-				for(int i = a.length - 1; i >= startIndex; i--){
-					if(value == a[i]){
-						return i;
-					}
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1214,7 +1020,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final char[] a, final char value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1230,19 +1036,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final char[] a, final char value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = a.length - 1; i >= startIndex; i--){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1256,7 +1050,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final short[] a, final short value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1270,7 +1064,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final short[] a, final int value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1284,7 +1078,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final short[] a, final long value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1300,19 +1094,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final short[] a, final short value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = a.length - 1; i >= startIndex; i--){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1328,7 +1110,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final short[] a, final int value, int startIndex){
-		return lastIndexOf(a, (long) value, startIndex);
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1344,21 +1126,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final short[] a, final long value, int startIndex){
-		if(a != null && a.length > 0){
-			if(value >= Short.MIN_VALUE && value <= Short.MAX_VALUE){
-				if(startIndex < 0){
-					startIndex = 0;
-				}
-
-				for(int i = a.length - 1; i >= startIndex; i--){
-					if(value == a[i]){
-						return i;
-					}
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1372,7 +1140,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final int[] a, final short value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1386,7 +1154,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final int[] a, final int value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1400,7 +1168,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final int[] a, final long value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1416,7 +1184,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final int[] a, final short value, int startIndex){
-		return lastIndexOf(a, (int) value, startIndex);
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1432,19 +1200,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final int[] a, final int value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = a.length - 1; i >= startIndex; i--){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1460,21 +1216,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final int[] a, final long value, int startIndex){
-		if(a != null && a.length > 0){
-			if(value >= Integer.MIN_VALUE && value <= Integer.MAX_VALUE){
-				if(startIndex < 0){
-					startIndex = 0;
-				}
-
-				for(int i = a.length - 1; i >= startIndex; i--){
-					if(value == a[i]){
-						return i;
-					}
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1488,7 +1230,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final long[] a, final short value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1502,7 +1244,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final long[] a, final int value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1516,7 +1258,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final long[] a, final long value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1532,7 +1274,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final long[] a, final short value, int startIndex){
-		return lastIndexOf(a, (long) value, startIndex);
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1548,7 +1290,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final long[] a, final int value, int startIndex){
-		return lastIndexOf(a, (long) value, startIndex);
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1564,19 +1306,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final long[] a, final long value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = a.length - 1; i >= startIndex; i--){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1590,7 +1320,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final float[] a, final float value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1604,7 +1334,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final float[] a, final double value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1620,19 +1350,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final float[] a, final float value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = a.length - 1; i >= startIndex; i--){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1648,21 +1366,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final float[] a, final double value, int startIndex){
-		if(a != null && a.length > 0){
-			if(value >= Float.MIN_VALUE && value <= Float.MAX_VALUE){
-				if(startIndex < 0){
-					startIndex = 0;
-				}
-
-				for(int i = a.length - 1; i >= startIndex; i--){
-					if(value == a[i]){
-						return i;
-					}
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1676,7 +1380,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final double[] a, final float value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1690,7 +1394,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final double[] a, final double value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1706,19 +1410,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final double[] a, final float value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = a.length - 1; i >= startIndex; i--){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1734,19 +1426,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final double[] a, final double value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = a.length - 1; i >= startIndex; i--){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1760,7 +1440,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final boolean[] a, final boolean value){
-		return lastIndexOf(a, value, 0);
+		return Arrays.lastIndexOf(a, value, 0);
 	}
 
 	/**
@@ -1776,19 +1456,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 指定值在数组中最后一次出现处的索引，未找到则返回 -1
 	 */
 	public static int lastIndexOf(final boolean[] a, final boolean value, int startIndex){
-		if(a != null && a.length > 0){
-			if(startIndex < 0){
-				startIndex = 0;
-			}
-
-			for(int i = a.length - 1; i >= startIndex; i--){
-				if(value == a[i]){
-					return i;
-				}
-			}
-		}
-
-		return INDEX_NOT_FOUND;
+		return Arrays.lastIndexOf(a, value, startIndex);
 	}
 
 	/**
@@ -1800,7 +1468,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final byte[] a){
-		return toString(a, DEFAULT_GLUE);
+		return Arrays.toString(a);
 	}
 
 	/**
@@ -1814,22 +1482,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final byte[] a, final String glue){
-		if(a == null){
-			return null;
-		}else if(a.length == 0){
-			return Constants.EMPTY_STRING;
-		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
-		}
+		return Arrays.toString(a, glue);
 	}
 
 	/**
@@ -1841,7 +1494,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final char[] a){
-		return toString(a, DEFAULT_GLUE);
+		return Arrays.toString(a);
 	}
 
 	/**
@@ -1855,22 +1508,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final char[] a, final String glue){
-		if(a == null){
-			return null;
-		}else if(a.length == 0){
-			return Constants.EMPTY_STRING;
-		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
-		}
+		return Arrays.toString(a, glue);
 	}
 
 	/**
@@ -1882,7 +1520,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final short[] a){
-		return toString(a, DEFAULT_GLUE);
+		return Arrays.toString(a);
 	}
 
 	/**
@@ -1896,22 +1534,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final short[] a, final String glue){
-		if(a == null){
-			return null;
-		}else if(a.length == 0){
-			return Constants.EMPTY_STRING;
-		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
-		}
+		return Arrays.toString(a, glue);
 	}
 
 	/**
@@ -1923,7 +1546,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final int[] a){
-		return toString(a, DEFAULT_GLUE);
+		return Arrays.toString(a);
 	}
 
 	/**
@@ -1937,22 +1560,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final int[] a, final String glue){
-		if(a == null){
-			return null;
-		}else if(a.length == 0){
-			return Constants.EMPTY_STRING;
-		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
-		}
+		return Arrays.toString(a, glue);
 	}
 
 	/**
@@ -1964,7 +1572,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final long[] a){
-		return toString(a, DEFAULT_GLUE);
+		return Arrays.toString(a);
 	}
 
 	/**
@@ -1978,23 +1586,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final long[] a, final String glue){
-		if(a == null){
-			return null;
-		}else if(a.length == 0){
-			return Constants.EMPTY_STRING;
-		}else{
-			StringUtils.join(a, glue);
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
-		}
+		return Arrays.toString(a, glue);
 	}
 
 	/**
@@ -2006,7 +1598,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final float[] a){
-		return toString(a, DEFAULT_GLUE);
+		return Arrays.toString(a);
 	}
 
 	/**
@@ -2020,22 +1612,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final float[] a, final String glue){
-		if(a == null){
-			return null;
-		}else if(a.length == 0){
-			return Constants.EMPTY_STRING;
-		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
-		}
+		return Arrays.toString(a, glue);
 	}
 
 	/**
@@ -2047,7 +1624,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final double[] a){
-		return toString(a, DEFAULT_GLUE);
+		return Arrays.toString(a);
 	}
 
 	/**
@@ -2061,22 +1638,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final double[] a, final String glue){
-		if(a == null){
-			return null;
-		}else if(a.length == 0){
-			return Constants.EMPTY_STRING;
-		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
-		}
+		return Arrays.toString(a, glue);
 	}
 
 	/**
@@ -2088,7 +1650,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final boolean[] a){
-		return toString(a, DEFAULT_GLUE);
+		return Arrays.toString(a);
 	}
 
 	/**
@@ -2102,22 +1664,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static String toString(final boolean[] a, final String glue){
-		if(a == null){
-			return null;
-		}else if(a.length == 0){
-			return Constants.EMPTY_STRING;
-		}else{
-			StringBuilder sb = new StringBuilder();
-
-			for(int i = 0; i < a.length; i++){
-				if(i > 0){
-					sb.append(glue);
-				}
-				sb.append(a[i]);
-			}
-
-			return sb.toString();
-		}
+		return Arrays.toString(a, glue);
 	}
 
 	/**
@@ -2131,7 +1678,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static <O> String toString(final O[] a){
-		return StringUtils.join(a, DEFAULT_GLUE);
+		return Arrays.toString(a);
 	}
 
 	/**
@@ -2147,67 +1694,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 拼接后的字符串
 	 */
 	public static <O> String toString(final O[] a, final String glue){
-		return StringUtils.join(a, glue);
-	}
-
-	/**
-	 * 将 O 型 List 拼接成字符串
-	 *
-	 * @param data
-	 * 		需要拼接的 List
-	 * @param <O>
-	 * 		类
-	 *
-	 * @return 拼接后的字符串
-	 */
-	public static <O> String toString(final List<O> data){
-		return StringUtils.join(data, DEFAULT_GLUE);
-	}
-
-	/**
-	 * 将 O 型 List 拼接成字符串
-	 *
-	 * @param data
-	 * 		需要拼接的 List
-	 * @param glue
-	 * 		拼接字符串
-	 * @param <O>
-	 * 		类
-	 *
-	 * @return 拼接后的字符串
-	 */
-	public static <O> String toString(final List<O> data, final String glue){
-		return StringUtils.join(data, glue);
-	}
-
-	/**
-	 * 将 O 型 Set 拼接成字符串
-	 *
-	 * @param data
-	 * 		需要拼接的 Set
-	 * @param <O>
-	 * 		类
-	 *
-	 * @return 拼接后的字符串
-	 */
-	public static <O> String toString(final Set<O> data){
-		return StringUtils.join(data, DEFAULT_GLUE);
-	}
-
-	/**
-	 * 将 O 型 Set 拼接成字符串
-	 *
-	 * @param data
-	 * 		需要拼接的 Set
-	 * @param glue
-	 * 		拼接字符串
-	 * @param <O>
-	 * 		类
-	 *
-	 * @return 拼接后的字符串
-	 */
-	public static <O> String toString(final Set<O> data, final String glue){
-		return StringUtils.join(data, glue);
+		return Arrays.toString(a, glue);
 	}
 
 	/**
@@ -2219,16 +1706,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static List<Byte> toList(final byte[] a){
-		if(a == null){
-			return null;
-		}
-
-		Byte[] temp = new Byte[a.length];
-		for(int i = 0; i < a.length; i++){
-			temp[i] = a[i];
-		}
-
-		return Arrays.asList(temp);
+		return Arrays.toList(a);
 	}
 
 	/**
@@ -2240,16 +1718,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static List<Character> toList(final char[] a){
-		if(a == null){
-			return null;
-		}
-
-		Character[] temp = new Character[a.length];
-		for(int i = 0; i < a.length; i++){
-			temp[i] = a[i];
-		}
-
-		return Arrays.asList(temp);
+		return Arrays.toList(a);
 	}
 
 	/**
@@ -2261,16 +1730,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static List<Short> toList(final short[] a){
-		if(a == null){
-			return null;
-		}
-
-		Short[] temp = new Short[a.length];
-		for(int i = 0; i < a.length; i++){
-			temp[i] = a[i];
-		}
-
-		return Arrays.asList(temp);
+		return Arrays.toList(a);
 	}
 
 	/**
@@ -2282,7 +1742,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static List<Integer> toList(final int[] a){
-		return a == null ? null : Arrays.stream(a).boxed().collect(Collectors.toList());
+		return Arrays.toList(a);
 	}
 
 	/**
@@ -2294,7 +1754,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static List<Long> toList(final long[] a){
-		return a == null ? null : Arrays.stream(a).boxed().collect(Collectors.toList());
+		return Arrays.toList(a);
 	}
 
 	/**
@@ -2306,16 +1766,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static List<Float> toList(final float[] a){
-		if(a == null){
-			return null;
-		}
-
-		Float[] temp = new Float[a.length];
-		for(int i = 0; i < a.length; i++){
-			temp[i] = a[i];
-		}
-
-		return Arrays.asList(temp);
+		return Arrays.toList(a);
 	}
 
 	/**
@@ -2327,7 +1778,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static List<Double> toList(final double[] a){
-		return a == null ? null : Arrays.stream(a).boxed().collect(Collectors.toList());
+		return Arrays.toList(a);
 	}
 
 	/**
@@ -2339,16 +1790,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static List<Boolean> toList(final boolean[] a){
-		if(a == null){
-			return null;
-		}
-
-		Boolean[] temp = new Boolean[a.length];
-		for(int i = 0; i < a.length; i++){
-			temp[i] = a[i];
-		}
-
-		return Arrays.asList(temp);
+		return Arrays.toList(a);
 	}
 
 	/**
@@ -2362,7 +1804,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static <O> List<O> toList(final O[] a){
-		return a == null ? null : Arrays.asList(a);
+		return Arrays.toList(a);
 	}
 
 	/**
@@ -2374,7 +1816,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static Set<Byte> toSet(final byte[] a){
-		return a == null ? null : new LinkedHashSet<>(toList(a));
+		return Arrays.toSet(a);
 	}
 
 	/**
@@ -2386,7 +1828,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static Set<Character> toSet(final char[] a){
-		return a == null ? null : new LinkedHashSet<>(toList(a));
+		return Arrays.toSet(a);
 	}
 
 	/**
@@ -2398,7 +1840,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static Set<Short> toSet(final short[] a){
-		return a == null ? null : new LinkedHashSet<>(toList(a));
+		return Arrays.toSet(a);
 	}
 
 	/**
@@ -2410,7 +1852,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static Set<Integer> toSet(final int[] a){
-		return a == null ? null : new LinkedHashSet<>(toList(a));
+		return Arrays.toSet(a);
 	}
 
 	/**
@@ -2422,7 +1864,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static Set<Long> toSet(final long[] a){
-		return a == null ? null : new LinkedHashSet<>(toList(a));
+		return Arrays.toSet(a);
 	}
 
 	/**
@@ -2434,7 +1876,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static Set<Float> toSet(final float[] a){
-		return a == null ? null : new LinkedHashSet<>(toList(a));
+		return Arrays.toSet(a);
 	}
 
 	/**
@@ -2446,7 +1888,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static Set<Double> toSet(final double[] a){
-		return a == null ? null : new LinkedHashSet<>(toList(a));
+		return Arrays.toSet(a);
 	}
 
 	/**
@@ -2458,7 +1900,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static Set<Boolean> toSet(final boolean[] a){
-		return a == null ? null : new LinkedHashSet<>(toList(a));
+		return Arrays.toSet(a);
 	}
 
 	/**
@@ -2472,7 +1914,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return 转换结果
 	 */
 	public static <O> Set<O> toSet(final O[] a){
-		return a == null ? null : new LinkedHashSet<>(Arrays.asList(a));
+		return Arrays.toSet(a);
 	}
 
 	/**
@@ -2484,7 +1926,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return String 类型的数组
 	 */
 	public static String[] toStringArray(final byte[] a){
-		return toStringArray(toObject(a));
+		return Arrays.toStringArray(a);
 	}
 
 	/**
@@ -2496,7 +1938,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return String 类型的数组
 	 */
 	public static String[] toStringArray(final char[] a){
-		return toStringArray(toObject(a));
+		return Arrays.toStringArray(a);
 	}
 
 	/**
@@ -2508,7 +1950,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return String 类型的数组
 	 */
 	public static String[] toStringArray(final short[] a){
-		return toStringArray(toObject(a));
+		return Arrays.toStringArray(a);
 	}
 
 	/**
@@ -2520,7 +1962,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return String 类型的数组
 	 */
 	public static String[] toStringArray(final int[] a){
-		return toStringArray(toObject(a));
+		return Arrays.toStringArray(a);
 	}
 
 	/**
@@ -2532,7 +1974,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return String 类型的数组
 	 */
 	public static String[] toStringArray(final long[] a){
-		return toStringArray(toObject(a));
+		return Arrays.toStringArray(a);
 	}
 
 	/**
@@ -2544,7 +1986,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return String 类型的数组
 	 */
 	public static String[] toStringArray(final float[] a){
-		return toStringArray(toObject(a));
+		return Arrays.toStringArray(a);
 	}
 
 	/**
@@ -2556,7 +1998,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return String 类型的数组
 	 */
 	public static String[] toStringArray(final double[] a){
-		return toStringArray(toObject(a));
+		return Arrays.toStringArray(a);
 	}
 
 	/**
@@ -2568,7 +2010,7 @@ public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 	 * @return String 类型的数组
 	 */
 	public static String[] toStringArray(final boolean[] a){
-		return toStringArray(toObject(a));
+		return Arrays.toStringArray(a);
 	}
 
 }

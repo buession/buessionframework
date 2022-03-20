@@ -21,10 +21,51 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core.exception;/**
- * 
+ */
+package com.buession.core.exception;
+
+import org.springframework.lang.Nullable;
+
+import java.lang.reflect.Constructor;
+
+/**
+ * 类实例化异常
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public class ClassInstantiationException {
+ */
+public class ClassInstantiationException extends NestedRuntimeException {
+
+	private final static long serialVersionUID = -7175870164520231227L;
+
+	private final Class<?> clazz;
+
+	@Nullable
+	private final Constructor<?> constructor;
+
+	public ClassInstantiationException(Class<?> clazz, String message){
+		this(clazz, message, null);
+	}
+
+	public ClassInstantiationException(Class<?> clazz, String message, @Nullable Throwable cause){
+		super("Failed to instantiate [" + clazz.getName() + "]: " + message, cause);
+		this.clazz = clazz;
+		this.constructor = null;
+	}
+
+	public ClassInstantiationException(Constructor<?> constructor, String message, @Nullable Throwable cause){
+		super("Failed to instantiate [" + constructor.getDeclaringClass().getName() + "]: " + message, cause);
+		this.clazz = constructor.getDeclaringClass();
+		this.constructor = constructor;
+	}
+
+	public Class<?> getClazz(){
+		return clazz;
+	}
+
+	@Nullable
+	public Constructor<?> getConstructor(){
+		return this.constructor;
+	}
+
 }

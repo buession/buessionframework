@@ -24,6 +24,8 @@
  */
 package com.buession.core.utils;
 
+import com.buession.core.validator.Validate;
+
 /**
  * System Property 工具类
  *
@@ -129,6 +131,24 @@ public class SystemPropertyUtils {
 	public static String setPropertyIfPresent(final String name, final String value){
 		if(value != null){
 			return System.setProperty(name, value);
+		}
+
+		return value;
+	}
+
+	/**
+	 * 设置系统属性或系统环境变量值，优先通过 System.getProperty 获取，未获取到再通过 System.getenv 获取系统环境变量值
+	 *
+	 * @param name
+	 * 		属性名称
+	 *
+	 * @return 属性值
+	 */
+	public static String getProperty(final String name){
+		String value = System.getProperty(name);
+
+		if(Validate.hasText(value) == false){
+			value = System.getenv(name);
 		}
 
 		return value;

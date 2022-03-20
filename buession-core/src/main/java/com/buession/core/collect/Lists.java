@@ -21,10 +21,51 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core.collect;/**
- * 
+ */
+package com.buession.core.collect;
+
+import com.buession.core.utils.StringUtils;
+
+import java.util.List;
+
+/**
+ * List 工具类
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public class Lists {
+ */
+public class Lists {
+
+	public final static String DEFAULT_GLUE = ", ";
+
+	/**
+	 * 将 O 型 List 拼接成字符串
+	 *
+	 * @param data
+	 * 		需要拼接的 List
+	 * @param <O>
+	 * 		类
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static <O> String toString(final List<O> data){
+		return StringUtils.join(data, DEFAULT_GLUE);
+	}
+
+	/**
+	 * 将 O 型 List 拼接成字符串
+	 *
+	 * @param data
+	 * 		需要拼接的 List
+	 * @param glue
+	 * 		拼接字符串
+	 * @param <O>
+	 * 		类
+	 *
+	 * @return 拼接后的字符串
+	 */
+	public static <O> String toString(final List<O> data, final String glue){
+		return StringUtils.join(data, glue);
+	}
+
 }

@@ -21,10 +21,19 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core.collect;/**
- * 
- *
+ */
+package com.buession.core.collect;
+
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
  * @since 2.0.0
- */public class ArraysTest {
+ */
+public class ArraysTest {
+
+	@Test
+	public void map(){
+	}
+
 }
