@@ -21,10 +21,27 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.httpclient;/**
- * 
- *
+ */
+package com.buession.httpclient;
+
+import com.buession.httpclient.core.ProtocolVersion;
+import org.junit.Assert;
+import org.junit.Test;
+
+/**
  * @author Yong.Teng
  * @since 2.0.0
- */public class ProtocolVersionTest {
+ */
+public class ProtocolVersionTest {
+
+	@Test
+	public void http(){
+		Assert.assertTrue(ProtocolVersion.createInstance("http", 0, 9) == ProtocolVersion.HTTP_0_9);
+		Assert.assertTrue(ProtocolVersion.createInstance("http", 1, 0) == ProtocolVersion.HTTP_1_0);
+		Assert.assertTrue(ProtocolVersion.createInstance("http", 1, 1) == ProtocolVersion.HTTP_1_1);
+		Assert.assertTrue(ProtocolVersion.createInstance("http", 3, 9) == ProtocolVersion.HTTP_1_1);
+		Assert.assertTrue(ProtocolVersion.createInstance("ftp", 3, 9) == ProtocolVersion.HTTP_1_1);
+	}
+
+
 }

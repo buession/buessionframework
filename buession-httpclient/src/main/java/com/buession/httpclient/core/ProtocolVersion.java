@@ -26,6 +26,8 @@ package com.buession.httpclient.core;
 
 import com.buession.core.utils.Assert;
 
+import java.util.Objects;
+
 /**
  * 协议及版本
  *
@@ -90,23 +92,44 @@ public enum ProtocolVersion {
 	public static ProtocolVersion createInstance(String protocol, int major, int minor){
 		Assert.isBlank(protocol, "Protocol cloud not be empty or null.");
 
+		boolean legalProtocol = false;
+		Boolean illegalMinorVersion = null;
+		Boolean illegalMajorVersion = null;
+
 		for(ProtocolVersion protocolVersion : ProtocolVersion.values()){
 			if(protocolVersion.getProtocol().equalsIgnoreCase(protocol)){
 				if(protocolVersion.getMajor() == major){
 					if(protocolVersion.getMinor() == minor){
 						return protocolVersion;
 					}else{
-						throw new IllegalArgumentException(
-								"Unknown protocol minor version: " + minor + " for " + protocolVersion.getProtocol() +
-										".");
+						illegalMinorVersion = true;
 					}
 				}else{
-					throw new IllegalArgumentException(
-							"Unknown protocol major version: " + minor + " for " + protocolVersion.getProtocol() + ".");
+					illegalMajorVersion = true;
 				}
+				legalProtocol = true;
+			}else{
+				if(legalProtocol == true){
+					break;
+				}
+
+				illegalMinorVersion = null;
+				illegalMajorVersion = null;
 			}
 		}
-		
+
+		if(legalProtocol){
+			if(Objects.equals(illegalMajorVersion, true)){
+				throw new IllegalArgumentException(
+						"Unknown " + protocol + " protocol major version: " + major + ".");
+			}
+
+			if(Objects.equals(illegalMinorVersion, true)){
+				throw new IllegalArgumentException(
+						"Unknown " + protocol + " protocol minor version: " + minor + ".");
+			}
+		}
+
 		throw new IllegalArgumentException("Unknown protocol: " + protocol);
 	}
 

@@ -24,12 +24,19 @@
  */
 package com.buession.httpclient;
 
+import com.buession.httpclient.core.ChunkedInputStreamRequestBody;
+import com.buession.httpclient.core.EncodedFormRequestBody;
 import com.buession.httpclient.core.Header;
+import com.buession.httpclient.core.HtmlRawRequestBody;
+import com.buession.httpclient.core.MultipartFormRequestBody;
 import com.buession.httpclient.core.Response;
 import com.buession.httpclient.exception.RequestException;
+import com.buession.lang.Gender;
 import com.google.common.io.CharStreams;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -40,10 +47,10 @@ import java.nio.charset.StandardCharsets;
  */
 public class OkHttpHttpClientTest {
 
+	private static OkHttpClient httpClient = new OkHttpClient();
+
 	@Test
 	public void responseHeaders() throws IOException, RequestException{
-		OkHttpClient httpClient = new OkHttpClient();
-
 		Response response = httpClient.get("https://shirojs.buession.com/manual/1.1/index.html");
 		for(Header header : response.getHeaders()){
 			System.out.println(header.toString());
@@ -52,8 +59,6 @@ public class OkHttpHttpClientTest {
 
 	@Test
 	public void responseBody() throws IOException, RequestException{
-		OkHttpClient httpClient = new OkHttpClient();
-
 		Response response = httpClient.get("https://shirojs.buession.com/support.html");
 		System.out.println(response.getBody());
 
@@ -62,9 +67,48 @@ public class OkHttpHttpClientTest {
 	}
 
 	@Test
-	public void unknowHost() throws IOException, RequestException{
-		OkHttpClient httpClient = new OkHttpClient();
+	public void chunkedInputStreamRequestBody() throws IOException, RequestException{
+		File file = new File("/Users/tengyong/Downloads/source-map-viewer.html");
+		Response response = httpClient.post("http://127.0.0.1:8081/upload/test/chunkedInputStream",
+				new ChunkedInputStreamRequestBody(new FileInputStream(file)));
+		System.out.println(response.getBody());
+	}
 
+	@Test
+	public void encodedFormRequestBody() throws IOException, RequestException{
+		EncodedFormRequestBody encodedFormRequestBody = new EncodedFormRequestBody();
+
+		encodedFormRequestBody.addRequestBodyElement("username", "username");
+		encodedFormRequestBody.addRequestBodyElement("gender", Gender.FEMALE.name());
+		encodedFormRequestBody.addRequestBodyElement("age", "11");
+
+		Response response = httpClient.post("http://127.0.0.1:8081/upload/test/encodedFormRequest",
+				encodedFormRequestBody);
+		System.out.println(response.getBody());
+	}
+
+	@Test
+	public void multipartFormRequestBody() throws IOException, RequestException{
+		MultipartFormRequestBody multipartFormRequestBody = new MultipartFormRequestBody();
+
+		multipartFormRequestBody.addRequestBodyElement("username", "username");
+		multipartFormRequestBody.addRequestBodyElement("file",
+				new File("/Users/tengyong/Downloads/source-map-viewer.html"));
+
+		Response response = httpClient.post("http://127.0.0.1:8081/upload/test/multipartFormRequest",
+				multipartFormRequestBody);
+		System.out.println(response.getBody());
+	}
+
+	@Test
+	public void htmlRawRequestBody() throws IOException, RequestException{
+		Response response = httpClient.post("http://127.0.0.1:8081/upload/test/htmlRawRequest",
+				new HtmlRawRequestBody("html request"));
+		System.out.println(response.getBody());
+	}
+
+	@Test
+	public void unknowHost() throws IOException, RequestException{
 		Response response = httpClient.get("https://aaa.buession.cn/support.html");
 		System.out.println(response.getBody());
 	}
