@@ -40,9 +40,9 @@ public class HostAndPort implements Serializable {
 	private final static long serialVersionUID = 856989636316530989L;
 
 	/**
-	 * IP
+	 * 主机地址
 	 */
-	private String ip;
+	private String host;
 
 	/**
 	 * 端口
@@ -52,43 +52,43 @@ public class HostAndPort implements Serializable {
 	/**
 	 * 构造函数
 	 *
-	 * @param ip
-	 * 		IP 地址
+	 * @param host
+	 * 		主机地址
 	 */
-	public HostAndPort(String ip){
-		this.ip = ip;
+	public HostAndPort(String host){
+		this.host = host;
 	}
 
 	/**
 	 * 构造函数
 	 *
-	 * @param ip
-	 * 		IP 地址
+	 * @param host
+	 * 		主机地址
 	 * @param port
 	 * 		端口
 	 */
-	public HostAndPort(String ip, int port){
-		this(ip);
+	public HostAndPort(String host, int port){
+		this(host);
 		setPort(port);
 	}
 
 	/**
-	 * 获取 IP 地址
+	 * 获取主机地址
 	 *
-	 * @return IP 地址
+	 * @return 主机地址
 	 */
-	public String getIp(){
-		return ip;
+	public String getHost(){
+		return host;
 	}
 
 	/**
-	 * 设置 IP 地址
+	 * 设置主机地址
 	 *
-	 * @param ip
-	 * 		IP 地址
+	 * @param host
+	 * 		主机地址
 	 */
-	public void setIp(String ip){
-		this.ip = ip;
+	public void setHost(String host){
+		this.host = host;
 	}
 
 	/**
@@ -115,14 +115,14 @@ public class HostAndPort implements Serializable {
 	public String toString(){
 		final StringBuilder sb = new StringBuilder(46);
 
-		sb.append(ip).append(':').append(port);
+		sb.append(host).append(':').append(port);
 
 		return sb.toString();
 	}
 
 	@Override
 	public int hashCode(){
-		return Objects.hash(ip, port);
+		return Objects.hash(host, port);
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public class HostAndPort implements Serializable {
 
 		if(o instanceof HostAndPort){
 			HostAndPort that = (HostAndPort) o;
-			return Objects.equals(ip, that.ip) && Objects.equals(port, that.port);
+			return Objects.equals(host, that.host) && Objects.equals(port, that.port);
 		}
 
 		return false;

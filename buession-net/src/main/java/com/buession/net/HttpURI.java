@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.net;
@@ -101,7 +101,7 @@ public class HttpURI extends AbstractUserInfoURI {
 			return Constants.EMPTY_STRING;
 		}
 
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 
 		data.forEach((name, value)->{
 			if(sb.length() > 0){
@@ -140,11 +140,11 @@ public class HttpURI extends AbstractUserInfoURI {
 		sb.append(host);
 
 		if(HTTP.equalsIgnoreCase(scheme)){
-			if(port != Protocol.HTTP.getPort()){
+			if(port != 80){
 				sb.append(':').append(port);
 			}
 		}else if(HTTPS.equalsIgnoreCase(scheme)){
-			if(port != Protocol.HTTPS.getPort()){
+			if(port != 443){
 				sb.append(':').append(port);
 			}
 		}
@@ -169,13 +169,13 @@ public class HttpURI extends AbstractUserInfoURI {
 		return sb.toString();
 	}
 
-	public final static class Builder extends AbstractUserInfoURIBuilder<HttpURI, Builder> {
+	public final static class Builder extends AbstractUserInfoURIBuilder<HttpURI> {
 
-		protected String path;
+		private String path;
 
-		protected String queryString;
+		private String queryString;
 
-		protected String fragment;
+		private String fragment;
 
 		private Builder(){
 			super();
