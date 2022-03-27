@@ -24,14 +24,14 @@
  */
 package com.buession.redis.spring.jedis;
 
-import com.buession.redis.spring.ClusterConfiguration;
+import com.buession.redis.spring.SentinelConfiguration;
 
 /**
- * Jedis Redis 集群工厂配置
+ * Jedis Redis 哨兵工厂配置
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class JedisClusterConfiguration extends AbstractJedisRedisConfiguration implements ClusterConfiguration {
+public class JedisSentinelConfiguration extends AbstractJedisRedisConfiguration implements SentinelConfiguration {
 
 }

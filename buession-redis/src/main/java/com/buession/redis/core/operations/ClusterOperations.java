@@ -21,10 +21,98 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.operations;/**
- * 
+ */
+package com.buession.redis.core.operations;
+
+import com.buession.core.utils.Assert;
+import com.buession.lang.Status;
+import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.command.ClusterCommands;
+
+/**
+ * 集群命令
+ *
+ * <p>详情说明 <a href="http://doc.redisfans.com/topic/cluster-tutorial.html" target="_blank">http://doc.redisfans.com/topic/cluster-tutorial.html</a></p>
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public interface ClusterOperations {
+ */
+public interface ClusterOperations extends ClusterCommands, RedisOperations {
+
+	/**
+	 * 把一组 hash slots 分配给接收命令的节点
+	 *
+	 * <p>详情说明
+	 * <a href="http://www.redis.cn/commands/cluster-addslots.html" target="_blank">http://www.redis.cn/commands/cluster-addslots.html</a></p>
+	 *
+	 * @param slot
+	 * 		hash slot
+	 *
+	 * @return 命令执行结果
+	 */
+	default Status clusterAddSlots(final int slot){
+		return clusterAddSlots(new int[]{slot});
+	}
+
+	/**
+	 * 使一个特定的 Redis Cluster 节点去忘记一个主节点正在负责的哈希槽
+	 *
+	 * <p>详情说明
+	 * <a href="http://www.redis.cn/commands/cluster-delslots.html" target="_blank">http://www.redis.cn/commands/cluster-delslots.html</a></p>
+	 *
+	 * @param slot
+	 * 		hash slot
+	 *
+	 * @return 命令执行结果
+	 */
+	default Status clusterDelSlots(final int slot){
+		return clusterDelSlots(new int[]{slot});
+	}
+
+	/**
+	 * 用来连接不同的开启集群支持的 Redis 节点，以进入工作集群
+	 *
+	 * <p>详情说明
+	 * <a href="http://www.redis.cn/commands/cluster-meet.html" target="_blank">http://www.redis.cn/commands/cluster-meet.html</a></p>
+	 *
+	 * @param ip
+	 * 		Redis 集群节点 IP
+	 *
+	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status clusterMeet(final String ip){
+		return clusterMeet(ip, RedisNode.DEFAULT_PORT);
+	}
+
+	/**
+	 * 用来连接不同的开启集群支持的 Redis 节点，以进入工作集群
+	 *
+	 * <p>详情说明
+	 * <a href="http://www.redis.cn/commands/cluster-meet.html" target="_blank">http://www.redis.cn/commands/cluster-meet.html</a></p>
+	 *
+	 * @param ip
+	 * 		Redis 集群节点 IP
+	 *
+	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status clusterMeet(final byte[] ip){
+		return clusterMeet(ip, RedisNode.DEFAULT_PORT);
+	}
+
+	/**
+	 * 用来连接不同的开启集群支持的 Redis 节点，以进入工作集群
+	 *
+	 * <p>详情说明
+	 * <a href="http://www.redis.cn/commands/cluster-meet.html" target="_blank">http://www.redis.cn/commands/cluster-meet.html</a></p>
+	 *
+	 * @param node
+	 * 		Redis 集群节点
+	 *
+	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status clusterMeet(final RedisNode node){
+		Assert.isNull(node, "Redis cluster node cloud not be null");
+		return clusterMeet(node.getHost(), node.getPort());
+	}
+
 }

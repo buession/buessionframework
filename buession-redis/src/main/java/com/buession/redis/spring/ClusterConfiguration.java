@@ -21,10 +21,15 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.spring;/**
- * 
+ */
+package com.buession.redis.spring;
+
+/**
+ * Redis 集群模式工厂连接配置
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public interface ClusterConfiguration {
+ */
+public interface ClusterConfiguration extends RedisConfiguration {
+
 }

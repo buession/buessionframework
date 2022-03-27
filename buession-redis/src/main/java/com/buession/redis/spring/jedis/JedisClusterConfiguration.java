@@ -21,10 +21,17 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.spring.jedis;/**
- * 
+ */
+package com.buession.redis.spring.jedis;
+
+import com.buession.redis.spring.ClusterConfiguration;
+
+/**
+ * Jedis Redis 集群工厂配置
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public class JedisClusterConfiguration {
+ */
+public class JedisClusterConfiguration extends AbstractJedisRedisConfiguration implements ClusterConfiguration {
+
 }
