@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -35,14 +35,11 @@ public class RedisServerTime implements Serializable {
 
 	private final static long serialVersionUID = 7818271427941747714L;
 
-	private Date date;
+	private final Date date;
 
-	private long usec;
+	private final long usec;
 
-	public RedisServerTime(){
-	}
-
-	public RedisServerTime(Date date, long usec){
+	public RedisServerTime(final Date date, final long usec){
 		this.date = date;
 		this.usec = usec;
 	}
@@ -51,16 +48,8 @@ public class RedisServerTime implements Serializable {
 		return date;
 	}
 
-	public void setDate(Date date){
-		this.date = date;
-	}
-
 	public long getUsec(){
 		return usec;
-	}
-
-	public void setUsec(long usec){
-		this.usec = usec;
 	}
 
 	@Override

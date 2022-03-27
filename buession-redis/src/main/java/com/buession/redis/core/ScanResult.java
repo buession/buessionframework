@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -31,11 +31,11 @@ import com.buession.redis.utils.SafeEncoder;
  */
 public class ScanResult<V> {
 
-	private byte[] cursor;
+	private final byte[] cursor;
 
 	private String cursorAsString;
 
-	private V results;
+	private final V results;
 
 	public ScanResult(final byte[] cursor, final V results){
 		this.cursor = cursor;
@@ -64,7 +64,7 @@ public class ScanResult<V> {
 	}
 
 	public boolean isCompleteIteration(){
-		return Constants.SCAN_POINTER_START.equals(getCursorAsString());
+		return Constants.SCAN_POINTER_START_BINARY.equals(getCursor());
 	}
 
 }

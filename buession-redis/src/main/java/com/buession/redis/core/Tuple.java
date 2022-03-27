@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -38,15 +38,15 @@ public class Tuple implements Comparable<Tuple>, Serializable {
 
 	private final static long serialVersionUID = -6469375940111456577L;
 
-	private byte[] element;
+	private final byte[] element;
 
-	private Double score;
+	private final Double score;
 
-	public Tuple(String element, Double score){
+	public Tuple(final String element, final Double score){
 		this(SafeEncoder.encode(element), score);
 	}
 
-	public Tuple(byte[] element, Double score){
+	public Tuple(final byte[] element, final Double score){
 		super();
 		this.element = element;
 		this.score = score;

@@ -79,4 +79,9 @@ public enum MaxMemoryPolicy {
 		return value;
 	}
 
+	@Override
+	public String toString(){
+		return getValue();
+	}
+	
 }

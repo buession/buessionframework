@@ -19,15 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.lang.Geo;
-import com.buession.redis.core.Constants;
 
 import java.io.Serializable;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -62,7 +62,7 @@ public class GeoRadius implements Serializable {
 	}
 
 	public String getMemberAsString(){
-		return new String(member, Constants.CHARSET);
+		return new String(member, StandardCharsets.UTF_8);
 	}
 
 	public double getDistance(){
@@ -96,7 +96,8 @@ public class GeoRadius implements Serializable {
 
 		if(obj instanceof GeoRadius){
 			GeoRadius geoRadius = (GeoRadius) obj;
-			return Double.compare(geoRadius.distance, distance) == 0 && Arrays.equals(member, geoRadius.member) && Objects.equals(geo, geoRadius.geo);
+			return Double.compare(geoRadius.distance, distance) == 0 && Arrays.equals(member, geoRadius.member) &&
+					Objects.equals(geo, geoRadius.geo);
 		}
 
 		return false;

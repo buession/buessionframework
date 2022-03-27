@@ -19,13 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 import com.buession.core.utils.Assert;
-import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.net.AbstractUserInfoURI;
 import com.buession.net.AbstractUserInfoURIBuilder;
@@ -168,7 +167,7 @@ public class RedisURI extends AbstractUserInfoURI {
 		return this.uri;
 	}
 
-	private final static RedisURI buildRedisUriFromUri(URI uri){
+	private static RedisURI buildRedisUriFromUri(URI uri){
 		Assert.isNull(uri, "URI must not be null");
 
 		if(Validate.hasText(uri.getScheme()) && ALLOWED_SCHEMES.contains(uri.getScheme())){
@@ -179,7 +178,8 @@ public class RedisURI extends AbstractUserInfoURI {
 
 		String userInfo = uri.getUserInfo();
 
-		if(Validate.hasText(userInfo) == false && Validate.hasText(uri.getAuthority()) && uri.getAuthority().indexOf('@') > 0){
+		if(Validate.hasText(userInfo) == false && Validate.hasText(uri.getAuthority()) &&
+				uri.getAuthority().indexOf('@') > 0){
 			userInfo = uri.getAuthority().substring(0, uri.getAuthority().indexOf('@'));
 		}
 
@@ -215,7 +215,7 @@ public class RedisURI extends AbstractUserInfoURI {
 		return builder.build();
 	}
 
-	public final static class Builder extends AbstractUserInfoURIBuilder {
+	public final static class Builder extends AbstractUserInfoURIBuilder<RedisURI> {
 
 		private int database = RedisNode.DEFAULT_DATABASE;
 
@@ -227,7 +227,7 @@ public class RedisURI extends AbstractUserInfoURI {
 			port(RedisNode.DEFAULT_PORT);
 		}
 
-		public final static Builder getInstance(){
+		public static Builder getInstance(){
 			return new Builder();
 		}
 
@@ -270,7 +270,7 @@ public class RedisURI extends AbstractUserInfoURI {
 			return redisURI;
 		}
 
-		protected final static void parseDatabase(final RedisURI redisURI, final String paramValue){
+		protected static void parseDatabase(final RedisURI redisURI, final String paramValue){
 			if(Validate.hasText(paramValue)){
 				int db = Integer.parseInt(paramValue);
 
@@ -280,13 +280,13 @@ public class RedisURI extends AbstractUserInfoURI {
 			}
 		}
 
-		protected final static void parseClientName(final RedisURI redisURI, final String paramValue){
+		protected static void parseClientName(final RedisURI redisURI, final String paramValue){
 			if(Validate.hasText(paramValue)){
 				redisURI.setClientName(paramValue);
 			}
 		}
 
-		protected final static void parseWeight(final RedisURI redisURI, final String paramValue){
+		protected static void parseWeight(final RedisURI redisURI, final String paramValue){
 			if(Validate.hasText(paramValue)){
 				int weight = Integer.parseInt(paramValue);
 
@@ -296,7 +296,7 @@ public class RedisURI extends AbstractUserInfoURI {
 			}
 		}
 
-		protected final static void parseTimeout(final RedisURI redisURI, final String paramValue){
+		protected static void parseTimeout(final RedisURI redisURI, final String paramValue){
 			if(Validate.hasText(paramValue)){
 				int timeout = Integer.parseInt(paramValue);
 

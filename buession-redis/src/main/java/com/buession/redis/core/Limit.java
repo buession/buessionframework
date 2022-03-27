@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -31,17 +31,13 @@ public class Limit {
 
 	private static final Limit UNLIMITED = new Limit(null, null);
 
-	private Long offset;
+	private final Long offset;
 
-	private Long count;
+	private final Long count;
 
-	public Limit(Long offset, Long count){
+	public Limit(final Long offset, final Long count){
 		this.offset = offset;
 		this.count = count;
-	}
-
-	public final static Limit create(long offset, long count){
-		return new Limit(offset, count);
 	}
 
 	public static Limit unlimited(){
@@ -64,7 +60,7 @@ public class Limit {
 	public String toString(){
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(getClass().getSimpleName()).append(" ");
+		sb.append("Limit ");
 
 		if(isLimited()){
 			sb.append("[offset=").append(offset).append(", count=").append(count).append(']');
