@@ -19,46 +19,114 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.connection;
+package com.buession.net.ssl;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocketFactory;
 
 /**
+ * SSL 配置
+ *
  * @author Yong.Teng
+ * @since 2.0.0
  */
 public class SslConfiguration {
 
+	/**
+	 * {@link SSLSocketFactory}
+	 */
 	private SSLSocketFactory sslSocketFactory;
 
+	/**
+	 * {@link SSLParameters}
+	 */
 	private SSLParameters sslParameters;
 
+	/**
+	 * {@link HostnameVerifier}
+	 */
 	private HostnameVerifier hostnameVerifier;
 
+	/**
+	 * 构造函数
+	 */
+	public SslConfiguration(){
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param sslSocketFactory
+	 *        {@link SSLSocketFactory}
+	 * @param sslParameters
+	 *        {@link SSLParameters}
+	 * @param hostnameVerifier
+	 *        {@link HostnameVerifier}
+	 */
+	public SslConfiguration(SSLSocketFactory sslSocketFactory, SSLParameters sslParameters,
+							HostnameVerifier hostnameVerifier){
+		this.sslSocketFactory = sslSocketFactory;
+		this.sslParameters = sslParameters;
+		this.hostnameVerifier = hostnameVerifier;
+	}
+
+	/**
+	 * 返回 {@link SSLSocketFactory}
+	 *
+	 * @return {@link SSLSocketFactory}
+	 */
 	public SSLSocketFactory getSslSocketFactory(){
 		return sslSocketFactory;
 	}
 
+	/**
+	 * 设置 {@link SSLSocketFactory}
+	 *
+	 * @param sslSocketFactory
+	 *        {@link SSLSocketFactory}
+	 */
 	public void setSslSocketFactory(final SSLSocketFactory sslSocketFactory){
 		this.sslSocketFactory = sslSocketFactory;
 	}
 
+	/**
+	 * 返回 {@link SSLParameters}
+	 *
+	 * @return {@link SSLParameters}
+	 */
 	public SSLParameters getSslParameters(){
 		return sslParameters;
 	}
 
+	/**
+	 * 设置 {@link SSLParameters}
+	 *
+	 * @param sslParameters
+	 *        {@link SSLParameters}
+	 */
 	public void setSslParameters(final SSLParameters sslParameters){
 		this.sslParameters = sslParameters;
 	}
 
+	/**
+	 * 返回 {@link HostnameVerifier}
+	 *
+	 * @return {@link HostnameVerifier}
+	 */
 	public HostnameVerifier getHostnameVerifier(){
 		return hostnameVerifier;
 	}
 
+	/**
+	 * 设置 {@link HostnameVerifier}
+	 *
+	 * @param hostnameVerifier
+	 *        {@link HostnameVerifier}
+	 */
 	public void setHostnameVerifier(final HostnameVerifier hostnameVerifier){
 		this.hostnameVerifier = hostnameVerifier;
 	}
