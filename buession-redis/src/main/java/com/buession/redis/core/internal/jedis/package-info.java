@@ -22,4 +22,4 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.jedis;
+package com.buession.redis.core.internal.jedis;

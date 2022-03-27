@@ -21,10 +21,29 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.command;/**
- * 
- *
+ */
+package com.buession.redis.core.command;
+
+/**
  * @author Yong.Teng
  * @since 2.0.0
- */public interface CommandNotSupported {
+ */
+public enum CommandNotSupported {
+
+	TRANSACTION(4),
+
+	PIPELINE(2),
+
+	ALL(1);
+
+	private final int code;
+
+	CommandNotSupported(final int code){
+		this.code = code;
+	}
+
+	public int getCode(){
+		return code;
+	}
+	
 }

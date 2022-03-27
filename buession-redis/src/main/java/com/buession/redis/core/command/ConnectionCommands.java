@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -35,6 +35,36 @@ import com.buession.lang.Status;
  * @author Yong.Teng
  */
 public interface ConnectionCommands extends RedisCommands {
+
+	/**
+	 * 通过密码进行认证
+	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/client_and_server/auth.html" target="_blank">http://redisdoc.com/client_and_server/auth.html</a></p>
+	 *
+	 * @param user
+	 * 		用户账号
+	 * @param password
+	 * 		密码
+	 *
+	 * @return 密码匹配时返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status auth(final String user, final String password);
+
+	/**
+	 * 通过密码进行认证
+	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/client_and_server/auth.html" target="_blank">http://redisdoc.com/client_and_server/auth.html</a></p>
+	 *
+	 * @param user
+	 * 		用户账号
+	 * @param password
+	 * 		密码
+	 *
+	 * @return 密码匹配时返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status auth(final byte[] user, final byte[] password);
 
 	/**
 	 * 通过密码进行认证
@@ -65,8 +95,7 @@ public interface ConnectionCommands extends RedisCommands {
 	/**
 	 * 打印一个特定的字符串
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/debug/echo.html" target="_blank">http://redisdoc.com/debug/echo.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/echo.html" target="_blank">http://www.redis.cn/commands/echo.html</a></p>
 	 *
 	 * @param str
 	 * 		待打印的字符串
@@ -78,8 +107,7 @@ public interface ConnectionCommands extends RedisCommands {
 	/**
 	 * 打印一个特定的字符串
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/debug/echo.html" target="_blank">http://redisdoc.com/debug/echo.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/echo.html" target="_blank">http://www.redis.cn/commands/echo.html</a></p>
 	 *
 	 * @param str
 	 * 		待打印的字符串
@@ -92,8 +120,7 @@ public interface ConnectionCommands extends RedisCommands {
 	 * 使用客户端向 Redis 服务器发送一个 PING ，如果服务器运作正常的话，会返回一个 PONG；
 	 * 通常用于测试与服务器的连接是否仍然生效，或者用于测量延迟值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/debug/ping.html" target="_blank">http://redisdoc.com/debug/ping.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/ping.html" target="_blank">http://www.redis.cn/commands/ping.html</a></p>
 	 *
 	 * @return PING 结果
 	 */
@@ -102,9 +129,7 @@ public interface ConnectionCommands extends RedisCommands {
 	/**
 	 * 请求服务器关闭与当前客户端的连接
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/client_and_server/quit.html" target="_blank">http://redisdoc
-	 * .com/client_and_server/quit.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/quit.html" target="_blank">http://www.redis.cn/commands/quit.html</a></p>
 	 *
 	 * @return 总是返回 Status.SUCCESS
 	 */
@@ -113,9 +138,7 @@ public interface ConnectionCommands extends RedisCommands {
 	/**
 	 * 切换到指定的数据库
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/select.html" target="_blank">http://redisdoc.com/database/select.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/database/select.html" target="_blank">http://redisdoc.com/database/select.html</a></p>
 	 *
 	 * @param db
 	 * 		数据库索引号
@@ -125,11 +148,9 @@ public interface ConnectionCommands extends RedisCommands {
 	Status select(final int db);
 
 	/**
-	 * 对换指定的两个数据库， 使得两个数据库的数据立即互换
+	 * 对换指定的两个数据库，使得两个数据库的数据立即互换
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/swapdb.html" target="_blank">http://redisdoc.com/database/swapdb.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/database/swapdb.html" target="_blank">http://redisdoc.com/database/swapdb.html</a></p>
 	 *
 	 * @param db1
 	 * 		数据库 1 索引号

@@ -19,13 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
 
+import com.buession.core.collect.Arrays;
 import com.buession.core.utils.ArrayUtils;
 import com.buession.core.validator.Validate;
+import com.buession.lang.Constants;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.LinkedHashMap;
@@ -36,13 +38,21 @@ import java.util.Map;
  */
 public class CommandArguments {
 
-	private Map<String, Object> parameters = new LinkedHashMap<>();
+	private final Map<String, Object> parameters = new LinkedHashMap<>();
 
-	private CommandArguments(){
+	public CommandArguments(){
 	}
 
-	public final static CommandArguments getInstance(){
+	public CommandArguments(final String key, final Object value){
+		parameters.put(key, value);
+	}
+
+	public static CommandArguments create(){
 		return new CommandArguments();
+	}
+
+	public static CommandArguments create(final String key, final Object value){
+		return new CommandArguments(key, value);
 	}
 
 	public CommandArguments put(final String key, final Object value){
@@ -51,7 +61,7 @@ public class CommandArguments {
 	}
 
 	public CommandArguments put(final String key, final Object... value){
-		parameters.put(key, ArrayUtils.toString(value));
+		parameters.put(key, Arrays.toString(value));
 		return this;
 	}
 
@@ -76,10 +86,11 @@ public class CommandArguments {
 	}
 
 	public String asString(){
-		boolean isEmpty = Validate.isEmpty(getParameters());
-		StringBuilder sb = isEmpty ? new StringBuilder() : new StringBuilder(getParameters().size() * 16);
+		if(Validate.isEmpty(getParameters())){
+			return Constants.EMPTY_STRING;
+		}else{
+			StringBuilder sb = new StringBuilder(getParameters().size() * 16);
 
-		if(isEmpty == false){
 			getParameters().forEach((name, value)->{
 				if(sb.length() > 0){
 					sb.append(", ");
@@ -91,17 +102,15 @@ public class CommandArguments {
 					if(value instanceof byte[]){
 						sb.append(SafeEncoder.encode((byte[]) value));
 					}else if(value.getClass().isArray()){
-						sb.append(ArrayUtils.toString((Object[]) value));
+						sb.append(Arrays.toString((Object[]) value));
 					}else{
 						sb.append(value);
 					}
-				}else{
-					sb.append(value);
 				}
 			});
-		}
 
-		return sb.toString();
+			return sb.toString();
+		}
 	}
 
 	@Override
