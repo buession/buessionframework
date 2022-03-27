@@ -19,47 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.core.jedis;
-
-import redis.clients.jedis.ScanParams;
-
-/**
+ */package com.buession.core;/**
+ * 
+ *
  * @author Yong.Teng
- */
-public class JedisScanParams extends ScanParams {
-
-	public JedisScanParams(){
-		super();
-	}
-
-	public JedisScanParams(final String pattern){
-		super();
-		match(pattern);
-	}
-
-	public JedisScanParams(final byte[] pattern){
-		super();
-		match(pattern);
-	}
-
-	public JedisScanParams(final Integer count){
-		super();
-		count(count);
-	}
-
-	public JedisScanParams(final String pattern, final Integer count){
-		super();
-		match(pattern);
-		count(count);
-	}
-
-	public JedisScanParams(final byte[] pattern, final Integer count){
-		super();
-		match(pattern);
-		count(count);
-	}
-
+ * @since 2.0.0
+ */public interface Rawable {
 }

@@ -19,19 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.client.operations;
-
-import com.buession.core.Executor;
-import com.buession.redis.exception.RedisException;
-
-/**
+ */package com.buession.redis.client;/**
+ * 
+ *
  * @author Yong.Teng
- */
-public interface RedisClientOperations<C> {
-
-	<R> R execute(final Executor<C, R> executor) throws RedisException;
-
+ * @since 2.0.0
+ */public interface RedisSentinelClient {
 }

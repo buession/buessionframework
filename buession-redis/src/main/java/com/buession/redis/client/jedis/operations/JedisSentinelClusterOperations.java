@@ -19,14 +19,34 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client;
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.core.command.CommandNotSupported;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.OkStatusConverter;
+import com.buession.redis.exception.RedisExceptionUtils;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.Pipeline;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface ShardedRedisClient extends RedisClient {
+public class JedisClusterOperations extends AbstractClusterOperations<Jedis, Pipeline> {
 
+	public JedisClusterOperations(final JedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Status asking(){
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_SETNAME,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
+		return execute((cmd)->cmd.asking(), new OkStatusConverter());
+	}
 }

@@ -19,31 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.core.jedis;
-
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.FutureResult;
-import redis.clients.jedis.Response;
-
-/**
+ */package com.buession.redis.core.operations;/**
+ * 
+ *
  * @author Yong.Teng
- */
-public class JedisResult<V, R> extends FutureResult<Response<V>, V, R> {
-
-	public JedisResult(final Response<V> resultHolder){
-		super(resultHolder);
-	}
-
-	public JedisResult(final Response<V> resultHolder, final Converter<V, R> converter){
-		super(resultHolder, converter);
-	}
-
-	@Override
-	public V get(){
-		return getResultHolder().get();
-	}
-
+ * @since 2.0.0
+ */public interface ClusterOperations {
 }

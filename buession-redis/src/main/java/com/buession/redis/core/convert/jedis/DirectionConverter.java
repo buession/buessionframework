@@ -22,75 +22,63 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.utils;
+package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.transaction.TxResult;
-import org.springframework.util.ReflectionUtils;
-
-import java.lang.reflect.Method;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.buession.redis.core.ListPosition;
 
 /**
+ * {@link ListPosition} 和 jedis {@link redis.clients.jedis.ListPosition} 互转
+ *
  * @author Yong.Teng
- * @since 1.2.1
+ * @since 2.0.0
  */
-public class TxResultsUtils {
+public interface ListPositionConverter<S, T> extends Converter<S, T> {
 
-	private final static ThreadLocal<Map<Integer, TxResult>> txResults = new ThreadLocal<>();
+	/**
+	 * {@link ListPosition} 转换为 jedis {@link redis.clients.jedis.ListPosition}
+	 *
+	 * @author Yong.Teng
+	 * @since 2.0.0
+	 */
+	final class ListPositionJedisConverter
+			implements ListPositionConverter<ListPosition, redis.clients.jedis.ListPosition> {
 
-	public static Map<Integer, TxResult> getTxResults(){
-		Map<Integer, TxResult> txResult = txResults.get();
-
-		if(txResult == null){
-			txResult = new LinkedHashMap<>(16, 0.8F);
-			txResults.set(txResult);
-		}
-
-		return txResult;
-	}
-
-	public static <S, T> void put(AtomicInteger index, Converter<S, T> converter, Class... paramTypes){
-		put(index.get(), converter, paramTypes);
-	}
-
-	public static <S, T> void put(int index, Converter<S, T> converter, Class... paramTypes){
-		getTxResults().put(index, new TxResult<>(converter, paramTypes));
-	}
-
-	public static List<Object> deserializeMixedResults(AtomicInteger index, List<Object> result){
-		Map<Integer, TxResult> cache = txResults.get();
-
-		if(cache == null){
-			return result;
-		}
-
-		TxResult<?, ?> txResult;
-
-		for(int i = 0; i < index.get(); i++){
-			txResult = cache.get(i);
-			if(txResult == null){
-				continue;
-			}
-
-			Method method = ReflectionUtils.findMethod(txResult.getConverter().getClass(), "convert", txResult.getParamTypes());
-
-			if(method != null){
-				Object value = result.get(i);
-				Object ret = ReflectionUtils.invokeMethod(method, txResult.getConverter(), value);
-
-				result.set(i, ret);
+		@Override
+		public redis.clients.jedis.ListPosition convert(final ListPosition source){
+			switch(source){
+				case BEFORE:
+					return redis.clients.jedis.ListPosition.BEFORE;
+				case AFTER:
+					return redis.clients.jedis.ListPosition.AFTER;
+				default:
+					return null;
 			}
 		}
 
-		return result;
 	}
 
-	public static void remove(){
-		txResults.remove();
+	/**
+	 * jedis {@link redis.clients.jedis.ListPosition} 转换为 {@link ListPosition}
+	 *
+	 * @author Yong.Teng
+	 * @since 2.0.0
+	 */
+	final class ListPositionExposeConverter
+			implements ListPositionConverter<redis.clients.jedis.ListPosition, ListPosition> {
+
+		@Override
+		public ListPosition convert(final redis.clients.jedis.ListPosition source){
+			switch(source){
+				case BEFORE:
+					return ListPosition.BEFORE;
+				case AFTER:
+					return ListPosition.AFTER;
+				default:
+					return null;
+			}
+		}
+
 	}
 
 }

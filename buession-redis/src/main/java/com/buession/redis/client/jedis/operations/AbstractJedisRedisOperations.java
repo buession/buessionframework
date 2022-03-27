@@ -19,29 +19,27 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.AbstractRedisClientOperations;
 import com.buession.redis.core.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
-import com.buession.redis.transaction.Transaction;
-import com.buession.redis.transaction.jedis.JedisTransaction;
-import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.Response;
-import redis.clients.jedis.commands.JedisCommands;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractRedisClientOperations<C> implements JedisRedisClientOperations<C, P> {
+public abstract class AbstractJedisRedisClientOperations<C>
+		extends AbstractRedisClientOperations<C> implements JedisRedisClientOperations<C> {
 
 	protected JedisRedisClient client;
 
@@ -54,19 +52,33 @@ public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands
 		return client.execute(executor);
 	}
 
-	protected <S, R> R execute(final Executor<C, S> executor, final Converter<S, R> converter) throws RedisException{
-		return converter.convert(client.execute(executor));
+	@Override
+	public <SR, R> R execute(final Executor<C, SR> executor, final Converter<SR, R> converter) throws RedisException{
+		return converter.convert(execute(executor));
+	}
+
+	@SuppressWarnings({"unchecked"})
+	protected <R> R transactionExecute(final Executor<C, JedisResult> executor)
+			throws RedisException{
+		client.getTxResults().add(execute(executor));
+		return null;
+	}
+
+	@SuppressWarnings({"unchecked"})
+	protected <R> R pipelineExecute(final Executor<C, JedisResult> executor) throws RedisException{
+		client.getTxResults().add(execute(executor));
+		return null;
 	}
 
 	protected redis.clients.jedis.Transaction getTransaction(){
-		Transaction transaction = client.getConnection().getTransaction();
+		JedisRedisConnection connection = (JedisRedisConnection) client.getConnection();
+		redis.clients.jedis.Transaction transaction = connection.getTransaction();
 
 		if(transaction == null){
-			return null;
+			throw new IllegalStateException("Connection transaction does not active");
 		}
 
-		JedisTransaction jedisTransaction = (JedisTransaction) transaction;
-		return jedisTransaction.primitive();
+		return transaction;
 	}
 
 	@Override
@@ -74,9 +86,8 @@ public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands
 		return client.getConnection().isTransaction();
 	}
 
-	@SuppressWarnings({"unchecked"})
-	protected P getPipeline(){
-		Pipeline pipeline = client.getConnection().getPipeline();
+	protected redis.clients.jedis.Pipeline getPipeline(){
+		Pipeline pipeline = client.pipeline();
 
 		if(pipeline == null){
 			return null;
@@ -91,24 +102,12 @@ public abstract class AbstractJedisRedisClientOperations<C extends JedisCommands
 		return client.getConnection().isPipeline();
 	}
 
-	@SuppressWarnings({"unchecked"})
-	protected <R> R transactionExecute(final Executor<C, JedisResult> executor) throws RedisException{
-		client.getTxResults().add(execute(executor));
-		return null;
-	}
-
-	@SuppressWarnings({"unchecked"})
-	protected <T, R> R pipelineExecute(final Executor<C, JedisResult> executor) throws RedisException{
-		client.getTxResults().add(execute(executor));
-		return null;
-	}
-
 	protected <T, R> JedisResult<T, R> newJedisResult(final Response<T> response){
-		return new JedisResult<>(response);
+		return JedisResult.Builder.<T, R>forResponse(response).build();
 	}
 
 	protected <T, R> JedisResult<T, R> newJedisResult(final Response<T> response, final Converter<T, R> converter){
-		return new JedisResult<>(response, converter);
+		return JedisResult.Builder.<T, R>forResponse(response).mappedWith(converter).build();
 	}
 
 }

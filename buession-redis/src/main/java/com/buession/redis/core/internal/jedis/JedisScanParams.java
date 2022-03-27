@@ -21,10 +21,57 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.spring;/**
- * 
- *
+ */
+package com.buession.redis.core.jedis;
+
+import redis.clients.jedis.ScanParams;
+
+/**
  * @author Yong.Teng
- * @since 2.0.0
- */public class RedisConnectionUtils {
+ */
+public class JedisScanParams extends ScanParams {
+
+	public JedisScanParams(){
+		super();
+	}
+
+	public JedisScanParams(final String pattern){
+		super();
+		match(pattern);
+	}
+
+	public JedisScanParams(final byte[] pattern){
+		super();
+		match(pattern);
+	}
+
+	public JedisScanParams(final Integer count){
+		super();
+		count(count);
+	}
+
+	public JedisScanParams(final String pattern, final Integer count){
+		super();
+		match(pattern);
+		count(count);
+	}
+
+	public JedisScanParams(final byte[] pattern, final Integer count){
+		super();
+		match(pattern);
+		count(count);
+	}
+
+	public JedisScanParams(final Long count){
+		this(count.intValue());
+	}
+
+	public JedisScanParams(final String pattern, final Long count){
+		this(pattern, count.intValue());
+	}
+
+	public JedisScanParams(final byte[] pattern, final Long count){
+		this(pattern, count.intValue());
+	}
+
 }

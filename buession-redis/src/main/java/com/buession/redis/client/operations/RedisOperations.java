@@ -19,29 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.pipeline.jedis;
+package com.buession.redis.client.operations;
 
-import com.buession.redis.pipeline.Pipeline;
+import com.buession.core.Executor;
+import com.buession.core.converter.Converter;
+import com.buession.redis.exception.RedisException;
 
 /**
- * Jedis 原生 Pipeline
- *
- * @param <T>
- * 		jedis 原生 Pipeline 类型
- *
  * @author Yong.Teng
- * @since 1.2.1
  */
-public interface JedisNativePipeline<T extends redis.clients.jedis.PipelineBase> extends Pipeline {
+public interface RedisClientOperations<C> {
 
-	/**
-	 * 获取 Jedis 原生 Pipeline
-	 *
-	 * @return Jedis 原生 Pipeline
-	 */
-	T getNativeObject();
+	<R> R execute(final Executor<C, R> executor) throws RedisException;
+
+	<SR, R> R execute(final Executor<C, SR> executor, final Converter<SR, R> converter) throws RedisException;
 
 }

@@ -19,26 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.transaction;
-
-import java.util.List;
+package com.buession.redis.client;
 
 /**
+ * 单机模式客户端
+ *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface Transaction {
-
-	List<Object> exec();
-
-	String discard();
-
-	default void clear(){
-		close();
-	}
-
-	void close();
+public interface StandaloneRedisClient extends RedisClient {
 
 }

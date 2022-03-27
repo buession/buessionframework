@@ -22,51 +22,31 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.pipeline.jedis;
+package com.buession.redis.client.jedis.operations;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.buession.lang.Status;
+import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.core.command.CommandNotSupported;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.OkStatusConverter;
+import com.buession.redis.exception.RedisExceptionUtils;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 
-import java.util.List;
-
 /**
- * 单例 Jedis 原生 Pipeline
- *
  * @author Yong.Teng
- * @since 1.2.1
+ * @since 2.0.0
  */
-public class StandaloneJedisPipeline implements JedisNativePipeline<redis.clients.jedis.Pipeline> {
+public class JedisClusterOperations extends AbstractClusterOperations<Jedis, Pipeline> {
 
-	private final redis.clients.jedis.Pipeline delegate;
-
-	private final static Logger logger = LoggerFactory.getLogger(StandaloneJedisPipeline.class);
-
-	public StandaloneJedisPipeline(final redis.clients.jedis.Pipeline pipeline){
-		this.delegate = pipeline;
+	public JedisClusterOperations(final JedisClient client){
+		super(client);
 	}
 
 	@Override
-	public Pipeline getNativeObject(){
-		return delegate;
+	public Status asking(){
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_SETNAME,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
+		return execute((cmd)->cmd.asking(), new OkStatusConverter());
 	}
-
-	@Override
-	public void sync(){
-		logger.info("Redis pipeline sync.");
-		delegate.sync();
-	}
-
-	@Override
-	public List<Object> syncAndReturnAll(){
-		logger.info("Redis pipeline syncAndReturnAll.");
-		return delegate.syncAndReturnAll();
-	}
-
-	@Override
-	public void close(){
-		logger.info("Redis pipeline close.");
-		delegate.close();
-	}
-
 }

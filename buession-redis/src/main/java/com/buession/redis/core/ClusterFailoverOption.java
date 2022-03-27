@@ -19,47 +19,19 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
-
-import com.buession.lang.Status;
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.util.List;
+package com.buession.redis.core;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class JedisClientTest extends AbstractJedisRedisTest {
+public enum ClusterFailover {
 
-	@Test
-	public void set(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+	FORCE,
 
-		Assert.assertEquals(Status.SUCCESS, redisTemplate.set("str", "value"));
-		Assert.assertEquals(Status.SUCCESS, redisTemplate.set("long", Long.MAX_VALUE));
-		Assert.assertEquals(Status.SUCCESS, redisTemplate.hSet("user", "1", new User(1, "一")));
-	}
-
-	@Test
-	public void get(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
-
-		Assert.assertEquals("value", redisTemplate.get("str"));
-		Assert.assertEquals(Long.toString(Long.MAX_VALUE), redisTemplate.get("long"));
-		Assert.assertEquals(new Long(Long.MAX_VALUE), redisTemplate.getObject("long", Long.class));
-	}
-
-	@Test
-	public void hMGet(){
-		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
-
-		List<User> result = redisTemplate.hMGetObject("user", new String[]{"1", "not_found"}, User.class);
-		Assert.assertNotNull(result.get(0));
-		Assert.assertNull(result.get(1));
-	}
+	TAKEOVER
 
 }

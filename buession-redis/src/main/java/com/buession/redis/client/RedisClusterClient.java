@@ -19,52 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.transaction.jedis;
-
-import com.buession.core.utils.Assert;
-import com.buession.redis.transaction.Transaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
-
-/**
+ */package com.buession.redis.client;/**
+ * 
+ *
  * @author Yong.Teng
- */
-public class JedisTransaction implements Transaction {
-
-	private redis.clients.jedis.Transaction delegate;
-
-	private final static Logger logger = LoggerFactory.getLogger(JedisTransaction.class);
-
-	public JedisTransaction(redis.clients.jedis.Transaction transaction){
-		Assert.isNull(transaction, "Redis Transaction cloud not be null.");
-		this.delegate = transaction;
-	}
-
-	public redis.clients.jedis.Transaction primitive(){
-		return delegate;
-	}
-
-	@Override
-	public List<Object> exec(){
-		logger.info("Redis transaction exec.");
-		return delegate.exec();
-	}
-
-	@Override
-	public String discard(){
-		logger.info("Redis transaction discard.");
-		return delegate.discard();
-	}
-
-	@Override
-	public void close(){
-		logger.info("Redis transaction close.");
-		delegate.close();
-	}
-
+ * @since 2.0.0
+ */public interface RedisClusterClient {
 }

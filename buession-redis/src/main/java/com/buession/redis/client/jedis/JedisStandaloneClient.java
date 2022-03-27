@@ -19,15 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis;
 
 import com.buession.lang.Geo;
 import com.buession.lang.Status;
-import com.buession.redis.client.GenericRedisClient;
+import com.buession.redis.client.StandaloneRedisClient;
 import com.buession.redis.client.connection.jedis.JedisConnection;
+import com.buession.redis.client.jedis.operations.JedisClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisConnectionOperations;
 import com.buession.redis.client.jedis.operations.JedisGeoOperations;
 import com.buession.redis.client.jedis.operations.JedisHashOperations;
@@ -43,6 +44,7 @@ import com.buession.redis.client.jedis.operations.JedisStringOperations;
 import com.buession.redis.client.jedis.operations.JedisTransactionOperations;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.Direction;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.ListPosition;
@@ -53,16 +55,17 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
-import redis.clients.jedis.Jedis;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
+ * jedis 单机模式客户端
+ *
  * @author Yong.Teng
  */
-public class JedisClient extends AbstractJedisRedisClient implements GenericRedisClient {
+public class JedisClient extends AbstractJedisRedisClient implements StandaloneRedisClient {
 
 	public JedisClient(){
 		super();
@@ -161,11 +164,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Long hDecrBy(final byte[] key, final byte[] field, final int value){
-		return hashOperations.hDecrBy(key, field, value);
-	}
-
-	@Override
 	public Long hDecrBy(final byte[] key, final byte[] field, final long value){
 		return hashOperations.hDecrBy(key, field, value);
 	}
@@ -231,11 +229,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor){
-		return hashOperations.hScan(key, cursor);
-	}
-
-	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor){
 		return hashOperations.hScan(key, cursor);
 	}
@@ -243,11 +236,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
 		return hashOperations.hScan(key, cursor);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern){
-		return hashOperations.hScan(key, cursor, pattern);
 	}
 
 	@Override
@@ -261,35 +249,24 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final int count){
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count){
 		return hashOperations.hScan(key, cursor, count);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count){
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count){
 		return hashOperations.hScan(key, cursor, count);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count){
-		return hashOperations.hScan(key, cursor, count);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern,
-												 final int count){
-		return hashOperations.hScan(key, cursor, pattern, count);
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-												 final int count){
+												 final long count){
 		return hashOperations.hScan(key, cursor, pattern, count);
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-												 final int count){
+												 final long count){
 		return hashOperations.hScan(key, cursor, pattern, count);
 	}
 
@@ -311,6 +288,21 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	@Override
 	public List<byte[]> hVals(final byte[] key){
 		return hashOperations.hVals(key);
+	}
+
+	@Override
+	public byte[] hrandfield(final byte[] key){
+		return hashOperations.hrandfield(key);
+	}
+
+	@Override
+	public List<byte[]> hrandfield(final byte[] key, final long count){
+		return hashOperations.hrandfield(key, count);
+	}
+
+	@Override
+	public Map<byte[], byte[]> hrandfieldWithValues(final byte[] key, final long count){
+		return hashOperations.hrandfieldWithValues(key, count);
 	}
 
 	@Override
@@ -431,11 +423,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern){
-		return keyOperations.scan(cursor, pattern);
-	}
-
-	@Override
 	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
 		return keyOperations.scan(cursor, pattern);
 	}
@@ -448,11 +435,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count){
 		return keyOperations.scan(cursor, count);
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern, final int count){
-		return keyOperations.scan(cursor, pattern, count);
 	}
 
 	@Override
@@ -521,11 +503,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public byte[] lIndex(final byte[] key, final int index){
-		return lIndex(key, (long) index);
-	}
-
-	@Override
 	public byte[] lIndex(final byte[] key, final long index){
 		return listOperations.lIndex(key, index);
 	}
@@ -556,18 +533,8 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public List<byte[]> lRange(final byte[] key, final int start, final int end){
-		return listOperations.lRange(key, start, end);
-	}
-
-	@Override
 	public List<byte[]> lRange(final byte[] key, final long start, final long end){
 		return listOperations.lRange(key, start, end);
-	}
-
-	@Override
-	public Long lRem(final byte[] key, final byte[] value, final int count){
-		return listOperations.lRem(key, value, count);
 	}
 
 	@Override
@@ -576,18 +543,8 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Status lSet(final byte[] key, final int index, final byte[] value){
-		return listOperations.lSet(key, index, value);
-	}
-
-	@Override
 	public Status lSet(final byte[] key, final long index, final byte[] value){
 		return listOperations.lSet(key, index, value);
-	}
-
-	@Override
-	public Status lTrim(final byte[] key, final int start, final int end){
-		return listOperations.lTrim(key, start, end);
 	}
 
 	@Override
@@ -613,6 +570,17 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	@Override
 	public Long rPushX(final byte[] key, final byte[]... values){
 		return listOperations.rPushX(key, values);
+	}
+
+	@Override
+	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
+		return listOperations.lMove(key, destKey, from, to);
+	}
+
+	@Override
+	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+						 final int timeout){
+		return listOperations.blMove(key, destKey, from, to, timeout);
 	}
 
 	@Override
@@ -701,26 +669,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Status configSet(final byte[] parameter, final float value){
-		return serverOperations.configSet(parameter, value);
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final double value){
-		return serverOperations.configSet(parameter, value);
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final int value){
-		return serverOperations.configSet(parameter, value);
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final long value){
-		return serverOperations.configSet(parameter, value);
-	}
-
-	@Override
 	public Status configSet(final byte[] parameter, final byte[] value){
 		return serverOperations.configSet(parameter, value);
 	}
@@ -733,11 +681,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	@Override
 	public Object object(final ObjectCommand command, final byte[] key){
 		return serverOperations.object(command, key);
-	}
-
-	@Override
-	public Object pSync(final byte[] masterRunId, final int offset){
-		return serverOperations.pSync(masterRunId, offset);
 	}
 
 	@Override
@@ -806,11 +749,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public List<byte[]> sRandMember(final byte[] key, final int count){
-		return setOperations.sRandMember(key, count);
-	}
-
-	@Override
 	public List<byte[]> sRandMember(final byte[] key, final long count){
 		return setOperations.sRandMember(key, count);
 	}
@@ -818,11 +756,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	@Override
 	public Long sRem(final byte[] key, final byte[]... members){
 		return setOperations.sRem(key, members);
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor){
-		return setOperations.sScan(key, cursor);
 	}
 
 	@Override
@@ -836,11 +769,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern){
-		return setOperations.sScan(key, cursor, pattern);
-	}
-
-	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern){
 		return setOperations.sScan(key, cursor, pattern);
 	}
@@ -851,33 +779,23 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final int count){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final long count){
 		return setOperations.sScan(key, cursor, count);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final int count){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count){
 		return setOperations.sScan(key, cursor, count);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
-		return setOperations.sScan(key, cursor, count);
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern, final int count){
-		return setOperations.sScan(key, cursor, pattern, count);
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count){
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final long count){
 		return setOperations.sScan(key, cursor, pattern, count);
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										  final int count){
+										  final long count){
 		return setOperations.sScan(key, cursor, pattern, count);
 	}
 
@@ -902,17 +820,7 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Long zCount(final byte[] key, final float min, final float max){
-		return sortedSetOperations.zCount(key, min, max);
-	}
-
-	@Override
 	public Long zCount(final byte[] key, final double min, final double max){
-		return sortedSetOperations.zCount(key, min, max);
-	}
-
-	@Override
-	public Long zCount(final byte[] key, final int min, final int max){
 		return sortedSetOperations.zCount(key, min, max);
 	}
 
@@ -927,17 +835,7 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Double zIncrBy(final byte[] key, final byte[] member, final float increment){
-		return sortedSetOperations.zIncrBy(key, member, increment);
-	}
-
-	@Override
 	public Double zIncrBy(final byte[] key, final byte[] member, final double increment){
-		return sortedSetOperations.zIncrBy(key, member, increment);
-	}
-
-	@Override
-	public Double zIncrBy(final byte[] key, final byte[] member, final int increment){
 		return sortedSetOperations.zIncrBy(key, member, increment);
 	}
 
@@ -968,17 +866,7 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Long zLexCount(final byte[] key, final float min, final float max){
-		return sortedSetOperations.zLexCount(key, min, max);
-	}
-
-	@Override
 	public Long zLexCount(final byte[] key, final double min, final double max){
-		return sortedSetOperations.zLexCount(key, min, max);
-	}
-
-	@Override
-	public Long zLexCount(final byte[] key, final int min, final int max){
 		return sortedSetOperations.zLexCount(key, min, max);
 	}
 
@@ -993,18 +881,8 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Set<byte[]> zRange(final byte[] key, final int start, final int end){
-		return sortedSetOperations.zRange(key, start, end);
-	}
-
-	@Override
 	public Set<byte[]> zRange(final byte[] key, final long start, final long end){
 		return sortedSetOperations.zRange(key, start, end);
-	}
-
-	@Override
-	public Set<Tuple> zRangeWithScores(final byte[] key, final int start, final int end){
-		return sortedSetOperations.zRangeWithScores(key, start, end);
 	}
 
 	@Override
@@ -1013,17 +891,7 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max){
-		return sortedSetOperations.zRangeByLex(key, min, max);
-	}
-
-	@Override
 	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max){
-		return sortedSetOperations.zRangeByLex(key, min, max);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max){
 		return sortedSetOperations.zRangeByLex(key, min, max);
 	}
 
@@ -1038,46 +906,25 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final float min, final float max, final int offset,
-								   final int count){
+	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final long offset,
+								   final long count){
 		return sortedSetOperations.zRangeByLex(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max, final int offset,
-								   final int count){
+	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max, final long offset,
+								   final long count){
 		return sortedSetOperations.zRangeByLex(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final int min, final int max, final int offset, final int count){
+	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
+								   final long count){
 		return sortedSetOperations.zRangeByLex(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max, final int offset,
-								   final int count){
-		return sortedSetOperations.zRangeByLex(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
-								   final int count){
-		return sortedSetOperations.zRangeByLex(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final float min, final float max){
-		return sortedSetOperations.zRangeByScore(key, min, max);
 	}
 
 	@Override
 	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max){
-		return sortedSetOperations.zRangeByScore(key, min, max);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final int min, final int max){
 		return sortedSetOperations.zRangeByScore(key, min, max);
 	}
 
@@ -1092,47 +939,25 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final float min, final float max, final int offset,
-									 final int count){
+	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final long offset,
+									 final long count){
 		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final int offset,
-									 final int count){
+	public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max, final long offset,
+									 final long count){
 		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final int min, final int max, final int offset,
-									 final int count){
+	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
+									 final long count){
 		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max, final int offset,
-									 final int count){
-		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
-									 final int count){
-		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max){
-		return sortedSetOperations.zRangeByScoreWithScores(key, min, max);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max){
-		return sortedSetOperations.zRangeByScoreWithScores(key, min, max);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max){
 		return sortedSetOperations.zRangeByScoreWithScores(key, min, max);
 	}
 
@@ -1147,32 +972,20 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset,
-											  final int count){
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final long offset,
+											  final long count){
 		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
-											  final int count){
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final long min, final long max, final long offset,
+											  final long count){
 		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset,
-											  final int count){
-		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
-											  final int count){
-		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int offset,
-											  final int count){
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final long offset,
+											  final long count){
 		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
@@ -1187,11 +1000,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Set<Tuple> zPopMax(final byte[] key, final int count){
-		return sortedSetOperations.zPopMax(key, count);
-	}
-
-	@Override
 	public Set<Tuple> zPopMax(final byte[] key, final long count){
 		return sortedSetOperations.zPopMax(key, count);
 	}
@@ -1199,11 +1007,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	@Override
 	public Tuple zPopMin(final byte[] key){
 		return sortedSetOperations.zPopMin(key);
-	}
-
-	@Override
-	public Set<Tuple> zPopMin(final byte[] key, final int count){
-		return sortedSetOperations.zPopMin(key, count);
 	}
 
 	@Override
@@ -1217,17 +1020,7 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Long zRemRangeByLex(final byte[] key, final float min, final float max){
-		return sortedSetOperations.zRemRangeByLex(key, min, max);
-	}
-
-	@Override
 	public Long zRemRangeByLex(final byte[] key, final double min, final double max){
-		return sortedSetOperations.zRemRangeByLex(key, min, max);
-	}
-
-	@Override
-	public Long zRemRangeByLex(final byte[] key, final int min, final int max){
 		return sortedSetOperations.zRemRangeByLex(key, min, max);
 	}
 
@@ -1242,17 +1035,7 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Long zRemRangeByScore(final byte[] key, final float min, final float max){
-		return sortedSetOperations.zRemRangeByScore(key, min, max);
-	}
-
-	@Override
 	public Long zRemRangeByScore(final byte[] key, final double min, final double max){
-		return sortedSetOperations.zRemRangeByScore(key, min, max);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final byte[] key, final int min, final int max){
 		return sortedSetOperations.zRemRangeByScore(key, min, max);
 	}
 
@@ -1267,18 +1050,8 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Long zRemRangeByRank(final byte[] key, final int start, final int end){
-		return sortedSetOperations.zRemRangeByRank(key, start, end);
-	}
-
-	@Override
 	public Long zRemRangeByRank(final byte[] key, final long start, final long end){
 		return sortedSetOperations.zRemRangeByRank(key, start, end);
-	}
-
-	@Override
-	public Set<byte[]> zRevRange(final byte[] key, final int start, final int end){
-		return sortedSetOperations.zRevRange(key, start, end);
 	}
 
 	@Override
@@ -1287,27 +1060,12 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Set<Tuple> zRevRangeWithScores(final byte[] key, final int start, final int end){
-		return sortedSetOperations.zRevRangeWithScores(key, start, end);
-	}
-
-	@Override
 	public Set<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end){
 		return sortedSetOperations.zRevRangeWithScores(key, start, end);
 	}
 
 	@Override
-	public Set<byte[]> zRevRangeByLex(byte[] key, float min, float max){
-		return sortedSetOperations.zRevRangeByLex(key, min, max);
-	}
-
-	@Override
 	public Set<byte[]> zRevRangeByLex(byte[] key, double min, double max){
-		return sortedSetOperations.zRevRangeByLex(key, min, max);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(byte[] key, int min, int max){
 		return sortedSetOperations.zRevRangeByLex(key, min, max);
 	}
 
@@ -1322,43 +1080,23 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Set<byte[]> zRevRangeByLex(byte[] key, float min, float max, int offset, int count){
+	public Set<byte[]> zRevRangeByLex(byte[] key, double min, double max, long offset, long count){
 		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<byte[]> zRevRangeByLex(byte[] key, double min, double max, int offset, int count){
+	public Set<byte[]> zRevRangeByLex(byte[] key, long min, long max, long offset, long count){
 		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<byte[]> zRevRangeByLex(byte[] key, int min, int max, int offset, int count){
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
+									  final long count){
 		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(byte[] key, long min, long max, int offset, int count){
-		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
-									  final int count){
-		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final float min, final float max){
-		return sortedSetOperations.zRevRangeByScore(key, min, max);
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max){
-		return sortedSetOperations.zRevRangeByScore(key, min, max);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final int min, final int max){
 		return sortedSetOperations.zRevRangeByScore(key, min, max);
 	}
 
@@ -1373,47 +1111,25 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final float min, final float max, final int offset,
-										final int count){
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final long offset,
+										final long count){
 		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset,
-										final int count){
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final long min, final long max, final long offset,
+										final long count){
 		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final int min, final int max, final int offset,
-										final int count){
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
+										final long count){
 		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final long min, final long max, final int offset,
-										final int count){
-		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
-										final int count){
-		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max){
-		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max){
-		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max){
 		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max);
 	}
 
@@ -1428,43 +1144,27 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final float min, final float max, final int offset,
-												 final int count){
-		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
-	}
-
-	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
-												 final int offset, final int count){
+												 final long offset,
+												 final long count){
 		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final int min, final int max, final int offset,
-												 final int count){
-		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max, final int offset,
-												 final int count){
+	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max, final long offset,
+												 final long count){
 		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
-												 final int offset, final int count){
+												 final long offset, final long count){
 		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Long zRevRank(final byte[] key, final byte[] member){
 		return sortedSetOperations.zRevRank(key, member);
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor){
-		return sortedSetOperations.zScan(key, cursor);
 	}
 
 	@Override
@@ -1478,11 +1178,6 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final byte[] pattern){
-		return sortedSetOperations.zScan(key, cursor, pattern);
-	}
-
-	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern){
 		return sortedSetOperations.zScan(key, cursor, pattern);
 	}
@@ -1493,32 +1188,22 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final int count){
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final long count){
 		return sortedSetOperations.zScan(key, cursor, count);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final int count){
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final long count){
 		return sortedSetOperations.zScan(key, cursor, count);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count){
-		return sortedSetOperations.zScan(key, cursor, count);
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final int cursor, final byte[] pattern, final int count){
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern, final long count){
 		return sortedSetOperations.zScan(key, cursor, pattern, count);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern, final int count){
-		return sortedSetOperations.zScan(key, cursor, pattern, count);
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final long count){
 		return sortedSetOperations.zScan(key, cursor, pattern, count);
 	}
 
@@ -1636,6 +1321,16 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	@Override
 	public byte[] getSet(final byte[] key, final byte[] value){
 		return stringOperations.getSet(key, value);
+	}
+
+	@Override
+	public byte[] getEx(final byte[] key, final GetExArgument getExArgument){
+		return stringOperations.getEx(key, getExArgument);
+	}
+
+	@Override
+	public byte[] getDel(final byte[] key){
+		return stringOperations.getDel(key);
 	}
 
 	@Override
@@ -1806,6 +1501,11 @@ public class JedisClient extends AbstractJedisRedisClient implements GenericRedi
 	@Override
 	protected JedisTransactionOperations createTransactionOperations(){
 		return new JedisTransactionOperations(this);
+	}
+
+	@Override
+	protected JedisClusterOperations createClusterOperations(){
+		return new JedisClusterOperations(this);
 	}
 
 }
