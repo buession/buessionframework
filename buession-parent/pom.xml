@@ -55,7 +55,6 @@
 		<module>../buession-json</module>
 		<module>../buession-lang</module>
 		<module>../buession-net</module>
-		<module>../buession-oss</module>
 		<module>../buession-redis</module>
 		<module>../buession-session</module>
 		<module>../buession-thesaurus</module>
