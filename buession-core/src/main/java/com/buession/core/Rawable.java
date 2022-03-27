@@ -21,10 +21,15 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.core;/**
- * 
- *
+ */
+package com.buession.core;
+
+/**
  * @author Yong.Teng
  * @since 2.0.0
- */public interface Rawable {
+ */
+public interface Rawable {
+
+	byte[] getRaw();
+
 }

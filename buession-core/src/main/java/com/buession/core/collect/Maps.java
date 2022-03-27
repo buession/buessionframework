@@ -71,7 +71,7 @@ public class Maps {
 			return null;
 		}
 
-		Map<TK, TV> result = null;
+		Map<TK, TV> result;
 
 		try{
 			result = ClassUtils.instantiate(map.getClass(), map.size());
