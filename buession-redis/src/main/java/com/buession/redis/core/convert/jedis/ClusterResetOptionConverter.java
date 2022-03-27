@@ -25,34 +25,32 @@
 package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.Aggregate;
-import redis.clients.jedis.ZParams;
+import com.buession.redis.core.ClusterResetOption;
+import redis.clients.jedis.args.ClusterResetType;
 
 /**
- * {@link Aggregate} 和 Jedis {@link ZParams.Aggregate} 互转
+ * {@link ClusterResetOption} 和 Jedis {@link ClusterResetType} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface AggregateConverter<S, T> extends Converter<S, T> {
+public interface ClusterResetOptionConverter<S, T> extends Converter<S, T> {
 
 	/**
-	 * {@link Aggregate} 转换为 jedis {@link ZParams.Aggregate}
+	 * {@link ClusterResetOption} 转换为 jedis {@link ClusterResetType}
 	 *
 	 * @author Yong.Teng
 	 * @since 1.2.1
 	 */
-	final class AggregateJedisConverter implements Converter<Aggregate, ZParams.Aggregate> {
+	final class ClusterResetOptionJedisConverter implements Converter<ClusterResetOption, ClusterResetType> {
 
 		@Override
-		public ZParams.Aggregate convert(final Aggregate source){
+		public ClusterResetType convert(final ClusterResetOption source){
 			switch(source){
-				case MIN:
-					return ZParams.Aggregate.MIN;
-				case MAX:
-					return ZParams.Aggregate.MAX;
-				case SUM:
-					return ZParams.Aggregate.SUM;
+				case SOFT:
+					return ClusterResetType.SOFT;
+				case HARD:
+					return ClusterResetType.HARD;
 				default:
 					return null;
 			}
@@ -61,22 +59,21 @@ public interface AggregateConverter<S, T> extends Converter<S, T> {
 	}
 
 	/**
-	 * Jedis {@link ZParams.Aggregate} 转换为 {@link Aggregate}
+	 * Jedis {@link ClusterResetType} 转换为 {@link ClusterResetOption}
 	 *
 	 * @author Yong.Teng
 	 * @since 2.0.0
 	 */
-	final class AggregateExposeConverter implements AggregateConverter<ZParams.Aggregate, Aggregate> {
+	final class ClusterResetOptionExposeConverter
+			implements ClusterResetOptionConverter<ClusterResetType, ClusterResetOption> {
 
 		@Override
-		public Aggregate convert(final ZParams.Aggregate source){
+		public ClusterResetOption convert(final ClusterResetType source){
 			switch(source){
-				case MIN:
-					return Aggregate.MIN;
-				case MAX:
-					return Aggregate.MAX;
-				case SUM:
-					return Aggregate.SUM;
+				case SOFT:
+					return ClusterResetOption.SOFT;
+				case HARD:
+					return ClusterResetOption.HARD;
 				default:
 					return null;
 			}

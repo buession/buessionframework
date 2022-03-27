@@ -35,7 +35,7 @@ import com.buession.redis.core.Constants;
  * @author Yong.Teng
  * @since 1.2.2
  */
-public class OkStatusConverter implements Converter<String, Status> {
+public final class OkStatusConverter implements Converter<String, Status> {
 
 	@Override
 	public Status convert(final String source){

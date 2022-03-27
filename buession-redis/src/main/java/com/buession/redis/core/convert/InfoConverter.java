@@ -21,10 +21,24 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.convert;/**
- * 
+ */
+package com.buession.redis.core.convert;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.Info;
+import com.buession.redis.utils.InfoUtil;
+
+/**
+ * Info 转换
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public class InfoConverter {
+ */
+public class InfoConverter implements Converter<String, Info> {
+
+	@Override
+	public Info convert(String source){
+		return InfoUtil.convert(source);
+	}
+
 }

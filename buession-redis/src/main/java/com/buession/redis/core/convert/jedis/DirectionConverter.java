@@ -25,32 +25,33 @@
 package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.ListPosition;
+import com.buession.redis.core.Direction;
+import redis.clients.jedis.args.ListDirection;
 
 /**
- * {@link ListPosition} 和 jedis {@link redis.clients.jedis.ListPosition} 互转
+ * {@link Direction} 和 jedis {@link ListDirection} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ListPositionConverter<S, T> extends Converter<S, T> {
+public interface DirectionConverter<S, T> extends Converter<S, T> {
 
 	/**
-	 * {@link ListPosition} 转换为 jedis {@link redis.clients.jedis.ListPosition}
+	 * {@link Direction} 转换为 jedis {@link ListDirection}
 	 *
 	 * @author Yong.Teng
 	 * @since 2.0.0
 	 */
-	final class ListPositionJedisConverter
-			implements ListPositionConverter<ListPosition, redis.clients.jedis.ListPosition> {
+	final class DirectionJedisConverter
+			implements DirectionConverter<Direction, ListDirection> {
 
 		@Override
-		public redis.clients.jedis.ListPosition convert(final ListPosition source){
+		public ListDirection convert(final Direction source){
 			switch(source){
-				case BEFORE:
-					return redis.clients.jedis.ListPosition.BEFORE;
-				case AFTER:
-					return redis.clients.jedis.ListPosition.AFTER;
+				case LEFT:
+					return ListDirection.LEFT;
+				case RIGHT:
+					return ListDirection.RIGHT;
 				default:
 					return null;
 			}
@@ -59,21 +60,21 @@ public interface ListPositionConverter<S, T> extends Converter<S, T> {
 	}
 
 	/**
-	 * jedis {@link redis.clients.jedis.ListPosition} 转换为 {@link ListPosition}
+	 * jedis {@link ListDirection} 转换为 {@link Direction}
 	 *
 	 * @author Yong.Teng
 	 * @since 2.0.0
 	 */
-	final class ListPositionExposeConverter
-			implements ListPositionConverter<redis.clients.jedis.ListPosition, ListPosition> {
+	final class DirectionExposeConverter
+			implements DirectionConverter<ListDirection, Direction> {
 
 		@Override
-		public ListPosition convert(final redis.clients.jedis.ListPosition source){
+		public Direction convert(final ListDirection source){
 			switch(source){
-				case BEFORE:
-					return ListPosition.BEFORE;
-				case AFTER:
-					return ListPosition.AFTER;
+				case LEFT:
+					return Direction.LEFT;
+				case RIGHT:
+					return Direction.RIGHT;
 				default:
 					return null;
 			}
