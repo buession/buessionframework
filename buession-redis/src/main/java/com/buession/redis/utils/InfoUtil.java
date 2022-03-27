@@ -19,13 +19,15 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.utils;
 
 import com.buession.core.utils.EnumUtils;
+import com.buession.core.utils.KeyValueParser;
 import com.buession.core.utils.StringUtils;
+import com.buession.lang.Arch;
 import com.buession.net.Multiplexing;
 import com.buession.lang.Uptime;
 import com.buession.redis.core.AtomicvarApi;
@@ -34,7 +36,6 @@ import com.buession.redis.core.MaxMemoryPolicy;
 import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.Role;
-import org.apache.commons.lang3.arch.Processor;
 import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
@@ -106,6 +107,181 @@ public class InfoUtil {
 		return new Info(server, clients, memory, persistence, stats, replication, sentinel, cpu, cluster, keyspaces);
 	}
 
+	public static String toPrettyString(final Info.Server server, final Info.Clients clients, final Info.Memory memory,
+										final Info.Persistence persistence,
+										final Info.Stats stats, final Info.Replication replication,
+										final Info.Sentinel sentinel, final Info.Cpu cpu,
+										final Info.Cluster cluster, final List<Info.Keyspace> keyspaces){
+		final StringBuilder sb = new StringBuilder();
+		String lineSeparator = System.lineSeparator();
+		boolean init = false;
+
+		if(server != null){
+			init = true;
+			sb.append("server:").append(lineSeparator).append(server.toPrettyString());
+		}
+
+		if(clients != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("clients:").append(lineSeparator).append(clients.toPrettyString());
+		}
+
+		if(memory != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("memory:").append(lineSeparator).append(memory.toPrettyString());
+		}
+
+		if(persistence != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("persistence:").append(lineSeparator).append(persistence.toPrettyString());
+		}
+
+		if(stats != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("stats:").append(lineSeparator).append(stats.toPrettyString());
+		}
+
+		if(replication != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("replication:").append(lineSeparator).append(replication.toPrettyString());
+		}
+
+		if(sentinel != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("sentinel:").append(lineSeparator).append(sentinel.toPrettyString());
+		}
+
+		if(cpu != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("cpu:").append(lineSeparator).append(cpu.toPrettyString());
+		}
+
+		if(cluster != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("cluster:").append(lineSeparator).append(cluster.toPrettyString());
+		}
+
+		if(keyspaces != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			sb.append("keyspace:").append(lineSeparator).append(StringUtils.join(keyspaces, lineSeparator));
+		}
+
+		return sb.toString();
+	}
+
+	public static String asString(final Info.Server server, final Info.Clients clients, final Info.Memory memory,
+								  final Info.Persistence persistence,
+								  final Info.Stats stats, final Info.Replication replication,
+								  final Info.Sentinel sentinel, final Info.Cpu cpu,
+								  final Info.Cluster cluster, final List<Info.Keyspace> keyspaces){
+		final StringBuilder sb = new StringBuilder();
+		boolean init = false;
+
+		if(server != null){
+			init = true;
+			sb.append("server=").append('[').append(server).append(']');
+		}
+
+		if(clients != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("clients=").append('[').append(clients).append(']').append(", ");
+		}
+
+		if(memory != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("memory=").append('[').append(memory).append(']');
+		}
+
+		if(persistence != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("persistence=").append('[').append(persistence).append(']');
+		}
+
+		if(stats != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("stats=").append('[').append(stats).append(']');
+		}
+
+		if(replication != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("replication=").append('[').append(replication).append(']');
+		}
+
+		if(sentinel != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("sentinel=").append('[').append(sentinel).append(']');
+		}
+
+		if(cpu != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("cpu=").append('[').append(cpu).append(']');
+		}
+
+		if(cluster != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("cluster=").append('[').append(cluster).append(']');
+		}
+
+		if(keyspaces != null){
+			if(init){
+				sb.append(", ");
+			}
+			sb.append("keyspace=").append('[').append(keyspaces).append(']');
+		}
+
+		return sb.toString();
+	}
+
 	@FunctionalInterface
 	protected interface Parser<V> {
 
@@ -128,9 +304,9 @@ public class InfoUtil {
 
 				if(Info.Server.Key.ARCH.getValue().equals(keyValueParser.getKey())){
 					if("32".equals(keyValueParser.getValue())){
-						properties.put(keyValueParser.getKey(), Processor.Arch.BIT_32);
+						properties.put(keyValueParser.getKey(), Arch.BIT_32);
 					}else if("64".equals(keyValueParser.getValue())){
-						properties.put(keyValueParser.getKey(), Processor.Arch.BIT_64);
+						properties.put(keyValueParser.getKey(), Arch.BIT_64);
 					}
 				}else if(Info.Server.Key.ATOMICVAR_API.getValue().equals(keyValueParser.getKey())){
 					for(AtomicvarApi v : AtomicvarApi.values()){
@@ -312,6 +488,10 @@ public class InfoUtil {
 				properties.put(Info.Replication.Key.MASTER.getValue(), new RedisNode(masterHost, masterPort));
 			}
 
+			if(slaves != null){
+				properties.put(Info.Replication.Key.SLAVE.getValue(), slaves);
+			}
+
 			if(replBackLogProperties != null){
 				properties.put(Info.Replication.Key.REPL_BACK_LOG.getValue(),
 						new Info.Replication.ReplBacklog(replBackLogProperties));
@@ -328,9 +508,9 @@ public class InfoUtil {
 			for(String group : groups){
 				keyValueParser = new KeyValueParser(group, '=');
 
-				if(Info.Replication.Slave.Key.STATE.equals(keyValueParser.getKey())){
+				if(Info.Replication.Slave.Key.STATE.getValue().equals(keyValueParser.getKey())){
 					properties.put(keyValueParser.getKey(),
-							keyValueParser.getEnumValue(Info.Replication.SlaveState.class));
+							keyValueParser.getEnumValue(Info.Replication.Slave.SlaveState.class));
 				}else{
 					properties.put(keyValueParser.getKey(), keyValueParser.getValue());
 				}
@@ -448,7 +628,7 @@ public class InfoUtil {
 				String db = StringUtils.replace(v[0], "\n", "").substring(2);
 				String[] params = StringUtils.splitByWholeSeparatorPreserveAllTokens(v[1], ",");
 
-				properties.put(Info.Keyspace.Key.DB, db);
+				properties.put(Info.Keyspace.Key.DB.getValue(), db);
 
 				if(params != null){
 					for(String s : params){
@@ -467,28 +647,6 @@ public class InfoUtil {
 
 	protected static String[] parseRows(final String str){
 		return StringUtils.split(str, ROW_SEPARATOR);
-	}
-
-	protected final static class KeyValueParser extends com.buession.core.utils.KeyValueParser {
-
-		private Double percentValue;
-
-		public KeyValueParser(final String str, final String delimiter){
-			super(str, delimiter);
-		}
-
-		public KeyValueParser(final String str, final char delimiter){
-			super(str, delimiter);
-		}
-
-		public double getPercentValue(){
-			if(percentValue == null){
-				percentValue = Double.parseDouble(getValue().substring(0, getValue().length() - 1));
-			}
-
-			return percentValue;
-		}
-
 	}
 
 }
