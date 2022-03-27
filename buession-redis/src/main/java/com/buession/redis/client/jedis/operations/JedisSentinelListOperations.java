@@ -26,23 +26,22 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisClient;
-import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.client.jedis.JedisSentinelClient;
+import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.convert.OkStatusConverter;
+import com.buession.redis.core.convert.jedis.DirectionConverter;
 import com.buession.redis.core.convert.jedis.ListPositionConverter;
 import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
 
 import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public class JedisClusterListOperations extends AbstractListOperations<Jedis, Pipeline> {
+public class JedisSentinelListOperations extends AbstractListOperations {
 
-	public JedisClusterListOperations(final JedisClusterClient client){
+	public JedisSentinelListOperations(final JedisSentinelClient client){
 		super(client);
 	}
 
@@ -63,7 +62,7 @@ public class JedisClusterListOperations extends AbstractListOperations<Jedis, Pi
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().blpop(keys[0])));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().blpop(timeout, keys),
-					new ListConverter<>((value)->SafeEncoder.encode(value))));
+					new ListConverter<>(SafeEncoder::encode)));
 		}else{
 			return execute((cmd)->cmd.blpop(timeout, keys));
 		}
@@ -86,7 +85,7 @@ public class JedisClusterListOperations extends AbstractListOperations<Jedis, Pi
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpop(keys[0])));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().brpop(timeout, keys),
-					new ListConverter<>((value)->SafeEncoder.encode(value))));
+					new ListConverter<>(SafeEncoder::encode)));
 		}else{
 			return execute((cmd)->cmd.brpop(timeout, keys));
 		}
@@ -283,6 +282,74 @@ public class JedisClusterListOperations extends AbstractListOperations<Jedis, Pi
 			return transactionExecute((cmd)->newJedisResult(getTransaction().rpushx(key, values)));
 		}else{
 			return execute((cmd)->cmd.rpushx(key, values));
+		}
+	}
+
+	@Override
+	public String lMove(final String key, final String destKey, final Direction from, final Direction to){
+		final DirectionConverter.DirectionJedisConverter converter = new DirectionConverter.DirectionJedisConverter();
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(
+					getPipeline().lmove(key, destKey, converter.convert(from), converter.convert(to))));
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(
+							getTransaction().lmove(key, destKey, converter.convert(from), converter.convert(to))));
+		}else{
+			return execute((cmd)->cmd.lmove(key, destKey, converter.convert(from), converter.convert(to)));
+		}
+	}
+
+	@Override
+	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
+		final DirectionConverter.DirectionJedisConverter converter = new DirectionConverter.DirectionJedisConverter();
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(
+					getPipeline().lmove(key, destKey, converter.convert(from), converter.convert(to))));
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(
+							getTransaction().lmove(key, destKey, converter.convert(from), converter.convert(to))));
+		}else{
+			return execute((cmd)->cmd.lmove(key, destKey, converter.convert(from), converter.convert(to)));
+		}
+	}
+
+	@Override
+	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
+						 final int timeout){
+		final DirectionConverter.DirectionJedisConverter converter = new DirectionConverter.DirectionJedisConverter();
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(
+					getPipeline().blmove(key, destKey, converter.convert(from), converter.convert(to),
+							timeout)));
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(
+							getTransaction().blmove(key, destKey, converter.convert(from), converter.convert(to),
+									timeout)));
+		}else{
+			return execute(
+					(cmd)->cmd.blmove(key, destKey, converter.convert(from), converter.convert(to), timeout));
+		}
+	}
+
+	@Override
+	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+						 final int timeout){
+		final DirectionConverter.DirectionJedisConverter converter = new DirectionConverter.DirectionJedisConverter();
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(
+					getPipeline().blmove(key, destKey, converter.convert(from), converter.convert(to),
+							timeout)));
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(
+							getTransaction().blmove(key, destKey, converter.convert(from), converter.convert(to),
+									timeout)));
+		}else{
+			return execute(
+					(cmd)->cmd.blmove(key, destKey, converter.convert(from), converter.convert(to), timeout));
 		}
 	}
 

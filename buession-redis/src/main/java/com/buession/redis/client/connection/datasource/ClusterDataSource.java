@@ -19,17 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource;
 
-import com.buession.redis.core.ClusterRedisNode;
+import com.buession.redis.core.RedisNode;
 
 import java.util.Set;
 
 /**
- * Redis Cluster 模式数据源
+ * Redis 集群（Cluster）模式数据源
  *
  * @author Yong.Teng
  */
@@ -40,7 +40,7 @@ public interface ClusterDataSource extends DataSource {
 	 *
 	 * @return 集群主机节点
 	 */
-	Set<ClusterRedisNode> getNodes();
+	Set<RedisNode> getNodes();
 
 	/**
 	 * 设置集群主机节点
@@ -48,6 +48,6 @@ public interface ClusterDataSource extends DataSource {
 	 * @param nodes
 	 * 		集群主机节点
 	 */
-	void setNodes(Set<ClusterRedisNode> nodes);
+	void setNodes(Set<RedisNode> nodes);
 
 }

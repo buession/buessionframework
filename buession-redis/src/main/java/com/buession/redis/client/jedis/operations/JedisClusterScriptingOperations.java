@@ -19,18 +19,17 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.exception.RedisExceptionUtils;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,9 +38,9 @@ import java.util.stream.Collectors;
 /**
  * @author Yong.Teng
  */
-public class JedisScriptingOperations extends AbstractScriptingOperations<Jedis, Pipeline> {
+public class JedisClusterScriptingOperations extends AbstractScriptingOperations {
 
-	public JedisScriptingOperations(final JedisClient client){
+	public JedisClusterScriptingOperations(final JedisClusterClient client){
 		super(client);
 	}
 
@@ -195,15 +194,15 @@ public class JedisScriptingOperations extends AbstractScriptingOperations<Jedis,
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_EXISTS,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCRIPT_EXISTS,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.scriptExists(sha1));
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final byte[]... sha1){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_EXISTS,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCRIPT_EXISTS,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->{
 			List<Long> result = cmd.scriptExists(sha1);
 			return result == null ? null : result.stream().map((v)->v == 1).collect(Collectors.toList());
@@ -212,29 +211,29 @@ public class JedisScriptingOperations extends AbstractScriptingOperations<Jedis,
 
 	@Override
 	public Status scriptFlush(){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_FLUSH,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCRIPT_FLUSH,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.scriptFlush(), new OkStatusConverter());
 	}
 
 	@Override
 	public Status scriptKill(){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_KILL,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCRIPT_KILL,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.scriptKill(), new OkStatusConverter());
 	}
 
 	@Override
 	public String scriptLoad(final String script){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_LOAD,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCRIPT_LOAD,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.scriptLoad(script));
 	}
 
 	@Override
 	public byte[] scriptLoad(final byte[] script){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_LOAD,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCRIPT_LOAD,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.scriptLoad(script));
 	}
 

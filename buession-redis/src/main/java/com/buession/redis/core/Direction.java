@@ -28,7 +28,7 @@ package com.buession.redis.core;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public enum LeftRight {
+public enum Direction {
 
 	LEFT,
 

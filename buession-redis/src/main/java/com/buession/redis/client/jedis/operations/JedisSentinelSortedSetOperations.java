@@ -24,19 +24,18 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
+import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.jedis.AggregateConverter;
 import com.buession.redis.core.convert.jedis.ScanResultConverter;
 import com.buession.redis.core.convert.jedis.TupleConverter;
-import com.buession.redis.core.jedis.JedisScanParams;
-import com.buession.redis.core.jedis.JedisZParams;
+import com.buession.redis.core.internal.jedis.JedisScanParams;
+import com.buession.redis.core.internal.jedis.JedisZParams;
 import com.buession.redis.exception.RedisExceptionUtils;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -46,9 +45,9 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations<Jedis, Pipeline> {
+public class JedisSentinelSortedSetOperations extends AbstractSortedSetOperations {
 
-	public JedisClusterSortedSetOperations(final JedisClusterClient client){
+	public JedisSentinelSortedSetOperations(final JedisSentinelClient client){
 		super(client);
 	}
 
@@ -265,8 +264,8 @@ public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations
 	}
 
 	@Override
-	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
-								   final int count){
+	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
+								   final long count){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().zrangeByLex(key, min, max, offset, count)));
 		}else if(isTransaction()){
@@ -300,8 +299,8 @@ public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations
 	}
 
 	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final int offset,
-									 final int count){
+	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max, final long offset,
+									 final long count){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().zrangeByScore(key, min, max)));
 		}else if(isTransaction()){
@@ -312,8 +311,8 @@ public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations
 	}
 
 	@Override
-	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
-									 final int count){
+	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
+									 final long count){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().zrangeByScore(key, min, max, offset, count)));
 		}else if(isTransaction()){
@@ -355,34 +354,36 @@ public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations
 	}
 
 	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final int offset,
-											  final int count){
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max, final long offset,
+											  final long count){
 		final TupleConverter.SetTupleExposeConverter converter = new TupleConverter.SetTupleExposeConverter();
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().zrangeByScoreWithScores(key, min, max, offset,
-					count), converter));
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().zrangeByScoreWithScores(key, min, max, (int) offset,
+							(int) count), converter));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().zrangeByScoreWithScores(key, min, max,
-					offset, count), converter));
+					(int) offset, (int) count), converter));
 		}else{
-			return execute((cmd)->cmd.zrangeByScoreWithScores(key, min, max, offset, count), converter);
+			return execute((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), converter);
 		}
 	}
 
 	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final int offset,
-											  final int count){
+	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max, final long offset,
+											  final long count){
 		final TupleConverter.SetTupleExposeConverter converter = new TupleConverter.SetTupleExposeConverter();
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().zrangeByScoreWithScores(key, min, max, offset,
-					count), converter));
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().zrangeByScoreWithScores(key, min, max, (int) offset,
+							(int) count), converter));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().zrangeByScoreWithScores(key, min, max,
-					offset, count), converter));
+					(int) offset, (int) count), converter));
 		}else{
-			return execute((cmd)->cmd.zrangeByScoreWithScores(key, min, max, offset, count), converter);
+			return execute((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count), converter);
 		}
 	}
 
@@ -411,19 +412,6 @@ public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations
 	}
 
 	@Override
-	public Set<Tuple> zPopMax(final byte[] key, final int count){
-		final TupleConverter.SetTupleExposeConverter converter = new TupleConverter.SetTupleExposeConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().zpopmax(key, count), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zpopmax(key, count), converter));
-		}else{
-			return execute((cmd)->cmd.zpopmax(key, count), converter);
-		}
-	}
-
-	@Override
 	public Tuple zPopMin(final byte[] key){
 		final TupleConverter.TupleExposeConverter converter = new TupleConverter.TupleExposeConverter();
 
@@ -433,19 +421,6 @@ public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations
 			return transactionExecute((cmd)->newJedisResult(getTransaction().zpopmin(key), converter));
 		}else{
 			return execute((cmd)->cmd.zpopmin(key), converter);
-		}
-	}
-
-	@Override
-	public Set<Tuple> zPopMin(final byte[] key, final int count){
-		final TupleConverter.SetTupleExposeConverter converter = new TupleConverter.SetTupleExposeConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().zpopmin(key, count), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zpopmin(key, count), converter));
-		}else{
-			return execute((cmd)->cmd.zpopmin(key, count), converter);
 		}
 	}
 
@@ -542,8 +517,8 @@ public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations
 	}
 
 	@Override
-	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final int offset,
-									  final int count){
+	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max, final long offset,
+									  final long count){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().zrevrangeByLex(key, min, max, offset, count)));
 		}else if(isTransaction()){
@@ -577,8 +552,8 @@ public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations
 	}
 
 	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final int offset,
-										final int count){
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max, final long offset,
+										final long count){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().zrevrangeByScore(key, min, max, offset,
 					count)));
@@ -591,8 +566,8 @@ public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations
 	}
 
 	@Override
-	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final int offset,
-										final int count){
+	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max, final long offset,
+										final long count){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().zrevrangeByScore(key, min, max, offset,
 					count)));
@@ -635,24 +610,8 @@ public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations
 	}
 
 	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max,
-												 final int offset, final int count){
-		final TupleConverter.SetTupleExposeConverter converter = new TupleConverter.SetTupleExposeConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().zrevrangeByScoreWithScores(key, min, max,
-					offset, count), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().zrevrangeByScoreWithScores(key, min, max,
-					offset, count), converter));
-		}else{
-			return execute((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, offset, count), converter);
-		}
-	}
-
-	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max,
-												 final int offset, final int count){
+												 final long offset, final long count){
 		final TupleConverter.SetTupleExposeConverter converter = new TupleConverter.SetTupleExposeConverter();
 
 		if(isPipeline()){
@@ -679,8 +638,8 @@ public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.ZSCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		ScanResult<List<Tuple>> execute = execute(
 				(cmd)->new ScanResultConverter.ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor)));
 		return execute;
@@ -688,29 +647,20 @@ public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.ZSCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute(
 				(cmd)->new ScanResultConverter.ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor,
 						new JedisScanParams(pattern))));
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final int count){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
-				client.getConnection());
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final long count){
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.ZSCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute(
 				(cmd)->new ScanResultConverter.ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor,
-						new JedisScanParams(count))));
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.ZSCAN,
-				client.getConnection());
-		return execute(
-				(cmd)->new ScanResultConverter.ListTupleScanResultExposeConverter().convert(cmd.zscan(key, cursor,
-						new JedisScanParams(pattern, count))));
+						new JedisScanParams(pattern, (int) count))));
 	}
 
 	@Override

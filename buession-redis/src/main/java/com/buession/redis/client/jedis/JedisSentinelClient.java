@@ -26,7 +26,7 @@ package com.buession.redis.client.jedis;
 
 import com.buession.lang.Geo;
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisStandaloneClient;
+import com.buession.redis.client.RedisSentinelClient;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.operations.JedisSentinelClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelConnectionOperations;
@@ -44,6 +44,7 @@ import com.buession.redis.client.jedis.operations.JedisSentinelStringOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelTransactionOperations;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
@@ -51,6 +52,7 @@ import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.PubSubListener;
+import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.Tuple;
@@ -66,14 +68,59 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class JedisSentinelStandaloneClient extends AbstractJedisRedisClient implements RedisStandaloneClient {
+public class JedisSentinelClient extends AbstractJedisRedisClient implements RedisSentinelClient {
 
-	public JedisSentinelStandaloneClient(){
+	public JedisSentinelClient(){
 		super();
 	}
 
-	public JedisSentinelStandaloneClient(JedisSentinelConnection connection){
+	public JedisSentinelClient(final JedisSentinelConnection connection){
 		super(connection);
+	}
+
+	@Override
+	public Status clusterForget(final byte[] nodeId){
+		return clusterOperations.clusterForget(nodeId);
+	}
+
+	@Override
+	public long clusterKeySlot(final byte[] key){
+		return clusterOperations.clusterKeySlot(key);
+	}
+
+	@Override
+	public Status clusterMeet(final byte[] ip, final int port){
+		return clusterOperations.clusterMeet(ip, port);
+	}
+
+	@Override
+	public List<RedisClusterServer> clusterSlaves(final byte[] nodeId){
+		return clusterOperations.clusterSlaves(nodeId);
+	}
+
+	@Override
+	public List<RedisClusterServer> clusterReplicas(final byte[] nodeId){
+		return clusterOperations.clusterReplicas(nodeId);
+	}
+
+	@Override
+	public Status clusterReplicate(final byte[] nodeId){
+		return clusterOperations.clusterReplicate(nodeId);
+	}
+
+	@Override
+	public Status clusterSetConfigEpoch(final byte[] configEpoch){
+		return clusterOperations.clusterSetConfigEpoch(configEpoch);
+	}
+
+	@Override
+	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId){
+		return clusterOperations.clusterSetSlot(slot, setSlotOption, nodeId);
+	}
+
+	@Override
+	public Status auth(final byte[] user, final byte[] password){
+		return connectionOperations.auth(user, password);
 	}
 
 	@Override
@@ -672,11 +719,6 @@ public class JedisSentinelStandaloneClient extends AbstractJedisRedisClient impl
 	@Override
 	public Status configSet(final byte[] parameter, final byte[] value){
 		return serverOperations.configSet(parameter, value);
-	}
-
-	@Override
-	public byte[] debugObject(final byte[] key){
-		return serverOperations.debugObject(key);
 	}
 
 	@Override

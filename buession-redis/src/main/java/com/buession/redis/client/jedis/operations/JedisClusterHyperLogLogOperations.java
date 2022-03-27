@@ -19,24 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.convert.OkStatusConverter;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
 
 /**
  * @author Yong.Teng
  */
-public class JedisHyperLogLogOperations extends AbstractHyperLogLogOperations<Jedis, Pipeline> {
+public class JedisClusterHyperLogLogOperations extends AbstractHyperLogLogOperations {
 
-	public JedisHyperLogLogOperations(final JedisClient client){
+	public JedisClusterHyperLogLogOperations(final JedisClusterClient client){
 		super(client);
 	}
 

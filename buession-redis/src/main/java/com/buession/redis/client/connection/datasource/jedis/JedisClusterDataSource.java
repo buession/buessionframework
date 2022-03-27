@@ -19,13 +19,13 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.client.connection.datasource.ClusterDataSource;
-import com.buession.redis.core.ClusterRedisNode;
+import com.buession.redis.core.RedisNode;
 
 import java.util.Set;
 
@@ -33,18 +33,19 @@ import java.util.Set;
  * Jedis 集群模式数据源
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class ClusterJedisDataSource extends AbstractJedisDataSource implements ClusterDataSource {
+public class JedisClusterDataSource extends AbstractJedisDataSource implements ClusterDataSource {
 
 	/**
 	 * 集群主机节点
 	 */
-	private Set<ClusterRedisNode> nodes;
+	private Set<RedisNode> nodes;
 
 	/**
 	 * 构造函数
 	 */
-	public ClusterJedisDataSource(){
+	public JedisClusterDataSource(){
 		super();
 	}
 
@@ -54,17 +55,17 @@ public class ClusterJedisDataSource extends AbstractJedisDataSource implements C
 	 * @param nodes
 	 * 		集群主机节点
 	 */
-	public ClusterJedisDataSource(final Set<ClusterRedisNode> nodes){
+	public JedisClusterDataSource(final Set<RedisNode> nodes){
 		this.nodes = nodes;
 	}
 
 	@Override
-	public Set<ClusterRedisNode> getNodes(){
+	public Set<RedisNode> getNodes(){
 		return nodes;
 	}
 
 	@Override
-	public void setNodes(Set<ClusterRedisNode> nodes){
+	public void setNodes(Set<RedisNode> nodes){
 		this.nodes = nodes;
 	}
 

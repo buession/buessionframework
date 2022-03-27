@@ -26,7 +26,7 @@ package com.buession.redis.client.jedis;
 
 import com.buession.lang.Geo;
 import com.buession.lang.Status;
-import com.buession.redis.client.RedisStandaloneClient;
+import com.buession.redis.client.RedisClusterClient;
 import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.jedis.operations.JedisClusterClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterConnectionOperations;
@@ -44,6 +44,7 @@ import com.buession.redis.client.jedis.operations.JedisClusterStringOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterTransactionOperations;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
@@ -51,6 +52,7 @@ import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.PubSubListener;
+import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.Tuple;
@@ -66,14 +68,59 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class JedisClusterStandaloneClient extends AbstractJedisRedisClient implements RedisStandaloneClient {
+public class JedisClusterClient extends AbstractJedisRedisClient implements RedisClusterClient {
 
-	public JedisClusterStandaloneClient(){
+	public JedisClusterClient(){
 		super();
 	}
 
-	public JedisClusterStandaloneClient(JedisClusterConnection connection){
+	public JedisClusterClient(final JedisClusterConnection connection){
 		super(connection);
+	}
+
+	@Override
+	public Status clusterForget(final byte[] nodeId){
+		return clusterOperations.clusterForget(nodeId);
+	}
+
+	@Override
+	public long clusterKeySlot(final byte[] key){
+		return clusterOperations.clusterKeySlot(key);
+	}
+
+	@Override
+	public Status clusterMeet(final byte[] ip, final int port){
+		return clusterOperations.clusterMeet(ip, port);
+	}
+
+	@Override
+	public List<RedisClusterServer> clusterSlaves(final byte[] nodeId){
+		return clusterOperations.clusterSlaves(nodeId);
+	}
+
+	@Override
+	public List<RedisClusterServer> clusterReplicas(final byte[] nodeId){
+		return clusterOperations.clusterReplicas(nodeId);
+	}
+
+	@Override
+	public Status clusterReplicate(final byte[] nodeId){
+		return clusterOperations.clusterReplicate(nodeId);
+	}
+
+	@Override
+	public Status clusterSetConfigEpoch(final byte[] configEpoch){
+		return clusterOperations.clusterSetConfigEpoch(configEpoch);
+	}
+
+	@Override
+	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId){
+		return clusterOperations.clusterSetSlot(slot, setSlotOption, nodeId);
+	}
+
+	@Override
+	public Status auth(final byte[] user, final byte[] password){
+		return connectionOperations.auth(user, password);
 	}
 
 	@Override
@@ -675,11 +722,6 @@ public class JedisClusterStandaloneClient extends AbstractJedisRedisClient imple
 	}
 
 	@Override
-	public byte[] debugObject(final byte[] key){
-		return serverOperations.debugObject(key);
-	}
-
-	@Override
 	public Object object(final ObjectCommand command, final byte[] key){
 		return serverOperations.object(command, key);
 	}
@@ -787,11 +829,6 @@ public class JedisClusterStandaloneClient extends AbstractJedisRedisClient imple
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count){
 		return setOperations.sScan(key, cursor, count);
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern, final long count){
-		return setOperations.sScan(key, cursor, pattern, count);
 	}
 
 	@Override

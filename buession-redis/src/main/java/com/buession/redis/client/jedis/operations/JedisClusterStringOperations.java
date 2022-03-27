@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.BitOperationConverter;
@@ -35,8 +35,6 @@ import com.buession.redis.core.convert.jedis.SetArgumentConverter;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.BitOP;
 import redis.clients.jedis.BitPosParams;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.params.SetParams;
 
 import java.util.ArrayList;
@@ -46,9 +44,9 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipeline> {
+public class JedisClusterStringOperations extends AbstractStringOperations {
 
-	public JedisStringOperations(final JedisClient client){
+	public JedisClusterStringOperations(final JedisClusterClient client){
 		super(client);
 	}
 
@@ -431,10 +429,10 @@ public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipel
 	public byte[] substr(final byte[] key, final int start, final int end){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().substr(key, start, end),
-					(value)->SafeEncoder.encode(value)));
+					SafeEncoder::encode));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().substr(key, start, end),
-					(value)->SafeEncoder.encode(value)));
+					SafeEncoder::encode));
 		}else{
 			return execute((cmd)->cmd.substr(key, start, end));
 		}

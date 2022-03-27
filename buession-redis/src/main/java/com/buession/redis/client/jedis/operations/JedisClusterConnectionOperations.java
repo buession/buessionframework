@@ -19,37 +19,45 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.OkStatusConverter;
-import com.buession.redis.core.convert.PingResultConverter;
-import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.JedisCluster;
 
 /**
+ * Jedis 集群模式连接命令操作抽象类
+ *
  * @author Yong.Teng
  */
-public class JedisConnectionOperations extends AbstractConnectionOperations<Jedis, Pipeline> {
+public final class JedisClusterConnectionOperations extends AbstractConnectionOperations<JedisCluster> {
 
-	public JedisConnectionOperations(final JedisClient client){
+	public JedisClusterConnectionOperations(final JedisClusterClient client){
 		super(client);
 	}
 
 	@Override
-	public Status auth(final String password){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.AUTH,
-				client.getConnection());
+	public Status auth(final String user, final String password){
+		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.AUTH, args);
+	}
 
-		final OkStatusConverter converter = new OkStatusConverter();
-		return execute((cmd)->cmd.auth(password), converter);
+	@Override
+	public Status auth(final byte[] user, final byte[] password){
+		return auth(SafeEncoder.encode(user), SafeEncoder.encode(password));
+	}
+
+	@Override
+	public Status auth(final String password){
+		final CommandArguments args = CommandArguments.create("password", password);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.AUTH, args);
 	}
 
 	@Override
@@ -58,62 +66,51 @@ public class JedisConnectionOperations extends AbstractConnectionOperations<Jedi
 	}
 
 	@Override
-	public byte[] echo(final byte[] str){
+	public String echo(final String str){
+		final CommandArguments args = CommandArguments.create("str", str);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().echo(str)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().echo(str)), ProtocolCommand.ECHO, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().echo(str)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().echo(str)), ProtocolCommand.ECHO, args);
 		}else{
-			return execute((cmd)->cmd.echo(str));
+			return execute((cmd)->cmd.echo(str), ProtocolCommand.ECHO, args);
+		}
+	}
+
+	@Override
+	public byte[] echo(final byte[] str){
+		final CommandArguments args = CommandArguments.create("str", str);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().echo(str)), ProtocolCommand.ECHO, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().echo(str)), ProtocolCommand.ECHO, args);
+		}else{
+			return execute((cmd)->cmd.echo(str), ProtocolCommand.ECHO, args);
 		}
 	}
 
 	@Override
 	public Status ping(){
-		final PingResultConverter converter = new PingResultConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().ping(), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().ping(), converter));
-		}else{
-			return execute((cmd)->cmd.ping(), converter);
-		}
+		return execute(CommandNotSupported.ALL, ProtocolCommand.PING);
 	}
 
 	@Override
 	public Status quit(){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.QUIT,
-				client.getConnection());
-
-		final OkStatusConverter converter = new OkStatusConverter();
-		return execute((cmd)->cmd.quit(), converter);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.QUIT);
 	}
 
 	@Override
 	public Status select(final int db){
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().select(db), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().select(db), converter));
-		}else{
-			return execute((cmd)->cmd.select(db), converter);
-		}
+		final CommandArguments args = CommandArguments.create("db", db);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.SELECT, args);
 	}
 
 	@Override
 	public Status swapdb(final int db1, final int db2){
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().swapDB(db1, db2), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().swapDB(db1, db2), converter));
-		}else{
-			return execute((cmd)->cmd.swapDB(db1, db2), converter);
-		}
+		final CommandArguments args = CommandArguments.create("db1", db1).put("db2", db2);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.SWAPDB, args);
 	}
 
 }

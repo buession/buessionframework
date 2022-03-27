@@ -25,10 +25,12 @@
 package com.buession.redis.core;
 
 /**
+ * <a href="http://www.redis.cn/commands/cluster-failover.html" target="_blank">http://www.redis.cn/commands/cluster-failover.html</a>
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public enum ClusterFailover {
+public enum ClusterFailoverOption {
 
 	FORCE,
 

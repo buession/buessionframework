@@ -26,17 +26,15 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.convert.OkStatusConverter;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
 
 /**
  * @author Yong.Teng
  */
-public class JedisClusterHyperLogLogOperations extends AbstractHyperLogLogOperations<Jedis, Pipeline> {
+public class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLogOperations {
 
-	public JedisClusterHyperLogLogOperations(final JedisClusterClient client){
+	public JedisSentinelHyperLogLogOperations(final JedisSentinelClient client){
 		super(client);
 	}
 

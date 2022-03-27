@@ -21,10 +21,19 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core;/**
- * 
+ */
+package com.buession.redis.core;
+
+/**
+ * Redis Reset 类型，详情 <a href="http://www.redis.cn/commands/cluster-reset.html" target="_blank">http://www.redis.cn/commands/cluster-reset.html</a>
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public enum ClusterResetOption {
+ */
+public enum ClusterResetOption {
+
+	HARD,
+
+	SOFT
+
 }

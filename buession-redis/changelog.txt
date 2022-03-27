@@ -4,6 +4,11 @@ Buession Framework Redis Changelog
 
 Changes in version 2.0.0 (2022-02-22)
 -------------------------------------
+*【新增】支持哨兵模式（Sentine）和集群模式（Cluster）
+*【新增】支持 xtream 命令
+*【新增】支持 redis 6.0.x
+*【移除】jedis shared redis API
+*【优化】内部 API
 
 Changes in version 1.3.2 (2021-11-10)
 -------------------------------------

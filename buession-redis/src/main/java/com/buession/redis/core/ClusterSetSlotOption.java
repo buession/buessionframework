@@ -25,8 +25,31 @@
 package com.buession.redis.core;
 
 /**
+ * 详情 <a href="http://www.redis.cn/commands/cluster-setslot.html" target="_blank">http://www.redis.cn/commands/cluster-setslot.html</a>
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public enum ClusterSetSlotOoption {
+public enum ClusterSetSlotOption {
+
+	/**
+	 * 将一个哈希槽设置为 importing 状态
+	 */
+	IMPORTING,
+
+	/**
+	 * 将一个哈希槽设置为 migrating 状态
+	 */
+	MIGRATING,
+
+	/**
+	 * 从哈希槽中清除导入和迁移状态
+	 */
+	STABLE,
+
+	/**
+	 * 将一个哈希槽绑定到另一个不同的节点
+	 */
+	NODE
+
 }

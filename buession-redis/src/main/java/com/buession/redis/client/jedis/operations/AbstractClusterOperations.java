@@ -21,10 +21,26 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.client.jedis.operations;/**
- * 
+ */
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.ClusterOperations;
+
+/**
+ * Jedis 集群命令操作抽象类
+ *
+ * @param <CMD>
+ * 		Jedis 原始命令对象
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public class AbstractClusterOperations {
+ */
+public abstract class AbstractClusterOperations<CMD> extends AbstractJedisRedisOperations<CMD>
+		implements ClusterOperations<CMD> {
+
+	public AbstractClusterOperations(final JedisRedisClient client){
+		super(client);
+	}
+
 }

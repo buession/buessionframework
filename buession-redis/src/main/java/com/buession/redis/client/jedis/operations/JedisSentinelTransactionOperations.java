@@ -27,22 +27,19 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.TransactionResultConverter;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.transaction.Transaction;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
 
 import java.util.List;
 
 /**
  * @author Yong.Teng
  */
-public class JedisClusterTransactionOperations extends AbstractTransactionOperations<Jedis, Pipeline> {
+public class JedisSentinelTransactionOperations extends AbstractTransactionOperations {
 
-	public JedisClusterTransactionOperations(final JedisClusterClient client){
+	public JedisSentinelTransactionOperations(final JedisSentinelClient client){
 		super(client);
 	}
 
@@ -66,11 +63,11 @@ public class JedisClusterTransactionOperations extends AbstractTransactionOperat
 	}
 
 	@Override
-	public Transaction multi(){
+	public Status multi(){
 		return execute((cmd)->{
 			RedisConnection connection = client.getConnection();
 			connection.multi();
-			return connection.getTransaction();
+			return Status.SUCCESS;
 		});
 	}
 

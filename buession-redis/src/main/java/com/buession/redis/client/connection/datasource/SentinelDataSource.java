@@ -21,10 +21,185 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.client.connection.datasource;/**
- * 
+ */
+package com.buession.redis.client.connection.datasource;
+
+import com.buession.redis.core.RedisNamedNode;
+import com.buession.redis.core.RedisNode;
+
+import java.util.List;
+
+/**
+ * Redis 哨兵（Sentinel）模式数据源
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public interface SentinelDataSource {
+ */
+public interface SentinelDataSource extends DataSource {
+
+	/**
+	 * 获取 Redis 主机地址
+	 *
+	 * @return Redis 主机地址
+	 */
+	String getHost();
+
+	/**
+	 * 设置 Redis 主机地址
+	 *
+	 * @param host
+	 * 		Redis 主机地址
+	 */
+	void setHost(String host);
+
+	/**
+	 * 获取 Redis 端口
+	 *
+	 * @return Redis 端口
+	 */
+	int getPort();
+
+	/**
+	 * 设置 Redis 端口
+	 *
+	 * @param port
+	 * 		Redis 端口
+	 */
+	void setPort(int port);
+
+	/**
+	 * 返回用户
+	 *
+	 * @return 用户
+	 */
+	String getUser();
+
+	/**
+	 * 设置用户
+	 *
+	 * @param user
+	 * 		用户
+	 */
+	void setUser(String user);
+
+	/**
+	 * 获取密码
+	 *
+	 * @return 密码
+	 */
+	String getPassword();
+
+	/**
+	 * 设置密码
+	 *
+	 * @param password
+	 * 		密码
+	 */
+	void setPassword(String password);
+
+	/**
+	 * 获取数据库
+	 *
+	 * @return 数据库
+	 */
+	int getDatabase();
+
+	/**
+	 * 设置数据库
+	 *
+	 * @param database
+	 * 		数据库
+	 */
+	void setDatabase(int database);
+
+	/**
+	 * 获取 Client Name
+	 *
+	 * @return Client Name
+	 */
+	String getClientName();
+
+	/**
+	 * 设置 Client Name
+	 *
+	 * @param clientName
+	 * 		Client Name
+	 */
+	void setClientName(String clientName);
+
+	/**
+	 * 返回 Sentinel 用户
+	 *
+	 * @return Sentinel 用户
+	 */
+	String getSentinelUser();
+
+	/**
+	 * 设置 Sentinel 用户
+	 *
+	 * @param sentinelUser
+	 * 		Sentinel 用户
+	 */
+	void setSentinelUser(String sentinelUser);
+
+	/**
+	 * 返回 Sentinel 密码
+	 *
+	 * @return Sentinel 密码
+	 */
+	String getSentinelPassword();
+
+	/**
+	 * 设置 Sentinel 密码
+	 *
+	 * @param sentinelPassword
+	 * 		Sentinel 密码
+	 */
+	void setSentinelPassword(String sentinelPassword);
+
+	/**
+	 * 返回 Sentinel Client Name
+	 *
+	 * @return Sentinel Client Name
+	 */
+	String getSentinelClientName();
+
+	/**
+	 * 设置 Sentinel Client Name
+	 *
+	 * @param sentinelClientName
+	 * 		Sentinel Client Name
+	 */
+	void setSentinelClientName(String sentinelClientName);
+
+	/**
+	 * 返回 Master 节点
+	 *
+	 * @return Master 节点
+	 */
+	RedisNamedNode getMaster();
+
+	/**
+	 * 设置 Master 节点
+	 *
+	 * @param master
+	 * 		Master 节点
+	 */
+	void setMaster(RedisNamedNode master);
+
+	/**
+	 * 返回哨兵节点
+	 *
+	 * @return 哨兵节点
+	 */
+	List<RedisNode> getSentinels();
+
+	/**
+	 * 设置哨兵节点
+	 *
+	 * @param sentinels
+	 * 		哨兵节点
+	 */
+	void setSentinels(List<RedisNode> sentinels);
+
 }

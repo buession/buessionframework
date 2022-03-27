@@ -25,6 +25,10 @@
 package com.buession.redis.client.connection.datasource.jedis;
 
 import com.buession.redis.client.connection.datasource.SentinelDataSource;
+import com.buession.redis.core.RedisNamedNode;
+import com.buession.redis.core.RedisNode;
+
+import java.util.List;
 
 /**
  * Jedis 哨兵模式数据源
@@ -32,6 +36,171 @@ import com.buession.redis.client.connection.datasource.SentinelDataSource;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class SentinelJedisDataSource extends AbstractJedisDataSource implements SentinelDataSource {
+public class JedisSentinelDataSource extends AbstractJedisDataSource implements SentinelDataSource {
+
+	/**
+	 * Redis 主机地址
+	 */
+	private String host = RedisNode.DEFAULT_HOST;
+
+	/**
+	 * Redis 端口
+	 */
+	private int port = RedisNode.DEFAULT_SENTINEL_PORT;
+
+	/**
+	 * 用户
+	 */
+	private String user;
+
+	/**
+	 * 密码
+	 */
+	private String password;
+
+	/**
+	 * 数据库
+	 */
+	private int database = RedisNode.DEFAULT_DATABASE;
+
+	/**
+	 * Client Name
+	 */
+	private String clientName;
+
+	/**
+	 * Sentinel 用户
+	 */
+	private String sentinelUser;
+
+	/**
+	 * Sentinel 密码
+	 */
+	private String sentinelPassword;
+
+	/**
+	 * Sentinel Client Name
+	 */
+	private String sentinelClientName;
+
+	/**
+	 * Master 节点
+	 */
+	private RedisNamedNode master;
+
+	/**
+	 * 设置哨兵节点
+	 */
+	private List<RedisNode> sentinels;
+
+	@Override
+	public String getHost(){
+		return host;
+	}
+
+	@Override
+	public void setHost(String host){
+		this.host = host;
+	}
+
+	@Override
+	public int getPort(){
+		return port;
+	}
+
+	@Override
+	public void setPort(int port){
+		this.port = port;
+	}
+
+	@Override
+	public String getUser(){
+		return user;
+	}
+
+	@Override
+	public void setUser(String user){
+		this.user = user;
+	}
+
+	@Override
+	public String getPassword(){
+		return password;
+	}
+
+	@Override
+	public void setPassword(String password){
+		this.password = password;
+	}
+
+	@Override
+	public int getDatabase(){
+		return database;
+	}
+
+	@Override
+	public void setDatabase(int database){
+		this.database = database;
+	}
+
+	@Override
+	public String getClientName(){
+		return clientName;
+	}
+
+	@Override
+	public void setClientName(String clientName){
+		this.clientName = clientName;
+	}
+
+	@Override
+	public String getSentinelUser(){
+		return sentinelUser;
+	}
+
+	@Override
+	public void setSentinelUser(String sentinelUser){
+		this.sentinelUser = sentinelUser;
+	}
+
+	@Override
+	public String getSentinelPassword(){
+		return sentinelPassword;
+	}
+
+	@Override
+	public void setSentinelPassword(String sentinelPassword){
+		this.sentinelPassword = sentinelPassword;
+	}
+
+	@Override
+	public String getSentinelClientName(){
+		return sentinelClientName;
+	}
+
+	@Override
+	public void setSentinelClientName(String sentinelClientName){
+		this.sentinelClientName = sentinelClientName;
+	}
+
+	@Override
+	public RedisNamedNode getMaster(){
+		return master;
+	}
+
+	@Override
+	public void setMaster(RedisNamedNode master){
+		this.master = master;
+	}
+
+	@Override
+	public List<RedisNode> getSentinels(){
+		return sentinels;
+	}
+
+	@Override
+	public void setSentinels(List<RedisNode> sentinels){
+		this.sentinels = sentinels;
+	}
 
 }

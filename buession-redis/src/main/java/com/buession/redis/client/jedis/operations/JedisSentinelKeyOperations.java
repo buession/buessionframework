@@ -28,19 +28,18 @@ import com.buession.core.converter.EnumConverter;
 import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
+import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.MigrateOperationConverter;
 import com.buession.redis.core.convert.jedis.ScanResultConverter;
 import com.buession.redis.core.convert.jedis.SortArgumentConverter;
-import com.buession.redis.core.jedis.JedisScanParams;
+import com.buession.redis.core.internal.jedis.JedisScanParams;
 import com.buession.redis.exception.RedisExceptionUtils;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.params.MigrateParams;
 
@@ -50,9 +49,9 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis, Pipeline> {
+public class JedisSentinelKeyOperations extends AbstractKeyOperations {
 
-	public JedisClusterKeyOperations(final JedisClusterClient client){
+	public JedisSentinelKeyOperations(final JedisSentinelClient client){
 		super(client);
 	}
 
@@ -356,39 +355,24 @@ public class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis, Pipe
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final int cursor){
-		return scan(Integer.toString(cursor));
-	}
-
-	@Override
 	public ScanResult<List<String>> scan(final long cursor){
 		return scan(Long.toString(cursor));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCAN,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute(
 				(cmd)->new ScanResultConverter.ListScanResultExposeConverter<String>().convert(cmd.scan(cursor)));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCAN,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute(
 				(cmd)->new ScanResultConverter.ListScanResultExposeConverter<byte[]>().convert(cmd.scan(cursor)));
-	}
-
-	@Override
-	public ScanResult<List<String>> scan(final int cursor, final String pattern){
-		return scan(Integer.toString(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern){
-		return scan(NumberUtils.int2bytes(cursor), pattern);
 	}
 
 	@Override
@@ -403,23 +387,18 @@ public class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis, Pipe
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCAN,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->new ScanResultConverter.ListScanResultExposeConverter<String>().convert(cmd.scan(cursor,
 				new JedisScanParams(pattern))));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCAN,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->new ScanResultConverter.ListScanResultExposeConverter<byte[]>().convert(cmd.scan(cursor,
 				new JedisScanParams(pattern))));
-	}
-
-	@Override
-	public ScanResult<List<String>> scan(final int cursor, final int count){
-		return scan(Integer.toString(cursor), count);
 	}
 
 	@Override
@@ -429,28 +408,18 @@ public class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis, Pipe
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final int count){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCAN,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->new ScanResultConverter.ListScanResultExposeConverter<String>().convert(cmd.scan(cursor,
 				new JedisScanParams(count))));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCAN,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->new ScanResultConverter.ListScanResultExposeConverter<byte[]>().convert(cmd.scan(cursor,
 				new JedisScanParams(count))));
-	}
-
-	@Override
-	public ScanResult<List<String>> scan(final int cursor, final String pattern, final int count){
-		return scan(Integer.toString(cursor), pattern, count);
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern, final int count){
-		return scan(NumberUtils.int2bytes(cursor), pattern, count);
 	}
 
 	@Override
@@ -465,16 +434,16 @@ public class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis, Pipe
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCAN,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->new ScanResultConverter.ListScanResultExposeConverter<String>().convert(cmd.scan(cursor,
 				new JedisScanParams(pattern, count))));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCAN,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->new ScanResultConverter.ListScanResultExposeConverter<byte[]>().convert(cmd.scan(cursor,
 				new JedisScanParams(pattern, count))));
 	}
@@ -616,6 +585,19 @@ public class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis, Pipe
 			return transactionExecute((cmd)->newJedisResult(getTransaction().unlink(keys)));
 		}else{
 			return execute((cmd)->cmd.unlink(keys));
+		}
+	}
+
+	@Override
+	public Long wait(final int replicas, final long timeout){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().waitReplicas(replicas, timeout)));
+		}else if(isTransaction()){
+			RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
+					CommandNotSupported.TRANSACTION, client.getConnection());
+			return null;
+		}else{
+			return execute((cmd)->cmd.waitReplicas(replicas, timeout));
 		}
 	}
 

@@ -25,16 +25,17 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Geo;
-import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.jedis.GeoConverter;
 import com.buession.redis.core.convert.jedis.GeoRadiusArgumentConverter;
 import com.buession.redis.core.convert.jedis.GeoRadiusConverter;
 import com.buession.redis.core.convert.jedis.GeoUnitConverter;
 import redis.clients.jedis.GeoCoordinate;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.params.GeoRadiusParam;
 
 import java.util.List;
@@ -43,35 +44,75 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class JedisGeoOperations extends AbstractGeoOperations<Jedis, Pipeline> {
+public class JedisClusterGeoOperations extends AbstractGeoOperations<JedisCluster> {
 
-	public JedisGeoOperations(final JedisClient client){
+	public JedisClusterGeoOperations(final JedisClusterClient client){
 		super(client);
 	}
 
 	@Override
-	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
+	public Long geoAdd(final String key, final String member, final double longitude, final double latitude){
+		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
+				.put("longitude", longitude).put("latitude", latitude);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().geoadd(key, longitude, latitude, member)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geoadd(key, longitude, latitude, member)),
+					ProtocolCommand.GEOADD, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().geoadd(key, longitude, latitude,
-					member)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().geoadd(key, longitude, latitude, member)),
+					ProtocolCommand.GEOADD, args);
 		}else{
-			return execute((cmd)->cmd.geoadd(key, longitude, latitude, member));
+			return execute((cmd)->cmd.geoadd(key, longitude, latitude, member), ProtocolCommand.GEOADD, args);
+		}
+	}
+
+	@Override
+	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
+		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
+				.put("longitude", longitude).put("latitude", latitude);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geoadd(key, longitude, latitude, member)),
+					ProtocolCommand.GEOADD, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().geoadd(key, longitude, latitude, member)),
+					ProtocolCommand.GEOADD, args);
+		}else{
+			return execute((cmd)->cmd.geoadd(key, longitude, latitude, member), ProtocolCommand.GEOADD, args);
+		}
+	}
+
+	@Override
+	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
+		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
+		final Map<String, GeoCoordinate> memberCoordinateMap = new GeoConverter.MapGeoMapJedisConverter<String>().convert(
+				memberCoordinates);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geoadd(key, memberCoordinateMap)),
+					ProtocolCommand.GEOADD, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().geoadd(key, memberCoordinateMap)),
+					ProtocolCommand.GEOADD, args);
+		}else{
+			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap), ProtocolCommand.GEOADD, args);
 		}
 	}
 
 	@Override
 	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
-		final Map<byte[], GeoCoordinate> memberCoordinateMap =
-				new GeoConverter.MapGeoMapJedisConverter<byte[]>().convert(memberCoordinates);
+		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
+		final Map<byte[], GeoCoordinate> memberCoordinateMap = new GeoConverter.MapGeoMapJedisConverter<byte[]>().convert(
+				memberCoordinates);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().geoadd(key, memberCoordinateMap)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geoadd(key, memberCoordinateMap)),
+					ProtocolCommand.GEOADD, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().geoadd(key, memberCoordinateMap)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().geoadd(key, memberCoordinateMap)),
+					ProtocolCommand.GEOADD, args);
 		}else{
-			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap));
+			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap), ProtocolCommand.GEOADD, args);
 		}
 	}
 

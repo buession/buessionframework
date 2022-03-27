@@ -19,34 +19,27 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ConnectionOperations;
-import redis.clients.jedis.PipelineBase;
-import redis.clients.jedis.commands.JedisCommands;
 
 /**
+ * Jedis 连接命令操作抽象类
+ *
+ * @param <CMD>
+ * 		Jedis 原始命令对象
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractConnectionOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements ConnectionOperations<C> {
+public abstract class AbstractConnectionOperations<CMD> extends AbstractJedisRedisOperations<CMD>
+		implements ConnectionOperations<CMD> {
 
 	public AbstractConnectionOperations(final JedisRedisClient client){
 		super(client);
-	}
-
-	@Override
-	public String echo(final String str){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().echo(str)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().echo(str)));
-		}else{
-			return execute((cmd)->cmd.echo(str));
-		}
 	}
 
 }

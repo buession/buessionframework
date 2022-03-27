@@ -19,17 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisClient;
 import com.buession.redis.client.jedis.JedisClientUtils;
+import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.Info;
@@ -37,18 +36,17 @@ import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.SlowLogCommand;
+import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.InfoConverter;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.RedisServerTimeConverter;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.utils.ClientUtil;
-import com.buession.redis.utils.InfoUtil;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.DebugParams;
-import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisMonitor;
-import redis.clients.jedis.Pipeline;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,9 +54,9 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipeline> {
+public class JedisClusterServerOperations extends AbstractServerOperations {
 
-	public JedisServerOperations(final JedisClient client){
+	public JedisClusterServerOperations(final JedisClusterClient client){
 		super(client);
 	}
 
@@ -86,43 +84,43 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 
 	@Override
 	public Status clientKill(final String host, final int port){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.CLIENT_KILL,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_KILL,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.clientKill(host + ":" + port), new OkStatusConverter());
 	}
 
 	@Override
 	public String clientGetName(){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.CLIENT_GETNAME,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_GETNAME,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.clientGetname());
 	}
 
 	@Override
 	public List<Client> clientList(){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.CLIENT_LIST,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_LIST,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->ClientUtil.parse(cmd.clientList()));
 	}
 
 	@Override
-	public Status clientPause(final long timeout){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.CLIENT_PAUSE,
-				client.getConnection());
+	public Status clientPause(final int timeout){
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_PAUSE,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.clientPause(timeout), new OkStatusConverter());
 	}
 
 	@Override
 	public Status clientSetName(final String name){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.CLIENT_SETNAME,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_SETNAME,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.clientSetname(name), new OkStatusConverter());
 	}
 
 	@Override
 	public Status clientSetName(final byte[] name){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.CLIENT_SETNAME,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_SETNAME,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.clientSetname(name), new OkStatusConverter());
 	}
 
@@ -130,10 +128,10 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 	public List<String> configGet(final String parameter){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().configGet(parameter),
-					new ListConverter<>((value)->SafeEncoder.encode(value))));
+					new ListConverter<>(SafeEncoder::encode)));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().configGet(parameter),
-					new ListConverter<>((value)->SafeEncoder.encode(value))));
+					new ListConverter<>(SafeEncoder::encode)));
 		}else{
 			return execute((cmd)->Collections.unmodifiableList(cmd.configGet(parameter)));
 		}
@@ -145,7 +143,7 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().configGet(SafeEncoder.encode(parameter))));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().configGet(SafeEncoder.encode(parameter)),
-					new ListConverter<>((value)->SafeEncoder.encode(value))));
+					new ListConverter<>(SafeEncoder::encode)));
 		}else{
 			return execute((cmd)->cmd.configGet(parameter));
 		}
@@ -166,8 +164,8 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 
 	@Override
 	public Status configRewrite(){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.CONFIG_REWRITE,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CONFIG_REWRITE,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.configRewrite(), new OkStatusConverter());
 	}
 
@@ -216,27 +214,6 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 	}
 
 	@Override
-	public String debugObject(final String key){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.DEBUG_OBJECT,
-				client.getConnection());
-		return execute((cmd)->cmd.debug(DebugParams.OBJECT(key)));
-	}
-
-	@Override
-	public byte[] debugObject(final byte[] key){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.DEBUG_OBJECT,
-				client.getConnection());
-		return execute((cmd)->SafeEncoder.encode(cmd.debug(DebugParams.OBJECT(SafeEncoder.encode(key)))));
-	}
-
-	@Override
-	public String debugSegfault(){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.DEBUG_SEGFAULT,
-				client.getConnection());
-		return execute((cmd)->cmd.debug(DebugParams.SEGFAULT()));
-	}
-
-	@Override
 	public Status flushAll(){
 		final OkStatusConverter converter = new OkStatusConverter();
 
@@ -264,27 +241,27 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 
 	@Override
 	public Info info(final Info.Section section){
-		Converter<String, Info> infoConverter = (source)->InfoUtil.convert(source);
+		final InfoConverter converter = new InfoConverter();
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().info(section.name().toLowerCase()),
-					infoConverter));
+					converter));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().info(section.name().toLowerCase()),
-					infoConverter));
+					converter));
 		}else{
-			return execute((cmd)->cmd.info(section.name().toLowerCase()), infoConverter);
+			return execute((cmd)->cmd.info(section.name().toLowerCase()), converter);
 		}
 	}
 
 	@Override
 	public Info info(){
-		Converter<String, Info> infoConverter = (source)->InfoUtil.convert(source);
+		final InfoConverter converter = new InfoConverter();
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().info(), infoConverter));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().info(), converter));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().info(), infoConverter));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().info(), converter));
 		}else{
-			return execute((cmd)->cmd.info(), infoConverter);
+			return execute((cmd)->cmd.info(), converter);
 		}
 	}
 
@@ -301,15 +278,15 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 
 	@Override
 	public String memoryDoctor(){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.MEMORY_DOCTOR,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.MEMORY_DOCTOR,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.memoryDoctor());
 	}
 
 	@Override
 	public void monitor(final RedisMonitor redisMonitor){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.MONITOR,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.MONITOR,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		execute((cmd)->{
 			cmd.monitor(new JedisMonitor() {
 
@@ -361,8 +338,8 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 
 	@Override
 	public void shutdown(){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SHUTDOWN,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SHUTDOWN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		execute((cmd)->{
 			cmd.shutdown();
 			return null;
@@ -371,22 +348,22 @@ public class JedisServerOperations extends AbstractServerOperations<Jedis, Pipel
 
 	@Override
 	public Status slaveOf(final String host, final int port){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SLAVEOF,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SLAVEOF,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.slaveof(host, port), new OkStatusConverter());
 	}
 
 	@Override
 	public Object slowLog(final SlowLogCommand command, final String... arguments){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SLOWLOG,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SLOWLOG,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->JedisClientUtils.slowLog(command, cmd, arguments));
 	}
 
 	@Override
 	public Object slowLog(final SlowLogCommand command, final byte[]... arguments){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SLOWLOG,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SLOWLOG,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->JedisClientUtils.slowLog(command, cmd, arguments));
 	}
 

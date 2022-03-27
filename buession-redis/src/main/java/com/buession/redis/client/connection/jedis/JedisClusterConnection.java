@@ -38,7 +38,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class ClusterJedisConnection extends AbstractJedisRedisConnection implements RedisClusterConnection {
+public class JedisClusterConnection extends AbstractJedisRedisConnection implements RedisClusterConnection {
 
 	@Override
 	protected void internalInit(){
@@ -71,7 +71,7 @@ public class ClusterJedisConnection extends AbstractJedisRedisConnection impleme
 	}
 
 	@Override
-	public Pipeline getPipeline(){
+	public Pipeline pipeline(){
 		return null;
 	}
 

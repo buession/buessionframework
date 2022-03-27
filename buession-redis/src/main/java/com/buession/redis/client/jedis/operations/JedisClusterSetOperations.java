@@ -26,14 +26,13 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.jedis.ScanResultConverter;
-import com.buession.redis.core.jedis.JedisScanParams;
+import com.buession.redis.core.internal.jedis.JedisScanParams;
 import com.buession.redis.exception.RedisExceptionUtils;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
 
 import java.util.List;
 import java.util.Set;
@@ -41,9 +40,9 @@ import java.util.Set;
 /**
  * @author Yong.Teng
  */
-public class JedisSetOperations extends AbstractSetOperations<Jedis, Pipeline> {
+public class JedisClusterSetOperations extends AbstractSetOperations {
 
-	public JedisSetOperations(final JedisClient client){
+	public JedisClusterSetOperations(final JedisClusterClient client){
 		super(client);
 	}
 
@@ -228,13 +227,13 @@ public class JedisSetOperations extends AbstractSetOperations<Jedis, Pipeline> {
 	}
 
 	@Override
-	public List<byte[]> sRandMember(final byte[] key, final int count){
+	public List<byte[]> sRandMember(final byte[] key, final long count){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().srandmember(key, count)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().srandmember(key, (int) count)));
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().srandmember(key, count)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().srandmember(key, (int) count)));
 		}else{
-			return execute((cmd)->cmd.srandmember(key, count));
+			return execute((cmd)->cmd.srandmember(key, (int) count));
 		}
 	}
 
@@ -251,38 +250,38 @@ public class JedisSetOperations extends AbstractSetOperations<Jedis, Pipeline> {
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SSCAN,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SSCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute(
 				(cmd)->new ScanResultConverter.ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor)));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SSCAN,
-				client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SSCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute(
 				(cmd)->new ScanResultConverter.ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor,
 						new JedisScanParams(pattern))));
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SSCAN,
-				client.getConnection());
+	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count){
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SSCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute(
 				(cmd)->new ScanResultConverter.ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor,
-						new JedisScanParams(count))));
+						new JedisScanParams((int) count))));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-										  final int count){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SSCAN,
-				client.getConnection());
+										  final long count){
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SSCAN,
+				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute(
 				(cmd)->new ScanResultConverter.ListScanResultExposeConverter<byte[]>().convert(cmd.sscan(key, cursor,
-						new JedisScanParams(pattern, count))));
+						new JedisScanParams(pattern, (int) count))));
 	}
 
 	@Override

@@ -22,18 +22,19 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
+package com.buession.redis.client.operations;
 
 import com.buession.redis.core.command.ClusterCommands;
 
 /**
- * 集群命令
+ * 集群命令操作接口
  *
- * <p>详情说明 <a href="http://doc.redisfans.com/topic/cluster-tutorial.html" target="_blank">http://doc.redisfans.com/topic/cluster-tutorial.html</a></p>
+ * @param <CMD>
+ * 		原始命令对象
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ClusterOperations extends ClusterCommands, RedisOperations {
+public interface ClusterOperations<CMD> extends ClusterCommands, RedisOperations<CMD> {
 
 }
