@@ -44,8 +44,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -63,8 +62,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -82,8 +80,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -97,8 +94,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 批量将给定的空间元素（经度、纬度、名字）添加到指定的键里面
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -112,8 +108,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 获取一个或多个位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geohash.html" target="_blank">http://redisdoc.com/geo/geohash.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geohash.html" target="_blank">http://redisdoc.com/geo/geohash.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -127,8 +122,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 获取一个或多个位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geohash.html" target="_blank">http://redisdoc.com/geo/geohash
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geohash.html" target="_blank">http://redisdoc.com/geo/geohash.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -142,8 +136,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 批量从键里面返回所有给定位置元素的位置（经度和纬度）
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geopos.html" target="_blank">http://redisdoc.com/geo/geopos.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geopos.html" target="_blank">http://redisdoc.com/geo/geopos.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -157,8 +150,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 批量从键里面返回所有给定位置元素的位置（经度和纬度）
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geopos.html" target="_blank">http://redisdoc.com/geo/geopos.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geopos.html" target="_blank">http://redisdoc.com/geo/geopos.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -172,8 +164,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 计算两个给定位置之间的距离
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geodist.html" target="_blank">http://redisdoc.com/geo/geodist.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geodist.html" target="_blank">http://redisdoc.com/geo/geodist.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -189,8 +180,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 计算两个给定位置之间的距离
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geodist.html" target="_blank">http://redisdoc.com/geo/geodist.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geodist.html" target="_blank">http://redisdoc.com/geo/geodist.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -206,8 +196,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 计算两个给定位置之间的距离
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geodist.html" target="_blank">http://redisdoc.com/geo/geodist.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geodist.html" target="_blank">http://redisdoc.com/geo/geodist.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -225,8 +214,7 @@ public interface GeoCommands extends RedisCommands {
 	/**
 	 * 计算两个给定位置之间的距离
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geodist.html" target="_blank">http://redisdoc.com/geo/geodist.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geodist.html" target="_blank">http://redisdoc.com/geo/geodist.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -254,44 +242,6 @@ public interface GeoCommands extends RedisCommands {
 	 * @param latitude
 	 * 		纬度
 	 * @param radius
-	 * 		范围（单位：米）
-	 *
-	 * @return 位置元素
-	 */
-	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius);
-
-	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
-	 * @param radius
-	 * 		范围（单位：米）
-	 *
-	 * @return 位置元素
-	 */
-	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius);
-
-	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
-	 * @param radius
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
@@ -299,7 +249,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
-			final GeoUnit unit);
+							  final GeoUnit unit);
 
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
@@ -321,51 +271,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
-			final GeoUnit unit);
-
-	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
-	 * @param radius
-	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
-	 *
-	 * @return 位置元素
-	 */
-	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
-			final GeoRadiusArgument geoRadiusArgument);
-
-	/**
-	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param longitude
-	 * 		经度
-	 * @param latitude
-	 * 		纬度
-	 * @param radius
-	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
-	 *
-	 * @return 位置元素
-	 */
-	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
-			final GeoRadiusArgument geoRadiusArgument);
+							  final GeoUnit unit);
 
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
@@ -389,7 +295,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude, final double radius,
-			final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument);
+							  final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument);
 
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
@@ -413,45 +319,99 @@ public interface GeoCommands extends RedisCommands {
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude, final double radius,
-			final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument);
+							  final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument);
 
 	/**
-	 * 找出位于指定范围内的元素，
-	 * 但是 GEORADIUSBYMEMBER 的中心点是由给定的位置元素决定的，而不是像 GEORADIUS 那样，使用输入的经度和纬度来决定中心点
+	 * Read-only variant of the GEORADIUS command
 	 *
 	 * <p>详情说明
-	 *
-	 * <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc
-	 * .com/geo/georadiusbymember.html</a></p>
+	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
-	 * @param member
-	 * 		位置元素
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
 	 * @param radius
-	 * 		范围（单位：米）
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
 	 *
 	 * @return 位置元素
 	 */
-	List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius);
+	List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude, final double radius,
+								final GeoUnit unit);
 
 	/**
-	 * 找出位于指定范围内的元素，
-	 * 但是 GEORADIUSBYMEMBER 的中心点是由给定的位置元素决定的，而不是像 GEORADIUS 那样，使用输入的经度和纬度来决定中心点
+	 * Read-only variant of the GEORADIUS command
 	 *
 	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
+	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
-	 * @param member
-	 * 		位置元素
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
 	 * @param radius
-	 * 		范围（单位：米）
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
 	 *
 	 * @return 位置元素
 	 */
-	List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius);
+	List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude, final double radius,
+								final GeoUnit unit);
+
+	/**
+	 * Read-only variant of the GEORADIUS command
+	 *
+	 * <p>详情说明
+	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param geoRadiusArgument
+	 * 		GEO 参数
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude, final double radius,
+								final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument);
+
+	/**
+	 * Read-only variant of the GEORADIUS command
+	 *
+	 * <p>详情说明
+	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param longitude
+	 * 		经度
+	 * @param latitude
+	 * 		纬度
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param geoRadiusArgument
+	 * 		GEO 参数
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude, final double radius,
+								final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument);
 
 	/**
 	 * 找出位于指定范围内的元素，
@@ -506,48 +466,6 @@ public interface GeoCommands extends RedisCommands {
 	 * @param member
 	 * 		位置元素
 	 * @param radius
-	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
-	 *
-	 * @return 位置元素
-	 */
-	List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-			final GeoRadiusArgument geoRadiusArgument);
-
-	/**
-	 * 找出位于指定范围内的元素，
-	 * 但是 GEORADIUSBYMEMBER 的中心点是由给定的位置元素决定的，而不是像 GEORADIUS 那样，使用输入的经度和纬度来决定中心点
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 * @param radius
-	 * 		范围（单位：米）
-	 * @param geoRadiusArgument
-	 * 		GEO 参数
-	 *
-	 * @return 位置元素
-	 */
-	List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-			final GeoRadiusArgument geoRadiusArgument);
-
-	/**
-	 * 找出位于指定范围内的元素，
-	 * 但是 GEORADIUSBYMEMBER 的中心点是由给定的位置元素决定的，而不是像 GEORADIUS 那样，使用输入的经度和纬度来决定中心点
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 * @param radius
 	 * 		范围
 	 * @param unit
 	 * 		距离单位
@@ -557,7 +475,7 @@ public interface GeoCommands extends RedisCommands {
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius, final GeoUnit unit,
-			final GeoRadiusArgument geoRadiusArgument);
+									  final GeoRadiusArgument geoRadiusArgument);
 
 	/**
 	 * 找出位于指定范围内的元素，
@@ -580,7 +498,90 @@ public interface GeoCommands extends RedisCommands {
 	 * @return 位置元素
 	 */
 	List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
-			final GeoRadiusArgument geoRadiusArgument);
+									  final GeoRadiusArgument geoRadiusArgument);
+
+	/**
+	 * Read-only variant of the GEORADIUSBYMEMBER command
+	 *
+	 * <p>详情说明
+	 *
+	 * <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius, final GeoUnit unit);
+
+	/**
+	 * Read-only variant of the GEORADIUSBYMEMBER command
+	 *
+	 * <p>详情说明
+	 * <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius, final GeoUnit unit);
+
+	/**
+	 * Read-only variant of the GEORADIUSBYMEMBER command
+	 *
+	 * <p>详情说明
+	 * <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param geoRadiusArgument
+	 * 		GEO 参数
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius, final GeoUnit unit,
+										final GeoRadiusArgument geoRadiusArgument);
+
+	/**
+	 * Read-only variant of the GEORADIUSBYMEMBER command
+	 *
+	 * <p>详情说明
+	 * <a href="https://redis.io/commands/georadiusbymember_ro/" target="_blank">https://redis.io/commands/georadiusbymember_ro/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		位置元素
+	 * @param radius
+	 * 		范围
+	 * @param unit
+	 * 		距离单位
+	 * @param geoRadiusArgument
+	 * 		GEO 参数
+	 *
+	 * @return 位置元素
+	 */
+	List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius, final GeoUnit unit,
+										final GeoRadiusArgument geoRadiusArgument);
 
 	/**
 	 * GEO 参数
@@ -652,7 +653,7 @@ public interface GeoCommands extends RedisCommands {
 			private Builder(){
 			}
 
-			public final static Builder create(){
+			public static Builder create(){
 				return new Builder();
 			}
 
