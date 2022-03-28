@@ -28,75 +28,10 @@ package com.buession.redis.core;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class RedisClusterServer extends RedisServer {
+public enum BumpEpoch {
 
-	private final static long serialVersionUID = 4843502163987630437L;
+	BUMPED,
 
-	/**
-	 * Redis 服务器主机 IP 地址
-	 */
-	private String ip;
-
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 */
-	public RedisClusterServer(final String host){
-		super(host);
-		this.ip = host;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 * @param port
-	 * 		Redis 端口
-	 */
-	public RedisClusterServer(final String host, final int port){
-		super(host, port);
-		this.ip = host;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 * @param role
-	 * 		节点角色
-	 */
-	public RedisClusterServer(final String host, final Role role){
-		super(host, role);
-		this.ip = host;
-	}
-
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 * @param port
-	 * 		Redis 端口
-	 * @param role
-	 * 		节点角色
-	 */
-	public RedisClusterServer(final String host, final int port, final Role role){
-		super(host, port, role);
-		this.ip = host;
-	}
-
-	/**
-	 * 获取 Redis 服务器主机 IP 地址
-	 *
-	 * @return Redis 服务器主机 IP 地址
-	 */
-	@Override
-	public String getIp(){
-		return ip;
-	}
+	STILL
 
 }

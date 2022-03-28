@@ -24,8 +24,15 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ClusterOperations;
+import com.buession.redis.core.BumpEpoch;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.CommandNotSupported;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.jedis.ClusterFailoverOptionConverter;
+import com.buession.redis.core.convert.jedis.ClusterResetOptionConverter;
 
 /**
  * Jedis 集群命令操作抽象类
@@ -39,8 +46,41 @@ import com.buession.redis.client.operations.ClusterOperations;
 public abstract class AbstractClusterOperations<CMD> extends AbstractJedisRedisOperations<CMD>
 		implements ClusterOperations<CMD> {
 
+	protected final static ClusterFailoverOptionConverter.ClusterFailoverOptionJedisConverter CLUSTER_FAILOVER_OPTION_JEDIS_CONVERTER = new ClusterFailoverOptionConverter.ClusterFailoverOptionJedisConverter();
+
+	protected final static ClusterResetOptionConverter.ClusterResetOptionJedisConverter CLUSTER_RESET_OPTION_JEDIS_CONVERTER = new ClusterResetOptionConverter.ClusterResetOptionJedisConverter();
+
 	public AbstractClusterOperations(final JedisRedisClient client){
 		super(client);
+	}
+
+	@Override
+	public int clusterCountFailureReports(final String nodeId){
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+	}
+
+	@Override
+	public int clusterCountFailureReports(final byte[] nodeId){
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+	}
+
+	@Override
+	public Status clusterSetConfigEpoch(final String configEpoch){
+		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+	}
+
+	@Override
+	public Status clusterSetConfigEpoch(final byte[] configEpoch){
+		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+	}
+
+	@Override
+	public BumpEpoch clusterBumpEpoch(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER);
 	}
 
 }

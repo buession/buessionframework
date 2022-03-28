@@ -24,79 +24,49 @@
  */
 package com.buession.redis.core;
 
+import java.io.Serializable;
+
 /**
+ * Redis Cluster Hash Slots Range
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class RedisClusterServer extends RedisServer {
+public class SlotsRange implements Serializable {
 
-	private final static long serialVersionUID = 4843502163987630437L;
+	private final static long serialVersionUID = -1872294358162514087L;
 
-	/**
-	 * Redis 服务器主机 IP 地址
-	 */
-	private String ip;
+	private long start;
 
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 */
-	public RedisClusterServer(final String host){
-		super(host);
-		this.ip = host;
+	private long end;
+
+	public SlotsRange(){
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 * @param port
-	 * 		Redis 端口
-	 */
-	public RedisClusterServer(final String host, final int port){
-		super(host, port);
-		this.ip = host;
+	public SlotsRange(final long start, final long end){
+		this.start = start;
+		this.end = end;
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 * @param role
-	 * 		节点角色
-	 */
-	public RedisClusterServer(final String host, final Role role){
-		super(host, role);
-		this.ip = host;
+	public long getStart(){
+		return start;
 	}
 
-	/**
-	 * 构造函数
-	 *
-	 * @param host
-	 * 		Redis 节点地址
-	 * @param port
-	 * 		Redis 端口
-	 * @param role
-	 * 		节点角色
-	 */
-	public RedisClusterServer(final String host, final int port, final Role role){
-		super(host, port, role);
-		this.ip = host;
+	public void setStart(long start){
+		this.start = start;
 	}
 
-	/**
-	 * 获取 Redis 服务器主机 IP 地址
-	 *
-	 * @return Redis 服务器主机 IP 地址
-	 */
+	public long getEnd(){
+		return end;
+	}
+
+	public void setEnd(long end){
+		this.end = end;
+	}
+
 	@Override
-	public String getIp(){
-		return ip;
+	public String toString(){
+		return "start=" + start + ", end=" + end;
 	}
-
+	
 }

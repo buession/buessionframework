@@ -79,6 +79,11 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
+	public int clusterCountFailureReports(final byte[] nodeId){
+		return clusterOperations.clusterCountFailureReports(nodeId);
+	}
+
+	@Override
 	public Status clusterForget(final byte[] nodeId){
 		return clusterOperations.clusterForget(nodeId);
 	}
@@ -165,44 +170,21 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									 final double radius){
-		return geoOperations.geoRadius(key, longitude, longitude, radius);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit){
 		return geoOperations.geoRadius(key, longitude, latitude, radius, unit);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
-									 final double radius, final GeoRadiusArgument geoRadiusArgument){
-		return geoOperations.geoRadius(key, longitude, latitude, radius, geoRadiusArgument);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit,
 									 final GeoRadiusArgument geoRadiusArgument){
-		return geoOperations.geoRadius(key, longitude, latitude, radius, geoRadiusArgument);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius){
-		return geoOperations.geoRadiusByMember(key, member, radius);
+		return geoOperations.geoRadius(key, longitude, latitude, radius, unit, geoRadiusArgument);
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 											 final GeoUnit unit){
 		return geoOperations.geoRadiusByMember(key, member, radius, unit);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
-											 final GeoRadiusArgument geoRadiusArgument){
-		return geoOperations.geoRadiusByMember(key, member, radius, geoRadiusArgument);
 	}
 
 	@Override

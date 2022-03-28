@@ -53,6 +53,11 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	}
 
 	@Override
+	public String clusterMyId(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER);
+	}
+
+	@Override
 	public Status clusterAddSlots(final int... slots){
 		final CommandArguments args = CommandArguments.create("slots", slots);
 		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
@@ -72,6 +77,11 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	@Override
 	public Status clusterDelSlots(final int... slots){
 		final CommandArguments args = CommandArguments.create("slots", slots);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+	}
+
+	@Override
+	public Status clusterFlushSlots(){
 		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
 	}
 
@@ -182,18 +192,6 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	@Override
 	public Status clusterSaveConfig(){
 		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER);
-	}
-
-	@Override
-	public Status clusterSetConfigEpoch(final String configEpoch){
-		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
-	}
-
-	@Override
-	public Status clusterSetConfigEpoch(final byte[] configEpoch){
-		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
 	}
 
 	@Override

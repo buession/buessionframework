@@ -27,6 +27,7 @@ package com.buession.redis.core.operations;
 import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
 import com.buession.redis.core.RedisNode;
+import com.buession.redis.core.SlotsRange;
 import com.buession.redis.core.command.ClusterCommands;
 
 /**
@@ -48,10 +49,25 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	 * @param slot
 	 * 		hash slot
 	 *
-	 * @return 命令执行结果
+	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	default Status clusterAddSlots(final int slot){
 		return clusterAddSlots(new int[]{slot});
+	}
+
+	/**
+	 * The CLUSTER ADDSLOTSRANGE is similar to the CLUSTER ADDSLOTS command in that they both assign hash slots to nodes.
+	 *
+	 * <p>详情说明
+	 * <a href="https://redis.io/commands/cluster-addslotsrange/" target="_blank">https://redis.io/commands/cluster-addslotsrange/</a></p>
+	 *
+	 * @param slotsRange
+	 * 		hash slots range
+	 *
+	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	default Status clusterAddSlotsRange(final SlotsRange slotsRange){
+		return clusterAddSlotsRange(new SlotsRange[]{slotsRange});
 	}
 
 	/**
@@ -63,7 +79,7 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	 * @param slot
 	 * 		hash slot
 	 *
-	 * @return 命令执行结果
+	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	default Status clusterDelSlots(final int slot){
 		return clusterDelSlots(new int[]{slot});

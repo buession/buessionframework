@@ -25,6 +25,7 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.ClusterFailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterResetOption;
@@ -43,6 +44,16 @@ import java.util.Map;
  * @since 2.0.0
  */
 public interface ClusterCommands extends RedisCommands {
+
+	/**
+	 * 返回当前节点 Id
+	 *
+	 * <p>详情说明
+	 * <a href="https://redis.io/commands/cluster-myid/" target="_blank">https://redis.io/commands/cluster-myid/</a></p>
+	 *
+	 * @return 返回当前节点 Id
+	 */
+	String clusterMyId();
 
 	/**
 	 * 把一组 hash slots 分配给接收命令的节点
@@ -66,6 +77,32 @@ public interface ClusterCommands extends RedisCommands {
 	 * @return 哈希槽和 Redis 实例映射关系
 	 */
 	Map<Integer, RedisClusterServer> clusterSlots();
+
+	/**
+	 * The command returns the number of failure reports for the specified node
+	 *
+	 * <p>详情说明
+	 * <a href="https://redis.io/commands/cluster-count-failure-reports/" target="_blank">https://redis.io/commands/cluster-count-failure-reports/</a></p>
+	 *
+	 * @param nodeId
+	 * 		节点 Id
+	 *
+	 * @return The number of active failure reports for the node
+	 */
+	int clusterCountFailureReports(final String nodeId);
+
+	/**
+	 * The command returns the number of failure reports for the specified node
+	 *
+	 * <p>详情说明
+	 * <a href="https://redis.io/commands/cluster-count-failure-reports/" target="_blank">https://redis.io/commands/cluster-count-failure-reports/</a></p>
+	 *
+	 * @param nodeId
+	 * 		节点 Id
+	 *
+	 * @return The number of active failure reports for the node
+	 */
+	int clusterCountFailureReports(final byte[] nodeId);
 
 	/**
 	 * 返回连接节点负责的指定 hash slot 的 key 的数量；
@@ -93,6 +130,16 @@ public interface ClusterCommands extends RedisCommands {
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	Status clusterDelSlots(final int... slots);
+
+	/**
+	 * Deletes all slots from a node
+	 *
+	 * <p>详情说明
+	 * <a href="https://redis.io/commands/cluster-flushslots/" target="_blank">https://redis.io/commands/cluster-flushslots/</a></p>
+	 *
+	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	Status clusterFlushSlots();
 
 	/**
 	 * 让 slave 节点进行一次人工故障切换
@@ -364,6 +411,17 @@ public interface ClusterCommands extends RedisCommands {
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	Status clusterSetConfigEpoch(final byte[] configEpoch);
+
+	/**
+	 * The CLUSTER BUMPEPOCH command triggers an increment to the cluster’s config epoch from the connected node.
+	 * The epoch will be incremented if the node’s config epoch is zero, or if it is less than the cluster’s greatest epoch.
+	 *
+	 * <p>详情说明
+	 * <a href="https://redis.io/commands/cluster-bumpepoch/" target="_blank">https://redis.io/commands/cluster-bumpepoch/</a></p>
+	 *
+	 * @return {@link BumpEpoch}
+	 */
+	BumpEpoch clusterBumpEpoch();
 
 	/**
 	 * 根据如下子命令选项，修改接受节点中哈希槽的状态
