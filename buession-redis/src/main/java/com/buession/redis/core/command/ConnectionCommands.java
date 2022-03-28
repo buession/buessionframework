@@ -127,6 +127,16 @@ public interface ConnectionCommands extends RedisCommands {
 	Status ping();
 
 	/**
+	 * This command performs a full reset of the connection’s server-side context,
+	 * mimicking the effect of disconnecting and reconnecting again.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/reset/" target="_blank">https://redis.io/commands/reset/</a></p>
+	 *
+	 * @return 总是返回 Status.SUCCESS
+	 */
+	Status reset();
+
+	/**
 	 * 请求服务器关闭与当前客户端的连接
 	 *
 	 * <p>详情说明 <a href="http://www.redis.cn/commands/quit.html" target="_blank">http://www.redis.cn/commands/quit.html</a></p>
