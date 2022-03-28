@@ -21,10 +21,64 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.convert.jedis;/**
- * 
+ */
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.GeoRadius;
+import redis.clients.jedis.GeoRadiusResponse;
+
+import java.util.List;
+
+/**
+ * {@link GeoRadius} 和 jedis {@link GeoRadiusResponse} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public interface ListGeoRadiusConverter {
+ */
+public interface GeoRadiusConverter<S, T> extends Converter<S, T> {
+
+	/**
+	 * {@link java.util.List}&lt;GeoRadius&gt; 转换为 jedis {@link java.util.List}&lt;GeoRadiusResponse&gt;
+	 *
+	 * @author Yong.Teng
+	 * @since 2.0.0
+	 */
+	final class ListGeoRadiusJedisConverter extends ListConverter<GeoRadius, GeoRadiusResponse>
+			implements GeoRadiusConverter<List<GeoRadius>, List<GeoRadiusResponse>> {
+
+		public ListGeoRadiusJedisConverter(){
+			super((source)->{
+				GeoConverter.GeoJedisConverter converter = new GeoConverter.GeoJedisConverter();
+				GeoRadiusResponse geoRadiusResponse = new GeoRadiusResponse(source.getMember());
+
+				geoRadiusResponse.setDistance(source.getDistance());
+				geoRadiusResponse.setCoordinate(converter.convert(source.getGeo()));
+
+				return geoRadiusResponse;
+			});
+		}
+
+	}
+
+	/**
+	 * jedis {@link java.util.List}&lt;GeoRadiusResponse&gt; 转换为 {@link java.util.List}&lt;GeoRadius&gt;
+	 *
+	 * @author Yong.Teng
+	 * @since 2.0.0
+	 */
+	final class ListGeoRadiusExposeConverter extends ListConverter<GeoRadiusResponse, GeoRadius>
+			implements GeoRadiusConverter<List<GeoRadiusResponse>, List<GeoRadius>> {
+
+		public ListGeoRadiusExposeConverter(){
+			super((source)->{
+				GeoConverter.GeoExposeConverter converter = new GeoConverter.GeoExposeConverter();
+				return new GeoRadius(source.getMember(), source.getDistance(),
+						converter.convert(source.getCoordinate()));
+			});
+		}
+
+	}
+
 }

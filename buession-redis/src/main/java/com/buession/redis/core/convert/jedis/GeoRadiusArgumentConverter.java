@@ -21,10 +21,95 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.convert.jedis;/**
- * 
+ */
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.lang.Order;
+import com.buession.redis.core.command.GeoCommands;
+import redis.clients.jedis.params.GeoRadiusParam;
+
+/**
+ * {@link GeoRadiusParam} 和 {@link GeoCommands.GeoRadiusArgument} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public interface GeoRadiusArgumentConverter {
+ */
+public interface GeoRadiusArgumentConverter<S, T> extends Converter<S, T> {
+
+	/**
+	 * {@link GeoRadiusParam} 转换为 jedis {@link GeoCommands.GeoRadiusArgument}
+	 *
+	 * @author Yong.Teng
+	 * @since 2.0.0
+	 */
+	class GeoRadiusArgumentExposeConverter
+			implements GeoRadiusArgumentConverter<GeoRadiusParam, GeoCommands.GeoRadiusArgument> {
+
+		@Override
+		public GeoCommands.GeoRadiusArgument convert(final GeoRadiusParam source){
+			final GeoCommands.GeoRadiusArgument.Builder builder = GeoCommands.GeoRadiusArgument.Builder.create();
+
+			for(byte[] v : source.getByteParams()){
+				String s = redis.clients.jedis.util.SafeEncoder.encode(v);
+
+				if("withcoord".equals(s)){
+					builder.withCoord();
+				}else if("withdist".equals(s)){
+					builder.withDist();
+				}else if("asc".equals(s)){
+					builder.order(Order.ASC);
+				}else if("desc".equals(s)){
+					builder.order(Order.DESC);
+				}else if("count".equals(s)){
+					builder.count(source.getParam("count"));
+				}
+			}
+
+			return builder.build();
+		}
+
+	}
+
+	/**
+	 * jedis {@link GeoCommands.GeoRadiusArgument} 转换为 {@link GeoRadiusParam}
+	 *
+	 * @author Yong.Teng
+	 * @since 2.0.0
+	 */
+	final class GeoRadiusArgumentJedisConverter
+			implements GeoRadiusArgumentConverter<GeoCommands.GeoRadiusArgument, GeoRadiusParam> {
+
+		@Override
+		public GeoRadiusParam convert(final GeoCommands.GeoRadiusArgument source){
+			final GeoRadiusParam geoRadiusParam = new GeoRadiusParam();
+
+			if(source.isWithCoord()){
+				geoRadiusParam.withCoord();
+			}
+
+			if(source.isWithDist()){
+				geoRadiusParam.withDist();
+			}
+
+			switch(source.getOrder()){
+				case ASC:
+					geoRadiusParam.sortAscending();
+					break;
+				case DESC:
+					geoRadiusParam.sortDescending();
+					break;
+				default:
+					break;
+			}
+
+			if(source.getCount() != null){
+				geoRadiusParam.count(source.getCount());
+			}
+
+			return geoRadiusParam;
+		}
+
+	}
+
 }
