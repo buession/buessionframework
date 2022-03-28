@@ -24,8 +24,12 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ConnectionOperations;
+import com.buession.redis.core.command.CommandNotSupported;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.PingResultConverter;
 
 /**
  * Jedis 连接命令操作抽象类
@@ -38,8 +42,15 @@ import com.buession.redis.client.operations.ConnectionOperations;
 public abstract class AbstractConnectionOperations<CMD> extends AbstractJedisRedisOperations<CMD>
 		implements ConnectionOperations<CMD> {
 
+	protected final static PingResultConverter PING_RESULT_CONVERTER = new PingResultConverter();
+
 	public AbstractConnectionOperations(final JedisRedisClient client){
 		super(client);
 	}
 
+	@Override
+	public Status reset(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.RESET);
+	}
+	
 }

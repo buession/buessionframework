@@ -30,7 +30,6 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.Converters;
-import com.buession.redis.core.convert.PingResultConverter;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
 
@@ -109,14 +108,14 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 
 	@Override
 	public Status ping(){
-		final PingResultConverter converter = new PingResultConverter();
-
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().ping(), converter), ProtocolCommand.PING);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().ping(), PING_RESULT_CONVERTER),
+					ProtocolCommand.PING);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().ping(), converter), ProtocolCommand.PING);
+			return transactionExecute((cmd)->newJedisResult(getTransaction().ping(), PING_RESULT_CONVERTER),
+					ProtocolCommand.PING);
 		}else{
-			return execute((cmd)->cmd.ping(), converter, ProtocolCommand.PING);
+			return execute((cmd)->cmd.ping(), PING_RESULT_CONVERTER, ProtocolCommand.PING);
 		}
 	}
 
