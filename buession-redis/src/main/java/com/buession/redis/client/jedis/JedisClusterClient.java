@@ -46,6 +46,7 @@ import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.ClusterSetSlotOption;
 import com.buession.redis.core.Direction;
+import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.ListPosition;
@@ -182,6 +183,19 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
+	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit){
+		return geoOperations.geoRadiusRo(key, longitude, latitude, radius, unit);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit,
+									   final GeoRadiusArgument geoRadiusArgument){
+		return geoOperations.geoRadiusRo(key, longitude, latitude, radius, unit, geoRadiusArgument);
+	}
+
+	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 											 final GeoUnit unit){
 		return geoOperations.geoRadiusByMember(key, member, radius, unit);
@@ -194,8 +208,15 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
-	public Long hDecrBy(final byte[] key, final byte[] field, final long value){
-		return hashOperations.hDecrBy(key, field, value);
+	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+											   final GeoUnit unit){
+		return geoOperations.geoRadiusByMemberRo(key, member, radius, unit);
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+		return geoOperations.geoRadiusByMemberRo(key, member, radius, unit, geoRadiusArgument);
 	}
 
 	@Override
@@ -219,18 +240,8 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
-	public Long hIncrBy(final byte[] key, final byte[] field, final int value){
-		return hashOperations.hIncrBy(key, field, value);
-	}
-
-	@Override
 	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
 		return hashOperations.hIncrBy(key, field, value);
-	}
-
-	@Override
-	public Double hIncrByFloat(final byte[] key, final byte[] field, final float value){
-		return hashOperations.hIncrByFloat(key, field, value);
 	}
 
 	@Override
@@ -256,6 +267,21 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
 		return hashOperations.hMSet(key, data);
+	}
+
+	@Override
+	public byte[] hRandField(final byte[] key){
+		return hashOperations.hRandField(key);
+	}
+
+	@Override
+	public List<byte[]> hRandField(final byte[] key, long count){
+		return hashOperations.hRandField(key, count);
+	}
+
+	@Override
+	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count){
+		return hashOperations.hRandFieldWithValues(key, count);
 	}
 
 	@Override
@@ -321,21 +347,6 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
-	public byte[] hrandfield(final byte[] key){
-		return hashOperations.hrandfield(key);
-	}
-
-	@Override
-	public List<byte[]> hrandfield(final byte[] key, final long count){
-		return hashOperations.hrandfield(key, count);
-	}
-
-	@Override
-	public Map<byte[], byte[]> hrandfieldWithValues(final byte[] key, final long count){
-		return hashOperations.hrandfieldWithValues(key, count);
-	}
-
-	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements){
 		return hyperLogLogOperations.pfAdd(key, elements);
 	}
@@ -348,11 +359,6 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	@Override
 	public Long pfCount(final byte[]... keys){
 		return hyperLogLogOperations.pfCount(keys);
-	}
-
-	@Override
-	public Long del(final String... keys){
-		return keyOperations.del(keys);
 	}
 
 	@Override
@@ -371,8 +377,18 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
+	public long exists(final byte[]... keys){
+		return keyOperations.exists(keys);
+	}
+
+	@Override
 	public Status expire(final byte[] key, final int lifetime){
 		return keyOperations.expire(key, lifetime);
+	}
+
+	@Override
+	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption){
+		return keyOperations.expire(key, lifetime, expireOption);
 	}
 
 	@Override
@@ -381,19 +397,33 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
-		return keyOperations.migrate(key, host, port, db, timeout);
+	public Status copy(final byte[] key, final byte[] destKey){
+		return keyOperations.copy(key, destKey);
+	}
+
+	@Override
+	public Status copy(final byte[] key, final byte[] destKey, final int db){
+		return keyOperations.copy(key, destKey, db);
+	}
+
+	@Override
+	public Status copy(final byte[] key, final byte[] destKey, final boolean replace){
+		return keyOperations.copy(key, destKey, replace);
+	}
+
+	@Override
+	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace){
+		return keyOperations.copy(key, destKey, db, replace);
+	}
+
+	@Override
+	public Status move(final byte[] key, final int db){
+		return keyOperations.move(key, db);
 	}
 
 	@Override
 	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
 		return keyOperations.migrate(key, host, port, db, timeout);
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
-						  final MigrateOperation operation){
-		return keyOperations.migrate(key, host, port, db, timeout, operation);
 	}
 
 	@Override
@@ -403,8 +433,62 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
-	public Status move(final byte[] key, final int db){
-		return keyOperations.move(key, db);
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
+						  final int timeout){
+		return keyOperations.migrate(key, host, port, db, password, timeout);
+	}
+
+	@Override
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
+						  final int timeout, final MigrateOperation operation){
+		return keyOperations.migrate(key, host, port, db, password, timeout, operation);
+	}
+
+	@Override
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
+						  final byte[] password, final int timeout){
+		return keyOperations.migrate(key, host, port, db, user, password, timeout);
+	}
+
+	@Override
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
+						  final byte[] password, final int timeout, final MigrateOperation operation){
+		return keyOperations.migrate(key, host, port, db, user, password, timeout, operation);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys){
+		return keyOperations.migrate(host, port, db, timeout, keys);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final int timeout,
+						  final MigrateOperation operation, final byte[]... keys){
+		return keyOperations.migrate(host, port, db, timeout, operation, keys);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
+						  final byte[]... keys){
+		return keyOperations.migrate(host, port, db, password, timeout, keys);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
+						  final MigrateOperation operation, final byte[]... keys){
+		return keyOperations.migrate(host, port, db, password, timeout, operation, keys);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
+						  final int timeout, final byte[]... keys){
+		return keyOperations.migrate(host, port, db, user, password, timeout, keys);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
+						  final int timeout, final MigrateOperation operation, final byte[]... keys){
+		return keyOperations.migrate(host, port, db, user, password, timeout, operation, keys);
 	}
 
 	@Override

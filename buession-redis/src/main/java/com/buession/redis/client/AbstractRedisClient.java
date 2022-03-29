@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client;
@@ -29,8 +29,9 @@ import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
 import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.operations.*;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
-import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	private RedisConnection connection;
 
-	private boolean enableTransactionSupport = false;
+	private boolean enableTransactionSupport = true;
 
 	protected ConnectionOperations connectionOperations = createConnectionOperations();
 
@@ -72,13 +73,15 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	protected TransactionOperations transactionOperations = createTransactionOperations();
 
-	private final static Logger logger = LoggerFactory.getLogger(AbstractRedisClient.class);
+	protected ClusterOperations clusterOperations = createClusterOperations();
+
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	public AbstractRedisClient(){
 		super();
 	}
 
-	public AbstractRedisClient(RedisConnection connection){
+	public AbstractRedisClient(final RedisConnection connection){
 		setConnection(connection);
 	}
 
@@ -107,11 +110,18 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	@Override
 	public Pipeline pipeline(){
-		return execute((cmd)->connection.getPipeline());
+		//return execute((cmd)->connection.pipeline());
+		return null;
 	}
 
 	@Override
-	public <C, R> R execute(final Executor<C, R> executor){
+	public <T, R> R execute(final Executor<T, R> executor, final ProtocolCommand command){
+		return execute(executor, command, null);
+	}
+
+	@Override
+	public <T, R> R execute(final Executor<T, R> executor, final ProtocolCommand command,
+							final CommandArguments arguments){
 		RedisConnection connection;
 
 		long startTime = 0;
@@ -126,11 +136,29 @@ public abstract class AbstractRedisClient implements RedisClient {
 			connection = RedisConnectionUtils.getConnection(connectionFactory);
 		}
 
+		String argumentsString = logger.isDebugEnabled() || logger.isErrorEnabled() && arguments != null ?
+				arguments.toString() : null;
+
+		if(logger.isDebugEnabled()){
+			if(arguments != null){
+				logger.debug("Execute command '{}' with arguments: {}", command, argumentsString);
+			}else{
+				logger.debug("Execute command '{}'", command);
+			}
+		}
+
 		try{
 			return connection.execute(executor);
 		}catch(RedisException e){
-			logger.error("Redis execute command failure: {}", e.getMessage(), e);
-			throw RedisExceptionUtils.convert(e);
+			if(logger.isErrorEnabled()){
+				if(arguments != null){
+					logger.error("Execute command '{}' with arguments: {}, failure: {}", command, argumentsString,
+							e.getMessage(), e);
+				}else{
+					logger.error("Execute command '{}', failure: {}", command, e.getMessage(), e);
+				}
+			}
+			throw e;
 		}finally{
 			if(logger.isDebugEnabled()){
 				long finishTime = System.nanoTime();
@@ -167,12 +195,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 	protected abstract TransactionOperations createTransactionOperations();
 
-	protected boolean isTransaction(){
-		return getConnection().isTransaction();
-	}
-
-	protected boolean isPipeline(){
-		return getConnection().isPipeline();
-	}
+	protected abstract ClusterOperations createClusterOperations();
 
 }

@@ -30,6 +30,6 @@ package com.buession.redis.client;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface StandaloneRedisClient extends RedisClient {
+public interface RedisStandaloneClient extends RedisClient {
 
 }

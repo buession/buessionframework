@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client;
@@ -33,9 +33,9 @@ import com.buession.redis.pipeline.Pipeline;
 /**
  * @author Yong.Teng
  */
-public interface RedisClient extends ConnectionCommands, GeoCommands, HashCommands, HyperLogLogCommands, KeyCommands,
-		ListCommands, PubSubCommands, ScriptingCommands, ServerCommands, SetCommands, SortedSetCommands,
-		StringCommands, TransactionCommands {
+public interface RedisClient extends ClusterCommands, ConnectionCommands, GeoCommands, HashCommands,
+		HyperLogLogCommands, KeyCommands, ListCommands, PubSubCommands, ScriptingCommands, ServerCommands, SetCommands,
+		SortedSetCommands, StringCommands, TransactionCommands {
 
 	RedisConnection getConnection();
 
@@ -43,6 +43,9 @@ public interface RedisClient extends ConnectionCommands, GeoCommands, HashComman
 
 	Pipeline pipeline();
 
-	<C, R> R execute(final Executor<C, R> executor) throws RedisException;
+	<T, R> R execute(final Executor<T, R> executor, final ProtocolCommand command) throws RedisException;
+
+	<T, R> R execute(final Executor<T, R> executor, final ProtocolCommand command, final CommandArguments arguments)
+			throws RedisException;
 
 }

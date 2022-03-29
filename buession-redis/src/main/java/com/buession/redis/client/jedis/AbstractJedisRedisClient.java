@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis;
@@ -30,26 +30,33 @@ import com.buession.redis.client.AbstractRedisClient;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitOperation;
+import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientUnblockType;
+import com.buession.redis.core.ClusterFailoverOption;
+import com.buession.redis.core.ClusterInfo;
+import com.buession.redis.core.ClusterResetOption;
+import com.buession.redis.core.ClusterSetSlotOption;
+import com.buession.redis.core.Direction;
+import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.FutureResult;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.Info;
+import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.PubSubListener;
+import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
+import com.buession.redis.core.SlotsRange;
 import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
-import com.buession.redis.pipeline.jedis.JedisPipeline;
-import com.buession.redis.transaction.Transaction;
-import com.buession.redis.transaction.jedis.JedisTransaction;
 import redis.clients.jedis.Response;
 
 import java.util.LinkedList;
@@ -69,8 +76,143 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 		super();
 	}
 
-	public AbstractJedisRedisClient(RedisConnection connection){
+	public AbstractJedisRedisClient(final RedisConnection connection){
 		super(connection);
+	}
+
+	@Override
+	public String clusterMyId(){
+		return clusterOperations.clusterMyId();
+	}
+
+	@Override
+	public Status clusterAddSlots(final int... slots){
+		return clusterOperations.clusterAddSlots(slots);
+	}
+
+	@Override
+	public Map<Integer, RedisClusterServer> clusterSlots(){
+		return clusterOperations.clusterSlots();
+	}
+
+	@Override
+	public int clusterCountFailureReports(final String nodeId){
+		return clusterOperations.clusterCountFailureReports(nodeId);
+	}
+
+	@Override
+	public int clusterCountKeysInSlot(final int slot){
+		return clusterOperations.clusterCountKeysInSlot(slot);
+	}
+
+	@Override
+	public Status clusterDelSlots(final int... slots){
+		return clusterOperations.clusterDelSlots(slots);
+	}
+
+	@Override
+	public Status clusterFlushSlots(){
+		return clusterOperations.clusterFlushSlots();
+	}
+
+	@Override
+	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption){
+		return clusterOperations.clusterFailover(clusterFailoverOption);
+	}
+
+	@Override
+	public Status clusterForget(final String nodeId){
+		return clusterOperations.clusterForget(nodeId);
+	}
+
+	@Override
+	public List<String> clusterGetKeysInSlot(final int slot, final long count){
+		return clusterOperations.clusterGetKeysInSlot(slot, count);
+	}
+
+	@Override
+	public ClusterInfo clusterInfo(){
+		return clusterOperations.clusterInfo();
+	}
+
+	@Override
+	public long clusterKeySlot(final String key){
+		return clusterOperations.clusterKeySlot(key);
+	}
+
+	@Override
+	public Status clusterMeet(final String ip, final int port){
+		return clusterOperations.clusterMeet(ip, port);
+	}
+
+	@Override
+	public List<RedisClusterServer> clusterNodes(){
+		return clusterOperations.clusterNodes();
+	}
+
+	@Override
+	public List<RedisClusterServer> clusterSlaves(final String nodeId){
+		return clusterOperations.clusterSlaves(nodeId);
+	}
+
+	@Override
+	public List<RedisClusterServer> clusterReplicas(final String nodeId){
+		return clusterOperations.clusterReplicas(nodeId);
+	}
+
+	@Override
+	public Status clusterReplicate(final String nodeId){
+		return clusterOperations.clusterReplicate(nodeId);
+	}
+
+	@Override
+	public Status clusterReset(){
+		return clusterOperations.clusterReset();
+	}
+
+	@Override
+	public Status clusterReset(final ClusterResetOption clusterResetOption){
+		return clusterOperations.clusterReset(clusterResetOption);
+	}
+
+	@Override
+	public Status clusterSaveConfig(){
+		return clusterOperations.clusterSaveConfig();
+	}
+
+	@Override
+	public Status clusterSetConfigEpoch(final String configEpoch){
+		return clusterOperations.clusterSetConfigEpoch(configEpoch);
+	}
+
+	@Override
+	public BumpEpoch clusterBumpEpoch(){
+		return clusterOperations.clusterBumpEpoch();
+	}
+
+	@Override
+	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId){
+		return clusterOperations.clusterSetSlot(slot, setSlotOption, nodeId);
+	}
+
+	@Override
+	public Status asking(){
+		return clusterOperations.asking();
+	}
+
+	@Override
+	public Status readWrite(){
+		return clusterOperations.readWrite();
+	}
+
+	@Override
+	public Status readOnly(){
+		return clusterOperations.readOnly();
+	}
+
+	@Override
+	public Status auth(final String user, final String password){
+		return connectionOperations.auth(user, password);
 	}
 
 	@Override
@@ -86,6 +228,11 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Status ping(){
 		return connectionOperations.ping();
+	}
+
+	@Override
+	public Status reset(){
+		return connectionOperations.reset();
 	}
 
 	@Override
@@ -135,18 +282,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									 final double radius){
-		return geoOperations.geoRadius(key, longitude, longitude, radius);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
-									 final double radius, final GeoRadiusArgument geoRadiusArgument){
-		return geoOperations.geoRadius(key, longitude, latitude, radius, geoRadiusArgument);
-	}
-
-	@Override
-	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit){
 		return geoOperations.geoRadius(key, longitude, latitude, radius, unit);
 	}
@@ -159,14 +294,16 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius){
-		return geoOperations.geoRadiusByMember(key, member, radius);
+	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit){
+		return geoOperations.geoRadiusRo(key, longitude, latitude, radius, unit);
 	}
 
 	@Override
-	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
-											 final GeoRadiusArgument geoRadiusArgument){
-		return geoOperations.geoRadiusByMember(key, member, radius, geoRadiusArgument);
+	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit,
+									   final GeoRadiusArgument geoRadiusArgument){
+		return geoOperations.geoRadiusRo(key, longitude, latitude, radius, unit, geoRadiusArgument);
 	}
 
 	@Override
@@ -182,13 +319,15 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Long hDecrBy(final String key, final String field, final int value){
-		return hashOperations.hDecrBy(key, field, value);
+	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+											   final GeoUnit unit){
+		return geoOperations.geoRadiusByMemberRo(key, member, radius, unit);
 	}
 
 	@Override
-	public Long hDecrBy(final String key, final String field, final long value){
-		return hashOperations.hDecrBy(key, field, value);
+	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+		return geoOperations.geoRadiusByMemberRo(key, member, radius, unit, geoRadiusArgument);
 	}
 
 	@Override
@@ -212,18 +351,8 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Long hIncrBy(final String key, final String field, final int value){
-		return hashOperations.hIncrBy(key, field, value);
-	}
-
-	@Override
 	public Long hIncrBy(final String key, final String field, final long value){
 		return hashOperations.hIncrBy(key, field, value);
-	}
-
-	@Override
-	public Double hIncrByFloat(final String key, final String field, final float value){
-		return hashOperations.hIncrByFloat(key, field, value);
 	}
 
 	@Override
@@ -252,8 +381,18 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor){
-		return hashOperations.hScan(key, cursor);
+	public String hRandField(final String key){
+		return hashOperations.hRandField(key);
+	}
+
+	@Override
+	public List<String> hRandField(final String key, final long count){
+		return hashOperations.hRandField(key, count);
+	}
+
+	@Override
+	public Map<String, String> hRandFieldWithValues(final String key, final long count){
+		return hashOperations.hRandFieldWithValues(key, count);
 	}
 
 	@Override
@@ -267,11 +406,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern){
-		return hashOperations.hScan(key, cursor, pattern);
-	}
-
-	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
 		return hashOperations.hScan(key, cursor, pattern);
 	}
@@ -282,35 +416,24 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final int count){
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count){
 		return hashOperations.hScan(key, cursor, count);
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count){
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count){
 		return hashOperations.hScan(key, cursor, count);
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count){
-		return hashOperations.hScan(key, cursor, count);
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern,
-												 final int count){
-		return hashOperations.hScan(key, cursor, pattern, count);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-												 final int count){
+												 final long count){
 		return hashOperations.hScan(key, cursor, pattern, count);
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-												 final int count){
+												 final long count){
 		return hashOperations.hScan(key, cursor, pattern, count);
 	}
 
@@ -350,7 +473,32 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public byte[] dump(final String key){
+	public Status copy(final String key, final String destKey){
+		return keyOperations.copy(key, destKey);
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final int db){
+		return keyOperations.copy(key, destKey, db);
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final boolean replace){
+		return keyOperations.copy(key, destKey, replace);
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final int db, final boolean replace){
+		return keyOperations.copy(key, destKey, db, replace);
+	}
+
+	@Override
+	public Long del(final String... keys){
+		return keyOperations.del(keys);
+	}
+
+	@Override
+	public String dump(final String key){
 		return keyOperations.dump(key);
 	}
 
@@ -360,8 +508,18 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
+	public long exists(final String... keys){
+		return keyOperations.exists(keys);
+	}
+
+	@Override
 	public Status expire(final String key, final int lifetime){
 		return keyOperations.expire(key, lifetime);
+	}
+
+	@Override
+	public Status expire(final String key, final int lifetime, final ExpireOption expireOption){
+		return keyOperations.expire(key, lifetime, expireOption);
 	}
 
 	@Override
@@ -372,6 +530,76 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Status move(final String key, final int db){
 		return keyOperations.move(key, db);
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
+		return keyOperations.migrate(key, host, port, db, timeout);
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
+						  final MigrateOperation operation){
+		return keyOperations.migrate(key, host, port, db, timeout, operation);
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final String password,
+						  final int timeout){
+		return keyOperations.migrate(key, host, port, db, password, timeout);
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final String password,
+						  final int timeout, final MigrateOperation operation){
+		return keyOperations.migrate(key, host, port, db, password, timeout, operation);
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final String user,
+						  final String password, final int timeout){
+		return keyOperations.migrate(key, host, port, db, user, password, timeout);
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final String user,
+						  final String password, final int timeout, final MigrateOperation operation){
+		return keyOperations.migrate(key, host, port, db, user, password, timeout, operation);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys){
+		return keyOperations.migrate(host, port, db, timeout, keys);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final int timeout,
+						  final MigrateOperation operation, final String... keys){
+		return keyOperations.migrate(host, port, db, timeout, operation, keys);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
+						  final String... keys){
+		return keyOperations.migrate(host, port, db, password, timeout, keys);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
+						  final MigrateOperation operation, final String... keys){
+		return keyOperations.migrate(host, port, db, password, timeout, operation, keys);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final String user, final String password,
+						  final int timeout, final String... keys){
+		return keyOperations.migrate(host, port, db, user, password, timeout, keys);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final String user, final String password,
+						  final int timeout, final MigrateOperation operation, final String... keys){
+		return keyOperations.migrate(host, port, db, user, password, timeout, operation, keys);
 	}
 
 	@Override
@@ -420,11 +648,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final int cursor){
-		return keyOperations.scan(cursor);
-	}
-
-	@Override
 	public ScanResult<List<String>> scan(final long cursor){
 		return keyOperations.scan(cursor);
 	}
@@ -432,11 +655,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public ScanResult<List<String>> scan(final String cursor){
 		return keyOperations.scan(cursor);
-	}
-
-	@Override
-	public ScanResult<List<String>> scan(final int cursor, final String pattern){
-		return keyOperations.scan(cursor, pattern);
 	}
 
 	@Override
@@ -450,11 +668,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final int cursor, final int count){
-		return keyOperations.scan(cursor, count);
-	}
-
-	@Override
 	public ScanResult<List<String>> scan(final long cursor, final int count){
 		return keyOperations.scan(cursor, count);
 	}
@@ -462,11 +675,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final int count){
 		return keyOperations.scan(cursor, count);
-	}
-
-	@Override
-	public ScanResult<List<String>> scan(final int cursor, final String pattern, final int count){
-		return keyOperations.scan(cursor, pattern, count);
 	}
 
 	@Override
@@ -520,6 +728,11 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
+	public Long wait(final int replicas, final long timeout){
+		return keyOperations.wait(replicas, timeout);
+	}
+
+	@Override
 	public List<String> blPop(final String[] keys, final int timeout){
 		return listOperations.blPop(keys, timeout);
 	}
@@ -532,11 +745,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public String brPoplPush(final String key, final String destKey, final int timeout){
 		return listOperations.brPoplPush(key, destKey, timeout);
-	}
-
-	@Override
-	public String lIndex(final String key, final int index){
-		return listOperations.lIndex(key, index);
 	}
 
 	@Override
@@ -570,18 +778,8 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public List<String> lRange(final String key, final int start, final int end){
-		return listOperations.lRange(key, start, end);
-	}
-
-	@Override
 	public List<String> lRange(final String key, final long start, final long end){
 		return listOperations.lRange(key, start, end);
-	}
-
-	@Override
-	public Long lRem(final String key, final String value, final int count){
-		return listOperations.lRem(key, value, count);
 	}
 
 	@Override
@@ -590,18 +788,8 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Status lSet(final String key, final int index, final String value){
-		return listOperations.lSet(key, index, value);
-	}
-
-	@Override
 	public Status lSet(final String key, final long index, final String value){
 		return listOperations.lSet(key, index, value);
-	}
-
-	@Override
-	public Status lTrim(final String key, final int start, final int end){
-		return listOperations.lTrim(key, start, end);
 	}
 
 	@Override
@@ -627,6 +815,17 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Long rPushX(final String key, final String... values){
 		return listOperations.rPushX(key, values);
+	}
+
+	@Override
+	public String lMove(final String key, final String destKey, final Direction from, final Direction to){
+		return listOperations.lMove(key, destKey, from, to);
+	}
+
+	@Override
+	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
+						 final int timeout){
+		return listOperations.blMove(key, destKey, from, to, timeout);
 	}
 
 	@Override
@@ -770,11 +969,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Status clientPause(final long timeout){
-		return serverOperations.clientPause(timeout);
-	}
-
-	@Override
 	public Status clientReply(final ClientReply option){
 		return serverOperations.clientReply(option);
 	}
@@ -810,26 +1004,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Status configSet(final String parameter, final float value){
-		return serverOperations.configSet(parameter, value);
-	}
-
-	@Override
-	public Status configSet(final String parameter, final double value){
-		return serverOperations.configSet(parameter, value);
-	}
-
-	@Override
-	public Status configSet(final String parameter, final int value){
-		return serverOperations.configSet(parameter, value);
-	}
-
-	@Override
-	public Status configSet(final String parameter, final long value){
-		return serverOperations.configSet(parameter, value);
-	}
-
-	@Override
 	public Status configSet(final String parameter, final String value){
 		return serverOperations.configSet(parameter, value);
 	}
@@ -837,16 +1011,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Long dbSize(){
 		return serverOperations.dbSize();
-	}
-
-	@Override
-	public String debugObject(final String key){
-		return serverOperations.debugObject(key);
-	}
-
-	@Override
-	public String debugSegfault(){
-		return serverOperations.debugSegfault();
 	}
 
 	@Override
@@ -887,11 +1051,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Object object(final ObjectCommand command, final String key){
 		return serverOperations.object(command, key);
-	}
-
-	@Override
-	public Object pSync(final String masterRunId, final int offset){
-		return serverOperations.pSync(masterRunId, offset);
 	}
 
 	@Override
@@ -1000,11 +1159,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public List<String> sRandMember(final String key, final int count){
-		return setOperations.sRandMember(key, count);
-	}
-
-	@Override
 	public List<String> sRandMember(final String key, final long count){
 		return setOperations.sRandMember(key, count);
 	}
@@ -1012,11 +1166,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Long sRem(final String key, final String... members){
 		return setOperations.sRem(key, members);
-	}
-
-	@Override
-	public ScanResult<List<String>> sScan(final String key, final int cursor){
-		return setOperations.sScan(key, cursor);
 	}
 
 	@Override
@@ -1030,11 +1179,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern){
-		return setOperations.sScan(key, cursor, pattern);
-	}
-
-	@Override
 	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern){
 		return setOperations.sScan(key, cursor, pattern);
 	}
@@ -1045,33 +1189,23 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final int cursor, final int count){
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final long count){
 		return setOperations.sScan(key, cursor, count);
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final int count){
+	public ScanResult<List<String>> sScan(final String key, final String cursor, final long count){
 		return setOperations.sScan(key, cursor, count);
 	}
 
 	@Override
-	public ScanResult<List<String>> sScan(final String key, final String cursor, final int count){
-		return setOperations.sScan(key, cursor, count);
-	}
-
-	@Override
-	public ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern, final int count){
-		return setOperations.sScan(key, cursor, pattern, count);
-	}
-
-	@Override
-	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final int count){
+	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final long count){
 		return setOperations.sScan(key, cursor, pattern, count);
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
-										  final int count){
+										  final long count){
 		return setOperations.sScan(key, cursor, pattern, count);
 	}
 
@@ -1096,17 +1230,7 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Long zCount(final String key, final float min, final float max){
-		return sortedSetOperations.zCount(key, min, max);
-	}
-
-	@Override
 	public Long zCount(final String key, final double min, final double max){
-		return sortedSetOperations.zCount(key, min, max);
-	}
-
-	@Override
-	public Long zCount(final String key, final int min, final int max){
 		return sortedSetOperations.zCount(key, min, max);
 	}
 
@@ -1121,17 +1245,7 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Double zIncrBy(final String key, final String member, final float increment){
-		return sortedSetOperations.zIncrBy(key, member, increment);
-	}
-
-	@Override
 	public Double zIncrBy(final String key, final String member, final double increment){
-		return sortedSetOperations.zIncrBy(key, member, increment);
-	}
-
-	@Override
-	public Double zIncrBy(final String key, final String member, final int increment){
 		return sortedSetOperations.zIncrBy(key, member, increment);
 	}
 
@@ -1162,17 +1276,7 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Long zLexCount(final String key, final float min, final float max){
-		return sortedSetOperations.zLexCount(key, min, max);
-	}
-
-	@Override
 	public Long zLexCount(final String key, final double min, final double max){
-		return sortedSetOperations.zLexCount(key, min, max);
-	}
-
-	@Override
-	public Long zLexCount(final String key, final int min, final int max){
 		return sortedSetOperations.zLexCount(key, min, max);
 	}
 
@@ -1187,18 +1291,8 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Set<String> zRange(final String key, final int start, final int end){
-		return sortedSetOperations.zRange(key, start, end);
-	}
-
-	@Override
 	public Set<String> zRange(final String key, final long start, final long end){
 		return sortedSetOperations.zRange(key, start, end);
-	}
-
-	@Override
-	public Set<Tuple> zRangeWithScores(final String key, final int start, final int end){
-		return sortedSetOperations.zRangeWithScores(key, start, end);
 	}
 
 	@Override
@@ -1207,17 +1301,7 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Set<String> zRangeByLex(final String key, final float min, final float max){
-		return sortedSetOperations.zRangeByLex(key, min, max);
-	}
-
-	@Override
 	public Set<String> zRangeByLex(final String key, final double min, final double max){
-		return sortedSetOperations.zRangeByLex(key, min, max);
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final int min, final int max){
 		return sortedSetOperations.zRangeByLex(key, min, max);
 	}
 
@@ -1232,46 +1316,25 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Set<String> zRangeByLex(final String key, final float min, final float max, final int offset,
-								   final int count){
-		return zRangeByLex(key, Float.toString(min), Float.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final double min, final double max, final int offset,
-								   final int count){
+	public Set<String> zRangeByLex(final String key, final double min, final double max, final long offset,
+								   final long count){
 		return zRangeByLex(key, Double.toString(min), Double.toString(max), offset, count);
 	}
 
 	@Override
-	public Set<String> zRangeByLex(final String key, final int min, final int max, final int offset, final int count){
-		return zRangeByLex(key, Integer.toString(min), Integer.toString(max), offset, count);
-	}
-
-	@Override
-	public Set<String> zRangeByLex(final String key, final long min, final long max, final int offset,
-								   final int count){
+	public Set<String> zRangeByLex(final String key, final long min, final long max, final long offset,
+								   final long count){
 		return zRangeByLex(key, Long.toString(min), Long.toString(max), offset, count);
 	}
 
 	@Override
-	public Set<String> zRangeByLex(final String key, final String min, final String max, final int offset,
-								   final int count){
+	public Set<String> zRangeByLex(final String key, final String min, final String max, final long offset,
+								   final long count){
 		return sortedSetOperations.zRangeByLex(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<String> zRangeByScore(final String key, final float min, final float max){
-		return sortedSetOperations.zRangeByScore(key, min, max);
-	}
-
-	@Override
 	public Set<String> zRangeByScore(final String key, final double min, final double max){
-		return sortedSetOperations.zRangeByScore(key, min, max);
-	}
-
-	@Override
-	public Set<String> zRangeByScore(final String key, final int min, final int max){
 		return sortedSetOperations.zRangeByScore(key, min, max);
 	}
 
@@ -1286,47 +1349,25 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Set<String> zRangeByScore(final String key, final float min, final float max, final int offset,
-									 final int count){
+	public Set<String> zRangeByScore(final String key, final double min, final double max, final long offset,
+									 final long count){
 		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<String> zRangeByScore(final String key, final double min, final double max, final int offset,
-									 final int count){
+	public Set<String> zRangeByScore(final String key, final long min, final long max, final long offset,
+									 final long count){
 		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<String> zRangeByScore(final String key, final int min, final int max, final int offset,
-									 final int count){
+	public Set<String> zRangeByScore(final String key, final String min, final String max, final long offset,
+									 final long count){
 		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<String> zRangeByScore(final String key, final long min, final long max, final int offset,
-									 final int count){
-		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<String> zRangeByScore(final String key, final String min, final String max, final int offset,
-									 final int count){
-		return sortedSetOperations.zRangeByScore(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max){
-		return sortedSetOperations.zRangeByScoreWithScores(key, min, max);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max){
-		return sortedSetOperations.zRangeByScoreWithScores(key, min, max);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max){
 		return sortedSetOperations.zRangeByScoreWithScores(key, min, max);
 	}
 
@@ -1341,32 +1382,20 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
-											  final int count){
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final long offset,
+											  final long count){
 		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max, final int offset,
-											  final int count){
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max, final long offset,
+											  final long count){
 		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
-											  final int count){
-		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
-											  final int count){
-		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final int offset,
-											  final int count){
+	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max, final long offset,
+											  final long count){
 		return sortedSetOperations.zRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
@@ -1381,11 +1410,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Set<Tuple> zPopMax(final String key, final int count){
-		return sortedSetOperations.zPopMax(key, count);
-	}
-
-	@Override
 	public Set<Tuple> zPopMax(final String key, final long count){
 		return sortedSetOperations.zPopMax(key, count);
 	}
@@ -1393,11 +1417,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Tuple zPopMin(final String key){
 		return sortedSetOperations.zPopMin(key);
-	}
-
-	@Override
-	public Set<Tuple> zPopMin(final String key, final int count){
-		return sortedSetOperations.zPopMin(key, count);
 	}
 
 	@Override
@@ -1411,17 +1430,7 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Long zRemRangeByLex(final String key, final float min, final float max){
-		return sortedSetOperations.zRemRangeByLex(key, min, max);
-	}
-
-	@Override
 	public Long zRemRangeByLex(final String key, final double min, final double max){
-		return sortedSetOperations.zRemRangeByLex(key, min, max);
-	}
-
-	@Override
-	public Long zRemRangeByLex(final String key, final int min, final int max){
 		return sortedSetOperations.zRemRangeByLex(key, min, max);
 	}
 
@@ -1436,17 +1445,7 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Long zRemRangeByScore(final String key, final float min, final float max){
-		return sortedSetOperations.zRemRangeByScore(key, min, max);
-	}
-
-	@Override
 	public Long zRemRangeByScore(final String key, final double min, final double max){
-		return sortedSetOperations.zRemRangeByScore(key, min, max);
-	}
-
-	@Override
-	public Long zRemRangeByScore(final String key, final int min, final int max){
 		return sortedSetOperations.zRemRangeByScore(key, min, max);
 	}
 
@@ -1461,18 +1460,8 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Long zRemRangeByRank(final String key, final int start, final int end){
-		return sortedSetOperations.zRemRangeByRank(key, start, end);
-	}
-
-	@Override
 	public Long zRemRangeByRank(final String key, final long start, final long end){
 		return sortedSetOperations.zRemRangeByRank(key, start, end);
-	}
-
-	@Override
-	public Set<String> zRevRange(final String key, final int start, final int end){
-		return sortedSetOperations.zRevRange(key, start, end);
 	}
 
 	@Override
@@ -1481,27 +1470,12 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Set<Tuple> zRevRangeWithScores(final String key, final int start, final int end){
-		return sortedSetOperations.zRevRangeWithScores(key, start, end);
-	}
-
-	@Override
 	public Set<Tuple> zRevRangeWithScores(final String key, final long start, final long end){
 		return sortedSetOperations.zRevRangeWithScores(key, start, end);
 	}
 
 	@Override
-	public Set<String> zRevRangeByLex(String key, float min, float max){
-		return sortedSetOperations.zRevRangeByLex(key, min, max);
-	}
-
-	@Override
 	public Set<String> zRevRangeByLex(String key, double min, double max){
-		return sortedSetOperations.zRevRangeByLex(key, min, max);
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(String key, int min, int max){
 		return sortedSetOperations.zRevRangeByLex(key, min, max);
 	}
 
@@ -1516,43 +1490,23 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Set<String> zRevRangeByLex(String key, float min, float max, int offset, int count){
+	public Set<String> zRevRangeByLex(String key, double min, double max, long offset, long count){
 		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<String> zRevRangeByLex(String key, double min, double max, int offset, int count){
+	public Set<String> zRevRangeByLex(String key, long min, long max, long offset, long count){
 		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<String> zRevRangeByLex(String key, int min, int max, int offset, int count){
+	public Set<String> zRevRangeByLex(final String key, final String min, final String max, final long offset,
+									  final long count){
 		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(String key, long min, long max, int offset, int count){
-		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<String> zRevRangeByLex(final String key, final String min, final String max, final int offset,
-									  final int count){
-		return sortedSetOperations.zRevRangeByLex(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<String> zRevRangeByScore(final String key, final float min, final float max){
-		return sortedSetOperations.zRevRangeByScore(key, min, max);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final double min, final double max){
-		return sortedSetOperations.zRevRangeByScore(key, min, max);
-	}
-
-	@Override
-	public Set<String> zRevRangeByScore(final String key, final int min, final int max){
 		return sortedSetOperations.zRevRangeByScore(key, min, max);
 	}
 
@@ -1567,47 +1521,25 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Set<String> zRevRangeByScore(final String key, final float min, final float max, final int offset,
-										final int count){
+	public Set<String> zRevRangeByScore(final String key, final double min, final double max, final long offset,
+										final long count){
 		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<String> zRevRangeByScore(final String key, final double min, final double max, final int offset,
-										final int count){
+	public Set<String> zRevRangeByScore(final String key, final long min, final long max, final long offset,
+										final long count){
 		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<String> zRevRangeByScore(final String key, final int min, final int max, final int offset,
-										final int count){
+	public Set<String> zRevRangeByScore(final String key, final String min, final String max, final long offset,
+										final long count){
 		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<String> zRevRangeByScore(final String key, final long min, final long max, final int offset,
-										final int count){
-		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<String> zRevRangeByScore(final String key, final String min, final String max, final int offset,
-										final int count){
-		return sortedSetOperations.zRevRangeByScore(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float min, final float max){
-		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max){
-		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max){
 		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max);
 	}
 
@@ -1622,43 +1554,27 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final float min, final float max, final int offset,
-												 final int count){
-		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
-	}
-
-	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max,
-												 final int offset, final int count){
+												 final long offset,
+												 final long count){
 		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final int min, final int max, final int offset,
-												 final int count){
-		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
-	}
-
-	@Override
-	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max, final int offset,
-												 final int count){
+	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max, final long offset,
+												 final long count){
 		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max,
-												 final int offset, final int count){
+												 final long offset, final long count){
 		return sortedSetOperations.zRevRangeByScoreWithScores(key, min, max, offset, count);
 	}
 
 	@Override
 	public Long zRevRank(final String key, final String member){
 		return sortedSetOperations.zRevRank(key, member);
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final int cursor){
-		return sortedSetOperations.zScan(key, cursor);
 	}
 
 	@Override
@@ -1672,11 +1588,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern){
-		return sortedSetOperations.zScan(key, cursor, pattern);
-	}
-
-	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern){
 		return sortedSetOperations.zScan(key, cursor, pattern);
 	}
@@ -1687,32 +1598,22 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final int count){
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final long count){
 		return sortedSetOperations.zScan(key, cursor, count);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final int count){
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final long count){
 		return sortedSetOperations.zScan(key, cursor, count);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final int count){
-		return sortedSetOperations.zScan(key, cursor, count);
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final int cursor, final String pattern, final int count){
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final long count){
 		return sortedSetOperations.zScan(key, cursor, pattern, count);
 	}
 
 	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final int count){
-		return sortedSetOperations.zScan(key, cursor, pattern, count);
-	}
-
-	@Override
-	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final int count){
+	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final long count){
 		return sortedSetOperations.zScan(key, cursor, pattern, count);
 	}
 
@@ -1830,6 +1731,16 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public String getSet(final String key, final String value){
 		return stringOperations.getSet(key, value);
+	}
+
+	@Override
+	public String getEx(final String key, final GetExArgument getExArgument){
+		return stringOperations.getEx(key, getExArgument);
+	}
+
+	@Override
+	public String getDel(final String key){
+		return stringOperations.getDel(key);
 	}
 
 	@Override
@@ -1965,7 +1876,7 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Transaction multi(){
+	public Status multi(){
 		return transactionOperations.multi();
 	}
 
@@ -1982,16 +1893,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Queue<FutureResult<Response<Object>, Object, Object>> getTxResults(){
 		return txResults;
-	}
-
-	protected redis.clients.jedis.Transaction getTransaction(){
-		JedisTransaction jedisTransaction = (JedisTransaction) getConnection().getTransaction();
-		return jedisTransaction.primitive();
-	}
-
-	protected redis.clients.jedis.PipelineBase getPipeline(){
-		JedisPipeline jedisPipeline = (JedisPipeline) getConnection().getPipeline();
-		return jedisPipeline.primitive();
 	}
 
 }
