@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -30,9 +30,7 @@ import com.buession.redis.core.command.HyperLogLogCommands;
 /**
  * HyperLogLog 运算
  *
- * <p>详情说明
- * <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a>
- * </p>
+ * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a></p>
  *
  * @author Yong.Teng
  */
@@ -40,6 +38,9 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 
 	/**
 	 * 将元素添加到指定的 HyperLogLog 里面
+	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/hyperloglog/pfadd.html" target="_blank">http://redisdoc.com/hyperloglog/pfadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -55,6 +56,9 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 	/**
 	 * 将元素添加到指定的 HyperLogLog 里面
 	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/hyperloglog/pfadd.html" target="_blank">http://redisdoc.com/hyperloglog/pfadd.html</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param element
@@ -69,6 +73,9 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 	/**
 	 * 将多个 HyperLogLog 合并（merge）为一个 HyperLogLog，并保存到 destKey 中
 	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/hyperloglog/pfmerge.html" target="_blank">http://redisdoc.com/hyperloglog/pfmerge.html</a></p>
+	 *
 	 * @param destKey
 	 * 		目标 Key
 	 * @param key
@@ -82,6 +89,9 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 
 	/**
 	 * 将多个 HyperLogLog 合并（merge）为一个 HyperLogLog，并保存到 destKey 中
+	 *
+	 * <p>详情说明
+	 * <a href="http://redisdoc.com/hyperloglog/pfmerge.html" target="_blank">http://redisdoc.com/hyperloglog/pfmerge.html</a></p>
 	 *
 	 * @param destKey
 	 * 		目标 Key
