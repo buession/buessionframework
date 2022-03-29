@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
 
 import com.buession.lang.Order;
 import com.buession.lang.Status;
+import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.Limit;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ScanResult;
@@ -47,9 +48,7 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 删除给定的一个或多个 key
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/del.html" target="_blank">http://redisdoc.com/database/del.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/database/del.html" target="_blank">http://redisdoc.com/database/del.html</a></p>
 	 *
 	 * @param keys
 	 * 		一个或多个 key
@@ -61,9 +60,7 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 删除给定的一个或多个 key
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/del.html" target="_blank">http://redisdoc.com/database/del.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/database/del.html" target="_blank">http://redisdoc.com/database/del.html</a></p>
 	 *
 	 * @param keys
 	 * 		一个或多个 key
@@ -75,21 +72,19 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 序列化给定 key ，并返回被序列化的值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/internal/dump.html" target="_blank">http://redisdoc.com/internal/dump
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/dump.html" target="_blank">http://redisdoc.com/internal/dump.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 *
 	 * @return 被序列化的值
 	 */
-	byte[] dump(final String key);
+	String dump(final String key);
 
 	/**
 	 * 序列化给定 key ，并返回被序列化的值
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/internal/dump.html" target="_blank">http://redisdoc.com/internal/dump.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/dump.html" target="_blank">http://redisdoc.com/internal/dump.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -101,9 +96,7 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 检查给定 key 是否存在
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/exists.html" target="_blank">http://redisdoc.com/database/exists.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/database/exists.html" target="_blank">http://redisdoc.com/database/exists.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -115,9 +108,7 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 检查给定 key 是否存在
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/exists.html" target="_blank">http://redisdoc.com/database/exists.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/database/exists.html" target="_blank">http://redisdoc.com/database/exists.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -127,10 +118,33 @@ public interface KeyCommands extends RedisCommands {
 	boolean exists(final byte[] key);
 
 	/**
+	 * 检查给定 key 是否存在
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/exists.html" target="_blank">http://redisdoc.com/database/exists.html</a></p>
+	 *
+	 * @param keys
+	 * 		Key
+	 *
+	 * @return 检查给定 key 存在的数量
+	 */
+	long exists(final String... keys);
+
+	/**
+	 * 检查给定 key 是否存在
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/exists.html" target="_blank">http://redisdoc.com/database/exists.html</a></p>
+	 *
+	 * @param keys
+	 * 		Key
+	 *
+	 * @return 检查给定 key 存在的数量
+	 */
+	long exists(final byte[]... keys);
+
+	/**
 	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/expire/expire.html" target="_blank">http://redisdoc.com/expire/expire.html</a></p>
+	 * <p>详情说明<a href="http://redisdoc.com/expire/expire.html" target="_blank">http://redisdoc.com/expire/expire.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -144,8 +158,7 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/expire/expire.html" target="_blank">http://redisdoc.com/expire/expire.html</a></p>
+	 * <p>详情说明<a href="http://redisdoc.com/expire/expire.html" target="_blank">http://redisdoc.com/expire/expire.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -157,11 +170,41 @@ public interface KeyCommands extends RedisCommands {
 	Status expire(final byte[] key, final int lifetime);
 
 	/**
+	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 *
+	 * <p>详情说明<a href="http://redisdoc.com/expire/expire.html" target="_blank">http://redisdoc.com/expire/expire.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lifetime
+	 * 		生存时间（单位：秒）
+	 * @param expireOption
+	 * 		过期选项
+	 *
+	 * @return 操作结果
+	 */
+	Status expire(final String key, final int lifetime, final ExpireOption expireOption);
+
+	/**
+	 * 为给定 key 设置生存时间，当 key 过期时(生存时间为 0)，它会被自动删除
+	 *
+	 * <p>详情说明<a href="http://redisdoc.com/expire/expire.html" target="_blank">http://redisdoc.com/expire/expire.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param lifetime
+	 * 		生存时间（单位：秒）
+	 * @param expireOption
+	 * 		过期选项
+	 *
+	 * @return 操作结果
+	 */
+	Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption);
+
+	/**
 	 * 为给定 key 设置过期时间，具体过期时间戳
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/expire/expireat.html" target="_blank">http://redisdoc.com/expire/expireat.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/expireat.html" target="_blank">http://redisdoc.com/expire/expireat.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -175,8 +218,7 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 为给定 key 设置过期时间，具体过期时间戳
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/expire/expireat.html" target="_blank">http://redisdoc.com/expire/expireat
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/expireat.html" target="_blank">http://redisdoc.com/expire/expireat.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -188,13 +230,170 @@ public interface KeyCommands extends RedisCommands {
 	Status expireAt(final byte[] key, final long unixTimestamp);
 
 	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final String key, final String destKey);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final byte[] key, final byte[] destKey);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 * @param db
+	 * 		目标 DB
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final String key, final String destKey, final int db);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 * @param db
+	 * 		目标 DB
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final byte[] key, final byte[] destKey, final int db);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 * @param replace
+	 * 		是否替换已存在 Key
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final String key, final String destKey, final boolean replace);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 * @param replace
+	 * 		是否替换已存在 Key
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final byte[] key, final byte[] destKey, final boolean replace);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 * @param db
+	 * 		目标 DB
+	 * @param replace
+	 * 		是否替换已存在 Key
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final String key, final String destKey, final int db, final boolean replace);
+
+	/**
+	 * Copy the value stored at the source key to the destination key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/copy/" target="_blank">https://redis.io/commands/copy/</a></p>
+	 *
+	 * @param key
+	 * 		待复制 key
+	 * @param destKey
+	 * 		目标 key
+	 * @param db
+	 * 		目标 DB
+	 * @param replace
+	 * 		是否替换已存在 Key
+	 *
+	 * @return 复制成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace);
+
+	/**
+	 * 将当前数据库的 key 移动到给定的数据库 db 当中；
+	 * 如果当前数据库(源数据库)和给定数据库(目标数据库)有相同名字的给定 key ，
+	 * 或者 key 不存在于当前数据库，那么 MOVE 没有任何效果
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/move.html" target="_blank">http://redisdoc.com/database/move.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param db
+	 * 		目标数据库
+	 *
+	 * @return 移动成功返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	Status move(final String key, final int db);
+
+	/**
+	 * 将当前数据库的 key 移动到给定的数据库 db 当中；
+	 * 如果当前数据库(源数据库)和给定数据库(目标数据库)有相同名字的给定 key ，
+	 * 或者 key 不存在于当前数据库，那么 MOVE 没有任何效果
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/move.html" target="_blank">http://redisdoc.com/database/move.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param db
+	 * 		目标数据库
+	 *
+	 * @return 移动成功返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 */
+	Status move(final byte[] key, final int db);
+
+	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
 	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate
-	 * .html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -215,9 +414,7 @@ public interface KeyCommands extends RedisCommands {
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
 	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -238,9 +435,7 @@ public interface KeyCommands extends RedisCommands {
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
 	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -258,15 +453,13 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 操作结果
 	 */
 	Status migrate(final String key, final String host, final int port, final int db, final int timeout,
-			final MigrateOperation operation);
+				   final MigrateOperation operation);
 
 	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
 	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -284,47 +477,518 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 操作结果
 	 */
 	Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
-			final MigrateOperation operation);
+				   final MigrateOperation operation);
 
 	/**
-	 * 将当前数据库的 key 移动到给定的数据库 db 当中；
-	 * 如果当前数据库(源数据库)和给定数据库(目标数据库)有相同名字的给定 key ，
-	 * 或者 key 不存在于当前数据库，那么 MOVE 没有任何效果
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/move.html" target="_blank">http://redisdoc.com/database/move.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
 	 * @param db
-	 * 		目标数据库
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
 	 *
-	 * @return 移动成功返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 * @return 操作结果
 	 */
-	Status move(final String key, final int db);
+	Status migrate(final String key, final String host, final int port, final int db, final String password,
+				   final int timeout);
 
 	/**
-	 * 将当前数据库的 key 移动到给定的数据库 db 当中；
-	 * 如果当前数据库(源数据库)和给定数据库(目标数据库)有相同名字的给定 key ，
-	 * 或者 key 不存在于当前数据库，那么 MOVE 没有任何效果
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/move.html" target="_blank">http://redisdoc.com/database/move.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
 	 * @param db
-	 * 		目标数据库
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
 	 *
-	 * @return 移动成功返回 Status.SUCCESS；否则返回 Status.FAILURE
+	 * @return 操作结果
 	 */
-	Status move(final byte[] key, final int db);
+	Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
+				   final int timeout);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String key, final String host, final int port, final int db, final String password,
+				   final int timeout, final MigrateOperation operation);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
+				   final int timeout, final MigrateOperation operation);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String key, final String host, final int port, final int db, final String user,
+				   final String password, final int timeout);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
+				   final byte[] password, final int timeout);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String key, final String host, final int port, final int db, final String user,
+				   final String password, final int timeout, final MigrateOperation operation);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
+				   final byte[] password, final int timeout, final MigrateOperation operation);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String host, final int port, final int db, final int timeout, final String... keys);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String host, final int port, final int db, final int timeout, final MigrateOperation operation,
+				   final String... keys);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String host, final int port, final int db, final int timeout, final MigrateOperation operation,
+				   final byte[]... keys);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String host, final int port, final int db, final String password, final int timeout,
+				   final String... keys);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
+				   final byte[]... keys);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String host, final int port, final int db, final String password, final int timeout,
+				   final MigrateOperation operation, final String... keys);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
+				   final MigrateOperation operation, final byte[]... keys);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String host, final int port, final int db, final String user, final String password,
+				   final int timeout, final String... keys);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
+				   final int timeout, final byte[]... keys);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String host, final int port, final int db, final String user, final String password,
+				   final int timeout, final MigrateOperation operation, final String... keys);
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param port
+	 * 		目标 Redis Server 端口
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
+				   final int timeout, final MigrateOperation operation, final byte[]... keys);
 
 	/**
 	 * 查找所有符合给定模式 pattern 的 key
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/keys.html" target="_blank">http://redisdoc.com/database/keys
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/database/keys.html" target="_blank">http://redisdoc.com/database/keys.html</a></p>
 	 *
 	 * @param pattern
 	 * 		模式
@@ -336,8 +1000,7 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 查找所有符合给定模式 pattern 的 key
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/keys.html" target="_blank">http://redisdoc.com/database/keys.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/database/keys.html" target="_blank">http://redisdoc.com/database/keys.html</a></p>
 	 *
 	 * @param pattern
 	 * 		模式
@@ -590,19 +1253,6 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 返回每个元素都是一个数据库键
 	 */
-	ScanResult<List<String>> scan(final int cursor);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 *
-	 * @return 返回每个元素都是一个数据库键
-	 */
 	ScanResult<List<String>> scan(final long cursor);
 
 	/**
@@ -630,36 +1280,6 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 返回每个元素都是一个数据库键
 	 */
 	ScanResult<List<byte[]>> scan(final byte[] cursor);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan
-	 * .html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 *
-	 * @return 返回和给定模式相匹配的数据库键
-	 */
-	ScanResult<List<String>> scan(final int cursor, final String pattern);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 *
-	 * @return 返回和给定模式相匹配的数据库键
-	 */
-	ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern);
 
 	/**
 	 * 迭代当前数据库中的数据库键
@@ -724,21 +1344,6 @@ public interface KeyCommands extends RedisCommands {
 	/**
 	 * 迭代当前数据库中的数据库键
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan
-	 * .html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回指定数量的数据库键
-	 */
-	ScanResult<List<String>> scan(final int cursor, final int count);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
 	 * <p>详情说明
 	 * <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
 	 *
@@ -780,40 +1385,6 @@ public interface KeyCommands extends RedisCommands {
 	 * @return 返回指定数量的数据库键
 	 */
 	ScanResult<List<byte[]>> scan(final byte[] cursor, final int count);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的数据库键
-	 */
-	ScanResult<List<String>> scan(final int cursor, final String pattern, final int count);
-
-	/**
-	 * 迭代当前数据库中的数据库键
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/scan.html" target="_blank">http://redisdoc.com/database/scan.html</a></p>
-	 *
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的数据库键
-	 */
-	ScanResult<List<byte[]>> scan(final int cursor, final byte[] pattern, final int count);
 
 	/**
 	 * 迭代当前数据库中的数据库键
@@ -1122,6 +1693,22 @@ public interface KeyCommands extends RedisCommands {
 	Long unlink(final byte[]... keys);
 
 	/**
+	 * 阻塞当前客户端，直到所有以前的写命令都成功的传输和指定的slaves确认
+	 *
+	 * <p>详情说明
+	 * <a href="http://www.redis.cn/commands/wait.html" target="_blank">http://www.redis.cn/commands/wait.html</a>
+	 * </p>
+	 *
+	 * @param replicas
+	 * 		副本数量
+	 * @param timeout
+	 * 		超时（单位：毫秒）
+	 *
+	 * @return 被删除 key 的数量
+	 */
+	Long wait(final int replicas, final long timeout);
+
+	/**
 	 * 排序参数
 	 *
 	 * @author Yong.Teng
@@ -1183,8 +1770,8 @@ public interface KeyCommands extends RedisCommands {
 			private Builder(){
 			}
 
-			public final static SortArgument.Builder create(){
-				return new SortArgument.Builder();
+			public static Builder create(){
+				return new Builder();
 			}
 
 			/**
@@ -1195,7 +1782,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public SortArgument.Builder by(String pattern){
+			public Builder by(String pattern){
 				sortArgument.by = pattern;
 				return this;
 			}
@@ -1205,7 +1792,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public SortArgument.Builder asc(){
+			public Builder asc(){
 				sortArgument.order = Order.ASC;
 				return this;
 			}
@@ -1215,7 +1802,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public SortArgument.Builder desc(){
+			public Builder desc(){
 				sortArgument.order = Order.DESC;
 				return this;
 			}
@@ -1228,7 +1815,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public SortArgument.Builder order(Order order){
+			public Builder order(Order order){
 				sortArgument.order = order;
 				return this;
 			}
@@ -1243,7 +1830,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return Builder
 			 */
-			public SortArgument.Builder limit(long offset, long count){
+			public Builder limit(long offset, long count){
 				sortArgument.limit = new Limit(offset, count);
 				return this;
 			}
@@ -1253,7 +1840,7 @@ public interface KeyCommands extends RedisCommands {
 			 *
 			 * @return 使用对字符串进行排序
 			 */
-			public SortArgument.Builder alpha(){
+			public Builder alpha(){
 				sortArgument.alpha = "ALPHA";
 				return this;
 			}

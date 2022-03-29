@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -29,85 +29,30 @@ import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.KeyOperations;
-import com.buession.redis.core.Constants;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.convert.OkStatusConverter;
-import com.buession.redis.core.convert.jedis.SortArgumentJedisConverter;
+import com.buession.redis.core.convert.jedis.MigrateOperationConverter;
+import com.buession.redis.core.convert.jedis.SortArgumentConverter;
 import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.PipelineBase;
 import redis.clients.jedis.SortingParams;
-import redis.clients.jedis.commands.JedisCommands;
 
 import java.util.List;
 
 /**
+ * Jedis Key 命令操作抽象类
+ *
+ * @param <CMD>
+ * 		Jedis 原始命令对象
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractKeyOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements KeyOperations<C> {
+public abstract class AbstractKeyOperations<CMD> extends AbstractJedisRedisOperations<CMD>
+		implements KeyOperations<CMD> {
+
+	protected final static MigrateOperationConverter.MigrateOperationJedisConverter MIGRATE_OPERATION_JEDIS_CONVERTER = new MigrateOperationConverter.MigrateOperationJedisConverter();
 
 	public AbstractKeyOperations(final JedisRedisClient client){
 		super(client);
-	}
-
-	@Override
-	public byte[] dump(final String key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().dump(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().dump(key)));
-		}else{
-			return execute((cmd)->cmd.dump(key));
-		}
-	}
-
-	@Override
-	public boolean exists(final String key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().exists(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().exists(key)));
-		}else{
-			return execute((cmd)->cmd.exists(key));
-		}
-	}
-
-	@Override
-	public Status expire(final String key, final int lifetime){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().expire(key, lifetime), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().expire(key, lifetime), converter));
-		}else{
-			return execute((cmd)->cmd.expire(key, lifetime), converter);
-		}
-	}
-
-	@Override
-	public Status expireAt(final String key, final long unixTimestamp){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().expireAt(key, unixTimestamp), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().expireAt(key, unixTimestamp), converter));
-		}else{
-			return execute((cmd)->cmd.expireAt(key, unixTimestamp), converter);
-		}
-	}
-
-	@Override
-	public Status move(final String key, final int db){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().move(key, db), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().move(key, db), converter));
-		}else{
-			return execute((cmd)->cmd.move(key, db), converter);
-		}
 	}
 
 	@Override
@@ -190,7 +135,7 @@ public abstract class AbstractKeyOperations<C extends JedisCommands, P extends P
 
 	@Override
 	public List<String> sort(final String key, final SortArgument sortArgument){
-		final SortingParams soringParams = new SortArgumentJedisConverter().convert(sortArgument);
+		final SortingParams soringParams = new SortArgumentConverter.SortArgumentJedisConverter().convert(sortArgument);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, soringParams)));

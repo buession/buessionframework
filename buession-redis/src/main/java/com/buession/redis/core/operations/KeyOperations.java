@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -46,6 +46,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	/**
 	 * 删除给定的 key
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/del.html" target="_blank">http://redisdoc.com/database/del.html</a></p>
+	 *
 	 * @param key
 	 * 		key
 	 *
@@ -57,6 +59,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	/**
 	 * 删除给定的 key
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/del.html" target="_blank">http://redisdoc.com/database/del.html</a></p>
 	 *
 	 * @param key
 	 * 		key
@@ -70,6 +74,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	/**
 	 * 删除给定的 key
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/del.html" target="_blank">http://redisdoc.com/database/del.html</a></p>
+	 *
 	 * @param key
 	 * 		key
 	 *
@@ -81,6 +87,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	/**
 	 * 删除给定的 key
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/del.html" target="_blank">http://redisdoc.com/database/del.html</a></p>
 	 *
 	 * @param key
 	 * 		key
@@ -94,6 +102,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	/**
 	 * 删除给定的一个或多个 key
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/del.html" target="_blank">http://redisdoc.com/database/del.html</a></p>
+	 *
 	 * @param keys
 	 * 		一个或多个 key
 	 *
@@ -106,6 +116,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	/**
 	 * 删除给定的一个或多个 key
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/del.html" target="_blank">http://redisdoc.com/database/del.html</a></p>
+	 *
 	 * @param keys
 	 * 		一个或多个 key
 	 *
@@ -117,6 +129,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 
 	/**
 	 * 为给定 key 设置过期时间
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/expireat.html" target="_blank">http://redisdoc.com/expire/expireat.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -133,6 +147,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	/**
 	 * 为给定 key 设置过期时间
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/expireat.html" target="_blank">http://redisdoc.com/expire/expireat.html</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param date
@@ -148,6 +164,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
 	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -168,6 +186,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
 	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param host
@@ -186,6 +206,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
 	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -209,6 +231,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
 	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param host
@@ -225,6 +249,1179 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	default Status migrate(final byte[] key, final String host, final int db, final int timeout,
 						   final MigrateOperation operation){
 		return migrate(key, host, RedisNode.DEFAULT_PORT, db, timeout, operation);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String key, final String host, final int db, final String password, final int timeout){
+		return migrate(key, host, RedisNode.DEFAULT_PORT, db, password, timeout);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final byte[] key, final String host, final int db, final byte[] password, final int timeout){
+		return migrate(key, host, RedisNode.DEFAULT_PORT, db, password, timeout);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String key, final String host, final int db, final String password, final int timeout,
+						   final MigrateOperation operation){
+		return migrate(key, host, RedisNode.DEFAULT_PORT, db, password, timeout, operation);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final byte[] key, final String host, final int db, final byte[] password, final int timeout,
+						   final MigrateOperation operation){
+		return migrate(key, host, RedisNode.DEFAULT_PORT, db, password, timeout, operation);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String key, final String host, final int db, final String user, final String password,
+						   final int timeout){
+		return migrate(key, host, RedisNode.DEFAULT_PORT, db, user, password, timeout);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final byte[] key, final String host, final int db, final byte[] user, final byte[] password,
+						   final int timeout){
+		return migrate(key, host, RedisNode.DEFAULT_PORT, db, user, password, timeout);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String key, final String host, final int db, final String user, final String password,
+						   final int timeout, final MigrateOperation operation){
+		return migrate(key, host, RedisNode.DEFAULT_PORT, db, user, password, timeout, operation);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final byte[] key, final String host, final int db, final byte[] user, final byte[] password,
+						   final int timeout, final MigrateOperation operation){
+		return migrate(key, host, RedisNode.DEFAULT_PORT, db, user, password, timeout, operation);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String key, final RedisNode server, final int db, final int timeout){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(key, server.getHost(), server.getPort(), db, timeout);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final byte[] key, final RedisNode server, final int db, final int timeout){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(key, server.getHost(), server.getPort(), db, timeout);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String key, final RedisNode server, final int db, final int timeout,
+						   final MigrateOperation operation){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(key, server.getHost(), server.getPort(), db, timeout, operation);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final byte[] key, final RedisNode server, final int db, final int timeout,
+						   final MigrateOperation operation){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(key, server.getHost(), server.getPort(), db, timeout, operation);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String key, final RedisNode server, final int db, final String password,
+						   final int timeout){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(key, server.getHost(), server.getPort(), db, password, timeout);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final byte[] key, final RedisNode server, final int db, final byte[] password,
+						   final int timeout){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(key, server.getHost(), server.getPort(), db, password, timeout);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String key, final RedisNode server, final int db, final String password,
+						   final int timeout,
+						   final MigrateOperation operation){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(key, server.getHost(), server.getPort(), db, password, timeout, operation);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final byte[] key, final RedisNode server, final int db, final byte[] password,
+						   final int timeout, final MigrateOperation operation){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(key, server.getHost(), server.getPort(), db, password, timeout, operation);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String key, final RedisNode server, final int db, final String user,
+						   final String password, final int timeout){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(key, server.getHost(), server.getPort(), db, user, password, timeout);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final byte[] key, final RedisNode server, final int db, final byte[] user,
+						   final byte[] password, final int timeout){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(key, server.getHost(), server.getPort(), db, user, password, timeout);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String key, final RedisNode server, final int db, final String user,
+						   final String password, final int timeout, final MigrateOperation operation){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(key, server.getHost(), server.getPort(), db, user, password, timeout, operation);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final byte[] key, final RedisNode server, final int db, final byte[] user,
+						   final byte[] password, final int timeout, final MigrateOperation operation){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(key, server.getHost(), server.getPort(), db, user, password, timeout, operation);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String host, final int db, final int timeout, final String... keys){
+		return migrate(host, RedisNode.DEFAULT_PORT, db, timeout, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String host, final int db, final int timeout, final byte[]... keys){
+		return migrate(host, RedisNode.DEFAULT_PORT, db, timeout, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String host, final int db, final int timeout, final MigrateOperation operation,
+						   final String... keys){
+		return migrate(host, RedisNode.DEFAULT_PORT, db, timeout, operation, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String host, final int db, final int timeout, final MigrateOperation operation,
+						   final byte[]... keys){
+		return migrate(host, RedisNode.DEFAULT_PORT, db, timeout, operation, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String host, final int db, final String password, final int timeout,
+						   final String... keys){
+		return migrate(host, RedisNode.DEFAULT_PORT, db, password, timeout, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String host, final int db, final byte[] password, final int timeout,
+						   final byte[]... keys){
+		return migrate(host, RedisNode.DEFAULT_PORT, db, password, timeout, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String host, final int db, final String password, final int timeout,
+						   final MigrateOperation operation, final String... keys){
+		return migrate(host, RedisNode.DEFAULT_PORT, db, password, timeout, operation, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String host, final int db, final byte[] password, final int timeout,
+						   final MigrateOperation operation, final byte[]... keys){
+		return migrate(host, RedisNode.DEFAULT_PORT, db, password, timeout, operation, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String host, final int db, final String user, final String password, final int timeout,
+						   final String... keys){
+		return migrate(host, RedisNode.DEFAULT_PORT, db, user, password, timeout, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String host, final int db, final byte[] user, final byte[] password, final int timeout,
+						   final byte[]... keys){
+		return migrate(host, RedisNode.DEFAULT_PORT, db, user, password, timeout, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String host, final int db, final String user, final String password, final int timeout,
+						   final MigrateOperation operation, final String... keys){
+		return migrate(host, RedisNode.DEFAULT_PORT, db, user, password, timeout, operation, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param host
+	 * 		目标 Redis Server 主机地址
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final String host, final int db, final byte[] user, final byte[] password, final int timeout,
+						   final MigrateOperation operation, final byte[]... keys){
+		return migrate(host, RedisNode.DEFAULT_PORT, db, user, password, timeout, operation, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final RedisNode server, final int db, final int timeout, final String... keys){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(server.getHost(), server.getPort(), db, timeout, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final RedisNode server, final int db, final int timeout, final byte[]... keys){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(server.getHost(), server.getPort(), db, timeout, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final RedisNode server, final int db, final int timeout, final MigrateOperation operation,
+						   final String... keys){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(server.getHost(), server.getPort(), db, timeout, operation, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final RedisNode server, final int db, final int timeout, final MigrateOperation operation,
+						   final byte[]... keys){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(server.getHost(), server.getPort(), db, timeout, operation, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final RedisNode server, final int db, final String password, final int timeout,
+						   final String... keys){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(server.getHost(), server.getPort(), db, password, timeout, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final RedisNode server, final int db, final byte[] password, final int timeout,
+						   final byte[]... keys){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(server.getHost(), server.getPort(), db, password, timeout, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final RedisNode server, final int db, final String password, final int timeout,
+						   final MigrateOperation operation, final String... keys){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(server.getHost(), server.getPort(), db, password, timeout, operation, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final RedisNode server, final int db, final byte[] password, final int timeout,
+						   final MigrateOperation operation, final byte[]... keys){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(server.getHost(), server.getPort(), db, password, timeout, operation, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final RedisNode server, final int db, final String user, final String password,
+						   final int timeout, final String... keys){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(server.getHost(), server.getPort(), db, user, password, timeout, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final RedisNode server, final int db, final byte[] user, final byte[] password,
+						   final int timeout, final byte[]... keys){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(server.getHost(), server.getPort(), db, user, password, timeout, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final RedisNode server, final int db, final String user, final String password,
+						   final int timeout, final MigrateOperation operation, final String... keys){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(server.getHost(), server.getPort(), db, user, password, timeout, operation, keys);
+	}
+
+	/**
+	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
+	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/internal/migrate.html" target="_blank">http://redisdoc.com/internal/migrate.html</a></p>
+	 *
+	 * @param server
+	 * 		目标 Redis Server
+	 * @param db
+	 * 		目标 Redis DB
+	 * @param user
+	 * 		目标 Redis 用户
+	 * @param password
+	 * 		目标 Redis 密码
+	 * @param timeout
+	 * 		当前实例和目标实例进行沟通的最大间隔时间，只是说数据传送的时间不能超过这个值（单位：毫秒）
+	 * @param operation
+	 *        {@link MigrateOperation}
+	 * @param keys
+	 * 		Keys
+	 *
+	 * @return 操作结果
+	 */
+	default Status migrate(final RedisNode server, final int db, final byte[] user, final byte[] password,
+						   final int timeout, final MigrateOperation operation, final byte[]... keys){
+		Assert.isNull(server, "Destination redis node cloud not be null");
+		Assert.isBlank(server.getHost(), "Destination redis host cloud not be null or empty");
+
+		return migrate(server.getHost(), server.getPort(), db, user, password, timeout, operation, keys);
 	}
 
 	/**
@@ -387,6 +1584,20 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 */
 	default Status unlink(final byte[] key){
 		return StatusUtils.valueOf(unlink(new byte[][]{key}) > 0);
+	}
+
+	/**
+	 * 阻塞当前客户端，直到所有以前的写命令都成功的传输和指定的slaves确认
+	 *
+	 * @param replicas
+	 * 		副本数量
+	 * @param timeout
+	 * 		超时（单位：毫秒）
+	 *
+	 * @return 被删除 key 的数量
+	 */
+	default Long wait(final int replicas, final int timeout){
+		return wait(replicas, (long) timeout);
 	}
 
 }

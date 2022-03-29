@@ -29,17 +29,22 @@ import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.convert.Converters;
 import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.MigrateOperationConverter;
 import com.buession.redis.core.convert.jedis.ScanResultConverter;
 import com.buession.redis.core.convert.jedis.SortArgumentConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 import com.buession.redis.exception.RedisExceptionUtils;
+import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.params.MigrateParams;
 
@@ -47,9 +52,11 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Jedis 集群模式 Key 命令操作抽象类
+ *
  * @author Yong.Teng
  */
-public class JedisClusterKeyOperations extends AbstractKeyOperations {
+public final class JedisClusterKeyOperations extends AbstractKeyOperations<JedisCluster> {
 
 	public JedisClusterKeyOperations(final JedisClusterClient client){
 		super(client);
@@ -57,172 +64,573 @@ public class JedisClusterKeyOperations extends AbstractKeyOperations {
 
 	@Override
 	public Long del(final String... keys){
+		final CommandArguments args = CommandArguments.create("keys", keys);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().del(keys[0])));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().del(keys)), ProtocolCommand.DEL, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().del(keys)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().del(keys)), ProtocolCommand.DEL, args);
 		}else{
-			return execute((cmd)->cmd.del(keys));
+			return execute((cmd)->cmd.del(keys), ProtocolCommand.DEL, args);
 		}
 	}
 
 	@Override
 	public Long del(final byte[]... keys){
+		final CommandArguments args = CommandArguments.create("keys", keys);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().del(keys[0])));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().del(keys)), ProtocolCommand.DEL, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().del(keys)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().del(keys)), ProtocolCommand.DEL, args);
 		}else{
-			return execute((cmd)->cmd.del(keys));
+			return execute((cmd)->cmd.del(keys), ProtocolCommand.DEL, args);
+		}
+	}
+
+	@Override
+	public String dump(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().dump(key)), ProtocolCommand.DUMP, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().dump(key)), ProtocolCommand.DUMP, args);
+		}else{
+			return execute((cmd)->SafeEncoder.encode(cmd.dump(key)), ProtocolCommand.DUMP, args);
 		}
 	}
 
 	@Override
 	public byte[] dump(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().dump(key)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().dump(key)), ProtocolCommand.DUMP, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().dump(key)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().dump(key)), ProtocolCommand.DUMP, args);
 		}else{
-			return execute((cmd)->cmd.dump(key));
+			return execute((cmd)->cmd.dump(key), ProtocolCommand.DUMP, args);
+		}
+	}
+
+	@Override
+	public boolean exists(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().exists(key)), ProtocolCommand.EXISTS, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().exists(key)), ProtocolCommand.EXISTS,
+					args);
+		}else{
+			return execute((cmd)->cmd.exists(key), ProtocolCommand.EXISTS, args);
 		}
 	}
 
 	@Override
 	public boolean exists(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().exists(key)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().exists(key)), ProtocolCommand.EXISTS, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().exists(key)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().exists(key)), ProtocolCommand.EXISTS,
+					args);
 		}else{
-			return execute((cmd)->cmd.exists(key));
+			return execute((cmd)->cmd.exists(key), ProtocolCommand.EXISTS, args);
+		}
+	}
+
+	@Override
+	public long exists(final String... keys){
+		final CommandArguments args = CommandArguments.create("keys", keys);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().exists(keys)), ProtocolCommand.EXISTS, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().exists(keys)), ProtocolCommand.EXISTS,
+					args);
+		}else{
+			return execute((cmd)->cmd.exists(keys), ProtocolCommand.EXISTS, args);
+		}
+	}
+
+	@Override
+	public long exists(final byte[]... keys){
+		final CommandArguments args = CommandArguments.create("keys", keys);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().exists(keys)), ProtocolCommand.EXISTS, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().exists(keys)), ProtocolCommand.EXISTS,
+					args);
+		}else{
+			return execute((cmd)->cmd.exists(keys), ProtocolCommand.EXISTS, args);
+		}
+	}
+
+	@Override
+	public Status expire(final String key, final int lifetime){
+		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().expire(key, lifetime), converter),
+					ProtocolCommand.EXPIRE, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().expire(key, lifetime), converter),
+					ProtocolCommand.EXPIRE, args);
+		}else{
+			return execute((cmd)->cmd.expire(key, lifetime), converter, ProtocolCommand.EXPIRE, args);
 		}
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime){
+		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
 		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().expire(key, lifetime), converter));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().expire(key, lifetime), converter),
+					ProtocolCommand.EXPIRE, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().expire(key, lifetime), converter));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().expire(key, lifetime), converter),
+					ProtocolCommand.EXPIRE, args);
 		}else{
-			return execute((cmd)->cmd.expire(key, lifetime), converter);
+			return execute((cmd)->cmd.expire(key, lifetime), converter, ProtocolCommand.EXPIRE, args);
+		}
+	}
+
+	@Override
+	public Status expire(final String key, final int lifetime, final ExpireOption expireOption){
+		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
+				.put("expireOption", expireOption);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().expire(key, lifetime), converter),
+					ProtocolCommand.EXPIRE, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().expire(key, lifetime), converter),
+					ProtocolCommand.EXPIRE, args);
+		}else{
+			return execute((cmd)->cmd.expire(key, lifetime), converter, ProtocolCommand.EXPIRE, args);
+		}
+	}
+
+	@Override
+	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption){
+		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
+				.put("expireOption", expireOption);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().expire(key, lifetime), converter),
+					ProtocolCommand.EXPIRE, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().expire(key, lifetime), converter),
+					ProtocolCommand.EXPIRE, args);
+		}else{
+			return execute((cmd)->cmd.expire(key, lifetime), converter, ProtocolCommand.EXPIRE, args);
+		}
+	}
+
+	@Override
+	public Status expireAt(final String key, final long unixTimestamp){
+		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().expireAt(key, unixTimestamp), converter),
+					ProtocolCommand.EXPIREAT, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().expireAt(key, unixTimestamp), converter),
+					ProtocolCommand.EXPIREAT, args);
+		}else{
+			return execute((cmd)->cmd.expireAt(key, unixTimestamp), converter, ProtocolCommand.EXPIREAT, args);
 		}
 	}
 
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp){
+		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
 		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().expireAt(key, unixTimestamp), converter));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().expireAt(key, unixTimestamp), converter),
+					ProtocolCommand.EXPIREAT, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().expireAt(key, unixTimestamp), converter));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().expireAt(key, unixTimestamp), converter),
+					ProtocolCommand.EXPIREAT, args);
 		}else{
-			return execute((cmd)->cmd.expireAt(key, unixTimestamp), converter);
+			return execute((cmd)->cmd.expireAt(key, unixTimestamp), converter, ProtocolCommand.EXPIREAT, args);
 		}
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().copy(key, destKey, true),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().copy(key, destKey, true),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else{
+			return execute((cmd)->cmd.copy(key, destKey, true), Converters.BOOLEAN_STATUS_CONVERTER,
+					ProtocolCommand.COPY, args);
+		}
+	}
+
+	@Override
+	public Status copy(final byte[] key, final byte[] destKey){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().copy(key, destKey, true),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().copy(key, destKey, true),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else{
+			return execute((cmd)->cmd.copy(key, destKey, true), Converters.BOOLEAN_STATUS_CONVERTER,
+					ProtocolCommand.COPY, args);
+		}
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final int db){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+				.put("db", db);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().copy(key, destKey, true),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().copy(key, destKey, true),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else{
+			return execute((cmd)->cmd.copy(key, destKey, true), Converters.BOOLEAN_STATUS_CONVERTER,
+					ProtocolCommand.COPY, args);
+		}
+	}
+
+	@Override
+	public Status copy(final byte[] key, final byte[] destKey, final int db){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+				.put("db", db);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().copy(key, destKey, true),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().copy(key, destKey, true),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else{
+			return execute((cmd)->cmd.copy(key, destKey, true), Converters.BOOLEAN_STATUS_CONVERTER,
+					ProtocolCommand.COPY, args);
+		}
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final boolean replace){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+				.put("replace", replace);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().copy(key, destKey, replace),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().copy(key, destKey, replace),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else{
+			return execute((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER,
+					ProtocolCommand.COPY, args);
+		}
+	}
+
+	@Override
+	public Status copy(final byte[] key, final byte[] destKey, final boolean replace){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+				.put("replace", replace);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().copy(key, destKey, replace),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().copy(key, destKey, replace),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else{
+			return execute((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER,
+					ProtocolCommand.COPY, args);
+		}
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final int db, final boolean replace){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db)
+				.put("replace", replace);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().copy(key, destKey, replace),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().copy(key, destKey, replace),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else{
+			return execute((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER,
+					ProtocolCommand.COPY, args);
+		}
+	}
+
+	@Override
+	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db)
+				.put("replace", replace);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().copy(key, destKey, replace),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().copy(key, destKey, replace),
+					Converters.BOOLEAN_STATUS_CONVERTER), ProtocolCommand.COPY, args);
+		}else{
+			return execute((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER,
+					ProtocolCommand.COPY, args);
+		}
+	}
+
+	@Override
+	public Status move(final String key, final int db){
+		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MOVE, args);
+	}
+
+	@Override
+	public Status move(final byte[] key, final int db){
+		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MOVE, args);
 	}
 
 	@Override
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
-					converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().migrate(host, port, key, db, timeout),
-					converter));
-		}else{
-			return execute((cmd)->cmd.migrate(host, port, key, db, timeout), converter);
-		}
+		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
+				.put("db", db).put("timeout", timeout);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
 	}
 
 	@Override
 	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
-					converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().migrate(host, port, key, db, timeout),
-					converter));
-		}else{
-			return execute((cmd)->cmd.migrate(host, port, key, db, timeout), converter);
-		}
+		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
+				.put("db", db).put("timeout", timeout);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
 	}
 
 	@Override
 	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
 						  final MigrateOperation operation){
-		final MigrateParams migrateParams = new MigrateOperationConverter.MigrateOperationJedisConverter().convert(
-				operation);
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
-					converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().migrate(host, port, db, timeout,
-					migrateParams, key), converter));
-		}else{
-			return execute((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, key), converter);
-		}
+		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
+				.put("db", db).put("timeout", timeout).put("operation", operation);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
 	}
 
 	@Override
 	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
 						  final MigrateOperation operation){
-		final MigrateParams migrateParams = new MigrateOperationConverter.MigrateOperationJedisConverter().convert(
-				operation);
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().migrate(host, port, key, db, timeout),
-					converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().migrate(host, port, db, timeout,
-					migrateParams, key), converter));
-		}else{
-			return execute((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, key), converter);
-		}
+		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
+				.put("db", db).put("timeout", timeout).put("operation", operation);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
 	}
 
 	@Override
-	public Status move(final byte[] key, final int db){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 1);
+	public Status migrate(final String key, final String host, final int port, final int db, final String password,
+						  final int timeout){
+		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
+				.put("db", db).put("password", password).put("timeout", timeout);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
 
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().move(key, db), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().move(key, db), converter));
-		}else{
-			return execute((cmd)->cmd.move(key, db), converter);
-		}
+	@Override
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
+						  final int timeout){
+		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
+				.put("db", db).put("password", password).put("timeout", timeout);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final String password,
+						  final int timeout, final MigrateOperation operation){
+		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
+				.put("db", db).put("password", password).put("timeout", timeout).put("operation", operation);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
+						  final int timeout, final MigrateOperation operation){
+		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
+				.put("db", db).put("password", password).put("timeout", timeout).put("operation", operation);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final String user,
+						  final String password, final int timeout){
+		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
+				.put("db", db).put("user", user).put("password", password).put("timeout", timeout);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
+						  final byte[] password, final int timeout){
+		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
+				.put("db", db).put("user", user).put("password", password).put("timeout", timeout);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String key, final String host, final int port, final int db, final String user,
+						  final String password, final int timeout, final MigrateOperation operation){
+		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
+				.put("db", db).put("user", user).put("password", password).put("timeout", timeout)
+				.put("operation", operation);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
+						  final byte[] password, final int timeout, final MigrateOperation operation){
+		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
+				.put("db", db).put("user", user).put("password", password).put("timeout", timeout)
+				.put("operation", operation);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
+				.put("timeout", timeout).put("keys", keys);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
+				.put("timeout", timeout).put("keys", keys);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final int timeout,
+						  final MigrateOperation operation, final String... keys){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
+				.put("timeout", timeout).put("operation", operation).put("keys", keys);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final int timeout,
+						  final MigrateOperation operation, final byte[]... keys){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
+				.put("timeout", timeout).put("operation", operation).put("keys", keys);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
+						  final String... keys){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
+				.put("password", password).put("timeout", timeout).put("keys", keys);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
+						  final byte[]... keys){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
+				.put("password", password).put("timeout", timeout).put("keys", keys);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
+						  final MigrateOperation operation, final String... keys){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
+				.put("password", password).put("timeout", timeout).put("operation", operation).put("keys", keys);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
+						  final MigrateOperation operation, final byte[]... keys){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
+				.put("password", password).put("timeout", timeout).put("operation", operation).put("keys", keys);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final String user, final String password,
+						  final int timeout, final String... keys){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
+				.put("user", user).put("password", password).put("timeout", timeout).put("keys", keys);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
+						  final int timeout, final byte[]... keys){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
+				.put("user", user).put("password", password).put("timeout", timeout).put("keys", keys);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final String user, final String password,
+						  final int timeout, final MigrateOperation operation, final String... keys){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
+				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
+				.put("keys", keys);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
+	}
+
+	@Override
+	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
+						  final int timeout, final MigrateOperation operation, final byte[]... keys){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
+				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
+				.put("keys", keys);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
 	}
 
 	@Override
 	public Set<String> keys(final String pattern){
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().keys(pattern)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().keys(pattern)), ProtocolCommand.KEYS, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().keys(pattern)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().keys(pattern)), ProtocolCommand.KEYS,
+					args);
 		}else{
-			return execute((cmd)->cmd.keys(pattern));
+			return execute((cmd)->cmd.keys(pattern), ProtocolCommand.KEYS, args);
 		}
 	}
 
 	@Override
 	public Set<byte[]> keys(final byte[] pattern){
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().keys(pattern)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().keys(pattern)), ProtocolCommand.KEYS, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().keys(pattern)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().keys(pattern)), ProtocolCommand.KEYS,
+					args);
 		}else{
-			return execute((cmd)->cmd.keys(pattern));
+			return execute((cmd)->cmd.keys(pattern), ProtocolCommand.KEYS, args);
 		}
 	}
 

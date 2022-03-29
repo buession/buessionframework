@@ -21,10 +21,62 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.convert.jedis;/**
- * 
+ */
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.MigrateOperation;
+import redis.clients.jedis.params.MigrateParams;
+
+/**
+ * {@link MigrateOperation} 和 {@link MigrateParams} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public interface MigrateOperationConverter {
+ */
+public interface MigrateOperationConverter<S, T> extends Converter<S, T> {
+
+	/**
+	 * {@link MigrateOperation} 转换为 jedis {@link MigrateParams}
+	 *
+	 * @author Yong.Teng
+	 * @since 2.0.0
+	 */
+	final class MigrateOperationJedisConverter implements MigrateOperationConverter<MigrateOperation, MigrateParams> {
+
+		@Override
+		public MigrateParams convert(final MigrateOperation source){
+			switch(source){
+				case COPY:
+					return MigrateParams.migrateParams().copy();
+				case REPLACE:
+					return MigrateParams.migrateParams().replace();
+				default:
+					return MigrateParams.migrateParams();
+			}
+		}
+
+	}
+
+	/**
+	 * jedis {@link MigrateParams} 转换为 {@link MigrateOperation}
+	 *
+	 * @author Yong.Teng
+	 * @since 2.0.0
+	 */
+	final class MigrateOperationExposeConverter implements MigrateOperationConverter<MigrateParams, MigrateOperation> {
+
+		@Override
+		public MigrateOperation convert(final MigrateParams source){
+			if(source.getParam(MigrateOperation.COPY.name())){
+				return MigrateOperation.COPY;
+			}else if(source.getParam(MigrateOperation.REPLACE.name())){
+				return MigrateOperation.REPLACE;
+			}else{
+				return null;
+			}
+		}
+
+	}
+
 }
