@@ -19,38 +19,27 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.PredicateStatusConverter;
-import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.HyperLogLogOperations;
-import redis.clients.jedis.PipelineBase;
-import redis.clients.jedis.commands.JedisCommands;
 
 /**
+ * Jedis 地理 HyperLogLog 命令操作抽象类
+ *
+ * @param <CMD>
+ * 		Jedis 原始命令对象
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractHyperLogLogOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements HyperLogLogOperations<C> {
+public abstract class AbstractHyperLogLogOperations<CMD> extends AbstractJedisRedisOperations<CMD>
+		implements HyperLogLogOperations<CMD> {
 
 	public AbstractHyperLogLogOperations(final JedisRedisClient client){
 		super(client);
-	}
-
-	@Override
-	public Status pfAdd(final String key, final String... elements){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pfadd(key, elements), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pfadd(key, elements), converter));
-		}else{
-			return execute((cmd)->cmd.pfadd(key, elements), converter);
-		}
 	}
 
 }

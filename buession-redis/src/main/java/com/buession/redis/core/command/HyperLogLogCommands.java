@@ -100,8 +100,7 @@ public interface HyperLogLogCommands extends RedisCommands {
 	/**
 	 * 获取所有给定 HyperLogLog 的并集的近似基数，这个近似基数是通过将所有给定 HyperLogLog 合并至一个临时 HyperLogLog 来计算得出的
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/pfmerge.html" target="_blank">http://redisdoc
-	 * .com/hyperloglog/pfmerge.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/pfmerge.html" target="_blank">http://redisdoc.com/hyperloglog/pfmerge.html</a></p>
 	 *
 	 * @param keys
 	 * 		一个或多个 Key
@@ -113,8 +112,7 @@ public interface HyperLogLogCommands extends RedisCommands {
 	/**
 	 * 获取所有给定 HyperLogLog 的并集的近似基数，这个近似基数是通过将所有给定 HyperLogLog 合并至一个临时 HyperLogLog 来计算得出的
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/pfmerge.html" target="_blank">http://redisdoc
-	 * .com/hyperloglog/pfmerge.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/pfmerge.html" target="_blank">http://redisdoc.com/hyperloglog/pfmerge.html</a></p>
 	 *
 	 * @param keys
 	 * 		一个或多个 Key

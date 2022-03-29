@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.operations;
@@ -27,8 +27,13 @@ package com.buession.redis.client.operations;
 import com.buession.redis.core.command.HyperLogLogCommands;
 
 /**
+ * HyperLogLog 命令操作接口
+ *
+ * @param <CMD>
+ * 		原始命令对象
+ *
  * @author Yong.Teng
  */
-public interface HyperLogLogOperations<T> extends HyperLogLogCommands, RedisClientOperations<T> {
+public interface HyperLogLogOperations<CMD> extends HyperLogLogCommands, RedisOperations<CMD> {
 
 }
