@@ -19,10 +19,12 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
+
+import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -32,7 +34,7 @@ import java.util.Objects;
  *
  * @author Yong.Teng
  */
-public class RedisNode implements Serializable {
+public class RedisNode implements Serializable, RedisNamedNode {
 
 	private final static long serialVersionUID = -2212702986712034274L;
 
@@ -45,22 +47,47 @@ public class RedisNode implements Serializable {
 	public final static int DEFAULT_DATABASE = 0;
 
 	/**
-	 * Redis 服务器主机地址
+	 * 主机 ID
 	 */
-	private String host = DEFAULT_HOST;
+	@Nullable
+	private String id;
 
 	/**
-	 * Redis 服务器主机端口
+	 * 主机名称
 	 */
-	private int port = DEFAULT_PORT;
+	@Nullable
+	private String name;
+
+	/**
+	 * 主机地址
+	 */
+	@Nullable
+	private String host;
+
+	/**
+	 * 主机端口
+	 */
+	private int port;
+
+	/**
+	 * 主机角色
+	 */
+	@Nullable
+	private Role role;
+
+	/**
+	 * Master 主机 ID
+	 */
+	@Nullable
+	private String masterId;
 
 	/**
 	 * 构造函数
 	 *
 	 * @param host
-	 * 		Redis 节点地址
+	 * 		主机地址
 	 */
-	public RedisNode(final String host){
+	public RedisNode(@Nullable final String host){
 		this.host = host;
 	}
 
@@ -68,31 +95,188 @@ public class RedisNode implements Serializable {
 	 * 构造函数
 	 *
 	 * @param host
-	 * 		Redis 节点地址
+	 * 		主机地址
 	 * @param port
-	 * 		Redis 节点端口
+	 * 		端口
 	 */
-	public RedisNode(final String host, final int port){
+	public RedisNode(@Nullable final String host, final int port){
 		this.host = host;
 		this.port = port;
 	}
 
 	/**
-	 * 获取 Redis 服务器主机地址
+	 * 构造函数
 	 *
-	 * @return Redis 服务器主机地址
+	 * @param host
+	 * 		主机地址
+	 * @param role
+	 * 		主机角色
 	 */
+	public RedisNode(@Nullable final String host, @Nullable final Role role){
+		this(host);
+		this.role = role;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		主机地址
+	 * @param port
+	 * 		端口
+	 * @param role
+	 * 		主机角色
+	 */
+	public RedisNode(@Nullable final String host, final int port, @Nullable final Role role){
+		this(host, port);
+		this.role = role;
+	}
+
+	/**
+	 * 返回主机 ID
+	 *
+	 * @return 主机 ID
+	 */
+	@Nullable
+	public String getId(){
+		return id;
+	}
+
+	/**
+	 * 设置主机 ID
+	 *
+	 * @param id
+	 * 		主机 ID
+	 */
+	public void setId(@Nullable String id){
+		this.id = id;
+	}
+
+	/**
+	 * 返回主机名称
+	 *
+	 * @return 主机名称
+	 */
+	@Override
+	@Nullable
+	public String getName(){
+		return name;
+	}
+
+	/**
+	 * 设置主机名称
+	 *
+	 * @param name
+	 * 		主机名称
+	 */
+	public void setName(@Nullable String name){
+		this.name = name;
+	}
+
+	/**
+	 * 返回主机地址
+	 *
+	 * @return 主机地址
+	 */
+	@Nullable
 	public String getHost(){
 		return host;
 	}
 
 	/**
-	 * 获取 Redis 服务器主机端口
+	 * 设置主机地址
 	 *
-	 * @return Redis 服务器主机端口
+	 * @param host
+	 * 		主机地址
+	 */
+	public void setHost(@Nullable String host){
+		this.host = host;
+	}
+
+	/**
+	 * 返回主机端口
+	 *
+	 * @return 主机地址
 	 */
 	public int getPort(){
 		return port;
+	}
+
+	/**
+	 * 设置主机端口
+	 *
+	 * @param port
+	 * 		主机端口
+	 */
+	public void setPort(int port){
+		this.port = port;
+	}
+
+	/**
+	 * 返回主机角色
+	 *
+	 * @return 主机角色
+	 */
+	@Nullable
+	public Role getRole(){
+		return role;
+	}
+
+	/**
+	 * 设置主机角色
+	 *
+	 * @param role
+	 * 		主机角色
+	 */
+	public void setRole(@Nullable Role role){
+		this.role = role;
+	}
+
+	/**
+	 * 返回主机 Master Id
+	 *
+	 * @return 主机 Master Id
+	 */
+	@Nullable
+	public String getMasterId(){
+		return masterId;
+	}
+
+	/**
+	 * 设置主机 Master Id
+	 *
+	 * @param masterId
+	 * 		主机 Master Id
+	 */
+	public void setMasterId(@Nullable String masterId){
+		this.masterId = masterId;
+	}
+
+	/**
+	 * 返回是否为 Master 节点
+	 *
+	 * @return 是否为 Master 节点
+	 */
+	public boolean isMaster(){
+		return Role.MASTER.equals(getRole());
+	}
+
+	/**
+	 * 返回是否为 Slave 节点
+	 *
+	 * @return 是否为 Slave 节点
+	 */
+	public boolean isSlave(){
+		return Role.SLAVE.equals(getRole());
+	}
+
+	/**
+	 * 返回是否为 Slave 节点
+	 *
+	 * @return 是否为 Slave 节点
+	 */
+	public boolean isReplica(){
+		return isSlave();
 	}
 
 	public String asString(){
@@ -127,7 +311,7 @@ public class RedisNode implements Serializable {
 
 		if(obj instanceof RedisNode){
 			RedisNode that = (RedisNode) obj;
-			return port == that.port && Objects.equals(host, that.host);
+			return port == that.port && Objects.equals(host, that.host) && Objects.equals(name, that.name);
 		}
 
 		return false;

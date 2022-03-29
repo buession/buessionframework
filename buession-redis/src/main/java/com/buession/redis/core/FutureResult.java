@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -30,30 +30,43 @@ import org.springframework.lang.Nullable;
 import java.util.function.Supplier;
 
 /**
+ * 事务、管道异步结果
+ *
+ * @param <T>
+ * @param <SV>
+ * 		原始结果类型
+ * @param <TV>
+ * 		目标结果类型
+ *
  * @author Yong.Teng
  */
 public abstract class FutureResult<T, SV, TV> implements Supplier<SV> {
 
-	private T resultHolder;
+	private final T holder;
 
-	private Converter<SV, TV> converter;
+	private final Converter<SV, TV> converter;
 
-	@SuppressWarnings("unchecked")
-	public FutureResult(final T resultHolder){
-		this(resultHolder, val->(TV) val);
+	public FutureResult(final T holder){
+		this(holder, null);
 	}
 
 	@SuppressWarnings("unchecked")
-	public FutureResult(final T resultHolder, final Converter<SV, TV> converter){
-		this.resultHolder = resultHolder;
+	public FutureResult(final T holder, final Converter<SV, TV> converter){
+		this.holder = holder;
 		this.converter = converter != null ? converter : val->(TV) val;
 	}
 
-	public T getResultHolder(){
-		return resultHolder;
+	public T getHolder(){
+		return holder;
 	}
 
-	@SuppressWarnings("unchecked")
+	/**
+	 * 将 事务、管道
+	 *
+	 * @param result
+	 *
+	 * @return
+	 */
 	@Nullable
 	public TV convert(@Nullable SV result){
 		return result == null ? null : converter.convert(result);

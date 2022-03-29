@@ -29,7 +29,7 @@ package com.buession.redis.core;
  */
 public enum RedisMode {
 
-	STANDALONE("standalone"),
+	STANDALONE("Standalone"),
 
 	SHARDED("Sharded"),
 

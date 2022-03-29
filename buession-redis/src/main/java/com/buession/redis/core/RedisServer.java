@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
@@ -35,11 +35,6 @@ public class RedisServer extends RedisNode {
 	 * Redis 服务器主机 IP 地址
 	 */
 	private String ip;
-
-	/**
-	 * 节点角色
-	 */
-	private Role role;
 
 	/**
 	 * 构造函数
@@ -74,8 +69,8 @@ public class RedisServer extends RedisNode {
 	 * 		节点角色
 	 */
 	public RedisServer(final String host, final Role role){
-		super(host);
-		this.role = role;
+		super(host, role);
+		this.ip = host;
 	}
 
 	/**
@@ -89,8 +84,8 @@ public class RedisServer extends RedisNode {
 	 * 		节点角色
 	 */
 	public RedisServer(final String host, final int port, final Role role){
-		super(host, port);
-		this.role = role;
+		super(host, port, role);
+		this.ip = host;
 	}
 
 	/**
@@ -100,69 +95,6 @@ public class RedisServer extends RedisNode {
 	 */
 	public String getIp(){
 		return ip;
-	}
-
-	/**
-	 * 获取节点角色
-	 *
-	 * @return 节点角色
-	 */
-	public Role getRole(){
-		return role;
-	}
-
-	/**
-	 * 判断节点是否为 Master 节点
-	 *
-	 * @return 节点为 Master 节点，返回 true；否则，返回 false
-	 */
-	public boolean isMaster(){
-		return getRole() == Role.MASTER;
-	}
-
-	/**
-	 * 判断节点是否为 Slave 节点
-	 *
-	 * @return 节点为 Slave 节点，返回 true；否则，返回 false
-	 */
-	public boolean isSlave(){
-		return getRole() == Role.SLAVE;
-	}
-
-	/**
-	 * 判断节点是否为副本节点
-	 *
-	 * @return 节点为副本节点，返回 true；否则，返回 false
-	 */
-	public boolean isReplica(){
-		return isSlave();
-	}
-
-	@Override
-	public String asString(){
-		final StringBuilder sb = new StringBuilder(20);
-
-		sb.append(super.asString()).append(", role: ").append(role);
-
-		return sb.toString();
-	}
-
-	@Override
-	public int hashCode(){
-		return super.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj){
-		if(this == obj){
-			return true;
-		}
-
-		if(obj instanceof RedisServer){
-			return super.equals(obj);
-		}
-
-		return false;
 	}
 
 }

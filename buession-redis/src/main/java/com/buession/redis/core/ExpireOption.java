@@ -22,28 +22,32 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.utils;
-
-import com.buession.core.utils.Assert;
-
-import java.nio.charset.StandardCharsets;
+package com.buession.redis.core;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class SafeEncoder {
+public enum ExpireOption {
 
-	private SafeEncoder(){
+	/**
+	 * Set expiry only when the key has no expiry
+	 */
+	NX,
 
-	}
+	/**
+	 * Set expiry only when the key has an existing expiry
+	 */
+	XX,
 
-	public static byte[] encode(final String str){
-		Assert.isNull(str, "Value cloud not be null.");
-		return str.getBytes(StandardCharsets.UTF_8);
-	}
+	/**
+	 * Set expiry only when the new expiry is greater than current one
+	 */
+	GT,
 
-	public static String encode(final byte[] data){
-		return new String(data, StandardCharsets.UTF_8);
-	}
+	/**
+	 * Set expiry only when the new expiry is less than current one
+	 */
+	LT
 
 }

@@ -24,6 +24,8 @@
  */
 package com.buession.redis.core.convert;
 
+import com.buession.core.converter.BooleanStatusConverter;
+
 /**
  * @author Yong.Teng
  * @since 2.0.0
@@ -31,5 +33,7 @@ package com.buession.redis.core.convert;
 public interface Converters {
 
 	OkStatusConverter OK_STATUS_CONVERTER = new OkStatusConverter();
+
+	BooleanStatusConverter BOOLEAN_STATUS_CONVERTER = new BooleanStatusConverter();
 
 }

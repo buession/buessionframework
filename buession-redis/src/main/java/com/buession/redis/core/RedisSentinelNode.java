@@ -21,10 +21,77 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core;/**
- * 
+ */
+package com.buession.redis.core;
+
+import org.springframework.lang.Nullable;
+
+/**
+ * Redis 哨兵节点
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public class RedisSentinelNode {
+ */
+public class RedisSentinelNode extends RedisNode {
+
+	private final static long serialVersionUID = 7609068824843419481L;
+
+	private int quorum;
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		主机地址
+	 */
+	public RedisSentinelNode(@Nullable String host){
+		super(host);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		主机地址
+	 * @param port
+	 * 		端口
+	 */
+	public RedisSentinelNode(@Nullable String host, int port){
+		super(host, port);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		主机地址
+	 * @param role
+	 * 		主机角色
+	 */
+	public RedisSentinelNode(@Nullable String host, @Nullable Role role){
+		super(host, role);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param host
+	 * 		主机地址
+	 * @param port
+	 * 		端口
+	 * @param role
+	 * 		主机角色
+	 */
+	public RedisSentinelNode(@Nullable String host, int port, @Nullable Role role){
+		super(host, port, role);
+	}
+
+	public int getQuorum(){
+		return quorum;
+	}
+
+	public void setQuorum(int quorum){
+		this.quorum = quorum;
+	}
+
 }
