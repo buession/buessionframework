@@ -19,19 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
 
+import com.buession.core.utils.ByteUtils;
+import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.command.*;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRedisTemplate extends RedisAccessor implements ConnectionCommands, GeoCommands,
-		HashCommands, HyperLogLogCommands, KeyCommands, ListCommands, PubSubCommands, ScriptingCommands,
+public abstract class AbstractRedisTemplate extends RedisAccessor implements ClusterCommands, ConnectionCommands,
+		GeoCommands, HashCommands, HyperLogLogCommands, KeyCommands, ListCommands, PubSubCommands, ScriptingCommands,
 		ServerCommands, SetCommands, SortedSetCommands, StringCommands, TransactionCommands {
 
 	/**
@@ -49,6 +52,58 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Con
 	 */
 	public AbstractRedisTemplate(RedisConnection connection){
 		super(connection);
+	}
+
+	protected final String makeRawKey(final String key){
+		String prefix = getOptions().getPrefix();
+
+		if(Validate.isEmpty(prefix)){
+			return key;
+		}
+
+		final StringBuilder sb = new StringBuilder(prefix.length() + key.length());
+
+		sb.append(prefix).append(key);
+
+		return sb.toString();
+	}
+
+	protected final String[] makeRawKeys(final String[] keys){
+		String prefix = getOptions().getPrefix();
+
+		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
+			return keys;
+		}
+
+		String[] rawKeys = new String[keys.length];
+
+		for(int i = 0; i < keys.length; i++){
+			rawKeys[i] = makeRawKey(keys[i]);
+		}
+
+		return rawKeys;
+	}
+
+	protected final byte[] makeByteKey(byte[] key){
+		String prefix = getOptions().getPrefix();
+		return Validate.isEmpty(prefix) ? key : ByteUtils.concat(SafeEncoder.encode(prefix), key);
+	}
+
+	protected final byte[][] makeByteKeys(final byte[][] keys){
+		String prefix = getOptions().getPrefix();
+
+		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
+			return keys;
+		}
+
+		byte[] prefixByte = SafeEncoder.encode(prefix);
+		byte[][] result = new byte[keys.length][];
+
+		for(int i = 0; i < keys.length; i++){
+			result[i] = ByteUtils.concat(prefixByte, keys[i]);
+		}
+
+		return result;
 	}
 
 }

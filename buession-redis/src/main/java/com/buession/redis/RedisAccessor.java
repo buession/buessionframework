@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis;
@@ -28,21 +28,18 @@ import com.buession.core.Executor;
 import com.buession.core.utils.Assert;
 import com.buession.redis.client.RedisClient;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.connection.jedis.JedisConnection;
-import com.buession.redis.client.connection.jedis.ShardedJedisConnection;
-import com.buession.redis.client.jedis.JedisClient;
-import com.buession.redis.client.jedis.ShardedJedisClient;
+import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
+import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.Options;
 import com.buession.redis.core.SessionCallback;
-import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.serializer.JacksonJsonSerializer;
 import com.buession.redis.serializer.Serializer;
-import com.buession.redis.utils.KeyUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -69,8 +66,6 @@ public abstract class RedisAccessor implements Closeable {
 
 	protected AtomicInteger index = new AtomicInteger(-1);
 
-	private final static Logger logger = LoggerFactory.getLogger(RedisAccessor.class);
-
 	{
 		DEFAULT_OPTIONS.setSerializer(DEFAULT_SERIALIZER);
 	}
@@ -88,16 +83,6 @@ public abstract class RedisAccessor implements Closeable {
 
 	public void setOptions(Options options){
 		this.options = options;
-	}
-
-	@Deprecated
-	public Serializer getSerializer(){
-		return serializer;
-	}
-
-	@Deprecated
-	public void setSerializer(Serializer serializer){
-		this.serializer = serializer;
 	}
 
 	public RedisConnection getConnection(){
@@ -118,12 +103,11 @@ public abstract class RedisAccessor implements Closeable {
 		Options options = getOptions();
 		if(options != null){
 			serializer = options.getSerializer();
+			enableTransactionSupport = options.isEnableTransactionSupport();
 		}
 		if(serializer == null){
 			serializer = DEFAULT_SERIALIZER;
 		}
-
-		enableTransactionSupport = options.isEnableTransactionSupport();
 
 		client = doGetRedisClient(connection);
 	}
@@ -132,11 +116,11 @@ public abstract class RedisAccessor implements Closeable {
 		return execute((cmd)->client.pipeline());
 	}
 
-	public <V> V execute(SessionCallback<V> callback) throws RedisException{
+	public <R> R execute(final SessionCallback<R> callback) throws RedisException{
 		Assert.isNull(callback, "callback cloud not be null.");
 
 		try{
-			return execute(callback, null, null);
+			return doExecute(callback);
 		}catch(Exception e){
 			throw new RedisException(e.getMessage(), e);
 		}
@@ -149,57 +133,41 @@ public abstract class RedisAccessor implements Closeable {
 		}
 	}
 
-	protected <R> R execute(final Executor<RedisClient, R> executor, final ProtocolCommand command){
-		return execute(executor, command, null);
-	}
-
-	protected <R> R execute(final Executor<RedisClient, R> executor, final ProtocolCommand command,
-							final CommandArguments arguments){
+	protected <R> R doExecute(final Executor<RedisClient, R> executor){
 		checkInitialized();
 
-		String argumentsString = logger.isDebugEnabled() || logger.isErrorEnabled() && arguments != null ?
-				arguments.toString() : null;
-
-		if(logger.isDebugEnabled()){
-			if(arguments != null){
-				logger.debug("Execute command '{}' with arguments: {}", command, argumentsString);
-			}else{
-				logger.debug("Execute command '{}'", command);
-			}
-		}
-
-		if(isPipeline() || isTransaction()){
+		if(isTransactionOrPipeline()){
 			index.getAndIncrement();
 		}
 
-		try{
-			return executor.execute(client);
-		}catch(Exception e){
-			if(logger.isErrorEnabled()){
-				if(arguments != null){
-					logger.error("Execute command '{}' with arguments: {}, failure: {}", command, argumentsString,
-							e.getMessage(), e);
-				}else{
-					logger.error("Execute command '{}', failure: {}", command, e.getMessage(), e);
-				}
-			}
-			throw e;
-		}
+		return executor.execute(client);
+	}
+
+	protected <R> R execute(final Executor<RedisClient, R> executor){
+		return doExecute(executor);
 	}
 
 	protected RedisClient doGetRedisClient(RedisConnection connection) throws RedisException{
 		if(connection instanceof JedisConnection){
-			JedisClient jedisClient = new JedisClient((JedisConnection) connection);
+			JedisStandaloneClient jedisClient = new JedisStandaloneClient((JedisConnection) connection);
 
 			jedisClient.setEnableTransactionSupport(enableTransactionSupport);
 
 			return jedisClient;
-		}else if(connection instanceof ShardedJedisConnection){
-			ShardedJedisClient shardedJedisClient = new ShardedJedisClient((ShardedJedisConnection) connection);
+		}else if(connection instanceof JedisSentinelConnection){
+			JedisSentinelClient jedisSentinelClient = new JedisSentinelClient(
+					(JedisSentinelConnection) connection);
 
-			shardedJedisClient.setEnableTransactionSupport(enableTransactionSupport);
+			jedisSentinelClient.setEnableTransactionSupport(enableTransactionSupport);
 
-			return shardedJedisClient;
+			return jedisSentinelClient;
+		}else if(connection instanceof JedisClusterConnection){
+			JedisClusterClient jedisClusterClient = new JedisClusterClient(
+					(JedisClusterConnection) connection);
+
+			jedisClusterClient.setEnableTransactionSupport(enableTransactionSupport);
+
+			return jedisClusterClient;
 		}else{
 			throw new RedisException("Cloud not initialize RedisClient for: " + connection);
 		}
@@ -207,7 +175,8 @@ public abstract class RedisAccessor implements Closeable {
 
 	protected final void checkInitialized(){
 		if(client == null){
-			throw new RedisException("RedisClient is not initialized. You can call the afterPropertiesSet method for " + "initialize.");
+			throw new RedisException(
+					"RedisClient is not initialized. You can call the afterPropertiesSet method for initialize.");
 		}
 	}
 
@@ -219,20 +188,8 @@ public abstract class RedisAccessor implements Closeable {
 		return getConnection().isPipeline();
 	}
 
-	protected final String makeRawKey(final String key){
-		return KeyUtil.makeRawKey(getOptions().getPrefix(), key);
-	}
-
-	protected final String[] makeRawKeys(final String[] keys){
-		return KeyUtil.makeRawKeys(getOptions().getPrefix(), keys);
-	}
-
-	protected final byte[] makeByteKey(byte[] key){
-		return KeyUtil.makeByteKey(getOptions().getPrefix(), key);
-	}
-
-	protected final byte[][] makeByteKeys(final byte[][] keys){
-		return KeyUtil.makeByteKeys(getOptions().getPrefix(), keys);
+	protected boolean isTransactionOrPipeline(){
+		return isTransaction() || isPipeline();
 	}
 
 }
