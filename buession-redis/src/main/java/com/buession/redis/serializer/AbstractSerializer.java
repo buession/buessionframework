@@ -21,24 +21,15 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2021 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.serializer;
 
 import com.buession.core.serializer.SerializerException;
-import com.buession.core.serializer.type.TypeReference;
 import com.buession.core.utils.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author Yong.Teng
@@ -68,7 +59,7 @@ public abstract class AbstractSerializer implements Serializer {
 	}
 
 	@Override
-	public <V> String[] serialize(final V[] objects){
+	public <V> String[] serialize(final V... objects){
 		if(objects != null){
 			final String[] temp = new String[objects.length];
 
@@ -96,7 +87,7 @@ public abstract class AbstractSerializer implements Serializer {
 	}
 
 	@Override
-	public <V> byte[][] serializeAsBytes(final V[] objects){
+	public <V> byte[][] serializeAsBytes(final V... objects){
 		if(objects != null){
 			final byte[][] temp = new byte[objects.length][];
 
@@ -137,92 +128,6 @@ public abstract class AbstractSerializer implements Serializer {
 	}
 
 	@Override
-	public <V> List<V> deserialize(final List<String> str){
-		if(str == null){
-			return null;
-		}
-
-		final List<V> result = new ArrayList<>(str.size());
-
-		for(String s : str){
-			result.add(deserialize(s));
-		}
-
-		return result;
-	}
-
-	@Override
-	public <V> List<V> deserializeBytes(final List<byte[]> bytes){
-		if(bytes == null){
-			return null;
-		}
-
-		final List<V> result = new ArrayList<>(bytes.size());
-
-		for(byte[] b : bytes){
-			result.add(deserializeBytes(b));
-		}
-
-		return result;
-	}
-
-	@Override
-	public <V> Set<V> deserialize(final Set<String> str){
-		if(str == null){
-			return null;
-		}
-
-		final Set<V> result = new LinkedHashSet<>(str.size());
-
-		for(String s : str){
-			result.add(deserialize(s));
-		}
-
-		return result;
-	}
-
-	@Override
-	public <V> Set<V> deserializeBytes(final Set<byte[]> bytes){
-		if(bytes == null){
-			return null;
-		}
-
-		final Set<V> result = new LinkedHashSet<>(bytes.size());
-
-		for(byte[] b : bytes){
-			result.add(deserializeBytes(b));
-		}
-
-		return result;
-	}
-
-	@Override
-	public <V> Map<String, V> deserialize(final Map<String, String> str){
-		if(str == null){
-			return null;
-		}
-
-		final Map<String, V> result = new LinkedHashMap<>(str.size());
-
-		str.forEach((key, value)->result.put(key, deserialize(value)));
-
-		return result;
-	}
-
-	@Override
-	public <V> Map<byte[], V> deserializeBytes(final Map<byte[], byte[]> bytes){
-		if(bytes == null){
-			return null;
-		}
-
-		final Map<byte[], V> result = new LinkedHashMap<>(bytes.size());
-
-		bytes.forEach((key, value)->result.put(key, deserializeBytes(value)));
-
-		return result;
-	}
-
-	@Override
 	public <V> V deserialize(final String str, final Class<V> clazz){
 		return deserialize(str);
 	}
@@ -230,130 +135,6 @@ public abstract class AbstractSerializer implements Serializer {
 	@Override
 	public <V> V deserializeBytes(final byte[] bytes, final Class<V> clazz){
 		return deserializeBytes(bytes);
-	}
-
-	@Override
-	public <V> List<V> deserialize(final List<String> str, final Class<V> clazz){
-		if(str == null){
-			return null;
-		}else{
-			return str.stream().map((value)->deserialize(value, clazz)).collect(Collectors.toList());
-		}
-	}
-
-	@Override
-	public <V> List<V> deserializeBytes(final List<byte[]> bytes, final Class<V> clazz){
-		if(bytes == null){
-			return null;
-		}else{
-			return bytes.stream().map((value)->deserializeBytes(value, clazz)).collect(Collectors.toList());
-		}
-	}
-
-	@Override
-	public <V> Set<V> deserialize(final Set<String> str, final Class<V> clazz){
-		if(str == null){
-			return null;
-		}else{
-			return str.stream().map((value)->deserialize(value, clazz)).collect(Collectors.toCollection(LinkedHashSet::new));
-		}
-	}
-
-	@Override
-	public <V> Set<V> deserializeBytes(final Set<byte[]> bytes, final Class<V> clazz){
-		if(bytes == null){
-			return null;
-		}else{
-			return bytes.stream().map((value)->deserializeBytes(value, clazz)).collect(Collectors.toCollection(LinkedHashSet::new));
-		}
-	}
-
-	@Override
-	public <V> Map<String, V> deserialize(final Map<String, String> str, final Class<V> clazz){
-		if(str == null){
-			return null;
-		}
-
-		final Map<String, V> result = new LinkedHashMap<>(str.size());
-
-		str.forEach((key, value)->result.put(key, deserialize(value, clazz)));
-
-		return result;
-	}
-
-	@Override
-	public <V> Map<byte[], V> deserializeBytes(final Map<byte[], byte[]> bytes, final Class<V> clazz){
-		if(bytes == null){
-			return null;
-		}
-
-		final Map<byte[], V> result = new LinkedHashMap<>(bytes.size());
-
-		bytes.forEach((key, value)->result.put(key, deserializeBytes(value, clazz)));
-
-		return result;
-	}
-
-	@Override
-	public <V> List<V> deserialize(final List<String> str, final TypeReference<V> type){
-		if(str == null){
-			return null;
-		}else{
-			return str.stream().map((value)->deserialize(value, type)).collect(Collectors.toCollection(ArrayList::new));
-		}
-	}
-
-	@Override
-	public <V> List<V> deserializeBytes(final List<byte[]> bytes, final TypeReference<V> type){
-		if(bytes == null){
-			return null;
-		}else{
-			return bytes.stream().map((value)->deserializeBytes(value, type)).collect(Collectors.toCollection(ArrayList::new));
-		}
-	}
-
-	@Override
-	public <V> Set<V> deserialize(final Set<String> str, final TypeReference<V> type){
-		if(str == null){
-			return null;
-		}else{
-			return str.stream().map((value)->deserialize(value, type)).collect(Collectors.toCollection(LinkedHashSet::new));
-		}
-	}
-
-	@Override
-	public <V> Set<V> deserializeBytes(final Set<byte[]> bytes, final TypeReference<V> type){
-		if(bytes == null){
-			return null;
-		}else{
-			return bytes.stream().map((value)->deserializeBytes(value, type)).collect(Collectors.toCollection(LinkedHashSet::new));
-		}
-	}
-
-	@Override
-	public <V> Map<String, V> deserialize(final Map<String, String> str, final TypeReference<V> type){
-		if(str == null){
-			return null;
-		}
-
-		final Map<String, V> result = new LinkedHashMap<>(str.size());
-
-		str.forEach((key, value)->result.put(key, deserialize(value, type)));
-
-		return result;
-	}
-
-	@Override
-	public <V> Map<byte[], V> deserializeBytes(final Map<byte[], byte[]> bytes, final TypeReference<V> type){
-		if(bytes == null){
-			return null;
-		}
-
-		final Map<byte[], V> result = new LinkedHashMap<>(bytes.size());
-
-		bytes.forEach((key, value)->result.put(key, deserializeBytes(value, type)));
-
-		return result;
 	}
 
 }
