@@ -429,7 +429,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 	}
 
 	@Override
-	public Status readwrite(){
+	public Status readWrite(){
 		if(isPipeline()){
 			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.READWRITE);
 		}else if(isTransaction()){
@@ -440,7 +440,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 	}
 
 	@Override
-	public Status readonly(){
+	public Status readOnly(){
 		if(isPipeline()){
 			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.READONLY);
 		}else if(isTransaction()){

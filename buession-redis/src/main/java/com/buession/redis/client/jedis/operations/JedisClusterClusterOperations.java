@@ -214,12 +214,12 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	}
 
 	@Override
-	public Status readwrite(){
+	public Status readWrite(){
 		return execute(CommandNotSupported.ALL, ProtocolCommand.READWRITE);
 	}
 
 	@Override
-	public Status readonly(){
+	public Status readOnly(){
 		return execute(CommandNotSupported.ALL, ProtocolCommand.READONLY);
 	}
 
