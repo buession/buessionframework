@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -39,74 +39,6 @@ import java.util.Set;
  * @author Yong.Teng
  */
 public interface HashCommands extends RedisCommands {
-
-	/**
-	 * 为哈希表 key 中的域 field 的值加上减量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 减量 increment 后的值
-	 */
-	Long hDecrBy(final String key, final String field, final int value);
-
-	/**
-	 * 为哈希表 key 中的域 field 的值加上减量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 减量 increment 后的值
-	 */
-	Long hDecrBy(final byte[] key, final byte[] field, final int value);
-
-	/**
-	 * 为哈希表 key 中的域 field 的值加上减量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 减量 increment 后的值
-	 */
-	Long hDecrBy(final String key, final String field, final long value);
-
-	/**
-	 * 为哈希表 key 中的域 field 的值加上减量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 减量 increment 后的值
-	 */
-	Long hDecrBy(final byte[] key, final byte[] field, final long value);
 
 	/**
 	 * 删除哈希表 key 中的一个或多个指定域
@@ -197,8 +129,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 获取哈希表 key 中，所有的域和值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hgetall.html" target="_blank">http://redisdoc.com/hash/hgetall
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hgetall.html" target="_blank">http://redisdoc.com/hash/hgetall.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -210,8 +141,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 获取哈希表 key 中，所有的域和值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hgetall.html" target="_blank">http://redisdoc.com/hash/hgetall
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hgetall.html" target="_blank">http://redisdoc.com/hash/hgetall.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -223,42 +153,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 为哈希表 key 中的域 field 的值加上增量 increment
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 增量 increment 后的值
-	 */
-	Long hIncrBy(final String key, final String field, final int value);
-
-	/**
-	 * 为哈希表 key 中的域 field 的值加上增量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 增量 increment 后的值
-	 */
-	Long hIncrBy(final byte[] key, final byte[] field, final int value);
-
-	/**
-	 * 为哈希表 key 中的域 field 的值加上增量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -274,8 +169,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 为哈希表 key 中的域 field 的值加上增量 increment
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -291,42 +185,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 为哈希表 key 中的域 field 加上浮点数增量 increment
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrbyfloat.html" target="_blank">http://redisdoc
-	 * .com/hash/hincrbyfloat.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 增量 increment 后的值
-	 */
-	Double hIncrByFloat(final String key, final String field, final float value);
-
-	/**
-	 * 为哈希表 key 中的域 field 加上浮点数增量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrbyfloat.html" target="_blank">http://redisdoc
-	 * .com/hash/hincrbyfloat.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 * @param value
-	 * 		值
-	 *
-	 * @return 哈希表 key 中域 field 增量 increment 后的值
-	 */
-	Double hIncrByFloat(final byte[] key, final byte[] field, final float value);
-
-	/**
-	 * 为哈希表 key 中的域 field 加上浮点数增量 increment
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrbyfloat.html" target="_blank">http://redisdoc
-	 * .com/hash/hincrbyfloat.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrbyfloat.html" target="_blank">http://redisdoc.com/hash/hincrbyfloat.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -342,8 +201,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 为哈希表 key 中的域 field 加上浮点数增量 increment
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrbyfloat.html" target="_blank">http://redisdoc
-	 * .com/hash/hincrbyfloat.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrbyfloat.html" target="_blank">http://redisdoc.com/hash/hincrbyfloat.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -359,8 +217,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 获取哈希表 key 中的所有域
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hkeys.html" target="_blank">http://redisdoc.com/hash/hkeys.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hkeys.html" target="_blank">http://redisdoc.com/hash/hkeys.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -372,8 +229,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 获取哈希表 key 中的所有域
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hkeys.html" target="_blank">http://redisdoc.com/hash/hkeys
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hkeys.html" target="_blank">http://redisdoc.com/hash/hkeys.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -409,8 +265,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 获取哈希表 key 中，一个或多个给定域的值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmget.html" target="_blank">http://redisdoc.com/hash/hmget.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmget.html" target="_blank">http://redisdoc.com/hash/hmget.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -424,8 +279,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 获取哈希表 key 中，一个或多个给定域的值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmget.html" target="_blank">http://redisdoc.com/hash/hmget
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmget.html" target="_blank">http://redisdoc.com/hash/hmget.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -439,8 +293,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmset.html" target="_blank">http://redisdoc.com/hash/hmset.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmset.html" target="_blank">http://redisdoc.com/hash/hmset.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -454,8 +307,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 批量将多个 field =&gt; value (域-值)对设置到哈希表 key 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmset.html" target="_blank">http://redisdoc.com/hash/hmset.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hmset.html" target="_blank">http://redisdoc.com/hash/hmset.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -467,34 +319,92 @@ public interface HashCommands extends RedisCommands {
 	Status hMSet(final byte[] key, final Map<byte[], byte[]> data);
 
 	/**
-	 * 迭代哈希键 key 中的键值对
+	 * 随机返回一个哈希表中存在的域
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
+	 * <p>详情说明 <a href="https://redis.io/commands/hrandfield/" target="_blank">https://redis.io/commands/hrandfield/</a>
 	 * </p>
 	 *
 	 * @param key
 	 * 		Key
-	 * @param cursor
-	 * 		游标
 	 *
-	 * @return 返回的每个元素都是一个键值对
+	 * @return 随机获取的哈希表中存在的域
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final int cursor);
+	String hRandField(final String key);
 
 	/**
-	 * 迭代哈希键 key 中的键值对
+	 * 随机返回一个哈希表中存在的域
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan
-	 * .html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/hrandfield/" target="_blank">https://redis.io/commands/hrandfield/</a>
+	 * </p>
 	 *
 	 * @param key
 	 * 		Key
-	 * @param cursor
-	 * 		游标
 	 *
-	 * @return 返回的每个元素都是一个键值对
+	 * @return 随机获取的哈希表中存在的域
 	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor);
+	byte[] hRandField(final byte[] key);
+
+	/**
+	 * 随机返回一个哈希表中指定数量的存在的域
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/hrandfield/" target="_blank">https://redis.io/commands/hrandfield/</a>
+	 * </p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		数量
+	 *
+	 * @return 随机获取指定数量的哈希表中存在的域
+	 */
+	List<String> hRandField(final String key, final long count);
+
+	/**
+	 * 随机返回一个哈希表中指定数量的存在的域
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/hrandfield/" target="_blank">https://redis.io/commands/hrandfield/</a>
+	 * </p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		数量
+	 *
+	 * @return 随机获取指定数量的哈希表中存在的域
+	 */
+	List<byte[]> hRandField(final byte[] key, final long count);
+
+	/**
+	 * When called with just the key argument, return a random field from the hash value stored at key.
+	 * If the provided count argument is positive, return an array of distinct fields.
+	 * The array’s length is either count or the hash’s number of fields (HLEN), whichever is lower.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/hrandfield/" target="_blank">https://redis.io/commands/hrandfield/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return A list fields and their values from the hash
+	 */
+	Map<String, String> hRandFieldWithValues(final String key, final long count);
+
+	/**
+	 * When called with just the key argument, return a random field from the hash value stored at key.
+	 * If the provided count argument is positive, return an array of distinct fields.
+	 * The array’s length is either count or the hash’s number of fields (HLEN), whichever is lower.
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/hrandfield/" target="_blank">https://redis.io/commands/hrandfield/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return A list fields and their values from the hash
+	 */
+	Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
@@ -559,42 +469,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 *
-	 * @return 返回和给定模式相匹配的元素
-	 */
-	ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 *
-	 * @return 返回和给定模式相匹配的元素
-	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -610,8 +485,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -627,8 +501,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -644,8 +517,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -661,8 +533,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -673,13 +544,12 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final int cursor, final int count);
+	ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -690,13 +560,12 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final int count);
+	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -707,13 +576,12 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count);
+	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a
-	 * ></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -724,47 +592,12 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count);
+	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回的指定数量的键值对
-	 */
-	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回的指定数量的键值对
-	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final int count);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -777,13 +610,12 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern, final int count);
+	ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern, final long count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -796,51 +628,12 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern, final int count);
+	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern, final long count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的元素
-	 */
-	ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern, final int count);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的元素
-	 */
-	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern, final int count);
-
-	/**
-	 * 迭代哈希键 key 中的键值对
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -854,13 +647,12 @@ public interface HashCommands extends RedisCommands {
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
 	ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-			final int count);
+										  final long count);
 
 	/**
 	 * 迭代哈希键 key 中的键值对
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -874,7 +666,7 @@ public interface HashCommands extends RedisCommands {
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
 	ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
-			final int count);
+										  final long count);
 
 	/**
 	 * 将哈希表 key 中域 field 的值设置为 value。
@@ -915,8 +707,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 当且仅当域 field 尚未存在于哈希表 key 中的情况下，将它的值设置为 value
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hsetnx.html" target="_blank">http://redisdoc.com/hash/hsetnx.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hsetnx.html" target="_blank">http://redisdoc.com/hash/hsetnx.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -932,8 +723,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 当且仅当域 field 尚未存在于哈希表 key 中的情况下，将它的值设置为 value
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hsetnx.html" target="_blank">http://redisdoc.com/hash/hsetnx.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hsetnx.html" target="_blank">http://redisdoc.com/hash/hsetnx.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -949,9 +739,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 获取哈希表 key 中，与给定域 field 相关联的值的字符串长度
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/hash/hstrlen.html" target="_blank">http://redisdoc.com/hash/hstrlen.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hstrlen.html" target="_blank">http://redisdoc.com/hash/hstrlen.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -965,9 +753,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 获取哈希表 key 中，与给定域 field 相关联的值的字符串长度
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/hash/hstrlen.html" target="_blank">http://redisdoc.com/hash/hstrlen.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hstrlen.html" target="_blank">http://redisdoc.com/hash/hstrlen.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -981,8 +767,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 获取哈希表 key 中所有域的值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hvals.html" target="_blank">http://redisdoc.com/hash/hvals
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hvals.html" target="_blank">http://redisdoc.com/hash/hvals.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -994,8 +779,7 @@ public interface HashCommands extends RedisCommands {
 	/**
 	 * 获取哈希表 key 中所有域的值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hvals.html" target="_blank">http://redisdoc.com/hash/hvals.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hvals.html" target="_blank">http://redisdoc.com/hash/hvals.html</a></p>
 	 *
 	 * @param key
 	 * 		Key

@@ -19,198 +19,36 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.core.utils.NumberUtils;
-import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.HashOperations;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.OkStatusConverter;
-import com.buession.redis.core.convert.jedis.MapScanResultExposeConverter;
-import com.buession.redis.core.jedis.JedisScanParams;
-import com.buession.redis.exception.RedisExceptionUtils;
-import redis.clients.jedis.PipelineBase;
-import redis.clients.jedis.commands.JedisCommands;
+import com.buession.redis.core.convert.jedis.ScanResultConverter;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
+ * Jedis 哈希表命令操作抽象类
+ *
+ * @param <CMD>
+ * 		Jedis 原始命令对象
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractHashOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements HashOperations<C> {
+public abstract class AbstractHashOperations<CMD> extends AbstractJedisRedisOperations<CMD>
+		implements HashOperations<CMD> {
+
+	protected final static ScanResultConverter.MapScanResultExposeConverter<String, String> STRING_MAP_SCAN_RESULT_EXPOSE_CONVERTER = new ScanResultConverter.MapScanResultExposeConverter<>();
+
+	protected final static ScanResultConverter.MapScanResultExposeConverter<byte[], byte[]> BINARY_MAP_SCAN_RESULT_EXPOSE_CONVERTER = new ScanResultConverter.MapScanResultExposeConverter<>();
 
 	public AbstractHashOperations(final JedisRedisClient client){
 		super(client);
-	}
-
-	@Override
-	public Long hDecrBy(final String key, final String field, final int value){
-		return hDecrBy(key, field, (long) value);
-	}
-
-	@Override
-	public Long hDecrBy(final byte[] key, final byte[] field, final int value){
-		return hDecrBy(key, field, (long) value);
-	}
-
-	@Override
-	public Long hDecrBy(final String key, final String field, final long value){
-		return hIncrBy(key, field, value > 0 ? value * -1 : value);
-	}
-
-	@Override
-	public Long hDecrBy(final byte[] key, final byte[] field, final long value){
-		return hIncrBy(key, field, value > 0 ? value * -1 : value);
-	}
-
-	@Override
-	public Long hDel(final String key, final String... fields){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hdel(key, fields)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hdel(key, fields)));
-		}else{
-			return execute((cmd)->cmd.hdel(key, fields));
-		}
-	}
-
-	@Override
-	public boolean hExists(final String key, final String field){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hexists(key, field)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hexists(key, field)));
-		}else{
-			return execute((cmd)->cmd.hexists(key, field));
-		}
-	}
-
-	@Override
-	public String hGet(final String key, final String field){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hget(key, field)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hget(key, field)));
-		}else{
-			return execute((cmd)->cmd.hget(key, field));
-		}
-	}
-
-	@Override
-	public Map<String, String> hGetAll(final String key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hgetAll(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hgetAll(key)));
-		}else{
-			return execute((cmd)->cmd.hgetAll(key));
-		}
-	}
-
-	@Override
-	public Long hIncrBy(final String key, final String field, final int value){
-		return hIncrBy(key, field, (long) value);
-	}
-
-	@Override
-	public Long hIncrBy(final byte[] key, final byte[] field, final int value){
-		return hIncrBy(key, field, (long) value);
-	}
-
-	@Override
-	public Long hIncrBy(final String key, final String field, final long value){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hincrBy(key, field, value)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hincrBy(key, field, value)));
-		}else{
-			return execute((cmd)->cmd.hincrBy(key, field, value));
-		}
-	}
-
-	@Override
-	public Double hIncrByFloat(final String key, final String field, final float value){
-		return hIncrByFloat(key, field, (double) value);
-	}
-
-	@Override
-	public Double hIncrByFloat(final byte[] key, final byte[] field, final float value){
-		return hIncrByFloat(key, field, (double) value);
-	}
-
-	@Override
-	public Double hIncrByFloat(final String key, final String field, final double value){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hincrByFloat(key, field, value)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hincrByFloat(key, field, value)));
-		}else{
-			return execute((cmd)->cmd.hincrByFloat(key, field, value));
-		}
-	}
-
-	@Override
-	public Set<String> hKeys(final String key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hkeys(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hkeys(key)));
-		}else{
-			return execute((cmd)->cmd.hkeys(key));
-		}
-	}
-
-	@Override
-	public Long hLen(final String key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hlen(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hlen(key)));
-		}else{
-			return execute((cmd)->cmd.hlen(key));
-		}
-	}
-
-	@Override
-	public List<String> hMGet(final String key, final String... fields){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmget(key, fields)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hmget(key, fields)));
-		}else{
-			return execute((cmd)->cmd.hmget(key, fields));
-		}
-	}
-
-	@Override
-	public Status hMSet(final String key, final Map<String, String> data){
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmset(key, data), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hmset(key, data), converter));
-		}else{
-			return execute((cmd)->cmd.hmset(key, data), converter);
-		}
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor){
-		return hScan(key, Integer.toString(cursor));
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor){
-		return hScan(key, NumberUtils.int2bytes(cursor));
 	}
 
 	@Override
@@ -224,23 +62,6 @@ public abstract class AbstractHashOperations<C extends JedisCommands, P extends 
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.HSCAN,
-				client.getConnection());
-		return execute((cmd)->new MapScanResultExposeConverter<String, String>().convert(cmd.hscan(key, cursor)));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern){
-		return hScan(key, Integer.toString(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern){
-		return hScan(key, NumberUtils.int2bytes(cursor), pattern);
-	}
-
-	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
 		return hScan(key, Long.toString(cursor), pattern);
 	}
@@ -251,120 +72,25 @@ public abstract class AbstractHashOperations<C extends JedisCommands, P extends 
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.HSCAN,
-				client.getConnection());
-		return execute((cmd)->new MapScanResultExposeConverter<String, String>().convert(cmd.hscan(key, cursor,
-				new JedisScanParams(pattern))));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final int count){
-		return hScan(key, Integer.toString(cursor), count);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final int count){
-		return hScan(key, NumberUtils.int2bytes(cursor), count);
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final int count){
+	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count){
 		return hScan(key, Long.toString(cursor), count);
 	}
 
 	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final int count){
+	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count){
 		return hScan(key, NumberUtils.long2bytes(cursor), count);
 	}
 
 	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final int count){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.HSCAN,
-				client.getConnection());
-		return execute((cmd)->new MapScanResultExposeConverter<String, String>().convert(cmd.hscan(key, cursor,
-				new JedisScanParams(count))));
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final int cursor, final String pattern,
-												 final int count){
-		return hScan(key, Integer.toString(cursor), pattern, count);
-	}
-
-	@Override
-	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final int cursor, final byte[] pattern,
-												 final int count){
-		return hScan(key, NumberUtils.int2bytes(cursor), pattern, count);
-	}
-
-	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
-												 final int count){
+												 final long count){
 		return hScan(key, Long.toString(cursor), pattern, count);
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
-												 final int count){
+												 final long count){
 		return hScan(key, NumberUtils.long2bytes(cursor), pattern, count);
-	}
-
-	@Override
-	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
-												 final int count){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.HSCAN,
-				client.getConnection());
-		return execute((cmd)->new MapScanResultExposeConverter<String, String>().convert(cmd.hscan(key, cursor,
-				new JedisScanParams(pattern, count))));
-	}
-
-	@Override
-	public Status hSet(final String key, final String field, final String value){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value), converter));
-		}else{
-			return execute((cmd)->cmd.hset(key, field, value), converter);
-		}
-	}
-
-	@Override
-	public Status hSetNx(final String key, final String field, final String value){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value), converter));
-		}else{
-			return execute((cmd)->cmd.hsetnx(key, field, value), converter);
-		}
-	}
-
-	@Override
-	public Long hStrLen(final String key, final String field){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hstrlen(key, field)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hstrlen(key, field)));
-		}else{
-			return execute((cmd)->cmd.hstrlen(key, field));
-		}
-	}
-
-	@Override
-	public List<String> hVals(final String key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hvals(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hvals(key)));
-		}else{
-			return execute((cmd)->cmd.hvals(key));
-		}
 	}
 
 }

@@ -24,256 +24,698 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.Executor;
 import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.OkStatusConverter;
-import com.buession.redis.core.convert.jedis.ScanResultConverter;
+import com.buession.redis.core.convert.Converters;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
-import com.buession.redis.exception.RedisExceptionUtils;
+import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.JedisCluster;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
+ * Jedis 集群模式哈希表命令操作抽象类
+ *
  * @author Yong.Teng
  */
-public class JedisClusterHashOperations extends AbstractHashOperations {
+public final class JedisClusterHashOperations extends AbstractHashOperations<JedisCluster> {
 
 	public JedisClusterHashOperations(final JedisClusterClient client){
 		super(client);
 	}
 
 	@Override
-	public Long hDel(final byte[] key, final byte[]... fields){
+	public Long hDel(final String key, final String... fields){
+		final CommandArguments args = CommandArguments.create("key", key).put("fields", fields);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hdel(key, fields)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hdel(key, fields)), ProtocolCommand.HDEL, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hdel(key, fields)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hdel(key, fields)), ProtocolCommand.HDEL,
+					args);
 		}else{
-			return execute((cmd)->cmd.hdel(key, fields));
+			return execute((cmd)->cmd.hdel(key, fields), ProtocolCommand.HDEL, args);
+		}
+	}
+
+	@Override
+	public Long hDel(final byte[] key, final byte[]... fields){
+		final CommandArguments args = CommandArguments.create("key", key).put("fields", fields);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hdel(key, fields)), ProtocolCommand.HDEL, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hdel(key, fields)), ProtocolCommand.HDEL,
+					args);
+		}else{
+			return execute((cmd)->cmd.hdel(key, fields), ProtocolCommand.HDEL, args);
+		}
+	}
+
+	@Override
+	public boolean hExists(final String key, final String field){
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hexists(key, field)), ProtocolCommand.HEXISTS,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hexists(key, field)),
+					ProtocolCommand.HEXISTS, args);
+		}else{
+			return execute((cmd)->cmd.hexists(key, field), ProtocolCommand.HEXISTS, args);
 		}
 	}
 
 	@Override
 	public boolean hExists(final byte[] key, final byte[] field){
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hexists(key, field)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hexists(key, field)), ProtocolCommand.HEXISTS,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hexists(key, field)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hexists(key, field)),
+					ProtocolCommand.HEXISTS, args);
 		}else{
-			return execute((cmd)->cmd.hexists(key, field));
+			return execute((cmd)->cmd.hexists(key, field), ProtocolCommand.HEXISTS, args);
+		}
+	}
+
+	@Override
+	public String hGet(final String key, final String field){
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hget(key, field)), ProtocolCommand.HGET,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hget(key, field)), ProtocolCommand.HGET,
+					args);
+		}else{
+			return execute((cmd)->cmd.hget(key, field), ProtocolCommand.HGET, args);
 		}
 	}
 
 	@Override
 	public byte[] hGet(final byte[] key, final byte[] field){
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hget(key, field)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hget(key, field)), ProtocolCommand.HGET,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hget(key, field)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hget(key, field)), ProtocolCommand.HGET,
+					args);
 		}else{
-			return execute((cmd)->cmd.hget(key, field));
+			return execute((cmd)->cmd.hget(key, field), ProtocolCommand.HGET, args);
+		}
+	}
+
+	@Override
+	public Map<String, String> hGetAll(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hgetAll(key)), ProtocolCommand.HGETALL,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hgetAll(key)), ProtocolCommand.HGETALL,
+					args);
+		}else{
+			return execute((cmd)->cmd.hgetAll(key), ProtocolCommand.HGETALL, args);
 		}
 	}
 
 	@Override
 	public Map<byte[], byte[]> hGetAll(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hgetAll(key)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hgetAll(key)), ProtocolCommand.HGETALL,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hgetAll(key)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hgetAll(key)), ProtocolCommand.HGETALL,
+					args);
 		}else{
-			return execute((cmd)->cmd.hgetAll(key));
+			return execute((cmd)->cmd.hgetAll(key), ProtocolCommand.HGETALL, args);
+		}
+	}
+
+	@Override
+	public Long hIncrBy(final String key, final String field, final long value){
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hincrBy(key, field, value)),
+					ProtocolCommand.HINCRBY, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hincrBy(key, field, value)),
+					ProtocolCommand.HINCRBY, args);
+		}else{
+			return execute((cmd)->cmd.hincrBy(key, field, value), ProtocolCommand.HINCRBY, args);
 		}
 	}
 
 	@Override
 	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hincrBy(key, field, value)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hincrBy(key, field, value)),
+					ProtocolCommand.HINCRBY, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hincrBy(key, field, value)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hincrBy(key, field, value)),
+					ProtocolCommand.HINCRBY, args);
 		}else{
-			return execute((cmd)->cmd.hincrBy(key, field, value));
+			return execute((cmd)->cmd.hincrBy(key, field, value), ProtocolCommand.HINCRBY, args);
+		}
+	}
+
+	@Override
+	public Double hIncrByFloat(final String key, final String field, final double value){
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hincrByFloat(key, field, value)),
+					ProtocolCommand.HINCRBYFLOAT, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hincrByFloat(key, field, value)),
+					ProtocolCommand.HINCRBYFLOAT, args);
+		}else{
+			return execute((cmd)->cmd.hincrByFloat(key, field, value), ProtocolCommand.HINCRBYFLOAT, args);
 		}
 	}
 
 	@Override
 	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hincrByFloat(key, field, value)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hincrByFloat(key, field, value)),
+					ProtocolCommand.HINCRBYFLOAT, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hincrByFloat(key, field, value)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hincrByFloat(key, field, value)),
+					ProtocolCommand.HINCRBYFLOAT, args);
 		}else{
-			return execute((cmd)->cmd.hincrByFloat(key, field, value));
+			return execute((cmd)->cmd.hincrByFloat(key, field, value), ProtocolCommand.HINCRBYFLOAT, args);
+		}
+	}
+
+	@Override
+	public Set<String> hKeys(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hkeys(key)), ProtocolCommand.HKEYS, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hkeys(key)), ProtocolCommand.HKEYS, args);
+		}else{
+			return execute((cmd)->cmd.hkeys(key), ProtocolCommand.HKEYS, args);
 		}
 	}
 
 	@Override
 	public Set<byte[]> hKeys(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hkeys(key)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hkeys(key)), ProtocolCommand.HKEYS, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hkeys(key)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hkeys(key)), ProtocolCommand.HKEYS, args);
 		}else{
-			return execute((cmd)->cmd.hkeys(key));
+			return execute((cmd)->cmd.hkeys(key), ProtocolCommand.HKEYS, args);
+		}
+	}
+
+	@Override
+	public Long hLen(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hlen(key)), ProtocolCommand.HLEN, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hlen(key)), ProtocolCommand.HLEN, args);
+		}else{
+			return execute((cmd)->cmd.hlen(key), ProtocolCommand.HLEN, args);
 		}
 	}
 
 	@Override
 	public Long hLen(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hlen(key)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hlen(key)), ProtocolCommand.HLEN, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hlen(key)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hlen(key)), ProtocolCommand.HLEN, args);
 		}else{
-			return execute((cmd)->cmd.hlen(key));
+			return execute((cmd)->cmd.hlen(key), ProtocolCommand.HLEN, args);
+		}
+	}
+
+	@Override
+	public List<String> hMGet(final String key, final String... fields){
+		final CommandArguments args = CommandArguments.create("key", key).put("fields", fields);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmget(key, fields)), ProtocolCommand.HMGET,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hmget(key, fields)), ProtocolCommand.HMGET,
+					args);
+		}else{
+			return execute((cmd)->cmd.hmget(key, fields), ProtocolCommand.HMGET, args);
 		}
 	}
 
 	@Override
 	public List<byte[]> hMGet(final byte[] key, final byte[]... fields){
+		final CommandArguments args = CommandArguments.create("key", key).put("fields", fields);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmget(key, fields)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmget(key, fields)), ProtocolCommand.HMGET,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hmget(key, fields)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hmget(key, fields)), ProtocolCommand.HMGET,
+					args);
 		}else{
-			return execute((cmd)->cmd.hmget(key, fields));
+			return execute((cmd)->cmd.hmget(key, fields), ProtocolCommand.HMGET, args);
+		}
+	}
+
+	@Override
+	public Status hMSet(final String key, final Map<String, String> data){
+		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().hmset(key, data), Converters.OK_STATUS_CONVERTER),
+					ProtocolCommand.HMSET, args);
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().hmset(key, data), Converters.OK_STATUS_CONVERTER),
+					ProtocolCommand.HMSET, args);
+		}else{
+			return execute((cmd)->cmd.hmset(key, data), Converters.OK_STATUS_CONVERTER, ProtocolCommand.HMSET, args);
 		}
 	}
 
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
-		final OkStatusConverter converter = new OkStatusConverter();
+		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hmset(key, data), converter));
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().hmset(key, data), Converters.OK_STATUS_CONVERTER),
+					ProtocolCommand.HMSET, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hmset(key, data), converter));
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().hmset(key, data), Converters.OK_STATUS_CONVERTER),
+					ProtocolCommand.HMSET, args);
 		}else{
-			return execute((cmd)->cmd.hmset(key, data), converter);
+			return execute((cmd)->cmd.hmset(key, data), Converters.OK_STATUS_CONVERTER, ProtocolCommand.HMSET, args);
+		}
+	}
+
+	@Override
+	public String hRandField(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hrandfield(key)), ProtocolCommand.HRANDFIELD,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hrandfield(key)),
+					ProtocolCommand.HRANDFIELD, args);
+		}else{
+			return execute((cmd)->cmd.hrandfield(key), ProtocolCommand.HRANDFIELD, args);
+		}
+	}
+
+	@Override
+	public byte[] hRandField(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hrandfield(key)), ProtocolCommand.HRANDFIELD,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hrandfield(key)),
+					ProtocolCommand.HRANDFIELD, args);
+		}else{
+			return execute((cmd)->cmd.hrandfield(key), ProtocolCommand.HRANDFIELD, args);
+		}
+	}
+
+	@Override
+	public List<String> hRandField(final String key, final long count){
+		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hrandfield(key, count)),
+					ProtocolCommand.HRANDFIELD,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hrandfield(key, count)),
+					ProtocolCommand.HRANDFIELD, args);
+		}else{
+			return execute((cmd)->cmd.hrandfield(key, count), ProtocolCommand.HRANDFIELD, args);
+		}
+	}
+
+	@Override
+	public List<byte[]> hRandField(final byte[] key, final long count){
+		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hrandfield(key, count)),
+					ProtocolCommand.HRANDFIELD, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hrandfield(key, count)),
+					ProtocolCommand.HRANDFIELD, args);
+		}else{
+			return execute((cmd)->cmd.hrandfield(key, count), ProtocolCommand.HRANDFIELD, args);
+		}
+	}
+
+	@Override
+	public Map<String, String> hRandFieldWithValues(final String key, final long count){
+		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hrandfieldWithValues(key, count)),
+					ProtocolCommand.HRANDFIELD, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hrandfieldWithValues(key, count)),
+					ProtocolCommand.HRANDFIELD, args);
+		}else{
+			return execute((cmd)->cmd.hrandfieldWithValues(key, count), ProtocolCommand.HRANDFIELD, args);
+		}
+	}
+
+	@Override
+	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count){
+		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hrandfieldWithValues(key, count)),
+					ProtocolCommand.HRANDFIELD, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hrandfieldWithValues(key, count)),
+					ProtocolCommand.HRANDFIELD, args);
+		}else{
+			return execute((cmd)->cmd.hrandfieldWithValues(key, count), ProtocolCommand.HRANDFIELD, args);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.HSCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
+		}else{
+			return execute((cmd)->cmd.hscan(key, cursor), STRING_MAP_SCAN_RESULT_EXPOSE_CONVERTER,
+					ProtocolCommand.HSCAN, args);
 		}
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.HSCAN,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->new ScanResultConverter.MapScanResultExposeConverter<byte[], byte[]>().convert(
-				cmd.hscan(key, cursor)));
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.HSCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
+		}else{
+			return execute((cmd)->cmd.hscan(key, cursor), BINARY_MAP_SCAN_RESULT_EXPOSE_CONVERTER,
+					ProtocolCommand.HSCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.HSCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
+		}else{
+			return execute(new Executor<JedisCluster, ScanResult<Map<String, String>>>() {
+
+				@Override
+				public ScanResult<Map<String, String>> execute(JedisCluster cmd){
+					final redis.clients.jedis.ScanResult<Map.Entry<byte[], byte[]>> result = cmd.
+							hscan(SafeEncoder.encode(key), SafeEncoder.encode(cursor), new JedisScanParams(pattern));
+					final Map<String, String> data = result.getResult().stream()
+							.collect(Collectors.toMap((e)->SafeEncoder.encode(e.getKey()),
+									(e)->SafeEncoder.encode(e.getValue()), (a, b)->a, LinkedHashMap::new));
+
+					return new ScanResult<>(result.getCursor(), data);
+				}
+
+			}, ProtocolCommand.HSCAN, args);
+		}
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.HSCAN,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->new ScanResultConverter.MapScanResultExposeConverter<byte[], byte[]>().convert(
-				cmd.hscan(key, cursor,
-						new JedisScanParams(pattern))));
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.HSCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
+		}else{
+			return execute(
+					(cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern)),
+					BINARY_MAP_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.HSCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count){
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.HSCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
+		}else{
+			return execute(new Executor<JedisCluster, ScanResult<Map<String, String>>>() {
+
+				@Override
+				public ScanResult<Map<String, String>> execute(JedisCluster cmd){
+					final redis.clients.jedis.ScanResult<Map.Entry<byte[], byte[]>> result = cmd.
+							hscan(SafeEncoder.encode(key), SafeEncoder.encode(cursor), new JedisScanParams(count));
+					final Map<String, String> data = result.getResult().stream()
+							.collect(Collectors.toMap((e)->SafeEncoder.encode(e.getKey()),
+									(e)->SafeEncoder.encode(e.getValue()), (a, b)->a, LinkedHashMap::new));
+
+					return new ScanResult<>(result.getCursor(), data);
+				}
+
+			}, ProtocolCommand.HSCAN, args);
+		}
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.HSCAN,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->new ScanResultConverter.MapScanResultExposeConverter<byte[], byte[]>().convert(
-				cmd.hscan(key, cursor,
-						new JedisScanParams((int) count))));
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.HSCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
+		}else{
+			return execute(
+					(cmd)->cmd.hscan(key, cursor, new JedisScanParams(count)),
+					BINARY_MAP_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.HSCAN, args);
+		}
+	}
+
+	@Override
+	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
+												 final long count){
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
+				.put("count", count);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.HSCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
+		}else{
+			return execute(new Executor<JedisCluster, ScanResult<Map<String, String>>>() {
+
+				@Override
+				public ScanResult<Map<String, String>> execute(JedisCluster cmd){
+					final redis.clients.jedis.ScanResult<Map.Entry<byte[], byte[]>> result = cmd.
+							hscan(SafeEncoder.encode(key), SafeEncoder.encode(cursor),
+									new JedisScanParams(pattern, count));
+					final Map<String, String> data = result.getResult().stream()
+							.collect(Collectors.toMap((e)->SafeEncoder.encode(e.getKey()),
+									(e)->SafeEncoder.encode(e.getValue()), (a, b)->a, LinkedHashMap::new));
+
+					return new ScanResult<>(result.getCursor(), data);
+				}
+
+			}, ProtocolCommand.HSCAN, args);
+		}
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 												 final long count){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.HSCAN,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->new ScanResultConverter.MapScanResultExposeConverter<byte[], byte[]>().convert(
-				cmd.hscan(key, cursor,
-						new JedisScanParams(pattern, (int) count))));
+		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
+				.put("count", count);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.HSCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
+		}else{
+			return execute(
+					(cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern, count)),
+					BINARY_MAP_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.HSCAN, args);
+		}
+	}
+
+	@Override
+	public Status hSet(final String key, final String field, final String value){
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 0 || val == 1);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value), converter),
+					ProtocolCommand.HSET, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value), converter),
+					ProtocolCommand.HSET, args);
+		}else{
+			return execute((cmd)->cmd.hset(key, field, value), converter, ProtocolCommand.HSET, args);
+		}
 	}
 
 	@Override
 	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 0 || val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value), converter));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value), converter),
+					ProtocolCommand.HSET, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value), converter));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value), converter),
+					ProtocolCommand.HSET, args);
 		}else{
-			return execute((cmd)->cmd.hset(key, field, value), converter);
+			return execute((cmd)->cmd.hset(key, field, value), converter, ProtocolCommand.HSET, args);
+		}
+	}
+
+	@Override
+	public Status hSetNx(final String key, final String field, final String value){
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 0 || val == 1);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value), converter),
+					ProtocolCommand.HSETNX, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value), converter),
+					ProtocolCommand.HSETNX, args);
+		}else{
+			return execute((cmd)->cmd.hsetnx(key, field, value), converter, ProtocolCommand.HSETNX, args);
 		}
 	}
 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 0 || val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value), converter));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value), converter),
+					ProtocolCommand.HSETNX, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value), converter));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value), converter),
+					ProtocolCommand.HSETNX, args);
 		}else{
-			return execute((cmd)->cmd.hsetnx(key, field, value), converter);
+			return execute((cmd)->cmd.hsetnx(key, field, value), converter, ProtocolCommand.HSETNX, args);
+		}
+	}
+
+	@Override
+	public Long hStrLen(final String key, final String field){
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hstrlen(key, field)), ProtocolCommand.HSTRLEN,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hstrlen(key, field)),
+					ProtocolCommand.HSTRLEN, args);
+		}else{
+			return execute((cmd)->cmd.hstrlen(key, field), ProtocolCommand.HSTRLEN, args);
 		}
 	}
 
 	@Override
 	public Long hStrLen(final byte[] key, final byte[] field){
+		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hstrlen(key, field)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hstrlen(key, field)), ProtocolCommand.HSTRLEN,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hstrlen(key, field)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hstrlen(key, field)),
+					ProtocolCommand.HSTRLEN, args);
 		}else{
-			return execute((cmd)->cmd.hstrlen(key, field));
+			return execute((cmd)->cmd.hstrlen(key, field), ProtocolCommand.HSTRLEN, args);
+		}
+	}
+
+	@Override
+	public List<String> hVals(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hvals(key)), ProtocolCommand.HVALS,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hvals(key)), ProtocolCommand.HVALS,
+					args);
+		}else{
+			return execute((cmd)->cmd.hvals(key), ProtocolCommand.HVALS, args);
 		}
 	}
 
 	@Override
 	public List<byte[]> hVals(final byte[] key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hvals(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hvals(key)));
-		}else{
-			return execute((cmd)->cmd.hvals(key));
-		}
-	}
+		final CommandArguments args = CommandArguments.create("key", key);
 
-	@Override
-	public byte[] hrandfield(final byte[] key){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hrandfield(key)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hvals(key)), ProtocolCommand.HVALS,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hrandfield(key)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hvals(key)), ProtocolCommand.HVALS,
+					args);
 		}else{
-			return execute((cmd)->cmd.hrandfield(key));
-		}
-	}
-
-	@Override
-	public List<byte[]> hrandfield(final byte[] key, final long count){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hrandfield(key, count)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hrandfield(key, count)));
-		}else{
-			return execute((cmd)->cmd.hrandfield(key, count));
-		}
-	}
-
-	@Override
-	public Map<byte[], byte[]> hrandfieldWithValues(final byte[] key, final long count){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hrandfieldWithValues(key, count)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hrandfieldWithValues(key, count)));
-		}else{
-			return execute((cmd)->cmd.hrandfieldWithValues(key, count));
+			return execute((cmd)->cmd.hvals(key), ProtocolCommand.HVALS, args);
 		}
 	}
 
