@@ -30,10 +30,6 @@ import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.jedis.GeoConverter;
-import com.buession.redis.core.convert.jedis.GeoRadiusArgumentConverter;
-import com.buession.redis.core.convert.jedis.GeoRadiusConverter;
-import com.buession.redis.core.convert.jedis.GeoUnitConverter;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.params.GeoRadiusParam;
@@ -44,7 +40,7 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedis> {
+public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedis> {
 
 	public JedisSentinelGeoOperations(final JedisSentinelClient client){
 		super(client);
@@ -85,15 +81,17 @@ public class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedis> {
 	@Override
 	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		final Map<String, GeoCoordinate> memberCoordinateMap = new GeoConverter.MapGeoMapJedisConverter<String>().convert(
+		final Map<String, GeoCoordinate> memberCoordinateMap = STRING_MAP_GEO_MAP_JEDIS_CONVERTER.convert(
 				memberCoordinates);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().geoadd(key, memberCoordinateMap)),
-					ProtocolCommand.GEOADD, args);
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().geoadd(key, memberCoordinateMap)), ProtocolCommand.GEOADD,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().geoadd(key, memberCoordinateMap)),
-					ProtocolCommand.GEOADD, args);
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().geoadd(key, memberCoordinateMap)), ProtocolCommand.GEOADD,
+					args);
 		}else{
 			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap), ProtocolCommand.GEOADD, args);
 		}
@@ -102,14 +100,16 @@ public class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedis> {
 	@Override
 	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		final Map<byte[], GeoCoordinate> memberCoordinateMap = new GeoConverter.MapGeoMapJedisConverter<byte[]>().convert(
+		final Map<byte[], GeoCoordinate> memberCoordinateMap = BINARY_MAP_GEO_MAP_JEDIS_CONVERTER.convert(
 				memberCoordinates);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().geoadd(key, memberCoordinateMap)),
-					ProtocolCommand.GEOADD, args);
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().geoadd(key, memberCoordinateMap)), ProtocolCommand.GEOADD,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().geoadd(key, memberCoordinateMap)),
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().geoadd(key, memberCoordinateMap)),
 					ProtocolCommand.GEOADD, args);
 		}else{
 			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap), ProtocolCommand.GEOADD, args);
@@ -118,77 +118,194 @@ public class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedis> {
 
 	@Override
 	public List<String> geoHash(final String key, final String... members){
+		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
+
 		if(isPipeline()){
-			return pipelineExecute(()->newJedisResult(getPipeline().geohash(key, members)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geohash(key, members)), ProtocolCommand.GEOHASH,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute(()->newJedisResult(getTransaction().geohash(key, members)));
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().geohash(key, members)), ProtocolCommand.GEOHASH, args);
 		}else{
-			return execute((cmd)->cmd.geohash(key, members));
+			return execute((cmd)->cmd.geohash(key, members), ProtocolCommand.GEOHASH, args);
 		}
 	}
 
 	@Override
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members){
+		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().geohash(key, members)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geohash(key, members)), ProtocolCommand.GEOHASH,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().geohash(key, members)));
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().geohash(key, members)), ProtocolCommand.GEOHASH, args);
 		}else{
-			return execute((cmd)->cmd.geohash(key, members));
+			return execute((cmd)->cmd.geohash(key, members), ProtocolCommand.GEOHASH, args);
+		}
+	}
+
+	@Override
+	public List<Geo> geoPos(final String key, final String... members){
+		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geopos(key, members), LIST_GEO_EXPOSE_CONVERTER),
+					ProtocolCommand.GEOPOS, args);
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().geopos(key, members), LIST_GEO_EXPOSE_CONVERTER),
+					ProtocolCommand.GEOPOS, args);
+		}else{
+			return execute((cmd)->cmd.geopos(key, members), LIST_GEO_EXPOSE_CONVERTER, ProtocolCommand.GEOPOS, args);
 		}
 	}
 
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members){
-		final GeoConverter.ListGeoExposeConverter converter = new GeoConverter.ListGeoExposeConverter();
+		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().geopos(key, members), converter));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geopos(key, members), LIST_GEO_EXPOSE_CONVERTER),
+					ProtocolCommand.GEOPOS, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().geopos(key, members), converter));
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().geopos(key, members), LIST_GEO_EXPOSE_CONVERTER),
+					ProtocolCommand.GEOPOS, args);
 		}else{
-			return execute((cmd)->cmd.geopos(key, members), converter);
+			return execute((cmd)->cmd.geopos(key, members), LIST_GEO_EXPOSE_CONVERTER, ProtocolCommand.GEOPOS, args);
+		}
+	}
+
+	@Override
+	public Double geoDist(final String key, final String member1, final String member2){
+		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
+				.put("member2", member2);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geodist(key, member1, member2)),
+					ProtocolCommand.GEODIST, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().geodist(key, member1, member2)),
+					ProtocolCommand.GEODIST, args);
+		}else{
+			return execute((cmd)->cmd.geodist(key, member1, member2), ProtocolCommand.GEODIST, args);
 		}
 	}
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
+		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
+				.put("member2", member2);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().geodist(key, member1, member2)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geodist(key, member1, member2)),
+					ProtocolCommand.GEODIST, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().geodist(key, member1, member2)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().geodist(key, member1, member2)),
+					ProtocolCommand.GEODIST, args);
 		}else{
-			return execute((cmd)->cmd.geodist(key, member1, member2));
+			return execute((cmd)->cmd.geodist(key, member1, member2), ProtocolCommand.GEODIST, args);
+		}
+	}
+
+	@Override
+	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
+		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
+				.put("member2", member2).put("unit", unit);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geodist(key, member1, member2, geoUnit)),
+					ProtocolCommand.GEODIST, args);
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().geodist(key, member1, member2, geoUnit)),
+					ProtocolCommand.GEODIST, args);
+		}else{
+			return execute((cmd)->cmd.geodist(key, member1, member2, geoUnit), ProtocolCommand.GEODIST, args);
 		}
 	}
 
 	@Override
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = new GeoUnitConverter.GeoUnitJedisConverter().convert(unit);
+		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
+				.put("member2", member2).put("unit", unit);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().geodist(key, member1, member2, geoUnit)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geodist(key, member1, member2, geoUnit)),
+					ProtocolCommand.GEODIST, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().geodist(key, member1, member2, geoUnit)));
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().geodist(key, member1, member2, geoUnit)),
+					ProtocolCommand.GEODIST, args);
 		}else{
-			return execute((cmd)->cmd.geodist(key, member1, member2, geoUnit));
+			return execute((cmd)->cmd.geodist(key, member1, member2, geoUnit), ProtocolCommand.GEODIST, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit){
+		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+				.put("latitude", latitude).put("radius", radius).put("unit", unit);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadius(key, longitude, latitude, radius,
+					geoUnit), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().georadius(key, longitude, latitude,
+							radius, geoUnit), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS,
+					args);
+		}else{
+			return execute((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUS, args);
 		}
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = new GeoUnitConverter.GeoUnitJedisConverter().convert(unit);
-		final GeoRadiusConverter.ListGeoRadiusExposeConverter converter = new GeoRadiusConverter.ListGeoRadiusExposeConverter();
+		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+				.put("latitude", latitude).put("radius", radius).put("unit", unit);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadius(key, longitude, latitude, radius,
-					geoUnit), converter));
+					geoUnit), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().georadius(key, longitude, latitude,
-					radius, geoUnit), converter));
+							radius, geoUnit), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS,
+					args);
 		}else{
-			return execute((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit), converter);
+			return execute((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUS, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
+									 final double radius, final GeoUnit unit,
+									 final GeoRadiusArgument geoRadiusArgument){
+		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+				.put("latitude", latitude).put("radius", radius).put("unit", unit)
+				.put("geoRadiusArgument", geoRadiusArgument);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadius(key, longitude, latitude, radius,
+					geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().georadius(key, longitude, latitude,
+							radius, geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS,
+					args);
+		}else{
+			return execute((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUS, args);
 		}
 	}
 
@@ -196,55 +313,286 @@ public class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedis> {
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit,
 									 final GeoRadiusArgument geoRadiusArgument){
-		final redis.clients.jedis.GeoUnit geoUnit = new GeoUnitConverter.GeoUnitJedisConverter().convert(unit);
-		final GeoRadiusParam geoRadiusParam = new GeoRadiusArgumentConverter.GeoRadiusArgumentJedisConverter().convert(
-				geoRadiusArgument);
-		final GeoRadiusConverter.ListGeoRadiusExposeConverter converter = new GeoRadiusConverter.ListGeoRadiusExposeConverter();
+		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+				.put("latitude", latitude).put("radius", radius).put("unit", unit)
+				.put("geoRadiusArgument", geoRadiusArgument);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadius(key, longitude, latitude, radius,
-					geoUnit, geoRadiusParam), converter));
+					geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().georadius(key, longitude, latitude,
-					radius, geoUnit, geoRadiusParam), converter));
+							radius, geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS,
+					args);
 		}else{
-			return execute((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, geoRadiusParam), converter);
+			return execute((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUS, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit){
+		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+				.put("latitude", latitude).put("radius", radius).put("unit", unit);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().georadiusReadonly(key, longitude, latitude, radius,
+							geoUnit), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS_RO, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().georadiusReadonly(key, longitude, latitude,
+							radius, geoUnit), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS_RO,
+					args);
+		}else{
+			return execute((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUS_RO, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit){
+		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+				.put("latitude", latitude).put("radius", radius).put("unit", unit);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().georadiusReadonly(key, longitude, latitude, radius,
+							geoUnit), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS_RO, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().georadiusReadonly(key, longitude, latitude,
+							radius, geoUnit), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS_RO,
+					args);
+		}else{
+			return execute((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUS_RO, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit,
+									   final GeoRadiusArgument geoRadiusArgument){
+		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+				.put("latitude", latitude).put("radius", radius).put("unit", unit)
+				.put("geoRadiusArgument", geoRadiusArgument);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().georadiusReadonly(key, longitude, latitude, radius,
+							geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS_RO,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().georadiusReadonly(key, longitude, latitude,
+							radius, geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS_RO,
+					args);
+		}else{
+			return execute((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUS_RO, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
+									   final double radius, final GeoUnit unit,
+									   final GeoRadiusArgument geoRadiusArgument){
+		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
+				.put("latitude", latitude).put("radius", radius).put("unit", unit)
+				.put("geoRadiusArgument", geoRadiusArgument);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().georadiusReadonly(key, longitude, latitude, radius,
+							geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS_RO,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().georadiusReadonly(key, longitude, latitude,
+							radius, geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUS_RO,
+					args);
+		}else{
+			return execute((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUS_RO, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+											 final GeoUnit unit){
+		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+				.put("unit", unit);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadiusByMember(key, member, radius, geoUnit)
+					, LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER, args);
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().georadiusByMember(key, member, radius, geoUnit)
+							, LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER, args);
+		}else{
+			return execute((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit), LIST_GEO_RADIUS_EXPOSE_CONVERTER,
+					ProtocolCommand.GEORADIUSBYMEMBER, args);
 		}
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 											 final GeoUnit unit){
-		final redis.clients.jedis.GeoUnit geoUnit = new GeoUnitConverter.GeoUnitJedisConverter().convert(unit);
-		final GeoRadiusConverter.ListGeoRadiusExposeConverter converter = new GeoRadiusConverter.ListGeoRadiusExposeConverter();
+		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+				.put("unit", unit);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadiusByMember(key, member, radius, geoUnit)
-					, converter));
+					, LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER, args);
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().georadiusByMember(key, member, radius, geoUnit)
+							, LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER, args);
+		}else{
+			return execute((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit), LIST_GEO_RADIUS_EXPOSE_CONVERTER,
+					ProtocolCommand.GEORADIUSBYMEMBER, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
+											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadiusByMember(key, member, radius, geoUnit,
+					geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().georadiusByMember(key, member, radius,
-					geoUnit), converter));
+							geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER,
+					args);
 		}else{
-			return execute((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit), converter);
+			return execute((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, geoRadiusParam),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUSBYMEMBER, args);
 		}
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
-		final redis.clients.jedis.GeoUnit geoUnit = new GeoUnitConverter.GeoUnitJedisConverter().convert(unit);
-		final GeoRadiusParam geoRadiusParam = new GeoRadiusArgumentConverter.GeoRadiusArgumentJedisConverter().convert(
-				geoRadiusArgument);
-		final GeoRadiusConverter.ListGeoRadiusExposeConverter converter = new GeoRadiusConverter.ListGeoRadiusExposeConverter();
+		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadiusByMember(key, member, radius, geoUnit,
-					geoRadiusParam), converter));
+					geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().georadiusByMember(key, member, radius,
-					geoUnit, geoRadiusParam), converter));
+							geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER,
+					args);
 		}else{
-			return execute((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, geoRadiusParam), converter);
+			return execute((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, geoRadiusParam),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUSBYMEMBER, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+											   final GeoUnit unit){
+		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+				.put("unit", unit);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().georadiusByMemberReadonly(key, member, radius, geoUnit)
+							, LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().georadiusByMemberReadonly(key, member, radius, geoUnit)
+							, LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		}else{
+			return execute((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+											   final GeoUnit unit){
+		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+				.put("unit", unit);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().georadiusByMemberReadonly(key, member, radius, geoUnit)
+							, LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().georadiusByMemberReadonly(key, member, radius, geoUnit)
+							, LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		}else{
+			return execute((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
+											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().georadiusByMemberReadonly(key, member, radius, geoUnit,
+							geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER_RO,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().georadiusByMemberReadonly(key, member, radius,
+							geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER),
+					ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		}else{
+			return execute((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, geoRadiusParam),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		}
+	}
+
+	@Override
+	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
+											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
+		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
+				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
+		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().georadiusByMemberReadonly(key, member, radius, geoUnit,
+							geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER), ProtocolCommand.GEORADIUSBYMEMBER_RO,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().georadiusByMemberReadonly(key, member, radius,
+							geoUnit, geoRadiusParam), LIST_GEO_RADIUS_EXPOSE_CONVERTER),
+					ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
+		}else{
+			return execute((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, geoRadiusParam),
+					LIST_GEO_RADIUS_EXPOSE_CONVERTER, ProtocolCommand.GEORADIUSBYMEMBER_RO, args);
 		}
 	}
 
