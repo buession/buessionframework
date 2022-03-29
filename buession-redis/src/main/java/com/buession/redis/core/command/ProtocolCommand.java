@@ -32,6 +32,20 @@ import com.buession.core.validator.Validate;
 public enum ProtocolCommand {
 
 	/**
+	 * cluster command start
+	 **/
+	CLUSTER(ProtocolCommandGroup.CLUSTER, "rw"),
+
+	ASKING(ProtocolCommandGroup.CLUSTER, "r"),
+
+	READWRITE(ProtocolCommandGroup.CLUSTER, "rw"),
+
+	READONLY(ProtocolCommandGroup.CLUSTER, "rw"),
+	/**
+	 * cluster command end
+	 **/
+
+	/**
 	 * connection command start
 	 */
 	AUTH(ProtocolCommandGroup.CONNECTION, "rw"),
@@ -39,6 +53,8 @@ public enum ProtocolCommand {
 	ECHO(ProtocolCommandGroup.CONNECTION, "r"),
 
 	PING(ProtocolCommandGroup.CONNECTION, "r"),
+
+	RESET(ProtocolCommandGroup.CONNECTION, "rw"),
 
 	QUIT(ProtocolCommandGroup.CONNECTION, "rw"),
 
@@ -62,7 +78,11 @@ public enum ProtocolCommand {
 
 	GEORADIUS(ProtocolCommandGroup.GEO, "r"),
 
+	GEORADIUS_RO(ProtocolCommandGroup.GEO, "r"),
+
 	GEORADIUSBYMEMBER(ProtocolCommandGroup.GEO, "r"),
+
+	GEORADIUSBYMEMBER_RO(ProtocolCommandGroup.TRANSACTION, "r"),
 	/**
 	 * geo command end
 	 **/
@@ -89,6 +109,8 @@ public enum ProtocolCommand {
 	HMGET(ProtocolCommandGroup.HASH, "r"),
 
 	HMSET(ProtocolCommandGroup.HASH, "w"),
+
+	HRANDFIELD(ProtocolCommandGroup.HASH, "r"),
 
 	HSCAN(ProtocolCommandGroup.HASH, "r"),
 
@@ -118,6 +140,8 @@ public enum ProtocolCommand {
 	/**
 	 * key command start
 	 **/
+	COPY(ProtocolCommandGroup.KEY, "rw"),
+
 	DEL(ProtocolCommandGroup.KEY, "rw"),
 
 	DUMP(ProtocolCommandGroup.KEY, "r"),
@@ -161,6 +185,8 @@ public enum ProtocolCommand {
 	TOUCH(ProtocolCommandGroup.KEY, "rw"),
 
 	UNLINK(ProtocolCommandGroup.KEY, "rw"),
+
+	WAIT(ProtocolCommandGroup.KEY, "rw"),
 	/** key command end **/
 
 	/**
@@ -199,6 +225,10 @@ public enum ProtocolCommand {
 	RPUSH(ProtocolCommandGroup.LIST, "rw"),
 
 	RPUSHX(ProtocolCommandGroup.LIST, "rw"),
+
+	LMOVE(ProtocolCommandGroup.LIST, "rw"),
+
+	BLMOVE(ProtocolCommandGroup.LIST, "rw"),
 	/**
 	 * list command end
 	 **/
@@ -272,9 +302,7 @@ public enum ProtocolCommand {
 
 	DBSIZE(ProtocolCommandGroup.SERVER, "r"),
 
-	DEBUG_OBJECT(ProtocolCommandGroup.SERVER, "rw"),
-
-	DEBUG_SEGFAULT(ProtocolCommandGroup.SERVER, "rw"),
+	DEBUG(ProtocolCommandGroup.SERVER, "rw"),
 
 	FLUSHALL(ProtocolCommandGroup.SERVER, "w"),
 
@@ -424,6 +452,10 @@ public enum ProtocolCommand {
 
 	GETSET(ProtocolCommandGroup.STRING, "rw"),
 
+	GETEX(ProtocolCommandGroup.STRING, "rw"),
+
+	GETDEL(ProtocolCommandGroup.STRING, "rw"),
+
 	INCR(ProtocolCommandGroup.STRING, "rw"),
 
 	INCRBY(ProtocolCommandGroup.STRING, "rw"),
@@ -464,11 +496,50 @@ public enum ProtocolCommand {
 
 	UNWATCH(ProtocolCommandGroup.TRANSACTION, "rw"),
 
-	WATCH(ProtocolCommandGroup.TRANSACTION, "rw");
-
+	WATCH(ProtocolCommandGroup.TRANSACTION, "rw"),
 	/**
 	 * transaction command end
 	 **/
+
+
+	ZDIFF(ProtocolCommandGroup.TRANSACTION, "rw"),
+	ZDIFFSTORE(ProtocolCommandGroup.TRANSACTION, "rw"),
+
+	ZRANDMEMBER(ProtocolCommandGroup.TRANSACTION, "rw"),
+
+	ZUNION(ProtocolCommandGroup.TRANSACTION, "rw"),
+
+	ZINTER(ProtocolCommandGroup.TRANSACTION, "rw"),
+
+	SENTINEL(ProtocolCommandGroup.TRANSACTION, "rw"),
+
+
+	MODULE(ProtocolCommandGroup.TRANSACTION, "rw"),
+
+	MEMORY(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XADD(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XLEN(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XDEL(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XTRIM(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XRANGE(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XREVRANGE(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XREAD(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XACK(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XGROUP(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XREADGROUP(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XPENDING(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XCLAIM(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XAUTOCLAIM(ProtocolCommandGroup.TRANSACTION, "rw"),
+	ACL(ProtocolCommandGroup.TRANSACTION, "rw"),
+	XINFO(ProtocolCommandGroup.TRANSACTION, "rw"),
+	BITFIELD_RO(ProtocolCommandGroup.TRANSACTION, "rw"),
+	LPOS(ProtocolCommandGroup.TRANSACTION, "rw"),
+	SMISMEMBER(ProtocolCommandGroup.TRANSACTION, "rw"),
+	ZMSCORE(ProtocolCommandGroup.TRANSACTION, "rw"),
+	BZPOPMIN(ProtocolCommandGroup.TRANSACTION, "rw"),
+	BZPOPMAX(ProtocolCommandGroup.TRANSACTION, "rw"),
+	FAILOVER(ProtocolCommandGroup.TRANSACTION, "rw"),
+	STRALGO(ProtocolCommandGroup.TRANSACTION, "rw");
 
 	private final ProtocolCommandGroup group;
 
