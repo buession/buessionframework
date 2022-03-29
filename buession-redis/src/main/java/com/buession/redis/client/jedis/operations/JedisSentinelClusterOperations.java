@@ -35,8 +35,6 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.Converters;
-import com.buession.redis.core.convert.jedis.ClusterFailoverOptionConverter;
-import com.buession.redis.core.convert.jedis.ClusterResetOptionConverter;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
 
@@ -53,6 +51,17 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 
 	public JedisSentinelClusterOperations(final JedisSentinelClient client){
 		super(client);
+	}
+
+	@Override
+	public String clusterMyId(){
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLUSTER);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLUSTER);
+		}else{
+			return execute((cmd)->cmd.clusterMyId(), ProtocolCommand.CLUSTER);
+		}
 	}
 
 	@Override
@@ -116,6 +125,17 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 	}
 
 	@Override
+	public Status clusterFlushSlots(){
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLUSTER);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLUSTER);
+		}else{
+			return execute((cmd)->cmd.clusterFlushSlots(), Converters.OK_STATUS_CONVERTER, ProtocolCommand.CLUSTER);
+		}
+	}
+
+	@Override
 	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption){
 		final CommandArguments args = CommandArguments.create("clusterFailoverOption", clusterFailoverOption);
 
@@ -124,9 +144,8 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 		}else if(isTransaction()){
 			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLUSTER, args);
 		}else{
-			final ClusterFailoverOptionConverter.ClusterFailoverOptionJedisConverter converter = new ClusterFailoverOptionConverter.ClusterFailoverOptionJedisConverter();
-
-			return execute((cmd)->cmd.clusterFailover(converter.convert(clusterFailoverOption)),
+			return execute(
+					(cmd)->cmd.clusterFailover(CLUSTER_FAILOVER_OPTION_JEDIS_CONVERTER.convert(clusterFailoverOption)),
 					Converters.OK_STATUS_CONVERTER, ProtocolCommand.CLUSTER, args);
 		}
 	}
@@ -314,8 +333,7 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 		}else if(isTransaction()){
 			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLUSTER, args);
 		}else{
-			final ClusterResetOptionConverter.ClusterResetOptionJedisConverter converter = new ClusterResetOptionConverter.ClusterResetOptionJedisConverter();
-			return execute((cmd)->cmd.clusterReset(converter.convert(clusterResetOption)),
+			return execute((cmd)->cmd.clusterReset(CLUSTER_RESET_OPTION_JEDIS_CONVERTER.convert(clusterResetOption)),
 					Converters.OK_STATUS_CONVERTER, ProtocolCommand.CLUSTER, args);
 		}
 	}
@@ -329,18 +347,6 @@ public final class JedisSentinelClusterOperations extends AbstractClusterOperati
 		}else{
 			return execute((cmd)->cmd.clusterSaveConfig(), Converters.OK_STATUS_CONVERTER, ProtocolCommand.CLUSTER);
 		}
-	}
-
-	@Override
-	public Status clusterSetConfigEpoch(final String configEpoch){
-		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
-	}
-
-	@Override
-	public Status clusterSetConfigEpoch(final byte[] configEpoch){
-		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
 	}
 
 	@Override
