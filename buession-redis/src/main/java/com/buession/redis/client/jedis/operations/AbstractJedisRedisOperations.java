@@ -28,45 +28,100 @@ import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.AbstractRedisClientOperations;
-import com.buession.redis.core.jedis.JedisResult;
+import com.buession.redis.client.operations.AbstractRedisOperations;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.CommandNotSupported;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
+import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Response;
 
 /**
+ * Jedis Redis 命令操作抽象类
+ *
+ * @param <CMD>
+ * 		Jedis 原始命令对象
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractJedisRedisClientOperations<C>
-		extends AbstractRedisClientOperations<C> implements JedisRedisClientOperations<C> {
+public abstract class AbstractJedisRedisOperations<CMD> extends AbstractRedisOperations<CMD>
+		implements JedisRedisOperations<CMD> {
+
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
 	protected JedisRedisClient client;
 
-	public AbstractJedisRedisClientOperations(final JedisRedisClient client){
+	public AbstractJedisRedisOperations(final JedisRedisClient client){
 		this.client = client;
 	}
 
 	@Override
-	public <R> R execute(final Executor<C, R> executor) throws RedisException{
-		return client.execute(executor);
+	public <R> R execute(final Executor<CMD, R> executor, final ProtocolCommand command) throws RedisException{
+		return execute(executor, command, null);
 	}
 
 	@Override
-	public <SR, R> R execute(final Executor<C, SR> executor, final Converter<SR, R> converter) throws RedisException{
-		return converter.convert(execute(executor));
+	public <R> R execute(final Executor<CMD, R> executor, final ProtocolCommand command,
+						 final CommandArguments arguments) throws RedisException{
+		return client.execute(executor, command);
+	}
+
+	@Override
+	public <SR, R> R execute(final Executor<CMD, SR> executor, final Converter<SR, R> converter,
+							 final ProtocolCommand command) throws RedisException{
+		return execute(executor, converter, command, null);
+	}
+
+	@Override
+	public <SR, R> R execute(final Executor<CMD, SR> executor, final Converter<SR, R> converter,
+							 final ProtocolCommand command, final CommandArguments arguments) throws RedisException{
+		return converter.convert(execute(executor, command, arguments));
+	}
+
+	protected <R> R execute(final CommandNotSupported commandNotSupported, final ProtocolCommand command)
+			throws RedisException{
+		return execute(commandNotSupported, command, null);
+	}
+
+	protected <R> R execute(final CommandNotSupported commandNotSupported, final ProtocolCommand command,
+							final CommandArguments arguments) throws RedisException{
+		return execute((cmd)->commandNotSupported(command, commandNotSupported), command, arguments);
 	}
 
 	@SuppressWarnings({"unchecked"})
-	protected <R> R transactionExecute(final Executor<C, JedisResult> executor)
+	protected <R> R transactionExecute(final Executor<CMD, JedisResult> executor, final ProtocolCommand command)
 			throws RedisException{
-		client.getTxResults().add(execute(executor));
+		return transactionExecute(executor, command, null);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	protected <R> R transactionExecute(final Executor<CMD, JedisResult> executor, final ProtocolCommand command,
+									   final CommandArguments arguments)
+			throws RedisException{
+		client.getTxResults().add(execute(executor, command, arguments));
 		return null;
 	}
 
 	@SuppressWarnings({"unchecked"})
-	protected <R> R pipelineExecute(final Executor<C, JedisResult> executor) throws RedisException{
-		client.getTxResults().add(execute(executor));
+	protected <R> R pipelineExecute(final Executor<CMD, JedisResult> executor, final ProtocolCommand command)
+			throws RedisException{
+		return pipelineExecute(executor, command, null);
+	}
+
+	@SuppressWarnings({"unchecked"})
+	protected <R> R pipelineExecute(final Executor<CMD, JedisResult> executor, final ProtocolCommand command,
+									final CommandArguments arguments) throws RedisException{
+		client.getTxResults().add(execute(executor, command, arguments));
+		return null;
+	}
+
+	protected <R> R commandNotSupported(final ProtocolCommand command, final CommandNotSupported commandNotSupported){
+		RedisExceptionUtils.commandNotSupportedException(command, commandNotSupported, client.getConnection());
 		return null;
 	}
 

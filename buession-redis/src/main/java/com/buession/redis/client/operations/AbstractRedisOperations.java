@@ -19,15 +19,20 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.operations;
 
 /**
+ * Redis 命令操作抽象类
+ *
+ * @param <CMD>
+ * 		原始命令对象
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisClientOperations<C> implements RedisClientOperations<C> {
+public abstract class AbstractRedisOperations<CMD> implements RedisOperations<CMD> {
 
 	protected abstract boolean isTransaction();
 
