@@ -19,16 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.exception;
 
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.RedisStandaloneConnection;
+import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.core.RedisMode;
+import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.utils.RedisClientUtils;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
 /**
@@ -38,61 +38,30 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
 public class RedisExceptionUtils {
 
 	/**
-	 * 管道或事务不支持命令异常
-	 *
-	 * @param command
-	 * 		命令
-	 * @param connection
-	 * 		连接对象
-	 */
-	public static void pipelineAndTransactionCommandNotSupportedException(final ProtocolCommand command,
-																		  final RedisConnection connection){
-		if(connection instanceof RedisStandaloneConnection){
-			if(connection.isPipeline()){
-				throw new NotSupportedPipelineCommandException(command);
-			}else if(connection.isTransaction()){
-				throw new NotSupportedTransactionCommandException(command);
-			}
-		}else{
-			if(connection.isPipeline()){
-				throw new NotSupportedPipelineCommandException(commandNotSupportedMessage(command,
-						RedisClientUtils.getRedisMode(connection), "pipeline"));
-			}else if(connection.isTransaction()){
-				throw new NotSupportedTransactionCommandException(commandNotSupportedMessage(command,
-						RedisClientUtils.getRedisMode(connection), "transaction"));
-			}
-		}
-	}
-
-	/**
 	 * 不支持命令异常
 	 *
 	 * @param command
 	 * 		命令
+	 * @param commandNotSupported
+	 * 		运行模式
 	 * @param connection
 	 * 		连接对象
 	 */
-	public static void commandAllNotSupportedException(final ProtocolCommand command,
-													   final RedisConnection connection){
-		if(connection instanceof RedisStandaloneConnection){
-			if(connection.isPipeline()){
-				throw new NotSupportedPipelineCommandException(command);
-			}else if(connection.isTransaction()){
-				throw new NotSupportedTransactionCommandException(command);
-			}else{
-				throw new NotSupportedCommandException(command);
-			}
-		}else{
+	public static void commandNotSupportedException(final ProtocolCommand command,
+													final CommandNotSupported commandNotSupported,
+													final RedisConnection connection){
+		final int code = commandNotSupported.getCode();
+		if((1 & code) == 0){
 			if(connection.isPipeline()){
 				throw new NotSupportedPipelineCommandException(commandNotSupportedMessage(command,
-						RedisClientUtils.getRedisMode(connection), "pipeline"));
+						RedisConnectionUtils.getRedisMode(connection), "pipeline"));
 			}else if(connection.isTransaction()){
 				throw new NotSupportedTransactionCommandException(commandNotSupportedMessage(command,
-						RedisClientUtils.getRedisMode(connection), "transaction"));
-			}else{
-				throw new NotSupportedCommandException(commandNotSupportedMessage(command,
-						RedisClientUtils.getRedisMode(connection), null));
+						RedisConnectionUtils.getRedisMode(connection), "transaction"));
 			}
+		}else if((1 & code) == 1){
+			throw new NotSupportedCommandException(commandNotSupportedMessage(command,
+					RedisConnectionUtils.getRedisMode(connection), null));
 		}
 	}
 
