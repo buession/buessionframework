@@ -56,21 +56,6 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	}
 
 	/**
-	 * The CLUSTER ADDSLOTSRANGE is similar to the CLUSTER ADDSLOTS command in that they both assign hash slots to nodes.
-	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/cluster-addslotsrange/" target="_blank">https://redis.io/commands/cluster-addslotsrange/</a></p>
-	 *
-	 * @param slotsRange
-	 * 		hash slots range
-	 *
-	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	default Status clusterAddSlotsRange(final SlotsRange slotsRange){
-		return clusterAddSlotsRange(new SlotsRange[]{slotsRange});
-	}
-
-	/**
 	 * 使一个特定的 Redis Cluster 节点去忘记一个主节点正在负责的哈希槽
 	 *
 	 * <p>详情说明
@@ -128,6 +113,8 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	 */
 	default Status clusterMeet(final RedisNode node){
 		Assert.isNull(node, "Redis cluster node cloud not be null");
+		Assert.isBlank(node.getHost(), "Redis cluster host cloud not be null or empty");
+		
 		return clusterMeet(node.getHost(), node.getPort());
 	}
 

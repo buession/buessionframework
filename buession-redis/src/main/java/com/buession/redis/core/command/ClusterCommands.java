@@ -477,7 +477,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status readwrite();
+	Status readWrite();
 
 	/**
 	 * 开启与 Redis Cluster 从节点连接的读请求，通过该命令将从节点设置为只读模式
@@ -487,6 +487,6 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status readonly();
+	Status readOnly();
 
 }
