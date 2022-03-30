@@ -19,13 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
 import com.buession.core.serializer.type.TypeReference;
 import com.buession.lang.Status;
+import com.buession.redis.core.Direction;
 import com.buession.redis.core.command.ListCommands;
 import redis.clients.jedis.ListPosition;
 
@@ -1649,5 +1650,260 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @return 执行 RPUSHX 之后，表的长度
 	 */
 	<V> Long rPushX(final byte[] key, final V... values);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	<V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	<V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	<V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+					  final Class<V> clazz);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	<V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+					  final Class<V> clazz);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+					  final TypeReference<V> type);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+					  final TypeReference<V> type);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+					   final Class<V> clazz);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param clazz
+	 * 		元素值对象类
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 */
+	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+					   final Class<V> clazz);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+					   final TypeReference<V> type);
+
+	/**
+	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
+	 * 是 lmove 的阻塞版
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 Key
+	 * @param from
+	 * 		第一个或最后一个元素
+	 * @param to
+	 * 		第一个或最后一个元素
+	 * @param type
+	 * 		元素值类型引用
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被移除并再次插入的元素
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+					   final TypeReference<V> type);
+
 
 }

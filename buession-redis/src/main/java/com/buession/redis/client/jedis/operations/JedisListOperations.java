@@ -19,98 +19,36 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.OkStatusConverter;
-import com.buession.redis.core.convert.jedis.ListPositionJedisConverter;
+import com.buession.redis.core.convert.jedis.DirectionConverter;
+import com.buession.redis.core.convert.jedis.ListPositionConverter;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.args.ListDirection;
 
 import java.util.List;
 
 /**
+ * Jedis 单机模式列表命令操作抽象类
+ *
  * @author Yong.Teng
  */
-public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline> {
+public final class JedisListOperations extends AbstractListOperations<Jedis> {
 
-	public JedisListOperations(final JedisClient client){
+	public JedisListOperations(final JedisStandaloneClient client){
 		super(client);
-	}
-
-	@Override
-	public List<String> blPop(final String[] keys, final int timeout){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().blpop(keys[0])));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().blpop(timeout, keys)));
-		}else{
-			return execute((cmd)->cmd.blpop(timeout, keys));
-		}
-	}
-
-	@Override
-	public List<byte[]> blPop(final byte[][] keys, final int timeout){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().blpop(keys[0])));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().blpop(timeout, keys),
-					new ListConverter<>((value)->SafeEncoder.encode(value))));
-		}else{
-			return execute((cmd)->cmd.blpop(timeout, keys));
-		}
-	}
-
-	@Override
-	public List<String> brPop(final String[] keys, final int timeout){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpop(keys[0])));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().brpop(timeout, keys)));
-		}else{
-			return execute((cmd)->cmd.brpop(timeout, keys));
-		}
-	}
-
-	@Override
-	public List<byte[]> brPop(final byte[][] keys, final int timeout){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpop(keys[0])));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().brpop(timeout, keys),
-					new ListConverter<>((value)->SafeEncoder.encode(value))));
-		}else{
-			return execute((cmd)->cmd.brpop(timeout, keys));
-		}
-	}
-
-	@Override
-	public String brPoplPush(final String key, final String destKey, final int timeout){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpoplpush(key, destKey, timeout)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().brpoplpush(key, destKey, timeout)));
-		}else{
-			return execute((cmd)->cmd.brpoplpush(key, destKey, timeout));
-		}
-	}
-
-	@Override
-	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpoplpush(key, destKey, timeout)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().brpoplpush(key, destKey, timeout)));
-		}else{
-			return execute((cmd)->cmd.brpoplpush(key, destKey, timeout));
-		}
 	}
 
 	@Override
@@ -126,7 +64,8 @@ public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline>
 
 	@Override
 	public Long lInsert(final byte[] key, final byte[] value, final ListPosition position, final byte[] pivot){
-		final redis.clients.jedis.ListPosition pos = new ListPositionJedisConverter().convert(position);
+		final redis.clients.jedis.ListPosition pos = new ListPositionConverter.ListPositionJedisConverter().convert(
+				position);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().linsert(key, pos, pivot, value)));
@@ -281,6 +220,168 @@ public class JedisListOperations extends AbstractListOperations<Jedis, Pipeline>
 			return transactionExecute((cmd)->newJedisResult(getTransaction().rpushx(key, values)));
 		}else{
 			return execute((cmd)->cmd.rpushx(key, values));
+		}
+	}
+
+	@Override
+	public String lMove(final String key, final String destKey, final Direction from, final Direction to){
+		final DirectionConverter.DirectionJedisConverter converter = new DirectionConverter.DirectionJedisConverter();
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(
+					getPipeline().lmove(key, destKey, converter.convert(from), converter.convert(to))));
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(
+							getTransaction().lmove(key, destKey, converter.convert(from), converter.convert(to))));
+		}else{
+			return execute((cmd)->cmd.lmove(key, destKey, converter.convert(from), converter.convert(to)));
+		}
+	}
+
+	@Override
+	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
+		final DirectionConverter.DirectionJedisConverter converter = new DirectionConverter.DirectionJedisConverter();
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(
+					getPipeline().lmove(key, destKey, converter.convert(from), converter.convert(to))));
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(
+							getTransaction().lmove(key, destKey, converter.convert(from), converter.convert(to))));
+		}else{
+			return execute((cmd)->cmd.lmove(key, destKey, converter.convert(from), converter.convert(to)));
+		}
+	}
+
+	@Override
+	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
+						 final int timeout){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
+				.put("to", to).put("timeout", timeout);
+		final ListDirection fromDirection = DIRECTION_JEDIS_CONVERTER.convert(from);
+		final ListDirection toDirection = DIRECTION_JEDIS_CONVERTER.convert(to);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().blmove(key, destKey, fromDirection, toDirection, timeout)),
+					ProtocolCommand.BLMOVE, args);
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().blmove(key, destKey, fromDirection, toDirection, timeout)),
+					ProtocolCommand.BLMOVE, args);
+		}else{
+			return execute((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout), ProtocolCommand.BLMOVE,
+					args);
+		}
+	}
+
+	@Override
+	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+						 final int timeout){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
+				.put("to", to).put("timeout", timeout);
+		final ListDirection fromDirection = DIRECTION_JEDIS_CONVERTER.convert(from);
+		final ListDirection toDirection = DIRECTION_JEDIS_CONVERTER.convert(to);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().blmove(key, destKey, fromDirection, toDirection, timeout)),
+					ProtocolCommand.BLMOVE, args);
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().blmove(key, destKey, fromDirection, toDirection, timeout)),
+					ProtocolCommand.BLMOVE, args);
+		}else{
+			return execute((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout), ProtocolCommand.BLMOVE,
+					args);
+		}
+	}
+
+	@Override
+	public List<String> blPop(final String[] keys, final int timeout){
+		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().blpop(keys)), ProtocolCommand.BLPOP, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().blpop(timeout, keys)),
+					ProtocolCommand.BLPOP, args);
+		}else{
+			return execute((cmd)->cmd.blpop(timeout, keys), ProtocolCommand.BLPOP, args);
+		}
+	}
+
+	@Override
+	public List<byte[]> blPop(final byte[][] keys, final int timeout){
+		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().blpop(keys)), ProtocolCommand.BLPOP, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().blpop(timeout, keys)),
+					ProtocolCommand.BLPOP, args);
+		}else{
+			return execute((cmd)->cmd.blpop(timeout, keys), ProtocolCommand.BLPOP, args);
+		}
+	}
+
+	@Override
+	public List<String> brPop(final String[] keys, final int timeout){
+		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpop(keys)), ProtocolCommand.BRPOP, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().brpop(timeout, keys)),
+					ProtocolCommand.BRPOP, args);
+		}else{
+			return execute((cmd)->cmd.brpop(timeout, keys), ProtocolCommand.BRPOP, args);
+		}
+	}
+
+	@Override
+	public List<byte[]> brPop(final byte[][] keys, final int timeout){
+		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpop(keys)), ProtocolCommand.BRPOP, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().brpop(timeout, keys)),
+					ProtocolCommand.BRPOP, args);
+		}else{
+			return execute((cmd)->cmd.brpop(timeout, keys), ProtocolCommand.BRPOP, args);
+		}
+	}
+
+	@Override
+	public String brPoplPush(final String key, final String destKey, final int timeout){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+				.put("timeout", timeout);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpoplpush(key, destKey, timeout)),
+					ProtocolCommand.BRPOPLPUSH, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().brpoplpush(key, destKey, timeout)),
+					ProtocolCommand.BRPOPLPUSH, args);
+		}else{
+			return execute((cmd)->cmd.brpoplpush(key, destKey, timeout), ProtocolCommand.BRPOPLPUSH, args);
+		}
+	}
+
+	@Override
+	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+				.put("timeout", timeout);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpoplpush(key, destKey, timeout)),
+					ProtocolCommand.BRPOPLPUSH, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().brpoplpush(key, destKey, timeout)),
+					ProtocolCommand.BRPOPLPUSH, args);
+		}else{
+			return execute((cmd)->cmd.brpoplpush(key, destKey, timeout), ProtocolCommand.BRPOPLPUSH, args);
 		}
 	}
 

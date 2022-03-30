@@ -178,6 +178,8 @@ public enum ProtocolCommand {
 
 	SORT(ProtocolCommandGroup.KEY, "rw"),
 
+	SORT_RO(ProtocolCommandGroup.KEY, "r"),
+
 	TTL(ProtocolCommandGroup.KEY, "r"),
 
 	TYPE(ProtocolCommandGroup.KEY, "r"),

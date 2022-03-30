@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -29,29 +29,26 @@ import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ListOperations;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.convert.OkStatusConverter;
-import com.buession.redis.core.convert.jedis.ListPositionJedisConverter;
-import redis.clients.jedis.PipelineBase;
-import redis.clients.jedis.commands.JedisCommands;
+import com.buession.redis.core.convert.jedis.DirectionConverter;
+import com.buession.redis.core.convert.jedis.ListPositionConverter;
 
 import java.util.List;
 
 /**
+ * Jedis 列表命令操作抽象类
+ *
+ * @param <CMD>
+ * 		Jedis 原始命令对象
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractListOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements ListOperations<C> {
+public abstract class AbstractListOperations<CMD> extends AbstractJedisRedisOperations<CMD>
+		implements ListOperations<CMD> {
+
+	protected final static DirectionConverter.DirectionJedisConverter DIRECTION_JEDIS_CONVERTER = new DirectionConverter.DirectionJedisConverter();
 
 	public AbstractListOperations(final JedisRedisClient client){
 		super(client);
-	}
-
-	@Override
-	public String lIndex(final String key, final int index){
-		return lIndex(key, (long) index);
-	}
-
-	@Override
-	public byte[] lIndex(final byte[] key, final int index){
-		return lIndex(key, (long) index);
 	}
 
 	@Override
@@ -67,7 +64,8 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 
 	@Override
 	public Long lInsert(final String key, final String value, final ListPosition position, final String pivot){
-		final redis.clients.jedis.ListPosition pos = new ListPositionJedisConverter().convert(position);
+		final redis.clients.jedis.ListPosition pos = new ListPositionConverter.ListPositionJedisConverter().convert(
+				position);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().linsert(key, pos, pivot, value)));
@@ -123,16 +121,6 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 	}
 
 	@Override
-	public List<String> lRange(final String key, final int start, final int end){
-		return lRange(key, (long) start, (long) end);
-	}
-
-	@Override
-	public List<byte[]> lRange(final byte[] key, final int start, final int end){
-		return lRange(key, (long) start, (long) end);
-	}
-
-	@Override
 	public List<String> lRange(final String key, final long start, final long end){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().lrange(key, start, end)));
@@ -141,16 +129,6 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 		}else{
 			return execute((cmd)->cmd.lrange(key, start, end));
 		}
-	}
-
-	@Override
-	public Long lRem(final String key, final String value, final int count){
-		return lRem(key, value, (long) count);
-	}
-
-	@Override
-	public Long lRem(final byte[] key, final byte[] value, final int count){
-		return lRem(key, value, (long) count);
 	}
 
 	@Override
@@ -165,16 +143,6 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 	}
 
 	@Override
-	public Status lSet(final String key, final int index, final String value){
-		return lSet(key, (long) index, value);
-	}
-
-	@Override
-	public Status lSet(final byte[] key, final int index, final byte[] value){
-		return lSet(key, (long) index, value);
-	}
-
-	@Override
 	public Status lSet(final String key, final long index, final String value){
 		final OkStatusConverter converter = new OkStatusConverter();
 
@@ -185,16 +153,6 @@ public abstract class AbstractListOperations<C extends JedisCommands, P extends 
 		}else{
 			return execute((cmd)->cmd.lset(key, index, value), converter);
 		}
-	}
-
-	@Override
-	public Status lTrim(final String key, final int start, final int end){
-		return lTrim(key, (long) start, (long) end);
-	}
-
-	@Override
-	public Status lTrim(final byte[] key, final int start, final int end){
-		return lTrim(key, (long) start, (long) end);
 	}
 
 	@Override
