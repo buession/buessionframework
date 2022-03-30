@@ -19,20 +19,46 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core;
 
 /**
+ * 详细信息请看，<a href="https://redis.io/commands/object-encoding/" target="_blank">https://redis.io/commands/object-encoding/</a>
+ *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public enum ObjectCommand {
+public enum ObjectEncoding {
 
-	REFCOUNT,
+	RAW("raw"),
 
-	ENCODING,
+	INT("int"),
 
-	IDLETIME
+	ZIPLIST("ziplist"),
 
+	LINKEDLIST("linkedlist"),
+
+	SKIPLIST("skiplist"),
+
+	INTSET("intset"),
+
+	HASHTABLE("hashtable");
+
+	private final String raw;
+
+	ObjectEncoding(final String raw){
+		this.raw = raw;
+	}
+
+	public String getRaw(){
+		return raw;
+	}
+
+	@Override
+	public String toString(){
+		return getRaw();
+	}
+	
 }

@@ -24,29 +24,23 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.EnumConverter;
 import com.buession.core.converter.PredicateStatusConverter;
-import com.buession.core.utils.NumberUtils;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.MigrateOperation;
+import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.Converters;
-import com.buession.redis.core.convert.OkStatusConverter;
-import com.buession.redis.core.convert.jedis.MigrateOperationConverter;
-import com.buession.redis.core.convert.jedis.ScanResultConverter;
-import com.buession.redis.core.convert.jedis.SortArgumentConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
-import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.SortingParams;
-import redis.clients.jedis.params.MigrateParams;
+import redis.clients.jedis.params.RestoreParams;
 
 import java.util.List;
 import java.util.Set;
@@ -265,6 +259,154 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 					ProtocolCommand.EXPIREAT, args);
 		}else{
 			return execute((cmd)->cmd.expireAt(key, unixTimestamp), converter, ProtocolCommand.EXPIREAT, args);
+		}
+	}
+
+	@Override
+	public Status pExpire(final String key, final int lifetime){
+		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpire(key, lifetime), converter),
+					ProtocolCommand.PEXPIRE, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().pexpire(key, lifetime), converter),
+					ProtocolCommand.PEXPIRE, args);
+		}else{
+			return execute((cmd)->cmd.pexpire(key, lifetime), converter, ProtocolCommand.PEXPIRE, args);
+		}
+	}
+
+	@Override
+	public Status pExpire(final byte[] key, final int lifetime){
+		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpire(key, lifetime), converter),
+					ProtocolCommand.PEXPIRE, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().pexpire(key, lifetime), converter),
+					ProtocolCommand.PEXPIRE, args);
+		}else{
+			return execute((cmd)->cmd.pexpire(key, lifetime), converter, ProtocolCommand.PEXPIRE, args);
+		}
+	}
+
+	@Override
+	public Status pExpireAt(final String key, final long unixTimestamp){
+		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpireAt(key, unixTimestamp), converter),
+					ProtocolCommand.PEXPIREAT, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().pexpireAt(key, unixTimestamp),
+					converter), ProtocolCommand.PEXPIREAT, args);
+		}else{
+			return execute((cmd)->cmd.pexpireAt(key, unixTimestamp), converter, ProtocolCommand.PEXPIREAT, args);
+		}
+	}
+
+	@Override
+	public Status pExpireAt(final byte[] key, final long unixTimestamp){
+		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpireAt(key, unixTimestamp), converter),
+					ProtocolCommand.PEXPIREAT, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().pexpireAt(key, unixTimestamp),
+					converter), ProtocolCommand.PEXPIREAT, args);
+		}else{
+			return execute((cmd)->cmd.pexpireAt(key, unixTimestamp), converter, ProtocolCommand.PEXPIREAT, args);
+		}
+	}
+
+	@Override
+	public Status persist(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().persist(key), converter),
+					ProtocolCommand.PERSIST, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().persist(key), converter),
+					ProtocolCommand.PERSIST, args);
+		}else{
+			return execute((cmd)->cmd.persist(key), converter, ProtocolCommand.PERSIST, args);
+		}
+	}
+
+	@Override
+	public Status persist(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().persist(key), converter),
+					ProtocolCommand.PERSIST, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().persist(key), converter),
+					ProtocolCommand.PERSIST, args);
+		}else{
+			return execute((cmd)->cmd.persist(key), converter, ProtocolCommand.PERSIST, args);
+		}
+	}
+
+	@Override
+	public Long ttl(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().ttl(key)), ProtocolCommand.TTL, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().ttl(key)), ProtocolCommand.TTL, args);
+		}else{
+			return execute((cmd)->cmd.ttl(key), ProtocolCommand.TTL, args);
+		}
+	}
+
+	@Override
+	public Long ttl(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().ttl(key)), ProtocolCommand.TTL, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().ttl(key)), ProtocolCommand.TTL, args);
+		}else{
+			return execute((cmd)->cmd.ttl(key), ProtocolCommand.TTL, args);
+		}
+	}
+
+	@Override
+	public Long pTtl(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().pttl(key)), ProtocolCommand.PTTL, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().pttl(key)), ProtocolCommand.PTTL, args);
+		}else{
+			return execute((cmd)->cmd.pttl(key), ProtocolCommand.PTTL, args);
+		}
+	}
+
+	@Override
+	public Long pTtl(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().pttl(key)), ProtocolCommand.PTTL, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().pttl(key)), ProtocolCommand.PTTL, args);
+		}else{
+			return execute((cmd)->cmd.pttl(key), ProtocolCommand.PTTL, args);
 		}
 	}
 
@@ -635,378 +777,534 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	}
 
 	@Override
-	public Status persist(final byte[] key){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 1);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().persist(key), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().persist(key), converter));
-		}else{
-			return execute((cmd)->cmd.persist(key), converter);
-		}
-	}
-
-	@Override
-	public Status pExpire(final byte[] key, final int lifetime){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpire(key, lifetime), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pexpire(key, lifetime), converter));
-		}else{
-			return execute((cmd)->cmd.pexpire(key, lifetime), converter);
-		}
-	}
-
-	@Override
-	public Status pExpireAt(final byte[] key, final long unixTimestamp){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpireAt(key, unixTimestamp), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pexpireAt(key, unixTimestamp),
-					converter));
-		}else{
-			return execute((cmd)->cmd.pexpireAt(key, unixTimestamp), converter);
-		}
-	}
-
-	@Override
-	public Long pTtl(final byte[] key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pttl(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pttl(key)));
-		}else{
-			return execute((cmd)->cmd.pttl(key));
-		}
-	}
-
-	@Override
 	public String randomKey(){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().randomKey()));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().randomKey()));
-		}else{
-			return execute((cmd)->cmd.randomKey());
-		}
+		return execute(CommandNotSupported.ALL, ProtocolCommand.RANDOMKEY);
 	}
 
 	@Override
 	public Status rename(final String key, final String newKey){
-		final OkStatusConverter converter = new OkStatusConverter();
+		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().rename(key, newKey), converter));
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().rename(key, newKey), Converters.OK_STATUS_CONVERTER),
+					ProtocolCommand.RENAME, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().rename(key, newKey), converter));
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().rename(key, newKey), Converters.OK_STATUS_CONVERTER),
+					ProtocolCommand.RENAME, args);
 		}else{
-			return execute((cmd)->cmd.rename(key, newKey), converter);
+			return execute((cmd)->cmd.rename(key, newKey), Converters.OK_STATUS_CONVERTER, ProtocolCommand.RENAME,
+					args);
 		}
 	}
 
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey){
-		final OkStatusConverter converter = new OkStatusConverter();
+		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().rename(key, newKey), converter));
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().rename(key, newKey), Converters.OK_STATUS_CONVERTER),
+					ProtocolCommand.RENAME, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().rename(key, newKey), converter));
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().rename(key, newKey), Converters.OK_STATUS_CONVERTER),
+					ProtocolCommand.RENAME, args);
 		}else{
-			return execute((cmd)->cmd.rename(key, newKey), converter);
+			return execute((cmd)->cmd.rename(key, newKey), Converters.OK_STATUS_CONVERTER, ProtocolCommand.RENAME,
+					args);
 		}
 	}
 
 	@Override
 	public Status renameNx(final String key, final String newKey){
+		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().renamenx(key, newKey), null));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().renamenx(key, newKey), converter),
+					ProtocolCommand.RENAMENX, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().renamenx(key, newKey), converter));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().renamenx(key, newKey), converter),
+					ProtocolCommand.RENAMENX, args);
 		}else{
-			return execute((cmd)->cmd.renamenx(key, newKey), converter);
+			return execute((cmd)->cmd.renamenx(key, newKey), converter, ProtocolCommand.RENAMENX, args);
 		}
 	}
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey){
+		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().renamenx(key, newKey), converter));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().renamenx(key, newKey), converter),
+					ProtocolCommand.RENAMENX, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().renamenx(key, newKey), converter));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().renamenx(key, newKey), converter),
+					ProtocolCommand.RENAMENX, args);
 		}else{
-			return execute((cmd)->cmd.renamenx(key, newKey), converter);
+			return execute((cmd)->cmd.renamenx(key, newKey), converter, ProtocolCommand.RENAMENX, args);
+		}
+	}
+
+	@Override
+	public Status restore(final String key, final byte[] serializedValue, final int ttl){
+		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
+				.put("ttl", ttl);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().restore(key, ttl, serializedValue),
+					Converters.OK_STATUS_CONVERTER), ProtocolCommand.RESTORE, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().restore(key, ttl, serializedValue),
+					Converters.OK_STATUS_CONVERTER), ProtocolCommand.RESTORE, args);
+		}else{
+			return execute((cmd)->cmd.restore(key, ttl, serializedValue), Converters.OK_STATUS_CONVERTER,
+					ProtocolCommand.RESTORE, args);
 		}
 	}
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
-		final OkStatusConverter converter = new OkStatusConverter();
+		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
+				.put("ttl", ttl);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().restore(key, ttl, serializedValue), converter));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().restore(key, ttl, serializedValue),
+					Converters.OK_STATUS_CONVERTER), ProtocolCommand.RESTORE, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().restore(key, ttl, serializedValue),
-					converter));
+					Converters.OK_STATUS_CONVERTER), ProtocolCommand.RESTORE, args);
 		}else{
-			return execute((cmd)->cmd.restore(key, ttl, serializedValue), converter);
+			return execute((cmd)->cmd.restore(key, ttl, serializedValue), Converters.OK_STATUS_CONVERTER,
+					ProtocolCommand.RESTORE, args);
 		}
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final long cursor){
-		return scan(Long.toString(cursor));
+	public Status restore(final String key, final byte[] serializedValue, final int ttl,
+						  final RestoreArgument argument){
+		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
+				.put("ttl", ttl).put("argument", argument);
+		final RestoreParams restoreParams = RESTORE_ARGUMENT_JEDIS_CONVERTER.convert(argument);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().restore(key, ttl, serializedValue, restoreParams),
+							Converters.OK_STATUS_CONVERTER), ProtocolCommand.RESTORE, args);
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().restore(key, ttl, serializedValue, restoreParams),
+							Converters.OK_STATUS_CONVERTER), ProtocolCommand.RESTORE, args);
+		}else{
+			return execute((cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), Converters.OK_STATUS_CONVERTER,
+					ProtocolCommand.RESTORE, args);
+		}
+	}
+
+	@Override
+	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
+						  final RestoreArgument argument){
+		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
+				.put("ttl", ttl).put("argument", argument);
+		final RestoreParams restoreParams = RESTORE_ARGUMENT_JEDIS_CONVERTER.convert(argument);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().restore(key, ttl, serializedValue, restoreParams),
+							Converters.OK_STATUS_CONVERTER), ProtocolCommand.RESTORE, args);
+		}else if(isTransaction()){
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().restore(key, ttl, serializedValue, restoreParams),
+							Converters.OK_STATUS_CONVERTER), ProtocolCommand.RESTORE, args);
+		}else{
+			return execute((cmd)->cmd.restore(key, ttl, serializedValue, restoreParams), Converters.OK_STATUS_CONVERTER,
+					ProtocolCommand.RESTORE, args);
+		}
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute(
-				(cmd)->new ScanResultConverter.ListScanResultExposeConverter<String>().convert(cmd.scan(cursor)));
+		final CommandArguments args = CommandArguments.create("cursor", cursor);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCAN, args);
+		}else{
+			return execute((cmd)->cmd.scan(cursor, new JedisScanParams()), STRING_LIST_SCAN_RESULT_EXPOSE_CONVERTER,
+					ProtocolCommand.SCAN, args);
+		}
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute(
-				(cmd)->new ScanResultConverter.ListScanResultExposeConverter<byte[]>().convert(cmd.scan(cursor)));
-	}
+		final CommandArguments args = CommandArguments.create("cursor", cursor);
 
-	@Override
-	public ScanResult<List<String>> scan(final long cursor, final String pattern){
-		return scan(Long.toString(cursor), pattern);
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
-		return scan(NumberUtils.long2bytes(cursor), pattern);
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCAN, args);
+		}else{
+			return execute((cmd)->cmd.scan(cursor, new JedisScanParams()), BINARY_LIST_SCAN_RESULT_EXPOSE_CONVERTER,
+					ProtocolCommand.SCAN, args);
+		}
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->new ScanResultConverter.ListScanResultExposeConverter<String>().convert(cmd.scan(cursor,
-				new JedisScanParams(pattern))));
+		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCAN, args);
+		}else{
+			return execute((cmd)->cmd.scan(cursor, new JedisScanParams(pattern)),
+					STRING_LIST_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.SCAN, args);
+		}
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->new ScanResultConverter.ListScanResultExposeConverter<byte[]>().convert(cmd.scan(cursor,
-				new JedisScanParams(pattern))));
+		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCAN, args);
+		}else{
+			return execute((cmd)->cmd.scan(cursor, new JedisScanParams(pattern)),
+					BINARY_LIST_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.SCAN, args);
+		}
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final long cursor, final int count){
-		return scan(Long.toString(cursor), count);
+	public ScanResult<List<String>> scan(final String cursor, final long count){
+		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCAN, args);
+		}else{
+			return execute((cmd)->cmd.scan(cursor, new JedisScanParams(count)),
+					STRING_LIST_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.SCAN, args);
+		}
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final String cursor, final int count){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->new ScanResultConverter.ListScanResultExposeConverter<String>().convert(cmd.scan(cursor,
-				new JedisScanParams(count))));
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final long count){
+		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCAN, args);
+		}else{
+			return execute((cmd)->cmd.scan(cursor, new JedisScanParams(count)),
+					BINARY_LIST_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.SCAN, args);
+		}
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->new ScanResultConverter.ListScanResultExposeConverter<byte[]>().convert(cmd.scan(cursor,
-				new JedisScanParams(count))));
+	public ScanResult<List<String>> scan(final String cursor, final String pattern, final long count){
+		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
+				.put("count", count);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCAN, args);
+		}else{
+			return execute((cmd)->cmd.scan(cursor, new JedisScanParams(pattern, count)),
+					STRING_LIST_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.SCAN, args);
+		}
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final long cursor, final String pattern, final int count){
-		return scan(Long.toString(cursor), pattern, count);
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count){
+		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
+				.put("count", count);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCAN, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCAN, args);
+		}else{
+			return execute((cmd)->cmd.scan(cursor, new JedisScanParams(pattern, count)),
+					BINARY_LIST_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.SCAN, args);
+		}
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count){
-		return scan(NumberUtils.long2bytes(cursor), pattern, count);
-	}
+	public List<String> sort(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
 
-	@Override
-	public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->new ScanResultConverter.ListScanResultExposeConverter<String>().convert(cmd.scan(cursor,
-				new JedisScanParams(pattern, count))));
-	}
-
-	@Override
-	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->new ScanResultConverter.ListScanResultExposeConverter<byte[]>().convert(cmd.scan(cursor,
-				new JedisScanParams(pattern, count))));
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key)), ProtocolCommand.SORT, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key)), ProtocolCommand.SORT, args);
+		}else{
+			return execute((cmd)->cmd.sort(key), ProtocolCommand.SORT, args);
+		}
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key)), ProtocolCommand.SORT, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key)), ProtocolCommand.SORT, args);
 		}else{
-			return execute((cmd)->cmd.sort(key));
+			return execute((cmd)->cmd.sort(key), ProtocolCommand.SORT, args);
+		}
+	}
+
+	@Override
+	public List<String> sort(final String key, final SortArgument sortArgument){
+		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
+		final SortingParams soringParams = SORT_ARGUMENT_JEDIS_CONVERTER.convert(sortArgument);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, soringParams)), ProtocolCommand.SORT,
+					args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, soringParams)),
+					ProtocolCommand.SORT, args);
+		}else{
+			return execute((cmd)->cmd.sort(key, soringParams), ProtocolCommand.SORT, args);
 		}
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument){
-		final SortingParams soringParams = new SortArgumentConverter.SortArgumentJedisConverter().convert(sortArgument);
+		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
+		final SortingParams soringParams = SORT_ARGUMENT_JEDIS_CONVERTER.convert(sortArgument);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, soringParams)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, soringParams)), ProtocolCommand.SORT,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, soringParams)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, soringParams)),
+					ProtocolCommand.SORT, args);
 		}else{
-			return execute((cmd)->cmd.sort(key, soringParams));
+			return execute((cmd)->cmd.sort(key, soringParams), ProtocolCommand.SORT, args);
 		}
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, destKey)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, destKey)), ProtocolCommand.SORT,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, destKey)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, destKey)), ProtocolCommand.SORT,
+					args);
 		}else{
-			return execute((cmd)->cmd.sort(key, destKey));
+			return execute((cmd)->cmd.sort(key, destKey), ProtocolCommand.SORT, args);
 		}
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey){
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, destKey)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, destKey)), ProtocolCommand.SORT,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, destKey)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, destKey)), ProtocolCommand.SORT,
+					args);
 		}else{
-			return execute((cmd)->cmd.sort(key, destKey));
+			return execute((cmd)->cmd.sort(key, destKey), ProtocolCommand.SORT, args);
 		}
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey, final SortArgument sortArgument){
-		final SortingParams soringParams = new SortArgumentConverter.SortArgumentJedisConverter().convert(sortArgument);
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+				.put("sortArgument", sortArgument);
+		final SortingParams soringParams = SORT_ARGUMENT_JEDIS_CONVERTER.convert(sortArgument);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, soringParams, destKey)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, soringParams, destKey)),
+					ProtocolCommand.SORT, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, soringParams, destKey)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, soringParams, destKey)),
+					ProtocolCommand.SORT, args);
 		}else{
-			return execute((cmd)->cmd.sort(key, soringParams, destKey));
+			return execute((cmd)->cmd.sort(key, soringParams, destKey), ProtocolCommand.SORT, args);
 		}
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
-		final SortingParams soringParams = new SortArgumentConverter.SortArgumentJedisConverter().convert(sortArgument);
+		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
+				.put("sortArgument", sortArgument);
+		final SortingParams soringParams = SORT_ARGUMENT_JEDIS_CONVERTER.convert(sortArgument);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, soringParams, destKey)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, soringParams, destKey)),
+					ProtocolCommand.SORT, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, soringParams, destKey)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, soringParams, destKey)),
+					ProtocolCommand.SORT, args);
 		}else{
-			return execute((cmd)->cmd.sort(key, soringParams, destKey));
+			return execute((cmd)->cmd.sort(key, soringParams, destKey), ProtocolCommand.SORT, args);
 		}
 	}
 
 	@Override
 	public Long touch(final String... keys){
+		final CommandArguments args = CommandArguments.create("keys", keys);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().touch(keys[0])));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().touch(keys)), ProtocolCommand.TOUCH, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().touch(keys)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().touch(keys)), ProtocolCommand.TOUCH, args);
 		}else{
-			return execute((cmd)->cmd.touch(keys));
+			return execute((cmd)->cmd.touch(keys), ProtocolCommand.TOUCH, args);
 		}
 	}
 
 	@Override
 	public Long touch(final byte[]... keys){
+		final CommandArguments args = CommandArguments.create("keys", keys);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().touch(keys[0])));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().touch(keys)), ProtocolCommand.TOUCH, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().touch(keys)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().touch(keys)), ProtocolCommand.TOUCH, args);
 		}else{
-			return execute((cmd)->cmd.touch(keys));
+			return execute((cmd)->cmd.touch(keys), ProtocolCommand.TOUCH, args);
 		}
 	}
 
 	@Override
-	public Long ttl(final byte[] key){
+	public Type type(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().ttl(key)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().type(key), TYPE_CONVERTER), ProtocolCommand.TYPE,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().ttl(key)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().type(key), TYPE_CONVERTER),
+					ProtocolCommand.TYPE, args);
 		}else{
-			return execute((cmd)->cmd.ttl(key));
+			return execute((cmd)->cmd.type(key), TYPE_CONVERTER, ProtocolCommand.TYPE, args);
 		}
 	}
 
 	@Override
 	public Type type(final byte[] key){
-		final EnumConverter<Type> converter = new EnumConverter<>(Type.class);
+		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().type(key), converter));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().type(key), TYPE_CONVERTER), ProtocolCommand.TYPE,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().type(key), converter));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().type(key), TYPE_CONVERTER),
+					ProtocolCommand.TYPE, args);
 		}else{
-			return execute((cmd)->cmd.type(key), converter);
+			return execute((cmd)->cmd.type(key), TYPE_CONVERTER, ProtocolCommand.TYPE, args);
 		}
 	}
 
 	@Override
 	public Long unlink(final String... keys){
+		final CommandArguments args = CommandArguments.create("keys", keys);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().unlink(keys[0])));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().unlink(keys)), ProtocolCommand.UNLINK, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().unlink(keys)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().unlink(keys)), ProtocolCommand.UNLINK,
+					args);
 		}else{
-			return execute((cmd)->cmd.unlink(keys));
+			return execute((cmd)->cmd.unlink(keys), ProtocolCommand.UNLINK, args);
 		}
 	}
 
 	@Override
 	public Long unlink(final byte[]... keys){
+		final CommandArguments args = CommandArguments.create("keys", keys);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().unlink(keys[0])));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().unlink(keys)), ProtocolCommand.UNLINK, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().unlink(keys)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().unlink(keys)), ProtocolCommand.UNLINK,
+					args);
 		}else{
-			return execute((cmd)->cmd.unlink(keys));
+			return execute((cmd)->cmd.unlink(keys), ProtocolCommand.UNLINK, args);
 		}
 	}
 
 	@Override
-	public Long wait(final int replicas, final long timeout){
+	public Long wait(final int replicas, final int timeout){
+		final CommandArguments args = CommandArguments.create("replicas", replicas).put("timeout", timeout);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().waitReplicas(replicas, timeout)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().waitReplicas(replicas, timeout)),
+					ProtocolCommand.WAIT, args);
 		}else if(isTransaction()){
-			RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SCAN,
-					CommandNotSupported.TRANSACTION, client.getConnection());
-			return null;
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.WAIT, args);
 		}else{
-			return execute((cmd)->cmd.waitReplicas(replicas, timeout));
+			return execute((cmd)->cmd.waitReplicas((String) null, replicas, timeout), ProtocolCommand.WAIT, args);
 		}
+	}
+
+	@Override
+	public ObjectEncoding objectEncoding(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.OBJECT, args);
+	}
+
+	@Override
+	public ObjectEncoding objectEncoding(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.OBJECT, args);
+	}
+
+	@Override
+	public Long objectFreq(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.OBJECT, args);
+	}
+
+	@Override
+	public Long objectFreq(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.OBJECT, args);
+	}
+
+	@Override
+	public Long objectIdleTime(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.OBJECT, args);
+	}
+
+	@Override
+	public Long objectIdleTime(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.OBJECT, args);
+	}
+
+	@Override
+	public Long objectRefcount(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.OBJECT, args);
+	}
+
+	@Override
+	public Long objectRefcount(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.OBJECT, args);
 	}
 
 }

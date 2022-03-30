@@ -24,17 +24,20 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.Converter;
 import com.buession.core.converter.EnumConverter;
-import com.buession.core.converter.PredicateStatusConverter;
-import com.buession.lang.Status;
+import com.buession.core.utils.EnumUtils;
+import com.buession.core.utils.NumberUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.KeyOperations;
+import com.buession.redis.core.ObjectEncoding;
+import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
-import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.MigrateOperationConverter;
+import com.buession.redis.core.convert.jedis.RestoreArgumentConverter;
+import com.buession.redis.core.convert.jedis.ScanResultConverter;
 import com.buession.redis.core.convert.jedis.SortArgumentConverter;
 import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.SortingParams;
 
 import java.util.List;
 
@@ -51,123 +54,54 @@ public abstract class AbstractKeyOperations<CMD> extends AbstractJedisRedisOpera
 
 	protected final static MigrateOperationConverter.MigrateOperationJedisConverter MIGRATE_OPERATION_JEDIS_CONVERTER = new MigrateOperationConverter.MigrateOperationJedisConverter();
 
+	protected final static Converter<String, ObjectEncoding> STRING_OBJECT_ENCODING_CONVERTER = (value)->EnumUtils.getEnumIgnoreCase(
+			ObjectEncoding.class, value);
+
+	protected final static Converter<byte[], ObjectEncoding> BINARY_OBJECT_ENCODING_CONVERTER = (value)->EnumUtils.getEnumIgnoreCase(
+			ObjectEncoding.class, SafeEncoder.encode(value));
+
+	protected final static RestoreArgumentConverter.RestoreArgumentJedisConverter RESTORE_ARGUMENT_JEDIS_CONVERTER = new RestoreArgumentConverter.RestoreArgumentJedisConverter();
+
+	protected final static ScanResultConverter.ListScanResultExposeConverter<String> STRING_LIST_SCAN_RESULT_EXPOSE_CONVERTER = new ScanResultConverter.ListScanResultExposeConverter<>();
+
+	protected final static ScanResultConverter.ListScanResultExposeConverter<byte[]> BINARY_LIST_SCAN_RESULT_EXPOSE_CONVERTER = new ScanResultConverter.ListScanResultExposeConverter<>();
+
+	protected final static SortArgumentConverter.SortArgumentJedisConverter SORT_ARGUMENT_JEDIS_CONVERTER = new SortArgumentConverter.SortArgumentJedisConverter();
+
+	protected final static EnumConverter<Type> TYPE_CONVERTER = new EnumConverter<>(Type.class);
+
 	public AbstractKeyOperations(final JedisRedisClient client){
 		super(client);
 	}
 
 	@Override
-	public Status persist(final String key){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().persist(key), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().persist(key), converter));
-		}else{
-			return execute((cmd)->cmd.persist(key), converter);
-		}
+	public ScanResult<List<String>> scan(final long cursor){
+		return scan(Long.toString(cursor));
 	}
 
 	@Override
-	public Status pExpire(final String key, final int lifetime){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpire(key, lifetime), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pexpire(key, lifetime), converter));
-		}else{
-			return execute((cmd)->cmd.pexpire(key, lifetime), converter);
-		}
+	public ScanResult<List<String>> scan(final long cursor, final String pattern){
+		return scan(Long.toString(cursor), pattern);
 	}
 
 	@Override
-	public Status pExpireAt(final String key, final long unixTimestamp){
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpireAt(key, unixTimestamp), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pexpireAt(key, unixTimestamp),
-					converter));
-		}else{
-			return execute((cmd)->cmd.pexpireAt(key, unixTimestamp), converter);
-		}
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
+		return scan(NumberUtils.long2bytes(cursor), pattern);
 	}
 
 	@Override
-	public Long pTtl(final String key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pttl(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pttl(key)));
-		}else{
-			return execute((cmd)->cmd.pttl(key));
-		}
+	public ScanResult<List<String>> scan(final long cursor, final long count){
+		return scan(Long.toString(cursor), count);
 	}
 
 	@Override
-	public Status restore(final String key, final String serializedValue, final int ttl){
-		final OkStatusConverter converter = new OkStatusConverter();
-		final byte[] serializedEncodeValue = SafeEncoder.encode(serializedValue);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().restore(key, ttl, serializedEncodeValue),
-					converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().restore(key, ttl, serializedEncodeValue),
-					converter));
-		}else{
-			return execute((cmd)->cmd.restore(key, ttl, serializedEncodeValue), converter);
-		}
+	public ScanResult<List<String>> scan(final long cursor, final String pattern, final long count){
+		return scan(Long.toString(cursor), pattern, count);
 	}
 
 	@Override
-	public List<String> sort(final String key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key)));
-		}else{
-			return execute((cmd)->cmd.sort(key));
-		}
-	}
-
-	@Override
-	public List<String> sort(final String key, final SortArgument sortArgument){
-		final SortingParams soringParams = new SortArgumentConverter.SortArgumentJedisConverter().convert(sortArgument);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().sort(key, soringParams)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().sort(key, soringParams)));
-		}else{
-			return execute((cmd)->cmd.sort(key, soringParams));
-		}
-	}
-
-	@Override
-	public Long ttl(final String key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().ttl(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().ttl(key)));
-		}else{
-			return execute((cmd)->cmd.ttl(key));
-		}
-	}
-
-	@Override
-	public Type type(final String key){
-		final EnumConverter<Type> converter = new EnumConverter<>(Type.class);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().type(key), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().type(key), converter));
-		}else{
-			return execute((cmd)->cmd.type(key), converter);
-		}
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final long count){
+		return scan(NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
 }

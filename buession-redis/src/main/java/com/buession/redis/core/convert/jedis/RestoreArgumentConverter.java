@@ -26,76 +26,75 @@ package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.utils.NumberUtils;
-import com.buession.redis.core.NxXx;
-import com.buession.redis.core.command.StringCommands;
-import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.params.SetParams;
+import com.buession.redis.core.command.KeyCommands;
+import redis.clients.jedis.Protocol;
+import redis.clients.jedis.params.RestoreParams;
 
 /**
- * {@link StringCommands.SetArgument} 和 jedis {@link SetParams} 互转
+ * {@link KeyCommands.RestoreArgument} 和 jedis {@link RestoreParams} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface SetArgumentConverter<S, T> extends Converter<S, T> {
+public interface RestoreArgumentConverter<S, T> extends Converter<S, T> {
 
 	/**
-	 * {@link StringCommands.SetArgument} 转换为 jedis {@link SetParams}
+	 * {@link KeyCommands.RestoreArgument} 转换为 jedis {@link RestoreParams}
 	 *
 	 * @author Yong.Teng
 	 * @since 1.2.1
 	 */
-	final class SetArgumentJedisConverter
-			implements SetArgumentConverter<StringCommands.SetArgument, SetParams> {
+	final class RestoreArgumentJedisConverter
+			implements RestoreArgumentConverter<KeyCommands.RestoreArgument, RestoreParams> {
 
 		@Override
-		public SetParams convert(final StringCommands.SetArgument source){
-			final SetParams setParams = new SetParams();
+		public RestoreParams convert(final KeyCommands.RestoreArgument source){
+			final RestoreParams restoreParams = RestoreParams.restoreParams();
 
-			if(source.getEx() != null){
-				setParams.ex(source.getEx().intValue());
+			if(source.isReplace() != null){
+				restoreParams.replace();
 			}
 
-			if(source.getPx() != null){
-				setParams.px(source.getPx().intValue());
+			if(source.isAbsTtl() != null){
+				restoreParams.absTtl();
 			}
 
-			if(source.getNxXx() == NxXx.NX){
-				setParams.nx();
-			}else if(source.getNxXx() == NxXx.XX){
-				setParams.xx();
+			if(source.getIdleTime() != null){
+				restoreParams.idleTime(source.getIdleTime());
 			}
 
-			return setParams;
+			if(source.getFrequency() != null){
+				restoreParams.frequency(source.getFrequency());
+			}
+
+			return restoreParams;
 		}
 
 	}
 
 	/**
-	 * jedis {@link SetParams} 转换为 {@link StringCommands.SetArgument}
+	 * jedis {@link RestoreParams} 转换为 {@link KeyCommands.RestoreArgument}
 	 *
 	 * @author Yong.Teng
 	 * @since 2.0.0
 	 */
-	final class SetArgumentExposeConverter
-			implements SetArgumentConverter<SetParams, StringCommands.SetArgument> {
+	final class RestoreArgumentExposeConverter
+			implements RestoreArgumentConverter<RestoreParams, KeyCommands.RestoreArgument> {
 
 		@Override
-		public StringCommands.SetArgument convert(final SetParams source){
-			final StringCommands.SetArgument.Builder builder = StringCommands.SetArgument.Builder.create();
+		public KeyCommands.RestoreArgument convert(final RestoreParams source){
+			final KeyCommands.RestoreArgument.Builder builder = KeyCommands.RestoreArgument.Builder.create();
 			byte[][] params = source.getByteParams();
 
 			for(int i = 0; i < params.length; i++){
-				String s = SafeEncoder.encode(params[i]);
-
-				if("ex".equals(s)){
-					builder.ex(NumberUtils.bytes2long(params[++i]));
-				}else if("px".equals(s)){
-					builder.px(NumberUtils.bytes2long(params[++i]));
-				}else if("nx".equals(s)){
-					builder.nxXX(NxXx.NX);
-				}else if("xx".equals(s)){
-					builder.nxXX(NxXx.XX);
+				if(Protocol.Keyword.REPLACE.getRaw().equals(params[i])){
+					builder.replace();
+				}else if(Protocol.Keyword.ABSTTL.getRaw().equals(params[i])){
+					builder.absTtl();
+				}else if(Protocol.Keyword.IDLETIME.getRaw().equals(params[i])){
+					builder.idleTime(NumberUtils.bytes2long(params[++i]));
+				}else if(Protocol.Keyword.FREQ.getRaw().equals(params[i])){
+					builder.frequency(NumberUtils.bytes2long(params[++i]));
 				}
 			}
 

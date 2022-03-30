@@ -162,6 +162,100 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	}
 
 	/**
+	 * 为给定 key 设置过期时间
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpireat.html" target="_blank">http://redisdoc.com/expire/pexpireat.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 *
+	 * @return 操作结果
+	 */
+	default Status pExpireAt(final String key, final Date date){
+		Assert.isNull(date, "Expire date could not be null");
+		return pExpireAt(key, date.getTime());
+	}
+
+	/**
+	 * 为给定 key 设置过期时间
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/pexpireat.html" target="_blank">http://redisdoc.com/expire/pexpireat.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param date
+	 * 		过期时间
+	 *
+	 * @return 操作结果
+	 */
+	default Status pExpireAt(final byte[] key, final Date date){
+		Assert.isNull(date, "Expire date could not be null");
+		return pExpireAt(key, date.getTime());
+	}
+
+	/**
+	 * 获取给定 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/ttl.html" target="_blank">http://redisdoc.com/expire/ttl.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
+	 */
+	default Date ttlAt(final String key){
+		Long ttl = ttl(key);
+		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + ttl * 1000L) : null;
+	}
+
+	/**
+	 * 获取给定 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/ttl.html" target="_blank">http://redisdoc.com/expire/ttl.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
+	 */
+	default Date ttlAt(final byte[] key){
+		Long ttl = ttl(key);
+		return ttl != null && ttl >= 0 ? new Date(System.currentTimeMillis() + ttl * 1000L) : null;
+	}
+
+	/**
+	 * 获取给定 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/pttl.html" target="_blank">http://redisdoc.com/expire/pttl.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
+	 */
+	default Date pTtlAt(final String key){
+		Long ttl = pTtl(key);
+		return ttl == null ? null : new Date(System.currentTimeMillis() + pTtl(key));
+	}
+
+	/**
+	 * 获取给定 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/expire/pttl.html" target="_blank">http://redisdoc.com/expire/pttl.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
+	 */
+	default Date pTtlAt(final byte[] key){
+		Long ttl = pTtl(key);
+		return ttl == null ? null : new Date(System.currentTimeMillis() + pTtl(key));
+	}
+
+	/**
 	 * 将 key 原子性地从当前实例传送到目标实例的指定数据库上，
 	 * 一旦传送成功，key 保证会出现在目标实例上，而当前实例上的 key 会被删除
 	 *
@@ -1425,60 +1519,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	}
 
 	/**
-	 * 为给定 key 设置过期时间
-	 *
-	 * @param key
-	 * 		Key
-	 * @param date
-	 * 		过期时间
-	 *
-	 * @return 操作结果
-	 */
-	default Status pExpireAt(final String key, final Date date){
-		Assert.isNull(date, "Expire date could not be null");
-		return pExpireAt(key, date.getTime());
-	}
-
-	/**
-	 * 获取给定 key 的过期时间
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
-	 */
-	default Date pTtlAt(final String key){
-		return new Date(System.currentTimeMillis() + pTtl(key));
-	}
-
-	/**
-	 * 获取给定 key 的过期时间
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
-	 */
-	default Date pTtlAt(final byte[] key){
-		return new Date(System.currentTimeMillis() + pTtl(key));
-	}
-
-	/**
-	 * 为给定 key 设置过期时间
-	 *
-	 * @param key
-	 * 		Key
-	 * @param date
-	 * 		过期时间
-	 *
-	 * @return 操作结果
-	 */
-	default Status pExpireAt(final byte[] key, final Date date){
-		Assert.isNull(date, "Expire date could not be null");
-		return pExpireAt(key, date.getTime());
-	}
-
-	/**
 	 * 反序列化给定的序列化值，并将它和给定的 key 关联
 	 *
 	 * @param key
@@ -1490,7 +1530,7 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 *
 	 * @return 操作结果
 	 */
-	default Status restore(final String key, final String serializedValue, final Date ttl){
+	default Status restore(final String key, final byte[] serializedValue, final Date ttl){
 		Assert.isNull(ttl, "Ttl date could not be null");
 		return restore(key, serializedValue, (int) (ttl.getTime() - System.currentTimeMillis()));
 	}
@@ -1515,6 +1555,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	/**
 	 * 修改指定一个或多个 key 最后访问时间
 	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/touch.html" target="_blank">http://www.redis.cn/commands/touch.html</a></p>
+	 *
 	 * @param key
 	 * 		key
 	 *
@@ -1527,6 +1569,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	/**
 	 * 修改指定一个或多个 key 最后访问时间
 	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/touch.html" target="_blank">http://www.redis.cn/commands/touch.html</a></p>
+	 *
 	 * @param key
 	 * 		key
 	 *
@@ -1537,32 +1581,10 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取给定 key 的过期时间
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
-	 */
-	default Date ttlAt(final String key){
-		return new Date(System.currentTimeMillis() + ttl(key) * 1000L);
-	}
-
-	/**
-	 * 获取给定 key 的过期时间
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 key 不存在时，或没有设置剩余生存时间时，返回 null；否则返回过期时间
-	 */
-	default Date ttlAt(final byte[] key){
-		return new Date(System.currentTimeMillis() + ttl(key) * 1000L);
-	}
-
-	/**
 	 * 删除给定的 key，该命令会在另一个线程中回收内存，因此它是非阻塞的。
 	 * 仅将 keys 从 keyspace 元数据中删除，真正的删除会在后续异步操作。
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/unlink.html" target="_blank">http://www.redis.cn/commands/unlink.html</a></p>
 	 *
 	 * @param key
 	 * 		key
@@ -1577,6 +1599,8 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 * 删除给定的 key，该命令会在另一个线程中回收内存，因此它是非阻塞的。
 	 * 仅将 keys 从 keyspace 元数据中删除，真正的删除会在后续异步操作。
 	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/unlink.html" target="_blank">http://www.redis.cn/commands/unlink.html</a></p>
+	 *
 	 * @param key
 	 * 		key
 	 *
@@ -1584,20 +1608,6 @@ public interface KeyOperations extends KeyCommands, RedisOperations {
 	 */
 	default Status unlink(final byte[] key){
 		return StatusUtils.valueOf(unlink(new byte[][]{key}) > 0);
-	}
-
-	/**
-	 * 阻塞当前客户端，直到所有以前的写命令都成功的传输和指定的slaves确认
-	 *
-	 * @param replicas
-	 * 		副本数量
-	 * @param timeout
-	 * 		超时（单位：毫秒）
-	 *
-	 * @return 被删除 key 的数量
-	 */
-	default Long wait(final int replicas, final int timeout){
-		return wait(replicas, (long) timeout);
 	}
 
 }

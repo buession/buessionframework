@@ -21,10 +21,57 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.convert.jedis;/**
- * 
+ */
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.StringCommands;
+import redis.clients.jedis.params.GetExParams;
+
+/**
+ * {@link StringCommands.GetExArgument} 和 jedis {@link GetExParams} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public interface GetExArgumentConvert {
+ */
+public interface GetExArgumentConvert<S, T> extends Converter<S, T> {
+
+	/**
+	 * {@link StringCommands.GetExArgument} 转换为 jedis {@link GetExParams}
+	 *
+	 * @author Yong.Teng
+	 * @since 1.2.1
+	 */
+	final class GetExArgumentJedisConverter
+			implements SetArgumentConverter<StringCommands.GetExArgument, GetExParams> {
+
+		@Override
+		public GetExParams convert(final StringCommands.GetExArgument source){
+			final GetExParams getExParams = new GetExParams();
+
+			if(source.getEx() != null){
+				getExParams.ex(source.getEx());
+			}
+
+			if(source.getPx() != null){
+				getExParams.px(source.getPx());
+			}
+
+			if(source.getExAt() != null){
+				getExParams.exAt(source.getEx());
+			}
+
+			if(source.getPxAt() != null){
+				getExParams.pxAt(source.getPx());
+			}
+
+			if(source.getPersist() != null){
+				getExParams.persist();
+			}
+
+			return getExParams;
+		}
+
+	}
+
 }
