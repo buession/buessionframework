@@ -208,6 +208,8 @@ public enum ProtocolCommand {
 
 	LPOP(ProtocolCommandGroup.LIST, "rw"),
 
+	LPOS(ProtocolCommandGroup.LIST, "r"),
+
 	LPUSH(ProtocolCommandGroup.LIST, "rw"),
 
 	LPUSHX(ProtocolCommandGroup.LIST, "rw"),
@@ -535,7 +537,6 @@ public enum ProtocolCommand {
 	ACL(ProtocolCommandGroup.TRANSACTION, "rw"),
 	XINFO(ProtocolCommandGroup.TRANSACTION, "rw"),
 	BITFIELD_RO(ProtocolCommandGroup.TRANSACTION, "rw"),
-	LPOS(ProtocolCommandGroup.TRANSACTION, "rw"),
 	SMISMEMBER(ProtocolCommandGroup.TRANSACTION, "rw"),
 	ZMSCORE(ProtocolCommandGroup.TRANSACTION, "rw"),
 	BZPOPMIN(ProtocolCommandGroup.TRANSACTION, "rw"),

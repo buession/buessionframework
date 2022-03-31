@@ -791,86 +791,282 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 	}
 
 	@Override
-	public <V> List<V> blPopObject(final String key, final int timeout){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				blPop(key, timeout), this);
+	public <V> V lIndexObject(final String key, final long index){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				lIndex(key, index), this);
 		return operations.operation();
 	}
 
 	@Override
-	public <V> List<V> blPopObject(final byte[] key, final int timeout){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				blPop(key, timeout), this);
+	public <V> V lIndexObject(final byte[] key, final long index){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				lIndex(key, index), this);
 		return operations.operation();
 	}
 
 	@Override
-	public <V> List<V> blPopObject(final String key, final int timeout, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				blPop(key, timeout), this);
+	public <V> V lIndexObject(final String key, final long index, final Class<V> clazz){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				lIndex(key, index), this);
 		return operations.operation(clazz);
 	}
 
 	@Override
-	public <V> List<V> blPopObject(final byte[] key, final int timeout, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				blPop(key, timeout), this);
+	public <V> V lIndexObject(final byte[] key, final long index, final Class<V> clazz){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				lIndex(key, index), this);
 		return operations.operation(clazz);
 	}
 
 	@Override
-	public <V> List<V> blPopObject(final String key, final int timeout, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				blPop(key, timeout), this);
+	public <V> V lIndexObject(final String key, final long index, final TypeReference<V> type){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				lIndex(key, index), this);
 		return operations.operation(type);
 	}
 
 	@Override
-	public <V> List<V> blPopObject(final byte[] key, final int timeout, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				blPop(key, timeout), this);
+	public <V> V lIndexObject(final byte[] key, final long index, final TypeReference<V> type){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				lIndex(key, index), this);
 		return operations.operation(type);
 	}
 
 	@Override
-	public <V> List<V> brPopObject(final String key, final int timeout){
+	public <V> Long lInsert(final String key, final ListPosition position, final V pivot, final V value){
+		return lInsert(key, position, serializer.serialize(pivot), serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value){
+		return lInsert(key, position, serializer.serializeAsBytes(pivot), serializer.serializeAsBytes(value));
+	}
+
+	@Override
+	public <V> Status lSet(final String key, final long index, final V value){
+		return lSet(key, index, serializer.serialize(value));
+	}
+
+	@Override
+	public <V> Status lSet(final byte[] key, final long index, final V value){
+		return lSet(key, index, serializer.serializeAsBytes(value));
+	}
+
+	@Override
+	public <V> List<V> lRangeObject(final String key, final long start, final long end){
 		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				brPop(key, timeout), this);
+				lRange(key, start, end), this);
 		return operations.operation();
 	}
 
 	@Override
-	public <V> List<V> brPopObject(final byte[] key, final int timeout){
+	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end){
 		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				brPop(key, timeout), this);
+				lRange(key, start, end), this);
 		return operations.operation();
 	}
 
 	@Override
-	public <V> List<V> brPopObject(final String key, final int timeout, final Class<V> clazz){
+	public <V> List<V> lRangeObject(final String key, final long start, final long end, final Class<V> clazz){
 		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				brPop(key, timeout), this);
+				lRange(key, start, end), this);
 		return operations.operation(clazz);
 	}
 
 	@Override
-	public <V> List<V> brPopObject(final byte[] key, final int timeout, final Class<V> clazz){
+	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz){
 		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				brPop(key, timeout), this);
+				lRange(key, start, end), this);
 		return operations.operation(clazz);
 	}
 
 	@Override
-	public <V> List<V> brPopObject(final String key, final int timeout, final TypeReference<V> type){
+	public <V> List<V> lRangeObject(final String key, final long start, final long end, final TypeReference<V> type){
 		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				brPop(key, timeout), this);
+				lRange(key, start, end), this);
 		return operations.operation(type);
 	}
 
 	@Override
-	public <V> List<V> brPopObject(final byte[] key, final int timeout, final TypeReference<V> type){
+	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type){
 		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				brPop(key, timeout), this);
+				lRange(key, start, end), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				lMove(key, destKey, from, to), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				lMove(key, destKey, from, to), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+							 final Class<V> clazz){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				lMove(key, destKey, from, to), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+							 final Class<V> clazz){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				lMove(key, destKey, from, to), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+							 final TypeReference<V> type){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				lMove(key, destKey, from, to), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+							 final TypeReference<V> type){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				lMove(key, destKey, from, to), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				blMove(key, destKey, from, to), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				blMove(key, destKey, from, to), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+							  final Class<V> clazz){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				blMove(key, destKey, from, to), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+							  final Class<V> clazz){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				blMove(key, destKey, from, to), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+							  final TypeReference<V> type){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				blMove(key, destKey, from, to), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+							  final TypeReference<V> type){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				blMove(key, destKey, from, to), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> blPopObject(final String[] keys, final int timeout){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				blPop(keys, timeout), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> blPopObject(final byte[][] keys, final int timeout){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				blPop(keys, timeout), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> blPopObject(final String[] keys, final int timeout, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				blPop(keys, timeout), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> blPopObject(final byte[][] keys, final int timeout, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				blPop(keys, timeout), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> blPopObject(final String[] keys, final int timeout, final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				blPop(keys, timeout), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> blPopObject(final byte[][] keys, final int timeout, final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				blPop(keys, timeout), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> brPopObject(final String[] keys, final int timeout){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				brPop(keys, timeout), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> brPopObject(final byte[][] keys, final int timeout){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				brPop(keys, timeout), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> brPopObject(final String[] keys, final int timeout, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				brPop(keys, timeout), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> brPopObject(final byte[][] keys, final int timeout, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				brPop(keys, timeout), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> brPopObject(final String[] keys, final int timeout, final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				brPop(keys, timeout), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> brPopObject(final byte[][] keys, final int timeout, final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				brPop(keys, timeout), this);
 		return operations.operation(type);
 	}
 
@@ -916,100 +1112,6 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
 				brPoplPush(key, destKey, timeout), this);
 		return operations.operation(type);
-	}
-
-	@Override
-	public <V> V lIndexObject(final String key, final int index){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> V lIndexObject(final byte[] key, final int index){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> V lIndexObject(final String key, final int index, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> V lIndexObject(final byte[] key, final int index, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> V lIndexObject(final String key, final int index, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> V lIndexObject(final byte[] key, final int index, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> V lIndexObject(final String key, final long index){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> V lIndexObject(final byte[] key, final long index){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> V lIndexObject(final String key, final long index, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> V lIndexObject(final byte[] key, final long index, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> V lIndexObject(final String key, final long index, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> V lIndexObject(final byte[] key, final long index, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lIndex(key, index), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> Long lInsert(final String key, final V value, final ListPosition position, final V pivot){
-		return lInsert(key, serializer.serialize(value), position, serializer.serialize(pivot));
-	}
-
-	@Override
-	public <V> Long lInsert(final byte[] key, final V value, final ListPosition position, final V pivot){
-		return lInsert(key, serializer.serializeAsBytes(value), position, serializer.serializeAsBytes(pivot));
 	}
 
 	@Override
@@ -1092,110 +1194,6 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 	@Override
 	public <V> Long lPushX(final byte[] key, final V... values){
 		return lPushX(key, serializer.serializeAsBytes(values));
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final String key, final int start, final int end){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final byte[] key, final int start, final int end){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final String key, final long start, final long end){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final String key, final int start, final int end, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final byte[] key, final int start, final int end, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final String key, final long start, final long end, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final String key, final int start, final int end, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final byte[] key, final int start, final int end, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final String key, final long start, final long end, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> List<V> lRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				lRange(key, start, end), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> Status lSet(final String key, final int index, final V value){
-		return lSet(key, index, serializer.serialize(value));
-	}
-
-	@Override
-	public <V> Status lSet(final byte[] key, final int index, final V value){
-		return lSet(key, index, serializer.serializeAsBytes(value));
-	}
-
-	@Override
-	public <V> Status lSet(final String key, final long index, final V value){
-		return lSet(key, index, serializer.serialize(value));
-	}
-
-	@Override
-	public <V> Status lSet(final byte[] key, final long index, final V value){
-		return lSet(key, index, serializer.serializeAsBytes(value));
 	}
 
 	@Override
@@ -1320,98 +1318,6 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 	@Override
 	public <V> Long rPushX(final byte[] key, final V... values){
 		return rPushX(key, serializer.serializeAsBytes(values));
-	}
-
-	@Override
-	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lMove(key, destKey, from, to), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lMove(key, destKey, from, to), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-							 final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lMove(key, destKey, from, to), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-							 final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lMove(key, destKey, from, to), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> V lMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-							 final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				lMove(key, destKey, from, to), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> V lMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-							 final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				lMove(key, destKey, from, to), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				blMove(key, destKey, from, to), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				blMove(key, destKey, from, to), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-							  final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				blMove(key, destKey, from, to), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-							  final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				blMove(key, destKey, from, to), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-							  final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				blMove(key, destKey, from, to), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-							  final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				blMove(key, destKey, from, to), this);
-		return operations.operation(type);
 	}
 
 	@Override

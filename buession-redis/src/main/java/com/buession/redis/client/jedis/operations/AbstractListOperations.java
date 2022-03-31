@@ -24,15 +24,11 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ListOperations;
-import com.buession.redis.core.ListPosition;
-import com.buession.redis.core.convert.OkStatusConverter;
 import com.buession.redis.core.convert.jedis.DirectionConverter;
+import com.buession.redis.core.convert.jedis.LPosArgumentConverter;
 import com.buession.redis.core.convert.jedis.ListPositionConverter;
-
-import java.util.List;
 
 /**
  * Jedis 列表命令操作抽象类
@@ -47,158 +43,12 @@ public abstract class AbstractListOperations<CMD> extends AbstractJedisRedisOper
 
 	protected final static DirectionConverter.DirectionJedisConverter DIRECTION_JEDIS_CONVERTER = new DirectionConverter.DirectionJedisConverter();
 
+	protected final static ListPositionConverter.ListPositionJedisConverter LIST_POSITION_JEDIS_CONVERTER = new ListPositionConverter.ListPositionJedisConverter();
+
+	protected final static LPosArgumentConverter.LPosArgumentJedisConverter L_POS_ARGUMENT_JEDIS_CONVERTER = new LPosArgumentConverter.LPosArgumentJedisConverter();
+
 	public AbstractListOperations(final JedisRedisClient client){
 		super(client);
-	}
-
-	@Override
-	public String lIndex(final String key, final long index){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().lindex(key, index)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().lindex(key, index)));
-		}else{
-			return execute((cmd)->cmd.lindex(key, index));
-		}
-	}
-
-	@Override
-	public Long lInsert(final String key, final String value, final ListPosition position, final String pivot){
-		final redis.clients.jedis.ListPosition pos = new ListPositionConverter.ListPositionJedisConverter().convert(
-				position);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().linsert(key, pos, pivot, value)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().linsert(key, pos, pivot, value)));
-		}else{
-			return execute((cmd)->cmd.linsert(key, pos, pivot, value));
-		}
-	}
-
-	@Override
-	public Long lLen(final String key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().llen(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().llen(key)));
-		}else{
-			return execute((cmd)->cmd.llen(key));
-		}
-	}
-
-	@Override
-	public String lPop(final String key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().lpop(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().lpop(key)));
-		}else{
-			return execute((cmd)->cmd.lpop(key));
-		}
-	}
-
-	@Override
-	public Long lPush(final String key, final String... values){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().lpush(key, values)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().lpush(key, values)));
-		}else{
-			return execute((cmd)->cmd.lpush(key, values));
-		}
-	}
-
-	@Override
-	public Long lPushX(final String key, final String... values){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().lpushx(key, values)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().lpushx(key, values)));
-		}else{
-			return execute((cmd)->cmd.lpushx(key, values));
-		}
-	}
-
-	@Override
-	public List<String> lRange(final String key, final long start, final long end){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().lrange(key, start, end)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().lrange(key, start, end)));
-		}else{
-			return execute((cmd)->cmd.lrange(key, start, end));
-		}
-	}
-
-	@Override
-	public Long lRem(final String key, final String value, final long count){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().lrem(key, count, value)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().lrem(key, count, value)));
-		}else{
-			return execute((cmd)->cmd.lrem(key, count, value));
-		}
-	}
-
-	@Override
-	public Status lSet(final String key, final long index, final String value){
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().lset(key, index, value), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().lset(key, index, value), converter));
-		}else{
-			return execute((cmd)->cmd.lset(key, index, value), converter);
-		}
-	}
-
-	@Override
-	public Status lTrim(final String key, final long start, final long end){
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().ltrim(key, start, end), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().ltrim(key, start, end), converter));
-		}else{
-			return execute((cmd)->cmd.ltrim(key, start, end), converter);
-		}
-	}
-
-	@Override
-	public String rPop(final String key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().rpop(key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().rpop(key)));
-		}else{
-			return execute((cmd)->cmd.rpop(key));
-		}
-	}
-
-	@Override
-	public Long rPush(final String key, final String... values){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().rpush(key, values)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().rpush(key, values)));
-		}else{
-			return execute((cmd)->cmd.rpush(key, values));
-		}
-	}
-
-	@Override
-	public Long rPushX(final String key, final String... values){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().rpushx(key, values)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().rpushx(key, values)));
-		}else{
-			return execute((cmd)->cmd.rpushx(key, values));
-		}
 	}
 
 }
