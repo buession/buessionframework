@@ -24,12 +24,17 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapConverter;
+import com.buession.lang.Geo;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.GeoOperations;
+import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.convert.jedis.GeoConverter;
 import com.buession.redis.core.convert.jedis.GeoRadiusArgumentConverter;
-import com.buession.redis.core.convert.jedis.GeoRadiusConverter;
 import com.buession.redis.core.convert.jedis.GeoUnitConverter;
+import redis.clients.jedis.GeoCoordinate;
+import redis.clients.jedis.GeoRadiusResponse;
 
 /**
  * Jedis 地理位置命令操作抽象类
@@ -42,15 +47,23 @@ import com.buession.redis.core.convert.jedis.GeoUnitConverter;
 public abstract class AbstractGeoOperations<CMD> extends AbstractJedisRedisOperations<CMD>
 		implements GeoOperations<CMD> {
 
-	protected final static GeoConverter.MapGeoMapJedisConverter<String> STRING_MAP_GEO_MAP_JEDIS_CONVERTER = new GeoConverter.MapGeoMapJedisConverter<>();
+	protected final static MapConverter<String, Geo, String, GeoCoordinate> STRING_MAP_GEO_MAP_JEDIS_CONVERTER = new MapConverter<>(
+			(source)->source, (value)->new GeoCoordinate(value.getLongitude(), value.getLatitude()));
 
-	protected final static GeoConverter.MapGeoMapJedisConverter<byte[]> BINARY_MAP_GEO_MAP_JEDIS_CONVERTER = new GeoConverter.MapGeoMapJedisConverter<>();
+	protected final static MapConverter<byte[], Geo, byte[], GeoCoordinate> BINARY_MAP_GEO_MAP_JEDIS_CONVERTER = new MapConverter<>(
+			(source)->source, (value)->new GeoCoordinate(value.getLongitude(), value.getLatitude()));
 
 	protected final static GeoUnitConverter.GeoUnitJedisConverter GEO_UNIT_JEDIS_CONVERTER = new GeoUnitConverter.GeoUnitJedisConverter();
 
-	protected final static GeoConverter.ListGeoExposeConverter LIST_GEO_EXPOSE_CONVERTER = new GeoConverter.ListGeoExposeConverter();
+	protected final static ListConverter<GeoCoordinate, Geo> LIST_GEO_EXPOSE_CONVERTER = new ListConverter<>(
+			(source)->new Geo(source.getLongitude(), source.getLatitude()));
 
-	protected final static GeoRadiusConverter.ListGeoRadiusExposeConverter LIST_GEO_RADIUS_EXPOSE_CONVERTER = new GeoRadiusConverter.ListGeoRadiusExposeConverter();
+	protected final static ListConverter<GeoRadiusResponse, GeoRadius> LIST_GEO_RADIUS_EXPOSE_CONVERTER = new ListConverter<GeoRadiusResponse, GeoRadius>(
+			(source)->{
+				GeoConverter.GeoExposeConverter converter = new GeoConverter.GeoExposeConverter();
+				return new GeoRadius(source.getMember(), source.getDistance(),
+						converter.convert(source.getCoordinate()));
+			});
 
 	protected final static GeoRadiusArgumentConverter.GeoRadiusArgumentJedisConverter GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER = new GeoRadiusArgumentConverter.GeoRadiusArgumentJedisConverter();
 
