@@ -21,10 +21,39 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.convert.jedis;/**
- * 
+ */
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.BitOperation;
+import redis.clients.jedis.BitOP;
+
+/**
+ * {@link BitOperation} 和 jedis {@link BitOP} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public interface BitOperationConverter {
+ */
+public interface BitOperationConverter<S, T> extends Converter<S, T> {
+
+	final class BitOperationJedisConverter implements BitOperationConverter<BitOperation, BitOP> {
+
+		@Override
+		public BitOP convert(final BitOperation source){
+			switch(source){
+				case AND:
+					return BitOP.AND;
+				case OR:
+					return BitOP.OR;
+				case NOT:
+					return BitOP.NOT;
+				case XOR:
+					return BitOP.XOR;
+				default:
+					return null;
+			}
+		}
+
+	}
+
 }

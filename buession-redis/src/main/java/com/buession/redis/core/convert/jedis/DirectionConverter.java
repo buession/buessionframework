@@ -36,14 +36,7 @@ import redis.clients.jedis.args.ListDirection;
  */
 public interface DirectionConverter<S, T> extends Converter<S, T> {
 
-	/**
-	 * {@link Direction} 转换为 jedis {@link ListDirection}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	final class DirectionJedisConverter
-			implements DirectionConverter<Direction, ListDirection> {
+	final class DirectionJedisConverter implements DirectionConverter<Direction, ListDirection> {
 
 		@Override
 		public ListDirection convert(final Direction source){
@@ -52,29 +45,6 @@ public interface DirectionConverter<S, T> extends Converter<S, T> {
 					return ListDirection.LEFT;
 				case RIGHT:
 					return ListDirection.RIGHT;
-				default:
-					return null;
-			}
-		}
-
-	}
-
-	/**
-	 * jedis {@link ListDirection} 转换为 {@link Direction}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	final class DirectionExposeConverter
-			implements DirectionConverter<ListDirection, Direction> {
-
-		@Override
-		public Direction convert(final ListDirection source){
-			switch(source){
-				case LEFT:
-					return Direction.LEFT;
-				case RIGHT:
-					return Direction.RIGHT;
 				default:
 					return null;
 			}

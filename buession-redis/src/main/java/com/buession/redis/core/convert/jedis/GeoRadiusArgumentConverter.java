@@ -25,58 +25,17 @@
 package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.lang.Order;
 import com.buession.redis.core.command.GeoCommands;
 import redis.clients.jedis.params.GeoRadiusParam;
 
 /**
- * {@link GeoRadiusParam} 和 {@link GeoCommands.GeoRadiusArgument} 互转
+ * {@link GeoCommands.GeoRadiusArgument} 和 jedis {@link GeoRadiusParam} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public interface GeoRadiusArgumentConverter<S, T> extends Converter<S, T> {
 
-	/**
-	 * {@link GeoRadiusParam} 转换为 jedis {@link GeoCommands.GeoRadiusArgument}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	class GeoRadiusArgumentExposeConverter
-			implements GeoRadiusArgumentConverter<GeoRadiusParam, GeoCommands.GeoRadiusArgument> {
-
-		@Override
-		public GeoCommands.GeoRadiusArgument convert(final GeoRadiusParam source){
-			final GeoCommands.GeoRadiusArgument.Builder builder = GeoCommands.GeoRadiusArgument.Builder.create();
-
-			for(byte[] v : source.getByteParams()){
-				String s = redis.clients.jedis.util.SafeEncoder.encode(v);
-
-				if("withcoord".equals(s)){
-					builder.withCoord();
-				}else if("withdist".equals(s)){
-					builder.withDist();
-				}else if("asc".equals(s)){
-					builder.order(Order.ASC);
-				}else if("desc".equals(s)){
-					builder.order(Order.DESC);
-				}else if("count".equals(s)){
-					builder.count(source.getParam("count"));
-				}
-			}
-
-			return builder.build();
-		}
-
-	}
-
-	/**
-	 * jedis {@link GeoCommands.GeoRadiusArgument} 转换为 {@link GeoRadiusParam}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
 	final class GeoRadiusArgumentJedisConverter
 			implements GeoRadiusArgumentConverter<GeoCommands.GeoRadiusArgument, GeoRadiusParam> {
 
@@ -90,6 +49,10 @@ public interface GeoRadiusArgumentConverter<S, T> extends Converter<S, T> {
 
 			if(source.isWithDist()){
 				geoRadiusParam.withDist();
+			}
+
+			if(source.isWithHash()){
+				geoRadiusParam.withHash();
 			}
 
 			switch(source.getOrder()){

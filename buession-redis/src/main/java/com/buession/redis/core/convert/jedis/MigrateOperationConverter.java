@@ -29,19 +29,13 @@ import com.buession.redis.core.MigrateOperation;
 import redis.clients.jedis.params.MigrateParams;
 
 /**
- * {@link MigrateOperation} 和 {@link MigrateParams} 互转
+ * {@link MigrateOperation} 和 jedis {@link MigrateParams} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public interface MigrateOperationConverter<S, T> extends Converter<S, T> {
 
-	/**
-	 * {@link MigrateOperation} 转换为 jedis {@link MigrateParams}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
 	final class MigrateOperationJedisConverter implements MigrateOperationConverter<MigrateOperation, MigrateParams> {
 
 		@Override
@@ -53,27 +47,6 @@ public interface MigrateOperationConverter<S, T> extends Converter<S, T> {
 					return MigrateParams.migrateParams().replace();
 				default:
 					return MigrateParams.migrateParams();
-			}
-		}
-
-	}
-
-	/**
-	 * jedis {@link MigrateParams} 转换为 {@link MigrateOperation}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	final class MigrateOperationExposeConverter implements MigrateOperationConverter<MigrateParams, MigrateOperation> {
-
-		@Override
-		public MigrateOperation convert(final MigrateParams source){
-			if(source.getParam(MigrateOperation.COPY.name())){
-				return MigrateOperation.COPY;
-			}else if(source.getParam(MigrateOperation.REPLACE.name())){
-				return MigrateOperation.REPLACE;
-			}else{
-				return null;
 			}
 		}
 

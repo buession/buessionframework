@@ -25,15 +25,9 @@
 package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.utils.NumberUtils;
 import com.buession.redis.core.Limit;
 import com.buession.redis.core.command.KeyCommands;
-import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.Protocol;
 import redis.clients.jedis.SortingParams;
-
-import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * {@link KeyCommands.SortArgument} 和 jedis {@link SortingParams} 互转
@@ -43,12 +37,6 @@ import java.util.Iterator;
  */
 public interface SortArgumentConverter<S, T> extends Converter<S, T> {
 
-	/**
-	 * jedis {@link KeyCommands.SortArgument} 转换为 {@link SortingParams}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
 	final class SortArgumentJedisConverter implements SortArgumentConverter<KeyCommands.SortArgument, SortingParams> {
 
 		@Override
@@ -80,46 +68,6 @@ public interface SortArgumentConverter<S, T> extends Converter<S, T> {
 			}
 
 			return sortingParams;
-		}
-
-	}
-
-	/**
-	 * {@link SortingParams} 转换为 jedis {@link KeyCommands.SortArgument}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	final class SortArgumentExposeConverter implements SortArgumentConverter<SortingParams, KeyCommands.SortArgument> {
-
-		@Override
-		public KeyCommands.SortArgument convert(final SortingParams source){
-			final KeyCommands.SortArgument.Builder builder = KeyCommands.SortArgument.Builder.create();
-
-			Collection<byte[]> collections = source.getParams();
-			Iterator<byte[]> iterator = collections.iterator();
-
-			while(iterator.hasNext()){
-				byte[] v = iterator.next();
-
-				if(v == Protocol.Keyword.BY.getRaw()){
-					v = iterator.next();
-					builder.by(SafeEncoder.encode(v));
-				}else if(v == Protocol.Keyword.ASC.getRaw()){
-					builder.asc();
-				}else if(v == Protocol.Keyword.DESC.getRaw()){
-					builder.desc();
-				}else if(v == Protocol.Keyword.LIMIT.getRaw()){
-					byte[] start = iterator.next();
-					byte[] end = iterator.next();
-
-					builder.limit(NumberUtils.bytes2long(start), NumberUtils.bytes2long(end));
-				}else if(v == Protocol.Keyword.ALPHA.getRaw()){
-					builder.alpha();
-				}
-			}
-
-			return builder.build();
 		}
 
 	}

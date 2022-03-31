@@ -25,51 +25,32 @@
 package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.StringCommands;
-import redis.clients.jedis.params.GetExParams;
+import com.buession.redis.core.command.ListCommands;
+import redis.clients.jedis.params.LPosParams;
 
 /**
- * {@link StringCommands.GetExArgument} 和 jedis {@link GetExParams} 互转
+ * {@link ListCommands.LPosArgument} 和 jedis {@link LPosParams} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface GetExArgumentConvert<S, T> extends Converter<S, T> {
+public interface LPosArgumentConverter<S, T> extends Converter<S, T> {
 
-	/**
-	 * {@link StringCommands.GetExArgument} 转换为 jedis {@link GetExParams}
-	 *
-	 * @author Yong.Teng
-	 * @since 1.2.1
-	 */
-	final class GetExArgumentJedisConverter
-			implements SetArgumentConverter<StringCommands.GetExArgument, GetExParams> {
+	final class LPosArgumentJedisConverter implements LPosArgumentConverter<ListCommands.LPosArgument, LPosParams> {
 
 		@Override
-		public GetExParams convert(final StringCommands.GetExArgument source){
-			final GetExParams getExParams = new GetExParams();
+		public LPosParams convert(final ListCommands.LPosArgument source){
+			final LPosParams lPosParams = LPosParams.lPosParams();
 
-			if(source.getEx() != null){
-				getExParams.ex(source.getEx());
+			if(source.getRank() != null){
+				lPosParams.rank(source.getRank());
 			}
 
-			if(source.getPx() != null){
-				getExParams.px(source.getPx());
+			if(source.getMaxLen() != null){
+				lPosParams.maxlen(source.getMaxLen());
 			}
 
-			if(source.getExAt() != null){
-				getExParams.exAt(source.getEx());
-			}
-
-			if(source.getPxAt() != null){
-				getExParams.pxAt(source.getPx());
-			}
-
-			if(source.getPersist() != null){
-				getExParams.persist();
-			}
-
-			return getExParams;
+			return lPosParams;
 		}
 
 	}

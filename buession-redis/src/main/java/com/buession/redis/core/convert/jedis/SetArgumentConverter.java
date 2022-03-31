@@ -25,11 +25,11 @@
 package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.utils.NumberUtils;
 import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.StringCommands;
-import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.params.SetParams;
+
+import java.util.Objects;
 
 /**
  * {@link StringCommands.SetArgument} 和 jedis {@link SetParams} 互转
@@ -39,25 +39,26 @@ import redis.clients.jedis.params.SetParams;
  */
 public interface SetArgumentConverter<S, T> extends Converter<S, T> {
 
-	/**
-	 * {@link StringCommands.SetArgument} 转换为 jedis {@link SetParams}
-	 *
-	 * @author Yong.Teng
-	 * @since 1.2.1
-	 */
-	final class SetArgumentJedisConverter
-			implements SetArgumentConverter<StringCommands.SetArgument, SetParams> {
+	final class SetArgumentJedisConverter implements SetArgumentConverter<StringCommands.SetArgument, SetParams> {
 
 		@Override
 		public SetParams convert(final StringCommands.SetArgument source){
 			final SetParams setParams = new SetParams();
 
 			if(source.getEx() != null){
-				setParams.ex(source.getEx().intValue());
+				setParams.ex(source.getEx());
+			}
+
+			if(source.getExAt() != null){
+				setParams.exAt(source.getExAt());
 			}
 
 			if(source.getPx() != null){
 				setParams.px(source.getPx().intValue());
+			}
+
+			if(source.getPxAt() != null){
+				setParams.px(source.getPxAt());
 			}
 
 			if(source.getNxXx() == NxXx.NX){
@@ -66,40 +67,11 @@ public interface SetArgumentConverter<S, T> extends Converter<S, T> {
 				setParams.xx();
 			}
 
-			return setParams;
-		}
-
-	}
-
-	/**
-	 * jedis {@link SetParams} 转换为 {@link StringCommands.SetArgument}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	final class SetArgumentExposeConverter
-			implements SetArgumentConverter<SetParams, StringCommands.SetArgument> {
-
-		@Override
-		public StringCommands.SetArgument convert(final SetParams source){
-			final StringCommands.SetArgument.Builder builder = StringCommands.SetArgument.Builder.create();
-			byte[][] params = source.getByteParams();
-
-			for(int i = 0; i < params.length; i++){
-				String s = SafeEncoder.encode(params[i]);
-
-				if("ex".equals(s)){
-					builder.ex(NumberUtils.bytes2long(params[++i]));
-				}else if("px".equals(s)){
-					builder.px(NumberUtils.bytes2long(params[++i]));
-				}else if("nx".equals(s)){
-					builder.nxXX(NxXx.NX);
-				}else if("xx".equals(s)){
-					builder.nxXX(NxXx.XX);
-				}
+			if(Objects.equals(source.getKeepTtl(), Boolean.TRUE)){
+				setParams.keepttl();
 			}
 
-			return builder.build();
+			return setParams;
 		}
 
 	}

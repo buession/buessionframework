@@ -21,10 +21,54 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.convert.jedis;/**
- * 
+ */
+package com.buession.redis.core.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.SetConverter;
+import com.buession.redis.core.Tuple;
+
+import java.util.Set;
+
+/**
+ * {@link Tuple} 和 jedis {@link redis.clients.jedis.Tuple} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public interface TupleConverter {
+ */
+public interface TupleConverter<S, T> extends Converter<S, T> {
+
+	final class TupleJedisConverter implements TupleConverter<Tuple, redis.clients.jedis.Tuple> {
+
+		@Override
+		public redis.clients.jedis.Tuple convert(final Tuple source){
+			return new redis.clients.jedis.Tuple(source.getBinaryElement(), source.getScore());
+		}
+
+	}
+
+	final class TupleExposeConverter implements TupleConverter<redis.clients.jedis.Tuple, Tuple> {
+
+		@Override
+		public Tuple convert(final redis.clients.jedis.Tuple source){
+			return new Tuple(source.getBinaryElement(), source.getScore());
+		}
+
+	}
+
+	/**
+	 * jedis {@link java.util.Set}&lt;redis.clients.jedis.Tuple&gt; 转换为 {@link java.util.Set}&lt;Tuple&gt;
+	 *
+	 * @author Yong.Teng
+	 * @since 2.0.0
+	 */
+	final class SetTupleExposeConverter extends SetConverter<redis.clients.jedis.Tuple, Tuple>
+			implements TupleConverter<Set<redis.clients.jedis.Tuple>, Set<Tuple>> {
+
+		public SetTupleExposeConverter(){
+			super(new TupleConverter.TupleExposeConverter());
+		}
+
+	}
+
 }

@@ -25,58 +25,45 @@
 package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.redis.core.GeoRadius;
-import redis.clients.jedis.GeoRadiusResponse;
-
-import java.util.List;
+import com.buession.redis.core.command.StringCommands;
+import redis.clients.jedis.params.GetExParams;
 
 /**
- * {@link GeoRadius} 和 jedis {@link GeoRadiusResponse} 互转
+ * {@link StringCommands.GetExArgument} 和 jedis {@link GetExParams} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface GeoRadiusConverter<S, T> extends Converter<S, T> {
+public interface GetExArgumentConverter<S, T> extends Converter<S, T> {
 
-	/**
-	 * {@link java.util.List}&lt;GeoRadius&gt; 转换为 jedis {@link java.util.List}&lt;GeoRadiusResponse&gt;
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	final class ListGeoRadiusJedisConverter extends ListConverter<GeoRadius, GeoRadiusResponse>
-			implements GeoRadiusConverter<List<GeoRadius>, List<GeoRadiusResponse>> {
+	final class GetExArgumentJedisConverter
+			implements SetArgumentConverter<StringCommands.GetExArgument, GetExParams> {
 
-		public ListGeoRadiusJedisConverter(){
-			super((source)->{
-				GeoConverter.GeoJedisConverter converter = new GeoConverter.GeoJedisConverter();
-				GeoRadiusResponse geoRadiusResponse = new GeoRadiusResponse(source.getMember());
+		@Override
+		public GetExParams convert(final StringCommands.GetExArgument source){
+			final GetExParams getExParams = new GetExParams();
 
-				geoRadiusResponse.setDistance(source.getDistance());
-				geoRadiusResponse.setCoordinate(converter.convert(source.getGeo()));
+			if(source.getEx() != null){
+				getExParams.ex(source.getEx());
+			}
 
-				return geoRadiusResponse;
-			});
-		}
+			if(source.getPx() != null){
+				getExParams.px(source.getPx());
+			}
 
-	}
+			if(source.getExAt() != null){
+				getExParams.exAt(source.getEx());
+			}
 
-	/**
-	 * jedis {@link java.util.List}&lt;GeoRadiusResponse&gt; 转换为 {@link java.util.List}&lt;GeoRadius&gt;
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	final class ListGeoRadiusExposeConverter extends ListConverter<GeoRadiusResponse, GeoRadius>
-			implements GeoRadiusConverter<List<GeoRadiusResponse>, List<GeoRadius>> {
+			if(source.getPxAt() != null){
+				getExParams.pxAt(source.getPx());
+			}
 
-		public ListGeoRadiusExposeConverter(){
-			super((source)->{
-				GeoConverter.GeoExposeConverter converter = new GeoConverter.GeoExposeConverter();
-				return new GeoRadius(source.getMember(), source.getDistance(),
-						converter.convert(source.getCoordinate()));
-			});
+			if(source.getPersist() != null){
+				getExParams.persist();
+			}
+
+			return getExParams;
 		}
 
 	}

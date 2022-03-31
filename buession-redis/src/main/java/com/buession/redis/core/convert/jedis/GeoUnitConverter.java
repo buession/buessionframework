@@ -26,7 +26,6 @@ package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.GeoUnit;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link GeoUnit} 和 jedis {@link redis.clients.jedis.GeoUnit} 互转
@@ -36,12 +35,6 @@ import org.springframework.lang.Nullable;
  */
 public interface GeoUnitConverter<S, T> extends Converter<S, T> {
 
-	/**
-	 * {@link GeoUnit} 转换为 jedis {@link redis.clients.jedis.GeoUnit}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
 	final class GeoUnitJedisConverter implements GeoUnitConverter<GeoUnit, redis.clients.jedis.GeoUnit> {
 
 		@Override
@@ -55,32 +48,6 @@ public interface GeoUnitConverter<S, T> extends Converter<S, T> {
 					return redis.clients.jedis.GeoUnit.MI;
 				case FT:
 					return redis.clients.jedis.GeoUnit.FT;
-				default:
-					return null;
-			}
-		}
-
-	}
-
-	/**
-	 * jedis {@link redis.clients.jedis.GeoUnit} 转换为 {@link GeoUnit}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	final class GeoUnitExposeConverter implements GeoUnitConverter<redis.clients.jedis.GeoUnit, GeoUnit> {
-
-		@Override
-		public GeoUnit convert(final redis.clients.jedis.GeoUnit source){
-			switch(source){
-				case M:
-					return GeoUnit.M;
-				case KM:
-					return GeoUnit.KM;
-				case MI:
-					return GeoUnit.MI;
-				case FT:
-					return GeoUnit.FT;
 				default:
 					return null;
 			}

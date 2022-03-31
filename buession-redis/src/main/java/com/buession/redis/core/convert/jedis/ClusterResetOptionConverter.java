@@ -36,12 +36,6 @@ import redis.clients.jedis.args.ClusterResetType;
  */
 public interface ClusterResetOptionConverter<S, T> extends Converter<S, T> {
 
-	/**
-	 * {@link ClusterResetOption} 转换为 jedis {@link ClusterResetType}
-	 *
-	 * @author Yong.Teng
-	 * @since 1.2.1
-	 */
 	final class ClusterResetOptionJedisConverter implements Converter<ClusterResetOption, ClusterResetType> {
 
 		@Override
@@ -51,29 +45,6 @@ public interface ClusterResetOptionConverter<S, T> extends Converter<S, T> {
 					return ClusterResetType.SOFT;
 				case HARD:
 					return ClusterResetType.HARD;
-				default:
-					return null;
-			}
-		}
-
-	}
-
-	/**
-	 * Jedis {@link ClusterResetType} 转换为 {@link ClusterResetOption}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	final class ClusterResetOptionExposeConverter
-			implements ClusterResetOptionConverter<ClusterResetType, ClusterResetOption> {
-
-		@Override
-		public ClusterResetOption convert(final ClusterResetType source){
-			switch(source){
-				case SOFT:
-					return ClusterResetOption.SOFT;
-				case HARD:
-					return ClusterResetOption.HARD;
 				default:
 					return null;
 			}

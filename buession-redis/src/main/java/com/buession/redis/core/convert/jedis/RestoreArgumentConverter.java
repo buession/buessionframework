@@ -25,9 +25,7 @@
 package com.buession.redis.core.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.utils.NumberUtils;
 import com.buession.redis.core.command.KeyCommands;
-import redis.clients.jedis.Protocol;
 import redis.clients.jedis.params.RestoreParams;
 
 /**
@@ -38,12 +36,6 @@ import redis.clients.jedis.params.RestoreParams;
  */
 public interface RestoreArgumentConverter<S, T> extends Converter<S, T> {
 
-	/**
-	 * {@link KeyCommands.RestoreArgument} 转换为 jedis {@link RestoreParams}
-	 *
-	 * @author Yong.Teng
-	 * @since 1.2.1
-	 */
 	final class RestoreArgumentJedisConverter
 			implements RestoreArgumentConverter<KeyCommands.RestoreArgument, RestoreParams> {
 
@@ -68,37 +60,6 @@ public interface RestoreArgumentConverter<S, T> extends Converter<S, T> {
 			}
 
 			return restoreParams;
-		}
-
-	}
-
-	/**
-	 * jedis {@link RestoreParams} 转换为 {@link KeyCommands.RestoreArgument}
-	 *
-	 * @author Yong.Teng
-	 * @since 2.0.0
-	 */
-	final class RestoreArgumentExposeConverter
-			implements RestoreArgumentConverter<RestoreParams, KeyCommands.RestoreArgument> {
-
-		@Override
-		public KeyCommands.RestoreArgument convert(final RestoreParams source){
-			final KeyCommands.RestoreArgument.Builder builder = KeyCommands.RestoreArgument.Builder.create();
-			byte[][] params = source.getByteParams();
-
-			for(int i = 0; i < params.length; i++){
-				if(Protocol.Keyword.REPLACE.getRaw().equals(params[i])){
-					builder.replace();
-				}else if(Protocol.Keyword.ABSTTL.getRaw().equals(params[i])){
-					builder.absTtl();
-				}else if(Protocol.Keyword.IDLETIME.getRaw().equals(params[i])){
-					builder.idleTime(NumberUtils.bytes2long(params[++i]));
-				}else if(Protocol.Keyword.FREQ.getRaw().equals(params[i])){
-					builder.frequency(NumberUtils.bytes2long(params[++i]));
-				}
-			}
-
-			return builder.build();
 		}
 
 	}
