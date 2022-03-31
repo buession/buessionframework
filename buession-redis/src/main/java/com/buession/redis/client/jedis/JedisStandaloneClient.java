@@ -51,7 +51,7 @@ import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.MigrateOperation;
-import com.buession.redis.core.ObjectCommand;
+import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.ScanResult;
@@ -396,6 +396,31 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	}
 
 	@Override
+	public Status pExpire(final byte[] key, final int lifetime){
+		return keyOperations.pExpire(key, lifetime);
+	}
+
+	@Override
+	public Status pExpireAt(final byte[] key, final long unixTimestamp){
+		return keyOperations.pExpireAt(key, unixTimestamp);
+	}
+
+	@Override
+	public Status persist(final byte[] key){
+		return keyOperations.persist(key);
+	}
+
+	@Override
+	public Long ttl(final byte[] key){
+		return keyOperations.ttl(key);
+	}
+
+	@Override
+	public Long pTtl(final byte[] key){
+		return keyOperations.pTtl(key);
+	}
+
+	@Override
 	public Status copy(final byte[] key, final byte[] destKey){
 		return keyOperations.copy(key, destKey);
 	}
@@ -496,26 +521,6 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	}
 
 	@Override
-	public Status persist(final byte[] key){
-		return keyOperations.persist(key);
-	}
-
-	@Override
-	public Status pExpire(final byte[] key, final int lifetime){
-		return keyOperations.pExpire(key, lifetime);
-	}
-
-	@Override
-	public Status pExpireAt(final byte[] key, final long unixTimestamp){
-		return keyOperations.pExpireAt(key, unixTimestamp);
-	}
-
-	@Override
-	public Long pTtl(final byte[] key){
-		return keyOperations.pTtl(key);
-	}
-
-	@Override
 	public Status rename(final byte[] key, final byte[] newKey){
 		return keyOperations.rename(key, newKey);
 	}
@@ -528,6 +533,12 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
 		return keyOperations.restore(key, serializedValue, ttl);
+	}
+
+	@Override
+	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
+						  final RestoreArgument argument){
+		return keyOperations.restore(key, serializedValue, ttl, argument);
 	}
 
 	@Override
@@ -546,17 +557,17 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final byte[] cursor, final int count){
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final long count){
 		return keyOperations.scan(cursor, count);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final int count){
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final long count){
 		return keyOperations.scan(cursor, pattern, count);
 	}
 
 	@Override
-	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final int count){
+	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count){
 		return keyOperations.scan(cursor, pattern, count);
 	}
 
@@ -581,11 +592,6 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	}
 
 	@Override
-	public Long ttl(final byte[] key){
-		return keyOperations.ttl(key);
-	}
-
-	@Override
 	public Long touch(final byte[]... keys){
 		return keyOperations.touch(keys);
 	}
@@ -598,6 +604,87 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	@Override
 	public Long unlink(final byte[]... keys){
 		return keyOperations.unlink(keys);
+	}
+
+	@Override
+	public ObjectEncoding objectEncoding(final byte[] key){
+		return keyOperations.objectEncoding(key);
+	}
+
+	@Override
+	public Long objectFreq(final byte[] key){
+		return keyOperations.objectFreq(key);
+	}
+
+	@Override
+	public Long objectIdleTime(final byte[] key){
+		return keyOperations.objectIdleTime(key);
+	}
+
+	@Override
+	public Long objectRefcount(final byte[] key){
+		return keyOperations.objectRefcount(key);
+	}
+
+	@Override
+	public byte[] lIndex(final byte[] key, final long index){
+		return listOperations.lIndex(key, index);
+	}
+
+	@Override
+	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value){
+		return listOperations.lInsert(key, position, pivot, value);
+	}
+
+	@Override
+	public Status lSet(final byte[] key, final long index, final byte[] value){
+		return listOperations.lSet(key, index, value);
+	}
+
+	@Override
+	public Long lLen(final byte[] key){
+		return listOperations.lLen(key);
+	}
+
+	@Override
+	public List<byte[]> lRange(final byte[] key, final long start, final long end){
+		return listOperations.lRange(key, start, end);
+	}
+
+	@Override
+	public Long lPos(final byte[] key, final byte[] element){
+		return listOperations.lPos(key, element);
+	}
+
+	@Override
+	public Long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument){
+		return listOperations.lPos(key, element, lPosArgument);
+	}
+
+	@Override
+	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count){
+		return listOperations.lPos(key, element, lPosArgument, count);
+	}
+
+	@Override
+	public Long lRem(final byte[] key, final byte[] value, final long count){
+		return listOperations.lRem(key, value, count);
+	}
+
+	@Override
+	public Status lTrim(final byte[] key, final long start, final long end){
+		return listOperations.lTrim(key, start, end);
+	}
+
+	@Override
+	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
+		return listOperations.lMove(key, destKey, from, to);
+	}
+
+	@Override
+	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+						 final int timeout){
+		return listOperations.blMove(key, destKey, from, to, timeout);
 	}
 
 	@Override
@@ -616,21 +703,6 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	}
 
 	@Override
-	public byte[] lIndex(final byte[] key, final long index){
-		return listOperations.lIndex(key, index);
-	}
-
-	@Override
-	public Long lInsert(final byte[] key, final byte[] value, final ListPosition position, final byte[] pivot){
-		return listOperations.lInsert(key, value, position, pivot);
-	}
-
-	@Override
-	public Long lLen(final byte[] key){
-		return listOperations.lLen(key);
-	}
-
-	@Override
 	public byte[] lPop(final byte[] key){
 		return listOperations.lPop(key);
 	}
@@ -643,26 +715,6 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	@Override
 	public Long lPushX(final byte[] key, final byte[]... values){
 		return listOperations.lPushX(key, values);
-	}
-
-	@Override
-	public List<byte[]> lRange(final byte[] key, final long start, final long end){
-		return listOperations.lRange(key, start, end);
-	}
-
-	@Override
-	public Long lRem(final byte[] key, final byte[] value, final long count){
-		return listOperations.lRem(key, value, count);
-	}
-
-	@Override
-	public Status lSet(final byte[] key, final long index, final byte[] value){
-		return listOperations.lSet(key, index, value);
-	}
-
-	@Override
-	public Status lTrim(final byte[] key, final long start, final long end){
-		return listOperations.lTrim(key, start, end);
 	}
 
 	@Override
@@ -683,17 +735,6 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	@Override
 	public Long rPushX(final byte[] key, final byte[]... values){
 		return listOperations.rPushX(key, values);
-	}
-
-	@Override
-	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
-		return listOperations.lMove(key, destKey, from, to);
-	}
-
-	@Override
-	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-						 final int timeout){
-		return listOperations.blMove(key, destKey, from, to, timeout);
 	}
 
 	@Override
@@ -784,11 +825,6 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	@Override
 	public Status configSet(final byte[] parameter, final byte[] value){
 		return serverOperations.configSet(parameter, value);
-	}
-
-	@Override
-	public Object object(final ObjectCommand command, final byte[] key){
-		return serverOperations.object(command, key);
 	}
 
 	@Override

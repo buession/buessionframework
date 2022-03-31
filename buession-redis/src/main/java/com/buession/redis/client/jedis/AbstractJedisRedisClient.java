@@ -45,13 +45,12 @@ import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.Info;
 import com.buession.redis.core.MigrateOperation;
-import com.buession.redis.core.ObjectCommand;
+import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
-import com.buession.redis.core.SlotsRange;
 import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.ScanResult;
@@ -473,26 +472,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Status copy(final String key, final String destKey){
-		return keyOperations.copy(key, destKey);
-	}
-
-	@Override
-	public Status copy(final String key, final String destKey, final int db){
-		return keyOperations.copy(key, destKey, db);
-	}
-
-	@Override
-	public Status copy(final String key, final String destKey, final boolean replace){
-		return keyOperations.copy(key, destKey, replace);
-	}
-
-	@Override
-	public Status copy(final String key, final String destKey, final int db, final boolean replace){
-		return keyOperations.copy(key, destKey, db, replace);
-	}
-
-	@Override
 	public Long del(final String... keys){
 		return keyOperations.del(keys);
 	}
@@ -525,6 +504,51 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp){
 		return keyOperations.expireAt(key, unixTimestamp);
+	}
+
+	@Override
+	public Status pExpire(final String key, final int lifetime){
+		return keyOperations.pExpire(key, lifetime);
+	}
+
+	@Override
+	public Status pExpireAt(final String key, final long unixTimestamp){
+		return keyOperations.pExpireAt(key, unixTimestamp);
+	}
+
+	@Override
+	public Status persist(final String key){
+		return keyOperations.persist(key);
+	}
+
+	@Override
+	public Long ttl(final String key){
+		return keyOperations.ttl(key);
+	}
+
+	@Override
+	public Long pTtl(final String key){
+		return keyOperations.pTtl(key);
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey){
+		return keyOperations.copy(key, destKey);
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final int db){
+		return keyOperations.copy(key, destKey, db);
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final boolean replace){
+		return keyOperations.copy(key, destKey, replace);
+	}
+
+	@Override
+	public Status copy(final String key, final String destKey, final int db, final boolean replace){
+		return keyOperations.copy(key, destKey, db, replace);
 	}
 
 	@Override
@@ -608,26 +632,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Status persist(final String key){
-		return keyOperations.persist(key);
-	}
-
-	@Override
-	public Status pExpire(final String key, final int lifetime){
-		return keyOperations.pExpire(key, lifetime);
-	}
-
-	@Override
-	public Status pExpireAt(final String key, final long unixTimestamp){
-		return keyOperations.pExpireAt(key, unixTimestamp);
-	}
-
-	@Override
-	public Long pTtl(final String key){
-		return keyOperations.pTtl(key);
-	}
-
-	@Override
 	public String randomKey(){
 		return keyOperations.randomKey();
 	}
@@ -643,8 +647,14 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Status restore(final String key, final String serializedValue, final int ttl){
+	public Status restore(final String key, final byte[] serializedValue, final int ttl){
 		return keyOperations.restore(key, serializedValue, ttl);
+	}
+
+	@Override
+	public Status restore(final String key, final byte[] serializedValue, final int ttl,
+						  final RestoreArgument argument){
+		return keyOperations.restore(key, serializedValue, ttl, argument);
 	}
 
 	@Override
@@ -668,22 +678,22 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final long cursor, final int count){
+	public ScanResult<List<String>> scan(final long cursor, final long count){
 		return keyOperations.scan(cursor, count);
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final String cursor, final int count){
+	public ScanResult<List<String>> scan(final String cursor, final long count){
 		return keyOperations.scan(cursor, count);
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final long cursor, final String pattern, final int count){
+	public ScanResult<List<String>> scan(final long cursor, final String pattern, final long count){
 		return keyOperations.scan(cursor, pattern, count);
 	}
 
 	@Override
-	public ScanResult<List<String>> scan(final String cursor, final String pattern, final int count){
+	public ScanResult<List<String>> scan(final String cursor, final String pattern, final long count){
 		return keyOperations.scan(cursor, pattern, count);
 	}
 
@@ -713,11 +723,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Long ttl(final String key){
-		return keyOperations.ttl(key);
-	}
-
-	@Override
 	public Type type(final String key){
 		return keyOperations.type(key);
 	}
@@ -728,8 +733,89 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Long wait(final int replicas, final long timeout){
+	public Long wait(final int replicas, final int timeout){
 		return keyOperations.wait(replicas, timeout);
+	}
+
+	@Override
+	public ObjectEncoding objectEncoding(final String key){
+		return keyOperations.objectEncoding(key);
+	}
+
+	@Override
+	public Long objectFreq(final String key){
+		return keyOperations.objectFreq(key);
+	}
+
+	@Override
+	public Long objectIdleTime(final String key){
+		return keyOperations.objectIdleTime(key);
+	}
+
+	@Override
+	public Long objectRefcount(final String key){
+		return keyOperations.objectRefcount(key);
+	}
+
+	@Override
+	public String lIndex(final String key, final long index){
+		return listOperations.lIndex(key, index);
+	}
+
+	@Override
+	public Long lInsert(final String key, final ListPosition position, final String pivot, final String value){
+		return listOperations.lInsert(key, position, pivot, value);
+	}
+
+	@Override
+	public Status lSet(final String key, final long index, final String value){
+		return listOperations.lSet(key, index, value);
+	}
+
+	@Override
+	public Long lLen(final String key){
+		return listOperations.lLen(key);
+	}
+
+	@Override
+	public List<String> lRange(final String key, final long start, final long end){
+		return listOperations.lRange(key, start, end);
+	}
+
+	@Override
+	public Long lPos(final String key, final String element){
+		return listOperations.lPos(key, element);
+	}
+
+	@Override
+	public Long lPos(final String key, final String element, final LPosArgument lPosArgument){
+		return listOperations.lPos(key, element, lPosArgument);
+	}
+
+	@Override
+	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final long count){
+		return listOperations.lPos(key, element, lPosArgument, count);
+	}
+
+	@Override
+	public Long lRem(final String key, final String value, final long count){
+		return listOperations.lRem(key, value, count);
+	}
+
+	@Override
+	public Status lTrim(final String key, final long start, final long end){
+		return listOperations.lTrim(key, start, end);
+	}
+
+	@Override
+	public String lMove(final String key, final String destKey, final Direction from, final Direction to){
+		return listOperations.lMove(key, destKey, from, to);
+	}
+
+	@Override
+	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
+						 final int timeout){
+		return listOperations.blMove(key, destKey, from, to, timeout);
 	}
 
 	@Override
@@ -748,21 +834,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public String lIndex(final String key, final long index){
-		return listOperations.lIndex(key, index);
-	}
-
-	@Override
-	public Long lInsert(final String key, final String value, final ListPosition position, final String pivot){
-		return listOperations.lInsert(key, value, position, pivot);
-	}
-
-	@Override
-	public Long lLen(final String key){
-		return listOperations.lLen(key);
-	}
-
-	@Override
 	public String lPop(final String key){
 		return listOperations.lPop(key);
 	}
@@ -775,26 +846,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Long lPushX(final String key, final String... values){
 		return listOperations.lPushX(key, values);
-	}
-
-	@Override
-	public List<String> lRange(final String key, final long start, final long end){
-		return listOperations.lRange(key, start, end);
-	}
-
-	@Override
-	public Long lRem(final String key, final String value, final long count){
-		return listOperations.lRem(key, value, count);
-	}
-
-	@Override
-	public Status lSet(final String key, final long index, final String value){
-		return listOperations.lSet(key, index, value);
-	}
-
-	@Override
-	public Status lTrim(final String key, final long start, final long end){
-		return listOperations.lTrim(key, start, end);
 	}
 
 	@Override
@@ -815,17 +866,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Long rPushX(final String key, final String... values){
 		return listOperations.rPushX(key, values);
-	}
-
-	@Override
-	public String lMove(final String key, final String destKey, final Direction from, final Direction to){
-		return listOperations.lMove(key, destKey, from, to);
-	}
-
-	@Override
-	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
-						 final int timeout){
-		return listOperations.blMove(key, destKey, from, to, timeout);
 	}
 
 	@Override
@@ -1046,11 +1086,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public void monitor(final RedisMonitor redisMonitor){
 		serverOperations.monitor(redisMonitor);
-	}
-
-	@Override
-	public Object object(final ObjectCommand command, final String key){
-		return serverOperations.object(command, key);
 	}
 
 	@Override
