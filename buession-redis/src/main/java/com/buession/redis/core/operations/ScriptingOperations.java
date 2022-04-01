@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -41,6 +41,8 @@ public interface ScriptingOperations extends ScriptingCommands, RedisOperations 
 	/**
 	 * 对 Lua 脚本进行求值
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a></p>
+	 *
 	 * @param script
 	 * 		脚本程序
 	 * @param param
@@ -54,6 +56,8 @@ public interface ScriptingOperations extends ScriptingCommands, RedisOperations 
 
 	/**
 	 * 对 Lua 脚本进行求值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a></p>
 	 *
 	 * @param script
 	 * 		脚本程序
@@ -69,6 +73,8 @@ public interface ScriptingOperations extends ScriptingCommands, RedisOperations 
 	/**
 	 * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a></p>
+	 *
 	 * @param digest
 	 * 		SHA1 校验码
 	 * @param param
@@ -82,6 +88,8 @@ public interface ScriptingOperations extends ScriptingCommands, RedisOperations 
 
 	/**
 	 * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a></p>
 	 *
 	 * @param digest
 	 * 		SHA1 校验码
@@ -97,6 +105,8 @@ public interface ScriptingOperations extends ScriptingCommands, RedisOperations 
 	/**
 	 * 根据 SHA1 校验和，检测校验和所指定的脚本是否已经被保存在缓存当中
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/script/script_exists.html" target="_blank">http://redisdoc.com/script/script_exists.html</a></p>
+	 *
 	 * @param sha1
 	 * 		SHA1 校验和
 	 *
@@ -109,6 +119,8 @@ public interface ScriptingOperations extends ScriptingCommands, RedisOperations 
 
 	/**
 	 * 根据 SHA1 校验和，检测校验和所指定的脚本是否已经被保存在缓存当中
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/script/script_exists.html" target="_blank">http://redisdoc.com/script/script_exists.html</a></p>
 	 *
 	 * @param sha1
 	 * 		SHA1 校验和

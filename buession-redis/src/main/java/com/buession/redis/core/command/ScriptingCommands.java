@@ -25,6 +25,7 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.ScriptFlushMode;
 
 import java.util.List;
 
@@ -40,8 +41,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 对 Lua 脚本进行求值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a></p>
 	 *
 	 * @param script
 	 * 		脚本程序
@@ -53,8 +53,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 对 Lua 脚本进行求值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a></p>
 	 *
 	 * @param script
 	 * 		脚本程序
@@ -66,8 +65,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 对 Lua 脚本进行求值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a></p>
 	 *
 	 * @param script
 	 * 		脚本程序
@@ -81,8 +79,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 对 Lua 脚本进行求值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a></p>
 	 *
 	 * @param script
 	 * 		脚本程序
@@ -96,8 +93,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 对 Lua 脚本进行求值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a></p>
 	 *
 	 * @param script
 	 * 		脚本程序
@@ -113,8 +109,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 对 Lua 脚本进行求值
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a></p>
 	 *
 	 * @param script
 	 * 		脚本程序
@@ -130,9 +125,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a></p>
 	 *
 	 * @param digest
 	 * 		SHA1 校验码
@@ -144,9 +137,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a></p>
 	 *
 	 * @param digest
 	 * 		SHA1 校验码
@@ -158,9 +149,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a></p>
 	 *
 	 * @param digest
 	 * 		SHA1 校验码
@@ -174,9 +163,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a></p>
 	 *
 	 * @param digest
 	 * 		SHA1 校验码
@@ -190,9 +177,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a></p>
 	 *
 	 * @param digest
 	 * 		SHA1 校验码
@@ -208,9 +193,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a></p>
 	 *
 	 * @param digest
 	 * 		SHA1 校验码
@@ -226,8 +209,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 根据一个或多个脚本的 SHA1 校验和，检测校验和所指定的脚本是否已经被保存在缓存当中
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/script/script_exists.html" target="_blank">http://redisdoc.com/script/script_exists.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/script_exists.html" target="_blank">http://redisdoc.com/script/script_exists.html</a></p>
 	 *
 	 * @param sha1
 	 * 		一个或多个 SHA1 校验和
@@ -239,9 +221,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 根据一个或多个脚本的 SHA1 校验和，检测校验和所指定的脚本是否已经被保存在缓存当中
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/script/script_exists.html" target="_blank">http://redisdoc
-	 * .com/script/script_exists.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/script_exists.html" target="_blank">http://redisdoc.com/script/script_exists.html</a></p>
 	 *
 	 * @param sha1
 	 * 		一个或多个 SHA1 校验和
@@ -253,29 +233,28 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 清除所有 Lua 脚本缓存
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/script_flush.html" target="_blank">http://redisdoc
-	 * .com/script/script_flush.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/script_flush.html" target="_blank">http://redisdoc.com/script/script_flush.html</a></p>
 	 *
 	 * @return 操作成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
 	Status scriptFlush();
 
 	/**
-	 * 杀死当前正在运行的 Lua 脚本，当且仅当这个脚本没有执行过任何写操作时，这个命令才生效
+	 * 清除所有 Lua 脚本缓存
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/script_kill.html" target="_blank">http://redisdoc
-	 * .com/script/script_kill.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/script_flush.html" target="_blank">http://redisdoc.com/script/script_flush.html</a></p>
+	 *
+	 * @param mode
+	 * 		刷新模式
 	 *
 	 * @return 操作成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	Status scriptKill();
+	Status scriptFlush(final ScriptFlushMode mode);
 
 	/**
 	 * 将脚本 script 添加到脚本缓存中
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/script/script_load.html" target="_blank">http://redisdoc.com/script/script_load
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/script_load.html" target="_blank">http://redisdoc.com/script/script_load.html</a></p>
 	 *
 	 * @param script
 	 * 		脚本
@@ -287,8 +266,7 @@ public interface ScriptingCommands extends RedisCommands {
 	/**
 	 * 将脚本 script 添加到脚本缓存中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/script_load.html" target="_blank">http://redisdoc
-	 * .com/script/script_load.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/script/script_load.html" target="_blank">http://redisdoc.com/script/script_load.html</a></p>
 	 *
 	 * @param script
 	 * 		脚本
@@ -296,5 +274,14 @@ public interface ScriptingCommands extends RedisCommands {
 	 * @return script 的 SHA1 校验和
 	 */
 	byte[] scriptLoad(final byte[] script);
+
+	/**
+	 * 杀死当前正在运行的 Lua 脚本，当且仅当这个脚本没有执行过任何写操作时，这个命令才生效
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/script/script_kill.html" target="_blank">http://redisdoc.com/script/script_kill.html</a></p>
+	 *
+	 * @return 操作成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status scriptKill();
 
 }

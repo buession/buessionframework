@@ -25,6 +25,11 @@
 package com.buession.redis.core.convert;
 
 import com.buession.core.converter.BooleanStatusConverter;
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapConverter;
+import com.buession.redis.utils.SafeEncoder;
+import org.springframework.lang.Nullable;
 
 /**
  * @author Yong.Teng
@@ -35,5 +40,26 @@ public interface Converters {
 	OkStatusConverter OK_STATUS_CONVERTER = new OkStatusConverter();
 
 	BooleanStatusConverter BOOLEAN_STATUS_CONVERTER = new BooleanStatusConverter();
+
+	MapConverter<String, String, byte[], byte[]> STRING_MAP_TO_BINARY_MAP_CONVERTER = new MapConverter<>(
+			SafeEncoder::encode, SafeEncoder::encode);
+
+	ListConverter<String, byte[]> STRING_LIST_TO_STRING_LIST_CONVERTER = new ListConverter<>(SafeEncoder::encode);
+
+	Converter<byte[][], String[]> BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER = new Converter<byte[][], String[]>() {
+
+		@Nullable
+		@Override
+		public String[] convert(byte[][] source){
+			final String[] result = new String[source.length];
+
+			for(int i = 0; i < source.length; i++){
+				result[i] = SafeEncoder.encode(source[i]);
+			}
+
+			return result;
+		}
+
+	};
 
 }

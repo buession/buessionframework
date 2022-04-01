@@ -51,6 +51,7 @@ import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
+import com.buession.redis.core.ScriptFlushMode;
 import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.ScanResult;
@@ -874,6 +875,11 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
+	public Long publish(final String channel, final String message){
+		return pubSubOperations.publish(channel, message);
+	}
+
+	@Override
 	public List<String> pubsubChannels(){
 		return pubSubOperations.pubsubChannels();
 	}
@@ -891,11 +897,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Map<String, String> pubsubNumSub(final String... channels){
 		return pubSubOperations.pubsubNumSub(channels);
-	}
-
-	@Override
-	public Long publish(final String channel, final String message){
-		return pubSubOperations.publish(channel, message);
 	}
 
 	@Override
@@ -964,13 +965,18 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Status scriptKill(){
-		return scriptingOperations.scriptKill();
+	public Status scriptFlush(final ScriptFlushMode mode){
+		return scriptingOperations.scriptFlush(mode);
 	}
 
 	@Override
 	public String scriptLoad(final String script){
 		return scriptingOperations.scriptLoad(script);
+	}
+
+	@Override
+	public Status scriptKill(){
+		return scriptingOperations.scriptKill();
 	}
 
 	@Override

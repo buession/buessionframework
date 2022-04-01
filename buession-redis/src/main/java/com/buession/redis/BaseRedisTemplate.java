@@ -51,6 +51,7 @@ import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.ScriptFlushMode;
 import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
@@ -1642,110 +1643,97 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Object eval(final String script){
-		return execute((client)->client.eval(script), ProtocolCommand.EVAL, new CommandArguments("script", script));
+		return execute((client)->client.eval(script));
 	}
 
 	@Override
 	public Object eval(final byte[] script){
-		return execute((client)->client.eval(script), ProtocolCommand.EVAL, new CommandArguments("script", script));
+		return execute((client)->client.eval(script));
 	}
 
 	@Override
 	public Object eval(final String script, final String... params){
-		final CommandArguments args = CommandArguments.create("script", script).put("params", params);
-		return execute((client)->client.eval(script, params), ProtocolCommand.EVAL, args);
+		return execute((client)->client.eval(script, params));
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... params){
-		final CommandArguments args = CommandArguments.create("script", script).put("params", params);
-		return execute((client)->client.eval(script, params), ProtocolCommand.EVAL, args);
+		return execute((client)->client.eval(script, params));
 	}
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments){
-		final CommandArguments args = CommandArguments.create("script", script).put("keys", keys)
-				.put("arguments", arguments);
-		return execute((client)->client.eval(script, keys, arguments), ProtocolCommand.EVAL, args);
+		return execute((client)->client.eval(script, keys, arguments));
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments){
-		final CommandArguments args = CommandArguments.create("script", script).put("keys", keys)
-				.put("arguments", arguments);
-		return execute((client)->client.eval(script, keys, arguments), ProtocolCommand.EVAL, args);
+		return execute((client)->client.eval(script, keys, arguments));
 	}
 
 	@Override
 	public Object evalSha(final String digest){
-		return execute((client)->client.evalSha(digest), ProtocolCommand.EVALSHA,
-				new CommandArguments("digest", digest));
+		return execute((client)->client.evalSha(digest));
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest){
-		return execute((client)->client.evalSha(digest), ProtocolCommand.EVALSHA,
-				new CommandArguments("digest", digest));
+		return execute((client)->client.evalSha(digest));
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String... params){
-		final CommandArguments args = CommandArguments.create("digest", digest).put("params", params);
-		return execute((client)->client.evalSha(digest, params), ProtocolCommand.EVALSHA, args);
+		return execute((client)->client.evalSha(digest, params));
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... params){
-		final CommandArguments args = CommandArguments.create("digest", digest).put("params", params);
-		return execute((client)->client.evalSha(digest, params), ProtocolCommand.EVALSHA, args);
+		return execute((client)->client.evalSha(digest, params));
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
-		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", keys)
-				.put("arguments", arguments);
-		return execute((client)->client.evalSha(digest, keys, arguments), ProtocolCommand.EVALSHA, args);
+		return execute((client)->client.evalSha(digest, keys, arguments));
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments){
-		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", keys)
-				.put("arguments", arguments);
-		return execute((client)->client.evalSha(digest, keys, arguments), ProtocolCommand.EVALSHA, args);
+		return execute((client)->client.evalSha(digest, keys, arguments));
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1){
-		return execute((client)->client.scriptExists(sha1), ProtocolCommand.SCRIPT_EXISTS,
-				new CommandArguments("sha1", sha1));
+		return execute((client)->client.scriptExists(sha1));
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final byte[]... sha1){
-		return execute((client)->client.scriptExists(sha1), ProtocolCommand.SCRIPT_EXISTS,
-				new CommandArguments("sha1", sha1));
+		return execute((client)->client.scriptExists(sha1));
 	}
 
 	@Override
 	public Status scriptFlush(){
-		return execute((client)->client.scriptFlush(), ProtocolCommand.SCRIPT_FLUSH);
+		return execute((client)->client.scriptFlush());
 	}
 
 	@Override
-	public Status scriptKill(){
-		return execute((client)->client.scriptKill(), ProtocolCommand.SCRIPT_KILL);
+	public Status scriptFlush(final ScriptFlushMode mode){
+		return execute((client)->client.scriptFlush(mode));
 	}
 
 	@Override
 	public String scriptLoad(final String script){
-		return execute((client)->client.scriptLoad(script), ProtocolCommand.SCRIPT_LOAD,
-				new CommandArguments("script", script));
+		return execute((client)->client.scriptLoad(script));
 	}
 
 	@Override
 	public byte[] scriptLoad(final byte[] script){
-		return execute((client)->client.scriptLoad(script), ProtocolCommand.SCRIPT_LOAD,
-				new CommandArguments("script", script));
+		return execute((client)->client.scriptLoad(script));
+	}
+
+	@Override
+	public Status scriptKill(){
+		return execute((client)->client.scriptKill());
 	}
 
 	@Override

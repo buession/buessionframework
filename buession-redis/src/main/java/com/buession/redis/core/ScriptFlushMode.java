@@ -22,18 +22,16 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.operations;
-
-import com.buession.redis.core.command.ScriptingCommands;
+package com.buession.redis.core;
 
 /**
- * Script 命令操作接口
- *
- * @param <CMD>
- * 		Jedis 原始命令对象
- *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface ScriptingOperations<CMD> extends ScriptingCommands, RedisOperations<CMD> {
+public enum ScriptFlushMode {
+
+	ASYNC,
+	
+	SYNC
 
 }

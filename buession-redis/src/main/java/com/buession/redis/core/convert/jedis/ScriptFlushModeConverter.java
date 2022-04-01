@@ -21,19 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.client.operations;
-
-import com.buession.redis.core.command.ScriptingCommands;
-
-/**
- * Script 命令操作接口
- *
- * @param <CMD>
- * 		Jedis 原始命令对象
+ */package com.buession.redis.core.convert.jedis;/**
+ * 
  *
  * @author Yong.Teng
- */
-public interface ScriptingOperations<CMD> extends ScriptingCommands, RedisOperations<CMD> {
-
+ * @since 2.0.0
+ */public interface ScriptFlushModeConverter {
 }

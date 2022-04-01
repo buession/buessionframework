@@ -19,223 +19,311 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.client.jedis.JedisStandaloneClient;
+import com.buession.redis.core.ScriptFlushMode;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.OkStatusConverter;
-import com.buession.redis.exception.RedisExceptionUtils;
+import com.buession.redis.core.convert.Converters;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.args.FlushMode;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
+ * Jedis 单机模式 Script 命令操作
+ *
  * @author Yong.Teng
  */
-public class JedisScriptingOperations extends AbstractScriptingOperations<Jedis, Pipeline> {
+public final class JedisScriptingOperations extends AbstractScriptingOperations<Jedis> {
 
-	public JedisScriptingOperations(final JedisClient client){
+	public JedisScriptingOperations(final JedisStandaloneClient client){
 		super(client);
 	}
 
 	@Override
 	public Object eval(final String script){
+		final CommandArguments args = CommandArguments.create("script", script);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().eval(script)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().eval(script)), ProtocolCommand.EVAL, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().eval(script)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().eval(script)), ProtocolCommand.EVAL, args);
 		}else{
-			return execute((cmd)->cmd.eval(script));
+			return execute((cmd)->cmd.eval(script), ProtocolCommand.EVAL, args);
 		}
 	}
 
 	@Override
 	public Object eval(final byte[] script){
+		final CommandArguments args = CommandArguments.create("script", script);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().eval(script)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().eval(script)), ProtocolCommand.EVAL, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().eval(script)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().eval(script)), ProtocolCommand.EVAL, args);
 		}else{
-			return execute((cmd)->cmd.eval(script));
+			return execute((cmd)->cmd.eval(script), ProtocolCommand.EVAL, args);
 		}
 	}
 
 	@Override
 	public Object eval(final String script, final String... params){
+		final CommandArguments args = CommandArguments.create("script", script).put("params", params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().eval(script, paramsSize, params)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().eval(script, paramsSize, params)),
+					ProtocolCommand.EVAL, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().eval(script, paramsSize, params)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().eval(script, paramsSize, params)),
+					ProtocolCommand.EVAL, args);
 		}else{
-			return execute((cmd)->cmd.eval(script, paramsSize, params));
+			return execute((cmd)->cmd.eval(script, paramsSize, params), ProtocolCommand.EVAL, args);
 		}
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... params){
+		final CommandArguments args = CommandArguments.create("script", script).put("params", params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().eval(script, paramsSize, params)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().eval(script, paramsSize, params)),
+					ProtocolCommand.EVAL, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().eval(script, paramsSize, params)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().eval(script, paramsSize, params)),
+					ProtocolCommand.EVAL, args);
 		}else{
-			return execute((cmd)->cmd.eval(script, paramsSize, params));
+			return execute((cmd)->cmd.eval(script, paramsSize, params), ProtocolCommand.EVAL, args);
 		}
 	}
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments){
+		final CommandArguments args = CommandArguments.create("script", script).put("keys", keys)
+				.put("arguments", arguments);
+
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().eval(script, Arrays.asList(keys),
-					Arrays.asList(arguments))));
+					Arrays.asList(arguments))), ProtocolCommand.EVAL, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().eval(script, Arrays.asList(keys),
-					Arrays.asList(arguments))));
+					Arrays.asList(arguments))), ProtocolCommand.EVAL, args);
 		}else{
-			return execute((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
+			return execute((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)), ProtocolCommand.EVAL,
+					args);
 		}
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments){
+		final CommandArguments args = CommandArguments.create("script", script).put("keys", keys)
+				.put("arguments", arguments);
+
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().eval(script, Arrays.asList(keys),
-					Arrays.asList(arguments))));
+					Arrays.asList(arguments))), ProtocolCommand.EVAL, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().eval(script, Arrays.asList(keys),
-					Arrays.asList(arguments))));
+					Arrays.asList(arguments))), ProtocolCommand.EVAL, args);
 		}else{
-			return execute((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
+			return execute((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)), ProtocolCommand.EVAL,
+					args);
 		}
 	}
 
 	@Override
 	public Object evalSha(final String digest){
+		final CommandArguments args = CommandArguments.create("digest", digest);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().evalsha(digest)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().evalsha(digest)), ProtocolCommand.EVALSHA,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().evalsha(digest)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().evalsha(digest)), ProtocolCommand.EVALSHA,
+					args);
 		}else{
-			return execute((cmd)->cmd.evalsha(digest));
+			return execute((cmd)->cmd.evalsha(digest), ProtocolCommand.EVALSHA, args);
 		}
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest){
+		final CommandArguments args = CommandArguments.create("digest", digest);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().evalsha(digest)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().evalsha(digest)), ProtocolCommand.EVALSHA,
+					args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().evalsha(digest)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().evalsha(digest)), ProtocolCommand.EVALSHA,
+					args);
 		}else{
-			return execute((cmd)->cmd.evalsha(digest));
+			return execute((cmd)->cmd.evalsha(digest), ProtocolCommand.EVALSHA, args);
 		}
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String... params){
+		final CommandArguments args = CommandArguments.create("digest", digest).put("params", params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().evalsha(digest, paramsSize, params)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().evalsha(digest, paramsSize, params)),
+					ProtocolCommand.EVALSHA, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().evalsha(digest, paramsSize, params)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().evalsha(digest, paramsSize, params)),
+					ProtocolCommand.EVALSHA, args);
 		}else{
-			return execute((cmd)->cmd.evalsha(digest, paramsSize, params));
+			return execute((cmd)->cmd.evalsha(digest, paramsSize, params), ProtocolCommand.EVALSHA, args);
 		}
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... params){
+		final CommandArguments args = CommandArguments.create("digest", digest).put("params", params);
 		final int paramsSize = params == null ? 0 : params.length;
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().evalsha(digest, paramsSize, params)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().evalsha(digest, paramsSize, params)),
+					ProtocolCommand.EVALSHA, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().evalsha(digest, paramsSize, params)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().evalsha(digest, paramsSize, params)),
+					ProtocolCommand.EVALSHA, args);
 		}else{
-			return execute((cmd)->cmd.evalsha(digest, paramsSize, params));
+			return execute((cmd)->cmd.evalsha(digest, paramsSize, params), ProtocolCommand.EVALSHA, args);
 		}
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
+		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", keys)
+				.put("arguments", arguments);
+
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().evalsha(digest, Arrays.asList(keys),
-					Arrays.asList(arguments))));
+					Arrays.asList(arguments))), ProtocolCommand.EVALSHA, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().evalsha(digest, Arrays.asList(keys),
-					Arrays.asList(arguments))));
+					Arrays.asList(arguments))), ProtocolCommand.EVALSHA, args);
 		}else{
-			return execute((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
+			return execute((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)),
+					ProtocolCommand.EVALSHA, args);
 		}
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments){
+		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", keys)
+				.put("arguments", arguments);
+
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().evalsha(digest, Arrays.asList(keys),
-					Arrays.asList(arguments))));
+					Arrays.asList(arguments))), ProtocolCommand.EVALSHA, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().evalsha(digest, Arrays.asList(keys),
-					Arrays.asList(arguments))));
+					Arrays.asList(arguments))), ProtocolCommand.EVALSHA, args);
 		}else{
-			return execute((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
+			return execute((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)),
+					ProtocolCommand.EVALSHA, args);
 		}
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_EXISTS,
-				client.getConnection());
-		return execute((cmd)->cmd.scriptExists(sha1));
+		final CommandArguments args = CommandArguments.create("sha1", sha1);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.EVALSHA, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.EVALSHA, args);
+		}else{
+			return execute((cmd)->cmd.scriptExists(sha1), ProtocolCommand.EVALSHA, args);
+		}
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final byte[]... sha1){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_EXISTS,
-				client.getConnection());
-		return execute((cmd)->{
-			List<Long> result = cmd.scriptExists(sha1);
-			return result == null ? null : result.stream().map((v)->v == 1).collect(Collectors.toList());
-		});
+		final CommandArguments args = CommandArguments.create("sha1", sha1);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.EVALSHA, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.EVALSHA, args);
+		}else{
+			return execute((cmd)->cmd.scriptExists(sha1), LONG_LIST_TO_BOOLEAN_LIST_CONVERTER, ProtocolCommand.EVALSHA,
+					args);
+		}
 	}
 
 	@Override
 	public Status scriptFlush(){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_FLUSH,
-				client.getConnection());
-		return execute((cmd)->cmd.scriptFlush(), new OkStatusConverter());
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCRIPT_FLUSH);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCRIPT_FLUSH);
+		}else{
+			return execute((cmd)->cmd.scriptFlush(), Converters.OK_STATUS_CONVERTER, ProtocolCommand.SCRIPT_FLUSH);
+		}
 	}
 
 	@Override
-	public Status scriptKill(){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_KILL,
-				client.getConnection());
-		return execute((cmd)->cmd.scriptKill(), new OkStatusConverter());
+	public Status scriptFlush(final ScriptFlushMode mode){
+		final CommandArguments args = CommandArguments.create("mode", mode);
+		final FlushMode flushMode = SCRIPT_FLUSH_MODE_JEDIS_CONVERTER.convert(mode);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCRIPT_FLUSH, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCRIPT_FLUSH, args);
+		}else{
+			return execute((cmd)->cmd.scriptFlush(flushMode), Converters.OK_STATUS_CONVERTER,
+					ProtocolCommand.SCRIPT_FLUSH, args);
+		}
 	}
 
 	@Override
 	public String scriptLoad(final String script){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_LOAD,
-				client.getConnection());
-		return execute((cmd)->cmd.scriptLoad(script));
+		final CommandArguments args = CommandArguments.create("script", script);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCRIPT_LOAD, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCRIPT_LOAD, args);
+		}else{
+			return execute((cmd)->cmd.scriptLoad(script), ProtocolCommand.SCRIPT_LOAD, args);
+		}
 	}
 
 	@Override
 	public byte[] scriptLoad(final byte[] script){
-		RedisExceptionUtils.pipelineAndTransactionCommandNotSupportedException(ProtocolCommand.SCRIPT_LOAD,
-				client.getConnection());
-		return execute((cmd)->cmd.scriptLoad(script));
+		final CommandArguments args = CommandArguments.create("script", script);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCRIPT_LOAD, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCRIPT_LOAD, args);
+		}else{
+			return execute((cmd)->cmd.scriptLoad(script), ProtocolCommand.SCRIPT_LOAD, args);
+		}
+	}
+
+	@Override
+	public Status scriptKill(){
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCRIPT_KILL);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCRIPT_KILL);
+		}else{
+			return execute((cmd)->cmd.scriptKill(), Converters.OK_STATUS_CONVERTER, ProtocolCommand.SCRIPT_KILL);
+		}
 	}
 
 }

@@ -19,20 +19,31 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ScriptingOperations;
-import redis.clients.jedis.PipelineBase;
-import redis.clients.jedis.commands.JedisCommands;
+import com.buession.redis.core.convert.jedis.ScriptFlushModeConverter;
 
 /**
+ * Jedis Script 命令操作抽象类
+ *
+ * @param <CMD>
+ * 		Jedis 原始命令对象
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractScriptingOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements ScriptingOperations<C> {
+public abstract class AbstractScriptingOperations<CMD> extends AbstractJedisRedisOperations<CMD>
+		implements ScriptingOperations<CMD> {
+
+	protected final static ListConverter<Long, Boolean> LONG_LIST_TO_BOOLEAN_LIST_CONVERTER = new ListConverter<>(
+			(value)->value == 1);
+
+	protected final static ScriptFlushModeConverter.ScriptFlushModeJedisConverter SCRIPT_FLUSH_MODE_JEDIS_CONVERTER = new ScriptFlushModeConverter.ScriptFlushModeJedisConverter();
 
 	public AbstractScriptingOperations(final JedisRedisClient client){
 		super(client);

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -27,16 +27,16 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisClient;
+import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.convert.OkStatusConverter;
-import com.buession.redis.core.convert.jedis.BitOperationJedisConverter;
-import com.buession.redis.core.convert.jedis.SetArgumentJedisConverter;
+import com.buession.redis.core.convert.jedis.BitOperationConverter;
+import com.buession.redis.core.convert.jedis.GetExArgumentConverter;
+import com.buession.redis.core.convert.jedis.SetArgumentConverter;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.BitOP;
 import redis.clients.jedis.BitPosParams;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
+import redis.clients.jedis.params.GetExParams;
 import redis.clients.jedis.params.SetParams;
 
 import java.util.ArrayList;
@@ -46,9 +46,9 @@ import java.util.Map;
 /**
  * @author Yong.Teng
  */
-public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipeline> {
+public class JedisStringOperations extends AbstractStringOperations {
 
-	public JedisStringOperations(final JedisClient client){
+	public JedisStringOperations(final JedisStandaloneClient client){
 		super(client);
 	}
 
@@ -98,7 +98,7 @@ public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipel
 
 	@Override
 	public Long bitOp(final BitOperation operation, final String destKey, final String... keys){
-		final BitOP bitOP = new BitOperationJedisConverter().convert(operation);
+		final BitOP bitOP = new BitOperationConverter.BitOperationJedisConverter().convert(operation);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().bitop(bitOP, destKey, keys)));
@@ -111,7 +111,7 @@ public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipel
 
 	@Override
 	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys){
-		final BitOP bitOP = new BitOperationJedisConverter().convert(operation);
+		final BitOP bitOP = new BitOperationConverter.BitOperationJedisConverter().convert(operation);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().bitop(bitOP, destKey, keys)));
@@ -211,6 +211,31 @@ public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipel
 			return transactionExecute((cmd)->newJedisResult(getTransaction().getSet(key, value)));
 		}else{
 			return execute((cmd)->cmd.getSet(key, value));
+		}
+	}
+
+	@Override
+	public byte[] getEx(final byte[] key, final GetExArgument getExArgument){
+		final GetExArgumentConverter.GetExArgumentJedisConverter converter = new GetExArgumentConverter.GetExArgumentJedisConverter();
+		final GetExParams getExParams = converter.convert(getExArgument);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().getEx(key, getExParams)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().getEx(key, getExParams)));
+		}else{
+			return execute((cmd)->cmd.getEx(key, getExParams));
+		}
+	}
+
+	@Override
+	public byte[] getDel(final byte[] key){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().getDel(key)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().getDel(key)));
+		}else{
+			return execute((cmd)->cmd.getDel(key));
 		}
 	}
 
@@ -339,7 +364,7 @@ public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipel
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
-		final SetParams setParams = new SetArgumentJedisConverter().convert(setArgument);
+		final SetParams setParams = new SetArgumentConverter.SetArgumentJedisConverter().convert(setArgument);
 		final OkStatusConverter converter = new OkStatusConverter();
 
 		if(isPipeline()){
@@ -431,10 +456,10 @@ public class JedisStringOperations extends AbstractStringOperations<Jedis, Pipel
 	public byte[] substr(final byte[] key, final int start, final int end){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().substr(key, start, end),
-					(value)->SafeEncoder.encode(value)));
+					SafeEncoder::encode));
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().substr(key, start, end),
-					(value)->SafeEncoder.encode(value)));
+					SafeEncoder::encode));
 		}else{
 			return execute((cmd)->cmd.substr(key, start, end));
 		}

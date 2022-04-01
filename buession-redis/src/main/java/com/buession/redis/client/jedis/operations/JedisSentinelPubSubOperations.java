@@ -24,24 +24,26 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.MapConverter;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.PubSubListener;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.RedisExceptionUtils;
+import com.buession.redis.core.convert.Converters;
 import com.buession.redis.pubsub.jedis.DefaultBinaryJedisPubSub;
 import com.buession.redis.pubsub.jedis.DefaultJedisPubSub;
 import com.buession.redis.utils.SafeEncoder;
+import redis.clients.jedis.Jedis;
 
 import java.util.List;
 import java.util.Map;
 
 /**
+ * Jedis 单机模式 Pub/Sub 命令操作
+ *
  * @author Yong.Teng
  */
-public class JedisSentinelPubSubOperations extends AbstractPubSubOperations {
+public final class JedisSentinelPubSubOperations extends AbstractPubSubOperations<Jedis> {
 
 	public JedisSentinelPubSubOperations(final JedisSentinelClient client){
 		super(client);
@@ -49,157 +51,211 @@ public class JedisSentinelPubSubOperations extends AbstractPubSubOperations {
 
 	@Override
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.PSUBSCRIBE,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		execute((cmd)->{
-			cmd.psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
-			return null;
-		});
+		final CommandArguments args = CommandArguments.create("patterns", patterns)
+				.put("pubSubListener", pubSubListener);
+
+		if(isPipeline()){
+			execute(CommandNotSupported.PIPELINE, ProtocolCommand.PSUBSCRIBE, args);
+		}else if(isTransaction()){
+			execute(CommandNotSupported.TRANSACTION, ProtocolCommand.PSUBSCRIBE, args);
+		}else{
+			execute((cmd)->{
+				cmd.psubscribe(new DefaultJedisPubSub(pubSubListener), patterns);
+				return null;
+			}, ProtocolCommand.PSUBSCRIBE, args);
+		}
 	}
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.PSUBSCRIBE,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		execute((cmd)->{
-			cmd.psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
-			return null;
-		});
-	}
+		final CommandArguments args = CommandArguments.create("patterns", patterns)
+				.put("pubSubListener", pubSubListener);
 
-	@Override
-	public List<String> pubsubChannels(){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.PUBSUB,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.pubsubChannels(null));
-	}
-
-	@Override
-	public List<String> pubsubChannels(final String pattern){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.PUBSUB,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.pubsubChannels(pattern));
-	}
-
-	@Override
-	public List<byte[]> pubsubChannels(final byte[] pattern){
-		final ListConverter<String, byte[]> converter = new ListConverter<>(SafeEncoder::encode);
-		return converter.convert(pubsubChannels(SafeEncoder.encode(pattern)));
-	}
-
-	@Override
-	public Long pubsubNumPat(){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.PUBSUB,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.pubsubNumPat());
-	}
-
-	@Override
-	public Map<String, String> pubsubNumSub(final String... channels){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.PUBSUB,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.pubsubNumSub(channels));
-	}
-
-	@Override
-	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.PSUBSCRIBE,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->{
-			String[] sChannels = new String[channels.length];
-
-			for(int i = 0; i < channels.length; i++){
-				sChannels[i] = SafeEncoder.encode(channels[i]);
-			}
-
-			MapConverter<String, String, byte[], byte[]> converter = new MapConverter<>(SafeEncoder::encode
-					, SafeEncoder::encode);
-			return converter.convert(cmd.pubsubNumSub(sChannels));
-		});
+		if(isPipeline()){
+			execute(CommandNotSupported.PIPELINE, ProtocolCommand.PSUBSCRIBE, args);
+		}else if(isTransaction()){
+			execute(CommandNotSupported.TRANSACTION, ProtocolCommand.PSUBSCRIBE, args);
+		}else{
+			execute((cmd)->{
+				cmd.psubscribe(new DefaultBinaryJedisPubSub(pubSubListener), patterns);
+				return null;
+			}, ProtocolCommand.PSUBSCRIBE, args);
+		}
 	}
 
 	@Override
 	public Long publish(final String channel, final String message){
+		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().publish(channel, message)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().publish(channel, message)),
+					ProtocolCommand.PUBLISH, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().publish(channel, message)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().publish(channel, message)),
+					ProtocolCommand.PUBLISH, args);
 		}else{
-			return execute((cmd)->cmd.publish(channel, message));
+			return execute((cmd)->cmd.publish(channel, message), ProtocolCommand.PUBLISH, args);
 		}
 	}
 
 	@Override
 	public Long publish(final byte[] channel, final byte[] message){
+		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
+
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().publish(channel, message)));
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().publish(channel, message)),
+					ProtocolCommand.PUBLISH, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().publish(channel, message)));
+			return transactionExecute((cmd)->newJedisResult(getTransaction().publish(channel, message)),
+					ProtocolCommand.PUBLISH, args);
 		}else{
-			return execute((cmd)->cmd.publish(channel, message));
+			return execute((cmd)->cmd.publish(channel, message), ProtocolCommand.PUBLISH, args);
+		}
+	}
+
+	@Override
+	public List<String> pubsubChannels(){
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.PUBSUB);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.PUBSUB);
+		}else{
+			return execute((cmd)->cmd.pubsubChannels(), ProtocolCommand.PUBSUB);
+		}
+	}
+
+	@Override
+	public List<String> pubsubChannels(final String pattern){
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.PUBSUB, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.PUBSUB, args);
+		}else{
+			return execute((cmd)->cmd.pubsubChannels(pattern), ProtocolCommand.PUBSUB, args);
+		}
+	}
+
+	@Override
+	public List<byte[]> pubsubChannels(final byte[] pattern){
+		final CommandArguments args = CommandArguments.create("pattern", pattern);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.PUBSUB, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.PUBSUB, args);
+		}else{
+			return execute((cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)),
+					Converters.STRING_LIST_TO_STRING_LIST_CONVERTER, ProtocolCommand.PUBSUB, args);
+		}
+	}
+
+	@Override
+	public Long pubsubNumPat(){
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.PUBSUB);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.PUBSUB);
+		}else{
+			return execute((cmd)->cmd.pubsubNumPat(), ProtocolCommand.PUBSUB);
+		}
+	}
+
+	@Override
+	public Map<String, String> pubsubNumSub(final String... channels){
+		final CommandArguments args = CommandArguments.create("channels", channels);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.PUBSUB, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.PUBSUB, args);
+		}else{
+			return execute((cmd)->cmd.pubsubNumSub(channels), ProtocolCommand.PUBSUB, args);
+		}
+	}
+
+	@Override
+	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
+		final CommandArguments args = CommandArguments.create("channels", channels);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.PUBSUB, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.PUBSUB, args);
+		}else{
+			return execute((cmd)->Converters.STRING_MAP_TO_BINARY_MAP_CONVERTER.convert(
+							cmd.pubsubNumSub(Converters.BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER.convert(channels))),
+					ProtocolCommand.PUBSUB, args);
 		}
 	}
 
 	@Override
 	public Object pUnSubscribe(){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.PUNSUBSCRIBE, CommandNotSupported.ALL,
-				client.getConnection());
-		return null;
+		return execute(CommandNotSupported.ALL, ProtocolCommand.PUNSUBSCRIBE);
 	}
 
 	@Override
 	public Object pUnSubscribe(final String... patterns){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.PUNSUBSCRIBE, CommandNotSupported.ALL,
-				client.getConnection());
-		return null;
+		final CommandArguments args = CommandArguments.create("patterns", patterns);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.PUNSUBSCRIBE);
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.UNSUBSCRIBE, CommandNotSupported.ALL,
-				client.getConnection());
-		return null;
+		final CommandArguments args = CommandArguments.create("patterns", patterns);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.PUNSUBSCRIBE);
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SUBSCRIBE,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		execute((cmd)->{
-			cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
-			return null;
-		});
+		final CommandArguments args = CommandArguments.create("channels", channels)
+				.put("pubSubListener", pubSubListener);
+
+		if(isPipeline()){
+			execute(CommandNotSupported.PIPELINE, ProtocolCommand.SUBSCRIBE, args);
+		}else if(isTransaction()){
+			execute(CommandNotSupported.PIPELINE, ProtocolCommand.SUBSCRIBE, args);
+		}else{
+			execute((cmd)->{
+				cmd.subscribe(new DefaultJedisPubSub(pubSubListener), channels);
+				return null;
+			}, ProtocolCommand.SUBSCRIBE, args);
+		}
 	}
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SUBSCRIBE,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		execute((cmd)->{
-			cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
-			return null;
-		});
+		final CommandArguments args = CommandArguments.create("channels", channels)
+				.put("pubSubListener", pubSubListener);
+
+		if(isPipeline()){
+			execute(CommandNotSupported.PIPELINE, ProtocolCommand.SUBSCRIBE, args);
+		}else if(isTransaction()){
+			execute(CommandNotSupported.PIPELINE, ProtocolCommand.SUBSCRIBE, args);
+		}else{
+			execute((cmd)->{
+				cmd.subscribe(new DefaultBinaryJedisPubSub(pubSubListener), channels);
+				return null;
+			}, ProtocolCommand.SUBSCRIBE, args);
+		}
 	}
 
 	@Override
 	public Object unSubscribe(){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.UNSUBSCRIBE, CommandNotSupported.ALL,
-				client.getConnection());
-		return null;
+		return execute(CommandNotSupported.ALL, ProtocolCommand.UNSUBSCRIBE);
 	}
 
 	@Override
 	public Object unSubscribe(final String... channels){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.UNSUBSCRIBE, CommandNotSupported.ALL,
-				client.getConnection());
-		return null;
+		final CommandArguments args = CommandArguments.create("channels", channels);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.UNSUBSCRIBE, args);
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.UNSUBSCRIBE, CommandNotSupported.ALL,
-				client.getConnection());
-		return null;
+		final CommandArguments args = CommandArguments.create("channels", channels);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.UNSUBSCRIBE, args);
 	}
 
 }
