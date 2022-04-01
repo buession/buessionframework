@@ -31,8 +31,8 @@ import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.jedis.ClusterFailoverOptionConverter;
-import com.buession.redis.core.convert.jedis.ClusterResetOptionConverter;
+import com.buession.redis.core.internal.convert.jedis.ClusterFailoverOptionConverter;
+import com.buession.redis.core.internal.convert.jedis.ClusterResetOptionConverter;
 
 /**
  * Jedis 集群命令操作抽象类

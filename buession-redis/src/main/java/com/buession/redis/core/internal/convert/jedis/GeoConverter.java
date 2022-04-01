@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
+package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
 import com.buession.lang.Geo;

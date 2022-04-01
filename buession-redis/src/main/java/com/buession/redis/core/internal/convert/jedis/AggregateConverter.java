@@ -22,44 +22,34 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
+package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.KeyCommands;
-import redis.clients.jedis.params.RestoreParams;
+import com.buession.redis.core.Aggregate;
+import redis.clients.jedis.ZParams;
 
 /**
- * {@link KeyCommands.RestoreArgument} 和 jedis {@link RestoreParams} 互转
+ * {@link Aggregate} 和 Jedis {@link ZParams.Aggregate} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface RestoreArgumentConverter<S, T> extends Converter<S, T> {
+public interface AggregateConverter<S, T> extends Converter<S, T> {
 
-	final class RestoreArgumentJedisConverter
-			implements RestoreArgumentConverter<KeyCommands.RestoreArgument, RestoreParams> {
+	final class AggregateJedisConverter implements Converter<Aggregate, ZParams.Aggregate> {
 
 		@Override
-		public RestoreParams convert(final KeyCommands.RestoreArgument source){
-			final RestoreParams restoreParams = RestoreParams.restoreParams();
-
-			if(source.isReplace() != null){
-				restoreParams.replace();
+		public ZParams.Aggregate convert(final Aggregate source){
+			switch(source){
+				case MIN:
+					return ZParams.Aggregate.MIN;
+				case MAX:
+					return ZParams.Aggregate.MAX;
+				case SUM:
+					return ZParams.Aggregate.SUM;
+				default:
+					return null;
 			}
-
-			if(source.isAbsTtl() != null){
-				restoreParams.absTtl();
-			}
-
-			if(source.getIdleTime() != null){
-				restoreParams.idleTime(source.getIdleTime());
-			}
-
-			if(source.getFrequency() != null){
-				restoreParams.frequency(source.getFrequency());
-			}
-
-			return restoreParams;
 		}
 
 	}

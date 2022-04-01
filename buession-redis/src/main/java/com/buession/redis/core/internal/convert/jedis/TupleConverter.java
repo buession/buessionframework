@@ -22,32 +22,42 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
+package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.ListPosition;
+import com.buession.core.converter.SetConverter;
+import com.buession.redis.core.Tuple;
+
+import java.util.Set;
 
 /**
- * {@link ListPosition} 和 jedis {@link redis.clients.jedis.ListPosition} 互转
+ * {@link Tuple} 和 jedis {@link redis.clients.jedis.Tuple} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ListPositionConverter<S, T> extends Converter<S, T> {
+public interface TupleConverter<S, T> extends Converter<S, T> {
 
-	final class ListPositionJedisConverter
-			implements ListPositionConverter<ListPosition, redis.clients.jedis.ListPosition> {
+	final class TupleExposeConverter implements TupleConverter<redis.clients.jedis.Tuple, Tuple> {
 
 		@Override
-		public redis.clients.jedis.ListPosition convert(final ListPosition source){
-			switch(source){
-				case BEFORE:
-					return redis.clients.jedis.ListPosition.BEFORE;
-				case AFTER:
-					return redis.clients.jedis.ListPosition.AFTER;
-				default:
-					return null;
-			}
+		public Tuple convert(final redis.clients.jedis.Tuple source){
+			return new Tuple(source.getBinaryElement(), source.getScore());
+		}
+
+	}
+
+	/**
+	 * jedis {@link java.util.Set}&lt;redis.clients.jedis.Tuple&gt; 转换为 {@link java.util.Set}&lt;Tuple&gt;
+	 *
+	 * @author Yong.Teng
+	 * @since 2.0.0
+	 */
+	final class SetTupleExposeConverter extends SetConverter<redis.clients.jedis.Tuple, Tuple>
+			implements TupleConverter<Set<redis.clients.jedis.Tuple>, Set<Tuple>> {
+
+		public SetTupleExposeConverter(){
+			super(new TupleConverter.TupleExposeConverter());
 		}
 
 	}

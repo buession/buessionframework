@@ -19,27 +19,41 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.utils.NumberUtils;
+import com.buession.core.converter.ListConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ServerOperations;
+import com.buession.redis.core.AclLog;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.Role;
+import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.jedis.AclLogConverter;
+import com.buession.redis.core.internal.convert.jedis.AclUserConverter;
 import com.buession.redis.exception.RedisExceptionUtils;
-import redis.clients.jedis.PipelineBase;
-import redis.clients.jedis.commands.JedisCommands;
+import redis.clients.jedis.AccessControlLogEntry;
 
 /**
+ * Jedis 服务端命令操作抽象类
+ *
+ * @param <CMD>
+ * 		Jedis 原始命令对象
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractServerOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements ServerOperations<C> {
+public abstract class AbstractServerOperations<CMD> extends AbstractJedisRedisOperations<CMD>
+		implements ServerOperations<CMD> {
+
+	protected final static AclUserConverter.AclUserExposeConverter USER_EXPOSE_CONVERTER = new AclUserConverter.AclUserExposeConverter();
+
+	protected final static ListConverter<AccessControlLogEntry, AclLog> LIST_ACL_LOG_EXPOSE_CONVERTER = new ListConverter<>(
+			new AclLogConverter.AclLogExposeConverter());
 
 	public AbstractServerOperations(final JedisRedisClient client){
 		super(client);
@@ -47,24 +61,22 @@ public abstract class AbstractServerOperations<C extends JedisCommands, P extend
 
 	@Override
 	public String clientId(){
-		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.CLIENT_ID, client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_ID, CommandNotSupported.ALL,
+				client.getConnection());
 		return null;
 	}
 
 	@Override
-	public Status clientPause(final int timeout){
-		return clientPause((long) timeout);
-	}
-
-	@Override
 	public Status clientReply(final ClientReply option){
-		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.CLIENT_REPLY, client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_REPLY, CommandNotSupported.ALL,
+				client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId){
-		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.CLIENT_UNBLOCK, client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_UNBLOCK, CommandNotSupported.ALL,
+				client.getConnection());
 		return null;
 	}
 
@@ -74,76 +86,30 @@ public abstract class AbstractServerOperations<C extends JedisCommands, P extend
 	}
 
 	@Override
-	public Status configSet(final String parameter, final float value){
-		return configSet(parameter, Float.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final float value){
-		return configSet(parameter, NumberUtils.float2bytes(value));
-	}
-
-	@Override
-	public Status configSet(final String parameter, final double value){
-		return configSet(parameter, Double.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final double value){
-		return configSet(parameter, NumberUtils.double2bytes(value));
-	}
-
-	@Override
-	public Status configSet(final String parameter, final int value){
-		return configSet(parameter, Integer.toString(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final int value){
-		return configSet(parameter, NumberUtils.int2bytes(value));
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final long value){
-		return configSet(parameter, NumberUtils.long2bytes(value));
-	}
-
-	@Override
-	public Status configSet(final String parameter, final long value){
-		return configSet(parameter, Long.toString(value));
-	}
-
-	@Override
-	public Object pSync(final String masterRunId, final int offset){
-		return pSync(masterRunId, 1L);
-	}
-
-	@Override
-	public Object pSync(final byte[] masterRunId, final int offset){
-		return pSync(masterRunId, 1L);
-	}
-
-	@Override
 	public Object pSync(final String masterRunId, final long offset){
-		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PSYNC, client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.PSYNC, CommandNotSupported.ALL,
+				client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Object pSync(final byte[] masterRunId, final long offset){
-		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.PSYNC, client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.PSYNC, CommandNotSupported.ALL,
+				client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Status replicaOf(final String host, final int port){
-		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.REPLICAOF, client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.REPLICAOF, CommandNotSupported.ALL,
+				client.getConnection());
 		return null;
 	}
 
 	@Override
 	public Role role(){
-		RedisExceptionUtils.commandAllNotSupportedException(ProtocolCommand.ROLE, client.getConnection());
+		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.ROLE, CommandNotSupported.ALL,
+				client.getConnection());
 		return null;
 	}
 

@@ -22,35 +22,25 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
+package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.ListCommands;
-import redis.clients.jedis.params.LPosParams;
+import com.buession.redis.core.AclUser;
+import redis.clients.jedis.AccessControlUser;
 
 /**
- * {@link ListCommands.LPosArgument} 和 jedis {@link LPosParams} 互转
+ * {@link AclUser} 和 jedis {@link AccessControlUser} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface LPosArgumentConverter<S, T> extends Converter<S, T> {
+public interface AclUserConverter<S, T> extends Converter<S, T> {
 
-	final class LPosArgumentJedisConverter implements LPosArgumentConverter<ListCommands.LPosArgument, LPosParams> {
+	final class AclUserExposeConverter implements AclUserConverter<AccessControlUser, AclUser> {
 
 		@Override
-		public LPosParams convert(final ListCommands.LPosArgument source){
-			final LPosParams lPosParams = LPosParams.lPosParams();
-
-			if(source.getRank() != null){
-				lPosParams.rank(source.getRank());
-			}
-
-			if(source.getMaxLen() != null){
-				lPosParams.maxlen(source.getMaxLen());
-			}
-
-			return lPosParams;
+		public AclUser convert(final AccessControlUser source){
+			return new AclUser(source.getFlags(), source.getKeys(), source.getPassword(), source.getCommands());
 		}
 
 	}

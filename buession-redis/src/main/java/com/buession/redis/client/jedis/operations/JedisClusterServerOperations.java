@@ -29,57 +29,188 @@ import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.Constants;
 import com.buession.redis.core.Info;
-import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.SlowLogCommand;
+import com.buession.redis.core.AclUser;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.InfoConverter;
-import com.buession.redis.core.convert.OkStatusConverter;
-import com.buession.redis.core.convert.RedisServerTimeConverter;
+import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.InfoConverter;
+import com.buession.redis.core.internal.convert.OkStatusConverter;
+import com.buession.redis.core.internal.convert.RedisServerTimeConverter;
 import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.utils.ClientUtil;
 import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.DebugParams;
+import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.JedisMonitor;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
+ * Jedis 集群模式服务端命令操作
+ *
  * @author Yong.Teng
  */
-public class JedisClusterServerOperations extends AbstractServerOperations {
+public final class JedisClusterServerOperations extends AbstractServerOperations<JedisCluster> {
 
 	public JedisClusterServerOperations(final JedisClusterClient client){
 		super(client);
 	}
 
 	@Override
+	public List<String> aclCat(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+	}
+
+	@Override
+	public List<String> aclCat(final String categoryName){
+		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+	}
+
+	@Override
+	public List<byte[]> aclCat(final byte[] categoryName){
+		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+	}
+
+	@Override
+	public Status aclSetUser(final String username, final String... rules){
+		final CommandArguments args = CommandArguments.create("username", username).put("rules", rules);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+	}
+
+	@Override
+	public Status aclSetUser(final byte[] username, final byte[]... rules){
+		final CommandArguments args = CommandArguments.create("username", username).put("rules", rules);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+	}
+
+	@Override
+	public List<String> aclUsers(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+	}
+
+	@Override
+	public String aclWhoAmI(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+	}
+
+	@Override
+	public AclUser aclGetUser(final String username){
+		final CommandArguments args = CommandArguments.create("username", username);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+	}
+
+	@Override
+	public AclUser aclGetUser(final byte[] username){
+		final CommandArguments args = CommandArguments.create("username", username);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+	}
+
+	@Override
+	public Status aclDelUser(final String username){
+		final CommandArguments args = CommandArguments.create("username", username);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+	}
+
+	@Override
+	public Status aclDelUser(final byte[] username){
+		final CommandArguments args = CommandArguments.create("username", username);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+	}
+
+	@Override
+	public String aclGenPass(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+	}
+
+	@Override
+	public List<String> aclList(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+	}
+
+	@Override
+	public Status aclLoad(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+	}
+
+	@Override
+	public List<AclLog> aclLog(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+	}
+
+	@Override
+	public List<AclLog> aclLog(final long count){
+		final CommandArguments args = CommandArguments.create("count", count);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+	}
+
+	@Override
+	public Status aclLogReset(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+	}
+
+	@Override
+	public Status aclLogSave(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+	}
+
+	@Override
 	public String bgRewriteAof(){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().bgrewriteaof()));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().bgrewriteaof()));
-		}else{
-			return execute((cmd)->cmd.bgrewriteaof());
-		}
+		return execute(CommandNotSupported.ALL, ProtocolCommand.BGREWRITEAOF);
 	}
 
 	@Override
 	public String bgSave(){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().bgsave()));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().bgsave()));
-		}else{
-			return execute((cmd)->cmd.bgsave());
-		}
+		return execute(CommandNotSupported.ALL, ProtocolCommand.BGSAVE);
+	}
+
+	@Override
+	public Status configSet(final String parameter, final String value){
+		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CONFIG_SET, args);
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final byte[] value){
+		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CONFIG_SET, args);
+	}
+
+	@Override
+	public List<String> configGet(final String parameter){
+		final CommandArguments args = CommandArguments.create("parameter", parameter);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CONFIG_GET, args);
+	}
+
+	@Override
+	public List<byte[]> configGet(final byte[] parameter){
+		final CommandArguments args = CommandArguments.create("parameter", parameter);
+		return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CONFIG_GET, args);
+	}
+
+	@Override
+	public Status configResetStat(){
+		return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CONFIG_RESETSTAT);
+	}
+
+	@Override
+	public Status configRewrite(){
+		return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CONFIG_REWRITE);
+	}
+
+	@Override
+	public Long dbSize(){
+		return execute(CommandNotSupported.PIPELINE, ProtocolCommand.DBSIZE);
 	}
 
 	@Override
@@ -122,95 +253,6 @@ public class JedisClusterServerOperations extends AbstractServerOperations {
 		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_SETNAME,
 				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.clientSetname(name), new OkStatusConverter());
-	}
-
-	@Override
-	public List<String> configGet(final String parameter){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().configGet(parameter),
-					new ListConverter<>(SafeEncoder::encode)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().configGet(parameter),
-					new ListConverter<>(SafeEncoder::encode)));
-		}else{
-			return execute((cmd)->Collections.unmodifiableList(cmd.configGet(parameter)));
-		}
-	}
-
-	@Override
-	public List<byte[]> configGet(final byte[] parameter){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().configGet(SafeEncoder.encode(parameter))));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().configGet(SafeEncoder.encode(parameter)),
-					new ListConverter<>(SafeEncoder::encode)));
-		}else{
-			return execute((cmd)->cmd.configGet(parameter));
-		}
-	}
-
-	@Override
-	public Status configResetStat(){
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().configResetStat(), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().configResetStat(), converter));
-		}else{
-			return execute((cmd)->cmd.configResetStat(), converter);
-		}
-	}
-
-	@Override
-	public Status configRewrite(){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CONFIG_REWRITE,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.configRewrite(), new OkStatusConverter());
-	}
-
-	@Override
-	public Status configSet(final String parameter, final String value){
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().configSet(parameter, value), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().configSet(parameter, value), converter));
-		}else{
-			return execute((cmd)->cmd.configSet(parameter, value), converter);
-		}
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final byte[] value){
-		if(isPipeline()){
-			final OkStatusConverter converter = new OkStatusConverter();
-
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().configSet(SafeEncoder.encode(parameter),
-					SafeEncoder.encode(value)), converter));
-		}else if(isTransaction()){
-			final OkStatusConverter converter = new OkStatusConverter();
-
-			return transactionExecute((cmd)->newJedisResult(getTransaction().configSet(SafeEncoder.encode(parameter),
-					SafeEncoder.encode(value)), converter));
-		}else{
-			final PredicateStatusConverter<byte[]> converter =
-					new PredicateStatusConverter<>((val)->Constants.OK_BINARY == val);
-
-			return execute((cmd)->cmd.configSet(parameter, value), converter);
-		}
-	}
-
-	@Override
-	public Long dbSize(){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().dbSize()));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().dbSize()));
-		}else{
-			return execute((cmd)->cmd.dbSize());
-		}
 	}
 
 	@Override
@@ -297,30 +339,6 @@ public class JedisClusterServerOperations extends AbstractServerOperations {
 			});
 			return null;
 		});
-	}
-
-	@Override
-	public Object object(final ObjectCommand command, final String key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(JedisClientUtils.objectDebug(command, getPipeline(), key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(JedisClientUtils.objectDebug(command, getTransaction(),
-					key)));
-		}else{
-			return execute((cmd)->JedisClientUtils.objectDebug(command, cmd, key));
-		}
-	}
-
-	@Override
-	public Object object(final ObjectCommand command, final byte[] key){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(JedisClientUtils.objectDebug(command, getPipeline(), key)));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(JedisClientUtils.objectDebug(command, getTransaction(),
-					key)));
-		}else{
-			return execute((cmd)->JedisClientUtils.objectDebug(command, cmd, key));
-		}
 	}
 
 	@Override

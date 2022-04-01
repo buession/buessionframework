@@ -28,7 +28,7 @@ import com.buession.core.utils.NumberUtils;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.HashOperations;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.convert.jedis.ScanResultConverter;
+import com.buession.redis.core.internal.convert.jedis.ScanResultConverter;
 
 import java.util.Map;
 

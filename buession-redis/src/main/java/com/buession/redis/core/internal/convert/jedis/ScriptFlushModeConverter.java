@@ -22,48 +22,33 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
+package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.StringCommands;
-import redis.clients.jedis.params.GetExParams;
+import com.buession.redis.core.ScriptFlushMode;
+import redis.clients.jedis.args.FlushMode;
 
 /**
- * {@link StringCommands.GetExArgument} 和 jedis {@link GetExParams} 互转
+ * {@link ScriptFlushMode} 和 jedis {@link FlushMode} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface GetExArgumentConverter<S, T> extends Converter<S, T> {
+public interface ScriptFlushModeConverter<S, T> extends Converter<S, T> {
 
-	final class GetExArgumentJedisConverter
-			implements SetArgumentConverter<StringCommands.GetExArgument, GetExParams> {
+	final class ScriptFlushModeJedisConverter
+			implements ListPositionConverter<ScriptFlushMode, FlushMode> {
 
 		@Override
-		public GetExParams convert(final StringCommands.GetExArgument source){
-			final GetExParams getExParams = new GetExParams();
-
-			if(source.getEx() != null){
-				getExParams.ex(source.getEx());
+		public FlushMode convert(final ScriptFlushMode source){
+			switch(source){
+				case ASYNC:
+					return FlushMode.ASYNC;
+				case SYNC:
+					return FlushMode.SYNC;
+				default:
+					return null;
 			}
-
-			if(source.getPx() != null){
-				getExParams.px(source.getPx());
-			}
-
-			if(source.getExAt() != null){
-				getExParams.exAt(source.getEx());
-			}
-
-			if(source.getPxAt() != null){
-				getExParams.pxAt(source.getPx());
-			}
-
-			if(source.getPersist() != null){
-				getExParams.persist();
-			}
-
-			return getExParams;
 		}
 
 	}

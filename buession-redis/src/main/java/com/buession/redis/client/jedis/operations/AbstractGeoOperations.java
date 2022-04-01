@@ -30,9 +30,9 @@ import com.buession.lang.Geo;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.GeoOperations;
 import com.buession.redis.core.GeoRadius;
-import com.buession.redis.core.convert.jedis.GeoConverter;
-import com.buession.redis.core.convert.jedis.GeoRadiusArgumentConverter;
-import com.buession.redis.core.convert.jedis.GeoUnitConverter;
+import com.buession.redis.core.internal.convert.jedis.GeoConverter;
+import com.buession.redis.core.internal.convert.jedis.GeoRadiusArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.GeoUnitConverter;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.GeoRadiusResponse;
 

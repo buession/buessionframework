@@ -33,10 +33,10 @@ import com.buession.redis.client.operations.KeyOperations;
 import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
-import com.buession.redis.core.convert.jedis.MigrateOperationConverter;
-import com.buession.redis.core.convert.jedis.RestoreArgumentConverter;
-import com.buession.redis.core.convert.jedis.ScanResultConverter;
-import com.buession.redis.core.convert.jedis.SortArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.MigrateOperationConverter;
+import com.buession.redis.core.internal.convert.jedis.RestoreArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.ScanResultConverter;
+import com.buession.redis.core.internal.convert.jedis.SortArgumentConverter;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;

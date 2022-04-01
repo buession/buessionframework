@@ -19,37 +19,10 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2019 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
-
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.Direction;
-import redis.clients.jedis.args.ListDirection;
-
 /**
- * {@link Direction} 和 jedis {@link ListDirection} 互转
- *
  * @author Yong.Teng
- * @since 2.0.0
  */
-public interface DirectionConverter<S, T> extends Converter<S, T> {
-
-	final class DirectionJedisConverter implements DirectionConverter<Direction, ListDirection> {
-
-		@Override
-		public ListDirection convert(final Direction source){
-			switch(source){
-				case LEFT:
-					return ListDirection.LEFT;
-				case RIGHT:
-					return ListDirection.RIGHT;
-				default:
-					return null;
-			}
-		}
-
-	}
-
-}
+package com.buession.redis.core.internal.convert;

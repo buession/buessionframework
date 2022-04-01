@@ -19,27 +19,41 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;
+package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.utils.StatusUtils;
-import com.buession.lang.Status;
-import com.buession.redis.core.Constants;
+import com.buession.redis.core.BitOperation;
+import redis.clients.jedis.BitOP;
 
 /**
- * Ping 结果转换器
+ * {@link BitOperation} 和 jedis {@link BitOP} 互转
  *
  * @author Yong.Teng
- * @since 1.2.2
+ * @since 2.0.0
  */
-public final class PingResultConverter implements Converter<String, Status> {
+public interface BitOperationConverter<S, T> extends Converter<S, T> {
 
-	@Override
-	public Status convert(final String source){
-		return StatusUtils.valueOf(Constants.PONG.equalsIgnoreCase(source));
+	final class BitOperationJedisConverter implements BitOperationConverter<BitOperation, BitOP> {
+
+		@Override
+		public BitOP convert(final BitOperation source){
+			switch(source){
+				case AND:
+					return BitOP.AND;
+				case OR:
+					return BitOP.OR;
+				case NOT:
+					return BitOP.NOT;
+				case XOR:
+					return BitOP.XOR;
+				default:
+					return null;
+			}
+		}
+
 	}
 
 }

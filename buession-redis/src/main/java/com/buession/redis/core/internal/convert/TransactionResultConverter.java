@@ -19,60 +19,50 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
+package com.buession.redis.core.internal.convert;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.GeoCommands;
-import redis.clients.jedis.params.GeoRadiusParam;
+import com.buession.core.utils.Assert;
+import com.buession.redis.core.FutureResult;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
 
 /**
- * {@link GeoCommands.GeoRadiusArgument} 和 jedis {@link GeoRadiusParam} 互转
+ * 事务结果转换器
+ *
+ * @param <V>
+ * 		事务结果类型
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 1.2.0
  */
-public interface GeoRadiusArgumentConverter<S, T> extends Converter<S, T> {
+public final class TransactionResultConverter<V> implements Converter<List<Object>, List<Object>> {
 
-	final class GeoRadiusArgumentJedisConverter
-			implements GeoRadiusArgumentConverter<GeoCommands.GeoRadiusArgument, GeoRadiusParam> {
+	private final Queue<FutureResult<V, Object, Object>> txResults;
 
-		@Override
-		public GeoRadiusParam convert(final GeoCommands.GeoRadiusArgument source){
-			final GeoRadiusParam geoRadiusParam = new GeoRadiusParam();
+	public TransactionResultConverter(Queue<FutureResult<V, Object, Object>> txResults){
+		this.txResults = txResults;
+	}
 
-			if(source.isWithCoord()){
-				geoRadiusParam.withCoord();
-			}
+	@Override
+	public List<Object> convert(final List<Object> rawResults){
+		Assert.isTrue(rawResults.size() != txResults.size(),
+				"Incorrect number of transaction results. Expected: " + txResults.size() + " Actual: " +
+						rawResults.size());
 
-			if(source.isWithDist()){
-				geoRadiusParam.withDist();
-			}
+		List<Object> result = new ArrayList<>(rawResults.size());
 
-			if(source.isWithHash()){
-				geoRadiusParam.withHash();
-			}
-
-			switch(source.getOrder()){
-				case ASC:
-					geoRadiusParam.sortAscending();
-					break;
-				case DESC:
-					geoRadiusParam.sortDescending();
-					break;
-				default:
-					break;
-			}
-
-			if(source.getCount() != null){
-				geoRadiusParam.count(source.getCount());
-			}
-
-			return geoRadiusParam;
+		for(Object rawResult : rawResults){
+			FutureResult<V, Object, Object> futureResult = txResults.remove();
+			result.add(futureResult.convert(rawResult));
 		}
 
+		return result;
 	}
 
 }

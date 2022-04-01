@@ -27,6 +27,7 @@ package com.buession.redis;
 import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.BumpEpoch;
@@ -55,6 +56,7 @@ import com.buession.redis.core.ScriptFlushMode;
 import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
+import com.buession.redis.core.AclUser;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 
@@ -1737,13 +1739,138 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public List<String> aclCat(){
+		return execute((client)->client.aclCat());
+	}
+
+	@Override
+	public List<String> aclCat(final String categoryName){
+		return execute((client)->client.aclCat(categoryName));
+	}
+
+	@Override
+	public List<byte[]> aclCat(final byte[] categoryName){
+		return execute((client)->client.aclCat(categoryName));
+	}
+
+	@Override
+	public Status aclSetUser(final String username, final String... rules){
+		return execute((client)->client.aclSetUser(username, rules));
+	}
+
+	@Override
+	public Status aclSetUser(final byte[] username, final byte[]... rules){
+		return execute((client)->client.aclSetUser(username, rules));
+	}
+
+	@Override
+	public List<String> aclUsers(){
+		return execute((client)->client.aclUsers());
+	}
+
+	@Override
+	public String aclWhoAmI(){
+		return execute((client)->client.aclWhoAmI());
+	}
+
+	@Override
+	public AclUser aclGetUser(final String username){
+		return execute((client)->client.aclGetUser(username));
+	}
+
+	@Override
+	public AclUser aclGetUser(final byte[] username){
+		return execute((client)->client.aclGetUser(username));
+	}
+
+	@Override
+	public Status aclDelUser(final String username){
+		return execute((client)->client.aclDelUser(username));
+	}
+
+	@Override
+	public Status aclDelUser(final byte[] username){
+		return execute((client)->client.aclDelUser(username));
+	}
+
+	@Override
+	public String aclGenPass(){
+		return execute((client)->client.aclGenPass());
+	}
+
+	@Override
+	public List<String> aclList(){
+		return execute((client)->client.aclList());
+	}
+
+	@Override
+	public Status aclLoad(){
+		return execute((client)->client.aclLoad());
+	}
+
+	@Override
+	public List<AclLog> aclLog(){
+		return execute((client)->client.aclLog());
+	}
+
+	@Override
+	public List<AclLog> aclLog(final long count){
+		return execute((client)->client.aclLog(count));
+	}
+
+	@Override
+	public Status aclLogReset(){
+		return execute((client)->client.aclLogReset());
+	}
+
+	@Override
+	public Status aclLogSave(){
+		return execute((client)->client.aclLogSave());
+	}
+
+	@Override
 	public String bgRewriteAof(){
-		return execute((client)->client.bgSave(), ProtocolCommand.BGREWRITEAOF);
+		return execute((client)->client.bgRewriteAof());
 	}
 
 	@Override
 	public String bgSave(){
-		return execute((client)->client.bgSave(), ProtocolCommand.BGSAVE);
+		return execute((client)->client.bgSave());
+	}
+
+	@Override
+	public Status configSet(final String parameter, final String value){
+		return execute((client)->client.configSet(parameter, value));
+	}
+
+	@Override
+	public Status configSet(final byte[] parameter, final byte[] value){
+		return execute((client)->client.configSet(parameter, value));
+	}
+
+	@Override
+	public List<String> configGet(final String parameter){
+		return execute((client)->client.configGet(parameter));
+	}
+
+	@Override
+	public List<byte[]> configGet(final byte[] parameter){
+		return execute((client)->client.configGet(parameter));
+	}
+
+	@Override
+	public Status configResetStat(){
+		return execute((client)->client.configResetStat());
+	}
+
+	@Override
+	public Status configRewrite(){
+		return execute((client)->client.configRewrite());
+	}
+
+	@Override
+	public Long dbSize(){
+		return execute((client)->client.dbSize());
 	}
 
 	@Override
@@ -1801,45 +1928,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Status clientUnblock(final int clientId, final ClientUnblockType type){
 		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
 		return execute((client)->client.clientUnblock(clientId, type), ProtocolCommand.CLIENT_UNBLOCK, args);
-	}
-
-	@Override
-	public List<String> configGet(final String parameter){
-		return execute((client)->client.configGet(parameter), ProtocolCommand.CONFIG_GET,
-				new CommandArguments("parameter", parameter));
-	}
-
-	@Override
-	public List<byte[]> configGet(final byte[] parameter){
-		return execute((client)->client.configGet(parameter), ProtocolCommand.CONFIG_GET,
-				new CommandArguments("parameter", parameter));
-	}
-
-	@Override
-	public Status configResetStat(){
-		return execute((client)->client.configResetStat(), ProtocolCommand.CONFIG_RESETSTAT);
-	}
-
-	@Override
-	public Status configRewrite(){
-		return execute((client)->client.configRewrite(), ProtocolCommand.CONFIG_REWRITE);
-	}
-
-	@Override
-	public Status configSet(final String parameter, final String value){
-		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
-		return execute((client)->client.configSet(parameter, value), ProtocolCommand.CONFIG_SET, args);
-	}
-
-	@Override
-	public Status configSet(final byte[] parameter, final byte[] value){
-		final CommandArguments args = CommandArguments.create("parameter", parameter).put("value", value);
-		return execute((client)->client.configSet(parameter, value), ProtocolCommand.CONFIG_SET, args);
-	}
-
-	@Override
-	public Long dbSize(){
-		return execute((client)->client.dbSize(), ProtocolCommand.DBSIZE);
 	}
 
 	@Override

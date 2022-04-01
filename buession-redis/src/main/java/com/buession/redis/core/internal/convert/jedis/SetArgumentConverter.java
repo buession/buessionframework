@@ -22,23 +22,58 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;
+package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.Info;
-import com.buession.redis.utils.InfoUtil;
+import com.buession.redis.core.NxXx;
+import com.buession.redis.core.command.StringCommands;
+import redis.clients.jedis.params.SetParams;
+
+import java.util.Objects;
 
 /**
- * Info 转换
+ * {@link StringCommands.SetArgument} 和 jedis {@link SetParams} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class InfoConverter implements Converter<String, Info> {
+public interface SetArgumentConverter<S, T> extends Converter<S, T> {
 
-	@Override
-	public Info convert(String source){
-		return InfoUtil.convert(source);
+	final class SetArgumentJedisConverter implements SetArgumentConverter<StringCommands.SetArgument, SetParams> {
+
+		@Override
+		public SetParams convert(final StringCommands.SetArgument source){
+			final SetParams setParams = new SetParams();
+
+			if(source.getEx() != null){
+				setParams.ex(source.getEx());
+			}
+
+			if(source.getExAt() != null){
+				setParams.exAt(source.getExAt());
+			}
+
+			if(source.getPx() != null){
+				setParams.px(source.getPx().intValue());
+			}
+
+			if(source.getPxAt() != null){
+				setParams.px(source.getPxAt());
+			}
+
+			if(source.getNxXx() == NxXx.NX){
+				setParams.nx();
+			}else if(source.getNxXx() == NxXx.XX){
+				setParams.xx();
+			}
+
+			if(Objects.equals(source.getKeepTtl(), Boolean.TRUE)){
+				setParams.keepttl();
+			}
+
+			return setParams;
+		}
+
 	}
 
 }

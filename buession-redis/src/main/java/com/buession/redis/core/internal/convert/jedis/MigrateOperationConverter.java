@@ -22,31 +22,34 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.core.internal.convert.jedis;
 
-import com.buession.core.converter.ListConverter;
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.ScriptingOperations;
-import com.buession.redis.core.internal.convert.jedis.ScriptFlushModeConverter;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.MigrateOperation;
+import redis.clients.jedis.params.MigrateParams;
 
 /**
- * Jedis Script 命令操作抽象类
- *
- * @param <CMD>
- * 		Jedis 原始命令对象
+ * {@link MigrateOperation} 和 jedis {@link MigrateParams} 互转
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public abstract class AbstractScriptingOperations<CMD> extends AbstractJedisRedisOperations<CMD>
-		implements ScriptingOperations<CMD> {
+public interface MigrateOperationConverter<S, T> extends Converter<S, T> {
 
-	protected final static ListConverter<Long, Boolean> LONG_LIST_TO_BOOLEAN_LIST_CONVERTER = new ListConverter<>(
-			(value)->value == 1);
+	final class MigrateOperationJedisConverter implements MigrateOperationConverter<MigrateOperation, MigrateParams> {
 
-	protected final static ScriptFlushModeConverter.ScriptFlushModeJedisConverter SCRIPT_FLUSH_MODE_JEDIS_CONVERTER = new ScriptFlushModeConverter.ScriptFlushModeJedisConverter();
+		@Override
+		public MigrateParams convert(final MigrateOperation source){
+			switch(source){
+				case COPY:
+					return MigrateParams.migrateParams().copy();
+				case REPLACE:
+					return MigrateParams.migrateParams().replace();
+				default:
+					return MigrateParams.migrateParams();
+			}
+		}
 
-	public AbstractScriptingOperations(final JedisRedisClient client){
-		super(client);
 	}
 
 }

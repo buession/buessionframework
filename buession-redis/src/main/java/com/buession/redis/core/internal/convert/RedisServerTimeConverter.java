@@ -22,24 +22,32 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;
+package com.buession.redis.core.internal.convert;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.utils.StatusUtils;
-import com.buession.lang.Status;
-import com.buession.redis.core.Constants;
+import com.buession.redis.core.RedisServerTime;
+
+import java.util.Date;
+import java.util.List;
 
 /**
- * OK 结果转换器
+ * Jedis 返回的服务器时间转换为 {@link RedisServerTime}
  *
  * @author Yong.Teng
- * @since 1.2.2
+ * @since 1.2.1
  */
-public final class OkStatusConverter implements Converter<String, Status> {
+public final class RedisServerTimeConverter implements Converter<List<String>, RedisServerTime> {
 
 	@Override
-	public Status convert(final String source){
-		return StatusUtils.valueOf(Constants.OK.equalsIgnoreCase(source));
+	public RedisServerTime convert(final List<String> source){
+		if(source == null){
+			return null;
+		}
+
+		Date date = new Date();
+		date.setTime(Long.parseLong(source.get(0)) * 1000L);
+
+		return new RedisServerTime(date, Long.parseLong(source.get(1)));
 	}
 
 }

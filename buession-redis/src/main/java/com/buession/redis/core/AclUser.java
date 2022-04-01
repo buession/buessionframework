@@ -22,36 +22,76 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
+package com.buession.redis.core;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.Aggregate;
-import redis.clients.jedis.ZParams;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * {@link Aggregate} 和 Jedis {@link ZParams.Aggregate} 互转
- *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface AggregateConverter<S, T> extends Converter<S, T> {
+public class AclUser implements Serializable {
 
-	final class AggregateJedisConverter implements Converter<Aggregate, ZParams.Aggregate> {
+	private final static long serialVersionUID = -2237993389031684508L;
 
-		@Override
-		public ZParams.Aggregate convert(final Aggregate source){
-			switch(source){
-				case MIN:
-					return ZParams.Aggregate.MIN;
-				case MAX:
-					return ZParams.Aggregate.MAX;
-				case SUM:
-					return ZParams.Aggregate.SUM;
-				default:
-					return null;
-			}
+	private final List<String> flags = new ArrayList<>();
+
+	private final List<String> keys = new ArrayList<>();
+
+	private final List<String> passwords = new ArrayList<>();
+
+	private String commands;
+
+	public AclUser(){
+	}
+
+	public AclUser(final List<String> flags, final List<String> keys, final List<String> passwords,
+				   final String commands){
+		if(flags != null){
+			flags.addAll(flags);
 		}
 
+		if(keys != null){
+			keys.addAll(keys);
+		}
+
+		if(passwords != null){
+			passwords.addAll(passwords);
+		}
+
+		this.commands = commands;
+	}
+
+	public List<String> getFlags(){
+		return flags;
+	}
+
+	public List<String> getKeys(){
+		return keys;
+	}
+
+	public List<String> getPasswords(){
+		return passwords;
+	}
+
+	public String getCommands(){
+		return commands;
+	}
+
+	public void setCommands(String commands){
+		this.commands = commands;
+	}
+
+	@Override
+	public String toString(){
+		return "User{" +
+				"flags=" + flags +
+				", keys=" + keys +
+				", passwords=" + passwords +
+				", commands='" + commands + '\'' +
+				'}';
 	}
 
 }

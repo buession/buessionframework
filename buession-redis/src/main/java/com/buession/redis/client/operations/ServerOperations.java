@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.operations;
@@ -27,8 +27,13 @@ package com.buession.redis.client.operations;
 import com.buession.redis.core.command.ServerCommands;
 
 /**
+ * 服务端操作接口
+ *
+ * @param <CMD>
+ * 		Jedis 原始命令对象
+ *
  * @author Yong.Teng
  */
-public interface ServerOperations<T> extends ServerCommands, RedisClientOperations<T> {
+public interface ServerOperations<CMD> extends ServerCommands, RedisOperations<CMD> {
 
 }

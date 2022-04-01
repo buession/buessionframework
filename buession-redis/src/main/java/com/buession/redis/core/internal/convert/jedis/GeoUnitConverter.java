@@ -22,29 +22,32 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
+package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.ClusterFailoverOption;
+import com.buession.redis.core.GeoUnit;
 
 /**
- * {@link ClusterFailoverOption} 和 jedis {@link redis.clients.jedis.args.ClusterFailoverOption} 互转
+ * {@link GeoUnit} 和 jedis {@link redis.clients.jedis.GeoUnit} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ClusterFailoverOptionConverter<S, T> extends Converter<S, T> {
+public interface GeoUnitConverter<S, T> extends Converter<S, T> {
 
-	final class ClusterFailoverOptionJedisConverter
-			implements BitOperationConverter<ClusterFailoverOption, redis.clients.jedis.args.ClusterFailoverOption> {
+	final class GeoUnitJedisConverter implements GeoUnitConverter<GeoUnit, redis.clients.jedis.GeoUnit> {
 
 		@Override
-		public redis.clients.jedis.args.ClusterFailoverOption convert(final ClusterFailoverOption source){
+		public redis.clients.jedis.GeoUnit convert(final GeoUnit source){
 			switch(source){
-				case FORCE:
-					return redis.clients.jedis.args.ClusterFailoverOption.FORCE;
-				case TAKEOVER:
-					return redis.clients.jedis.args.ClusterFailoverOption.TAKEOVER;
+				case M:
+					return redis.clients.jedis.GeoUnit.M;
+				case KM:
+					return redis.clients.jedis.GeoUnit.KM;
+				case MI:
+					return redis.clients.jedis.GeoUnit.MI;
+				case FT:
+					return redis.clients.jedis.GeoUnit.FT;
 				default:
 					return null;
 			}

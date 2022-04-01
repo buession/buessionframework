@@ -19,49 +19,26 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;
+package com.buession.redis.core.internal.convert;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.utils.Assert;
-import com.buession.redis.core.FutureResult;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import com.buession.redis.core.Info;
+import com.buession.redis.utils.InfoUtil;
 
 /**
- * 事务结果转换器
- *
- * @param <V>
- * 		事务结果类型
+ * Info 转换
  *
  * @author Yong.Teng
- * @since 1.2.0
+ * @since 2.0.0
  */
-final public class TransactionResultConverter<V> implements Converter<List<Object>, List<Object>> {
-
-	private final Queue<FutureResult<V, Object, Object>> txResults;
-
-	public TransactionResultConverter(Queue<FutureResult<V, Object, Object>> txResults){
-		this.txResults = txResults;
-	}
+public class InfoConverter implements Converter<String, Info> {
 
 	@Override
-	public List<Object> convert(final List<Object> rawResults){
-		Assert.isTrue(rawResults.size() != txResults.size(),
-				"Incorrect number of transaction results. Expected: " + txResults.size() + " Actual: " + rawResults.size());
-
-		List<Object> result = new ArrayList<>(rawResults.size());
-
-		for(Object rawResult : rawResults){
-			FutureResult<V, Object, Object> futureResult = txResults.remove();
-			result.add(futureResult.convert(rawResult));
-		}
-
-		return result;
+	public Info convert(String source){
+		return InfoUtil.convert(source);
 	}
 
 }

@@ -22,32 +22,44 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
+package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.ClusterResetOption;
-import redis.clients.jedis.args.ClusterResetType;
+import com.buession.redis.core.command.KeyCommands;
+import redis.clients.jedis.params.RestoreParams;
 
 /**
- * {@link ClusterResetOption} 和 Jedis {@link ClusterResetType} 互转
+ * {@link KeyCommands.RestoreArgument} 和 jedis {@link RestoreParams} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ClusterResetOptionConverter<S, T> extends Converter<S, T> {
+public interface RestoreArgumentConverter<S, T> extends Converter<S, T> {
 
-	final class ClusterResetOptionJedisConverter implements Converter<ClusterResetOption, ClusterResetType> {
+	final class RestoreArgumentJedisConverter
+			implements RestoreArgumentConverter<KeyCommands.RestoreArgument, RestoreParams> {
 
 		@Override
-		public ClusterResetType convert(final ClusterResetOption source){
-			switch(source){
-				case SOFT:
-					return ClusterResetType.SOFT;
-				case HARD:
-					return ClusterResetType.HARD;
-				default:
-					return null;
+		public RestoreParams convert(final KeyCommands.RestoreArgument source){
+			final RestoreParams restoreParams = RestoreParams.restoreParams();
+
+			if(source.isReplace() != null){
+				restoreParams.replace();
 			}
+
+			if(source.isAbsTtl() != null){
+				restoreParams.absTtl();
+			}
+
+			if(source.getIdleTime() != null){
+				restoreParams.idleTime(source.getIdleTime());
+			}
+
+			if(source.getFrequency() != null){
+				restoreParams.frequency(source.getFrequency());
+			}
+
+			return restoreParams;
 		}
 
 	}

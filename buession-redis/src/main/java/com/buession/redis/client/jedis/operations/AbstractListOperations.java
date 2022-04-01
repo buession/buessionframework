@@ -26,9 +26,9 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ListOperations;
-import com.buession.redis.core.convert.jedis.DirectionConverter;
-import com.buession.redis.core.convert.jedis.LPosArgumentConverter;
-import com.buession.redis.core.convert.jedis.ListPositionConverter;
+import com.buession.redis.core.internal.convert.jedis.DirectionConverter;
+import com.buession.redis.core.internal.convert.jedis.LPosArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.ListPositionConverter;
 
 /**
  * Jedis 列表命令操作抽象类

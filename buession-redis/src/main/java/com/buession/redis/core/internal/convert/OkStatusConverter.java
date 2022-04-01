@@ -19,57 +19,27 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2022 Buession.com Inc.														       |
+ * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
+package com.buession.redis.core.internal.convert;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.Limit;
-import com.buession.redis.core.command.KeyCommands;
-import redis.clients.jedis.SortingParams;
+import com.buession.core.utils.StatusUtils;
+import com.buession.lang.Status;
+import com.buession.redis.core.Constants;
 
 /**
- * {@link KeyCommands.SortArgument} 和 jedis {@link SortingParams} 互转
+ * OK 结果转换器
  *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 1.2.2
  */
-public interface SortArgumentConverter<S, T> extends Converter<S, T> {
+public final class OkStatusConverter implements Converter<String, Status> {
 
-	final class SortArgumentJedisConverter implements SortArgumentConverter<KeyCommands.SortArgument, SortingParams> {
-
-		@Override
-		public SortingParams convert(final KeyCommands.SortArgument source){
-			final SortingParams sortingParams = new SortingParams();
-
-			if(source.getBy() != null){
-				sortingParams.by(source.getBy());
-			}
-
-			switch(source.getOrder()){
-				case ASC:
-					sortingParams.asc();
-					break;
-				case DESC:
-					sortingParams.desc();
-					break;
-				default:
-					break;
-			}
-
-			if(source.getLimit() != null){
-				Limit limit = source.getLimit();
-				sortingParams.limit((int) limit.getOffset(), (int) limit.getCount());
-			}
-
-			if(source.getAlpha() != null){
-				sortingParams.alpha();
-			}
-
-			return sortingParams;
-		}
-
+	@Override
+	public Status convert(final String source){
+		return StatusUtils.valueOf(Constants.OK.equalsIgnoreCase(source));
 	}
 
 }

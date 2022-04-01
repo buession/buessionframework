@@ -30,7 +30,7 @@ import com.buession.redis.core.ScriptFlushMode;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.Converters;
+import com.buession.redis.core.internal.convert.Converters;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.args.FlushMode;
 

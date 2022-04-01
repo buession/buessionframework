@@ -22,44 +22,34 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;
+package com.buession.redis.core.internal.convert.jedis;
 
-import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.MapConverter;
-import com.buession.redis.utils.SafeEncoder;
-import org.springframework.lang.Nullable;
+import com.buession.redis.core.ClusterResetOption;
+import redis.clients.jedis.args.ClusterResetType;
 
 /**
+ * {@link ClusterResetOption} 和 Jedis {@link ClusterResetType} 互转
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface Converters {
+public interface ClusterResetOptionConverter<S, T> extends Converter<S, T> {
 
-	OkStatusConverter OK_STATUS_CONVERTER = new OkStatusConverter();
+	final class ClusterResetOptionJedisConverter implements Converter<ClusterResetOption, ClusterResetType> {
 
-	BooleanStatusConverter BOOLEAN_STATUS_CONVERTER = new BooleanStatusConverter();
-
-	MapConverter<String, String, byte[], byte[]> STRING_MAP_TO_BINARY_MAP_CONVERTER = new MapConverter<>(
-			SafeEncoder::encode, SafeEncoder::encode);
-
-	ListConverter<String, byte[]> STRING_LIST_TO_STRING_LIST_CONVERTER = new ListConverter<>(SafeEncoder::encode);
-
-	Converter<byte[][], String[]> BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER = new Converter<byte[][], String[]>() {
-
-		@Nullable
 		@Override
-		public String[] convert(byte[][] source){
-			final String[] result = new String[source.length];
-
-			for(int i = 0; i < source.length; i++){
-				result[i] = SafeEncoder.encode(source[i]);
+		public ClusterResetType convert(final ClusterResetOption source){
+			switch(source){
+				case SOFT:
+					return ClusterResetType.SOFT;
+				case HARD:
+					return ClusterResetType.HARD;
+				default:
+					return null;
 			}
-
-			return result;
 		}
 
-	};
+	}
 
 }

@@ -21,10 +21,55 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.convert.jedis;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.Limit;
+import com.buession.redis.core.command.KeyCommands;
+import redis.clients.jedis.SortingParams;
+
+/**
+ * {@link KeyCommands.SortArgument} 和 jedis {@link SortingParams} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public interface ScriptFlushModeConverter {
+ */
+public interface SortArgumentConverter<S, T> extends Converter<S, T> {
+
+	final class SortArgumentJedisConverter implements SortArgumentConverter<KeyCommands.SortArgument, SortingParams> {
+
+		@Override
+		public SortingParams convert(final KeyCommands.SortArgument source){
+			final SortingParams sortingParams = new SortingParams();
+
+			if(source.getBy() != null){
+				sortingParams.by(source.getBy());
+			}
+
+			switch(source.getOrder()){
+				case ASC:
+					sortingParams.asc();
+					break;
+				case DESC:
+					sortingParams.desc();
+					break;
+				default:
+					break;
+			}
+
+			if(source.getLimit() != null){
+				Limit limit = source.getLimit();
+				sortingParams.limit((int) limit.getOffset(), (int) limit.getCount());
+			}
+
+			if(source.getAlpha() != null){
+				sortingParams.alpha();
+			}
+
+			return sortingParams;
+		}
+
+	}
+
 }

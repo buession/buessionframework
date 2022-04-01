@@ -22,31 +22,34 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.core.internal.convert.jedis;
 
-import com.buession.core.converter.ListConverter;
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.ScriptingOperations;
-import com.buession.redis.core.internal.convert.jedis.ScriptFlushModeConverter;
+import com.buession.beans.BeanUtils;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.AclLog;
+import com.buession.redis.core.Client;
+import redis.clients.jedis.AccessControlLogEntry;
 
 /**
- * Jedis Script 命令操作抽象类
- *
- * @param <CMD>
- * 		Jedis 原始命令对象
+ * {@link AclLog} 和 jedis {@link AccessControlLogEntry} 互转
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public abstract class AbstractScriptingOperations<CMD> extends AbstractJedisRedisOperations<CMD>
-		implements ScriptingOperations<CMD> {
+public interface AclLogConverter<S, T> extends Converter<S, T> {
 
-	protected final static ListConverter<Long, Boolean> LONG_LIST_TO_BOOLEAN_LIST_CONVERTER = new ListConverter<>(
-			(value)->value == 1);
+	final class AclLogExposeConverter implements AclUserConverter<AccessControlLogEntry, AclLog> {
 
-	protected final static ScriptFlushModeConverter.ScriptFlushModeJedisConverter SCRIPT_FLUSH_MODE_JEDIS_CONVERTER = new ScriptFlushModeConverter.ScriptFlushModeJedisConverter();
+		@Override
+		public AclLog convert(final AccessControlLogEntry source){
+			final Client client = new Client();
 
-	public AbstractScriptingOperations(final JedisRedisClient client){
-		super(client);
+			BeanUtils.populate(client, source.getClientInfo());
+
+			return new AclLog(source.getCount(), source.getReason(), source.getContext(), source.getObject(),
+					source.getUsername(), source.getAgeSeconds(), client, source.getlogEntry());
+		}
+
 	}
 
 }

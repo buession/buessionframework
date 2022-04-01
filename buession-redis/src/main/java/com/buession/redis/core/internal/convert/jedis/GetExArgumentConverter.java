@@ -22,56 +22,48 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
+package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.StringCommands;
-import redis.clients.jedis.params.SetParams;
-
-import java.util.Objects;
+import redis.clients.jedis.params.GetExParams;
 
 /**
- * {@link StringCommands.SetArgument} 和 jedis {@link SetParams} 互转
+ * {@link StringCommands.GetExArgument} 和 jedis {@link GetExParams} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface SetArgumentConverter<S, T> extends Converter<S, T> {
+public interface GetExArgumentConverter<S, T> extends Converter<S, T> {
 
-	final class SetArgumentJedisConverter implements SetArgumentConverter<StringCommands.SetArgument, SetParams> {
+	final class GetExArgumentJedisConverter
+			implements SetArgumentConverter<StringCommands.GetExArgument, GetExParams> {
 
 		@Override
-		public SetParams convert(final StringCommands.SetArgument source){
-			final SetParams setParams = new SetParams();
+		public GetExParams convert(final StringCommands.GetExArgument source){
+			final GetExParams getExParams = new GetExParams();
 
 			if(source.getEx() != null){
-				setParams.ex(source.getEx());
-			}
-
-			if(source.getExAt() != null){
-				setParams.exAt(source.getExAt());
+				getExParams.ex(source.getEx());
 			}
 
 			if(source.getPx() != null){
-				setParams.px(source.getPx().intValue());
+				getExParams.px(source.getPx());
+			}
+
+			if(source.getExAt() != null){
+				getExParams.exAt(source.getEx());
 			}
 
 			if(source.getPxAt() != null){
-				setParams.px(source.getPxAt());
+				getExParams.pxAt(source.getPx());
 			}
 
-			if(source.getNxXx() == NxXx.NX){
-				setParams.nx();
-			}else if(source.getNxXx() == NxXx.XX){
-				setParams.xx();
+			if(source.getPersist() != null){
+				getExParams.persist();
 			}
 
-			if(Objects.equals(source.getKeepTtl(), Boolean.TRUE)){
-				setParams.keepttl();
-			}
-
-			return setParams;
+			return getExParams;
 		}
 
 	}

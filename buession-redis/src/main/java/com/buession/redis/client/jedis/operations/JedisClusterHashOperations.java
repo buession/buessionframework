@@ -32,7 +32,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.Converters;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.JedisCluster;

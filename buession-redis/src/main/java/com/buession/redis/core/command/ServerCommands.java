@@ -19,39 +19,233 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
+import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.Info;
-import com.buession.redis.core.ObjectCommand;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLogCommand;
+import com.buession.redis.core.AclUser;
 
 import java.util.List;
 
 /**
  * 服务端命令
  *
- * <p>详情说明
- * <a href="http://www.redis.cn/commands.html#server" target="_blank">http://www.redis.cn/commands.html#server</a></p>
+ * <p>详情说明 <a href="http://www.redis.cn/commands.html#server" target="_blank">http://www.redis.cn/commands.html#server</a></p>
  *
  * @author Yong.Teng
  */
 public interface ServerCommands extends RedisCommands {
 
 	/**
+	 * The command shows the available ACL categories
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-cat/" target="_blank">https://redis.io/commands/acl-cat/</a></p>
+	 *
+	 * @return A list of ACL categories or a list of commands inside a given category
+	 */
+	List<String> aclCat();
+
+	/**
+	 * The command shows all the Redis commands in the specified category
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-cat/" target="_blank">https://redis.io/commands/acl-cat/</a></p>
+	 *
+	 * @param categoryName
+	 * 		Category Name
+	 *
+	 * @return A list of ACL categories or a list of commands inside a given category
+	 */
+	List<String> aclCat(final String categoryName);
+
+	/**
+	 * The command shows all the Redis commands in the specified category
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-cat/" target="_blank">https://redis.io/commands/acl-cat/</a></p>
+	 *
+	 * @param categoryName
+	 * 		Category Name
+	 *
+	 * @return A list of ACL categories or a list of commands inside a given category
+	 */
+	List<byte[]> aclCat(final byte[] categoryName);
+
+	/**
+	 * Create an ACL user with the specified rules or modify the rules of an existing user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param rules
+	 * 		the specified rules
+	 *
+	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
+	 */
+	Status aclSetUser(final String username, final String... rules);
+
+	/**
+	 * Create an ACL user with the specified rules or modify the rules of an existing user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param rules
+	 * 		the specified rules
+	 *
+	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
+	 */
+	Status aclSetUser(final byte[] username, final byte[]... rules);
+
+	/**
+	 * The command shows a list of all the usernames of the currently configured users in the Redis ACL system
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-users/" target="_blank">https://redis.io/commands/acl-users/</a></p>
+	 *
+	 * @return A list of all the usernames of the currently configured users in the Redis ACL system
+	 */
+	List<String> aclUsers();
+
+	/**
+	 * Return the username the current connection is authenticated with
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-whoami/" target="_blank">https://redis.io/commands/acl-whoami/</a></p>
+	 *
+	 * @return The username of the current connection
+	 */
+	String aclWhoAmI();
+
+	/**
+	 * The command returns all the rules defined for an existing ACL user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-getuser/" target="_blank">https://redis.io/commands/acl-getuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 *
+	 * @return A list of ACL rule definitions for the user
+	 */
+	AclUser aclGetUser(final String username);
+
+	/**
+	 * The command returns all the rules defined for an existing ACL user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-getuser/" target="_blank">https://redis.io/commands/acl-getuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 *
+	 * @return A list of ACL rule definitions for the user
+	 */
+	AclUser aclGetUser(final byte[] username);
+
+	/**
+	 * Delete all the specified ACL users and terminate all the connections that are authenticated with such users
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-deluser/" target="_blank">https://redis.io/commands/acl-deluser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 *
+	 * @return 删除成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status aclDelUser(final String username);
+
+	/**
+	 * Delete all the specified ACL users and terminate all the connections that are authenticated with such users
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-deluser/" target="_blank">https://redis.io/commands/acl-deluser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 *
+	 * @return 删除成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status aclDelUser(final byte[] username);
+
+	/**
+	 * ACL users need a solid password in order to authenticate to the server without security risks
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-genpass/" target="_blank">https://redis.io/commands/acl-genpass/</a></p>
+	 *
+	 * @return By default 64 bytes string representing 256 bits of pseudorandom data
+	 */
+	String aclGenPass();
+
+	/**
+	 * The command shows the currently active ACL rules in the Redis server
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-list/" target="_blank">https://redis.io/commands/acl-list/</a></p>
+	 *
+	 * @return By default 64 bytes string representing 256 bits of pseudorandom data
+	 */
+	List<String> aclList();
+
+	/**
+	 * When Redis is configured to use an ACL file (with the aclfile configuration option),
+	 * this command will reload the ACLs from the file, replacing all the current ACL rules with the ones defined in the file
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-load/" target="_blank">https://redis.io/commands/acl-load/</a></p>
+	 *
+	 * @return Status.SUCCESS
+	 */
+	Status aclLoad();
+
+	/**
+	 * The optional argument specifies how many entries to show. By default up to ten failures are returned
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-log/" target="_blank">https://redis.io/commands/acl-log/</a></p>
+	 *
+	 * @return A list of ACL security events
+	 */
+	List<AclLog> aclLog();
+
+	/**
+	 * The optional argument specifies how many entries to show. By default up to ten failures are returned
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-log/" target="_blank">https://redis.io/commands/acl-log/</a></p>
+	 *
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return A list of ACL security events
+	 */
+	List<AclLog> aclLog(final long count);
+
+	/**
+	 * The optional argument specifies how many entries to show. By default up to ten failures are returned
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-log/" target="_blank">https://redis.io/commands/acl-log/</a></p>
+	 *
+	 * @return 日志重置成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status aclLogReset();
+
+	/**
+	 * When Redis is configured to use an ACL file (with the aclfile configuration option),
+	 * this command will save the currently defined ACLs from the server memory to the ACL file
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-save/" target="_blank">https://redis.io/commands/acl-save/</a></p>
+	 *
+	 * @return 保存成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status aclLogSave();
+
+	/**
 	 * 执行一个 AOF文件 重写操作；重写会创建一个当前 AOF 文件的体积优化版本
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/persistence/bgrewriteaof.html" target="_blank">http://redisdoc.com/persistence/bgrewriteaof.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/persistence/bgrewriteaof.html" target="_blank">http://redisdoc.com/persistence/bgrewriteaof.html</a></p>
 	 *
 	 * @return 反馈信息
 	 */
@@ -60,12 +254,98 @@ public interface ServerCommands extends RedisCommands {
 	/**
 	 * 在后台异步保存当前数据库的数据到磁盘
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/persistence/bgsave.html" target="_blank">http://redisdoc
-	 * .com/persistence/bgsave.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/persistence/bgsave.html" target="_blank">http://redisdoc.com/persistence/bgsave.html</a></p>
 	 *
 	 * @return 反馈信息
 	 */
 	String bgSave();
+
+	/**
+	 * 动态地调整 Redis 服务器的配置
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_set.html" target="_blank">http://redisdoc.com/configure/config_set.html</a></p>
+	 *
+	 * @param parameter
+	 * 		配置项
+	 * @param value
+	 * 		配置值
+	 *
+	 * @return 设置成功时返回，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status configSet(final String parameter, final String value);
+
+	/**
+	 * 动态地调整 Redis 服务器的配置
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_set.html" target="_blank">http://redisdoc.com/configure/config_set.html</a></p>
+	 *
+	 * @param parameter
+	 * 		配置项
+	 * @param value
+	 * 		配置值
+	 *
+	 * @return 设置成功时返回，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status configSet(final byte[] parameter, final byte[] value);
+
+	/**
+	 * 获取 Redis 服务器的配置参数
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_get.html" target="_blank">http://redisdoc.com/configure/config_get.html</a></p>
+	 *
+	 * @param parameter
+	 * 		配置项
+	 *
+	 * @return 给定配置参数的值
+	 */
+	List<String> configGet(final String parameter);
+
+	/**
+	 * 获取 Redis 服务器的配置参数
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_get.html" target="_blank">http://redisdoc.com/configure/config_get.html</a></p>
+	 *
+	 * @param parameter
+	 * 		配置项
+	 *
+	 * @return 给定配置参数的值
+	 */
+	List<byte[]> configGet(final byte[] parameter);
+
+	/**
+	 * 重置 INFO 命令中的某些统计数据，包括：
+	 * 1）Keyspace hits (键空间命中次数)
+	 * 2）Keyspace misses (键空间不命中次数)
+	 * 3）Number of commands processed (执行命令的次数)
+	 * 4）Number of connections received (连接服务器的次数)
+	 * 5）Number of expired keys (过期key的数量)
+	 * 6）Number of rejected connections (被拒绝的连接数量)
+	 * 7）Latest fork(2) time(最后执行 fork(2) 的时间)
+	 * 8）The aof_delayed_fsync counter(aof_delayed_fsync 计数器的值)
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_resetstat.html" target="_blank">http://redisdoc.com/configure/config_resetstat.html</a></p>
+	 *
+	 * @return 总是返回 Status.SUCCESS
+	 */
+	Status configResetStat();
+
+	/**
+	 * 对启动 Redis 服务器时所指定的 redis.conf 文件进行改写
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_rewrite.html" target="_blank">http://redisdoc.com/configure/config_rewrite.html</a></p>
+	 *
+	 * @return 如果配置重写成功则，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status configRewrite();
+
+	/**
+	 * 获取数据库的 key 的数量
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/dbsize.html" target="_blank">http://redisdoc.com/database/dbsize.html</a></p>
+	 *
+	 * @return 数据库的 key 的数量
+	 */
+	Long dbSize();
 
 	/**
 	 * 关闭地址为 host:port 的客户端
@@ -126,20 +406,6 @@ public interface ServerCommands extends RedisCommands {
 	 * @return 操作结果
 	 */
 	Status clientPause(final int timeout);
-
-	/**
-	 * 将所有客户端的访问暂停给定的毫秒数
-	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/client-pause.html" target="_blank">http://www.redis
-	 * .cn/commands/client-pause.html</a></p>
-	 *
-	 * @param timeout
-	 * 		暂停时间（单位：毫秒）
-	 *
-	 * @return 操作结果
-	 */
-	Status clientPause(final long timeout);
 
 	/**
 	 * 当需要完全禁用redis服务器对当前客户端的回复时可使用该命令
@@ -213,269 +479,6 @@ public interface ServerCommands extends RedisCommands {
 	Status clientUnblock(final int clientId, final ClientUnblockType type);
 
 	/**
-	 * 获取 Redis 服务器的配置参数
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/configure/config_get.html" target="_blank">http://redisdoc
-	 * .com/configure/config_get.html</a></p>
-	 *
-	 * @param parameter
-	 * 		配置项
-	 *
-	 * @return 给定配置参数的值
-	 */
-	List<String> configGet(final String parameter);
-
-	/**
-	 * 获取 Redis 服务器的配置参数
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/configure/config_get.html" target="_blank">http://redisdoc.com/configure
-	 * /config_get.html</a></p>
-	 *
-	 * @param parameter
-	 * 		配置项
-	 *
-	 * @return 给定配置参数的值
-	 */
-	List<byte[]> configGet(final byte[] parameter);
-
-	/**
-	 * 重置 INFO 命令中的某些统计数据，包括：
-	 * 1）Keyspace hits (键空间命中次数)
-	 * 2）Keyspace misses (键空间不命中次数)
-	 * 3）Number of commands processed (执行命令的次数)
-	 * 4）Number of connections received (连接服务器的次数)
-	 * 5）Number of expired keys (过期key的数量)
-	 * 6）Number of rejected connections (被拒绝的连接数量)
-	 * 7）Latest fork(2) time(最后执行 fork(2) 的时间)
-	 * 8）The aof_delayed_fsync counter(aof_delayed_fsync 计数器的值)
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/configure/config_resetstat.html" target="_blank">http://redisdoc
-	 * .com/configure/config_resetstat.html</a></p>
-	 *
-	 * @return 总是返回 Status.SUCCESS
-	 */
-	Status configResetStat();
-
-	/**
-	 * 对启动 Redis 服务器时所指定的 redis.conf 文件进行改写
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/configure/config_rewrite.html" target="_blank">http://redisdoc.com/configure/config_rewrite.html</a></p>
-	 *
-	 * @return 如果配置重写成功则，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status configRewrite();
-
-	/**
-	 * 动态地调整 Redis 服务器的配置
-	 *
-	 * <p>详情说明
-	 *
-	 * <a href="http://redisdoc.com/configure/config_set.html" target="_blank">http://redisdoc
-	 * .com/configure/config_set.html</a></p>
-	 *
-	 * @param parameter
-	 * 		配置项
-	 * @param value
-	 * 		配置值
-	 *
-	 * @return 设置成功时返回，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status configSet(final String parameter, final float value);
-
-	/**
-	 * 动态地调整 Redis 服务器的配置
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/configure/config_set.html" target="_blank">http://redisdoc
-	 * .com/configure/config_set.html</a></p>
-	 *
-	 * @param parameter
-	 * 		配置项
-	 * @param value
-	 * 		配置值
-	 *
-	 * @return 设置成功时返回，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status configSet(final byte[] parameter, final float value);
-
-	/**
-	 * 动态地调整 Redis 服务器的配置
-	 *
-	 * <p>详情说明
-	 *
-	 * <a href="http://redisdoc.com/configure/config_set.html" target="_blank">http://redisdoc.com/configure
-	 * /config_set.html</a></p>
-	 *
-	 * @param parameter
-	 * 		配置项
-	 * @param value
-	 * 		配置值
-	 *
-	 * @return 设置成功时返回，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status configSet(final String parameter, final double value);
-
-	/**
-	 * 动态地调整 Redis 服务器的配置
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/configure/config_set.html" target="_blank">http://redisdoc.com/configure/config_set.html</a></p>
-	 *
-	 * @param parameter
-	 * 		配置项
-	 * @param value
-	 * 		配置值
-	 *
-	 * @return 设置成功时返回，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status configSet(final byte[] parameter, final double value);
-
-	/**
-	 * 动态地调整 Redis 服务器的配置
-	 *
-	 * <p>详情说明
-	 *
-	 * <a href="http://redisdoc.com/configure/config_set.html" target="_blank">http://redisdoc.com/configure/config_set.html</a></p>
-	 *
-	 * @param parameter
-	 * 		配置项
-	 * @param value
-	 * 		配置值
-	 *
-	 * @return 设置成功时返回，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status configSet(final String parameter, final int value);
-
-	/**
-	 * 动态地调整 Redis 服务器的配置
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/configure/config_set.html" target="_blank">http://redisdoc.com/configure/config_set.html</a></p>
-	 *
-	 * @param parameter
-	 * 		配置项
-	 * @param value
-	 * 		配置值
-	 *
-	 * @return 设置成功时返回，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status configSet(final byte[] parameter, final int value);
-
-	/**
-	 * 动态地调整 Redis 服务器的配置
-	 *
-	 * <p>详情说明
-	 *
-	 * <a href="http://redisdoc.com/configure/config_set.html" target="_blank">http://redisdoc.com/configure/config_set.html</a></p>
-	 *
-	 * @param parameter
-	 * 		配置项
-	 * @param value
-	 * 		配置值
-	 *
-	 * @return 设置成功时返回，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status configSet(final String parameter, final long value);
-
-	/**
-	 * 动态地调整 Redis 服务器的配置
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/configure/config_set.html" target="_blank">http://redisdoc
-	 * .com/configure/config_set.html</a></p>
-	 *
-	 * @param parameter
-	 * 		配置项
-	 * @param value
-	 * 		配置值
-	 *
-	 * @return 设置成功时返回，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status configSet(final byte[] parameter, final long value);
-
-	/**
-	 * 动态地调整 Redis 服务器的配置
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/configure/config_set.html" target="_blank">http://redisdoc.com/configure/config_set.html</a></p>
-	 *
-	 * @param parameter
-	 * 		配置项
-	 * @param value
-	 * 		配置值
-	 *
-	 * @return 设置成功时返回，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status configSet(final String parameter, final String value);
-
-	/**
-	 * 动态地调整 Redis 服务器的配置
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/configure/config_set.html" target="_blank">http://redisdoc.com/configure
-	 * /config_set.html</a></p>
-	 *
-	 * @param parameter
-	 * 		配置项
-	 * @param value
-	 * 		配置值
-	 *
-	 * @return 设置成功时返回，返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status configSet(final byte[] parameter, final byte[] value);
-
-	/**
-	 * 获取数据库的 key 的数量
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/database/dbsize.html" target="_blank">http://redisdoc.com/database/dbsize.html</a>
-	 * </p>
-	 *
-	 * @return 数据库的 key 的数量
-	 */
-	Long dbSize();
-
-	/**
-	 * 是一个调试命令，它不应被客户端所使用
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/debug/debug_object.html" target="_blank">http://redisdoc.com/debug/debug_object.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 有关信息
-	 */
-	String debugObject(final String key);
-
-	/**
-	 * 是一个调试命令，它不应被客户端所使用
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/debug/debug_object.html" target="_blank">http://redisdoc.com/debug/debug_object.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 有关信息
-	 */
-	byte[] debugObject(final byte[] key);
-
-	/**
-	 * 执行一个不合法的内存访问从而让 Redis 崩溃，仅在开发时用于 BUG 模拟
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/debug/debug_segfault.html" target="_blank">http://redisdoc.com/debug
-	 * /debug_segfault.html</a></p>
-	 *
-	 * @return 调试信息
-	 */
-	String debugSegfault();
-
-	/**
 	 * 清空整个 Redis 服务器的数据（删除所有数据库的所有 key ）
 	 *
 	 * <p>详情说明
@@ -547,77 +550,6 @@ public interface ServerCommands extends RedisCommands {
 	 * 		Redis Monitor
 	 */
 	void monitor(final RedisMonitor redisMonitor);
-
-	/**
-	 * 命令允许从内部察看给定 key 的 Redis 对象，它通常用在除错(debugging)
-	 * 或者了解为了节省空间而对 key 使用特殊编码的情况；
-	 * 当将Redis用作缓存程序时，你也可以通过 OBJECT 命令中的信息，决定 key 的驱逐策略(eviction policies)
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/debug/object.html" target="_blank">http://redisdoc.com/debug/object.html</a>
-	 * </p>
-	 *
-	 * @param command
-	 * 		子命令
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 objectCommand 为 ObjectCommand.REFCOUNT 时，返回给定 key 引用所储存的值的次数
-	 * 当 objectCommand 为 ObjectCommand.ENCODING 时，返回给定 key 锁储存的值所使用的内部表示
-	 * 当 objectCommand 为 ObjectCommand.IDLETIME 时，自储存以来的空闲时间（单位：秒）
-	 */
-	Object object(final ObjectCommand command, final String key);
-
-	/**
-	 * 命令允许从内部察看给定 key 的 Redis 对象，它通常用在除错(debugging)
-	 * 或者了解为了节省空间而对 key 使用特殊编码的情况；
-	 * 当将Redis用作缓存程序时，你也可以通过 OBJECT 命令中的信息，决定 key 的驱逐策略(eviction policies)
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/debug/object.html" target="_blank">http://redisdoc.com/debug/object.html</a>
-	 * </p>
-	 *
-	 * @param command
-	 * 		子命令
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 当 objectCommand 为 ObjectCommand.REFCOUNT 时，返回给定 key 引用所储存的值的次数
-	 * 当 objectCommand 为 ObjectCommand.ENCODING 时，返回给定 key 锁储存的值所使用的内部表示
-	 * 当 objectCommand 为 ObjectCommand.IDLETIME 时，自储存以来的空闲时间（单位：秒）
-	 */
-	Object object(final ObjectCommand command, final byte[] key);
-
-	/**
-	 * 用于复制功能(replication)的内部命令
-	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/internal/psync.html" target="_blank">http://redisdoc.com/internal/psync.html</a>
-	 * </p>
-	 *
-	 * @param masterRunId
-	 * 		Master Run Id
-	 * @param offset
-	 * 		偏移量
-	 *
-	 * @return 序列化数据
-	 */
-	Object pSync(final String masterRunId, final int offset);
-
-	/**
-	 * 用于复制功能(replication)的内部命令
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/internal/psync.html" target="_blank">http://redisdoc.com/internal/psync
-	 * .html</a></p>
-	 *
-	 * @param masterRunId
-	 * 		Master Run Id
-	 * @param offset
-	 * 		偏移量
-	 *
-	 * @return 序列化数据
-	 */
-	Object pSync(final byte[] masterRunId, final int offset);
 
 	/**
 	 * 用于复制功能(replication)的内部命令

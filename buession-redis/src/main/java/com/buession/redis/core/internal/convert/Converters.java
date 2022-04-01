@@ -22,37 +22,67 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert.jedis;
+package com.buession.redis.core.internal.convert;
 
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.GeoUnit;
+import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapConverter;
+import com.buession.core.utils.StatusUtils;
+import com.buession.lang.Status;
+import com.buession.redis.core.Constants;
+import com.buession.redis.utils.SafeEncoder;
+import org.springframework.lang.Nullable;
+
+import java.util.Objects;
 
 /**
- * {@link GeoUnit} 和 jedis {@link redis.clients.jedis.GeoUnit} 互转
- *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface GeoUnitConverter<S, T> extends Converter<S, T> {
+public interface Converters {
 
-	final class GeoUnitJedisConverter implements GeoUnitConverter<GeoUnit, redis.clients.jedis.GeoUnit> {
+	Converter<String, Status> OK_STATUS_CONVERTER = new Converter<String, Status>() {
 
+		@Nullable
 		@Override
-		public redis.clients.jedis.GeoUnit convert(final GeoUnit source){
-			switch(source){
-				case M:
-					return redis.clients.jedis.GeoUnit.M;
-				case KM:
-					return redis.clients.jedis.GeoUnit.KM;
-				case MI:
-					return redis.clients.jedis.GeoUnit.MI;
-				case FT:
-					return redis.clients.jedis.GeoUnit.FT;
-				default:
-					return null;
-			}
+		public Status convert(String source){
+			return StatusUtils.valueOf(Constants.OK.equalsIgnoreCase(source));
 		}
 
-	}
+	};
+
+	Converter<byte[], Status> BINARY_OK_STATUS_CONVERTER = new Converter<byte[], Status>() {
+
+		@Nullable
+		@Override
+		public Status convert(byte[] source){
+			return Objects.equals(Constants.OK_BINARY, source) ? Status.SUCCESS : Status.FAILURE;
+		}
+
+	};
+
+	BooleanStatusConverter BOOLEAN_STATUS_CONVERTER = new BooleanStatusConverter();
+
+	MapConverter<String, String, byte[], byte[]> STRING_MAP_TO_BINARY_MAP_CONVERTER = new MapConverter<>(
+			SafeEncoder::encode, SafeEncoder::encode);
+
+	ListConverter<String, byte[]> STRING_LIST_TO_STRING_LIST_CONVERTER = new ListConverter<>(SafeEncoder::encode);
+
+	Converter<byte[][], String[]> BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER = new Converter<byte[][], String[]>() {
+
+		@Nullable
+		@Override
+		public String[] convert(byte[][] source){
+			final String[] result = new String[source.length];
+
+			for(int i = 0; i < source.length; i++){
+				result[i] = SafeEncoder.encode(source[i]);
+			}
+
+			return result;
+		}
+
+	};
 
 }

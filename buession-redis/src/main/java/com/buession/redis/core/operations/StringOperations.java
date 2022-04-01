@@ -272,6 +272,186 @@ public interface StringOperations extends StringCommands, RedisOperations {
 	<V> V getSet(final byte[] key, final V value, final TypeReference<V> type);
 
 	/**
+	 * 获取键 key 的值反序列化后对象，并删除 key
+	 *
+	 * @param key
+	 * 		Key
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 */
+	<V> V getDelObject(final String key);
+
+	/**
+	 * 获取键 key 的值反序列化后对象，并删除 key
+	 *
+	 * @param key
+	 * 		Key
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 */
+	<V> V getDelObject(final byte[] key);
+
+	/**
+	 * 获取键 key 的值反序列化为 clazz 指定类型后的对象，并删除 key
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 */
+	<V> V getDelObject(final String key, final Class<V> clazz);
+
+	/**
+	 * 获取键 key 的值反序列化为 clazz 指定类型后的对象，并删除 key
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 */
+	<V> V getDelObject(final byte[] key, final Class<V> clazz);
+
+	/**
+	 * 获取键 key 的值反序列化为 type 指定类型后的对象，并删除 key
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V getDelObject(final String key, final TypeReference<V> type);
+
+	/**
+	 * 获取键 key 的值反序列化为 type 指定类型后的对象，并删除 key
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V getDelObject(final byte[] key, final TypeReference<V> type);
+
+	/**
+	 * 获取键 key 的值反序列化后对象，并重置 key 的过期时间
+	 *
+	 * @param key
+	 * 		Key
+	 * @param getExArgument
+	 * 		Key 过期时间参数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 */
+	<V> V getExObject(final String key, final GetExArgument getExArgument);
+
+	/**
+	 * 获取键 key 的值反序列化后对象，并重置 key 的过期时间
+	 *
+	 * @param key
+	 * 		Key
+	 * @param getExArgument
+	 * 		Key 过期时间参数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 */
+	<V> V getExObject(final byte[] key, final GetExArgument getExArgument);
+
+	/**
+	 * 获取键 key 的值反序列化为 clazz 指定类型后的对象，并重置 key 的过期时间
+	 *
+	 * @param key
+	 * 		Key
+	 * @param getExArgument
+	 * 		Key 过期时间参数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 */
+	<V> V getExObject(final String key, final GetExArgument getExArgument, final Class<V> clazz);
+
+	/**
+	 * 获取键 key 的值反序列化为 clazz 指定类型后的对象，并重置 key 的过期时间
+	 *
+	 * @param key
+	 * 		Key
+	 * @param getExArgument
+	 * 		Key 过期时间参数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 */
+	<V> V getExObject(final byte[] key, final GetExArgument getExArgument, final Class<V> clazz);
+
+	/**
+	 * 获取键 key 的值反序列化为 type 指定类型后的对象，并重置 key 的过期时间
+	 *
+	 * @param key
+	 * 		Key
+	 * @param getExArgument
+	 * 		Key 过期时间参数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V getExObject(final String key, final GetExArgument getExArgument, final TypeReference<V> type);
+
+	/**
+	 * 获取键 key 的值反序列化为 type 指定类型后的对象，并重置 key 的过期时间
+	 *
+	 * @param key
+	 * 		Key
+	 * @param getExArgument
+	 * 		Key 过期时间参数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 键 key 的值反序列化后对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V getExObject(final byte[] key, final GetExArgument getExArgument, final TypeReference<V> type);
+
+	/**
 	 * 获取给定的一个或多个字符串键的值，并反序列化为对象
 	 *
 	 * @param keys

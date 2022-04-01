@@ -30,7 +30,7 @@ import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.Converters;
+import com.buession.redis.core.internal.convert.Converters;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.args.ListDirection;
 import redis.clients.jedis.params.LPosParams;

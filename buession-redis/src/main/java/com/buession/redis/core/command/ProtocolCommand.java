@@ -339,6 +339,8 @@ public enum ProtocolCommand {
 	PSYNC(ProtocolCommandGroup.SERVER, "rw"),
 
 	TIME(ProtocolCommandGroup.SERVER, "r"),
+
+	ACL(ProtocolCommandGroup.SERVER, "rw"),
 	/**
 	 * server command end
 	 **/
@@ -534,7 +536,6 @@ public enum ProtocolCommand {
 	XPENDING(ProtocolCommandGroup.TRANSACTION, "rw"),
 	XCLAIM(ProtocolCommandGroup.TRANSACTION, "rw"),
 	XAUTOCLAIM(ProtocolCommandGroup.TRANSACTION, "rw"),
-	ACL(ProtocolCommandGroup.TRANSACTION, "rw"),
 	XINFO(ProtocolCommandGroup.TRANSACTION, "rw"),
 	BITFIELD_RO(ProtocolCommandGroup.TRANSACTION, "rw"),
 	SMISMEMBER(ProtocolCommandGroup.TRANSACTION, "rw"),

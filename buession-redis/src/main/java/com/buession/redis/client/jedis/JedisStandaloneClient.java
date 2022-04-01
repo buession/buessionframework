@@ -58,6 +58,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
+import com.buession.redis.core.AclUser;
 
 import java.util.List;
 import java.util.Map;
@@ -813,13 +814,33 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	}
 
 	@Override
-	public Status clientSetName(final byte[] name){
-		return serverOperations.clientSetName(name);
+	public List<byte[]> aclCat(final byte[] categoryName){
+		return serverOperations.aclCat(categoryName);
+	}
+
+	@Override
+	public Status aclSetUser(final byte[] username, final byte[]... rules){
+		return serverOperations.aclSetUser(username, rules);
+	}
+
+	@Override
+	public AclUser aclGetUser(final byte[] username){
+		return serverOperations.aclGetUser(username);
+	}
+
+	@Override
+	public Status aclDelUser(final byte[] username){
+		return serverOperations.aclDelUser(username);
 	}
 
 	@Override
 	public List<byte[]> configGet(final byte[] parameter){
 		return serverOperations.configGet(parameter);
+	}
+
+	@Override
+	public Status clientSetName(final byte[] name){
+		return serverOperations.clientSetName(name);
 	}
 
 	@Override

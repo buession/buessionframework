@@ -19,35 +19,37 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.convert;
+package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.RedisServerTime;
-
-import java.util.Date;
-import java.util.List;
+import com.buession.redis.core.ClusterFailoverOption;
 
 /**
- * Jedis 返回的服务器时间转换为 {@link RedisServerTime}
+ * {@link ClusterFailoverOption} 和 jedis {@link redis.clients.jedis.args.ClusterFailoverOption} 互转
  *
  * @author Yong.Teng
- * @since 1.2.1
+ * @since 2.0.0
  */
-public final class RedisServerTimeConverter implements Converter<List<String>, RedisServerTime> {
+public interface ClusterFailoverOptionConverter<S, T> extends Converter<S, T> {
 
-	@Override
-	public RedisServerTime convert(final List<String> source){
-		if(source == null){
-			return null;
+	final class ClusterFailoverOptionJedisConverter
+			implements BitOperationConverter<ClusterFailoverOption, redis.clients.jedis.args.ClusterFailoverOption> {
+
+		@Override
+		public redis.clients.jedis.args.ClusterFailoverOption convert(final ClusterFailoverOption source){
+			switch(source){
+				case FORCE:
+					return redis.clients.jedis.args.ClusterFailoverOption.FORCE;
+				case TAKEOVER:
+					return redis.clients.jedis.args.ClusterFailoverOption.TAKEOVER;
+				default:
+					return null;
+			}
 		}
 
-		Date date = new Date();
-		date.setTime(Long.parseLong(source.get(0)) * 1000L);
-
-		return new RedisServerTime(date, Long.parseLong(source.get(1)));
 	}
 
 }

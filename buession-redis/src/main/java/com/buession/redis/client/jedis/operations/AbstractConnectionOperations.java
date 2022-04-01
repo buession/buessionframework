@@ -29,7 +29,7 @@ import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ConnectionOperations;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.PingResultConverter;
+import com.buession.redis.core.internal.convert.PingResultConverter;
 
 /**
  * Jedis 连接命令操作抽象类
@@ -52,5 +52,5 @@ public abstract class AbstractConnectionOperations<CMD> extends AbstractJedisRed
 	public Status reset(){
 		return execute(CommandNotSupported.ALL, ProtocolCommand.RESET);
 	}
-	
+
 }
