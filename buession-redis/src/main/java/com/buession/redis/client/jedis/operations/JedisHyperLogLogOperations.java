@@ -33,7 +33,7 @@ import com.buession.redis.core.convert.Converters;
 import redis.clients.jedis.Jedis;
 
 /**
- * Jedis 单机模式 HyperLogLog 命令操作抽象类
+ * Jedis 单机模式 HyperLogLog 命令操作
  *
  * @author Yong.Teng
  */

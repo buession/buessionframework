@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Jedis 集群模式地理位置命令操作
+ *
  * @author Yong.Teng
  */
 public final class JedisClusterGeoOperations extends AbstractGeoOperations<JedisCluster> {

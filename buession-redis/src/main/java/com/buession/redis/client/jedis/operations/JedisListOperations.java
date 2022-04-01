@@ -31,7 +31,6 @@ import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.convert.Converters;
-import com.buession.redis.core.convert.OkStatusConverter;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.args.ListDirection;
 import redis.clients.jedis.params.LPosParams;
@@ -39,7 +38,7 @@ import redis.clients.jedis.params.LPosParams;
 import java.util.List;
 
 /**
- * Jedis 单机模式列表命令操作抽象类
+ * Jedis 单机模式列表命令操作
  *
  * @author Yong.Teng
  */

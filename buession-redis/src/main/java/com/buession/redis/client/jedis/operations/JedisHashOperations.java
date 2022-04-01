@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Jedis 单机模式模式哈希表命令操作抽象类
+ * Jedis 单机模式模式哈希表命令操作
  *
  * @author Yong.Teng
  */

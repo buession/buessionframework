@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Jedis 单机模式地理位置命令操作
+ *
  * @author Yong.Teng
  */
 public final class JedisGeoOperations extends AbstractGeoOperations<Jedis> {

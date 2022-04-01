@@ -34,7 +34,7 @@ import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
 
 /**
- * Jedis 哨兵模式连接命令操作抽象类
+ * Jedis 哨兵模式连接命令操作
  *
  * @author Yong.Teng
  */

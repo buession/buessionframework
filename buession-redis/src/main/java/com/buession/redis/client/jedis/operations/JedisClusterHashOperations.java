@@ -44,7 +44,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Jedis 集群模式哈希表命令操作抽象类
+ * Jedis 集群模式哈希表命令操作
  *
  * @author Yong.Teng
  */

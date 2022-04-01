@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Jedis 哨兵模式 Key 命令操作抽象类
+ * Jedis 哨兵模式 Key 命令操作
  *
  * @author Yong.Teng
  */

@@ -33,7 +33,7 @@ import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.JedisCluster;
 
 /**
- * Jedis 集群模式连接命令操作抽象类
+ * Jedis 集群模式连接命令操作
  *
  * @author Yong.Teng
  */

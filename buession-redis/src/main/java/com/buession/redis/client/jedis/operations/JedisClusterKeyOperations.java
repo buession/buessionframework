@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Jedis 集群模式 Key 命令操作抽象类
+ * Jedis 集群模式 Key 命令操作
  *
  * @author Yong.Teng
  */

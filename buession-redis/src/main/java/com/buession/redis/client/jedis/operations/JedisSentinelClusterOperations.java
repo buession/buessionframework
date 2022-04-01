@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Jedis 哨兵模式集群命令操作抽象类
+ * Jedis 哨兵模式集群命令操作
  *
  * @author Yong.Teng
  * @since 2.0.0
