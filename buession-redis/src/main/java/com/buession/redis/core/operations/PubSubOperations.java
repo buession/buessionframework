@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
@@ -41,6 +41,8 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	/**
 	 * 订阅给定模式的频道的信息
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/psubscribe.html" target="_blank">http://redisdoc.com/pubsub/psubscribe.html</a></p>
+	 *
 	 * @param pattern
 	 * 		模式
 	 * @param pubSubListener
@@ -53,6 +55,8 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	/**
 	 * 订阅给定模式的频道的信息
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/psubscribe.html" target="_blank">http://redisdoc.com/pubsub/psubscribe.html</a></p>
+	 *
 	 * @param pattern
 	 * 		模式
 	 * @param pubSubListener
@@ -62,16 +66,38 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 		pSubscribe(new byte[][]{pattern}, pubSubListener);
 	}
 
+	/**
+	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pubsub.html" target="_blank">https://www.redis.com.cn/commands/pubsub.html</a></p>
+	 *
+	 * @param channel
+	 * 		频道
+	 *
+	 * @return 指定信道的订阅者个数
+	 */
 	default Map<String, String> pubsubNumSub(final String channel){
 		return pubsubNumSub(new String[]{channel});
 	}
 
+	/**
+	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pubsub.html" target="_blank">https://www.redis.com.cn/commands/pubsub.html</a></p>
+	 *
+	 * @param channel
+	 * 		频道
+	 *
+	 * @return 指定信道的订阅者个数
+	 */
 	default Map<byte[], byte[]> pubsubNumSub(final byte[] channel){
 		return pubsubNumSub(new byte[][]{channel});
 	}
 
 	/**
 	 * 指示客户端退订所有给定模式的消息
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/punsubscribe.html" target="_blank">http://redisdoc.com/pubsub/punsubscribe.html</a></p>
 	 *
 	 * @param pattern
 	 * 		模式
@@ -85,6 +111,8 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	/**
 	 * 指示客户端退订所有给定模式的消息
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/punsubscribe.html" target="_blank">http://redisdoc.com/pubsub/punsubscribe.html</a></p>
+	 *
 	 * @param pattern
 	 * 		模式
 	 *
@@ -97,6 +125,8 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	/**
 	 * 订阅给定的频道的信息
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/subscribe.html" target="_blank">http://redisdoc.com/pubsub/subscribe.html</a></p>
+	 *
 	 * @param channel
 	 * 		频道
 	 * @param pubSubListener
@@ -108,6 +138,8 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 
 	/**
 	 * 订阅给定的频道的信息
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/subscribe.html" target="_blank">http://redisdoc.com/pubsub/subscribe.html</a></p>
 	 *
 	 * @param channel
 	 * 		频道

@@ -744,6 +744,11 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
+	public Long publish(final byte[] channel, final byte[] message){
+		return pubSubOperations.publish(channel, message);
+	}
+
+	@Override
 	public List<byte[]> pubsubChannels(final byte[] pattern){
 		return pubSubOperations.pubsubChannels(pattern);
 	}
@@ -751,11 +756,6 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	@Override
 	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
 		return pubSubOperations.pubsubNumSub(channels);
-	}
-
-	@Override
-	public Long publish(final byte[] channel, final byte[] message){
-		return pubSubOperations.publish(channel, message);
 	}
 
 	@Override

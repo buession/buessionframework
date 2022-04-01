@@ -19,20 +19,24 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.PubSubOperations;
-import redis.clients.jedis.PipelineBase;
-import redis.clients.jedis.commands.JedisCommands;
 
 /**
+ * Jedis Pub/Sub 命令操作抽象类
+ *
+ * @param <CMD>
+ * 		Jedis 原始命令对象
+ *
  * @author Yong.Teng
  */
-public abstract class AbstractPubSubOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements PubSubOperations<C> {
+public abstract class AbstractPubSubOperations<CMD> extends AbstractJedisRedisOperations<CMD>
+		implements PubSubOperations<CMD> {
 
 	public AbstractPubSubOperations(final JedisRedisClient client){
 		super(client);

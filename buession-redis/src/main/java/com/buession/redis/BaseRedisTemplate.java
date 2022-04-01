@@ -1540,122 +1540,104 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){
-		final CommandArguments args = CommandArguments.create("patterns", patterns)
-				.put("pubSubListener", pubSubListener);
 		execute((client)->{
 			client.pSubscribe(patterns, pubSubListener);
 			return null;
-		}, ProtocolCommand.PSUBSCRIBE, args);
+		});
 	}
 
 	@Override
 	public void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener){
-		final CommandArguments args = CommandArguments.create("patterns", patterns)
-				.put("pubSubListener", pubSubListener);
 		execute((client)->{
 			client.pSubscribe(patterns, pubSubListener);
 			return null;
-		}, ProtocolCommand.PSUBSCRIBE, args);
-	}
-
-	@Override
-	public List<String> pubsubChannels(){
-		return execute((client)->client.pubsubChannels(), ProtocolCommand.PUBSUB);
-	}
-
-	@Override
-	public List<String> pubsubChannels(final String pattern){
-		return execute((client)->client.pubsubChannels(pattern), ProtocolCommand.PUBSUB,
-				new CommandArguments("pattern", pattern));
-	}
-
-	@Override
-	public List<byte[]> pubsubChannels(final byte[] pattern){
-		return execute((client)->client.pubsubChannels(pattern), ProtocolCommand.PUBSUB,
-				new CommandArguments("pattern", pattern));
-	}
-
-	@Override
-	public Long pubsubNumPat(){
-		return execute((client)->client.pubsubNumPat(), ProtocolCommand.PUBSUB);
-	}
-
-	@Override
-	public Map<String, String> pubsubNumSub(final String... channels){
-		return execute((client)->client.pubsubNumSub(channels), ProtocolCommand.PUBSUB,
-				new CommandArguments("channels", channels));
-	}
-
-	@Override
-	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
-		return execute((client)->client.pubsubNumSub(channels), ProtocolCommand.PUBSUB,
-				new CommandArguments("channels", channels));
+		});
 	}
 
 	@Override
 	public Long publish(final String channel, final String message){
-		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
-		return execute((client)->client.publish(channel, message), ProtocolCommand.PUBLISH, args);
+		return execute((client)->client.publish(channel, message));
 	}
 
 	@Override
 	public Long publish(final byte[] channel, final byte[] message){
-		final CommandArguments args = CommandArguments.create("channel", channel).put("message", message);
-		return execute((client)->client.publish(channel, message), ProtocolCommand.PUBLISH, args);
+		return execute((client)->client.publish(channel, message));
+	}
+
+	@Override
+	public List<String> pubsubChannels(){
+		return execute((client)->client.pubsubChannels());
+	}
+
+	@Override
+	public List<String> pubsubChannels(final String pattern){
+		return execute((client)->client.pubsubChannels(pattern));
+	}
+
+	@Override
+	public List<byte[]> pubsubChannels(final byte[] pattern){
+		return execute((client)->client.pubsubChannels(pattern));
+	}
+
+	@Override
+	public Long pubsubNumPat(){
+		return execute((client)->client.pubsubNumPat());
+	}
+
+	@Override
+	public Map<String, String> pubsubNumSub(final String... channels){
+		return execute((client)->client.pubsubNumSub(channels));
+	}
+
+	@Override
+	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
+		return execute((client)->client.pubsubNumSub(channels));
 	}
 
 	@Override
 	public Object pUnSubscribe(){
-		return execute((client)->client.pUnSubscribe(), ProtocolCommand.PUNSUBSCRIBE);
+		return execute((client)->client.pUnSubscribe());
 	}
 
 	@Override
 	public Object pUnSubscribe(final String... patterns){
-		return execute((client)->client.pUnSubscribe(patterns), ProtocolCommand.PUNSUBSCRIBE,
-				new CommandArguments("patterns", patterns));
+		return execute((client)->client.pUnSubscribe(patterns));
 	}
 
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns){
-		return execute((client)->client.pUnSubscribe(patterns), ProtocolCommand.PUNSUBSCRIBE,
-				new CommandArguments("patterns", patterns));
+		return execute((client)->client.pUnSubscribe(patterns));
 	}
 
 	@Override
 	public void subscribe(final String[] channels, final PubSubListener<String> pubSubListener){
-		final CommandArguments args = CommandArguments.create("channels", channels)
-				.put("pubSubListener", pubSubListener);
 		execute((client)->{
 			client.subscribe(channels, pubSubListener);
 			return null;
-		}, ProtocolCommand.SUBSCRIBE, args);
+		});
 	}
 
 	@Override
 	public void subscribe(final byte[][] channels, final PubSubListener<byte[]> pubSubListener){
-		final CommandArguments args = CommandArguments.create("channels", channels)
-				.put("pubSubListener", pubSubListener);
 		execute((client)->{
 			client.subscribe(channels, pubSubListener);
 			return null;
-		}, ProtocolCommand.SUBSCRIBE, args);
+		});
 	}
 
 	@Override
 	public Object unSubscribe(){
-		return execute((client)->client.unSubscribe(), ProtocolCommand.UNSUBSCRIBE);
+		return execute((client)->client.unSubscribe());
 	}
 
 	@Override
 	public Object unSubscribe(final String... channels){
-		return execute((client)->client.unSubscribe(channels), ProtocolCommand.UNSUBSCRIBE,
-				new CommandArguments("channels", channels));
+		return execute((client)->client.unSubscribe(channels));
 	}
 
 	@Override
 	public Object unSubscribe(final byte[]... channels){
-		return execute((client)->client.unSubscribe(channels), ProtocolCommand.UNSUBSCRIBE,
-				new CommandArguments("channels", channels));
+		return execute((client)->client.unSubscribe(channels));
 	}
 
 	@Override

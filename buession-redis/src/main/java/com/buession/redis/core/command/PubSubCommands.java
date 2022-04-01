@@ -41,8 +41,7 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 订阅一个或多个符合给定模式的频道的信息
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/psubscribe.html" target="_blank">http://redisdoc
-	 * .com/pubsub/psubscribe.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/psubscribe.html" target="_blank">http://redisdoc.com/pubsub/psubscribe.html</a></p>
 	 *
 	 * @param patterns
 	 * 		一个或多个模式
@@ -54,8 +53,7 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 订阅一个或多个符合给定模式的频道的信息
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/psubscribe.html" target="_blank">http://redisdoc.com/pubsub
-	 * /psubscribe.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/psubscribe.html" target="_blank">http://redisdoc.com/pubsub/psubscribe.html</a></p>
 	 *
 	 * @param patterns
 	 * 		一个或多个模式
@@ -65,69 +63,9 @@ public interface PubSubCommands extends RedisCommands {
 	void pSubscribe(final byte[][] patterns, final PubSubListener<byte[]> pubSubListener);
 
 	/**
-	 * 列出当前 active channels 活跃是指信道含有一个或多个订阅者(不包括从模式接收订阅的客户端)
-	 * 如果 pattern未提供，所有的信道都被列出，否则只列出匹配上指定全局-类型模式的信道被列出
-	 *
-	 * @return 活跃的信道列表，或者符合指定模式的信道
-	 */
-	List<String> pubsubChannels();
-
-	/**
-	 * 列出当前 active channels 活跃是指信道含有一个或多个订阅者(不包括从模式接收订阅的客户端)
-	 * 如果 pattern未提供，所有的信道都被列出，否则只列出匹配上指定全局-类型模式的信道被列出
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 *
-	 * @return 活跃的信道列表，或者符合指定模式的信道
-	 */
-	List<String> pubsubChannels(final String pattern);
-
-	/**
-	 * 列出当前 active channels 活跃是指信道含有一个或多个订阅者(不包括从模式接收订阅的客户端)
-	 * 如果 pattern未提供，所有的信道都被列出，否则只列出匹配上指定全局-类型模式的信道被列出
-	 *
-	 * @param pattern
-	 * 		匹配模式
-	 *
-	 * @return 活跃的信道列表，或者符合指定模式的信道
-	 */
-	List<byte[]> pubsubChannels(final byte[] pattern);
-
-	/**
-	 * 返回订阅模式的数量(使用命令PSUBSCRIBE实现)。
-	 * 注意，这个命令返回的不是订阅模式的客户端的数量， 而是客户端订阅的所有模式的数量总和。
-	 *
-	 * @return 阅模式的数量
-	 */
-	Long pubsubNumPat();
-
-	/**
-	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
-	 *
-	 * @param channels
-	 * 		一个或多个频道
-	 *
-	 * @return 指定信道的订阅者个数
-	 */
-	Map<String, String> pubsubNumSub(final String... channels);
-
-	/**
-	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
-	 *
-	 * @param channels
-	 * 		一个或多个频道
-	 *
-	 * @return 指定信道的订阅者个数
-	 */
-	Map<byte[], byte[]> pubsubNumSub(final byte[]... channels);
-
-	/**
 	 * 将信息 message 发送到指定的频道 channel
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/pubsub/publish.html" target="_blank">http://redisdoc.com/pubsub/publish.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/publish.html" target="_blank">http://redisdoc.com/pubsub/publish.html</a></p>
 	 *
 	 * @param channel
 	 * 		频道名称
@@ -141,9 +79,7 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 将信息 message 发送到指定的频道 channel
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/pubsub/publish.html" target="_blank">http://redisdoc.com/pubsub/publish.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/publish.html" target="_blank">http://redisdoc.com/pubsub/publish.html</a></p>
 	 *
 	 * @param channel
 	 * 		频道名称
@@ -155,10 +91,79 @@ public interface PubSubCommands extends RedisCommands {
 	Long publish(final byte[] channel, final byte[] message);
 
 	/**
+	 * 列出当前 active channels 活跃是指信道含有一个或多个订阅者(不包括从模式接收订阅的客户端)
+	 * 如果 pattern未提供，所有的信道都被列出，否则只列出匹配上指定全局-类型模式的信道被列出
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pubsub.html" target="_blank">https://www.redis.com.cn/commands/pubsub.html</a></p>
+	 *
+	 * @return 活跃的信道列表，或者符合指定模式的信道
+	 */
+	List<String> pubsubChannels();
+
+	/**
+	 * 列出当前 active channels 活跃是指信道含有一个或多个订阅者(不包括从模式接收订阅的客户端)
+	 * 如果 pattern未提供，所有的信道都被列出，否则只列出匹配上指定全局-类型模式的信道被列出
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pubsub.html" target="_blank">https://www.redis.com.cn/commands/pubsub.html</a></p>
+	 *
+	 * @param pattern
+	 * 		匹配模式
+	 *
+	 * @return 活跃的信道列表，或者符合指定模式的信道
+	 */
+	List<String> pubsubChannels(final String pattern);
+
+	/**
+	 * 列出当前 active channels 活跃是指信道含有一个或多个订阅者(不包括从模式接收订阅的客户端)
+	 * 如果 pattern未提供，所有的信道都被列出，否则只列出匹配上指定全局-类型模式的信道被列出
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pubsub.html" target="_blank">https://www.redis.com.cn/commands/pubsub.html</a></p>
+	 *
+	 * @param pattern
+	 * 		匹配模式
+	 *
+	 * @return 活跃的信道列表，或者符合指定模式的信道
+	 */
+	List<byte[]> pubsubChannels(final byte[] pattern);
+
+	/**
+	 * 返回订阅模式的数量(使用命令PSUBSCRIBE实现)。
+	 * 注意，这个命令返回的不是订阅模式的客户端的数量， 而是客户端订阅的所有模式的数量总和。
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pubsub.html" target="_blank">https://www.redis.com.cn/commands/pubsub.html</a></p>
+	 *
+	 * @return 阅模式的数量
+	 */
+	Long pubsubNumPat();
+
+	/**
+	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pubsub.html" target="_blank">https://www.redis.com.cn/commands/pubsub.html</a></p>
+	 *
+	 * @param channels
+	 * 		一个或多个频道
+	 *
+	 * @return 指定信道的订阅者个数
+	 */
+	Map<String, String> pubsubNumSub(final String... channels);
+
+	/**
+	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pubsub.html" target="_blank">https://www.redis.com.cn/commands/pubsub.html</a></p>
+	 *
+	 * @param channels
+	 * 		一个或多个频道
+	 *
+	 * @return 指定信道的订阅者个数
+	 */
+	Map<byte[], byte[]> pubsubNumSub(final byte[]... channels);
+
+	/**
 	 * 指示客户端退订使用 PSUBSCRIBE pattern [pattern …] 命令订阅的所有模式消息
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/pubsub/punsubscribe.html" target="_blank">http://redisdoc.com/pubsub/punsubscribe.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/punsubscribe.html" target="_blank">http://redisdoc.com/pubsub/punsubscribe.html</a></p>
 	 *
 	 * @return 在不同的客户端中有不同的表现
 	 */
@@ -167,8 +172,7 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 指示客户端退订所有给定一个或多个模式的消息
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/pubsub/punsubscribe.html" target="_blank">http://redisdoc.com/pubsub/punsubscribe.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/punsubscribe.html" target="_blank">http://redisdoc.com/pubsub/punsubscribe.html</a></p>
 	 *
 	 * @param patterns
 	 * 		一个或多个模式
@@ -180,8 +184,7 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 指示客户端退订所有给定一个或多个模式的消息
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/pubsub/punsubscribe.html" target="_blank">http://redisdoc.com/pubsub/punsubscribe.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/punsubscribe.html" target="_blank">http://redisdoc.com/pubsub/punsubscribe.html</a></p>
 	 *
 	 * @param patterns
 	 * 		一个或多个模式
@@ -193,8 +196,7 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 订阅给定的一个或多个频道的信息
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/subscribe.html" target="_blank">http://redisdoc
-	 * .com/pubsub/subscribe.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/subscribe.html" target="_blank">http://redisdoc.com/pubsub/subscribe.html</a></p>
 	 *
 	 * @param channels
 	 * 		一个或多个频道
@@ -206,8 +208,7 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 订阅给定的一个或多个频道的信息
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/subscribe.html" target="_blank">http://redisdoc
-	 * .com/pubsub/subscribe.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/subscribe.html" target="_blank">http://redisdoc.com/pubsub/subscribe.html</a></p>
 	 *
 	 * @param channels
 	 * 		一个或多个频道
@@ -219,8 +220,7 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 指示客户端退订所有频道
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/pubsub/unsubscribe.html" target="_blank">http://redisdoc.com/pubsub/unsubscribe.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/unsubscribe.html" target="_blank">http://redisdoc.com/pubsub/unsubscribe.html</a></p>
 	 *
 	 * @return 在不同的客户端中有不同的表现
 	 */
@@ -229,8 +229,7 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 指示客户端退订给定的一个或多个频道
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/pubsub/unsubscribe.html" target="_blank">http://redisdoc.com/pubsub/unsubscribe.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/unsubscribe.html" target="_blank">http://redisdoc.com/pubsub/unsubscribe.html</a></p>
 	 *
 	 * @param channels
 	 * 		一个或多个频道
@@ -242,9 +241,7 @@ public interface PubSubCommands extends RedisCommands {
 	/**
 	 * 指示客户端退订给定的一个或多个频道
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/pubsub/unsubscribe.html" target="_blank">http://redisdoc.com/pubsub/unsubscribe
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/pubsub/unsubscribe.html" target="_blank">http://redisdoc.com/pubsub/unsubscribe.html</a></p>
 	 *
 	 * @param channels
 	 * 		一个或多个频道

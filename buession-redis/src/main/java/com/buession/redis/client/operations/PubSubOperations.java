@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.operations;
@@ -27,8 +27,13 @@ package com.buession.redis.client.operations;
 import com.buession.redis.core.command.PubSubCommands;
 
 /**
+ * 发布订阅命令操作接口
+ *
+ * @param <CMD>
+ * 		原始命令对象
+ *
  * @author Yong.Teng
  */
-public interface PubSubOperations<T> extends PubSubCommands, RedisClientOperations<T> {
+public interface PubSubOperations<CMD> extends PubSubCommands, RedisOperations<CMD> {
 
 }
