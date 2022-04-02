@@ -24,14 +24,67 @@
  */
 package com.buession.redis.core;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public enum ScriptFlushMode {
+public final class Module implements Serializable {
 
-	ASYNC,
-	
-	SYNC
+	private final static long serialVersionUID = 8584149197825340590L;
+
+	private String name;
+
+	private int version;
+
+	public Module(){
+	}
+
+	public Module(final String name, final int version){
+		this.name = name;
+		this.version = version;
+	}
+
+	public String getName(){
+		return name;
+	}
+
+	public void setName(String name){
+		this.name = name;
+	}
+
+	public int getVersion(){
+		return version;
+	}
+
+	public void setVersion(int version){
+		this.version = version;
+	}
+
+	@Override
+	public int hashCode(){
+		return Objects.hash(name, version);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(obj == this){
+			return true;
+		}
+
+		if(obj instanceof Module){
+			Module that = (Module) obj;
+			return Objects.equals(name, that.name) && version == that.version;
+		}
+
+		return false;
+	}
+
+	@Override
+	public String toString(){
+		return '[' + "name=" + name + ", version=" + version + ']';
+	}
 
 }

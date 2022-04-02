@@ -25,7 +25,7 @@
 package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
-import com.buession.redis.core.ScriptFlushMode;
+import com.buession.redis.core.FlushMode;
 
 import java.util.List;
 
@@ -249,7 +249,7 @@ public interface ScriptingCommands extends RedisCommands {
 	 *
 	 * @return 操作成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	Status scriptFlush(final ScriptFlushMode mode);
+	Status scriptFlush(final FlushMode mode);
 
 	/**
 	 * 将脚本 script 添加到脚本缓存中

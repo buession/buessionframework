@@ -27,7 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ScriptingOperations;
-import com.buession.redis.core.internal.convert.jedis.ScriptFlushModeConverter;
+import com.buession.redis.core.internal.convert.jedis.FlushModeConverter;
 
 /**
  * Jedis Script 命令操作抽象类
@@ -43,7 +43,7 @@ public abstract class AbstractScriptingOperations<CMD> extends AbstractJedisRedi
 	protected final static ListConverter<Long, Boolean> LONG_LIST_TO_BOOLEAN_LIST_CONVERTER = new ListConverter<>(
 			(value)->value == 1);
 
-	protected final static ScriptFlushModeConverter.ScriptFlushModeJedisConverter SCRIPT_FLUSH_MODE_JEDIS_CONVERTER = new ScriptFlushModeConverter.ScriptFlushModeJedisConverter();
+	protected final static FlushModeConverter.FlushModeJedisConverter FLUSH_MODE_JEDIS_CONVERTER = new FlushModeConverter.FlushModeJedisConverter();
 
 	public AbstractScriptingOperations(final JedisRedisClient client){
 		super(client);

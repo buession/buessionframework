@@ -26,13 +26,12 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
-import com.buession.redis.core.ScriptFlushMode;
+import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.args.FlushMode;
 
 import java.util.Arrays;
 import java.util.List;
@@ -275,9 +274,9 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 	}
 
 	@Override
-	public Status scriptFlush(final ScriptFlushMode mode){
+	public Status scriptFlush(final FlushMode mode){
 		final CommandArguments args = CommandArguments.create("mode", mode);
-		final FlushMode flushMode = SCRIPT_FLUSH_MODE_JEDIS_CONVERTER.convert(mode);
+		final redis.clients.jedis.args.FlushMode flushMode = FLUSH_MODE_JEDIS_CONVERTER.convert(mode);
 
 		if(isPipeline()){
 			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.SCRIPT_FLUSH, args);

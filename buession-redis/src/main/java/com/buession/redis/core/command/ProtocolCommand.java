@@ -59,8 +59,6 @@ public enum ProtocolCommand {
 	QUIT(ProtocolCommandGroup.CONNECTION, "rw"),
 
 	SELECT(ProtocolCommandGroup.CONNECTION, "rw"),
-
-	SWAPDB(ProtocolCommandGroup.CONNECTION, "w"),
 	/**
 	 * connection command end
 	 */
@@ -341,6 +339,14 @@ public enum ProtocolCommand {
 	TIME(ProtocolCommandGroup.SERVER, "r"),
 
 	ACL(ProtocolCommandGroup.SERVER, "rw"),
+
+	FAILOVER(ProtocolCommandGroup.SERVER, "rw"),
+
+	MEMORY(ProtocolCommandGroup.SERVER, "r"),
+
+	MODULE(ProtocolCommandGroup.SERVER, "r"),
+
+	SWAPDB(ProtocolCommandGroup.CONNECTION, "w"),
 	/**
 	 * server command end
 	 **/
@@ -520,9 +526,6 @@ public enum ProtocolCommand {
 	SENTINEL(ProtocolCommandGroup.TRANSACTION, "rw"),
 
 
-	MODULE(ProtocolCommandGroup.TRANSACTION, "rw"),
-
-	MEMORY(ProtocolCommandGroup.TRANSACTION, "rw"),
 	XADD(ProtocolCommandGroup.TRANSACTION, "rw"),
 	XLEN(ProtocolCommandGroup.TRANSACTION, "rw"),
 	XDEL(ProtocolCommandGroup.TRANSACTION, "rw"),
@@ -542,7 +545,6 @@ public enum ProtocolCommand {
 	ZMSCORE(ProtocolCommandGroup.TRANSACTION, "rw"),
 	BZPOPMIN(ProtocolCommandGroup.TRANSACTION, "rw"),
 	BZPOPMAX(ProtocolCommandGroup.TRANSACTION, "rw"),
-	FAILOVER(ProtocolCommandGroup.TRANSACTION, "rw"),
 	STRALGO(ProtocolCommandGroup.TRANSACTION, "rw");
 
 	private final ProtocolCommandGroup group;

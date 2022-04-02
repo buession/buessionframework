@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.jedis.operations;
@@ -29,12 +29,12 @@ import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.StringOperations;
-import com.buession.redis.core.convert.OkStatusConverter;
-import com.buession.redis.core.convert.jedis.SetArgumentJedisConverter;
+import com.buession.redis.core.internal.convert.OkStatusConverter;
+import com.buession.redis.core.internal.convert.jedis.GetExArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.SetArgumentConverter;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.BitPosParams;
-import redis.clients.jedis.PipelineBase;
-import redis.clients.jedis.commands.JedisCommands;
+import redis.clients.jedis.params.GetExParams;
 import redis.clients.jedis.params.SetParams;
 
 import java.util.List;
@@ -42,7 +42,7 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractStringOperations<C extends JedisCommands, P extends PipelineBase> extends AbstractJedisRedisClientOperations<C, P> implements StringOperations<C> {
+public abstract class AbstractStringOperations extends AbstractJedisRedisOperations implements StringOperations {
 
 	public AbstractStringOperations(final JedisRedisClient client){
 		super(client);
@@ -235,6 +235,31 @@ public abstract class AbstractStringOperations<C extends JedisCommands, P extend
 	}
 
 	@Override
+	public String getEx(final String key, final GetExArgument getExArgument){
+		final GetExArgumentConverter.GetExArgumentJedisConverter converter = new GetExArgumentConverter.GetExArgumentJedisConverter();
+		final GetExParams getExParams = converter.convert(getExArgument);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().getEx(key, getExParams)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().getEx(key, getExParams)));
+		}else{
+			return execute((cmd)->cmd.getEx(key, getExParams));
+		}
+	}
+
+	@Override
+	public String getDel(final String key){
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().getDel(key)));
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().getDel(key)));
+		}else{
+			return execute((cmd)->cmd.getDel(key));
+		}
+	}
+
+	@Override
 	public Long incr(final String key){
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().incr(key)));
@@ -316,7 +341,7 @@ public abstract class AbstractStringOperations<C extends JedisCommands, P extend
 	@Override
 	public Status set(final String key, final String value, final SetArgument setArgument){
 		final OkStatusConverter converter = new OkStatusConverter();
-		final SetParams setParams = new SetArgumentJedisConverter().convert(setArgument);
+		final SetParams setParams = new SetArgumentConverter.SetArgumentJedisConverter().convert(setArgument);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().set(key, value, setParams), converter));

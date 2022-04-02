@@ -30,9 +30,7 @@ import com.buession.redis.core.command.TransactionCommands;
 /**
  * 事务运算
  *
- * <p>详情说明
- * <a href="http://redisdoc.com/transaction/index.html" target="_blank">http://redisdoc.com/transaction/index.html</a>
- * </p>
+ * <p>详情说明 <a href="http://redisdoc.com/transaction/index.html" target="_blank">http://redisdoc.com/transaction/index.html</a></p>
  *
  * @author Yong.Teng
  */
@@ -40,6 +38,8 @@ public interface TransactionOperations extends TransactionCommands, RedisOperati
 
 	/**
 	 * 监视一 key ，如果在事务执行之前这个 key 被其他命令所改动，那么事务将被打断
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/transaction/watch.html" target="_blank">http://redisdoc.com/transaction/watch.html</a></p>
 	 *
 	 * @param key
 	 * 		key
@@ -52,6 +52,8 @@ public interface TransactionOperations extends TransactionCommands, RedisOperati
 
 	/**
 	 * 监视一 key ，如果在事务执行之前这个 key 被其他命令所改动，那么事务将被打断
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/transaction/watch.html" target="_blank">http://redisdoc.com/transaction/watch.html</a></p>
 	 *
 	 * @param key
 	 * 		key

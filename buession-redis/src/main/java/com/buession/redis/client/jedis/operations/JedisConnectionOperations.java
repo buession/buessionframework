@@ -148,21 +148,4 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 		}
 	}
 
-	@Override
-	public Status swapdb(final int db1, final int db2){
-		final CommandArguments args = CommandArguments.create("db1", db1).put("db2", db2);
-
-		if(isPipeline()){
-			return pipelineExecute(
-					(cmd)->newJedisResult(getPipeline().swapDB(db1, db2), Converters.OK_STATUS_CONVERTER),
-					ProtocolCommand.SWAPDB, args);
-		}else if(isTransaction()){
-			return transactionExecute(
-					(cmd)->newJedisResult(getTransaction().swapDB(db1, db2), Converters.OK_STATUS_CONVERTER),
-					ProtocolCommand.SWAPDB, args);
-		}else{
-			return execute((cmd)->cmd.swapDB(db1, db2), Converters.OK_STATUS_CONVERTER, ProtocolCommand.SWAPDB, args);
-		}
-	}
-
 }

@@ -37,7 +37,7 @@ import com.buession.redis.utils.InfoUtil;
 public class InfoConverter implements Converter<String, Info> {
 
 	@Override
-	public Info convert(String source){
+	public Info convert(final String source){
 		return InfoUtil.convert(source);
 	}
 

@@ -25,30 +25,29 @@
 package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.ScriptFlushMode;
-import redis.clients.jedis.args.FlushMode;
+import com.buession.redis.core.Client;
+import com.buession.redis.core.SlowLog;
+import redis.clients.jedis.util.Slowlog;
 
 /**
- * {@link ScriptFlushMode} 和 jedis {@link FlushMode} 互转
+ * {@link SlowLog} 和 jedis {@link Slowlog} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ScriptFlushModeConverter<S, T> extends Converter<S, T> {
+public interface SlowLogConverter<S, T> extends Converter<S, T> {
 
-	final class ScriptFlushModeJedisConverter
-			implements ListPositionConverter<ScriptFlushMode, FlushMode> {
+	final class SlowLogExposeConverter implements AclUserConverter<Slowlog, SlowLog> {
 
 		@Override
-		public FlushMode convert(final ScriptFlushMode source){
-			switch(source){
-				case ASYNC:
-					return FlushMode.ASYNC;
-				case SYNC:
-					return FlushMode.SYNC;
-				default:
-					return null;
-			}
+		public SlowLog convert(final Slowlog source){
+			final Client client = new Client();
+
+			client.setHost(source.getClientIpPort().getHost());
+			client.setPort(source.getClientIpPort().getPort());
+
+			return new SlowLog(source.getId(), source.getTimeStamp(), source.getExecutionTime(), source.getArgs(),
+					client, source.getClientName());
 		}
 
 	}

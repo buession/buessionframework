@@ -28,27 +28,34 @@ import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.jedis.JedisSentinelClient;
-import com.buession.redis.core.convert.OkStatusConverter;
-import com.buession.redis.core.convert.TransactionResultConverter;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.TransactionResultConverter;
 import com.buession.redis.exception.RedisException;
+import redis.clients.jedis.Jedis;
 
 import java.util.List;
 
 /**
+ * Jedis 哨兵模式事务命令操作
+ *
  * @author Yong.Teng
  */
-public class JedisSentinelTransactionOperations extends AbstractTransactionOperations {
+public final class JedisSentinelTransactionOperations extends AbstractTransactionOperations<Jedis> {
 
 	public JedisSentinelTransactionOperations(final JedisSentinelClient client){
 		super(client);
 	}
 
 	@Override
-	public void discard(){
-		execute((cmd)->{
-			client.getConnection().discard();
-			return null;
-		});
+	public Status multi(){
+		return execute((cmd)->{
+			RedisConnection connection = client.getConnection();
+			connection.multi();
+
+			return Status.SUCCESS;
+		}, ProtocolCommand.MULTI);
 	}
 
 	@Override
@@ -57,36 +64,34 @@ public class JedisSentinelTransactionOperations extends AbstractTransactionOpera
 			throw new RedisException("No ongoing transaction. Did you forget to call multi?");
 		}
 
-		List<Object> results = execute((cmd)->client.getConnection().exec());
-		return Validate.isEmpty(results) ? results :
-				new TransactionResultConverter<>(client.getTxResults()).convert(results);
+		List<Object> results = execute((cmd)->client.getConnection().exec(), ProtocolCommand.EXEC);
+		return Validate.isEmpty(results) ? results : new TransactionResultConverter<>(client.getTxResults()).convert(
+				results);
 	}
 
 	@Override
-	public Status multi(){
-		return execute((cmd)->{
-			RedisConnection connection = client.getConnection();
-			connection.multi();
-			return Status.SUCCESS;
-		});
+	public void discard(){
+		execute((cmd)->{
+			client.getConnection().discard();
+			return null;
+		}, ProtocolCommand.DISCARD);
 	}
 
 	@Override
 	public Status watch(final String... keys){
-		final OkStatusConverter converter = new OkStatusConverter();
-		return execute((cmd)->cmd.watch(keys), converter);
+		final CommandArguments args = CommandArguments.create("keys", keys);
+		return execute((cmd)->cmd.watch(keys), Converters.OK_STATUS_CONVERTER, ProtocolCommand.WATCH, args);
 	}
 
 	@Override
 	public Status watch(final byte[]... keys){
-		final OkStatusConverter converter = new OkStatusConverter();
-		return execute((cmd)->cmd.watch(keys), converter);
+		final CommandArguments args = CommandArguments.create("keys", keys);
+		return execute((cmd)->cmd.watch(keys), Converters.OK_STATUS_CONVERTER, ProtocolCommand.WATCH, args);
 	}
 
 	@Override
 	public Status unwatch(){
-		final OkStatusConverter converter = new OkStatusConverter();
-		return execute((cmd)->cmd.unwatch(), converter);
+		return execute((cmd)->cmd.unwatch(), Converters.OK_STATUS_CONVERTER, ProtocolCommand.UNWATCH);
 	}
 
 }

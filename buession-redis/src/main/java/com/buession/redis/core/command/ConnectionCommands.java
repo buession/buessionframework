@@ -157,18 +157,4 @@ public interface ConnectionCommands extends RedisCommands {
 	 */
 	Status select(final int db);
 
-	/**
-	 * 对换指定的两个数据库，使得两个数据库的数据立即互换
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/swapdb.html" target="_blank">http://redisdoc.com/database/swapdb.html</a></p>
-	 *
-	 * @param db1
-	 * 		数据库 1 索引号
-	 * @param db2
-	 * 		数据库 2 索引号
-	 *
-	 * @return 对换成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
-	 */
-	Status swapdb(final int db1, final int db2);
-
 }

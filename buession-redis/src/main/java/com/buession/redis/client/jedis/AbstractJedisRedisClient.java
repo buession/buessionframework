@@ -28,6 +28,7 @@ import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.client.AbstractRedisClient;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.BumpEpoch;
@@ -44,19 +45,22 @@ import com.buession.redis.core.FutureResult;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.Info;
+import com.buession.redis.core.MemoryStats;
 import com.buession.redis.core.MigrateOperation;
+import com.buession.redis.core.Module;
 import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
-import com.buession.redis.core.ScriptFlushMode;
-import com.buession.redis.core.SlowLogCommand;
+import com.buession.redis.core.FlushMode;
+import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
+import com.buession.redis.core.AclUser;
 import redis.clients.jedis.Response;
 
 import java.util.LinkedList;
@@ -243,11 +247,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Status select(final int db){
 		return connectionOperations.select(db);
-	}
-
-	@Override
-	public Status swapdb(final int db1, final int db2){
-		return connectionOperations.swapdb(db1, db2);
 	}
 
 	@Override
@@ -965,7 +964,7 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Status scriptFlush(final ScriptFlushMode mode){
+	public Status scriptFlush(final FlushMode mode){
 		return scriptingOperations.scriptFlush(mode);
 	}
 
@@ -980,6 +979,76 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
+	public List<String> aclCat(){
+		return serverOperations.aclCat();
+	}
+
+	@Override
+	public List<String> aclCat(final String categoryName){
+		return serverOperations.aclCat(categoryName);
+	}
+
+	@Override
+	public Status aclSetUser(final String username, final String... rules){
+		return serverOperations.aclSetUser(username, rules);
+	}
+
+	@Override
+	public AclUser aclGetUser(final String username){
+		return serverOperations.aclGetUser(username);
+	}
+
+	@Override
+	public List<String> aclUsers(){
+		return serverOperations.aclUsers();
+	}
+
+	@Override
+	public String aclWhoAmI(){
+		return serverOperations.aclWhoAmI();
+	}
+
+	@Override
+	public Status aclDelUser(final String username){
+		return serverOperations.aclDelUser(username);
+	}
+
+	@Override
+	public String aclGenPass(){
+		return serverOperations.aclGenPass();
+	}
+
+	@Override
+	public List<String> aclList(){
+		return serverOperations.aclList();
+	}
+
+	@Override
+	public Status aclLoad(){
+		return serverOperations.aclLoad();
+	}
+
+	@Override
+	public List<AclLog> aclLog(){
+		return serverOperations.aclLog();
+	}
+
+	@Override
+	public List<AclLog> aclLog(final long count){
+		return serverOperations.aclLog(count);
+	}
+
+	@Override
+	public Status aclLogReset(){
+		return serverOperations.aclLogReset();
+	}
+
+	@Override
+	public Status aclLogSave(){
+		return serverOperations.aclLogSave();
+	}
+
+	@Override
 	public String bgRewriteAof(){
 		return serverOperations.bgRewriteAof();
 	}
@@ -987,6 +1056,56 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public String bgSave(){
 		return serverOperations.bgSave();
+	}
+
+	@Override
+	public Status configSet(final String parameter, final String value){
+		return serverOperations.configSet(parameter, value);
+	}
+
+	@Override
+	public List<String> configGet(final String parameter){
+		return serverOperations.configGet(parameter);
+	}
+
+	@Override
+	public Status configResetStat(){
+		return serverOperations.configResetStat();
+	}
+
+	@Override
+	public Status configRewrite(){
+		return serverOperations.configRewrite();
+	}
+
+	@Override
+	public Long dbSize(){
+		return serverOperations.dbSize();
+	}
+
+	@Override
+	public Status failover(){
+		return serverOperations.failover();
+	}
+
+	@Override
+	public Status failover(final String host, final int port){
+		return serverOperations.failover(host, port);
+	}
+
+	@Override
+	public Status failover(final String host, final int port, final int timeout){
+		return serverOperations.failover(host, port, timeout);
+	}
+
+	@Override
+	public Status failover(final String host, final int port, final boolean isForce, final int timeout){
+		return serverOperations.failover(host, port, timeout);
+	}
+
+	@Override
+	public Status failover(final int timeout){
+		return serverOperations.failover(timeout);
 	}
 
 	@Override
@@ -1035,33 +1154,13 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public List<String> configGet(final String parameter){
-		return serverOperations.configGet(parameter);
-	}
-
-	@Override
-	public Status configResetStat(){
-		return serverOperations.configResetStat();
-	}
-
-	@Override
-	public Status configRewrite(){
-		return serverOperations.configRewrite();
-	}
-
-	@Override
-	public Status configSet(final String parameter, final String value){
-		return serverOperations.configSet(parameter, value);
-	}
-
-	@Override
-	public Long dbSize(){
-		return serverOperations.dbSize();
-	}
-
-	@Override
 	public Status flushAll(){
 		return serverOperations.flushAll();
+	}
+
+	@Override
+	public Status flushAll(final FlushMode mode){
+		return serverOperations.flushAll(mode);
 	}
 
 	@Override
@@ -1070,13 +1169,18 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Info info(final Info.Section section){
-		return serverOperations.info(section);
+	public Status flushDb(final FlushMode mode){
+		return serverOperations.flushDb(mode);
 	}
 
 	@Override
 	public Info info(){
 		return serverOperations.info();
+	}
+
+	@Override
+	public Info info(final Info.Section section){
+		return serverOperations.info(section);
 	}
 
 	@Override
@@ -1090,18 +1194,68 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
+	public String memoryMallocStats(){
+		return serverOperations.memoryMallocStats();
+	}
+
+	@Override
+	public Status memoryPurge(){
+		return serverOperations.memoryPurge();
+	}
+
+	@Override
+	public MemoryStats memoryStats(){
+		return serverOperations.memoryStats();
+	}
+
+	@Override
+	public Long memoryUsage(final String key){
+		return serverOperations.memoryUsage(key);
+	}
+
+	@Override
+	public Long memoryUsage(final String key, final int samples){
+		return serverOperations.memoryUsage(key, samples);
+	}
+
+	@Override
+	public List<Module> moduleList(){
+		return serverOperations.moduleList();
+	}
+
+	@Override
+	public Status moduleLoad(final String path, final String... arguments){
+		return serverOperations.moduleLoad(path, arguments);
+	}
+
+	@Override
+	public Status moduleUnLoad(final String name){
+		return serverOperations.moduleUnLoad(name);
+	}
+
+	@Override
 	public void monitor(final RedisMonitor redisMonitor){
 		serverOperations.monitor(redisMonitor);
 	}
 
 	@Override
-	public Object pSync(final String masterRunId, final long offset){
-		return serverOperations.pSync(masterRunId, offset);
+	public Object pSync(final String replicationId, final long offset){
+		return serverOperations.pSync(replicationId, offset);
+	}
+
+	@Override
+	public void sync(){
+		serverOperations.sync();
 	}
 
 	@Override
 	public Status replicaOf(final String host, final int port){
 		return serverOperations.replicaOf(host, port);
+	}
+
+	@Override
+	public Status slaveOf(final String host, final int port){
+		return serverOperations.slaveOf(host, port);
 	}
 
 	@Override
@@ -1115,8 +1269,8 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public void shutdown(){
-		serverOperations.shutdown();
+	public Status shutdown(){
+		return serverOperations.shutdown();
 	}
 
 	@Override
@@ -1125,18 +1279,28 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Status slaveOf(final String host, final int port){
-		return serverOperations.slaveOf(host, port);
+	public List<SlowLog> slowLogGet(){
+		return serverOperations.slowLogGet();
 	}
 
 	@Override
-	public Object slowLog(final SlowLogCommand command, final String... arguments){
-		return serverOperations.slowLog(command, arguments);
+	public List<SlowLog> slowLogGet(final long count){
+		return serverOperations.slowLogGet(count);
 	}
 
 	@Override
-	public Object sync(){
-		return serverOperations.sync();
+	public Long slowLogLen(){
+		return serverOperations.slowLogLen();
+	}
+
+	@Override
+	public Status slowLogReset(){
+		return serverOperations.slowLogReset();
+	}
+
+	@Override
+	public Status swapdb(final int db1, final int db2){
+		return serverOperations.swapdb(db1, db2);
 	}
 
 	@Override
@@ -1895,14 +2059,8 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public void discard(){
-		try{
-			transactionOperations.discard();
-		}catch(Exception e){
-			throw e;
-		}finally{
-			txResults.clear();
-		}
+	public Status multi(){
+		return transactionOperations.multi();
 	}
 
 	@Override
@@ -1917,8 +2075,14 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Status multi(){
-		return transactionOperations.multi();
+	public void discard(){
+		try{
+			transactionOperations.discard();
+		}catch(Exception e){
+			throw e;
+		}finally{
+			txResults.clear();
+		}
 	}
 
 	@Override

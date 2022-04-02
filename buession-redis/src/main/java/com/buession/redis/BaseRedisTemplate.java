@@ -44,7 +44,9 @@ import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.Info;
 import com.buession.redis.core.ListPosition;
+import com.buession.redis.core.MemoryStats;
 import com.buession.redis.core.MigrateOperation;
+import com.buession.redis.core.Module;
 import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.RedisClusterServer;
@@ -52,8 +54,8 @@ import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.ScriptFlushMode;
-import com.buession.redis.core.SlowLogCommand;
+import com.buession.redis.core.FlushMode;
+import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.AclUser;
@@ -311,11 +313,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Status select(final int db){
 		return execute((client)->client.select(db));
-	}
-
-	@Override
-	public Status swapdb(final int db1, final int db2){
-		return execute((client)->client.swapdb(db1, db2));
 	}
 
 	@Override
@@ -1719,7 +1716,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Status scriptFlush(final ScriptFlushMode mode){
+	public Status scriptFlush(final FlushMode mode){
 		return execute((client)->client.scriptFlush(mode));
 	}
 
@@ -1874,6 +1871,235 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public Status failover(){
+		return execute((client)->client.failover());
+	}
+
+	@Override
+	public Status failover(final String host, final int port){
+		return execute((client)->client.failover(host, port));
+	}
+
+	@Override
+	public Status failover(final byte[] host, final int port){
+		return execute((client)->client.failover(host, port));
+	}
+
+	@Override
+	public Status failover(final String host, final int port, final int timeout){
+		return execute((client)->client.failover(host, port, timeout));
+	}
+
+	@Override
+	public Status failover(final byte[] host, final int port, final int timeout){
+		return execute((client)->client.failover(host, port, timeout));
+	}
+
+	@Override
+	public Status failover(final String host, final int port, final boolean isForce, final int timeout){
+		return execute((client)->client.failover(host, port, isForce, timeout));
+	}
+
+	@Override
+	public Status failover(final byte[] host, final int port, final boolean isForce, final int timeout){
+		return execute((client)->client.failover(host, port, isForce, timeout));
+	}
+
+	@Override
+	public Status failover(final int timeout){
+		return execute((client)->client.failover(timeout));
+	}
+
+	@Override
+	public Status flushAll(){
+		return execute((client)->client.flushAll());
+	}
+
+	@Override
+	public Status flushAll(final FlushMode mode){
+		return execute((client)->client.flushAll(mode));
+	}
+
+	@Override
+	public Status flushDb(){
+		return execute((client)->client.flushDb());
+	}
+
+	@Override
+	public Status flushDb(final FlushMode mode){
+		return execute((client)->client.flushDb(mode));
+	}
+
+	@Override
+	public Info info(){
+		return execute((client)->client.info());
+	}
+
+	@Override
+	public Info info(final Info.Section section){
+		return execute((client)->client.info(section));
+	}
+
+	@Override
+	public Long lastSave(){
+		return execute((client)->client.lastSave());
+	}
+
+	@Override
+	public String memoryDoctor(){
+		return execute((client)->client.memoryDoctor());
+	}
+
+	@Override
+	public String memoryMallocStats(){
+		return execute((client)->client.memoryMallocStats());
+	}
+
+	@Override
+	public Status memoryPurge(){
+		return execute((client)->client.memoryPurge());
+	}
+
+	@Override
+	public MemoryStats memoryStats(){
+		return execute((client)->client.memoryStats());
+	}
+
+	@Override
+	public Long memoryUsage(final String key){
+		return execute((client)->client.memoryUsage(key));
+	}
+
+	@Override
+	public Long memoryUsage(final byte[] key){
+		return execute((client)->client.memoryUsage(key));
+	}
+
+	@Override
+	public Long memoryUsage(final String key, final int samples){
+		return execute((client)->client.memoryUsage(key, samples));
+	}
+
+	@Override
+	public Long memoryUsage(final byte[] key, final int samples){
+		return execute((client)->client.memoryUsage(key, samples));
+	}
+
+	@Override
+	public List<Module> moduleList(){
+		return execute((client)->client.moduleList());
+	}
+
+	@Override
+	public Status moduleLoad(final String path, final String... arguments){
+		return execute((client)->client.moduleLoad(path, arguments));
+	}
+
+	@Override
+	public Status moduleLoad(final byte[] path, final byte[]... arguments){
+		return execute((client)->client.moduleLoad(path, arguments));
+	}
+
+	@Override
+	public Status moduleUnLoad(final String name){
+		return execute((client)->client.moduleUnLoad(name));
+	}
+
+	@Override
+	public Status moduleUnLoad(final byte[] name){
+		return execute((client)->client.moduleUnLoad(name));
+	}
+
+	@Override
+	public void monitor(final RedisMonitor redisMonitor){
+		execute((client)->{
+			client.monitor(redisMonitor);
+			return null;
+		});
+	}
+
+	@Override
+	public Object pSync(final String replicationId, final long offset){
+		return execute((client)->client.pSync(replicationId, offset));
+	}
+
+	@Override
+	public Object pSync(final byte[] replicationId, final long offset){
+		return execute((client)->client.pSync(replicationId, offset));
+	}
+
+	@Override
+	public void sync(){
+		execute((client)->{
+			client.sync();
+			return null;
+		});
+	}
+
+	@Override
+	public Status replicaOf(final String host, final int port){
+		return execute((client)->client.replicaOf(host, port));
+	}
+
+	@Override
+	public Status slaveOf(final String host, final int port){
+		return execute((client)->client.slaveOf(host, port));
+	}
+
+	@Override
+	public Role role(){
+		return execute((client)->client.role());
+	}
+
+	@Override
+	public Status save(){
+		return execute((client)->client.save());
+	}
+
+	@Override
+	public Status shutdown(){
+		return execute((client)->client.shutdown());
+	}
+
+	@Override
+	public void shutdown(final boolean save){
+		execute((client)->{
+			client.shutdown(save);
+			return null;
+		});
+	}
+
+	@Override
+	public List<SlowLog> slowLogGet(){
+		return execute((client)->client.slowLogGet());
+	}
+
+	@Override
+	public List<SlowLog> slowLogGet(final long count){
+		return execute((client)->client.slowLogGet(count));
+	}
+
+	@Override
+	public Long slowLogLen(){
+		return execute((client)->client.slowLogLen());
+	}
+
+	@Override
+	public Status slowLogReset(){
+		return execute((client)->client.slowLogReset());
+	}
+
+	@Override
+	public Status swapdb(final int db1, final int db2){
+		return execute((client)->client.swapdb(db1, db2));
+	}
+
+	@Override
+	public RedisServerTime time(){
+		return execute((client)->client.time());
+	}
+
+	@Override
 	public Status clientKill(final String host, final int port){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 		return execute((client)->client.clientKill(host, port), ProtocolCommand.CLIENT_KILL, args);
@@ -1928,116 +2154,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Status clientUnblock(final int clientId, final ClientUnblockType type){
 		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
 		return execute((client)->client.clientUnblock(clientId, type), ProtocolCommand.CLIENT_UNBLOCK, args);
-	}
-
-	@Override
-	public Status flushAll(){
-		return execute((client)->client.flushAll(), ProtocolCommand.FLUSHALL);
-	}
-
-	@Override
-	public Status flushDb(){
-		return execute((client)->client.flushDb(), ProtocolCommand.FLUSHDB);
-	}
-
-	@Override
-	public Info info(final Info.Section section){
-		return execute((client)->client.info(section), ProtocolCommand.INFO, new CommandArguments("section", section));
-	}
-
-	@Override
-	public Info info(){
-		return execute((client)->client.info(), ProtocolCommand.INFO);
-	}
-
-	@Override
-	public Long lastSave(){
-		return execute((client)->client.lastSave(), ProtocolCommand.LASTSAVE);
-	}
-
-	@Override
-	public String memoryDoctor(){
-		return execute((client)->client.memoryDoctor(), ProtocolCommand.MEMORY_DOCTOR);
-	}
-
-	@Override
-	public void monitor(final RedisMonitor redisMonitor){
-		execute((client)->{
-			client.monitor(redisMonitor);
-			return null;
-		}, ProtocolCommand.MEMORY_DOCTOR, new CommandArguments("redisMonitor", redisMonitor));
-	}
-
-	@Override
-	public Status replicaOf(final String host, final int port){
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		return execute((client)->client.replicaOf(host, port), ProtocolCommand.REPLICAOF, args);
-	}
-
-	@Override
-	public Role role(){
-		return execute((client)->client.role(), ProtocolCommand.ROLE);
-	}
-
-	@Override
-	public Status save(){
-		return execute((client)->client.save(), ProtocolCommand.SAVE);
-	}
-
-	@Override
-	public void shutdown(){
-		execute((client)->{
-			client.shutdown();
-			return null;
-		}, ProtocolCommand.SHUTDOWN);
-	}
-
-	@Override
-	public void shutdown(final boolean save){
-		execute((client)->{
-			client.shutdown(save);
-			return null;
-		}, ProtocolCommand.SHUTDOWN, new CommandArguments("save", save));
-	}
-
-	@Override
-	public Status slaveOf(final String host, final int port){
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		return execute((client)->client.slaveOf(host, port), ProtocolCommand.SLAVEOF, args);
-	}
-
-	@Override
-	public Object slowLog(final SlowLogCommand command, final String... arguments){
-		final CommandArguments args = CommandArguments.create("command", command).put("arguments", arguments);
-		return execute((client)->client.slowLog(command, arguments), ProtocolCommand.SLOWLOG, args);
-	}
-
-	@Override
-	public Object slowLog(final SlowLogCommand command, final byte[]... arguments){
-		final CommandArguments args = CommandArguments.create("command", command).put("arguments", arguments);
-		return execute((client)->client.slowLog(command, arguments), ProtocolCommand.SLOWLOG, args);
-	}
-
-	@Override
-	public Object sync(){
-		return execute((client)->client.sync(), ProtocolCommand.SYNC);
-	}
-
-	@Override
-	public Object pSync(final String masterRunId, final long offset){
-		final CommandArguments args = CommandArguments.create("masterRunId", masterRunId).put("offset", offset);
-		return execute((client)->client.pSync(masterRunId, offset), ProtocolCommand.PSYNC, args);
-	}
-
-	@Override
-	public Object pSync(final byte[] masterRunId, final long offset){
-		final CommandArguments args = CommandArguments.create("masterRunId", masterRunId).put("offset", offset);
-		return execute((client)->client.pSync(masterRunId, offset), ProtocolCommand.PSYNC, args);
-	}
-
-	@Override
-	public RedisServerTime time(){
-		return execute((client)->client.time(), ProtocolCommand.TIME);
 	}
 
 	@Override
@@ -3988,36 +4104,36 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public void discard(){
-		execute((client)->{
-			client.discard();
-			return null;
-		}, ProtocolCommand.DISCARD);
+	public Status multi(){
+		return execute((client)->client.multi());
 	}
 
 	@Override
 	public List<Object> exec(){
-		return execute((client)->client.exec(), ProtocolCommand.EXEC);
+		return execute((client)->client.exec());
 	}
 
 	@Override
-	public Status multi(){
-		return execute((client)->client.multi(), ProtocolCommand.MULTI);
-	}
-
-	@Override
-	public Status unwatch(){
-		return execute((client)->client.unwatch(), ProtocolCommand.UNWATCH);
+	public void discard(){
+		execute((client)->{
+			client.discard();
+			return null;
+		});
 	}
 
 	@Override
 	public Status watch(final String... keys){
-		return execute((client)->client.watch(makeRawKeys(keys)), ProtocolCommand.WATCH);
+		return execute((client)->client.watch(makeRawKeys(keys)));
 	}
 
 	@Override
 	public Status watch(final byte[]... keys){
-		return execute((client)->client.watch(makeByteKeys(keys)), ProtocolCommand.WATCH);
+		return execute((client)->client.watch(makeByteKeys(keys)));
+	}
+
+	@Override
+	public Status unwatch(){
+		return execute((client)->client.unwatch());
 	}
 
 }

@@ -107,10 +107,4 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 		return execute(CommandNotSupported.ALL, ProtocolCommand.SELECT, args);
 	}
 
-	@Override
-	public Status swapdb(final int db1, final int db2){
-		final CommandArguments args = CommandArguments.create("db1", db1).put("db2", db2);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.SWAPDB, args);
-	}
-
 }

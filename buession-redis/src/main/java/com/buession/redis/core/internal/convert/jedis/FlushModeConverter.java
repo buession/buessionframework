@@ -22,18 +22,34 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.operations;
+package com.buession.redis.core.internal.convert.jedis;
 
-import com.buession.redis.core.command.TransactionCommands;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.FlushMode;
 
 /**
- * 事务命令操作接口
- *
- * @param <CMD>
- * 		Jedis 原始命令对象
+ * {@link FlushMode} 和 jedis {@link redis.clients.jedis.args.FlushMode} 互转
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface TransactionOperations<CMD> extends TransactionCommands, RedisOperations<CMD> {
+public interface FlushModeConverter<S, T> extends Converter<S, T> {
+
+	final class FlushModeJedisConverter
+			implements ListPositionConverter<FlushMode, redis.clients.jedis.args.FlushMode> {
+
+		@Override
+		public redis.clients.jedis.args.FlushMode convert(final FlushMode source){
+			switch(source){
+				case ASYNC:
+					return redis.clients.jedis.args.FlushMode.ASYNC;
+				case SYNC:
+					return redis.clients.jedis.args.FlushMode.SYNC;
+				default:
+					return null;
+			}
+		}
+
+	}
 
 }

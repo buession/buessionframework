@@ -24,23 +24,153 @@
  */
 package com.buession.redis.core.operations;
 
+import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.command.ServerCommands;
 
+import java.util.Date;
+
 /**
  * 服务端运算
  *
- * <p>详情说明
- * <a href="http://www.redis.cn/commands.html#server" target="_blank">http://www.redis.cn/commands.html#server</a></p>
+ * <p>详情说明 <a href="http://www.redis.cn/commands.html#server" target="_blank">http://www.redis.cn/commands.html#server</a></p>
  *
  * @author Yong.Teng
  */
 public interface ServerOperations extends ServerCommands, RedisOperations {
 
 	/**
+	 * Create an ACL user with the specified rules or modify the rules of an existing user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param rule
+	 * 		the specified rule
+	 *
+	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
+	 */
+	default Status aclSetUser(final String username, final String rule){
+		return aclSetUser(username, new String[]{rule});
+	}
+
+	/**
+	 * Create an ACL user with the specified rules or modify the rules of an existing user
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
+	 *
+	 * @param username
+	 * 		用户名
+	 * @param rule
+	 * 		the specified rule
+	 *
+	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
+	 */
+	default Status aclSetUser(final byte[] username, final byte[] rule){
+		return aclSetUser(username, new byte[][]{rule});
+	}
+
+	/**
+	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/failover/" target="_blank">https://redis.io/commands/failover/</a></p>
+	 *
+	 * @param server
+	 * 		Redis 主机
+	 *
+	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
+	 */
+	default Status failover(final RedisNode server){
+		Assert.isNull(server, "Redis server cloud not be null");
+		return failover(server.getHost(), server.getPort());
+	}
+
+	/**
+	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/failover/" target="_blank">https://redis.io/commands/failover/</a></p>
+	 *
+	 * @param server
+	 * 		Redis 主机
+	 * @param timeout
+	 * 		超时（单位：毫秒）
+	 *
+	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
+	 */
+	default Status failover(final RedisNode server, final int timeout){
+		Assert.isNull(server, "Redis server cloud not be null");
+		return failover(server.getHost(), server.getPort(), timeout);
+	}
+
+	/**
+	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/failover/" target="_blank">https://redis.io/commands/failover/</a></p>
+	 *
+	 * @param server
+	 * 		Redis 主机
+	 * @param isForce
+	 * 		是否强制
+	 * @param timeout
+	 * 		超时（单位：毫秒）
+	 *
+	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
+	 */
+	default Status failover(final RedisNode server, final boolean isForce, final int timeout){
+		Assert.isNull(server, "Redis server cloud not be null");
+		return failover(server.getHost(), server.getPort(), isForce, timeout);
+	}
+
+	/**
+	 * 获取最近一次 Redis 成功将数据保存到磁盘上的时间
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/persistence/lastsave.html" target="_blank">http://redisdoc.com/persistence/lastsave.html</a></p>
+	 *
+	 * @return 最近一次成功将数据保存到磁盘上的时间
+	 */
+	default Date lastSaveAt(){
+		return new Date(lastSave());
+	}
+
+	/**
+	 * Returns information about the modules loaded to the server
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/module-load/" target="_blank">https://redis.io/commands/module-load/</a></p>
+	 *
+	 * @param path
+	 * 		Module Path
+	 * @param arg
+	 * 		Argument
+	 *
+	 * @return A list of loaded modules
+	 */
+	default Status moduleLoad(final String path, final String arg){
+		return moduleLoad(path, new String[]{arg});
+	}
+
+	/**
+	 * Returns information about the modules loaded to the server
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/module-load/" target="_blank">https://redis.io/commands/module-load/</a></p>
+	 *
+	 * @param path
+	 * 		Module Path
+	 * @param arg
+	 * 		Argument
+	 *
+	 * @return A list of loaded modules
+	 */
+	default Status moduleLoad(final byte[] path, final byte[] arg){
+		return moduleLoad(path, new byte[][]{arg});
+	}
+
+	/**
 	 * 用于在 Redis 运行时动态地修改复制(replication)功能的行为；
 	 * 可以将当前服务器转变为指定服务器的从属服务器(slave server)
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/replicaof/" target="_blank">https://redis.io/commands/replicaof/</a></p>
 	 *
 	 * @param host
 	 * 		Redis Slave Server 主机地址
@@ -52,8 +182,27 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	}
 
 	/**
+	 * 可以在线修改当前服务器的复制设置
+	 * 如果当前服务器已经是副本服务器，会将当前服务器转变为某一服务器的副本服务器；
+	 * 如果当前服务器已经是某个主服务器的副本服务器，那么将使当前服务器停止对原主服务器的同步，丢弃旧数据集，转而开始对新主服务器进行同步
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/replicaof/" target="_blank">https://redis.io/commands/replicaof/</a></p>
+	 *
+	 * @param server
+	 * 		Redis 主机
+	 *
+	 * @return 操作结果
+	 */
+	default Status replicaOf(final RedisNode server){
+		Assert.isNull(server, "Redis server cloud not be null.");
+		return replicaOf(server.getHost(), server.getPort());
+	}
+
+	/**
 	 * 用于在 Redis 运行时动态地修改复制(replication)功能的行为；
 	 * 可以将当前服务器转变为指定服务器的从属服务器(slave server)
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/replication/slaveof.html" target="_blank">http://redisdoc.com/replication/slaveof.html</a></p>
 	 *
 	 * @param host
 	 * 		Redis Slave Server 主机地址
@@ -62,6 +211,22 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	 */
 	default Status slaveOf(final String host){
 		return slaveOf(host, RedisNode.DEFAULT_PORT);
+	}
+
+	/**
+	 * 用于在 Redis 运行时动态地修改复制(replication)功能的行为；
+	 * 可以将当前服务器转变为指定服务器的从属服务器(slave server)
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/replication/slaveof.html" target="_blank">http://redisdoc.com/replication/slaveof.html</a></p>
+	 *
+	 * @param server
+	 * 		Redis Slave Server 主机地址
+	 *
+	 * @return 总是返回 Status.SUCCESS
+	 */
+	default Status slaveOf(final RedisNode server){
+		Assert.isNull(server, "Redis server cloud not be null.");
+		return replicaOf(server.getHost(), server.getPort());
 	}
 
 }

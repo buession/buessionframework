@@ -55,7 +55,6 @@ import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.ScanResult;
-import com.buession.redis.core.SlowLogCommand;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.AclUser;
@@ -835,28 +834,58 @@ public class JedisSentinelClient extends AbstractJedisRedisClient implements Red
 	}
 
 	@Override
-	public List<byte[]> configGet(final byte[] parameter){
-		return serverOperations.configGet(parameter);
-	}
-
-	@Override
-	public Status clientSetName(final byte[] name){
-		return serverOperations.clientSetName(name);
-	}
-
-	@Override
 	public Status configSet(final byte[] parameter, final byte[] value){
 		return serverOperations.configSet(parameter, value);
 	}
 
 	@Override
-	public Object pSync(final byte[] masterRunId, final long offset){
-		return serverOperations.pSync(masterRunId, offset);
+	public List<byte[]> configGet(final byte[] parameter){
+		return serverOperations.configGet(parameter);
 	}
 
 	@Override
-	public Object slowLog(final SlowLogCommand command, final byte[]... arguments){
-		return serverOperations.slowLog(command, arguments);
+	public Status failover(final byte[] host, final int port){
+		return serverOperations.failover(host, port);
+	}
+
+	@Override
+	public Status failover(final byte[] host, final int port, final int timeout){
+		return serverOperations.failover(host, port, timeout);
+	}
+
+	@Override
+	public Status failover(final byte[] host, final int port, final boolean isForce, final int timeout){
+		return serverOperations.failover(host, port, isForce, timeout);
+	}
+
+	@Override
+	public Long memoryUsage(final byte[] key){
+		return serverOperations.memoryUsage(key);
+	}
+
+	@Override
+	public Long memoryUsage(final byte[] key, final int samples){
+		return serverOperations.memoryUsage(key, samples);
+	}
+
+	@Override
+	public Status moduleLoad(final byte[] path, final byte[]... arguments){
+		return serverOperations.moduleLoad(path, arguments);
+	}
+
+	@Override
+	public Status moduleUnLoad(final byte[] name){
+		return serverOperations.moduleUnLoad(name);
+	}
+
+	@Override
+	public Object pSync(final byte[] replicationId, final long offset){
+		return serverOperations.pSync(replicationId, offset);
+	}
+
+	@Override
+	public Status clientSetName(final byte[] name){
+		return serverOperations.clientSetName(name);
 	}
 
 	@Override

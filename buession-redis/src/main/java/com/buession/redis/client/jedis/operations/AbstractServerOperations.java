@@ -31,13 +31,20 @@ import com.buession.redis.client.operations.ServerOperations;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.ClientReply;
 import com.buession.redis.core.ClientUnblockType;
-import com.buession.redis.core.Role;
+import com.buession.redis.core.Module;
+import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.core.internal.convert.InfoConverter;
+import com.buession.redis.core.internal.convert.RedisServerTimeConverter;
 import com.buession.redis.core.internal.convert.jedis.AclLogConverter;
 import com.buession.redis.core.internal.convert.jedis.AclUserConverter;
+import com.buession.redis.core.internal.convert.jedis.FlushModeConverter;
+import com.buession.redis.core.internal.convert.jedis.ModuleConverter;
+import com.buession.redis.core.internal.convert.jedis.SlowLogConverter;
 import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.AccessControlLogEntry;
+import redis.clients.jedis.util.Slowlog;
 
 /**
  * Jedis 服务端命令操作抽象类
@@ -54,6 +61,18 @@ public abstract class AbstractServerOperations<CMD> extends AbstractJedisRedisOp
 
 	protected final static ListConverter<AccessControlLogEntry, AclLog> LIST_ACL_LOG_EXPOSE_CONVERTER = new ListConverter<>(
 			new AclLogConverter.AclLogExposeConverter());
+
+	protected final static FlushModeConverter.FlushModeJedisConverter FLUSH_MODE_JEDIS_CONVERTER = new FlushModeConverter.FlushModeJedisConverter();
+
+	protected final static InfoConverter INFO_CONVERTER = new InfoConverter();
+
+	protected final static ListConverter<redis.clients.jedis.Module, Module> LIST_MODULE_EXPOSE_CONVERTER = new ListConverter<>(
+			new ModuleConverter.ModuleExposeConverter());
+
+	protected final static ListConverter<Slowlog, SlowLog> LIST_SLOW_LOG_EXPOSE_CONVERTER = new ListConverter<>(
+			new SlowLogConverter.SlowLogExposeConverter());
+
+	protected final static RedisServerTimeConverter REDIS_SERVER_TIME_CONVERTER = new RedisServerTimeConverter();
 
 	public AbstractServerOperations(final JedisRedisClient client){
 		super(client);
@@ -85,37 +104,5 @@ public abstract class AbstractServerOperations<CMD> extends AbstractJedisRedisOp
 		return clientUnblock(clientId);
 	}
 
-	@Override
-	public Object pSync(final String masterRunId, final long offset){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.PSYNC, CommandNotSupported.ALL,
-				client.getConnection());
-		return null;
-	}
-
-	@Override
-	public Object pSync(final byte[] masterRunId, final long offset){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.PSYNC, CommandNotSupported.ALL,
-				client.getConnection());
-		return null;
-	}
-
-	@Override
-	public Status replicaOf(final String host, final int port){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.REPLICAOF, CommandNotSupported.ALL,
-				client.getConnection());
-		return null;
-	}
-
-	@Override
-	public Role role(){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.ROLE, CommandNotSupported.ALL,
-				client.getConnection());
-		return null;
-	}
-
-	@Override
-	public void shutdown(final boolean save){
-		shutdown();
-	}
 
 }

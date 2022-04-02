@@ -24,34 +24,28 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
-import com.buession.redis.client.jedis.JedisClientUtils;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Client;
-import com.buession.redis.core.Constants;
+import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.Info;
+import com.buession.redis.core.MemoryStats;
+import com.buession.redis.core.Module;
 import com.buession.redis.core.RedisMonitor;
 import com.buession.redis.core.RedisServerTime;
-import com.buession.redis.core.SlowLogCommand;
+import com.buession.redis.core.Role;
+import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.InfoConverter;
 import com.buession.redis.core.internal.convert.OkStatusConverter;
-import com.buession.redis.core.internal.convert.RedisServerTimeConverter;
-import com.buession.redis.exception.NotSupportedTransactionCommandException;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.utils.ClientUtil;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.JedisCluster;
-import redis.clients.jedis.JedisMonitor;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -214,6 +208,275 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	}
 
 	@Override
+	public Status failover(final byte[] host, final int port){
+		return failover(SafeEncoder.encode(host), port);
+	}
+
+	@Override
+	public Status failover(final String host, final int port, final int timeout){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("timeout", timeout);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.FAILOVER, args);
+	}
+
+	@Override
+	public Status failover(final byte[] host, final int port, final int timeout){
+		return failover(SafeEncoder.encode(host), port, timeout);
+	}
+
+	@Override
+	public Status failover(final String host, final int port, final boolean isForce, final int timeout){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("isForce", isForce)
+				.put("timeout", timeout);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.FAILOVER, args);
+	}
+
+	@Override
+	public Status failover(final byte[] host, final int port, final boolean isForce, final int timeout){
+		return failover(SafeEncoder.encode(host), port, isForce, timeout);
+	}
+
+	@Override
+	public Status failover(final int timeout){
+		final CommandArguments args = CommandArguments.create("timeout", timeout);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.FAILOVER, args);
+	}
+
+	@Override
+	public Status flushAll(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.FLUSHALL);
+	}
+
+	@Override
+	public Status flushAll(final FlushMode mode){
+		final CommandArguments args = CommandArguments.create("mode", mode);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.FLUSHALL, args);
+	}
+
+	@Override
+	public Status flushDb(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.FLUSHDB);
+	}
+
+	@Override
+	public Status flushDb(final FlushMode mode){
+		final CommandArguments args = CommandArguments.create("mode", mode);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.FLUSHDB, args);
+	}
+
+	@Override
+	public Info info(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.INFO);
+	}
+
+	@Override
+	public Info info(final Info.Section section){
+		final CommandArguments args = CommandArguments.create("section", section);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.INFO, args);
+	}
+
+	@Override
+	public Long lastSave(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.LASTSAVE);
+	}
+
+	@Override
+	public String memoryDoctor(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MEMORY_DOCTOR);
+	}
+
+	@Override
+	public String memoryMallocStats(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MEMORY);
+	}
+
+	@Override
+	public Status memoryPurge(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MEMORY);
+	}
+
+	@Override
+	public MemoryStats memoryStats(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MEMORY);
+	}
+
+	@Override
+	public Long memoryUsage(final String key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.MEMORY, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.MEMORY, args);
+		}else{
+			return execute((cmd)->cmd.memoryUsage(key), ProtocolCommand.MEMORY, args);
+		}
+	}
+
+	@Override
+	public Long memoryUsage(final byte[] key){
+		final CommandArguments args = CommandArguments.create("key", key);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.MEMORY, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.MEMORY, args);
+		}else{
+			return execute((cmd)->cmd.memoryUsage(key), ProtocolCommand.MEMORY, args);
+		}
+	}
+
+	@Override
+	public Long memoryUsage(final String key, final int samples){
+		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.MEMORY, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.MEMORY, args);
+		}else{
+			return execute((cmd)->cmd.memoryUsage(key, samples), ProtocolCommand.MEMORY, args);
+		}
+	}
+
+	@Override
+	public Long memoryUsage(final byte[] key, final int samples){
+		final CommandArguments args = CommandArguments.create("key", key).put("samples", samples);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.MEMORY, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.MEMORY, args);
+		}else{
+			return execute((cmd)->cmd.memoryUsage(key, samples), ProtocolCommand.MEMORY, args);
+		}
+	}
+
+	@Override
+	public List<Module> moduleList(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE);
+	}
+
+	@Override
+	public Status moduleLoad(final String path, final String... arguments){
+		final CommandArguments args = CommandArguments.create("path", path).put("arguments", arguments);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE, args);
+	}
+
+	@Override
+	public Status moduleLoad(final byte[] path, final byte[]... arguments){
+		final CommandArguments args = CommandArguments.create("path", path).put("arguments", arguments);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE, args);
+	}
+
+	@Override
+	public Status moduleUnLoad(final String name){
+		final CommandArguments args = CommandArguments.create("name", name);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE, args);
+	}
+
+	@Override
+	public Status moduleUnLoad(final byte[] name){
+		final CommandArguments args = CommandArguments.create("name", name);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE, args);
+	}
+
+	@Override
+	public void monitor(final RedisMonitor redisMonitor){
+		final CommandArguments args = CommandArguments.create("redisMonitor", redisMonitor);
+		execute(CommandNotSupported.ALL, ProtocolCommand.MONITOR, args);
+	}
+
+	@Override
+	public Object pSync(final String replicationId, final long offset){
+		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.PSYNC, args);
+	}
+
+	@Override
+	public Object pSync(final byte[] replicationId, final long offset){
+		final CommandArguments args = CommandArguments.create("replicationId", replicationId).put("offset", offset);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.PSYNC, args);
+	}
+
+	@Override
+	public void sync(){
+		execute(CommandNotSupported.ALL, ProtocolCommand.SYNC);
+	}
+
+	@Override
+	public Status replicaOf(final String host, final int port){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.REPLICAOF, args);
+	}
+
+	@Override
+	public Status slaveOf(final String host, final int port){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.SLAVEOF, args);
+	}
+
+	@Override
+	public Role role(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ROLE);
+	}
+
+	@Override
+	public Status save(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.SAVE);
+	}
+
+	@Override
+	public Status shutdown(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.SHUTDOWN);
+	}
+
+	@Override
+	public void shutdown(final boolean save){
+		final CommandArguments args = CommandArguments.create("save", save);
+		execute(CommandNotSupported.ALL, ProtocolCommand.SHUTDOWN, args);
+	}
+
+	@Override
+	public List<SlowLog> slowLogGet(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.SLOWLOG);
+	}
+
+	@Override
+	public List<SlowLog> slowLogGet(final long count){
+		final CommandArguments args = CommandArguments.create("count", count);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.SLOWLOG, args);
+	}
+
+	@Override
+	public Long slowLogLen(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.SLOWLOG);
+	}
+
+	@Override
+	public Status slowLogReset(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.SLOWLOG);
+	}
+
+	@Override
+	public Status swapdb(final int db1, final int db2){
+		final CommandArguments args = CommandArguments.create("db1", db1).put("db2", db2);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.SWAPDB, args);
+	}
+
+	@Override
+	public RedisServerTime time(){
+		if(isPipeline()){
+			return transactionExecute((cmd)->newJedisResult(getPipeline().time(), REDIS_SERVER_TIME_CONVERTER),
+					ProtocolCommand.TIME);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().time(), REDIS_SERVER_TIME_CONVERTER),
+					ProtocolCommand.TIME);
+		}else{
+			return execute((cmd)->cmd.time(), REDIS_SERVER_TIME_CONVERTER, ProtocolCommand.TIME);
+		}
+	}
+
+	@Override
 	public Status clientKill(final String host, final int port){
 		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_KILL,
 				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
@@ -253,166 +516,6 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_SETNAME,
 				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
 		return execute((cmd)->cmd.clientSetname(name), new OkStatusConverter());
-	}
-
-	@Override
-	public Status flushAll(){
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().flushAll(), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().flushAll(), converter));
-		}else{
-			return execute((cmd)->cmd.flushAll(), converter);
-		}
-	}
-
-	@Override
-	public Status flushDb(){
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().flushDB(), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().flushDB(), converter));
-		}else{
-			return execute((cmd)->cmd.flushDB(), converter);
-		}
-	}
-
-	@Override
-	public Info info(final Info.Section section){
-		final InfoConverter converter = new InfoConverter();
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().info(section.name().toLowerCase()),
-					converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().info(section.name().toLowerCase()),
-					converter));
-		}else{
-			return execute((cmd)->cmd.info(section.name().toLowerCase()), converter);
-		}
-	}
-
-	@Override
-	public Info info(){
-		final InfoConverter converter = new InfoConverter();
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().info(), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().info(), converter));
-		}else{
-			return execute((cmd)->cmd.info(), converter);
-		}
-	}
-
-	@Override
-	public Long lastSave(){
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().lastsave()));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().lastsave()));
-		}else{
-			return execute((cmd)->cmd.lastsave());
-		}
-	}
-
-	@Override
-	public String memoryDoctor(){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.MEMORY_DOCTOR,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.memoryDoctor());
-	}
-
-	@Override
-	public void monitor(final RedisMonitor redisMonitor){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.MONITOR,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		execute((cmd)->{
-			cmd.monitor(new JedisMonitor() {
-
-				@Override
-				public void onCommand(final String command){
-					redisMonitor.onCommand(command);
-				}
-			});
-			return null;
-		});
-	}
-
-	@Override
-	public Status save(){
-		final OkStatusConverter converter = new OkStatusConverter();
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().save(), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().save(), converter));
-		}else{
-			return execute((cmd)->cmd.save(), converter);
-		}
-	}
-
-	@Override
-	public void shutdown(){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SHUTDOWN,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		execute((cmd)->{
-			cmd.shutdown();
-			return null;
-		});
-	}
-
-	@Override
-	public Status slaveOf(final String host, final int port){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SLAVEOF,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.slaveof(host, port), new OkStatusConverter());
-	}
-
-	@Override
-	public Object slowLog(final SlowLogCommand command, final String... arguments){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SLOWLOG,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->JedisClientUtils.slowLog(command, cmd, arguments));
-	}
-
-	@Override
-	public Object slowLog(final SlowLogCommand command, final byte[]... arguments){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.SLOWLOG,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->JedisClientUtils.slowLog(command, cmd, arguments));
-	}
-
-	@Override
-	public Object sync(){
-		if(isPipeline()){
-			return transactionExecute((cmd)->{
-				getPipeline().sync();
-				return null;
-			});
-		}else if(isTransaction()){
-			throw new NotSupportedTransactionCommandException(ProtocolCommand.SYNC);
-		}else{
-			return execute((cmd)->{
-				cmd.sync();
-				return null;
-			});
-		}
-	}
-
-	@Override
-	public RedisServerTime time(){
-		final RedisServerTimeConverter converter = new RedisServerTimeConverter();
-
-		if(isPipeline()){
-			return transactionExecute((cmd)->newJedisResult(getPipeline().time(), converter));
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().time(), converter));
-		}else{
-			return execute((cmd)->cmd.time(), converter);
-		}
 	}
 
 }
