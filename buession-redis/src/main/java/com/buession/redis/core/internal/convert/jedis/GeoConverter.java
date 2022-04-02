@@ -36,15 +36,6 @@ import redis.clients.jedis.GeoCoordinate;
  */
 public interface GeoConverter<S, T> extends Converter<S, T> {
 
-	final class GeoJedisConverter implements GeoConverter<Geo, GeoCoordinate> {
-
-		@Override
-		public GeoCoordinate convert(final Geo source){
-			return new GeoCoordinate(source.getLongitude(), source.getLatitude());
-		}
-
-	}
-
 	final class GeoExposeConverter implements GeoConverter<GeoCoordinate, Geo> {
 
 		@Override

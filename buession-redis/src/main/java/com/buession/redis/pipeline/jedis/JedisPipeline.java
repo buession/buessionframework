@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.pipeline.jedis;
@@ -28,6 +28,7 @@ import com.buession.core.utils.Assert;
 import com.buession.redis.pipeline.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.PipelineBase;
 
 import java.util.List;
 
@@ -36,18 +37,18 @@ import java.util.List;
  */
 public class JedisPipeline implements Pipeline {
 
-	private JedisNativePipeline<? extends redis.clients.jedis.PipelineBase> delegate;
+	private redis.clients.jedis.Pipeline delegate;
 
 	private final static Logger logger = LoggerFactory.getLogger(JedisPipeline.class);
 
-	public JedisPipeline(JedisNativePipeline<? extends redis.clients.jedis.PipelineBase> pipeline){
+	public JedisPipeline(redis.clients.jedis.Pipeline pipeline){
 		Assert.isNull(pipeline, "Redis Pipeline cloud not be null.");
 		this.delegate = pipeline;
 	}
 
 	@SuppressWarnings({"unchecked"})
-	public <T extends redis.clients.jedis.PipelineBase> T primitive(){
-		return (T) delegate.getNativeObject();
+	public redis.clients.jedis.Pipeline primitive(){
+		return delegate;
 	}
 
 	@Override

@@ -26,15 +26,29 @@ package com.buession.redis.client.operations;
 
 import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
 
 /**
+ * Redis 命令操作接口
+ *
+ * @param <CMD>
+ * 		原始命令对象
+ *
  * @author Yong.Teng
  */
-public interface RedisClientOperations<C> {
+public interface RedisOperations<CMD> {
 
-	<R> R execute(final Executor<C, R> executor) throws RedisException;
+	<R> R execute(final Executor<CMD, R> executor, final ProtocolCommand command) throws RedisException;
 
-	<SR, R> R execute(final Executor<C, SR> executor, final Converter<SR, R> converter) throws RedisException;
+	<R> R execute(final Executor<CMD, R> executor, final ProtocolCommand command, final CommandArguments arguments)
+			throws RedisException;
+
+	<SR, R> R execute(final Executor<CMD, SR> executor, final Converter<SR, R> converter, final ProtocolCommand command)
+			throws RedisException;
+
+	<SR, R> R execute(final Executor<CMD, SR> executor, final Converter<SR, R> converter, final ProtocolCommand command,
+					  final CommandArguments arguments) throws RedisException;
 
 }
