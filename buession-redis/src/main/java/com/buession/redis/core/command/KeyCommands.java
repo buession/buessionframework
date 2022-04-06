@@ -35,6 +35,7 @@ import com.buession.redis.core.Type;
 
 import java.util.List;
 import java.util.Set;
+import java.util.StringJoiner;
 
 /**
  * KEY 命令
@@ -1917,6 +1918,29 @@ public interface KeyCommands extends RedisCommands {
 		 */
 		public String getAlpha(){
 			return alpha;
+		}
+
+		@Override
+		public String toString(){
+			final StringJoiner stringJoiner = new StringJoiner(",", "{", "}");
+
+			if(by != null){
+				stringJoiner.add("by=" + by);
+			}
+
+			if(order != null){
+				stringJoiner.add("order=" + order);
+			}
+
+			if(limit != null){
+				stringJoiner.add("limit=" + limit);
+			}
+
+			if(alpha != null){
+				stringJoiner.add("alpha=" + alpha);
+			}
+
+			return stringJoiner.toString();
 		}
 
 		public static class Builder {

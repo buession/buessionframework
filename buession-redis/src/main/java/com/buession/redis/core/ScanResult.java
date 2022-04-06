@@ -26,6 +26,8 @@ package com.buession.redis.core;
 
 import com.buession.redis.utils.SafeEncoder;
 
+import java.util.Arrays;
+
 /**
  * @author Yong.Teng
  */
@@ -64,7 +66,7 @@ public class ScanResult<V> {
 	}
 
 	public boolean isCompleteIteration(){
-		return Constants.SCAN_POINTER_START_BINARY.equals(getCursor());
+		return Arrays.equals(Constants.SCAN_POINTER_START_BINARY, getCursor());
 	}
 
 }

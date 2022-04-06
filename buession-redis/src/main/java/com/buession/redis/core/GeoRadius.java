@@ -38,16 +38,13 @@ public class GeoRadius implements Serializable {
 
 	private final static long serialVersionUID = 8391863034011700419L;
 
-	private byte[] member;
+	private final byte[] member;
 
-	private double distance;
+	private final double distance;
 
-	private Geo geo;
+	private final Geo geo;
 
-	public GeoRadius(){
-	}
-
-	public GeoRadius(byte[] member, double distance, Geo geo){
+	public GeoRadius(final byte[] member, final double distance, final Geo geo){
 		this.member = member;
 		this.distance = distance;
 		this.geo = geo;
@@ -55,10 +52,6 @@ public class GeoRadius implements Serializable {
 
 	public byte[] getMember(){
 		return member;
-	}
-
-	public void setMember(byte[] member){
-		this.member = member;
 	}
 
 	public String getMemberAsString(){
@@ -69,16 +62,8 @@ public class GeoRadius implements Serializable {
 		return distance;
 	}
 
-	public void setDistance(double distance){
-		this.distance = distance;
-	}
-
 	public Geo getGeo(){
 		return geo;
-	}
-
-	public void setGeo(Geo geo){
-		this.geo = geo;
 	}
 
 	@Override
