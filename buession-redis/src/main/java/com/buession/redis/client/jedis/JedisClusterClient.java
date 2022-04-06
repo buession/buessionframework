@@ -140,6 +140,11 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
+	public Status clientSetName(final byte[] name){
+		return connectionOperations.clientSetName(name);
+	}
+
+	@Override
 	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
 		return geoOperations.geoAdd(key, member, longitude, latitude);
 	}
@@ -881,11 +886,6 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	@Override
 	public Object pSync(final byte[] replicationId, final long offset){
 		return serverOperations.pSync(replicationId, offset);
-	}
-
-	@Override
-	public Status clientSetName(final byte[] name){
-		return serverOperations.clientSetName(name);
 	}
 
 	@Override

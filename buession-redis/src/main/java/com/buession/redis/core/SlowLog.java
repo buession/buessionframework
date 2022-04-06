@@ -35,20 +35,17 @@ public class SlowLog implements Serializable {
 
 	private static final long serialVersionUID = 4948377124212583969L;
 
-	private long id;
+	private final long id;
 
-	private long timeStamp;
+	private final long timeStamp;
 
 	private long executionTime;
 
-	private List<String> args;
+	private final List<String> args;
 
-	private Client client;
+	private final Client client;
 
-	private String clientName;
-
-	public SlowLog(){
-	}
+	private final String clientName;
 
 	public SlowLog(final long id, final long timeStamp, final long executionTime, final List<String> args,
 				   final Client client, final String clientName){
@@ -64,48 +61,24 @@ public class SlowLog implements Serializable {
 		return id;
 	}
 
-	public void setId(long id){
-		this.id = id;
-	}
-
 	public long getTimeStamp(){
 		return timeStamp;
-	}
-
-	public void setTimeStamp(long timeStamp){
-		this.timeStamp = timeStamp;
 	}
 
 	public long getExecutionTime(){
 		return executionTime;
 	}
 
-	public void setExecutionTime(long executionTime){
-		this.executionTime = executionTime;
-	}
-
 	public List<String> getArgs(){
 		return args;
-	}
-
-	public void setArgs(List<String> args){
-		this.args = args;
 	}
 
 	public Client getClient(){
 		return client;
 	}
 
-	public void setClient(Client client){
-		this.client = client;
-	}
-
 	public String getClientName(){
 		return clientName;
-	}
-
-	public void setClientName(String clientName){
-		this.clientName = clientName;
 	}
 
 	@Override
@@ -119,4 +92,5 @@ public class SlowLog implements Serializable {
 				", clientName='" + clientName + '\'' +
 				'}';
 	}
+
 }

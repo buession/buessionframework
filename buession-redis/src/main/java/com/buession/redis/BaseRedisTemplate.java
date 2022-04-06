@@ -33,6 +33,7 @@ import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientReply;
+import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.ClusterFailoverOption;
 import com.buession.redis.core.ClusterInfo;
@@ -313,6 +314,76 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Status select(final int db){
 		return execute((client)->client.select(db));
+	}
+
+	@Override
+	public Status clientCaching(final boolean isYes){
+		return execute((client)->client.clientCaching(isYes));
+	}
+
+	@Override
+	public Long clientId(){
+		return execute((client)->client.clientId());
+	}
+
+	@Override
+	public Status clientSetName(final String name){
+		return execute((client)->client.clientSetName(name));
+	}
+
+	@Override
+	public Status clientSetName(final byte[] name){
+		return execute((client)->client.clientSetName(name));
+	}
+
+	@Override
+	public String clientGetName(){
+		return execute((client)->client.clientGetName());
+	}
+
+	@Override
+	public Integer clientGetRedir(){
+		return execute((client)->client.clientGetRedir());
+	}
+
+	@Override
+	public List<Client> clientList(){
+		return execute((client)->client.clientList());
+	}
+
+	@Override
+	public List<Client> clientList(final ClientType clientType){
+		return execute((client)->client.clientList(clientType));
+	}
+
+	@Override
+	public Client clientInfo(){
+		return execute((client)->client.clientInfo());
+	}
+
+	@Override
+	public Status clientPause(final int timeout){
+		return execute((client)->client.clientPause(timeout));
+	}
+
+	@Override
+	public Status clientReply(final ClientReply option){
+		return execute((client)->client.clientReply(option));
+	}
+
+	@Override
+	public Status clientKill(final String host, final int port){
+		return execute((client)->client.clientKill(host, port));
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId){
+		return execute((client)->client.clientUnblock(clientId));
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId, final ClientUnblockType type){
+		return execute((client)->client.clientUnblock(clientId, type));
 	}
 
 	@Override
@@ -2097,63 +2168,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public RedisServerTime time(){
 		return execute((client)->client.time());
-	}
-
-	@Override
-	public Status clientKill(final String host, final int port){
-		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		return execute((client)->client.clientKill(host, port), ProtocolCommand.CLIENT_KILL, args);
-	}
-
-	@Override
-	public String clientGetName(){
-		return execute((client)->client.clientGetName(), ProtocolCommand.CLIENT_GETNAME);
-	}
-
-	@Override
-	public String clientId(){
-		return execute((client)->client.clientId(), ProtocolCommand.CLIENT_ID);
-	}
-
-	@Override
-	public List<Client> clientList(){
-		return execute((client)->client.clientList(), ProtocolCommand.CLIENT_LIST);
-	}
-
-	@Override
-	public Status clientPause(final int timeout){
-		return execute((client)->client.clientPause(timeout), ProtocolCommand.CLIENT_PAUSE,
-				new CommandArguments("timeout", timeout));
-	}
-
-	@Override
-	public Status clientReply(final ClientReply option){
-		return execute((client)->client.clientReply(option), ProtocolCommand.CLIENT_REPLY,
-				new CommandArguments("option", option));
-	}
-
-	@Override
-	public Status clientSetName(final String name){
-		return execute((client)->client.clientSetName(name), ProtocolCommand.CLIENT_SETNAME,
-				new CommandArguments("name", name));
-	}
-
-	@Override
-	public Status clientSetName(final byte[] name){
-		return execute((client)->client.clientSetName(name), ProtocolCommand.CLIENT_SETNAME,
-				new CommandArguments("name", name));
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId){
-		return execute((client)->client.clientUnblock(clientId), ProtocolCommand.CLIENT_UNBLOCK,
-				new CommandArguments("clientId", clientId));
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId, final ClientUnblockType type){
-		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
-		return execute((client)->client.clientUnblock(clientId, type), ProtocolCommand.CLIENT_UNBLOCK, args);
 	}
 
 	@Override

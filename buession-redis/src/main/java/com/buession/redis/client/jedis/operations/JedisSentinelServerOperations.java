@@ -27,7 +27,6 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.AclLog;
-import com.buession.redis.core.Client;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.Info;
 import com.buession.redis.core.MemoryStats;
@@ -41,9 +40,6 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.OkStatusConverter;
-import com.buession.redis.exception.RedisExceptionUtils;
-import com.buession.redis.utils.ClientUtil;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisMonitor;
@@ -542,12 +538,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public Info info(){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().info(), INFO_CONVERTER), ProtocolCommand.INFO);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().info(), Converters.INFO_CONVERTER),
+					ProtocolCommand.INFO);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().info(), INFO_CONVERTER),
+			return transactionExecute((cmd)->newJedisResult(getTransaction().info(), Converters.INFO_CONVERTER),
 					ProtocolCommand.INFO);
 		}else{
-			return execute((cmd)->cmd.info(), INFO_CONVERTER, ProtocolCommand.INFO);
+			return execute((cmd)->cmd.info(), Converters.INFO_CONVERTER, ProtocolCommand.INFO);
 		}
 	}
 
@@ -557,12 +554,13 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().info(section.name().toLowerCase()),
-					INFO_CONVERTER), ProtocolCommand.INFO, args);
+					Converters.INFO_CONVERTER), ProtocolCommand.INFO, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().info(section.name().toLowerCase()),
-					INFO_CONVERTER), ProtocolCommand.INFO, args);
+					Converters.INFO_CONVERTER), ProtocolCommand.INFO, args);
 		}else{
-			return execute((cmd)->cmd.info(section.name().toLowerCase()), INFO_CONVERTER, ProtocolCommand.INFO, args);
+			return execute((cmd)->cmd.info(section.name().toLowerCase()), Converters.INFO_CONVERTER,
+					ProtocolCommand.INFO, args);
 		}
 	}
 
@@ -929,48 +927,6 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		}else{
 			return execute((cmd)->cmd.time(), REDIS_SERVER_TIME_CONVERTER, ProtocolCommand.TIME);
 		}
-	}
-
-	@Override
-	public Status clientKill(final String host, final int port){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_KILL,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.clientKill(host + ":" + port), new OkStatusConverter());
-	}
-
-	@Override
-	public String clientGetName(){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_GETNAME,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.clientGetname());
-	}
-
-	@Override
-	public List<Client> clientList(){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_LIST,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->ClientUtil.parse(cmd.clientList()));
-	}
-
-	@Override
-	public Status clientPause(final int timeout){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_PAUSE,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.clientPause(timeout), new OkStatusConverter());
-	}
-
-	@Override
-	public Status clientSetName(final String name){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_SETNAME,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.clientSetname(name), new OkStatusConverter());
-	}
-
-	@Override
-	public Status clientSetName(final byte[] name){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_SETNAME,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.clientSetname(name), new OkStatusConverter());
 	}
 
 }

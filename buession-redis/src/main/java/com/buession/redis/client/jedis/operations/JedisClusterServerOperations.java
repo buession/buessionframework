@@ -27,7 +27,6 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.AclLog;
-import com.buession.redis.core.Client;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.Info;
 import com.buession.redis.core.MemoryStats;
@@ -40,9 +39,6 @@ import com.buession.redis.core.AclUser;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.OkStatusConverter;
-import com.buession.redis.exception.RedisExceptionUtils;
-import com.buession.redis.utils.ClientUtil;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.JedisCluster;
 
@@ -465,57 +461,7 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 
 	@Override
 	public RedisServerTime time(){
-		if(isPipeline()){
-			return transactionExecute((cmd)->newJedisResult(getPipeline().time(), REDIS_SERVER_TIME_CONVERTER),
-					ProtocolCommand.TIME);
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().time(), REDIS_SERVER_TIME_CONVERTER),
-					ProtocolCommand.TIME);
-		}else{
-			return execute((cmd)->cmd.time(), REDIS_SERVER_TIME_CONVERTER, ProtocolCommand.TIME);
-		}
-	}
-
-	@Override
-	public Status clientKill(final String host, final int port){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_KILL,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.clientKill(host + ":" + port), new OkStatusConverter());
-	}
-
-	@Override
-	public String clientGetName(){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_GETNAME,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.clientGetname());
-	}
-
-	@Override
-	public List<Client> clientList(){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_LIST,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->ClientUtil.parse(cmd.clientList()));
-	}
-
-	@Override
-	public Status clientPause(final int timeout){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_PAUSE,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.clientPause(timeout), new OkStatusConverter());
-	}
-
-	@Override
-	public Status clientSetName(final String name){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_SETNAME,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.clientSetname(name), new OkStatusConverter());
-	}
-
-	@Override
-	public Status clientSetName(final byte[] name){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_SETNAME,
-				CommandNotSupported.PIPELINE | CommandNotSupported.TRANSACTION, client.getConnection());
-		return execute((cmd)->cmd.clientSetname(name), new OkStatusConverter());
+		return execute(CommandNotSupported.ALL, ProtocolCommand.TIME);
 	}
 
 }

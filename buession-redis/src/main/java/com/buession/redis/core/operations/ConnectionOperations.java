@@ -19,21 +19,38 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.operations;
 
+import com.buession.core.utils.Assert;
+import com.buession.lang.Status;
+import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.command.ConnectionCommands;
 
 /**
  * 连接相关命令
  *
- * <p>详情说明
- * <a href="http://www.redis.cn/commands.html#connection" target="_blank">http://www.redis.cn/commands.html#connection</a></p>
+ * <p>详情说明 <a href="http://www.redis.cn/commands.html#connection" target="_blank">http://www.redis.cn/commands.html#connection</a></p>
  *
  * @author Yong.Teng
  */
 public interface ConnectionOperations extends ConnectionCommands, RedisOperations {
+
+	/**
+	 * 关闭地址为 host:port 的客户端
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/client_kill.html" target="_blank">http://redisdoc.com/client_and_server/client_kill.html</a></p>
+	 *
+	 * @param server
+	 * 		客户端地址
+	 *
+	 * @return 当指定的客户端存在，且被成功关闭时，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	default Status clientKill(final RedisNode server){
+		Assert.isNull(server, "Redis server cloud not be null.");
+		return clientKill(server.getHost(), server.getPort());
+	}
 
 }

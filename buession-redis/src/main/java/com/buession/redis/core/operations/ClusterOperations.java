@@ -27,7 +27,6 @@ package com.buession.redis.core.operations;
 import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
 import com.buession.redis.core.RedisNode;
-import com.buession.redis.core.SlotsRange;
 import com.buession.redis.core.command.ClusterCommands;
 
 /**
@@ -114,7 +113,7 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	default Status clusterMeet(final RedisNode node){
 		Assert.isNull(node, "Redis cluster node cloud not be null");
 		Assert.isBlank(node.getHost(), "Redis cluster host cloud not be null or empty");
-		
+
 		return clusterMeet(node.getHost(), node.getPort());
 	}
 

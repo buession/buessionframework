@@ -24,67 +24,20 @@
  */
 package com.buession.redis.core;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class AclUser implements Serializable {
+public enum ClientType {
 
-	private final static long serialVersionUID = -2237993389031684508L;
+	NORMAL,
 
-	private final List<String> flags = new ArrayList<>();
+	MASTER,
 
-	private final List<String> keys = new ArrayList<>();
+	SLAVE,
 
-	private final List<String> passwords = new ArrayList<>();
+	REPLICA,
 
-	private final String commands;
-
-	public AclUser(final List<String> flags, final List<String> keys, final List<String> passwords,
-				   final String commands){
-		if(flags != null){
-			flags.addAll(flags);
-		}
-
-		if(keys != null){
-			keys.addAll(keys);
-		}
-
-		if(passwords != null){
-			passwords.addAll(passwords);
-		}
-
-		this.commands = commands;
-	}
-
-	public List<String> getFlags(){
-		return flags;
-	}
-
-	public List<String> getKeys(){
-		return keys;
-	}
-
-	public List<String> getPasswords(){
-		return passwords;
-	}
-
-	public String getCommands(){
-		return commands;
-	}
-
-	@Override
-	public String toString(){
-		return "AclUser{" +
-				"flags=" + flags +
-				", keys=" + keys +
-				", passwords=" + passwords +
-				", commands='" + commands + '\'' +
-				'}';
-	}
+	PUBSUB
 
 }

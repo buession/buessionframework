@@ -28,7 +28,6 @@ import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.MapConverter;
-import com.buession.core.utils.StatusUtils;
 import com.buession.lang.Status;
 import com.buession.redis.core.Constants;
 import com.buession.redis.utils.SafeEncoder;
@@ -42,12 +41,14 @@ import java.util.Objects;
  */
 public interface Converters {
 
-	Converter<String, Status> OK_STATUS_CONVERTER = new Converter<String, Status>() {
+	OkStatusConverter OK_STATUS_CONVERTER = new OkStatusConverter();
+
+	Converter<Long, Status> LONG_STATUS_CONVERTER = new Converter<Long, Status>() {
 
 		@Nullable
 		@Override
-		public Status convert(String source){
-			return StatusUtils.valueOf(Constants.OK.equalsIgnoreCase(source));
+		public Status convert(final Long source){
+			return source != null && source > 0 ? Status.SUCCESS : Status.FAILURE;
 		}
 
 	};
@@ -56,11 +57,13 @@ public interface Converters {
 
 		@Nullable
 		@Override
-		public Status convert(byte[] source){
+		public Status convert(final byte[] source){
 			return Objects.equals(Constants.OK_BINARY, source) ? Status.SUCCESS : Status.FAILURE;
 		}
 
 	};
+
+	InfoConverter INFO_CONVERTER = new InfoConverter();
 
 	BooleanStatusConverter BOOLEAN_STATUS_CONVERTER = new BooleanStatusConverter();
 
@@ -73,7 +76,7 @@ public interface Converters {
 
 		@Nullable
 		@Override
-		public String[] convert(byte[][] source){
+		public String[] convert(final byte[][] source){
 			final String[] result = new String[source.length];
 
 			for(int i = 0; i < source.length; i++){

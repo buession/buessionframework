@@ -26,12 +26,19 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisSentinelClient;
+import com.buession.redis.core.Client;
+import com.buession.redis.core.ClientReply;
+import com.buession.redis.core.ClientType;
+import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.args.UnblockType;
+
+import java.util.List;
 
 /**
  * Jedis 哨兵模式连接命令操作
@@ -145,6 +152,162 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 					ProtocolCommand.SELECT, args);
 		}else{
 			return execute((cmd)->cmd.select(db), Converters.OK_STATUS_CONVERTER, ProtocolCommand.SELECT, args);
+		}
+	}
+
+	@Override
+	public Status clientCaching(final boolean isYes){
+		final CommandArguments args = CommandArguments.create("isYes", isYes);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLIENT_CACHING, args);
+	}
+
+	@Override
+	public Long clientId(){
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLIENT_ID);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLIENT_ID);
+		}else{
+			return execute((cmd)->cmd.clientId(), ProtocolCommand.CLIENT_ID);
+		}
+	}
+
+	@Override
+	public Status clientSetName(final String name){
+		final CommandArguments args = CommandArguments.create("name", name);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLIENT_SETNAME, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLIENT_SETNAME, args);
+		}else{
+			return execute((cmd)->cmd.clientSetname(name), Converters.OK_STATUS_CONVERTER,
+					ProtocolCommand.CLIENT_SETNAME, args);
+		}
+	}
+
+	@Override
+	public Status clientSetName(final byte[] name){
+		final CommandArguments args = CommandArguments.create("name", name);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLIENT_SETNAME, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLIENT_SETNAME, args);
+		}else{
+			return execute((cmd)->cmd.clientSetname(name), Converters.OK_STATUS_CONVERTER,
+					ProtocolCommand.CLIENT_SETNAME, args);
+		}
+	}
+
+	@Override
+	public String clientGetName(){
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLIENT_GETNAME);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLIENT_GETNAME);
+		}else{
+			return execute((cmd)->cmd.clientGetname(), ProtocolCommand.CLIENT_GETNAME);
+		}
+	}
+
+	@Override
+	public Integer clientGetRedir(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLIENT_GETREDIR);
+	}
+
+	@Override
+	public List<Client> clientList(){
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLIENT_LIST);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLIENT_LIST);
+		}else{
+			return execute((cmd)->cmd.clientList(), CLIENT_LIST_CONVERTER, ProtocolCommand.CLIENT_LIST);
+		}
+	}
+
+	@Override
+	public List<Client> clientList(final ClientType clientType){
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLIENT_LIST);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLIENT_LIST);
+		}else{
+			final redis.clients.jedis.args.ClientType jedisClientType = CLIENT_TYPE_JEDIS_CONVERTER.convert(clientType);
+			return execute((cmd)->cmd.clientList(jedisClientType), CLIENT_LIST_CONVERTER, ProtocolCommand.CLIENT_LIST);
+		}
+	}
+
+	@Override
+	public Client clientInfo(){
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLIENT_INFO);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLIENT_INFO);
+		}else{
+			return execute((cmd)->cmd.clientInfo(), Converters.INFO_CONVERTER, ProtocolCommand.CLIENT_INFO);
+		}
+	}
+
+	@Override
+	public Status clientPause(final int timeout){
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLIENT_PAUSE);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLIENT_PAUSE);
+		}else{
+			return execute((cmd)->cmd.clientPause(timeout), Converters.OK_STATUS_CONVERTER,
+					ProtocolCommand.CLIENT_PAUSE);
+		}
+	}
+
+	@Override
+	public Status clientReply(final ClientReply option){
+		final CommandArguments args = CommandArguments.create("option", option);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLIENT_REPLY, args);
+	}
+
+	@Override
+	public Status clientKill(final String host, final int port){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLIENT_KILL, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLIENT_KILL, args);
+		}else{
+			return execute((cmd)->cmd.clientKill(host + ":" + port), Converters.OK_STATUS_CONVERTER,
+					ProtocolCommand.CLIENT_KILL, args);
+		}
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId){
+		final CommandArguments args = CommandArguments.create("clientId", clientId);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLIENT_UNBLOCK, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLIENT_UNBLOCK, args);
+		}else{
+			return execute((cmd)->cmd.clientUnblock(clientId, null), Converters.LONG_STATUS_CONVERTER,
+					ProtocolCommand.CLIENT_UNBLOCK, args);
+		}
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId, final ClientUnblockType type){
+		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
+
+		if(isPipeline()){
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.CLIENT_UNBLOCK, args);
+		}else if(isTransaction()){
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.CLIENT_UNBLOCK, args);
+		}else{
+			final UnblockType unblockType = CLIENT_UNBLOCK_JEDIS_CONVERTER.convert(type);
+			return execute((cmd)->cmd.clientUnblock(clientId, unblockType), Converters.LONG_STATUS_CONVERTER,
+					ProtocolCommand.CLIENT_UNBLOCK, args);
 		}
 	}
 

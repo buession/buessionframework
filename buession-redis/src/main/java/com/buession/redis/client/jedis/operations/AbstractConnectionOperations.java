@@ -24,12 +24,19 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.converter.Converter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ConnectionOperations;
+import com.buession.redis.core.Client;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.PingResultConverter;
+import com.buession.redis.core.internal.convert.jedis.ClientTypeConverter;
+import com.buession.redis.core.internal.convert.jedis.ClientUnblockTypeConverter;
+import com.buession.redis.utils.ClientUtil;
+
+import java.util.List;
 
 /**
  * Jedis 连接命令操作抽象类
@@ -43,6 +50,12 @@ public abstract class AbstractConnectionOperations<CMD> extends AbstractJedisRed
 		implements ConnectionOperations<CMD> {
 
 	protected final static PingResultConverter PING_RESULT_CONVERTER = new PingResultConverter();
+
+	protected final static ClientTypeConverter.ClientTypeJedisConverter CLIENT_TYPE_JEDIS_CONVERTER = new ClientTypeConverter.ClientTypeJedisConverter();
+
+	protected final static Converter<String, List<Client>> CLIENT_LIST_CONVERTER = ClientUtil::parse;
+
+	protected final static ClientUnblockTypeConverter.ClientUnblockJedisConverter CLIENT_UNBLOCK_JEDIS_CONVERTER = new ClientUnblockTypeConverter.ClientUnblockJedisConverter();
 
 	public AbstractConnectionOperations(final JedisRedisClient client){
 		super(client);

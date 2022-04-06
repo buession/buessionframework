@@ -36,24 +36,21 @@ public class AclLog implements Serializable {
 
 	private final static long serialVersionUID = -1362912160889551004L;
 
-	private long count;
+	private final long count;
 
-	private String reason;
+	private final String reason;
 
-	private String context;
+	private final String context;
 
-	private String object;
+	private final String object;
 
-	private String username;
+	private final String username;
 
-	private String ageSeconds;
+	private final String ageSeconds;
 
-	private Client clientInfo;
+	private final Client clientInfo;
 
-	private Map<String, Object> logEntry;
-
-	public AclLog(){
-	}
+	private final Map<String, Object> logEntry;
 
 	public AclLog(final long count, final String reason, final String context, final String object,
 				  final String username, final String ageSeconds, final Client clientInfo,
@@ -72,64 +69,32 @@ public class AclLog implements Serializable {
 		return count;
 	}
 
-	public void setCount(long count){
-		this.count = count;
-	}
-
 	public String getReason(){
 		return reason;
-	}
-
-	public void setReason(String reason){
-		this.reason = reason;
 	}
 
 	public String getContext(){
 		return context;
 	}
 
-	public void setContext(String context){
-		this.context = context;
-	}
-
 	public String getObject(){
 		return object;
-	}
-
-	public void setObject(String object){
-		this.object = object;
 	}
 
 	public String getUsername(){
 		return username;
 	}
 
-	public void setUsername(String username){
-		this.username = username;
-	}
-
 	public String getAgeSeconds(){
 		return ageSeconds;
-	}
-
-	public void setAgeSeconds(String ageSeconds){
-		this.ageSeconds = ageSeconds;
 	}
 
 	public Client getClientInfo(){
 		return clientInfo;
 	}
 
-	public void setClientInfo(Client clientInfo){
-		this.clientInfo = clientInfo;
-	}
-
 	public Map<String, Object> getLogEntry(){
 		return logEntry;
-	}
-
-	public void setLogEntry(Map<String, Object> logEntry){
-		this.logEntry = logEntry;
 	}
 
 	@Override
@@ -145,4 +110,5 @@ public class AclLog implements Serializable {
 				", logEntry=" + logEntry +
 				'}';
 	}
+
 }

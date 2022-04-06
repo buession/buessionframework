@@ -22,69 +22,40 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.jedis;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.ClientType;
 
 /**
+ * {@link ClientType} 和 jedis {@link redis.clients.jedis.args.ClientType} 互转
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class AclUser implements Serializable {
+public interface ClientTypeConverter<S, T> extends Converter<S, T> {
 
-	private final static long serialVersionUID = -2237993389031684508L;
+	final class ClientTypeJedisConverter
+			implements ClientTypeConverter<ClientType, redis.clients.jedis.args.ClientType> {
 
-	private final List<String> flags = new ArrayList<>();
-
-	private final List<String> keys = new ArrayList<>();
-
-	private final List<String> passwords = new ArrayList<>();
-
-	private final String commands;
-
-	public AclUser(final List<String> flags, final List<String> keys, final List<String> passwords,
-				   final String commands){
-		if(flags != null){
-			flags.addAll(flags);
+		@Override
+		public redis.clients.jedis.args.ClientType convert(final ClientType source){
+			switch(source){
+				case NORMAL:
+					return redis.clients.jedis.args.ClientType.NORMAL;
+				case MASTER:
+					return redis.clients.jedis.args.ClientType.MASTER;
+				case SLAVE:
+					return redis.clients.jedis.args.ClientType.SLAVE;
+				case REPLICA:
+					return redis.clients.jedis.args.ClientType.REPLICA;
+				case PUBSUB:
+					return redis.clients.jedis.args.ClientType.PUBSUB;
+				default:
+					return null;
+			}
 		}
 
-		if(keys != null){
-			keys.addAll(keys);
-		}
-
-		if(passwords != null){
-			passwords.addAll(passwords);
-		}
-
-		this.commands = commands;
-	}
-
-	public List<String> getFlags(){
-		return flags;
-	}
-
-	public List<String> getKeys(){
-		return keys;
-	}
-
-	public List<String> getPasswords(){
-		return passwords;
-	}
-
-	public String getCommands(){
-		return commands;
-	}
-
-	@Override
-	public String toString(){
-		return "AclUser{" +
-				"flags=" + flags +
-				", keys=" + keys +
-				", passwords=" + passwords +
-				", commands='" + commands + '\'' +
-				'}';
 	}
 
 }

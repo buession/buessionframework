@@ -35,12 +35,9 @@ public final class Module implements Serializable {
 
 	private final static long serialVersionUID = 8584149197825340590L;
 
-	private String name;
+	private final String name;
 
-	private int version;
-
-	public Module(){
-	}
+	private final int version;
 
 	public Module(final String name, final int version){
 		this.name = name;
@@ -51,16 +48,8 @@ public final class Module implements Serializable {
 		return name;
 	}
 
-	public void setName(String name){
-		this.name = name;
-	}
-
 	public int getVersion(){
 		return version;
-	}
-
-	public void setVersion(int version){
-		this.version = version;
 	}
 
 	@Override

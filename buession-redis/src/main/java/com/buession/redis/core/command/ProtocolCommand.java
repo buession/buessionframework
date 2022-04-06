@@ -59,6 +59,28 @@ public enum ProtocolCommand {
 	QUIT(ProtocolCommandGroup.CONNECTION, "rw"),
 
 	SELECT(ProtocolCommandGroup.CONNECTION, "rw"),
+
+	CLIENT_KILL(ProtocolCommandGroup.CONNECTION, "rw"),
+
+	CLIENT_SETNAME(ProtocolCommandGroup.CONNECTION, "w"),
+
+	CLIENT_GETNAME(ProtocolCommandGroup.CONNECTION, "r"),
+
+	CLIENT_GETREDIR(ProtocolCommandGroup.CONNECTION, "r"),
+
+	CLIENT_CACHING(ProtocolCommandGroup.CONNECTION, "r"),
+
+	CLIENT_ID(ProtocolCommandGroup.CONNECTION, "r"),
+
+	CLIENT_LIST(ProtocolCommandGroup.CONNECTION, "r"),
+
+	CLIENT_INFO(ProtocolCommandGroup.CONNECTION, "r"),
+
+	CLIENT_PAUSE(ProtocolCommandGroup.CONNECTION, "rw"),
+
+	CLIENT_REPLY(ProtocolCommandGroup.CONNECTION, "rw"),
+
+	CLIENT_UNBLOCK(ProtocolCommandGroup.CONNECTION, "rw"),
 	/**
 	 * connection command end
 	 */
@@ -278,22 +300,6 @@ public enum ProtocolCommand {
 
 	BGSAVE(ProtocolCommandGroup.SERVER, "r"),
 
-	CLIENT_KILL(ProtocolCommandGroup.SERVER, "rw"),
-
-	CLIENT_GETNAME(ProtocolCommandGroup.SERVER, "r"),
-
-	CLIENT_ID(ProtocolCommandGroup.SERVER, "r"),
-
-	CLIENT_LIST(ProtocolCommandGroup.SERVER, "r"),
-
-	CLIENT_PAUSE(ProtocolCommandGroup.SERVER, "rw"),
-
-	CLIENT_REPLY(ProtocolCommandGroup.SERVER, "rw"),
-
-	CLIENT_SETNAME(ProtocolCommandGroup.SERVER, "w"),
-
-	CLIENT_UNBLOCK(ProtocolCommandGroup.SERVER, "rw"),
-
 	CONFIG_GET(ProtocolCommandGroup.SERVER, "r"),
 
 	CONFIG_RESETSTAT(ProtocolCommandGroup.SERVER, "w"),
@@ -346,7 +352,7 @@ public enum ProtocolCommand {
 
 	MODULE(ProtocolCommandGroup.SERVER, "r"),
 
-	SWAPDB(ProtocolCommandGroup.CONNECTION, "w"),
+	SWAPDB(ProtocolCommandGroup.SERVER, "w"),
 	/**
 	 * server command end
 	 **/

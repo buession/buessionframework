@@ -25,24 +25,17 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.converter.ListConverter;
-import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ServerOperations;
 import com.buession.redis.core.AclLog;
-import com.buession.redis.core.ClientReply;
-import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.Module;
 import com.buession.redis.core.SlowLog;
-import com.buession.redis.core.command.CommandNotSupported;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.InfoConverter;
 import com.buession.redis.core.internal.convert.RedisServerTimeConverter;
 import com.buession.redis.core.internal.convert.jedis.AclLogConverter;
 import com.buession.redis.core.internal.convert.jedis.AclUserConverter;
 import com.buession.redis.core.internal.convert.jedis.FlushModeConverter;
 import com.buession.redis.core.internal.convert.jedis.ModuleConverter;
 import com.buession.redis.core.internal.convert.jedis.SlowLogConverter;
-import com.buession.redis.exception.RedisExceptionUtils;
 import redis.clients.jedis.AccessControlLogEntry;
 import redis.clients.jedis.util.Slowlog;
 
@@ -64,8 +57,6 @@ public abstract class AbstractServerOperations<CMD> extends AbstractJedisRedisOp
 
 	protected final static FlushModeConverter.FlushModeJedisConverter FLUSH_MODE_JEDIS_CONVERTER = new FlushModeConverter.FlushModeJedisConverter();
 
-	protected final static InfoConverter INFO_CONVERTER = new InfoConverter();
-
 	protected final static ListConverter<redis.clients.jedis.Module, Module> LIST_MODULE_EXPOSE_CONVERTER = new ListConverter<>(
 			new ModuleConverter.ModuleExposeConverter());
 
@@ -76,32 +67,6 @@ public abstract class AbstractServerOperations<CMD> extends AbstractJedisRedisOp
 
 	public AbstractServerOperations(final JedisRedisClient client){
 		super(client);
-	}
-
-	@Override
-	public String clientId(){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_ID, CommandNotSupported.ALL,
-				client.getConnection());
-		return null;
-	}
-
-	@Override
-	public Status clientReply(final ClientReply option){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_REPLY, CommandNotSupported.ALL,
-				client.getConnection());
-		return null;
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId){
-		RedisExceptionUtils.commandNotSupportedException(ProtocolCommand.CLIENT_UNBLOCK, CommandNotSupported.ALL,
-				client.getConnection());
-		return null;
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId, final ClientUnblockType type){
-		return clientUnblock(clientId);
 	}
 
 

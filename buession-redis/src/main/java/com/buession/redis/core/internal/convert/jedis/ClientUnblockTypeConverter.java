@@ -22,51 +22,35 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.jedis;
 
-import java.io.Serializable;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.ClientUnblockType;
+import redis.clients.jedis.args.UnblockType;
 
 /**
- * Redis Cluster Hash Slots Range
+ * {@link ClientUnblockType} 和 jedis {@link UnblockType} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class SlotsRange implements Serializable {
+public interface ClientUnblockTypeConverter<S, T> extends Converter<S, T> {
 
-	private final static long serialVersionUID = -1872294358162514087L;
+	final class ClientUnblockJedisConverter
+			implements ClientUnblockTypeConverter<ClientUnblockType, UnblockType> {
 
-	private long start;
+		@Override
+		public UnblockType convert(final ClientUnblockType source){
+			switch(source){
+				case TIMEOUT:
+					return UnblockType.TIMEOUT;
+				case ERROR:
+					return UnblockType.ERROR;
+				default:
+					return null;
+			}
+		}
 
-	private long end;
-
-	public SlotsRange(){
 	}
 
-	public SlotsRange(final long start, final long end){
-		this.start = start;
-		this.end = end;
-	}
-
-	public long getStart(){
-		return start;
-	}
-
-	public void setStart(long start){
-		this.start = start;
-	}
-
-	public long getEnd(){
-		return end;
-	}
-
-	public void setEnd(long end){
-		this.end = end;
-	}
-
-	@Override
-	public String toString(){
-		return "start=" + start + ", end=" + end;
-	}
-	
 }
