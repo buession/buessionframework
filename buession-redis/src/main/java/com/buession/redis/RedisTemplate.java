@@ -941,48 +941,50 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 	}
 
 	@Override
-	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to){
+	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+							  final int timeout){
 		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				blMove(key, destKey, from, to), this);
+				blMove(key, destKey, from, to, timeout), this);
 		return operations.operation();
 	}
 
 	@Override
-	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
+	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+							  final int timeout){
 		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				blMove(key, destKey, from, to), this);
+				blMove(key, destKey, from, to, timeout), this);
 		return operations.operation();
 	}
 
 	@Override
 	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-							  final Class<V> clazz){
+							  final int timeout, final Class<V> clazz){
 		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				blMove(key, destKey, from, to), this);
+				blMove(key, destKey, from, to, timeout), this);
 		return operations.operation(clazz);
 	}
 
 	@Override
 	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-							  final Class<V> clazz){
+							  final int timeout, final Class<V> clazz){
 		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				blMove(key, destKey, from, to), this);
+				blMove(key, destKey, from, to, timeout), this);
 		return operations.operation(clazz);
 	}
 
 	@Override
 	public <V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-							  final TypeReference<V> type){
+							  final int timeout, final TypeReference<V> type){
 		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				blMove(key, destKey, from, to), this);
+				blMove(key, destKey, from, to, timeout), this);
 		return operations.operation(type);
 	}
 
 	@Override
 	public <V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-							  final TypeReference<V> type){
+							  final int timeout, final TypeReference<V> type){
 		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				blMove(key, destKey, from, to), this);
+				blMove(key, destKey, from, to, timeout), this);
 		return operations.operation(type);
 	}
 
@@ -1341,44 +1343,44 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 	}
 
 	@Override
-	public <V> Set<V> sDiffObject(final String key){
+	public <V> Set<V> sDiffObject(final String key, final String[] keys){
 		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sDiff(key), this);
+				sDiff(key, keys), this);
 		return operations.operation();
 	}
 
 	@Override
-	public <V> Set<V> sDiffObject(final byte[] key){
+	public <V> Set<V> sDiffObject(final byte[] key, final byte[][] keys){
 		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sDiff(key), this);
+				sDiff(key, keys), this);
 		return operations.operation();
 	}
 
 	@Override
-	public <V> Set<V> sDiffObject(final String key, final Class<V> clazz){
+	public <V> Set<V> sDiffObject(final String key, final String[] keys, final Class<V> clazz){
 		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sDiff(key), this);
+				sDiff(key, keys), this);
 		return operations.operation(clazz);
 	}
 
 	@Override
-	public <V> Set<V> sDiffObject(final byte[] key, final Class<V> clazz){
+	public <V> Set<V> sDiffObject(final byte[] key, final byte[][] keys, final Class<V> clazz){
 		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sDiff(key), this);
+				sDiff(key, keys), this);
 		return operations.operation(clazz);
 	}
 
 	@Override
-	public <V> Set<V> sDiffObject(final String key, final TypeReference<V> type){
+	public <V> Set<V> sDiffObject(final String key, final String[] keys, final TypeReference<V> type){
 		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sDiff(key), this);
+				sDiff(key, keys), this);
 		return operations.operation(type);
 	}
 
 	@Override
-	public <V> Set<V> sDiffObject(final byte[] key, final TypeReference<V> type){
+	public <V> Set<V> sDiffObject(final byte[] key, final byte[][] keys, final TypeReference<V> type){
 		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sDiff(key), this);
+				sDiff(key, keys), this);
 		return operations.operation(type);
 	}
 
@@ -1467,6 +1469,48 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 	}
 
 	@Override
+	public <V> Set<V> sPopObject(final String key, final long count){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				sPop(key, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> sPopObject(final byte[] key, final long count){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				sPop(key, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> sPopObject(final String key, final long count, final Class<V> clazz){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				sPop(key, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> sPopObject(final byte[] key, final long count, final Class<V> clazz){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				sPop(key, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> sPopObject(final String key, final long count, final TypeReference<V> type){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				sPop(key, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> sPopObject(final byte[] key, final long count, final TypeReference<V> type){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				sPop(key, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
 	public <V> V sRandMemberObject(final String key){
 		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
 				sRandMember(key), this);
@@ -1509,20 +1553,6 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 	}
 
 	@Override
-	public <V> List<V> sRandMemberObject(final String key, final int count){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				sRandMember(key, count), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> List<V> sRandMemberObject(final byte[] key, final int count){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				sRandMember(key, count), this);
-		return operations.operation();
-	}
-
-	@Override
 	public <V> List<V> sRandMemberObject(final String key, final long count){
 		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
 				sRandMember(key, count), this);
@@ -1537,20 +1567,6 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 	}
 
 	@Override
-	public <V> List<V> sRandMemberObject(final String key, final int count, final Class<V> clazz){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				sRandMember(key, count), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> List<V> sRandMemberObject(final byte[] key, final int count, final Class<V> clazz){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				sRandMember(key, count), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
 	public <V> List<V> sRandMemberObject(final String key, final long count, final Class<V> clazz){
 		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
 				sRandMember(key, count), this);
@@ -1562,20 +1578,6 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
 				sRandMember(key, count), this);
 		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> List<V> sRandMemberObject(final String key, final int count, final TypeReference<V> type){
-		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
-				sRandMember(key, count), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> List<V> sRandMemberObject(final byte[] key, final int count, final TypeReference<V> type){
-		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
-				sRandMember(key, count), this);
-		return operations.operation(type);
 	}
 
 	@Override

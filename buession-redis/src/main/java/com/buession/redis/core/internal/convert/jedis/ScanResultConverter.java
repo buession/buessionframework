@@ -28,6 +28,7 @@ import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
+import com.buession.redis.utils.SafeEncoder;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -69,6 +70,23 @@ public interface ScanResultConverter<S, T> extends Converter<S, T> {
 		@Override
 		public ScanResult<List<S>> convert(final redis.clients.jedis.ScanResult<S> source){
 			return new ScanResult<>(source.getCursor(), source.getResult());
+		}
+
+	}
+
+	/**
+	 * jedis {@link redis.clients.jedis.ScanResult} 转换为 {@link java.util.List}&lt;ScanResult&gt;
+	 *
+	 * @author Yong.Teng
+	 * @since 2.0.0
+	 */
+	final class BinaryToStringListScanResultExposeConverter implements ScanResultExposeConverter<byte[], List<String>> {
+
+		@Override
+		public ScanResult<List<String>> convert(final redis.clients.jedis.ScanResult<byte[]> source){
+			final List<String> results = source.getResult().stream().map(SafeEncoder::encode).collect(
+					Collectors.toList());
+			return new ScanResult<>(source.getCursor(), results);
 		}
 
 	}

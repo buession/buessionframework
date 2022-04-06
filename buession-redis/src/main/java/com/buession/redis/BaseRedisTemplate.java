@@ -2172,292 +2172,254 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Long sAdd(final String key, final String... members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return execute((client)->client.sAdd(makeRawKey(key), members), ProtocolCommand.SADD, args);
+		return execute((client)->client.sAdd(makeRawKey(key), members));
 	}
 
 	@Override
 	public Long sAdd(final byte[] key, final byte[]... members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return execute((client)->client.sAdd(makeByteKey(key), members), ProtocolCommand.SADD, args);
+		return execute((client)->client.sAdd(makeByteKey(key), members));
 	}
 
 	@Override
 	public Long sCard(final String key){
-		return execute((client)->client.sCard(makeRawKey(key)), ProtocolCommand.SCARD,
-				new CommandArguments("key", key));
+		return execute((client)->client.sCard(makeRawKey(key)));
 	}
 
 	@Override
 	public Long sCard(final byte[] key){
-		return execute((client)->client.sCard(makeByteKey(key)), ProtocolCommand.SCARD,
-				new CommandArguments("key", key));
+		return execute((client)->client.sCard(makeByteKey(key)));
 	}
 
 	@Override
-	public Set<String> sDiff(final String... keys){
-		return execute((client)->client.sDiff(makeRawKeys(keys)), ProtocolCommand.SDIFF,
-				new CommandArguments("keys", keys));
+	public Set<String> sDiff(final String key, final String... keys){
+		return execute((client)->client.sDiff(makeRawKey(key), makeRawKeys(keys)));
 	}
 
 	@Override
-	public Set<byte[]> sDiff(final byte[]... keys){
-		return execute((client)->client.sDiff(makeByteKeys(keys)), ProtocolCommand.SDIFF,
-				new CommandArguments("keys", keys));
+	public Set<byte[]> sDiff(final byte[] key, final byte[]... keys){
+		return execute((client)->client.sDiff(makeByteKey(key), makeByteKeys(keys)));
 	}
 
 	@Override
 	public Long sDiffStore(final String destKey, final String... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return execute((client)->client.sDiffStore(makeRawKey(destKey), makeRawKeys(keys)), ProtocolCommand.SDIFFSTORE
-				, args);
+		return execute((client)->client.sDiffStore(makeRawKey(destKey), makeRawKeys(keys)));
 	}
 
 	@Override
 	public Long sDiffStore(final byte[] destKey, final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return execute((client)->client.sDiffStore(makeByteKey(destKey), makeByteKeys(keys)),
-				ProtocolCommand.SDIFFSTORE, args);
+		return execute((client)->client.sDiffStore(makeByteKey(destKey), makeByteKeys(keys)));
 	}
 
 	@Override
-	public Set<String> sInter(final String... keys){
-		return execute((client)->client.sInter(makeRawKeys(keys)), ProtocolCommand.SINTER,
-				new CommandArguments("keys", keys));
+	public Set<String> sInter(final String key, final String... keys){
+		return execute((client)->client.sInter(makeRawKey(key), makeRawKeys(keys)));
 	}
 
 	@Override
-	public Set<byte[]> sInter(final byte[]... keys){
-		return execute((client)->client.sInter(makeByteKeys(keys)), ProtocolCommand.SINTER,
-				new CommandArguments("keys", keys));
+	public Set<byte[]> sInter(final byte[] key, final byte[]... keys){
+		return execute((client)->client.sInter(makeByteKey(key), makeByteKeys(keys)));
 	}
 
 	@Override
 	public Long sInterStore(final String destKey, final String... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return execute((client)->client.sDiffStore(makeRawKey(destKey), makeRawKeys(keys)),
-				ProtocolCommand.SINTERSTORE, args);
+		return execute((client)->client.sDiffStore(makeRawKey(destKey), makeRawKeys(keys)));
 	}
 
 	@Override
 	public Long sInterStore(final byte[] destKey, final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return execute((client)->client.sDiffStore(makeByteKey(destKey), makeByteKeys(keys)),
-				ProtocolCommand.SINTERSTORE, args);
+		return execute((client)->client.sDiffStore(makeByteKey(destKey), makeByteKeys(keys)));
 	}
 
 	@Override
 	public boolean sisMember(final String key, final String member){
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return execute((client)->client.sisMember(makeRawKey(key), member), ProtocolCommand.SISMEMBER, args);
+		return execute((client)->client.sisMember(makeRawKey(key), member));
 	}
 
 	@Override
 	public boolean sisMember(final byte[] key, final byte[] member){
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return execute((client)->client.sisMember(makeByteKey(key), member), ProtocolCommand.SISMEMBER, args);
+		return execute((client)->client.sisMember(makeByteKey(key), member));
 	}
 
 	@Override
 	public Set<String> sMembers(final String key){
-		return execute((client)->client.sMembers(makeRawKey(key)), ProtocolCommand.SMEMBERS,
-				new CommandArguments("key", key));
+		return execute((client)->client.sMembers(makeRawKey(key)));
 	}
 
 	@Override
 	public Set<byte[]> sMembers(final byte[] key){
-		return execute((client)->client.sMembers(makeByteKey(key)), ProtocolCommand.SMEMBERS,
-				new CommandArguments("key", key));
+		return execute((client)->client.sMembers(makeByteKey(key)));
+	}
+
+	@Override
+	public Boolean sIsMember(final String key, final String member){
+		return execute((client)->client.sIsMember(makeRawKey(key), member));
+	}
+
+	@Override
+	public Boolean sIsMember(final byte[] key, final byte[] member){
+		return execute((client)->client.sIsMember(makeByteKey(key), member));
 	}
 
 	@Override
 	public Status sMove(final String key, final String destKey, final String member){
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("member", member);
-		return execute((client)->client.sMove(makeRawKey(key), makeRawKey(destKey), member), ProtocolCommand.SMOVE,
-				args);
+		return execute((client)->client.sMove(makeRawKey(key), makeRawKey(destKey), member));
 	}
 
 	@Override
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member){
-		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("member", member);
-		return execute((client)->client.sMove(makeByteKey(key), makeByteKey(destKey), member), ProtocolCommand.SMOVE,
-				args);
+		return execute((client)->client.sMove(makeByteKey(key), makeByteKey(destKey), member));
 	}
 
 	@Override
 	public String sPop(final String key){
-		return execute((client)->client.sPop(makeRawKey(key)), ProtocolCommand.SMEMBERS,
-				new CommandArguments("key", key));
+		return execute((client)->client.sPop(makeRawKey(key)));
 	}
 
 	@Override
 	public byte[] sPop(final byte[] key){
-		return execute((client)->client.sPop(makeByteKey(key)), ProtocolCommand.SMEMBERS,
-				new CommandArguments("key", key));
+		return execute((client)->client.sPop(makeByteKey(key)));
+	}
+
+	@Override
+	public Set<String> sPop(final String key, final long count){
+		return execute((client)->client.sPop(makeRawKey(key, count)));
+	}
+
+	@Override
+	public Set<byte[]> sPop(final byte[] key, final long count){
+		return execute((client)->client.sPop(makeByteKey(key, count)));
 	}
 
 	@Override
 	public String sRandMember(final String key){
-		return execute((client)->client.sRandMember(makeRawKey(key)), ProtocolCommand.SRANDMEMBER,
-				new CommandArguments("key", key));
+		return execute((client)->client.sRandMember(makeRawKey(key)));
 	}
 
 	@Override
 	public byte[] sRandMember(final byte[] key){
-		return execute((client)->client.sRandMember(makeByteKey(key)), ProtocolCommand.SRANDMEMBER,
-				new CommandArguments("key", key));
+		return execute((client)->client.sRandMember(makeByteKey(key)));
 	}
 
 	@Override
-	public List<String> sRandMember(final String key, final long count){
-		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return execute((client)->client.sRandMember(makeRawKey(key), count), ProtocolCommand.SRANDMEMBER, args);
+	public Set<String> sRandMember(final String key, final long count){
+		return execute((client)->client.sRandMember(makeRawKey(key), count));
 	}
 
 	@Override
-	public List<byte[]> sRandMember(final byte[] key, final long count){
-		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return execute((client)->client.sRandMember(makeByteKey(key), count), ProtocolCommand.SRANDMEMBER, args);
+	public Set<byte[]> sRandMember(final byte[] key, final long count){
+		return execute((client)->client.sRandMember(makeByteKey(key), count));
 	}
 
 	@Override
 	public Long sRem(final String key, final String... members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return execute((client)->client.sRem(makeRawKey(key), members), ProtocolCommand.SREM, args);
+		return execute((client)->client.sRem(makeRawKey(key), members));
 	}
 
 	@Override
 	public Long sRem(final byte[] key, final byte[]... members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return execute((client)->client.sRem(makeByteKey(key), members), ProtocolCommand.SREM, args);
+		return execute((client)->client.sRem(makeByteKey(key), members));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final long cursor){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return execute((client)->client.sScan(makeRawKey(key), cursor), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeRawKey(key), cursor));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return execute((client)->client.sScan(makeByteKey(key), cursor), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeByteKey(key), cursor));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return execute((client)->client.sScan(makeRawKey(key), cursor), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeRawKey(key), cursor));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return execute((client)->client.sScan(makeByteKey(key), cursor), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeByteKey(key), cursor));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		return execute((client)->client.sScan(makeRawKey(key), cursor, pattern), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeRawKey(key), cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		return execute((client)->client.sScan(makeByteKey(key), cursor, pattern), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeByteKey(key), cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		return execute((client)->client.sScan(makeRawKey(key), cursor, pattern), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeRawKey(key), cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		return execute((client)->client.sScan(makeByteKey(key), cursor, pattern), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeByteKey(key), cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final long cursor, final long count){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		return execute((client)->client.sScan(makeRawKey(key), cursor, count), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeRawKey(key), cursor, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final long count){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		return execute((client)->client.sScan(makeByteKey(key), cursor, count), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeByteKey(key), cursor, count));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final long count){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		return execute((client)->client.sScan(makeRawKey(key), cursor, count), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeRawKey(key), cursor, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		return execute((client)->client.sScan(makeByteKey(key), cursor, count), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeByteKey(key), cursor, count));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final long count){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
-				.put("count", count);
-		return execute((client)->client.sScan(makeRawKey(key), cursor, pattern, count), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeRawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final long count){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
-				.put("count", count);
-		return execute((client)->client.sScan(makeByteKey(key), cursor, pattern, count), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeByteKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
 										  final long count){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
-				.put("count", count);
-		return execute((client)->client.sScan(makeRawKey(key), cursor, pattern, count), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeRawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 										  final long count){
-		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
-				.put("count", count);
-		return execute((client)->client.sScan(makeByteKey(key), cursor, pattern, count), ProtocolCommand.SSCAN, args);
+		return execute((client)->client.sScan(makeByteKey(key), cursor, pattern, count));
 	}
 
 	@Override
-	public Set<String> sUnion(final String... keys){
-		return execute((client)->client.sUnion(makeRawKeys(keys)), ProtocolCommand.SUNION,
-				new CommandArguments("keys", keys));
+	public Set<String> sUnion(final String key, final String... keys){
+		return execute((client)->client.sUnion(makeRawKey(key), makeRawKeys(keys)));
 	}
 
 	@Override
-	public Set<byte[]> sUnion(final byte[]... keys){
-		return execute((client)->client.sUnion(makeByteKeys(keys)), ProtocolCommand.SUNION,
-				new CommandArguments("keys", keys));
+	public Set<byte[]> sUnion(final byte[] key, final byte[]... keys){
+		return execute((client)->client.sUnion(makeByteKey(key), makeByteKeys(keys)));
 	}
 
 	@Override
 	public Long sUnionStore(final String destKey, final String... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return execute((client)->client.sUnionStore(makeRawKey(destKey), makeRawKeys(keys)),
-				ProtocolCommand.SUNIONSTORE, args);
+		return execute((client)->client.sUnionStore(makeRawKey(destKey), makeRawKeys(keys)));
 	}
 
 	@Override
 	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return execute((client)->client.sUnionStore(makeByteKey(destKey), makeByteKeys(keys)),
-				ProtocolCommand.SUNIONSTORE, args);
+		return execute((client)->client.sUnionStore(makeByteKey(destKey), makeByteKeys(keys)));
 	}
 
 	@Override

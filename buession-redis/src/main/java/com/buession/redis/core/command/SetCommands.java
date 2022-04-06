@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -96,30 +96,33 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
 	 *
+	 * @param key
+	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 *
 	 * @return 一个包含差集成员的列表
 	 */
-	Set<String> sDiff(final String... keys);
+	Set<String> sDiff(final String key, final String... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
 	 *
+	 * @param key
+	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 *
 	 * @return 一个包含差集成员的列表
 	 */
-	Set<byte[]> sDiff(final byte[]... keys);
+	Set<byte[]> sDiff(final byte[] key, final byte[]... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiffstore.html" target="_blank">http://redisdoc.com/set/sdiffstore
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiffstore.html" target="_blank">http://redisdoc.com/set/sdiffstore.html</a></p>
 	 *
 	 * @param destKey
 	 * 		目标 Key
@@ -133,8 +136,7 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiffstore.html" target="_blank">http://redisdoc.com/set/sdiffstore
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiffstore.html" target="_blank">http://redisdoc.com/set/sdiffstore.html</a></p>
 	 *
 	 * @param destKey
 	 * 		目标 Key
@@ -148,34 +150,35 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a></p>
 	 *
+	 * @param key
+	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 *
 	 * @return 交集成员的列表
 	 */
-	Set<String> sInter(final String... keys);
+	Set<String> sInter(final String key, final String... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a></p>
 	 *
+	 * @param key
+	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 *
 	 * @return 交集成员的列表
 	 */
-	Set<byte[]> sInter(final byte[]... keys);
+	Set<byte[]> sInter(final byte[] key, final byte[]... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sinterstore.html" target="_blank">http://redisdoc.com/set/sinterstore
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sinterstore.html" target="_blank">http://redisdoc.com/set/sinterstore.html</a></p>
 	 *
 	 * @param destKey
 	 * 		目标 Key
@@ -189,8 +192,7 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sinterstore.html" target="_blank">http://redisdoc.com/set/sinterstore
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sinterstore.html" target="_blank">http://redisdoc.com/set/sinterstore.html</a></p>
 	 *
 	 * @param destKey
 	 * 		目标 Key
@@ -204,8 +206,7 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 检测 member 元素是否集合 key 的成员
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sismember.html" target="_blank">http://redisdoc.com/set/sismember
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sismember.html" target="_blank">http://redisdoc.com/set/sismember.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -219,8 +220,7 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 检测 member 元素是否集合 key 的成员
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sismember.html" target="_blank">http://redisdoc.com/set/sismember
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sismember.html" target="_blank">http://redisdoc.com/set/sismember.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -234,8 +234,7 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 获取集合 key 中的所有成员
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/smembers.html" target="_blank">http://redisdoc.com/set/smembers
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/smembers.html" target="_blank">http://redisdoc.com/set/smembers.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -247,8 +246,7 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 获取集合 key 中的所有成员
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/smembers.html" target="_blank">http://redisdoc.com/set/smembers
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/smembers.html" target="_blank">http://redisdoc.com/set/smembers.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -256,6 +254,34 @@ public interface SetCommands extends RedisCommands {
 	 * @return 集合中的所有成员
 	 */
 	Set<byte[]> sMembers(final byte[] key);
+
+	/**
+	 * 用于判断元素 member 是否集合 key 的成员
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/sismember.html" target="_blank">https://www.redis.com.cn/commands/sismember.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 *
+	 * @return 如果成员元素是集合的成员，返回 true；否则，返回 false
+	 */
+	Boolean sIsMember(final String key, final String member);
+
+	/**
+	 * 用于判断元素 member 是否集合 key 的成员
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/sismember.html" target="_blank">https://www.redis.com.cn/commands/sismember.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param member
+	 * 		成员
+	 *
+	 * @return 如果成员元素是集合的成员，返回 true；否则，返回 false
+	 */
+	Boolean sIsMember(final byte[] key, final byte[] member);
 
 	/**
 	 * 将 member 元素从 source 集合移动到 destKey 集合 中
@@ -314,10 +340,37 @@ public interface SetCommands extends RedisCommands {
 	byte[] sPop(final byte[] key);
 
 	/**
+	 * 移除并返回集合 key 中的 count 个随机元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/spop.html" target="_blank">http://redisdoc.com/set/spop.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		返回删除元素个数
+	 *
+	 * @return 被移除的随机元素
+	 */
+	Set<String> sPop(final String key, final long count);
+
+	/**
+	 * 移除并返回集合 key 中的 count 个随机元素
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/spop.html" target="_blank">http://redisdoc.com/set/spop.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		返回删除元素个数
+	 *
+	 * @return 被移除的随机元素
+	 */
+	Set<byte[]> sPop(final byte[] key, final long count);
+
+	/**
 	 * 返回集合 key 中的一个随机元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -329,8 +382,7 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 返回集合 key 中的一个随机元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -342,62 +394,30 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 返回集合 key 中的 count 个随机元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param count
 	 * 		需要返回的元素数量
 	 *
-	 * @return 集合 key 中的随机元素列表
+	 * @return 集合 key 中的随机元素
 	 */
-	List<String> sRandMember(final String key, final int count);
+	Set<String> sRandMember(final String key, final long count);
 
 	/**
 	 * 返回集合 key 中的 count 个随机元素
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
 	 * @param count
 	 * 		需要返回的元素数量
 	 *
-	 * @return 集合 key 中的随机元素列表
+	 * @return 集合 key 中的随机元素
 	 */
-	List<byte[]> sRandMember(final byte[] key, final int count);
-
-	/**
-	 * 返回集合 key 中的 count 个随机元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember
-	 * .html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param count
-	 * 		需要返回的元素数量
-	 *
-	 * @return 集合 key 中的随机元素列表
-	 */
-	List<String> sRandMember(final String key, final long count);
-
-	/**
-	 * 返回集合 key 中的 count 个随机元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srandmember.html" target="_blank">http://redisdoc.com/set/srandmember
-	 * .html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param count
-	 * 		需要返回的元素数量
-	 *
-	 * @return 集合 key 中的随机元素列表
-	 */
-	List<byte[]> sRandMember(final byte[] key, final long count);
+	Set<byte[]> sRandMember(final byte[] key, final long count);
 
 	/**
 	 * 移除集合 key 中的一个或多个 member 元素，不存在的 member 元素会被忽略
@@ -426,34 +446,6 @@ public interface SetCommands extends RedisCommands {
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
 	Long sRem(final byte[] key, final byte[]... members);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 *
-	 * @return 每个元素都是一个集合成员
-	 */
-	ScanResult<List<String>> sScan(final String key, final int cursor);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 *
-	 * @return 每个元素都是一个集合成员
-	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor);
 
 	/**
 	 * 迭代集合键中的元素
@@ -510,38 +502,6 @@ public interface SetCommands extends RedisCommands {
 	 * @return 每个元素都是一个集合成员
 	 */
 	ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 *
-	 * @return 返回和给定模式相匹配的元素
-	 */
-	ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 *
-	 * @return 返回和给定模式相匹配的元素
-	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern);
 
 	/**
 	 * 迭代集合键中的元素
@@ -621,7 +581,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<List<String>> sScan(final String key, final int cursor, final int count);
+	ScanResult<List<String>> sScan(final String key, final long cursor, final long count);
 
 	/**
 	 * 迭代集合键中的元素
@@ -637,7 +597,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final int count);
+	ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final long count);
 
 	/**
 	 * 迭代集合键中的元素
@@ -653,7 +613,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<List<String>> sScan(final String key, final long cursor, final int count);
+	ScanResult<List<String>> sScan(final String key, final String cursor, final long count);
 
 	/**
 	 * 迭代集合键中的元素
@@ -669,39 +629,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回的指定数量的键值对
 	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final int count);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回的指定数量的键值对
-	 */
-	ScanResult<List<String>> sScan(final String key, final String cursor, final int count);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回的指定数量的键值对
-	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final int count);
+	ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count);
 
 	/**
 	 * 迭代集合键中的元素
@@ -719,7 +647,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<List<String>> sScan(final String key, final int cursor, final String pattern, final int count);
+	ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final long count);
 
 	/**
 	 * 迭代集合键中的元素
@@ -737,7 +665,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final int cursor, final byte[] pattern, final int count);
+	ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final long count);
 
 	/**
 	 * 迭代集合键中的元素
@@ -755,7 +683,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final int count);
+	ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern, final long count);
 
 	/**
 	 * 迭代集合键中的元素
@@ -773,76 +701,40 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 返回和给定模式相匹配指定数量的元素
 	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final int count);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的元素
-	 */
-	ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern, final int count);
-
-	/**
-	 * 迭代集合键中的元素
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sscan.html" target="_blank">http://redisdoc.com/set/sscan.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param cursor
-	 * 		游标
-	 * @param pattern
-	 * 		glob 风格的模式参数
-	 * @param count
-	 * 		返回元素数量
-	 *
-	 * @return 返回和给定模式相匹配指定数量的元素
-	 */
-	ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final int count);
+	ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern, final long count);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a></p>
 	 *
+	 * @param key
+	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 *
 	 * @return 并集成员的列表
 	 */
-	Set<String> sUnion(final String... keys);
+	Set<String> sUnion(final String key, final String... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a></p>
 	 *
+	 * @param key
+	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 *
 	 * @return 并集成员的列表
 	 */
-	Set<byte[]> sUnion(final byte[]... keys);
+	Set<byte[]> sUnion(final byte[] key, final byte[]... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/set/sunionstore.html" target="_blank">http://redisdoc.com/set/sunionstorehtml</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sunionstore.html" target="_blank">http://redisdoc.com/set/sunionstorehtml</a></p>
 	 *
 	 * @param destKey
 	 * 		目标 Key
@@ -856,9 +748,7 @@ public interface SetCommands extends RedisCommands {
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/set/sunionstore.html" target="_blank">http://redisdoc.com/set/sunionstore.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sunionstore.html" target="_blank">http://redisdoc.com/set/sunionstore.html</a></p>
 	 *
 	 * @param destKey
 	 * 		目标 Key

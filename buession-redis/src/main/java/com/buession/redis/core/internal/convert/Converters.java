@@ -28,6 +28,7 @@ import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.MapConverter;
+import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.core.Constants;
 import com.buession.redis.utils.SafeEncoder;
@@ -43,15 +44,7 @@ public interface Converters {
 
 	OkStatusConverter OK_STATUS_CONVERTER = new OkStatusConverter();
 
-	Converter<Long, Status> LONG_STATUS_CONVERTER = new Converter<Long, Status>() {
-
-		@Nullable
-		@Override
-		public Status convert(final Long source){
-			return source != null && source > 0 ? Status.SUCCESS : Status.FAILURE;
-		}
-
-	};
+	Converter<Long, Status> LONG_STATUS_CONVERTER = new PredicateStatusConverter<>((val)->val != null && val > 0);
 
 	Converter<byte[], Status> BINARY_OK_STATUS_CONVERTER = new Converter<byte[], Status>() {
 

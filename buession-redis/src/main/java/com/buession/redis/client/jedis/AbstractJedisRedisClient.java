@@ -34,6 +34,7 @@ import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientReply;
+import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.ClusterFailoverOption;
 import com.buession.redis.core.ClusterInfo;
@@ -247,6 +248,71 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Status select(final int db){
 		return connectionOperations.select(db);
+	}
+
+	@Override
+	public Status clientCaching(final boolean isYes){
+		return connectionOperations.clientCaching(isYes);
+	}
+
+	@Override
+	public Long clientId(){
+		return connectionOperations.clientId();
+	}
+
+	@Override
+	public Status clientSetName(final String name){
+		return connectionOperations.clientSetName(name);
+	}
+
+	@Override
+	public String clientGetName(){
+		return connectionOperations.clientGetName();
+	}
+
+	@Override
+	public Integer clientGetRedir(){
+		return connectionOperations.clientGetRedir();
+	}
+
+	@Override
+	public List<Client> clientList(){
+		return connectionOperations.clientList();
+	}
+
+	@Override
+	public List<Client> clientList(final ClientType clientType){
+		return connectionOperations.clientList(clientType);
+	}
+
+	@Override
+	public Client clientInfo(){
+		return connectionOperations.clientInfo();
+	}
+
+	@Override
+	public Status clientPause(final int timeout){
+		return connectionOperations.clientPause(timeout);
+	}
+
+	@Override
+	public Status clientReply(final ClientReply option){
+		return connectionOperations.clientReply(option);
+	}
+
+	@Override
+	public Status clientKill(final String host, final int port){
+		return connectionOperations.clientKill(host, port);
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId){
+		return serverOperations.clientUnblock(clientId);
+	}
+
+	@Override
+	public Status clientUnblock(final int clientId, final ClientUnblockType type){
+		return serverOperations.clientUnblock(clientId, type);
 	}
 
 	@Override
@@ -1109,51 +1175,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Status clientKill(final String host, final int port){
-		return serverOperations.clientKill(host, port);
-	}
-
-	@Override
-	public String clientGetName(){
-		return serverOperations.clientGetName();
-	}
-
-	@Override
-	public String clientId(){
-		return serverOperations.clientId();
-	}
-
-	@Override
-	public List<Client> clientList(){
-		return serverOperations.clientList();
-	}
-
-	@Override
-	public Status clientPause(final int timeout){
-		return serverOperations.clientPause(timeout);
-	}
-
-	@Override
-	public Status clientReply(final ClientReply option){
-		return serverOperations.clientReply(option);
-	}
-
-	@Override
-	public Status clientSetName(final String name){
-		return serverOperations.clientSetName(name);
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId){
-		return serverOperations.clientUnblock(clientId);
-	}
-
-	@Override
-	public Status clientUnblock(final int clientId, final ClientUnblockType type){
-		return serverOperations.clientUnblock(clientId, type);
-	}
-
-	@Override
 	public Status flushAll(){
 		return serverOperations.flushAll();
 	}
@@ -1319,8 +1340,8 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Set<String> sDiff(final String... keys){
-		return setOperations.sDiff(keys);
+	public Set<String> sDiff(final String key, final String... keys){
+		return setOperations.sDiff(key, keys);
 	}
 
 	@Override
@@ -1329,8 +1350,8 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Set<String> sInter(final String... keys){
-		return setOperations.sInter(keys);
+	public Set<String> sInter(final String key, final String... keys){
+		return setOperations.sInter(key, keys);
 	}
 
 	@Override
@@ -1349,6 +1370,11 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
+	public Boolean sIsMember(final String key, final String member){
+		return setOperations.sIsMember(key, member);
+	}
+
+	@Override
 	public Status sMove(final String key, final String destKey, final String member){
 		return setOperations.sMove(key, destKey, member);
 	}
@@ -1359,12 +1385,17 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
+	public Set<String> sPop(final String key, final long count){
+		return setOperations.sPop(key, count);
+	}
+
+	@Override
 	public String sRandMember(final String key){
 		return setOperations.sRandMember(key);
 	}
 
 	@Override
-	public List<String> sRandMember(final String key, final long count){
+	public Set<String> sRandMember(final String key, final long count){
 		return setOperations.sRandMember(key, count);
 	}
 
@@ -1412,6 +1443,11 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
 										  final long count){
 		return setOperations.sScan(key, cursor, pattern, count);
+	}
+
+	@Override
+	public Set<String> sUnion(final String key, final String... keys){
+		return setOperations.sUnion(key, keys);
 	}
 
 	@Override

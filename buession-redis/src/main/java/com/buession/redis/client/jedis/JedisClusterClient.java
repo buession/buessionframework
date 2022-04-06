@@ -899,8 +899,8 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
-	public Set<byte[]> sDiff(final byte[]... keys){
-		return setOperations.sDiff(keys);
+	public Set<byte[]> sDiff(final byte[] key, final byte[]... keys){
+		return setOperations.sDiff(key, keys);
 	}
 
 	@Override
@@ -909,8 +909,8 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
-	public Set<byte[]> sInter(final byte[]... keys){
-		return setOperations.sInter(keys);
+	public Set<byte[]> sInter(final byte[] key, final byte[]... keys){
+		return setOperations.sInter(key, keys);
 	}
 
 	@Override
@@ -929,6 +929,11 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
+	public Boolean sIsMember(final byte[] key, final byte[] member){
+		return setOperations.sIsMember(key, member);
+	}
+
+	@Override
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member){
 		return setOperations.sMove(key, destKey, member);
 	}
@@ -939,12 +944,17 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
+	public Set<byte[]> sPop(final byte[] key, final long count){
+		return setOperations.sPop(key, count);
+	}
+
+	@Override
 	public byte[] sRandMember(final byte[] key){
 		return setOperations.sRandMember(key);
 	}
 
 	@Override
-	public List<byte[]> sRandMember(final byte[] key, final long count){
+	public Set<byte[]> sRandMember(final byte[] key, final long count){
 		return setOperations.sRandMember(key, count);
 	}
 
@@ -995,8 +1005,8 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
-	public Set<byte[]> sUnion(final byte[]... keys){
-		return setOperations.sUnion(keys);
+	public Set<byte[]> sUnion(final byte key, final byte[]... keys){
+		return setOperations.sUnion(key, keys);
 	}
 
 	@Override
