@@ -1014,6 +1014,11 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	}
 
 	@Override
+	public KeyedZSetElement bzPopMax(final byte[][] keys, final int timeout){
+		return sortedSetOperations.bzPopMax(keys, timeout);
+	}
+
+	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Number> members){
 		return sortedSetOperations.zAdd(key, members);
 	}

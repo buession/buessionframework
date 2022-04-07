@@ -19,64 +19,30 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.spring;
+package com.buession.redis.core.internal.convert.jedis;
 
-import com.buession.redis.core.Constants;
-import com.buession.net.ssl.SslConfiguration;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.KeyedZSetElement;
 
 /**
- * Redis 工厂配置抽象类
+ * {@link KeyedZSetElement} 和 jedis {@link redis.clients.jedis.resps.KeyedZSetElement} 互转
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public abstract class AbstractRedisConfiguration implements RedisConfiguration {
+public interface KeyedZSetElementConverter<S, T> extends Converter<S, T> {
 
-	/**
-	 * 连接超时（单位：秒）
-	 */
-	private int connectTimeout = Constants.DEFAULT_CONNECT_TIMEOUT;
+	final class KeyedZSetElementExposeConverter
+			implements KeyedZSetElementConverter<redis.clients.jedis.resps.KeyedZSetElement, KeyedZSetElement> {
 
-	/**
-	 * 读取超时（单位：秒）
-	 */
-	private int soTimeout = Constants.DEFAULT_SO_TIMEOUT;
+		@Override
+		public KeyedZSetElement convert(final redis.clients.jedis.resps.KeyedZSetElement source){
+			return new KeyedZSetElement(source.getKey(), source.getElement(), source.getScore());
+		}
 
-	/**
-	 * SSL 配置
-	 */
-	private SslConfiguration sslConfiguration;
-
-	@Override
-	public int getConnectTimeout(){
-		return connectTimeout;
-	}
-
-	@Override
-	public void setConnectTimeout(int connectTimeout){
-		this.connectTimeout = connectTimeout;
-	}
-
-	@Override
-	public int getSoTimeout(){
-		return soTimeout;
-	}
-
-	@Override
-	public void setSoTimeout(int soTimeout){
-		this.soTimeout = soTimeout;
-	}
-
-	@Override
-	public SslConfiguration getSslConfiguration(){
-		return sslConfiguration;
-	}
-
-	@Override
-	public void setSslConfiguration(SslConfiguration sslConfiguration){
-		this.sslConfiguration = sslConfiguration;
 	}
 
 }

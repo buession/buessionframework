@@ -25,10 +25,8 @@
 package com.buession.redis.core.command;
 
 import com.buession.core.collect.Arrays;
-import com.buession.core.utils.ArrayUtils;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Constants;
-import com.buession.redis.utils.SafeEncoder;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -38,13 +36,19 @@ import java.util.Map;
  */
 public class CommandArguments {
 
+	private final static String NIL = "<nil>";
+
 	private final Map<String, Object> parameters = new LinkedHashMap<>();
 
-	public CommandArguments(){
+	private CommandArguments(){
 	}
 
-	public CommandArguments(final String key, final Object value){
-		parameters.put(key, value);
+	private CommandArguments(final String key, final Object value){
+		put(key, value);
+	}
+
+	private CommandArguments(final String key, final Object... values){
+		put(key, values);
 	}
 
 	public static CommandArguments create(){
@@ -55,25 +59,17 @@ public class CommandArguments {
 		return new CommandArguments(key, value);
 	}
 
+	public static CommandArguments create(final String key, final Object... values){
+		return new CommandArguments(key, values);
+	}
+
 	public CommandArguments put(final String key, final Object value){
-		parameters.put(key, value);
+		parameters.put(key, value == null ? NIL : value.toString());
 		return this;
 	}
 
-	public CommandArguments put(final String key, final Object... value){
-		parameters.put(key, Arrays.toString(value));
-		return this;
-	}
-
-	public CommandArguments putAll(final CommandArguments parameters){
-		return parameters == null ? this : putAll(parameters.getParameters());
-	}
-
-	public CommandArguments putAll(final Map<String, Object> parameters){
-		if(parameters != null){
-			this.parameters.putAll(parameters);
-		}
-
+	public CommandArguments put(final String key, final Object... values){
+		parameters.put(key, values == null ? NIL : Arrays.toString(values));
 		return this;
 	}
 
@@ -96,17 +92,7 @@ public class CommandArguments {
 					sb.append(", ");
 				}
 
-				sb.append(name).append(" => ");
-
-				if(value != null){
-					if(value instanceof byte[]){
-						sb.append(SafeEncoder.encode((byte[]) value));
-					}else if(value.getClass().isArray()){
-						sb.append(Arrays.toString((Object[]) value));
-					}else{
-						sb.append(value);
-					}
-				}
+				sb.append(name).append(" => ").append(value);
 			});
 
 			return sb.toString();

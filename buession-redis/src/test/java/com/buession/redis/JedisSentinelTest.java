@@ -36,7 +36,7 @@ import java.util.List;
 /**
  * @author Yong.Teng
  */
-public class JedisTest extends AbstractJedisRedisTest {
+public class JedisSentinelTest extends AbstractJedisRedisTest {
 
 	@Test
 	public void ping(){

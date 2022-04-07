@@ -27,14 +27,10 @@ package com.buession.redis;
 import com.buession.core.utils.StringUtils;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.Options;
-import com.buession.redis.core.ShardedRedisNode;
-import com.buession.redis.spring.JedisRedisConnectionFactoryBean;
+import com.buession.redis.spring.JedisConnectionFactoryBean;
 import com.buession.redis.spring.jedis.JedisConfiguration;
-import com.buession.redis.spring.jedis.ShardedRedisConfiguration;
+import com.buession.redis.spring.jedis.JedisSentinelConfiguration;
 import redis.clients.jedis.JedisPoolConfig;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 /**
  * @author Yong.Teng
@@ -43,15 +39,18 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 
 	protected RedisConnection createJedisConnection(){
 		JedisConfiguration configuration = new JedisConfiguration();
+		JedisPoolConfig poolConfig = new JedisPoolConfig();
 
-		configuration.setHost("test.redis.server");
-		configuration.setPort(6379);
-		configuration.setPassword("rds_PWD");
-		configuration.setDatabase(63);
+		poolConfig.setMaxIdle(3);
+
+		configuration.setHost("127.0.0.1");
+		configuration.setPort(56379);
+		configuration.setPassword("passwd");
+		configuration.setDatabase(12);
 		configuration.setClientName(StringUtils.random(6));
+		configuration.setPoolConfig(poolConfig);
 
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean(configuration,
-				new JedisPoolConfig());
+		JedisConnectionFactoryBean factoryBean = new JedisConnectionFactoryBean(configuration);
 
 		try{
 			factoryBean.afterPropertiesSet();
@@ -61,16 +60,20 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 		}
 	}
 
-	protected RedisConnection createShardedJedisConnection(){
-		Set<ShardedRedisNode> nodes = new LinkedHashSet<>(2);
+	protected RedisConnection createJedisSentinelConnection(){
+		JedisSentinelConfiguration configuration = new JedisSentinelConfiguration();
+		JedisPoolConfig poolConfig = new JedisPoolConfig();
 
-		nodes.add(new ShardedRedisNode("10.101.0.230", 6379, 10));
-		nodes.add(new ShardedRedisNode("10.101.0.45", 6379, 9));
+		poolConfig.setMaxIdle(3);
 
-		ShardedRedisConfiguration configuration = new ShardedRedisConfiguration();
-		configuration.setNodes(nodes);
+		//configuration.setHost("127.0.0.1");
+		//configuration.setPort(56379);
+		//configuration.setPassword("passwd");
+		//configuration.setDatabase(12);
+		//configuration.setClientName(StringUtils.random(6));
+		//configuration.setPoolConfig(poolConfig);
 
-		JedisRedisConnectionFactoryBean factoryBean = new JedisRedisConnectionFactoryBean(configuration);
+		JedisConnectionFactoryBean factoryBean = new JedisConnectionFactoryBean(configuration);
 
 		try{
 			factoryBean.afterPropertiesSet();
@@ -86,6 +89,7 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 		Options options = new Options();
 
 		options.setPrefix("test:");
+		options.setEnableTransactionSupport(true);
 
 		redisTemplate.setOptions(options);
 

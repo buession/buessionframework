@@ -30,12 +30,13 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.convert.jedis.AggregateConverter;
-import com.buession.redis.core.convert.jedis.ScanResultConverter;
-import com.buession.redis.core.convert.jedis.TupleConverter;
+import com.buession.redis.core.internal.convert.jedis.AggregateConverter;
+import com.buession.redis.core.internal.convert.jedis.ScanResultConverter;
+import com.buession.redis.core.internal.convert.jedis.TupleConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 import com.buession.redis.core.internal.jedis.JedisZParams;
 import com.buession.redis.exception.RedisExceptionUtils;
+import redis.clients.jedis.JedisCluster;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,9 +44,11 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Jedis 集群模式模式模式有序集合命令操作
+ *
  * @author Yong.Teng
  */
-public class JedisClusterSortedSetOperations extends AbstractSortedSetOperations {
+public final class JedisClusterSortedSetOperations extends AbstractSortedSetOperations<JedisCluster> {
 
 	public JedisClusterSortedSetOperations(final JedisClusterClient client){
 		super(client);

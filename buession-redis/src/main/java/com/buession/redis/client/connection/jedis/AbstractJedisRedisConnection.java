@@ -19,14 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.AbstractRedisConnection;
-import com.buession.redis.client.connection.SslConfiguration;
+import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.jedis.JedisRedisDataSource;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Transaction;
 
 import java.io.IOException;
 
@@ -36,6 +38,16 @@ import java.io.IOException;
  * @author Yong.Teng
  */
 public abstract class AbstractJedisRedisConnection extends AbstractRedisConnection implements JedisRedisConnection {
+
+	/**
+	 * 连接池配置
+	 */
+	private JedisPoolConfig poolConfig;
+
+	/**
+	 * 事务
+	 */
+	protected Transaction transaction;
 
 	/**
 	 * 构造函数
@@ -97,12 +109,91 @@ public abstract class AbstractJedisRedisConnection extends AbstractRedisConnecti
 		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
 	}
 
-	@Override
-	protected void doDestroy() throws IOException{
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
+	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, JedisPoolConfig poolConfig){
+		super(dataSource);
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 */
+	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
+										int soTimeout){
+		super(dataSource, connectTimeout, soTimeout);
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, JedisPoolConfig poolConfig,
+										SslConfiguration sslConfiguration){
+		super(dataSource, sslConfiguration);
+		this.poolConfig = poolConfig;
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param dataSource
+	 * 		Redis 数据源
+	 * @param poolConfig
+	 * 		连接池配置
+	 * @param connectTimeout
+	 * 		连接超时
+	 * @param soTimeout
+	 * 		读取超时
+	 * @param sslConfiguration
+	 * 		SSL 配置
+	 */
+	public AbstractJedisRedisConnection(JedisRedisDataSource dataSource, JedisPoolConfig poolConfig, int connectTimeout,
+										int soTimeout,
+										SslConfiguration sslConfiguration){
+		super(dataSource, connectTimeout, soTimeout, sslConfiguration);
+		this.poolConfig = poolConfig;
 	}
 
 	@Override
-	protected void doDisconnect() throws IOException{
+	public JedisPoolConfig getPoolConfig(){
+		return poolConfig;
+	}
+
+	@Override
+	public void setPoolConfig(JedisPoolConfig poolConfig){
+		this.poolConfig = poolConfig;
+	}
+
+	@Override
+	public Transaction getTransaction(){
+		return transaction;
+	}
+
+	@Override
+	protected void doDestroy() throws IOException{
 	}
 
 	@Override

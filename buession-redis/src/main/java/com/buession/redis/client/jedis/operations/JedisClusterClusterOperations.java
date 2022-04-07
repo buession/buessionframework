@@ -54,70 +54,65 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 
 	@Override
 	public String clusterMyId(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_MY_ID);
 	}
 
 	@Override
 	public Status clusterAddSlots(final int... slots){
 		final CommandArguments args = CommandArguments.create("slots", slots);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_ADDSLOTS, args);
 	}
 
 	@Override
 	public Map<Integer, RedisClusterServer> clusterSlots(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_SLOTS);
 	}
 
 	@Override
-	public int clusterCountKeysInSlot(final int slot){
+	public long clusterCountKeysInSlot(final int slot){
 		final CommandArguments args = CommandArguments.create("slot", slot);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT, args);
 	}
 
 	@Override
 	public Status clusterDelSlots(final int... slots){
 		final CommandArguments args = CommandArguments.create("slots", slots);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_FLUSHSLOTS, args);
 	}
 
 	@Override
 	public Status clusterFlushSlots(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_FLUSHSLOTS);
 	}
 
 	@Override
 	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption){
 		final CommandArguments args = CommandArguments.create("clusterFailoverOption", clusterFailoverOption);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_FAILOVER, args);
 	}
 
 	@Override
 	public Status clusterForget(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_FORGET, args);
 	}
 
 	@Override
 	public Status clusterForget(final byte[] nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_FORGET, args);
 	}
 
 	@Override
 	public List<String> clusterGetKeysInSlot(final int slot, final long count){
 		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
-	}
-
-	@Override
-	public ClusterInfo clusterInfo(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_GETKEYSINSLOT, args);
 	}
 
 	@Override
 	public long clusterKeySlot(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_KEYSLOT, args);
 	}
 
 	@Override
@@ -126,56 +121,61 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	}
 
 	@Override
+	public ClusterInfo clusterInfo(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_INFO);
+	}
+
+	@Override
 	public Status clusterMeet(final String ip, final int port){
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_MEET, args);
 	}
 
 	@Override
 	public Status clusterMeet(final byte[] ip, final int port){
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_MEET, args);
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterNodes(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_NODES);
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterSlaves(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_SLAVES, args);
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterSlaves(final byte[] nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_SLAVES, args);
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterReplicas(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_REPLICAS, args);
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterReplicas(final byte[] nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_REPLICAS, args);
 	}
 
 	@Override
 	public Status clusterReplicate(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_REPLICATE, args);
 	}
 
 	@Override
 	public Status clusterReplicate(final byte[] nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_REPLICATE, args);
 	}
 
 	@Override
@@ -186,26 +186,26 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	@Override
 	public Status clusterReset(final ClusterResetOption clusterResetOption){
 		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_RESET, args);
 	}
 
 	@Override
 	public Status clusterSaveConfig(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_SAVECONFIG);
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId){
 		final CommandArguments args = CommandArguments.create("slot", slot).put("setSlotOption", setSlotOption)
 				.put("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_SETSLOT, args);
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId){
 		final CommandArguments args = CommandArguments.create("slot", slot).put("setSlotOption", setSlotOption)
 				.put("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_SETSLOT, args);
 	}
 
 	@Override

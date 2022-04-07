@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
@@ -27,9 +27,9 @@ package com.buession.redis.client.connection;
 import com.buession.core.Destroyable;
 import com.buession.core.Executor;
 import com.buession.lang.Status;
+import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.pipeline.Pipeline;
-import com.buession.redis.transaction.Transaction;
 import com.buession.redis.exception.RedisException;
 
 import java.io.Closeable;
@@ -126,7 +126,7 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 * @param executor
 	 * 		命令执行器
 	 * @param <C>
-	 * 		命令执行器源类型
+	 * 		原始命令对象
 	 * @param <R>
 	 * 		返回值类型
 	 *
@@ -136,13 +136,6 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 * 		Redis Exception
 	 */
 	<C, R> R execute(final Executor<C, R> executor) throws RedisException;
-
-	/**
-	 * 获取事务
-	 *
-	 * @return 事务
-	 */
-	Transaction getTransaction();
 
 	/**
 	 * 当前是否处于事务状态
@@ -156,7 +149,7 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 *
 	 * @return 管道
 	 */
-	Pipeline getPipeline();
+	Pipeline pipeline();
 
 	/**
 	 * 当前是否处于管道状态
@@ -195,13 +188,5 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 * @return 连接是否关闭
 	 */
 	boolean isClosed();
-
-	/**
-	 * 切断链接
-	 *
-	 * @throws IOException
-	 * 		IO 异常
-	 */
-	void disconnect() throws IOException;
 
 }

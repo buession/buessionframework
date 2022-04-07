@@ -19,12 +19,14 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection.jedis;
 
 import com.buession.redis.client.connection.RedisConnection;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.Transaction;
 
 /**
  * Jedis Redis 连接对象
@@ -32,5 +34,27 @@ import com.buession.redis.client.connection.RedisConnection;
  * @author Yong.Teng
  */
 public interface JedisRedisConnection extends RedisConnection {
+
+	/**
+	 * 返回连接池配置 {@link JedisPoolConfig}
+	 *
+	 * @return 连接池配置
+	 */
+	JedisPoolConfig getPoolConfig();
+
+	/**
+	 * 设置连接池配置 {@link JedisPoolConfig}
+	 *
+	 * @param poolConfig
+	 * 		连接池配置
+	 */
+	void setPoolConfig(JedisPoolConfig poolConfig);
+
+	/**
+	 * 获取事务
+	 *
+	 * @return 事务
+	 */
+	Transaction getTransaction();
 
 }

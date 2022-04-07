@@ -19,16 +19,16 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.client.connection;
 
 import com.buession.lang.Status;
+import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.core.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.pipeline.Pipeline;
-import com.buession.redis.transaction.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,11 +62,6 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	 * SSL 配置
 	 */
 	private SslConfiguration sslConfiguration;
-
-	/**
-	 * 事务
-	 */
-	protected Transaction transaction;
 
 	/**
 	 * 管道
@@ -195,11 +190,6 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	}
 
 	@Override
-	public Transaction getTransaction(){
-		return transaction;
-	}
-
-	@Override
 	public boolean isPipeline(){
 		return pipeline != null;
 	}
@@ -213,43 +203,18 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 			pipeline.close();
 			pipeline = null;
 		}
-
-		if(transaction != null){
-			transaction.close();
-			transaction = null;
-		}
-	}
-
-	@Override
-	public void disconnect() throws IOException{
-		logger.info("Disconnect redis server.");
-		doDisconnect();
-
-		if(pipeline != null){
-			pipeline.close();
-			pipeline = null;
-		}
-
-		if(transaction != null){
-			transaction.close();
-			transaction = null;
-		}
 	}
 
 	@Override
 	public void close() throws IOException{
 		logger.info("Closing redis server.");
-		doClose();
 
 		if(pipeline != null){
 			pipeline.close();
 			pipeline = null;
 		}
 
-		if(transaction != null){
-			transaction.close();
-			transaction = null;
-		}
+		doClose();
 	}
 
 	protected void initialized(){
@@ -272,8 +237,6 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	protected abstract void doConnect() throws IOException;
 
 	protected abstract void doDestroy() throws IOException;
-
-	protected abstract void doDisconnect() throws IOException;
 
 	protected abstract void doClose() throws IOException;
 

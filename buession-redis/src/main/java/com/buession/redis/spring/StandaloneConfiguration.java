@@ -25,7 +25,7 @@
 package com.buession.redis.spring;
 
 /**
- * Redis 单机工厂连接配置
+ * Redis 单机模式工厂连接配置
  *
  * @author Yong.Teng
  */

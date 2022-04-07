@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.spring.jedis;
@@ -45,6 +45,11 @@ public class JedisConfiguration extends AbstractJedisRedisConfiguration implemen
 	 * Redis 端口
 	 */
 	private int port = RedisNode.DEFAULT_PORT;
+
+	/**
+	 * 用户
+	 */
+	private String user;
 
 	/**
 	 * 密码
@@ -86,6 +91,14 @@ public class JedisConfiguration extends AbstractJedisRedisConfiguration implemen
 	@Override
 	public void setPort(int port){
 		this.port = port;
+	}
+
+	public String getUser(){
+		return user;
+	}
+
+	public void setUser(String user){
+		this.user = user;
 	}
 
 	@Override

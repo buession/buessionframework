@@ -48,8 +48,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 返回当前节点 Id
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/cluster-myid/" target="_blank">https://redis.io/commands/cluster-myid/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/cluster-myid/" target="_blank">https://redis.io/commands/cluster-myid/</a></p>
 	 *
 	 * @return 返回当前节点 Id
 	 */
@@ -58,8 +57,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 把一组 hash slots 分配给接收命令的节点
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-addslots.html" target="_blank">http://www.redis.cn/commands/cluster-addslots.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-addslots.html" target="_blank">http://www.redis.cn/commands/cluster-addslots.html</a></p>
 	 *
 	 * @param slots
 	 * 		hash slots
@@ -71,8 +69,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 返回哈希槽和 Redis 实例映射关系
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-slots.html" target="_blank">http://www.redis.cn/commands/cluster-slots.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-slots.html" target="_blank">http://www.redis.cn/commands/cluster-slots.html</a></p>
 	 *
 	 * @return 哈希槽和 Redis 实例映射关系
 	 */
@@ -81,8 +78,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * The command returns the number of failure reports for the specified node
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/cluster-count-failure-reports/" target="_blank">https://redis.io/commands/cluster-count-failure-reports/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/cluster-count-failure-reports/" target="_blank">https://redis.io/commands/cluster-count-failure-reports/</a></p>
 	 *
 	 * @param nodeId
 	 * 		节点 Id
@@ -94,8 +90,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * The command returns the number of failure reports for the specified node
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/cluster-count-failure-reports/" target="_blank">https://redis.io/commands/cluster-count-failure-reports/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/cluster-count-failure-reports/" target="_blank">https://redis.io/commands/cluster-count-failure-reports/</a></p>
 	 *
 	 * @param nodeId
 	 * 		节点 Id
@@ -108,21 +103,19 @@ public interface ClusterCommands extends RedisCommands {
 	 * 返回连接节点负责的指定 hash slot 的 key 的数量；
 	 * 只查询连接节点的数据集，所以如果连接节点指派到该 hash slot 会返回 0
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-countkeysinslot.html" target="_blank">http://www.redis.cn/commands/cluster-countkeysinslot.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-countkeysinslot.html" target="_blank">http://www.redis.cn/commands/cluster-countkeysinslot.html</a></p>
 	 *
 	 * @param slot
 	 * 		hash slot
 	 *
 	 * @return 连接节点负责的指定 hash slot 的 key 的数量
 	 */
-	int clusterCountKeysInSlot(final int slot);
+	long clusterCountKeysInSlot(final int slot);
 
 	/**
 	 * 使一个特定的 Redis Cluster 节点去忘记一个主节点正在负责的哈希槽
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-delslots.html" target="_blank">http://www.redis.cn/commands/cluster-delslots.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-delslots.html" target="_blank">http://www.redis.cn/commands/cluster-delslots.html</a></p>
 	 *
 	 * @param slots
 	 * 		hash slots
@@ -134,8 +127,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * Deletes all slots from a node
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/cluster-flushslots/" target="_blank">https://redis.io/commands/cluster-flushslots/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/cluster-flushslots/" target="_blank">https://redis.io/commands/cluster-flushslots/</a></p>
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
@@ -144,8 +136,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 让 slave 节点进行一次人工故障切换
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-failover.html" target="_blank">http://www.redis.cn/commands/cluster-failover.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-failover.html" target="_blank">http://www.redis.cn/commands/cluster-failover.html</a></p>
 	 *
 	 * @param clusterFailoverOption
 	 * 		切换选项
@@ -157,8 +148,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 从收到命令的 Redis 群集节点的节点信息列表中移除指定ID的节点
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-forget.html" target="_blank">http://www.redis.cn/commands/cluster-forget.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-forget.html" target="_blank">http://www.redis.cn/commands/cluster-forget.html</a></p>
 	 *
 	 * @param nodeId
 	 * 		节点 Id
@@ -170,8 +160,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 从收到命令的 Redis 群集节点的节点信息列表中移除指定ID的节点
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-forget.html" target="_blank">http://www.redis.cn/commands/cluster-forget.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-forget.html" target="_blank">http://www.redis.cn/commands/cluster-forget.html</a></p>
 	 *
 	 * @param nodeId
 	 * 		节点 Id
@@ -183,8 +172,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 返回存储在连接节点的指定 hash slot 里面的 key 的列表
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-getkeysinslot.html" target="_blank">http://www.redis.cn/commands/cluster-getkeysinslot.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-getkeysinslot.html" target="_blank">http://www.redis.cn/commands/cluster-getkeysinslot.html</a></p>
 	 *
 	 * @param slot
 	 * 		hash slot
@@ -196,20 +184,9 @@ public interface ClusterCommands extends RedisCommands {
 	List<String> clusterGetKeysInSlot(final int slot, final long count);
 
 	/**
-	 * 返回 Redis 集群信息
-	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-info.html" target="_blank">http://www.redis.cn/commands/cluster-info.html</a></p>
-	 *
-	 * @return Redis 集群信息
-	 */
-	ClusterInfo clusterInfo();
-
-	/**
 	 * 返回一个整数，用于标识指定键所散列到的哈希槽
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-keyslot.html" target="_blank">http://www.redis.cn/commands/cluster-keyslot.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-keyslot.html" target="_blank">http://www.redis.cn/commands/cluster-keyslot.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -221,8 +198,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 返回一个整数，用于标识指定键所散列到的哈希槽
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-keyslot.html" target="_blank">http://www.redis.cn/commands/cluster-keyslot.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-keyslot.html" target="_blank">http://www.redis.cn/commands/cluster-keyslot.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -232,10 +208,18 @@ public interface ClusterCommands extends RedisCommands {
 	long clusterKeySlot(final byte[] key);
 
 	/**
+	 * 返回 Redis 集群信息
+	 *
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-info.html" target="_blank">http://www.redis.cn/commands/cluster-info.html</a></p>
+	 *
+	 * @return Redis 集群信息
+	 */
+	ClusterInfo clusterInfo();
+
+	/**
 	 * 用来连接不同的开启集群支持的 Redis 节点，以进入工作集群
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-meet.html" target="_blank">http://www.redis.cn/commands/cluster-meet.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-meet.html" target="_blank">http://www.redis.cn/commands/cluster-meet.html</a></p>
 	 *
 	 * @param ip
 	 * 		Redis 集群节点 IP
@@ -249,8 +233,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 用来连接不同的开启集群支持的 Redis 节点，以进入工作集群
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-meet.html" target="_blank">http://www.redis.cn/commands/cluster-meet.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-meet.html" target="_blank">http://www.redis.cn/commands/cluster-meet.html</a></p>
 	 *
 	 * @param ip
 	 * 		Redis 集群节点 IP
@@ -264,8 +247,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 当前连接节点所属集群的配置信息
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-nodes.html" target="_blank">http://www.redis.cn/commands/cluster-nodes.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-nodes.html" target="_blank">http://www.redis.cn/commands/cluster-nodes.html</a></p>
 	 *
 	 * @return 集群配置信息
 	 */
@@ -274,8 +256,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 列出指定 master 节点所有 slave 节点
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-slaves.html" target="_blank">http://www.redis.cn/commands/cluster-slaves.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-slaves.html" target="_blank">http://www.redis.cn/commands/cluster-slaves.html</a></p>
 	 *
 	 * @param nodeId
 	 * 		Master 节点 Id
@@ -287,8 +268,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 列出指定 master 节点所有 slave 节点
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-slaves.html" target="_blank">http://www.redis.cn/commands/cluster-slaves.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-slaves.html" target="_blank">http://www.redis.cn/commands/cluster-slaves.html</a></p>
 	 *
 	 * @param nodeId
 	 * 		Master 节点 Id
@@ -300,8 +280,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 列出指定主节点的辅助副本节点
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-replicas.html" target="_blank">http://www.redis.cn/commands/cluster-replicas.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-replicas.html" target="_blank">http://www.redis.cn/commands/cluster-replicas.html</a></p>
 	 *
 	 * @param nodeId
 	 * 		节点 Id
@@ -313,8 +292,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 列出指定主节点的辅助副本节点
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-replicas.html" target="_blank">http://www.redis.cn/commands/cluster-replicas.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-replicas.html" target="_blank">http://www.redis.cn/commands/cluster-replicas.html</a></p>
 	 *
 	 * @param nodeId
 	 * 		节点 Id
@@ -326,8 +304,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 重新配置一个节点成为指定master的salve节点
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-replicate.html" target="_blank">http://www.redis.cn/commands/cluster-replicate.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-replicate.html" target="_blank">http://www.redis.cn/commands/cluster-replicate.html</a></p>
 	 *
 	 * @param nodeId
 	 * 		节点 Id
@@ -339,8 +316,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 重新配置一个节点成为指定master的salve节点
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-replicate.html" target="_blank">http://www.redis.cn/commands/cluster-replicate.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-replicate.html" target="_blank">http://www.redis.cn/commands/cluster-replicate.html</a></p>
 	 *
 	 * @param nodeId
 	 * 		节点 Id
@@ -352,8 +328,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * Reset 集群
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-reset.html" target="_blank">http://www.redis.cn/commands/cluster-reset.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-reset.html" target="_blank">http://www.redis.cn/commands/cluster-reset.html</a></p>
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
@@ -362,8 +337,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * Reset 集群
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-reset.html" target="_blank">http://www.redis.cn/commands/cluster-reset.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-reset.html" target="_blank">http://www.redis.cn/commands/cluster-reset.html</a></p>
 	 *
 	 * @param clusterResetOption
 	 * 		Reset 类型
@@ -375,8 +349,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 强制保存配置 nodes.conf 至磁盘
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-saveconfig.html" target="_blank">http://www.redis.cn/commands/cluster-saveconfig.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-saveconfig.html" target="_blank">http://www.redis.cn/commands/cluster-saveconfig.html</a></p>
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
@@ -387,8 +360,7 @@ public interface ClusterCommands extends RedisCommands {
 	 * 1）节点的节点信息表为空
 	 * 2）节点的当前 config epoch 为 0
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-set-config-epoch.html" target="_blank">http://www.redis.cn/commands/cluster-set-config-epoch.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-set-config-epoch.html" target="_blank">http://www.redis.cn/commands/cluster-set-config-epoch.html</a></p>
 	 *
 	 * @param configEpoch
 	 * 		Config Epoch
@@ -402,8 +374,7 @@ public interface ClusterCommands extends RedisCommands {
 	 * 1）节点的节点信息表为空
 	 * 2）节点的当前 config epoch 为 0
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-set-config-epoch.html" target="_blank">http://www.redis.cn/commands/cluster-set-config-epoch.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-set-config-epoch.html" target="_blank">http://www.redis.cn/commands/cluster-set-config-epoch.html</a></p>
 	 *
 	 * @param configEpoch
 	 * 		Config Epoch
@@ -416,8 +387,7 @@ public interface ClusterCommands extends RedisCommands {
 	 * The CLUSTER BUMPEPOCH command triggers an increment to the cluster’s config epoch from the connected node.
 	 * The epoch will be incremented if the node’s config epoch is zero, or if it is less than the cluster’s greatest epoch.
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/cluster-bumpepoch/" target="_blank">https://redis.io/commands/cluster-bumpepoch/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/cluster-bumpepoch/" target="_blank">https://redis.io/commands/cluster-bumpepoch/</a></p>
 	 *
 	 * @return {@link BumpEpoch}
 	 */
@@ -426,8 +396,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 根据如下子命令选项，修改接受节点中哈希槽的状态
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-setslot.html" target="_blank">http://www.redis.cn/commands/cluster-setslot.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-setslot.html" target="_blank">http://www.redis.cn/commands/cluster-setslot.html</a></p>
 	 *
 	 * @param slot
 	 * 		hash slot
@@ -443,8 +412,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 根据如下子命令选项，修改接受节点中哈希槽的状态
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-setslot.html" target="_blank">http://www.redis.cn/commands/cluster-setslot.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-setslot.html" target="_blank">http://www.redis.cn/commands/cluster-setslot.html</a></p>
 	 *
 	 * @param slot
 	 * 		hash slot
@@ -462,8 +430,7 @@ public interface ClusterCommands extends RedisCommands {
 	 * the ASKING command is sent to the target node followed by the command which was redirected.
 	 * This is normally done automatically by cluster clients.
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/asking/" target="_blank">https://redis.io/commands/asking/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/asking/" target="_blank">https://redis.io/commands/asking/</a></p>
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
@@ -472,8 +439,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 将连接的只读模式重置为读写模式
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/readwrite.html" target="_blank">http://www.redis.cn/commands/readwrite.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/readwrite.html" target="_blank">http://www.redis.cn/commands/readwrite.html</a></p>
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
@@ -482,8 +448,7 @@ public interface ClusterCommands extends RedisCommands {
 	/**
 	 * 开启与 Redis Cluster 从节点连接的读请求，通过该命令将从节点设置为只读模式
 	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/readonly.html" target="_blank">http://www.redis.cn/commands/readonly.html</a></p>
+	 * <p>详情说明 <a href="http://www.redis.cn/commands/readonly.html" target="_blank">http://www.redis.cn/commands/readonly.html</a></p>
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */

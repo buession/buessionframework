@@ -24,7 +24,7 @@
  */
 package com.buession.redis.spring;
 
-import com.buession.redis.client.connection.SslConfiguration;
+import com.buession.net.ssl.SslConfiguration;
 
 /**
  * Redis 工厂配置

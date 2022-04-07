@@ -24,6 +24,7 @@
  */
 package com.buession.redis.core.command;
 
+import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 
 /**
@@ -34,7 +35,43 @@ public enum ProtocolCommand {
 	/**
 	 * cluster command start
 	 **/
-	CLUSTER(ProtocolCommandGroup.CLUSTER, "rw"),
+	CLUSTER_MY_ID(ProtocolCommandGroup.CLUSTER, "r"),
+
+	CLUSTER_ADDSLOTS(ProtocolCommandGroup.CLUSTER, "rw"),
+
+	CLUSTER_SLOTS(ProtocolCommandGroup.CLUSTER, "r"),
+
+	CLUSTER_COUNTKEYSINSLOT(ProtocolCommandGroup.CLUSTER, "r"),
+
+	CLUSTER_DELSLOTS(ProtocolCommandGroup.CLUSTER, "rw"),
+
+	CLUSTER_FLUSHSLOTS(ProtocolCommandGroup.CLUSTER, "rw"),
+
+	CLUSTER_FAILOVER(ProtocolCommandGroup.CLUSTER, "rw"),
+
+	CLUSTER_FORGET(ProtocolCommandGroup.CLUSTER, "rw"),
+
+	CLUSTER_GETKEYSINSLOT(ProtocolCommandGroup.CLUSTER, "r"),
+
+	CLUSTER_KEYSLOT(ProtocolCommandGroup.CLUSTER, "r"),
+
+	CLUSTER_INFO(ProtocolCommandGroup.CLUSTER, "r"),
+
+	CLUSTER_MEET(ProtocolCommandGroup.CLUSTER, "rw"),
+
+	CLUSTER_NODES(ProtocolCommandGroup.CLUSTER, "r"),
+
+	CLUSTER_SLAVES(ProtocolCommandGroup.CLUSTER, "r"),
+
+	CLUSTER_REPLICAS(ProtocolCommandGroup.CLUSTER, "r"),
+
+	CLUSTER_REPLICATE(ProtocolCommandGroup.CLUSTER, "rw"),
+
+	CLUSTER_RESET(ProtocolCommandGroup.CLUSTER, "rw"),
+
+	CLUSTER_SAVECONFIG(ProtocolCommandGroup.CLUSTER, "rw"),
+
+	CLUSTER_SETSLOT(ProtocolCommandGroup.CLUSTER, "rw"),
 
 	ASKING(ProtocolCommandGroup.CLUSTER, "r"),
 
@@ -581,6 +618,11 @@ public enum ProtocolCommand {
 
 	public boolean isWrite(){
 		return isWrite;
+	}
+
+	@Override
+	public String toString(){
+		return StringUtils.replace(name(), "_", " ");
 	}
 
 }

@@ -29,6 +29,7 @@ import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * 列表命令
@@ -745,6 +746,21 @@ public interface ListCommands extends RedisCommands {
 
 		public Integer getMaxLen(){
 			return maxLen;
+		}
+
+		@Override
+		public String toString(){
+			final StringJoiner stringJoiner = new StringJoiner(",", "{", "}");
+
+			if(rank != null){
+				stringJoiner.add("rank=" + rank);
+			}
+
+			if(maxLen != null){
+				stringJoiner.add("maxLen=" + maxLen);
+			}
+
+			return stringJoiner.toString();
 		}
 
 		public static class Builder {

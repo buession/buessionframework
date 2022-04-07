@@ -26,6 +26,11 @@ package com.buession.redis.client.connection;
 
 import com.buession.core.utils.Assert;
 import com.buession.lang.Status;
+import com.buession.redis.core.RedisMode;
+import com.buession.redis.spring.ClusterConfiguration;
+import com.buession.redis.spring.RedisConfiguration;
+import com.buession.redis.spring.SentinelConfiguration;
+import com.buession.redis.spring.StandaloneConfiguration;
 import com.buession.redis.transaction.TransactionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +47,60 @@ public final class RedisConnectionUtils {
 	private final static Logger logger = LoggerFactory.getLogger(RedisConnectionUtils.class);
 
 	private RedisConnectionUtils(){
+	}
+
+	/**
+	 * 监测是否是单机模式连接
+	 *
+	 * @param configuration
+	 * 		RedisConfiguration
+	 *
+	 * @return 是否是单机模式连接
+	 */
+	public static boolean isStandaloneConnection(final RedisConfiguration configuration){
+		return configuration instanceof StandaloneConfiguration;
+	}
+
+	/**
+	 * 监测是否是哨兵模式连接
+	 *
+	 * @param configuration
+	 * 		RedisConfiguration
+	 *
+	 * @return 是否是哨兵模式连接
+	 */
+	public static boolean isSentinelConnection(final RedisConfiguration configuration){
+		return configuration instanceof SentinelConfiguration;
+	}
+
+	/**
+	 * 监测是否是集群模式连接
+	 *
+	 * @param configuration
+	 * 		RedisConfiguration
+	 *
+	 * @return 是否是集群模式连接
+	 */
+	public static boolean isClusterConnection(final RedisConfiguration configuration){
+		return configuration instanceof ClusterConfiguration;
+	}
+
+	/**
+	 * 根据连接器获取 Redis 模式
+	 *
+	 * @param connection
+	 * 		连接器
+	 *
+	 * @return Redis 模式
+	 */
+	public static RedisMode getRedisMode(final RedisConnection connection){
+		if(connection instanceof RedisSentinelConnection){
+			return RedisMode.SENTINEL;
+		}else if(connection instanceof RedisClusterConnection){
+			return RedisMode.CLUSTER;
+		}else{
+			return RedisMode.STANDALONE;
+		}
 	}
 
 	public static RedisConnection bindConnection(final RedisConnectionFactory factory){
@@ -173,7 +232,8 @@ public final class RedisConnectionUtils {
 
 	private static void potentiallyRegisterTransactionSynchronisation(final RedisConnectionFactory factory,
 																	  final RedisConnectionHolder connectionHolder){
-		if(TransactionUtils.isActualNonReadonlyTransactionActive() && connectionHolder.isTransactionSyncronisationActive() == false){
+		if(TransactionUtils.isActualNonReadonlyTransactionActive() &&
+				connectionHolder.isTransactionSyncronisationActive() == false){
 			connectionHolder.setTransactionSyncronisationActive(true);
 
 			RedisConnection connection = connectionHolder.getConnection();

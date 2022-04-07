@@ -25,14 +25,14 @@
 package com.buession.redis.client.connection.datasource;
 
 /**
- * Redis 单机模式数据源
+ * Redis 单机（Standalone）模式数据源
  *
  * @author Yong.Teng
  */
 public interface StandaloneDataSource extends DataSource {
 
 	/**
-	 * 获取 Redis 主机地址
+	 * 返回 Redis 主机地址
 	 *
 	 * @return Redis 主机地址
 	 */
@@ -47,7 +47,7 @@ public interface StandaloneDataSource extends DataSource {
 	void setHost(String host);
 
 	/**
-	 * 获取 Redis 端口
+	 * 返回 Redis 端口
 	 *
 	 * @return Redis 端口
 	 */
@@ -62,7 +62,22 @@ public interface StandaloneDataSource extends DataSource {
 	void setPort(int port);
 
 	/**
-	 * 获取密码
+	 * 返回用户
+	 *
+	 * @return 用户
+	 */
+	String getUser();
+
+	/**
+	 * 设置用户
+	 *
+	 * @param user
+	 * 		用户
+	 */
+	void setUser(String user);
+
+	/**
+	 * 返回密码
 	 *
 	 * @return 密码
 	 */
@@ -77,7 +92,7 @@ public interface StandaloneDataSource extends DataSource {
 	void setPassword(String password);
 
 	/**
-	 * 获取数据库
+	 * 返回数据库
 	 *
 	 * @return 数据库
 	 */
@@ -92,7 +107,7 @@ public interface StandaloneDataSource extends DataSource {
 	void setDatabase(int database);
 
 	/**
-	 * 获取 Client Name
+	 * 返回 Client Name
 	 *
 	 * @return Client Name
 	 */

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2021 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.spring;
@@ -38,7 +38,8 @@ import java.io.IOException;
  *
  * @author Yong.Teng
  */
-public abstract class RedisConnectionFactoryBean<C extends RedisConnection> extends RedisConnectionFactory implements FactoryBean<C>, InitializingBean, DisposableBean {
+public abstract class RedisConnectionFactoryBean<C extends RedisConnection> extends RedisConnectionFactory
+		implements FactoryBean<C>, InitializingBean, DisposableBean {
 
 	private C connection;
 
@@ -62,11 +63,6 @@ public abstract class RedisConnectionFactoryBean<C extends RedisConnection> exte
 	@Override
 	public C getObject() throws Exception{
 		return connection;
-	}
-
-	@Override
-	public boolean isSingleton(){
-		return true;
 	}
 
 	@Override

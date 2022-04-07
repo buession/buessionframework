@@ -34,7 +34,7 @@ public class RedisServer extends RedisNode {
 	/**
 	 * Redis 服务器主机 IP 地址
 	 */
-	private String ip;
+	private final String ip;
 
 	/**
 	 * 构造函数

@@ -19,7 +19,7 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2019 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.core.command;
@@ -27,13 +27,13 @@ package com.buession.redis.core.command;
 import com.buession.lang.Status;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.NxXx;
-import redis.clients.jedis.params.SetParams;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
- * STRING 命令
+ * 字符串命令
  *
  * <p>详情说明 <a href="http://redisdoc.com/string/index.html" target="_blank">http://redisdoc.com/string/index.html</a></p>
  *
@@ -633,6 +633,58 @@ public interface StringCommands extends RedisCommands {
 	 * @return 键 key 的旧值
 	 */
 	byte[] getSet(final byte[] key, final byte[] value);
+
+	/**
+	 * 获取键 key 的值，并重置 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param getExArgument
+	 * 		Key 过期时间参数
+	 *
+	 * @return 键 key 的值
+	 */
+	String getEx(final String key, final GetExArgument getExArgument);
+
+	/**
+	 * 获取键 key 的值，并重置 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getex/" target="_blank">https://redis.io/commands/getex/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param getExArgument
+	 * 		Key 过期时间参数
+	 *
+	 * @return 键 key 的值
+	 */
+	byte[] getEx(final byte[] key, final GetExArgument getExArgument);
+
+	/**
+	 * 获取键 key 的值，并删除 key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 键 key 的值
+	 */
+	String getDel(final String key);
+
+	/**
+	 * 获取键 key 的值，并重置 key 的过期时间
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/getdel/" target="_blank">https://redis.io/commands/getdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return 键 key 的值
+	 */
+	byte[] getDel(final byte[] key);
 
 	/**
 	 * 为键 key 储存的数字值加上一
@@ -1308,9 +1360,15 @@ public interface StringCommands extends RedisCommands {
 
 		private Long ex;
 
+		private Long exAt;
+
 		private Long px;
 
+		private Long pxAt;
+
 		private NxXx nxXx;
+
+		private Boolean keepTtl;
 
 		/**
 		 * 获取设置的键过期时间（单位：秒）
@@ -1319,6 +1377,15 @@ public interface StringCommands extends RedisCommands {
 		 */
 		public Long getEx(){
 			return ex;
+		}
+
+		/**
+		 * 获取设置的键过期时间戳
+		 *
+		 * @return 设置的键过期时间戳
+		 */
+		public Long getExAt(){
+			return exAt;
 		}
 
 		/**
@@ -1331,6 +1398,15 @@ public interface StringCommands extends RedisCommands {
 		}
 
 		/**
+		 * 获取设置的键过期时间戳
+		 *
+		 * @return 设置的键过期时间戳
+		 */
+		public Long getPxAt(){
+			return pxAt;
+		}
+
+		/**
 		 * 获取设置键的条件，NX：只在键不存在时，才对键进行设置操作；XX：只在键已经存在时，才对键进行设置
 		 *
 		 * @return 设置键的条件
@@ -1339,15 +1415,24 @@ public interface StringCommands extends RedisCommands {
 			return nxXx;
 		}
 
+		/**
+		 * Retain the time to live associated with the key
+		 *
+		 * @return the time to live associated with the key
+		 */
+		public Boolean getKeepTtl(){
+			return keepTtl;
+		}
+
 		public static class Builder {
 
-			private SetArgument setArgument = new SetArgument();
+			private final SetArgument setArgument = new SetArgument();
 
 			private Builder(){
 
 			}
 
-			public final static Builder create(){
+			public static Builder create(){
 				return new Builder();
 			}
 
@@ -1365,6 +1450,35 @@ public interface StringCommands extends RedisCommands {
 			}
 
 			/**
+			 * 设置键的过期时间戳
+			 *
+			 * @param seconds
+			 * 		键的过期时间戳，秒时间戳
+			 *
+			 * @return Builder
+			 */
+			public Builder exAt(long seconds){
+				setArgument.exAt = seconds;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间
+			 *
+			 * @param date
+			 * 		键的过期时间
+			 *
+			 * @return Builder
+			 */
+			public Builder exAt(Date date){
+				if(date != null){
+					setArgument.exAt = date.getTime() / 1000;
+				}
+
+				return this;
+			}
+
+			/**
 			 * 设置键的过期时间（单位：毫秒）
 			 *
 			 * @param lifetime
@@ -1374,6 +1488,35 @@ public interface StringCommands extends RedisCommands {
 			 */
 			public Builder px(long lifetime){
 				setArgument.px = lifetime;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间戳
+			 *
+			 * @param milliseconds
+			 * 		键的过期时间戳，毫秒秒时间戳
+			 *
+			 * @return Builder
+			 */
+			public Builder pxAt(long milliseconds){
+				setArgument.pxAt = milliseconds;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间
+			 *
+			 * @param date
+			 * 		键的过期时间
+			 *
+			 * @return Builder
+			 */
+			public Builder pxAt(Date date){
+				if(date != null){
+					setArgument.exAt = date.getTime();
+				}
+
 				return this;
 			}
 
@@ -1390,8 +1533,190 @@ public interface StringCommands extends RedisCommands {
 				return this;
 			}
 
+			/**
+			 * @return Builder
+			 */
+			public Builder keepTtl(){
+				setArgument.keepTtl = true;
+				return this;
+			}
+
 			public SetArgument build(){
 				return setArgument;
+			}
+
+		}
+
+	}
+
+	class GetExArgument {
+
+		private Long ex;
+
+		private Long exAt;
+
+		private Long px;
+
+		private Long pxAt;
+
+		private Boolean persist;
+
+		/**
+		 * 获取设置的键过期时间（单位：秒）
+		 *
+		 * @return 设置的键过期时间
+		 */
+		public Long getEx(){
+			return ex;
+		}
+
+		/**
+		 * 获取设置的键过期时间戳
+		 *
+		 * @return 设置的键过期时间戳
+		 */
+		public Long getExAt(){
+			return exAt;
+		}
+
+		/**
+		 * 获取设置的键过期时间（单位：毫秒）
+		 *
+		 * @return 设置的键过期时间
+		 */
+		public Long getPx(){
+			return px;
+		}
+
+		/**
+		 * 获取设置的键过期时间戳
+		 *
+		 * @return 设置的键过期时间戳
+		 */
+		public Long getPxAt(){
+			return pxAt;
+		}
+
+		/**
+		 * 获取设置键是否持久化
+		 *
+		 * @return 设置键是否持久化
+		 */
+		public Boolean getPersist(){
+			return persist;
+		}
+
+		public static class Builder {
+
+			private final GetExArgument getExArgument = new GetExArgument();
+
+			private Builder(){
+
+			}
+
+			public static Builder create(){
+				return new Builder();
+			}
+
+			/**
+			 * 设置键的过期时间（单位：秒）
+			 *
+			 * @param lifetime
+			 * 		键的过期时间
+			 *
+			 * @return Builder
+			 */
+			public Builder ex(long lifetime){
+				getExArgument.ex = lifetime;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间
+			 *
+			 * @param lifetime
+			 * 		键的过期时间，具体过期时间，秒时间戳
+			 *
+			 * @return Builder
+			 */
+			public Builder exAt(long lifetime){
+				getExArgument.exAt = lifetime;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间
+			 *
+			 * @param date
+			 * 		键的过期时间，具体过期时间
+			 *
+			 * @return Builder
+			 */
+			public Builder exAt(Date date){
+				if(date != null){
+					getExArgument.exAt = date.getTime() / 1000;
+				}
+
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间（单位：毫秒）
+			 *
+			 * @param lifetime
+			 * 		键的过期时间
+			 *
+			 * @return Builder
+			 */
+			public Builder px(long lifetime){
+				getExArgument.px = lifetime;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间
+			 *
+			 * @param lifetime
+			 * 		键的过期时间，具体过期时间，毫秒时间戳
+			 *
+			 * @return Builder
+			 */
+			public Builder pxAt(long lifetime){
+				getExArgument.pxAt = lifetime;
+				return this;
+			}
+
+			/**
+			 * 设置键的过期时间
+			 *
+			 * @param date
+			 * 		键的过期时间，具体过期时间，毫秒时间戳
+			 *
+			 * @return Builder
+			 */
+			public Builder pxAt(Date date){
+				if(date != null){
+					getExArgument.pxAt = date.getTime();
+				}
+
+				return this;
+			}
+
+			/**
+			 * 设置键是否持久化
+			 *
+			 * @param persist
+			 * 		设置键是否持久化
+			 *
+			 * @return Builder
+			 */
+			public Builder persist(Boolean persist){
+				getExArgument.persist = persist;
+				return this;
+			}
+
+			public GetExArgument build(){
+				return getExArgument;
 			}
 
 		}

@@ -27,58 +27,41 @@ package com.buession.redis.core;
 import com.buession.core.utils.comparator.ByteArrayComparable;
 import com.buession.redis.utils.SafeEncoder;
 
-import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class Tuple implements Comparable<Tuple>, Serializable {
+public class KeyedZSetElement extends Tuple {
 
-	private final static long serialVersionUID = -6469375940111456577L;
+	private final static long serialVersionUID = -8468320641916277445L;
 
-	private final byte[] element;
+	private final byte[] key;
 
-	private final Double score;
-
-	public Tuple(final String element, final Double score){
-		this(SafeEncoder.encode(element), score);
+	public KeyedZSetElement(final String key, final String element, final Double score){
+		super(element, score);
+		this.key = SafeEncoder.encode(key);
 	}
 
-	public Tuple(final byte[] element, final Double score){
-		super();
-		this.element = element;
-		this.score = score;
+	public KeyedZSetElement(final byte[] key, final byte[] element, final Double score){
+		super(element, score);
+		this.key = key;
 	}
 
-	public String getElement(){
-		return element == null ? null : SafeEncoder.encode(element);
+	public String getKey(){
+		return key == null ? null : SafeEncoder.encode(key);
 	}
 
-	public byte[] getBinaryElement(){
-		return element;
-	}
-
-	public double getScore(){
-		return score;
+	public byte[] getBinaryKey(){
+		return key;
 	}
 
 	@Override
 	public int hashCode(){
-		final int prime = 31;
-		int result = 1;
-
-		result = prime * result;
-
-		if(null != element){
-			for(byte b : element){
-				result = prime * result + b;
-			}
-		}
-
-		long temp = Double.doubleToLongBits(score);
-		return prime * result + (int) (temp ^ (temp >>> 32));
+		int result = super.hashCode();
+		result = 31 * result + Arrays.hashCode(key);
+		return result;
 	}
 
 	@Override
@@ -87,29 +70,35 @@ public class Tuple implements Comparable<Tuple>, Serializable {
 			return true;
 		}
 
-		if(obj instanceof Tuple){
-			Tuple that = (Tuple) obj;
-			return Arrays.equals(element, that.element) && Objects.equals(score, that.score);
+		if(obj instanceof KeyedZSetElement){
+			KeyedZSetElement that = (KeyedZSetElement) obj;
+			return Arrays.equals(key, that.key) && super.equals(obj);
 		}
 
 		return false;
 	}
 
-	@Override
-	public int compareTo(Tuple that){
-		int compScore = Double.compare(this.score, that.score);
+	public int compareTo(KeyedZSetElement that){
+		int compScore = Double.compare(this.getScore(), that.getScore());
 
 		if(compScore != 0){
 			return compScore;
 		}else{
-			ByteArrayComparable comparable = new ByteArrayComparable(this.element);
-			return comparable.compareTo(that.element);
+			ByteArrayComparable comparable = new ByteArrayComparable(this.getBinaryElement());
+
+			compScore = comparable.compareTo(that.getBinaryElement());
+			if(compScore != 0){
+				return compScore;
+			}else{
+				comparable = new ByteArrayComparable(this.key);
+				return comparable.compareTo(that.key);
+			}
 		}
 	}
 
 	@Override
 	public String toString(){
-		return "element=" + SafeEncoder.encode(element) + ", score=" + score;
+		return "key=" + SafeEncoder.encode(key) + ", " + super.toString();
 	}
 
 }

@@ -502,6 +502,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @param destKey
 	 * 		目标 Key
 	 * @param from
+	 * @param timeout
+	 * 		超时时间
 	 * 		第一个或最后一个元素
 	 * @param to
 	 * 		第一个或最后一个元素
@@ -510,7 +512,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 *
 	 * @return 被移除并再次插入的元素
 	 */
-	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to);
+	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
+					   final int timeout);
 
 	/**
 	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化后的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
@@ -524,12 +527,15 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		第一个或最后一个元素
 	 * @param to
 	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
 	 * @param <V>
 	 * 		元素值类型
 	 *
 	 * @return 被移除并再次插入的元素
 	 */
-	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to);
+	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
+					   final int timeout);
 
 	/**
 	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
@@ -543,6 +549,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		第一个或最后一个元素
 	 * @param to
 	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
 	 * @param clazz
 	 * 		元素值对象类
 	 * @param <V>
@@ -551,7 +559,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @return 被移除并再次插入的元素
 	 */
 	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-					   final Class<V> clazz);
+					   final int timeout, final Class<V> clazz);
 
 	/**
 	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 clazz 的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
@@ -565,6 +573,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		第一个或最后一个元素
 	 * @param to
 	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
 	 * @param clazz
 	 * 		元素值对象类
 	 * @param <V>
@@ -573,7 +583,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @return 被移除并再次插入的元素
 	 */
 	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-					   final Class<V> clazz);
+					   final int timeout, final Class<V> clazz);
 
 	/**
 	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
@@ -587,6 +597,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		第一个或最后一个元素
 	 * @param to
 	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
 	 * @param type
 	 * 		元素值类型引用
 	 * @param <V>
@@ -597,7 +609,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @see com.buession.core.serializer.type.TypeReference
 	 */
 	<V> V blMoveObject(final String key, final String destKey, final Direction from, final Direction to,
-					   final TypeReference<V> type);
+					   final int timeout, final TypeReference<V> type);
 
 	/**
 	 * 用于原子地从列表 key 中移除并返回第一个或最后一个元素反序列化为 type 指定的对象（头或尾取决于 from 参数)，然后把这个元素插入到列表 destKey 的第一个或最后一个元素（头或尾取决于 to 参数)；
@@ -611,6 +623,8 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * 		第一个或最后一个元素
 	 * @param to
 	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
 	 * @param type
 	 * 		元素值类型引用
 	 * @param <V>
@@ -621,7 +635,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @see com.buession.core.serializer.type.TypeReference
 	 */
 	<V> V blMoveObject(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
-					   final TypeReference<V> type);
+					   final int timeout, final TypeReference<V> type);
 
 	/**
 	 * 移除并返回 key 的头元素，BLPOP 是列表的阻塞式(blocking)弹出原语；

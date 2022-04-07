@@ -46,6 +46,7 @@ import com.buession.redis.core.FutureResult;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.Info;
+import com.buession.redis.core.KeyedZSetElement;
 import com.buession.redis.core.MemoryStats;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.Module;
@@ -136,13 +137,13 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public ClusterInfo clusterInfo(){
-		return clusterOperations.clusterInfo();
+	public long clusterKeySlot(final String key){
+		return clusterOperations.clusterKeySlot(key);
 	}
 
 	@Override
-	public long clusterKeySlot(final String key){
-		return clusterOperations.clusterKeySlot(key);
+	public ClusterInfo clusterInfo(){
+		return clusterOperations.clusterInfo();
 	}
 
 	@Override
@@ -307,12 +308,12 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 
 	@Override
 	public Status clientUnblock(final int clientId){
-		return serverOperations.clientUnblock(clientId);
+		return connectionOperations.clientUnblock(clientId);
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type){
-		return serverOperations.clientUnblock(clientId, type);
+		return connectionOperations.clientUnblock(clientId, type);
 	}
 
 	@Override
@@ -1451,13 +1452,13 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Set<String> sUnion(final String... keys){
-		return setOperations.sUnion(keys);
+	public Long sUnionStore(final String destKey, final String... keys){
+		return setOperations.sUnionStore(destKey, keys);
 	}
 
 	@Override
-	public Long sUnionStore(final String destKey, final String... keys){
-		return setOperations.sUnionStore(destKey, keys);
+	public KeyedZSetElement bzPopMax(final String[] keys, final int timeout){
+		return sortedSetOperations.bzPopMax(keys, timeout);
 	}
 
 	@Override

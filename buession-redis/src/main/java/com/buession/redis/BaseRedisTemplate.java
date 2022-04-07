@@ -152,11 +152,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public ClusterInfo clusterInfo(){
-		return execute((client)->client.clusterInfo());
-	}
-
-	@Override
 	public long clusterKeySlot(final String key){
 		return execute((client)->client.clusterKeySlot(key));
 	}
@@ -164,6 +159,11 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public long clusterKeySlot(final byte[] key){
 		return execute((client)->client.clusterKeySlot(key));
+	}
+
+	@Override
+	public ClusterInfo clusterInfo(){
+		return execute((client)->client.clusterInfo());
 	}
 
 	@Override
