@@ -27,7 +27,7 @@ package com.buession.redis.core.internal.convert.jedis;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.Limit;
 import com.buession.redis.core.command.KeyCommands;
-import redis.clients.jedis.SortingParams;
+import redis.clients.jedis.params.SortingParams;
 
 /**
  * {@link KeyCommands.SortArgument} 和 jedis {@link SortingParams} 互转

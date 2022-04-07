@@ -109,24 +109,6 @@ public interface ServerCommands extends RedisCommands {
 	Status aclSetUser(final byte[] username, final byte[]... rules);
 
 	/**
-	 * The command shows a list of all the usernames of the currently configured users in the Redis ACL system
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-users/" target="_blank">https://redis.io/commands/acl-users/</a></p>
-	 *
-	 * @return A list of all the usernames of the currently configured users in the Redis ACL system
-	 */
-	List<String> aclUsers();
-
-	/**
-	 * Return the username the current connection is authenticated with
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-whoami/" target="_blank">https://redis.io/commands/acl-whoami/</a></p>
-	 *
-	 * @return The username of the current connection
-	 */
-	String aclWhoAmI();
-
-	/**
 	 * The command returns all the rules defined for an existing ACL user
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/acl-getuser/" target="_blank">https://redis.io/commands/acl-getuser/</a></p>
@@ -149,6 +131,24 @@ public interface ServerCommands extends RedisCommands {
 	 * @return A list of ACL rule definitions for the user
 	 */
 	AclUser aclGetUser(final byte[] username);
+
+	/**
+	 * The command shows a list of all the usernames of the currently configured users in the Redis ACL system
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-users/" target="_blank">https://redis.io/commands/acl-users/</a></p>
+	 *
+	 * @return A list of all the usernames of the currently configured users in the Redis ACL system
+	 */
+	List<String> aclUsers();
+
+	/**
+	 * Return the username the current connection is authenticated with
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/acl-whoami/" target="_blank">https://redis.io/commands/acl-whoami/</a></p>
+	 *
+	 * @return The username of the current connection
+	 */
+	String aclWhoAmI();
 
 	/**
 	 * Delete all the specified ACL users and terminate all the connections that are authenticated with such users
@@ -788,10 +788,8 @@ public interface ServerCommands extends RedisCommands {
 	 * 4）关闭 redis 服务器
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/shutdown.html" target="_blank">http://redisdoc.com/client_and_server/shutdown.html</a></p>
-	 *
-	 * @return 操作成功返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
-	Status shutdown();
+	void shutdown();
 
 	/**
 	 * SHUTDOWN 命令执行以下操作：

@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.ExpireOption;
@@ -39,8 +38,8 @@ import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.JedisCluster;
-import redis.clients.jedis.SortingParams;
 import redis.clients.jedis.params.RestoreParams;
+import redis.clients.jedis.params.SortingParams;
 
 import java.util.List;
 import java.util.Set;
@@ -167,32 +166,36 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status expire(final String key, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().expire(key, lifetime), converter),
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().expire(key, lifetime), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.EXPIRE, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().expire(key, lifetime), converter),
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().expire(key, lifetime), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.EXPIRE, args);
 		}else{
-			return execute((cmd)->cmd.expire(key, lifetime), converter, ProtocolCommand.EXPIRE, args);
+			return execute((cmd)->cmd.expire(key, lifetime), Converters.LONG_STATUS_CONVERTER, ProtocolCommand.EXPIRE,
+					args);
 		}
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().expire(key, lifetime), converter),
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().expire(key, lifetime), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.EXPIRE, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().expire(key, lifetime), converter),
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().expire(key, lifetime), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.EXPIRE, args);
 		}else{
-			return execute((cmd)->cmd.expire(key, lifetime), converter, ProtocolCommand.EXPIRE, args);
+			return execute((cmd)->cmd.expire(key, lifetime), Converters.LONG_STATUS_CONVERTER, ProtocolCommand.EXPIRE,
+					args);
 		}
 	}
 
@@ -200,16 +203,18 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status expire(final String key, final int lifetime, final ExpireOption expireOption){
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
 				.put("expireOption", expireOption);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().expire(key, lifetime), converter),
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().expire(key, lifetime), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.EXPIRE, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().expire(key, lifetime), converter),
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().expire(key, lifetime), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.EXPIRE, args);
 		}else{
-			return execute((cmd)->cmd.expire(key, lifetime), converter, ProtocolCommand.EXPIRE, args);
+			return execute((cmd)->cmd.expire(key, lifetime), Converters.LONG_STATUS_CONVERTER, ProtocolCommand.EXPIRE,
+					args);
 		}
 	}
 
@@ -217,144 +222,154 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption){
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
 				.put("expireOption", expireOption);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().expire(key, lifetime), converter),
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().expire(key, lifetime), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.EXPIRE, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().expire(key, lifetime), converter),
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().expire(key, lifetime), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.EXPIRE, args);
 		}else{
-			return execute((cmd)->cmd.expire(key, lifetime), converter, ProtocolCommand.EXPIRE, args);
+			return execute((cmd)->cmd.expire(key, lifetime), Converters.LONG_STATUS_CONVERTER, ProtocolCommand.EXPIRE,
+					args);
 		}
 	}
 
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp){
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().expireAt(key, unixTimestamp), converter),
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().expireAt(key, unixTimestamp), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.EXPIREAT, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().expireAt(key, unixTimestamp), converter),
+			return transactionExecute((cmd)->newJedisResult(getTransaction().expireAt(key, unixTimestamp),
+							Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.EXPIREAT, args);
 		}else{
-			return execute((cmd)->cmd.expireAt(key, unixTimestamp), converter, ProtocolCommand.EXPIREAT, args);
+			return execute((cmd)->cmd.expireAt(key, unixTimestamp), Converters.LONG_STATUS_CONVERTER,
+					ProtocolCommand.EXPIREAT, args);
 		}
 	}
 
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp){
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().expireAt(key, unixTimestamp), converter),
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().expireAt(key, unixTimestamp), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.EXPIREAT, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().expireAt(key, unixTimestamp), converter),
+			return transactionExecute((cmd)->newJedisResult(getTransaction().expireAt(key, unixTimestamp),
+							Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.EXPIREAT, args);
 		}else{
-			return execute((cmd)->cmd.expireAt(key, unixTimestamp), converter, ProtocolCommand.EXPIREAT, args);
+			return execute((cmd)->cmd.expireAt(key, unixTimestamp), Converters.LONG_STATUS_CONVERTER,
+					ProtocolCommand.EXPIREAT, args);
 		}
 	}
 
 	@Override
 	public Status pExpire(final String key, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpire(key, lifetime), converter),
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().pexpire(key, lifetime), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.PEXPIRE, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pexpire(key, lifetime), converter),
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().pexpire(key, lifetime), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.PEXPIRE, args);
 		}else{
-			return execute((cmd)->cmd.pexpire(key, lifetime), converter, ProtocolCommand.PEXPIRE, args);
+			return execute((cmd)->cmd.pexpire(key, lifetime), Converters.LONG_STATUS_CONVERTER, ProtocolCommand.PEXPIRE,
+					args);
 		}
 	}
 
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpire(key, lifetime), converter),
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().pexpire(key, lifetime), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.PEXPIRE, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().pexpire(key, lifetime), converter),
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().pexpire(key, lifetime), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.PEXPIRE, args);
 		}else{
-			return execute((cmd)->cmd.pexpire(key, lifetime), converter, ProtocolCommand.PEXPIRE, args);
+			return execute((cmd)->cmd.pexpire(key, lifetime), Converters.LONG_STATUS_CONVERTER, ProtocolCommand.PEXPIRE,
+					args);
 		}
 	}
 
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp){
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpireAt(key, unixTimestamp), converter),
-					ProtocolCommand.PEXPIREAT, args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpireAt(key, unixTimestamp),
+					Converters.LONG_STATUS_CONVERTER), ProtocolCommand.PEXPIREAT, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().pexpireAt(key, unixTimestamp),
-					converter), ProtocolCommand.PEXPIREAT, args);
+					Converters.LONG_STATUS_CONVERTER), ProtocolCommand.PEXPIREAT, args);
 		}else{
-			return execute((cmd)->cmd.pexpireAt(key, unixTimestamp), converter, ProtocolCommand.PEXPIREAT, args);
+			return execute((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.LONG_STATUS_CONVERTER,
+					ProtocolCommand.PEXPIREAT, args);
 		}
 	}
 
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp){
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpireAt(key, unixTimestamp), converter),
-					ProtocolCommand.PEXPIREAT, args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().pexpireAt(key, unixTimestamp),
+					Converters.LONG_STATUS_CONVERTER), ProtocolCommand.PEXPIREAT, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().pexpireAt(key, unixTimestamp),
-					converter), ProtocolCommand.PEXPIREAT, args);
+					Converters.LONG_STATUS_CONVERTER), ProtocolCommand.PEXPIREAT, args);
 		}else{
-			return execute((cmd)->cmd.pexpireAt(key, unixTimestamp), converter, ProtocolCommand.PEXPIREAT, args);
+			return execute((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.LONG_STATUS_CONVERTER,
+					ProtocolCommand.PEXPIREAT, args);
 		}
 	}
 
 	@Override
 	public Status persist(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().persist(key), converter),
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().persist(key), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.PERSIST, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().persist(key), converter),
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().persist(key), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.PERSIST, args);
 		}else{
-			return execute((cmd)->cmd.persist(key), converter, ProtocolCommand.PERSIST, args);
+			return execute((cmd)->cmd.persist(key), Converters.LONG_STATUS_CONVERTER, ProtocolCommand.PERSIST, args);
 		}
 	}
 
 	@Override
 	public Status persist(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val > 0);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().persist(key), converter),
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().persist(key), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.PERSIST, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().persist(key), converter),
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().persist(key), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.PERSIST, args);
 		}else{
-			return execute((cmd)->cmd.persist(key), converter, ProtocolCommand.PERSIST, args);
+			return execute((cmd)->cmd.persist(key), Converters.LONG_STATUS_CONVERTER, ProtocolCommand.PERSIST, args);
 		}
 	}
 
@@ -557,102 +572,6 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	}
 
 	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
-		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
-				.put("db", db).put("timeout", timeout);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
-		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
-				.put("db", db).put("timeout", timeout);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
-						  final MigrateOperation operation){
-		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
-				.put("db", db).put("timeout", timeout).put("operation", operation);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
-						  final MigrateOperation operation){
-		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
-				.put("db", db).put("timeout", timeout).put("operation", operation);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final String password,
-						  final int timeout){
-		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
-				.put("db", db).put("password", password).put("timeout", timeout);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
-						  final int timeout){
-		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
-				.put("db", db).put("password", password).put("timeout", timeout);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final String password,
-						  final int timeout, final MigrateOperation operation){
-		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
-				.put("db", db).put("password", password).put("timeout", timeout).put("operation", operation);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
-						  final int timeout, final MigrateOperation operation){
-		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
-				.put("db", db).put("password", password).put("timeout", timeout).put("operation", operation);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final String user,
-						  final String password, final int timeout){
-		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
-				.put("db", db).put("user", user).put("password", password).put("timeout", timeout);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
-						  final byte[] password, final int timeout){
-		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
-				.put("db", db).put("user", user).put("password", password).put("timeout", timeout);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final String user,
-						  final String password, final int timeout, final MigrateOperation operation){
-		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
-				.put("db", db).put("user", user).put("password", password).put("timeout", timeout)
-				.put("operation", operation);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
-						  final byte[] password, final int timeout, final MigrateOperation operation){
-		final CommandArguments args = CommandArguments.create("key", key).put("host", host).put("port", port)
-				.put("db", db).put("user", user).put("password", password).put("timeout", timeout)
-				.put("operation", operation);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MIGRATE, args);
-	}
-
-	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("keys", keys);
@@ -820,32 +739,36 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status renameNx(final String key, final String newKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().renamenx(key, newKey), converter),
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().renamenx(key, newKey), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.RENAMENX, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().renamenx(key, newKey), converter),
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().renamenx(key, newKey), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.RENAMENX, args);
 		}else{
-			return execute((cmd)->cmd.renamenx(key, newKey), converter, ProtocolCommand.RENAMENX, args);
+			return execute((cmd)->cmd.renamenx(key, newKey), Converters.LONG_STATUS_CONVERTER, ProtocolCommand.RENAMENX,
+					args);
 		}
 	}
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().renamenx(key, newKey), converter),
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().renamenx(key, newKey), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.RENAMENX, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().renamenx(key, newKey), converter),
+			return transactionExecute(
+					(cmd)->newJedisResult(getTransaction().renamenx(key, newKey), Converters.LONG_STATUS_CONVERTER),
 					ProtocolCommand.RENAMENX, args);
 		}else{
-			return execute((cmd)->cmd.renamenx(key, newKey), converter, ProtocolCommand.RENAMENX, args);
+			return execute((cmd)->cmd.renamenx(key, newKey), Converters.LONG_STATUS_CONVERTER, ProtocolCommand.RENAMENX,
+					args);
 		}
 	}
 

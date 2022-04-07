@@ -333,6 +333,30 @@ public enum ProtocolCommand {
 	/**
 	 * server command start
 	 **/
+	ACL_CAT(ProtocolCommandGroup.SERVER, "r"),
+
+	ACL_SETUSER(ProtocolCommandGroup.SERVER, "rw"),
+
+	ACL_GETUSER(ProtocolCommandGroup.SERVER, "r"),
+
+	ACL_USERS(ProtocolCommandGroup.SERVER, "r"),
+
+	ACL_WHOAMI(ProtocolCommandGroup.SERVER, "r"),
+
+	ACL_DELUSER(ProtocolCommandGroup.SERVER, "rw"),
+
+	ACL_GENPASS(ProtocolCommandGroup.SERVER, "rw"),
+
+	ACL_LIST(ProtocolCommandGroup.SERVER, "r"),
+
+	ACL_LOAD(ProtocolCommandGroup.SERVER, "rw"),
+
+	ACL_LOG(ProtocolCommandGroup.SERVER, "r"),
+
+	ACL_LOGREST(ProtocolCommandGroup.SERVER, "rw"),
+
+	ACL_LOGSAVE(ProtocolCommandGroup.SERVER, "rw"),
+
 	BGREWRITEAOF(ProtocolCommandGroup.SERVER, "r"),
 
 	BGSAVE(ProtocolCommandGroup.SERVER, "r"),
@@ -381,13 +405,15 @@ public enum ProtocolCommand {
 
 	TIME(ProtocolCommandGroup.SERVER, "r"),
 
-	ACL(ProtocolCommandGroup.SERVER, "rw"),
-
 	FAILOVER(ProtocolCommandGroup.SERVER, "rw"),
 
 	MEMORY(ProtocolCommandGroup.SERVER, "r"),
 
-	MODULE(ProtocolCommandGroup.SERVER, "r"),
+	MODULE_LIST(ProtocolCommandGroup.SERVER, "r"),
+
+	MODULE_LOAD(ProtocolCommandGroup.SERVER, "rw"),
+
+	MODULE_UNLOAD(ProtocolCommandGroup.SERVER, "rw"),
 
 	SWAPDB(ProtocolCommandGroup.SERVER, "w"),
 	/**
@@ -478,6 +504,10 @@ public enum ProtocolCommand {
 	ZSCORE(ProtocolCommandGroup.SORTEDSET, "r"),
 
 	ZUNIONSTORE(ProtocolCommandGroup.SORTEDSET, "rw"),
+
+	BZPOPMIN(ProtocolCommandGroup.SORTEDSET, "rw"),
+
+	BZPOPMAX(ProtocolCommandGroup.SORTEDSET, "rw"),
 	/**
 	 * sorted set command end
 	 **/
@@ -586,8 +616,6 @@ public enum ProtocolCommand {
 	BITFIELD_RO(ProtocolCommandGroup.TRANSACTION, "rw"),
 	SMISMEMBER(ProtocolCommandGroup.TRANSACTION, "rw"),
 	ZMSCORE(ProtocolCommandGroup.TRANSACTION, "rw"),
-	BZPOPMIN(ProtocolCommandGroup.TRANSACTION, "rw"),
-	BZPOPMAX(ProtocolCommandGroup.TRANSACTION, "rw"),
 	STRALGO(ProtocolCommandGroup.TRANSACTION, "rw");
 
 	private final ProtocolCommandGroup group;

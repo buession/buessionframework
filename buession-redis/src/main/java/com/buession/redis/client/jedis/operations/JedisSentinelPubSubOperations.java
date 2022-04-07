@@ -35,6 +35,7 @@ import com.buession.redis.pubsub.jedis.DefaultJedisPubSub;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.Jedis;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -163,7 +164,7 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 	}
 
 	@Override
-	public Map<String, String> pubsubNumSub(final String... channels){
+	public Map<String, Long> pubsubNumSub(final String... channels){
 		final CommandArguments args = CommandArguments.create("channels", channels);
 
 		if(isPipeline()){
@@ -176,7 +177,7 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 	}
 
 	@Override
-	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
+	public Map<byte[], Long> pubsubNumSub(final byte[]... channels){
 		final CommandArguments args = CommandArguments.create("channels", channels);
 
 		if(isPipeline()){
@@ -184,9 +185,17 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 		}else if(isTransaction()){
 			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.PUBSUB, args);
 		}else{
-			return execute((cmd)->Converters.STRING_MAP_TO_BINARY_MAP_CONVERTER.convert(
-							cmd.pubsubNumSub(Converters.BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER.convert(channels))),
-					ProtocolCommand.PUBSUB, args);
+			return execute((cmd)->{
+				final Map<String, Long> temp = cmd.pubsubNumSub(
+						Converters.BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER.convert(channels));
+				final Map<byte[], Long> result = new HashMap<>(temp.size());
+
+				temp.forEach((key, value)->{
+					result.put(SafeEncoder.encode(key), value);
+				});
+
+				return result;
+			}, ProtocolCommand.PUBSUB, args);
 		}
 	}
 
@@ -204,7 +213,7 @@ public final class JedisSentinelPubSubOperations extends AbstractPubSubOperation
 	@Override
 	public Object pUnSubscribe(final byte[]... patterns){
 		final CommandArguments args = CommandArguments.create("patterns", patterns);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.PUNSUBSCRIBE);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.PUNSUBSCRIBE, args);
 	}
 
 	@Override

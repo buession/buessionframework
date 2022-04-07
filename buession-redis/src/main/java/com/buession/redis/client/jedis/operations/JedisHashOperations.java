@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.ScanResult;
@@ -380,8 +379,7 @@ public final class JedisHashOperations extends AbstractHashOperations<Jedis> {
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().hrandfield(key, count)),
-					ProtocolCommand.HRANDFIELD,
-					args);
+					ProtocolCommand.HRANDFIELD, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().hrandfield(key, count)),
 					ProtocolCommand.HRANDFIELD, args);
@@ -396,8 +394,7 @@ public final class JedisHashOperations extends AbstractHashOperations<Jedis> {
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().hrandfield(key, count)),
-					ProtocolCommand.HRANDFIELD,
-					args);
+					ProtocolCommand.HRANDFIELD, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().hrandfield(key, count)),
 					ProtocolCommand.HRANDFIELD, args);
@@ -412,8 +409,7 @@ public final class JedisHashOperations extends AbstractHashOperations<Jedis> {
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().hrandfieldWithValues(key, count)),
-					ProtocolCommand.HRANDFIELD,
-					args);
+					ProtocolCommand.HRANDFIELD, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().hrandfieldWithValues(key, count)),
 					ProtocolCommand.HRANDFIELD, args);
@@ -428,8 +424,7 @@ public final class JedisHashOperations extends AbstractHashOperations<Jedis> {
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().hrandfieldWithValues(key, count)),
-					ProtocolCommand.HRANDFIELD,
-					args);
+					ProtocolCommand.HRANDFIELD, args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().hrandfieldWithValues(key, count)),
 					ProtocolCommand.HRANDFIELD, args);
@@ -475,8 +470,7 @@ public final class JedisHashOperations extends AbstractHashOperations<Jedis> {
 		}else if(isTransaction()){
 			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
 		}else{
-			return execute(
-					(cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern)),
+			return execute((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern)),
 					STRING_MAP_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.HSCAN, args);
 		}
 	}
@@ -490,8 +484,7 @@ public final class JedisHashOperations extends AbstractHashOperations<Jedis> {
 		}else if(isTransaction()){
 			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
 		}else{
-			return execute(
-					(cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern)),
+			return execute((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern)),
 					BINARY_MAP_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.HSCAN, args);
 		}
 	}
@@ -505,8 +498,7 @@ public final class JedisHashOperations extends AbstractHashOperations<Jedis> {
 		}else if(isTransaction()){
 			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
 		}else{
-			return execute(
-					(cmd)->cmd.hscan(key, cursor, new JedisScanParams(count)),
+			return execute((cmd)->cmd.hscan(key, cursor, new JedisScanParams(count)),
 					STRING_MAP_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.HSCAN, args);
 		}
 	}
@@ -520,8 +512,7 @@ public final class JedisHashOperations extends AbstractHashOperations<Jedis> {
 		}else if(isTransaction()){
 			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
 		}else{
-			return execute(
-					(cmd)->cmd.hscan(key, cursor, new JedisScanParams(count)),
+			return execute((cmd)->cmd.hscan(key, cursor, new JedisScanParams(count)),
 					BINARY_MAP_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.HSCAN, args);
 		}
 	}
@@ -537,8 +528,7 @@ public final class JedisHashOperations extends AbstractHashOperations<Jedis> {
 		}else if(isTransaction()){
 			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
 		}else{
-			return execute(
-					(cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern, count)),
+			return execute((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern, count)),
 					STRING_MAP_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.HSCAN, args);
 		}
 	}
@@ -554,8 +544,7 @@ public final class JedisHashOperations extends AbstractHashOperations<Jedis> {
 		}else if(isTransaction()){
 			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.HSCAN, args);
 		}else{
-			return execute(
-					(cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern, count)),
+			return execute((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern, count)),
 					BINARY_MAP_SCAN_RESULT_EXPOSE_CONVERTER, ProtocolCommand.HSCAN, args);
 		}
 	}
@@ -563,64 +552,64 @@ public final class JedisHashOperations extends AbstractHashOperations<Jedis> {
 	@Override
 	public Status hSet(final String key, final String field, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 0 || val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value), converter),
-					ProtocolCommand.HSET, args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value),
+					Converters.LONG_ZERO_ONE_STATUS_CONVERTER), ProtocolCommand.HSET, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value), converter),
-					ProtocolCommand.HSET, args);
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value),
+					Converters.LONG_ZERO_ONE_STATUS_CONVERTER), ProtocolCommand.HSET, args);
 		}else{
-			return execute((cmd)->cmd.hset(key, field, value), converter, ProtocolCommand.HSET, args);
+			return execute((cmd)->cmd.hset(key, field, value), Converters.LONG_ZERO_ONE_STATUS_CONVERTER,
+					ProtocolCommand.HSET, args);
 		}
 	}
 
 	@Override
 	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 0 || val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value), converter),
-					ProtocolCommand.HSET, args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hset(key, field, value),
+					Converters.LONG_ZERO_ONE_STATUS_CONVERTER), ProtocolCommand.HSET, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value), converter),
-					ProtocolCommand.HSET, args);
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hset(key, field, value),
+					Converters.LONG_ZERO_ONE_STATUS_CONVERTER), ProtocolCommand.HSET, args);
 		}else{
-			return execute((cmd)->cmd.hset(key, field, value), converter, ProtocolCommand.HSET, args);
+			return execute((cmd)->cmd.hset(key, field, value), Converters.LONG_ZERO_ONE_STATUS_CONVERTER,
+					ProtocolCommand.HSET, args);
 		}
 	}
 
 	@Override
 	public Status hSetNx(final String key, final String field, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 0 || val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value), converter),
-					ProtocolCommand.HSETNX, args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value),
+					Converters.LONG_ZERO_ONE_STATUS_CONVERTER), ProtocolCommand.HSETNX, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value), converter),
-					ProtocolCommand.HSETNX, args);
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value),
+					Converters.LONG_ZERO_ONE_STATUS_CONVERTER), ProtocolCommand.HSETNX, args);
 		}else{
-			return execute((cmd)->cmd.hsetnx(key, field, value), converter, ProtocolCommand.HSETNX, args);
+			return execute((cmd)->cmd.hsetnx(key, field, value), Converters.LONG_ZERO_ONE_STATUS_CONVERTER,
+					ProtocolCommand.HSETNX, args);
 		}
 	}
 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
-		final PredicateStatusConverter<Long> converter = new PredicateStatusConverter<>((val)->val == 0 || val == 1);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value), converter),
-					ProtocolCommand.HSETNX, args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hsetnx(key, field, value),
+					Converters.LONG_ZERO_ONE_STATUS_CONVERTER), ProtocolCommand.HSETNX, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value), converter),
-					ProtocolCommand.HSETNX, args);
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hsetnx(key, field, value),
+					Converters.LONG_ZERO_ONE_STATUS_CONVERTER), ProtocolCommand.HSETNX, args);
 		}else{
-			return execute((cmd)->cmd.hsetnx(key, field, value), converter, ProtocolCommand.HSETNX, args);
+			return execute((cmd)->cmd.hsetnx(key, field, value), Converters.LONG_ZERO_ONE_STATUS_CONVERTER,
+					ProtocolCommand.HSETNX, args);
 		}
 	}
 
@@ -659,11 +648,9 @@ public final class JedisHashOperations extends AbstractHashOperations<Jedis> {
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hvals(key)), ProtocolCommand.HVALS,
-					args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hvals(key)), ProtocolCommand.HVALS, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hvals(key)), ProtocolCommand.HVALS,
-					args);
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hvals(key)), ProtocolCommand.HVALS, args);
 		}else{
 			return execute((cmd)->cmd.hvals(key), ProtocolCommand.HVALS, args);
 		}
@@ -674,11 +661,9 @@ public final class JedisHashOperations extends AbstractHashOperations<Jedis> {
 		final CommandArguments args = CommandArguments.create("key", key);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().hvals(key)), ProtocolCommand.HVALS,
-					args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().hvals(key)), ProtocolCommand.HVALS, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().hvals(key)), ProtocolCommand.HVALS,
-					args);
+			return transactionExecute((cmd)->newJedisResult(getTransaction().hvals(key)), ProtocolCommand.HVALS, args);
 		}else{
 			return execute((cmd)->cmd.hvals(key), ProtocolCommand.HVALS, args);
 		}

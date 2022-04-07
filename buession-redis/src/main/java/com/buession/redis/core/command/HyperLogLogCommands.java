@@ -29,9 +29,7 @@ import com.buession.lang.Status;
 /**
  * HyperLogLog 命令
  *
- * <p>详情说明
- * <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a>
- * </p>
+ * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a></p>
  *
  * @author Yong.Teng
  */

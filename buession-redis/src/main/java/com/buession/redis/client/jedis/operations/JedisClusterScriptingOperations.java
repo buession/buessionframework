@@ -257,8 +257,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 		}else if(isTransaction()){
 			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.EVALSHA, args);
 		}else{
-			return execute((cmd)->cmd.scriptExists(null, sha1), LONG_LIST_TO_BOOLEAN_LIST_CONVERTER,
-					ProtocolCommand.EVALSHA, args);
+			return execute((cmd)->cmd.scriptExists(null, sha1), ProtocolCommand.EVALSHA, args);
 		}
 	}
 
@@ -284,7 +283,7 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 		}else if(isTransaction()){
 			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCRIPT_FLUSH, args);
 		}else{
-			return execute((cmd)->cmd.scriptFlush(null, flushMode), Converters.OK_STATUS_CONVERTER,
+			return execute((cmd)->cmd.scriptFlush((String) null, flushMode), Converters.OK_STATUS_CONVERTER,
 					ProtocolCommand.SCRIPT_FLUSH, args);
 		}
 	}

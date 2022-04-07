@@ -257,9 +257,7 @@ public final class JedisSentinelScriptingOperations extends AbstractScriptingOpe
 		}else if(isTransaction()){
 			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SCRIPT_EXISTS, args);
 		}else{
-			return execute((cmd)->cmd.scriptExists(sha1), LONG_LIST_TO_BOOLEAN_LIST_CONVERTER,
-					ProtocolCommand.SCRIPT_EXISTS,
-					args);
+			return execute((cmd)->cmd.scriptExists(sha1), ProtocolCommand.SCRIPT_EXISTS, args);
 		}
 	}
 

@@ -28,7 +28,7 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.ListPosition;
 
 /**
- * {@link ListPosition} 和 jedis {@link redis.clients.jedis.ListPosition} 互转
+ * {@link ListPosition} 和 jedis {@link redis.clients.jedis.args.ListPosition} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
@@ -36,15 +36,15 @@ import com.buession.redis.core.ListPosition;
 public interface ListPositionConverter<S, T> extends Converter<S, T> {
 
 	final class ListPositionJedisConverter
-			implements ListPositionConverter<ListPosition, redis.clients.jedis.ListPosition> {
+			implements ListPositionConverter<ListPosition, redis.clients.jedis.args.ListPosition> {
 
 		@Override
-		public redis.clients.jedis.ListPosition convert(final ListPosition source){
+		public redis.clients.jedis.args.ListPosition convert(final ListPosition source){
 			switch(source){
 				case BEFORE:
-					return redis.clients.jedis.ListPosition.BEFORE;
+					return redis.clients.jedis.args.ListPosition.BEFORE;
 				case AFTER:
-					return redis.clients.jedis.ListPosition.AFTER;
+					return redis.clients.jedis.args.ListPosition.AFTER;
 				default:
 					return null;
 			}

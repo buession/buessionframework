@@ -44,6 +44,7 @@ import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.Info;
+import com.buession.redis.core.KeyedZSetElement;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.MemoryStats;
 import com.buession.redis.core.MigrateOperation;
@@ -1005,76 +1006,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
-		return execute((client)->client.migrate(makeRawKey(key), host, port, db, timeout));
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
-		return execute((client)->client.migrate(makeByteKey(key), host, port, db, timeout));
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
-						  MigrateOperation operation){
-		return execute((client)->client.migrate(makeRawKey(key), host, port, db, timeout, operation));
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
-						  final MigrateOperation operation){
-		return execute((client)->client.migrate(makeByteKey(key), host, port, db, timeout, operation));
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final String password,
-						  final int timeout){
-		return execute((client)->client.migrate(makeRawKey(key), host, port, db, password, timeout));
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
-						  final int timeout){
-		return execute((client)->client.migrate(makeByteKey(key), host, port, db, password, timeout));
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final String password,
-						  final int timeout, final MigrateOperation operation){
-		return execute((client)->client.migrate(makeRawKey(key), host, port, db, password, timeout, operation));
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
-						  final int timeout, final MigrateOperation operation){
-		return execute((client)->client.migrate(makeByteKey(key), host, port, db, password, timeout, operation));
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final String user,
-						  final String password, final int timeout){
-		return execute((client)->client.migrate(makeRawKey(key), host, port, db, user, password, timeout));
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
-						  final byte[] password, final int timeout){
-		return execute((client)->client.migrate(makeByteKey(key), host, port, db, user, password, timeout));
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final String user,
-						  final String password, final int timeout, final MigrateOperation operation){
-		return execute((client)->client.migrate(makeRawKey(key), host, port, db, user, password, timeout, operation));
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
-						  final byte[] password, final int timeout, final MigrateOperation operation){
-		return execute((client)->client.migrate(makeByteKey(key), host, port, db, user, password, timeout, operation));
-	}
-
-	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys){
 		return execute((client)->client.migrate(host, port, db, timeout, makeRawKeys(keys)));
 	}
@@ -1656,12 +1587,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Map<String, String> pubsubNumSub(final String... channels){
+	public Map<String, Long> pubsubNumSub(final String... channels){
 		return execute((client)->client.pubsubNumSub(channels));
 	}
 
 	@Override
-	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
+	public Map<byte[], Long> pubsubNumSub(final byte[]... channels){
 		return execute((client)->client.pubsubNumSub(channels));
 	}
 
@@ -1832,16 +1763,6 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public List<String> aclUsers(){
-		return execute((client)->client.aclUsers());
-	}
-
-	@Override
-	public String aclWhoAmI(){
-		return execute((client)->client.aclWhoAmI());
-	}
-
-	@Override
 	public AclUser aclGetUser(final String username){
 		return execute((client)->client.aclGetUser(username));
 	}
@@ -1849,6 +1770,16 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public AclUser aclGetUser(final byte[] username){
 		return execute((client)->client.aclGetUser(username));
+	}
+
+	@Override
+	public List<String> aclUsers(){
+		return execute((client)->client.aclUsers());
+	}
+
+	@Override
+	public String aclWhoAmI(){
+		return execute((client)->client.aclWhoAmI());
 	}
 
 	@Override
@@ -2128,8 +2059,8 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Status shutdown(){
-		return execute((client)->client.shutdown());
+	public void shutdown(){
+		execute((client)->client.shutdown());
 	}
 
 	@Override
@@ -2420,6 +2351,26 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
 		return execute((client)->client.sUnionStore(makeByteKey(destKey), makeByteKeys(keys)));
+	}
+
+	@Override
+	public KeyedZSetElement bzPopMin(final String[] keys, final int timeout){
+		return execute((client)->client.bzPopMin(makeRawKeys(keys), timeout));
+	}
+
+	@Override
+	public KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout){
+		return execute((client)->client.bzPopMin(makeByteKeys(keys), timeout));
+	}
+
+	@Override
+	public KeyedZSetElement bzPopMax(final String[] keys, final int timeout){
+		return execute((client)->client.bzPopMax(makeRawKeys(keys), timeout));
+	}
+
+	@Override
+	public KeyedZSetElement bzPopMax(final byte[][] keys, final int timeout){
+		return execute((client)->client.bzPopMax(makeByteKeys(keys), timeout));
 	}
 
 	@Override

@@ -30,9 +30,11 @@ package com.buession.redis.core.command;
  */
 public enum CommandNotSupported {
 
-	TRANSACTION(4),
+	TRANSACTION(8),
 
-	PIPELINE(2),
+	PIPELINE(4),
+
+	NORMAL(2),
 
 	ALL(1);
 
@@ -45,5 +47,5 @@ public enum CommandNotSupported {
 	public int getCode(){
 		return code;
 	}
-	
+
 }

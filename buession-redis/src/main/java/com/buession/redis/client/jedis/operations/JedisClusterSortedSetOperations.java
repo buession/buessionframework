@@ -26,8 +26,10 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.Aggregate;
+import com.buession.redis.core.KeyedZSetElement;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.AggregateConverter;
@@ -52,6 +54,74 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 
 	public JedisClusterSortedSetOperations(final JedisClusterClient client){
 		super(client);
+	}
+
+	@Override
+	public KeyedZSetElement bzPopMin(final String[] keys, final int timeout){
+		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().bzpopmin(timeout, keys), KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER),
+					ProtocolCommand.BZPOPMIN, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().bzpopmin(timeout, keys),
+							KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER),
+					ProtocolCommand.BZPOPMIN, args);
+		}else{
+			return execute((cmd)->cmd.bzpopmin(timeout, keys), KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER,
+					ProtocolCommand.BZPOPMIN, args);
+		}
+	}
+
+	@Override
+	public KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout){
+		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().bzpopmin(timeout, keys),
+					BINARY_DATA_KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER), ProtocolCommand.BZPOPMIN, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().bzpopmin(timeout, keys),
+					BINARY_DATA_KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER), ProtocolCommand.BZPOPMIN, args);
+		}else{
+			return execute((cmd)->cmd.bzpopmin(timeout, keys), BINARY_DATA_KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER,
+					ProtocolCommand.BZPOPMIN, args);
+		}
+	}
+
+	@Override
+	public KeyedZSetElement bzPopMax(final String[] keys, final int timeout){
+		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
+
+		if(isPipeline()){
+			return pipelineExecute(
+					(cmd)->newJedisResult(getPipeline().bzpopmax(timeout, keys), KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER),
+					ProtocolCommand.BZPOPMAX, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().bzpopmax(timeout, keys),
+							KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER),
+					ProtocolCommand.BZPOPMAX, args);
+		}else{
+			return execute((cmd)->cmd.bzpopmax(timeout, keys), KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER,
+					ProtocolCommand.BZPOPMAX, args);
+		}
+	}
+
+	@Override
+	public KeyedZSetElement bzPopMax(final byte[][] keys, final int timeout){
+		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
+
+		if(isPipeline()){
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().bzpopmax(timeout, keys),
+					BINARY_DATA_KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER), ProtocolCommand.BZPOPMAX, args);
+		}else if(isTransaction()){
+			return transactionExecute((cmd)->newJedisResult(getTransaction().bzpopmax(timeout, keys),
+					BINARY_DATA_KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER), ProtocolCommand.BZPOPMAX, args);
+		}else{
+			return execute((cmd)->cmd.bzpopmax(timeout, keys), BINARY_DATA_KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER,
+					ProtocolCommand.BZPOPMAX, args);
+		}
 	}
 
 	@Override

@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis;
 
-import redis.clients.jedis.ScanParams;
+import redis.clients.jedis.params.ScanParams;
 
 /**
  * @author Yong.Teng

@@ -55,6 +55,8 @@ public abstract class AbstractSortedSetOperations<CMD> extends AbstractJedisRedi
 
 	protected final static KeyedZSetElementConverter.KeyedZSetElementExposeConverter KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER = new KeyedZSetElementConverter.KeyedZSetElementExposeConverter();
 
+	protected final static KeyedZSetElementConverter.BinaryDataKeyedZSetElementExposeConverter BINARY_DATA_KEYED_Z_SET_ELEMENT_EXPOSE_CONVERTER = new KeyedZSetElementConverter.BinaryDataKeyedZSetElementExposeConverter();
+
 	public AbstractSortedSetOperations(final JedisRedisClient client){
 		super(client);
 	}

@@ -82,7 +82,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	public Long lInsert(final String key, final ListPosition position, final String pivot, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("position", position).put("pivot", pivot)
 				.put("value", value);
-		final redis.clients.jedis.ListPosition pos = LIST_POSITION_JEDIS_CONVERTER.convert(position);
+		final redis.clients.jedis.args.ListPosition pos = LIST_POSITION_JEDIS_CONVERTER.convert(position);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().linsert(key, pos, pivot, value)),
@@ -99,7 +99,7 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("position", position).put("pivot", pivot)
 				.put("value", value);
-		final redis.clients.jedis.ListPosition pos = LIST_POSITION_JEDIS_CONVERTER.convert(position);
+		final redis.clients.jedis.args.ListPosition pos = LIST_POSITION_JEDIS_CONVERTER.convert(position);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().linsert(key, pos, pivot, value)),
@@ -455,7 +455,8 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().blpop(keys)), ProtocolCommand.BLPOP, args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().blpop(timeout, keys)), ProtocolCommand.BLPOP,
+					args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().blpop(timeout, keys)),
 					ProtocolCommand.BLPOP, args);
@@ -469,7 +470,8 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().blpop(keys)), ProtocolCommand.BLPOP, args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().blpop(timeout, keys)), ProtocolCommand.BLPOP,
+					args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().blpop(timeout, keys)),
 					ProtocolCommand.BLPOP, args);
@@ -483,7 +485,8 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpop(keys)), ProtocolCommand.BRPOP, args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpop(timeout, keys)), ProtocolCommand.BRPOP,
+					args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().brpop(timeout, keys)),
 					ProtocolCommand.BRPOP, args);
@@ -497,7 +500,8 @@ public final class JedisClusterListOperations extends AbstractListOperations<Jed
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpop(keys)), ProtocolCommand.BRPOP, args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().brpop(timeout, keys)), ProtocolCommand.BRPOP,
+					args);
 		}else if(isTransaction()){
 			return transactionExecute((cmd)->newJedisResult(getTransaction().brpop(timeout, keys)),
 					ProtocolCommand.BRPOP, args);

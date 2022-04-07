@@ -28,7 +28,7 @@ import com.buession.beans.BeanUtils;
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Client;
-import redis.clients.jedis.AccessControlLogEntry;
+import redis.clients.jedis.resps.AccessControlLogEntry;
 
 /**
  * {@link AclLog} 和 jedis {@link AccessControlLogEntry} 互转

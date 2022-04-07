@@ -92,9 +92,9 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 		final CommandArguments args = CommandArguments.create("str", str);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().echo(str)), ProtocolCommand.ECHO, args);
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.ECHO, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().echo(str)), ProtocolCommand.ECHO, args);
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.ECHO, args);
 		}else{
 			return execute((cmd)->cmd.echo(str), ProtocolCommand.ECHO, args);
 		}
@@ -105,9 +105,9 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 		final CommandArguments args = CommandArguments.create("str", str);
 
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().echo(str)), ProtocolCommand.ECHO, args);
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.ECHO, args);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().echo(str)), ProtocolCommand.ECHO, args);
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.ECHO, args);
 		}else{
 			return execute((cmd)->cmd.echo(str), ProtocolCommand.ECHO, args);
 		}
@@ -116,11 +116,9 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	@Override
 	public Status ping(){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().ping(), PING_RESULT_CONVERTER),
-					ProtocolCommand.PING);
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.PING);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().ping(), PING_RESULT_CONVERTER),
-					ProtocolCommand.PING);
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.PING);
 		}else{
 			return execute((cmd)->cmd.ping(), PING_RESULT_CONVERTER, ProtocolCommand.PING);
 		}
@@ -129,11 +127,9 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	@Override
 	public Status quit(){
 		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().ping(), Converters.OK_STATUS_CONVERTER),
-					ProtocolCommand.PING);
+			return execute(CommandNotSupported.PIPELINE, ProtocolCommand.QUIT);
 		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().ping(), Converters.OK_STATUS_CONVERTER),
-					ProtocolCommand.PING);
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.QUIT);
 		}else{
 			return execute((cmd)->cmd.quit(), Converters.OK_STATUS_CONVERTER, ProtocolCommand.QUIT);
 		}
@@ -147,9 +143,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().select(db), Converters.OK_STATUS_CONVERTER),
 					ProtocolCommand.SELECT, args);
 		}else if(isTransaction()){
-			return transactionExecute(
-					(cmd)->newJedisResult(getTransaction().select(db), Converters.OK_STATUS_CONVERTER),
-					ProtocolCommand.SELECT, args);
+			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.SELECT, args);
 		}else{
 			return execute((cmd)->cmd.select(db), Converters.OK_STATUS_CONVERTER, ProtocolCommand.SELECT, args);
 		}

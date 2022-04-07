@@ -74,27 +74,13 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 	@Override
 	public String echo(final String str){
 		final CommandArguments args = CommandArguments.create("str", str);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().echo(str)), ProtocolCommand.ECHO, args);
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().echo(str)), ProtocolCommand.ECHO, args);
-		}else{
-			return execute((cmd)->cmd.echo(str), ProtocolCommand.ECHO, args);
-		}
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ECHO, args);
 	}
 
 	@Override
 	public byte[] echo(final byte[] str){
 		final CommandArguments args = CommandArguments.create("str", str);
-
-		if(isPipeline()){
-			return pipelineExecute((cmd)->newJedisResult(getPipeline().echo(str)), ProtocolCommand.ECHO, args);
-		}else if(isTransaction()){
-			return transactionExecute((cmd)->newJedisResult(getTransaction().echo(str)), ProtocolCommand.ECHO, args);
-		}else{
-			return execute((cmd)->cmd.echo(str), ProtocolCommand.ECHO, args);
-		}
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ECHO, args);
 	}
 
 	@Override

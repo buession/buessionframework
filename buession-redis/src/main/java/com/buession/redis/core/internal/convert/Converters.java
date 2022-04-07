@@ -44,7 +44,10 @@ public interface Converters {
 
 	OkStatusConverter OK_STATUS_CONVERTER = new OkStatusConverter();
 
-	Converter<Long, Status> LONG_STATUS_CONVERTER = new PredicateStatusConverter<>((val)->val != null && val > 0);
+	PredicateStatusConverter<Long> LONG_ZERO_ONE_STATUS_CONVERTER = new PredicateStatusConverter<>(
+			(val)->val == 0 || val == 1);
+
+	Converter<Long, Status> LONG_STATUS_CONVERTER = new PredicateStatusConverter<>((val)->val > 0);
 
 	Converter<byte[], Status> BINARY_OK_STATUS_CONVERTER = new Converter<byte[], Status>() {
 
@@ -59,9 +62,6 @@ public interface Converters {
 	InfoConverter INFO_CONVERTER = new InfoConverter();
 
 	BooleanStatusConverter BOOLEAN_STATUS_CONVERTER = new BooleanStatusConverter();
-
-	MapConverter<String, String, byte[], byte[]> STRING_MAP_TO_BINARY_MAP_CONVERTER = new MapConverter<>(
-			SafeEncoder::encode, SafeEncoder::encode);
 
 	ListConverter<String, byte[]> STRING_LIST_TO_STRING_LIST_CONVERTER = new ListConverter<>(SafeEncoder::encode);
 

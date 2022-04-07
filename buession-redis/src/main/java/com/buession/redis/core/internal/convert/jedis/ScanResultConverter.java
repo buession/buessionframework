@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * {@link ScanResult} 和 jedis {@link redis.clients.jedis.ScanResult} 互转
+ * {@link ScanResult} 和 jedis {@link redis.clients.jedis.resps.ScanResult} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
@@ -44,10 +44,10 @@ import java.util.stream.Collectors;
 public interface ScanResultConverter<S, T> extends Converter<S, T> {
 
 	/**
-	 * {@link redis.clients.jedis.ScanResult}&lt;S&gt; 转换为 {@link ScanResult}&lt;T&gt;
+	 * {@link redis.clients.jedis.resps.ScanResult}&lt;S&gt; 转换为 {@link ScanResult}&lt;T&gt;
 	 *
 	 * @param <S>
-	 * 		原始类型，{@link redis.clients.jedis.ScanResult} 泛型参数
+	 * 		原始类型，{@link redis.clients.jedis.resps.ScanResult} 泛型参数
 	 * @param <T>
 	 * 		目标类型，{@link ScanResult} 泛型参数
 	 *
@@ -55,12 +55,12 @@ public interface ScanResultConverter<S, T> extends Converter<S, T> {
 	 * @since 1.2.1
 	 */
 	interface ScanResultExposeConverter<S, T>
-			extends ScanResultConverter<redis.clients.jedis.ScanResult<S>, ScanResult<T>> {
+			extends ScanResultConverter<redis.clients.jedis.resps.ScanResult<S>, ScanResult<T>> {
 
 	}
 
 	/**
-	 * jedis {@link redis.clients.jedis.ScanResult} 转换为 {@link java.util.List}&lt;ScanResult&gt;
+	 * jedis {@link redis.clients.jedis.resps.ScanResult} 转换为 {@link java.util.List}&lt;ScanResult&gt;
 	 *
 	 * @author Yong.Teng
 	 * @since 2.0.0
@@ -68,14 +68,14 @@ public interface ScanResultConverter<S, T> extends Converter<S, T> {
 	final class ListScanResultExposeConverter<S> implements ScanResultExposeConverter<S, List<S>> {
 
 		@Override
-		public ScanResult<List<S>> convert(final redis.clients.jedis.ScanResult<S> source){
+		public ScanResult<List<S>> convert(final redis.clients.jedis.resps.ScanResult<S> source){
 			return new ScanResult<>(source.getCursor(), source.getResult());
 		}
 
 	}
 
 	/**
-	 * jedis {@link redis.clients.jedis.ScanResult} 转换为 {@link java.util.List}&lt;ScanResult&gt;
+	 * jedis {@link redis.clients.jedis.resps.ScanResult} 转换为 {@link java.util.List}&lt;ScanResult&gt;
 	 *
 	 * @author Yong.Teng
 	 * @since 2.0.0
@@ -83,7 +83,7 @@ public interface ScanResultConverter<S, T> extends Converter<S, T> {
 	final class BinaryToStringListScanResultExposeConverter implements ScanResultExposeConverter<byte[], List<String>> {
 
 		@Override
-		public ScanResult<List<String>> convert(final redis.clients.jedis.ScanResult<byte[]> source){
+		public ScanResult<List<String>> convert(final redis.clients.jedis.resps.ScanResult<byte[]> source){
 			final List<String> results = source.getResult().stream().map(SafeEncoder::encode).collect(
 					Collectors.toList());
 			return new ScanResult<>(source.getCursor(), results);
@@ -92,17 +92,18 @@ public interface ScanResultConverter<S, T> extends Converter<S, T> {
 	}
 
 	/**
-	 * jedis {@link redis.clients.jedis.Tuple} 转换为 {@link java.util.List}&lt;T&gt;
+	 * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link java.util.List}&lt;T&gt;
 	 *
 	 * @author Yong.Teng
 	 * @since 2.0.0
 	 */
 	final class ListTupleScanResultExposeConverter
-			implements ScanResultExposeConverter<redis.clients.jedis.Tuple, List<Tuple>> {
+			implements ScanResultExposeConverter<redis.clients.jedis.resps.Tuple, List<Tuple>> {
 
 		@Override
-		public ScanResult<List<Tuple>> convert(final redis.clients.jedis.ScanResult<redis.clients.jedis.Tuple> source){
-			final ListConverter<redis.clients.jedis.Tuple, Tuple> converter =
+		public ScanResult<List<Tuple>> convert(
+				final redis.clients.jedis.resps.ScanResult<redis.clients.jedis.resps.Tuple> source){
+			final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> converter =
 					new ListConverter<>((item)->new Tuple(item.getBinaryElement(), item.getScore()));
 			return new com.buession.redis.core.ScanResult<>(source.getCursor(), converter.convert(source.getResult()));
 		}
@@ -110,7 +111,7 @@ public interface ScanResultConverter<S, T> extends Converter<S, T> {
 	}
 
 	/**
-	 * jedis {@link redis.clients.jedis.ScanResult}&lt;Map.Entry&lt;K&gt;, &lt;K&gt;&gt; 转换为 {@link ScanResult}
+	 * jedis {@link redis.clients.jedis.resps.ScanResult}&lt;Map.Entry&lt;K&gt;, &lt;K&gt;&gt; 转换为 {@link ScanResult}
 	 * &lt;Map&lt;K&gt;, &lt;K&gt;&gt;
 	 *
 	 * @param <K>
@@ -124,7 +125,7 @@ public interface ScanResultConverter<S, T> extends Converter<S, T> {
 	final class MapScanResultExposeConverter<K, V> implements ScanResultExposeConverter<Map.Entry<K, V>, Map<K, V>> {
 
 		@Override
-		public ScanResult<Map<K, V>> convert(redis.clients.jedis.ScanResult<Map.Entry<K, V>> source){
+		public ScanResult<Map<K, V>> convert(redis.clients.jedis.resps.ScanResult<Map.Entry<K, V>> source){
 			Map<K, V> data = source.getResult().stream().collect(Collectors.toMap(Map.Entry::getKey,
 					Map.Entry::getValue, (a, b)->a, LinkedHashMap::new));
 			return new ScanResult<>(source.getCursorAsBytes(), data);

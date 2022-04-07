@@ -146,7 +146,7 @@ public interface PubSubCommands extends RedisCommands {
 	 *
 	 * @return 指定信道的订阅者个数
 	 */
-	Map<String, String> pubsubNumSub(final String... channels);
+	Map<String, Long> pubsubNumSub(final String... channels);
 
 	/**
 	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
@@ -158,7 +158,7 @@ public interface PubSubCommands extends RedisCommands {
 	 *
 	 * @return 指定信道的订阅者个数
 	 */
-	Map<byte[], byte[]> pubsubNumSub(final byte[]... channels);
+	Map<byte[], Long> pubsubNumSub(final byte[]... channels);
 
 	/**
 	 * 指示客户端退订使用 PSUBSCRIBE pattern [pattern …] 命令订阅的所有模式消息

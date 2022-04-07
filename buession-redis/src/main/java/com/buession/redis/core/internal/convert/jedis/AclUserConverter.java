@@ -26,7 +26,7 @@ package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.AclUser;
-import redis.clients.jedis.AccessControlUser;
+import redis.clients.jedis.resps.AccessControlUser;
 
 /**
  * {@link AclUser} 和 jedis {@link AccessControlUser} 互转

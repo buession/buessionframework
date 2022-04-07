@@ -26,6 +26,9 @@ package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.KeyedZSetElement;
+import redis.clients.jedis.BuilderFactory;
+
+import java.util.List;
 
 /**
  * {@link KeyedZSetElement} 和 jedis {@link redis.clients.jedis.resps.KeyedZSetElement} 互转
@@ -41,6 +44,20 @@ public interface KeyedZSetElementConverter<S, T> extends Converter<S, T> {
 		@Override
 		public KeyedZSetElement convert(final redis.clients.jedis.resps.KeyedZSetElement source){
 			return new KeyedZSetElement(source.getKey(), source.getElement(), source.getScore());
+		}
+
+	}
+
+	final class BinaryDataKeyedZSetElementExposeConverter
+			implements KeyedZSetElementConverter<List<byte[]>, KeyedZSetElement> {
+
+		@Override
+		public KeyedZSetElement convert(final List<byte[]> source){
+			if(source.isEmpty()){
+				return null;
+			}
+
+			return new KeyedZSetElement(source.get(0), source.get(1), BuilderFactory.DOUBLE.build(source.get(2)));
 		}
 
 	}

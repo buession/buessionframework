@@ -26,6 +26,7 @@ package com.buession.redis.core.operations;
 
 import com.buession.lang.KeyValue;
 import com.buession.redis.core.Aggregate;
+import com.buession.redis.core.KeyedZSetElement;
 import com.buession.redis.core.command.SortedSetCommands;
 
 import java.util.Arrays;
@@ -43,6 +44,66 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  */
 public interface SortedSetOperations extends SortedSetCommands, RedisOperations {
+
+	/**
+	 * 从非空的第一个有序集中弹出得分最小的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMIN 的阻塞变体；
+	 * 当没有成员可以从任何给定的有序集中弹出时，它会阻塞连接
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/bzpopmin.html" target="_blank">https://www.redis.com.cn/commands/bzpopmin.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param timeout
+	 * 		阻塞的最长时间；为 0 时，则无限期地阻塞，单位：秒
+	 */
+	default KeyedZSetElement bzPopMin(final String key, final int timeout){
+		return bzPopMin(new String[]{key}, timeout);
+	}
+
+	/**
+	 * 从非空的第一个有序集中弹出得分最小的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMIN 的阻塞变体；
+	 * 当没有成员可以从任何给定的有序集中弹出时，它会阻塞连接
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/bzpopmin.html" target="_blank">https://www.redis.com.cn/commands/bzpopmin.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param timeout
+	 * 		阻塞的最长时间；为 0 时，则无限期地阻塞，单位：秒
+	 */
+	default KeyedZSetElement bzPopMin(final byte[] key, final int timeout){
+		return bzPopMin(new byte[][]{key}, timeout);
+	}
+
+	/**
+	 * 从非空的第一个有序集中弹出得分最高的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMAX 的阻塞变体；
+	 * 当没有成员可以从任何给定的有序集中弹出时，它会阻塞连接
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/bzpopmax.html" target="_blank">https://www.redis.com.cn/commands/bzpopmax.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param timeout
+	 * 		阻塞的最长时间；为 0 时，则无限期地阻塞，单位：秒
+	 */
+	default KeyedZSetElement bzPopMax(final String key, final int timeout){
+		return bzPopMax(new String[]{key}, timeout);
+	}
+
+	/**
+	 * 从非空的第一个有序集中弹出得分最高的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMAX 的阻塞变体；
+	 * 当没有成员可以从任何给定的有序集中弹出时，它会阻塞连接
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/bzpopmax.html" target="_blank">https://www.redis.com.cn/commands/bzpopmax.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param timeout
+	 * 		阻塞的最长时间；为 0 时，则无限期地阻塞，单位：秒
+	 */
+	default KeyedZSetElement bzPopMax(final byte[] key, final int timeout){
+		return bzPopMax(new byte[][]{key}, timeout);
+	}
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中

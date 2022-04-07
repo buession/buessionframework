@@ -34,7 +34,7 @@ import com.buession.redis.core.internal.convert.jedis.GeoConverter;
 import com.buession.redis.core.internal.convert.jedis.GeoRadiusArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.GeoUnitConverter;
 import redis.clients.jedis.GeoCoordinate;
-import redis.clients.jedis.GeoRadiusResponse;
+import redis.clients.jedis.resps.GeoRadiusResponse;
 
 /**
  * Jedis 地理位置命令操作抽象类

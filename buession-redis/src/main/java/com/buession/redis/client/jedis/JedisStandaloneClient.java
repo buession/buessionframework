@@ -49,6 +49,7 @@ import com.buession.redis.core.Direction;
 import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
+import com.buession.redis.core.KeyedZSetElement;
 import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ObjectEncoding;
@@ -451,41 +452,6 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	}
 
 	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
-		return keyOperations.migrate(key, host, port, db, timeout);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
-						  final MigrateOperation operation){
-		return keyOperations.migrate(key, host, port, db, timeout, operation);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
-						  final int timeout){
-		return keyOperations.migrate(key, host, port, db, password, timeout);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
-						  final int timeout, final MigrateOperation operation){
-		return keyOperations.migrate(key, host, port, db, password, timeout, operation);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
-						  final byte[] password, final int timeout){
-		return keyOperations.migrate(key, host, port, db, user, password, timeout);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
-						  final byte[] password, final int timeout, final MigrateOperation operation){
-		return keyOperations.migrate(key, host, port, db, user, password, timeout, operation);
-	}
-
-	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys){
 		return keyOperations.migrate(host, port, db, timeout, keys);
 	}
@@ -758,7 +724,7 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	}
 
 	@Override
-	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
+	public Map<byte[], Long> pubsubNumSub(final byte[]... channels){
 		return pubSubOperations.pubsubNumSub(channels);
 	}
 
@@ -1004,13 +970,18 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	}
 
 	@Override
-	public Set<byte[]> sUnion(final byte key, final byte[]... keys){
+	public Set<byte[]> sUnion(final byte[] key, final byte[]... keys){
 		return setOperations.sUnion(key, keys);
 	}
 
 	@Override
 	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
 		return setOperations.sUnionStore(destKey, keys);
+	}
+
+	@Override
+	public KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout){
+		return sortedSetOperations.bzPopMin(keys, timeout);
 	}
 
 	@Override

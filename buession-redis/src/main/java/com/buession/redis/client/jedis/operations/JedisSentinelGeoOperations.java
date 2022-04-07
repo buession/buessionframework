@@ -87,13 +87,11 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 				memberCoordinates);
 
 		if(isPipeline()){
-			return pipelineExecute(
-					(cmd)->newJedisResult(getPipeline().geoadd(key, memberCoordinateMap)), ProtocolCommand.GEOADD,
-					args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geoadd(key, memberCoordinateMap)),
+					ProtocolCommand.GEOADD, args);
 		}else if(isTransaction()){
-			return transactionExecute(
-					(cmd)->newJedisResult(getTransaction().geoadd(key, memberCoordinateMap)), ProtocolCommand.GEOADD,
-					args);
+			return transactionExecute((cmd)->newJedisResult(getTransaction().geoadd(key, memberCoordinateMap)),
+					ProtocolCommand.GEOADD, args);
 		}else{
 			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap), ProtocolCommand.GEOADD, args);
 		}
@@ -106,12 +104,10 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 				memberCoordinates);
 
 		if(isPipeline()){
-			return pipelineExecute(
-					(cmd)->newJedisResult(getPipeline().geoadd(key, memberCoordinateMap)), ProtocolCommand.GEOADD,
-					args);
+			return pipelineExecute((cmd)->newJedisResult(getPipeline().geoadd(key, memberCoordinateMap)),
+					ProtocolCommand.GEOADD, args);
 		}else if(isTransaction()){
-			return transactionExecute(
-					(cmd)->newJedisResult(getTransaction().geoadd(key, memberCoordinateMap)),
+			return transactionExecute((cmd)->newJedisResult(getTransaction().geoadd(key, memberCoordinateMap)),
 					ProtocolCommand.GEOADD, args);
 		}else{
 			return execute((cmd)->cmd.geoadd(key, memberCoordinateMap), ProtocolCommand.GEOADD, args);
@@ -216,7 +212,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().geodist(key, member1, member2, geoUnit)),
@@ -234,7 +230,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().geodist(key, member1, member2, geoUnit)),
@@ -253,7 +249,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 									 final double radius, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadius(key, longitude, latitude, radius,
@@ -273,7 +269,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 									 final double radius, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadius(key, longitude, latitude, radius,
@@ -295,7 +291,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
 
 		if(isPipeline()){
@@ -318,7 +314,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
 
 		if(isPipeline()){
@@ -339,7 +335,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 									   final double radius, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 
 		if(isPipeline()){
 			return pipelineExecute(
@@ -360,7 +356,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 									   final double radius, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 
 		if(isPipeline()){
 			return pipelineExecute(
@@ -383,7 +379,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
 
 		if(isPipeline()){
@@ -408,7 +404,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
 
 		if(isPipeline()){
@@ -431,7 +427,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											 final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadiusByMember(key, member, radius, geoUnit)
@@ -451,7 +447,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											 final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 
 		if(isPipeline()){
 			return pipelineExecute((cmd)->newJedisResult(getPipeline().georadiusByMember(key, member, radius, geoUnit)
@@ -471,7 +467,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
 
 		if(isPipeline()){
@@ -492,7 +488,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
 
 		if(isPipeline()){
@@ -513,7 +509,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											   final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 
 		if(isPipeline()){
 			return pipelineExecute(
@@ -534,7 +530,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											   final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 
 		if(isPipeline()){
 			return pipelineExecute(
@@ -555,7 +551,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
 
 		if(isPipeline()){
@@ -579,7 +575,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GEO_UNIT_JEDIS_CONVERTER.convert(unit);
 		final GeoRadiusParam geoRadiusParam = GEO_RADIUS_ARGUMENT_JEDIS_CONVERTER.convert(geoRadiusArgument);
 
 		if(isPipeline()){

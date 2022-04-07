@@ -36,8 +36,8 @@ import com.buession.redis.core.internal.convert.jedis.AclUserConverter;
 import com.buession.redis.core.internal.convert.jedis.FlushModeConverter;
 import com.buession.redis.core.internal.convert.jedis.ModuleConverter;
 import com.buession.redis.core.internal.convert.jedis.SlowLogConverter;
-import redis.clients.jedis.AccessControlLogEntry;
-import redis.clients.jedis.util.Slowlog;
+import redis.clients.jedis.resps.AccessControlLogEntry;
+import redis.clients.jedis.resps.Slowlog;
 
 /**
  * Jedis 服务端命令操作抽象类

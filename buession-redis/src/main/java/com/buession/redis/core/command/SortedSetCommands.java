@@ -43,8 +43,36 @@ import java.util.Set;
 public interface SortedSetCommands extends RedisCommands {
 
 	/**
-	 * 从非空的第一个有序集中弹出得分最高的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMAX 原语的阻塞变体；
+	 * 从非空的第一个有序集中弹出得分最小的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMIN 的阻塞变体；
 	 * 当没有成员可以从任何给定的有序集中弹出时，它会阻塞连接
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/bzpopmin.html" target="_blank">https://www.redis.com.cn/commands/bzpopmin.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param timeout
+	 * 		阻塞的最长时间；为 0 时，则无限期地阻塞，单位：秒
+	 */
+	KeyedZSetElement bzPopMin(final String[] keys, final int timeout);
+
+	/**
+	 * 从非空的第一个有序集中弹出得分最小的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMIN 的阻塞变体；
+	 * 当没有成员可以从任何给定的有序集中弹出时，它会阻塞连接
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/bzpopmin.html" target="_blank">https://www.redis.com.cn/commands/bzpopmin.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param timeout
+	 * 		阻塞的最长时间；为 0 时，则无限期地阻塞，单位：秒
+	 */
+	KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout);
+
+	/**
+	 * 从非空的第一个有序集中弹出得分最高的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMAX 的阻塞变体；
+	 * 当没有成员可以从任何给定的有序集中弹出时，它会阻塞连接
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/bzpopmax.html" target="_blank">https://www.redis.com.cn/commands/bzpopmax.html</a></p>
 	 *
 	 * @param keys
 	 * 		一个或多个 Key
@@ -54,8 +82,10 @@ public interface SortedSetCommands extends RedisCommands {
 	KeyedZSetElement bzPopMax(final String[] keys, final int timeout);
 
 	/**
-	 * 从非空的第一个有序集中弹出得分最高的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMAX 原语的阻塞变体；
+	 * 从非空的第一个有序集中弹出得分最高的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMAX 的阻塞变体；
 	 * 当没有成员可以从任何给定的有序集中弹出时，它会阻塞连接
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/bzpopmax.html" target="_blank">https://www.redis.com.cn/commands/bzpopmax.html</a></p>
 	 *
 	 * @param keys
 	 * 		一个或多个 Key

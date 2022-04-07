@@ -57,101 +57,101 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 
 	@Override
 	public List<String> aclCat(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_CAT);
 	}
 
 	@Override
 	public List<String> aclCat(final String categoryName){
 		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_CAT, args);
 	}
 
 	@Override
 	public List<byte[]> aclCat(final byte[] categoryName){
 		final CommandArguments args = CommandArguments.create("categoryName", categoryName);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_CAT, args);
 	}
 
 	@Override
 	public Status aclSetUser(final String username, final String... rules){
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", rules);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_SETUSER, args);
 	}
 
 	@Override
 	public Status aclSetUser(final byte[] username, final byte[]... rules){
 		final CommandArguments args = CommandArguments.create("username", username).put("rules", rules);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
-	}
-
-	@Override
-	public List<String> aclUsers(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
-	}
-
-	@Override
-	public String aclWhoAmI(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_SETUSER, args);
 	}
 
 	@Override
 	public AclUser aclGetUser(final String username){
 		final CommandArguments args = CommandArguments.create("username", username);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_GETUSER, args);
 	}
 
 	@Override
 	public AclUser aclGetUser(final byte[] username){
 		final CommandArguments args = CommandArguments.create("username", username);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_GETUSER, args);
+	}
+
+	@Override
+	public List<String> aclUsers(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_USERS);
+	}
+
+	@Override
+	public String aclWhoAmI(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_WHOAMI);
 	}
 
 	@Override
 	public Status aclDelUser(final String username){
 		final CommandArguments args = CommandArguments.create("username", username);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_DELUSER, args);
 	}
 
 	@Override
 	public Status aclDelUser(final byte[] username){
 		final CommandArguments args = CommandArguments.create("username", username);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_DELUSER, args);
 	}
 
 	@Override
 	public String aclGenPass(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_GENPASS);
 	}
 
 	@Override
 	public List<String> aclList(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_LIST);
 	}
 
 	@Override
 	public Status aclLoad(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_LOAD);
 	}
 
 	@Override
 	public List<AclLog> aclLog(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_LOG);
 	}
 
 	@Override
 	public List<AclLog> aclLog(final long count){
 		final CommandArguments args = CommandArguments.create("count", count);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_LOG, args);
 	}
 
 	@Override
 	public Status aclLogReset(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_LOGREST);
 	}
 
 	@Override
 	public Status aclLogSave(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.ACL_LOGSAVE);
 	}
 
 	@Override
@@ -201,6 +201,17 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	@Override
 	public Long dbSize(){
 		return execute(CommandNotSupported.PIPELINE, ProtocolCommand.DBSIZE);
+	}
+
+	@Override
+	public Status failover(){
+		return execute(CommandNotSupported.ALL, ProtocolCommand.FAILOVER);
+	}
+
+	@Override
+	public Status failover(final String host, final int port){
+		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.FAILOVER, args);
 	}
 
 	@Override
@@ -349,31 +360,31 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 
 	@Override
 	public List<Module> moduleList(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE_LIST);
 	}
 
 	@Override
 	public Status moduleLoad(final String path, final String... arguments){
 		final CommandArguments args = CommandArguments.create("path", path).put("arguments", arguments);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE_LOAD, args);
 	}
 
 	@Override
 	public Status moduleLoad(final byte[] path, final byte[]... arguments){
 		final CommandArguments args = CommandArguments.create("path", path).put("arguments", arguments);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE_LOAD, args);
 	}
 
 	@Override
 	public Status moduleUnLoad(final String name){
 		final CommandArguments args = CommandArguments.create("name", name);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE_UNLOAD, args);
 	}
 
 	@Override
 	public Status moduleUnLoad(final byte[] name){
 		final CommandArguments args = CommandArguments.create("name", name);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE, args);
+		return execute(CommandNotSupported.ALL, ProtocolCommand.MODULE_UNLOAD, args);
 	}
 
 	@Override
@@ -422,8 +433,8 @@ public final class JedisClusterServerOperations extends AbstractServerOperations
 	}
 
 	@Override
-	public Status shutdown(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.SHUTDOWN);
+	public void shutdown(){
+		execute(CommandNotSupported.ALL, ProtocolCommand.SHUTDOWN);
 	}
 
 	@Override

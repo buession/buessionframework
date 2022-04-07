@@ -624,41 +624,6 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout){
-		return keyOperations.migrate(key, host, port, db, timeout);
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final int timeout,
-						  final MigrateOperation operation){
-		return keyOperations.migrate(key, host, port, db, timeout, operation);
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final String password,
-						  final int timeout){
-		return keyOperations.migrate(key, host, port, db, password, timeout);
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final String password,
-						  final int timeout, final MigrateOperation operation){
-		return keyOperations.migrate(key, host, port, db, password, timeout, operation);
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final String user,
-						  final String password, final int timeout){
-		return keyOperations.migrate(key, host, port, db, user, password, timeout);
-	}
-
-	@Override
-	public Status migrate(final String key, final String host, final int port, final int db, final String user,
-						  final String password, final int timeout, final MigrateOperation operation){
-		return keyOperations.migrate(key, host, port, db, user, password, timeout, operation);
-	}
-
-	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys){
 		return keyOperations.migrate(host, port, db, timeout, keys);
 	}
@@ -961,7 +926,7 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Map<String, String> pubsubNumSub(final String... channels){
+	public Map<String, Long> pubsubNumSub(final String... channels){
 		return pubSubOperations.pubsubNumSub(channels);
 	}
 
@@ -1291,8 +1256,8 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	}
 
 	@Override
-	public Status shutdown(){
-		return serverOperations.shutdown();
+	public void shutdown(){
+		serverOperations.shutdown();
 	}
 
 	@Override
@@ -1454,6 +1419,11 @@ public abstract class AbstractJedisRedisClient extends AbstractRedisClient imple
 	@Override
 	public Long sUnionStore(final String destKey, final String... keys){
 		return setOperations.sUnionStore(destKey, keys);
+	}
+
+	@Override
+	public KeyedZSetElement bzPopMin(final String[] keys, final int timeout){
+		return sortedSetOperations.bzPopMin(keys, timeout);
 	}
 
 	@Override

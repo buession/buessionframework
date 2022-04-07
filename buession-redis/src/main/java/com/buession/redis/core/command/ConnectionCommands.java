@@ -35,8 +35,7 @@ import java.util.List;
 /**
  * 连接相关命令
  *
- * <p>详情说明
- * <a href="http://www.redis.cn/commands.html#connection" target="_blank">http://www.redis.cn/commands.html#connection</a></p>
+ * <p>详情说明 <a href="http://www.redis.cn/commands.html#connection" target="_blank">http://www.redis.cn/commands.html#connection</a></p>
  *
  * @author Yong.Teng
  */
@@ -45,8 +44,7 @@ public interface ConnectionCommands extends RedisCommands {
 	/**
 	 * 通过密码进行认证
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/client_and_server/auth.html" target="_blank">http://redisdoc.com/client_and_server/auth.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/auth.html" target="_blank">http://redisdoc.com/client_and_server/auth.html</a></p>
 	 *
 	 * @param user
 	 * 		用户账号
@@ -60,8 +58,7 @@ public interface ConnectionCommands extends RedisCommands {
 	/**
 	 * 通过密码进行认证
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/client_and_server/auth.html" target="_blank">http://redisdoc.com/client_and_server/auth.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/client_and_server/auth.html" target="_blank">http://redisdoc.com/client_and_server/auth.html</a></p>
 	 *
 	 * @param user
 	 * 		用户账号

@@ -134,13 +134,13 @@ public final class JedisClusterPubSubOperations extends AbstractPubSubOperations
 	}
 
 	@Override
-	public Map<String, String> pubsubNumSub(final String... channels){
+	public Map<String, Long> pubsubNumSub(final String... channels){
 		final CommandArguments args = CommandArguments.create("channels", channels);
 		return execute(CommandNotSupported.ALL, ProtocolCommand.PUBSUB, args);
 	}
 
 	@Override
-	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
+	public Map<byte[], Long> pubsubNumSub(final byte[]... channels){
 		final CommandArguments args = CommandArguments.create("channels", channels);
 		return execute(CommandNotSupported.ALL, ProtocolCommand.PUBSUB, args);
 	}

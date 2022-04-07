@@ -453,41 +453,6 @@ public class JedisSentinelClient extends AbstractJedisRedisClient implements Red
 	}
 
 	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout){
-		return keyOperations.migrate(key, host, port, db, timeout);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final int timeout,
-						  final MigrateOperation operation){
-		return keyOperations.migrate(key, host, port, db, timeout, operation);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
-						  final int timeout){
-		return keyOperations.migrate(key, host, port, db, password, timeout);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] password,
-						  final int timeout, final MigrateOperation operation){
-		return keyOperations.migrate(key, host, port, db, password, timeout, operation);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
-						  final byte[] password, final int timeout){
-		return keyOperations.migrate(key, host, port, db, user, password, timeout);
-	}
-
-	@Override
-	public Status migrate(final byte[] key, final String host, final int port, final int db, final byte[] user,
-						  final byte[] password, final int timeout, final MigrateOperation operation){
-		return keyOperations.migrate(key, host, port, db, user, password, timeout, operation);
-	}
-
-	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys){
 		return keyOperations.migrate(host, port, db, timeout, keys);
 	}
@@ -760,7 +725,7 @@ public class JedisSentinelClient extends AbstractJedisRedisClient implements Red
 	}
 
 	@Override
-	public Map<byte[], byte[]> pubsubNumSub(final byte[]... channels){
+	public Map<byte[], Long> pubsubNumSub(final byte[]... channels){
 		return pubSubOperations.pubsubNumSub(channels);
 	}
 
@@ -1013,6 +978,11 @@ public class JedisSentinelClient extends AbstractJedisRedisClient implements Red
 	@Override
 	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
 		return setOperations.sUnionStore(destKey, keys);
+	}
+
+	@Override
+	public KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout){
+		return sortedSetOperations.bzPopMin(keys, timeout);
 	}
 
 	@Override

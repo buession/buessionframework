@@ -257,8 +257,7 @@ public final class JedisScriptingOperations extends AbstractScriptingOperations<
 		}else if(isTransaction()){
 			return execute(CommandNotSupported.TRANSACTION, ProtocolCommand.EVALSHA, args);
 		}else{
-			return execute((cmd)->cmd.scriptExists(sha1), LONG_LIST_TO_BOOLEAN_LIST_CONVERTER, ProtocolCommand.EVALSHA,
-					args);
+			return execute((cmd)->cmd.scriptExists(sha1), ProtocolCommand.EVALSHA, args);
 		}
 	}
 
