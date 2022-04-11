@@ -22,24 +22,8 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
-
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.PubSubOperations;
-
 /**
- * Jedis Pub/Sub 命令操作抽象类
- *
- * @param <CMD>
- * 		Jedis 原始命令对象
- *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public abstract class AbstractPubSubOperations<CMD> extends AbstractJedisRedisOperations<CMD>
-		implements PubSubOperations<CMD> {
-
-	public AbstractPubSubOperations(final JedisRedisClient client){
-		super(client);
-	}
-
-}
+package com.buession.redis.core.command.args;

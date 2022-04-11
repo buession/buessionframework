@@ -22,24 +22,28 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.core.internal.convert.jedis;
 
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.TransactionOperations;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.RedisClusterServer;
+
+import java.util.List;
 
 /**
- * Jedis 事务命令操作抽象类
- *
- * @param <CMD>
- * 		Jedis 原始命令对象
+ * Jedis Cluster Nodes 命令结果转换为 {@link RedisClusterServer} 列表
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public abstract class AbstractTransactionOperations<CMD> extends AbstractJedisRedisOperations<CMD>
-		implements TransactionOperations<CMD> {
+public interface ClusterNodesConverter<S, T> extends Converter<S, T> {
 
-	public AbstractTransactionOperations(final JedisRedisClient client){
-		super(client);
+	final class ClusterNodesExposeConverter implements ClusterNodesConverter<String, List<RedisClusterServer>> {
+
+		@Override
+		public List<RedisClusterServer> convert(final String source){
+			return null;
+		}
+
 	}
 
 }

@@ -26,7 +26,7 @@ package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.BitOperation;
-import redis.clients.jedis.BitOP;
+import redis.clients.jedis.args.BitOP;
 
 /**
  * {@link BitOperation} 和 jedis {@link BitOP} 互转

@@ -41,6 +41,8 @@ public enum ProtocolCommand {
 
 	CLUSTER_SLOTS(ProtocolCommandGroup.CLUSTER, "r"),
 
+	CLUSTER_COUNTFAILUREREPORTS(ProtocolCommandGroup.CLUSTER, "rw"),
+
 	CLUSTER_COUNTKEYSINSLOT(ProtocolCommandGroup.CLUSTER, "r"),
 
 	CLUSTER_DELSLOTS(ProtocolCommandGroup.CLUSTER, "rw"),
@@ -54,6 +56,10 @@ public enum ProtocolCommand {
 	CLUSTER_GETKEYSINSLOT(ProtocolCommandGroup.CLUSTER, "r"),
 
 	CLUSTER_KEYSLOT(ProtocolCommandGroup.CLUSTER, "r"),
+
+	CLUSTER_SETCONFIGEPOCH(ProtocolCommandGroup.CLUSTER, "rw"),
+
+	CLUSTER_BUMPEPOCH(ProtocolCommandGroup.CLUSTER, "rw"),
 
 	CLUSTER_INFO(ProtocolCommandGroup.CLUSTER, "r"),
 
@@ -508,6 +514,10 @@ public enum ProtocolCommand {
 	BZPOPMIN(ProtocolCommandGroup.SORTEDSET, "rw"),
 
 	BZPOPMAX(ProtocolCommandGroup.SORTEDSET, "rw"),
+
+	ZDIFF(ProtocolCommandGroup.TRANSACTION, "rw"),
+
+	ZDIFFSTORE(ProtocolCommandGroup.TRANSACTION, "rw"),
 	/**
 	 * sorted set command end
 	 **/
@@ -586,9 +596,6 @@ public enum ProtocolCommand {
 	 * transaction command end
 	 **/
 
-
-	ZDIFF(ProtocolCommandGroup.TRANSACTION, "rw"),
-	ZDIFFSTORE(ProtocolCommandGroup.TRANSACTION, "rw"),
 
 	ZRANDMEMBER(ProtocolCommandGroup.TRANSACTION, "rw"),
 

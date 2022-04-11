@@ -25,62 +25,70 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ClusterOperations;
-import com.buession.redis.core.BumpEpoch;
-import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.CommandNotSupported;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.ClusterFailoverOptionConverter;
-import com.buession.redis.core.internal.convert.jedis.ClusterResetOptionConverter;
+import com.buession.redis.core.ClusterResetOption;
+import com.buession.redis.core.ClusterSetSlotOption;
+import com.buession.redis.core.RedisClusterServer;
+import com.buession.redis.utils.SafeEncoder;
+
+import java.util.List;
 
 /**
  * Jedis 集群命令操作抽象类
  *
- * @param <CMD>
- * 		Jedis 原始命令对象
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractClusterOperations<CMD> extends AbstractJedisRedisOperations<CMD>
-		implements ClusterOperations<CMD> {
-
-	protected final static ClusterFailoverOptionConverter.ClusterFailoverOptionJedisConverter CLUSTER_FAILOVER_OPTION_JEDIS_CONVERTER = new ClusterFailoverOptionConverter.ClusterFailoverOptionJedisConverter();
-
-	protected final static ClusterResetOptionConverter.ClusterResetOptionJedisConverter CLUSTER_RESET_OPTION_JEDIS_CONVERTER = new ClusterResetOptionConverter.ClusterResetOptionJedisConverter();
+public abstract class AbstractClusterOperations<C extends JedisRedisConnection> extends AbstractJedisRedisOperations<C>
+		implements ClusterOperations<C> {
 
 	public AbstractClusterOperations(final JedisRedisClient client){
 		super(client);
 	}
 
 	@Override
-	public int clusterCountFailureReports(final String nodeId){
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+	public Status clusterForget(final byte[] nodeId){
+		return clusterForget(SafeEncoder.encode(nodeId));
 	}
 
 	@Override
-	public int clusterCountFailureReports(final byte[] nodeId){
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+	public long clusterKeySlot(final byte[] key){
+		return clusterKeySlot(SafeEncoder.encode(key));
 	}
 
 	@Override
-	public Status clusterSetConfigEpoch(final String configEpoch){
-		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+	public Status clusterMeet(final byte[] ip, final int port){
+		return clusterMeet(SafeEncoder.encode(ip), port);
 	}
 
 	@Override
-	public Status clusterSetConfigEpoch(final byte[] configEpoch){
-		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER, args);
+	public List<RedisClusterServer> clusterSlaves(final byte[] nodeId){
+		return clusterSlaves(SafeEncoder.encode(nodeId));
 	}
 
 	@Override
-	public BumpEpoch clusterBumpEpoch(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER);
+	public List<RedisClusterServer> clusterReplicas(final byte[] nodeId){
+		return clusterReplicas(SafeEncoder.encode(nodeId));
+	}
+
+	@Override
+	public Status clusterReplicate(final byte[] nodeId){
+		return clusterReplicate(SafeEncoder.encode(nodeId));
+	}
+
+	@Override
+	public Status clusterReset(){
+		return clusterReset(ClusterResetOption.SOFT);
+	}
+
+	@Override
+	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId){
+		return clusterSetSlot(slot, setSlotOption, SafeEncoder.encode(nodeId));
 	}
 
 }

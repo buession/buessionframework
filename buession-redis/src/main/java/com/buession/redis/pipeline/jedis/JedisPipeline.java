@@ -28,7 +28,6 @@ import com.buession.core.utils.Assert;
 import com.buession.redis.pipeline.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import redis.clients.jedis.PipelineBase;
 
 import java.util.List;
 

@@ -31,10 +31,10 @@ import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.Direction;
+import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.operations.*;
 import com.buession.redis.serializer.Serializer;
-import redis.clients.jedis.ListPosition;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -51,9 +51,9 @@ import java.util.stream.Collectors;
  *
  * @author Yong.Teng
  */
-public class RedisTemplate extends BaseRedisTemplate implements ClusterOperations, ConnectionOperations, GeoOperations,
+public class RedisTemplate extends BaseRedisTemplate /*implements ClusterOperations, ConnectionOperations, GeoOperations,
 		HashOperations, HyperLogLogOperations, KeyOperations, ListOperations, PubSubOperations, ScriptingOperations,
-		ServerOperations, SetOperations, SortedSetOperations, StringOperations, TransactionOperations {
+		ServerOperations, SetOperations, SortedSetOperations, StringOperations, TransactionOperations*/ {
 
 	private final static ThreadLocal<Map<Integer, Function<?, ?>>> txConverters = new ThreadLocal<>();
 
@@ -73,6 +73,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 	public RedisTemplate(RedisConnection connection){
 		super(connection);
 	}
+	/*
 
 	@Override
 	public <V> V hGetObject(final String key, final String field){
@@ -1615,6 +1616,68 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 	}
 
 	@Override
+	public <V> Long zAdd(final String key, final double score, final V member){
+		return zAdd(key, score, serializer.serialize(member));
+	}
+
+	@Override
+	public <V> Long zAdd(final byte[] key, final double score, final V member){
+		return zAdd(key, score, serializer.serialize(member));
+	}
+
+	@Override
+	public <V> Long zAdd(final String key, final double score, final V member, final ZAddArgument argument){
+		return zAdd(key, score, serializer.serialize(member), argument);
+	}
+
+	@Override
+	public <V> Long zAdd(final byte[] key, final double score, final V member, final ZAddArgument argument){
+		return zAdd(key, score, serializer.serialize(member), argument);
+	}
+
+	@Override
+	public <V> Set<V> zDiffObject(final String key, final String[] keys){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zDiff(key, keys), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zDiffObject(final byte[] key, final byte[][] keys){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zDiff(key, keys), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zDiffObject(final String key, final String[] keys, final Class<V> clazz){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zDiff(key, keys), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zDiffObject(final byte[] key, final byte[][] keys, final Class<V> clazz){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zDiff(key, keys), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zDiffObject(final String key, final String[] keys, final TypeReference<V> type){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zDiff(key, keys), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zDiffObject(final byte[] key, final byte[][] keys, final TypeReference<V> type){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zDiff(key, keys), this);
+		return operations.operation(type);
+	}
+
+	@Override
 	public <V> V getObject(final String key){
 		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
 				get(key), this);
@@ -1919,9 +1982,9 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 		return txResult;
 	}
 
-	interface ObjectOperations {
+	interface ObjectOperations<T> {
 
-		abstract class AbstractObjectOperations<T> implements ObjectOperations {
+		abstract class AbstractObjectOperations<T> implements ObjectOperations<T> {
 
 			protected final T value;
 
@@ -2321,5 +2384,7 @@ public class RedisTemplate extends BaseRedisTemplate implements ClusterOperation
 		}
 
 	}
+
+	 */
 
 }

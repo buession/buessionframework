@@ -24,17 +24,18 @@
  */
 package com.buession.redis.client.operations;
 
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.command.ClusterCommands;
 
 /**
  * 集群命令操作接口
  *
- * @param <CMD>
- * 		原始命令对象
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ClusterOperations<CMD> extends ClusterCommands, RedisOperations<CMD> {
+public interface ClusterOperations<C extends RedisConnection> extends ClusterCommands, RedisOperations<C> {
 
 }

@@ -59,6 +59,8 @@ public interface Converters {
 
 	};
 
+	PingResultConverter PING_RESULT_CONVERTER = new PingResultConverter();
+
 	InfoConverter INFO_CONVERTER = new InfoConverter();
 
 	BooleanStatusConverter BOOLEAN_STATUS_CONVERTER = new BooleanStatusConverter();

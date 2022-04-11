@@ -19,33 +19,29 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.exception;
+package com.buession.redis.core.internal.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.ClusterSlot;
 
 /**
+ * Jedis Cluster Slots 命令结果转换为 {@link ClusterSlot}
+ *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class MigrateException extends RedisException {
+public interface ClusterSlotConverter<S, T> extends Converter<S, T> {
 
-    public MigrateException(){
-        super();
-    }
+	final class ClusterSlotExposeConverter implements ClusterSlotConverter<Object, ClusterSlot> {
 
-    public MigrateException(String message){
-        super(message);
-    }
+		@Override
+		public ClusterSlot convert(final Object source){
+			return null;
+		}
 
-    public MigrateException(String message, Throwable cause){
-        super(message, cause);
-    }
+	}
 
-    public MigrateException(Throwable cause){
-        super(cause);
-    }
-
-    public MigrateException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }

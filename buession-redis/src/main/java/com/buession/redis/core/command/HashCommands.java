@@ -52,7 +52,7 @@ public interface HashCommands extends RedisCommands {
 	 *
 	 * @return 被成功删除的域的数量
 	 */
-	Long hDel(final String key, final String... fields);
+	long hDel(final String key, final String... fields);
 
 	/**
 	 * 删除哈希表 key 中的一个或多个指定域

@@ -19,33 +19,22 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.exception;
+package com.buession.redis.core;
+
+import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.command.ProtocolCommand;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class ListPushException extends RedisException {
+public interface Command<C extends RedisConnection, R> {
 
-    public ListPushException(){
-        super();
-    }
+	ProtocolCommand getCommand();
 
-    public ListPushException(String message){
-        super(message);
-    }
+	R execute(final C connection);
 
-    public ListPushException(String message, Throwable cause){
-        super(message, cause);
-    }
-
-    public ListPushException(Throwable cause){
-        super(cause);
-    }
-
-    public ListPushException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }

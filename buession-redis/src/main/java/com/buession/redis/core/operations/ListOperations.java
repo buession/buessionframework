@@ -27,8 +27,8 @@ package com.buession.redis.core.operations;
 import com.buession.core.serializer.type.TypeReference;
 import com.buession.lang.Status;
 import com.buession.redis.core.Direction;
+import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.ListCommands;
-import redis.clients.jedis.ListPosition;
 
 import java.util.List;
 

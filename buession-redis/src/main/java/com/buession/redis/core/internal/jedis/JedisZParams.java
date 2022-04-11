@@ -24,7 +24,7 @@
  */
 package com.buession.redis.core.internal.jedis;
 
-import redis.clients.jedis.ZParams;
+import redis.clients.jedis.params.ZParams;
 
 /**
  * @author Yong.Teng

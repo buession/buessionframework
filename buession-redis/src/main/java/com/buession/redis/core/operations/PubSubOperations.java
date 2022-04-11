@@ -76,9 +76,11 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	 *
 	 * @return 指定信道的订阅者个数
 	 */
+	/*
 	default Map<String, String> pubsubNumSub(final String channel){
 		return pubsubNumSub(new String[]{channel});
 	}
+	 */
 
 	/**
 	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)
@@ -90,9 +92,11 @@ public interface PubSubOperations extends PubSubCommands, RedisOperations {
 	 *
 	 * @return 指定信道的订阅者个数
 	 */
+	/*
 	default Map<byte[], byte[]> pubsubNumSub(final byte[] channel){
 		return pubsubNumSub(new byte[][]{channel});
 	}
+	 */
 
 	/**
 	 * 指示客户端退订所有给定模式的消息

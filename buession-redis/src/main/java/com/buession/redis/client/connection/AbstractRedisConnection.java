@@ -26,8 +26,11 @@ package com.buession.redis.client.connection;
 
 import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
+import com.buession.redis.core.Command;
 import com.buession.redis.core.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
+import com.buession.redis.exception.RedisException;
+import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -183,10 +186,26 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	@Override
 	public Status connect() throws IOException{
 		logger.info("Connection redis server.");
-		initialized();
-		doConnect();
 
-		return Status.SUCCESS;
+		try{
+			initialized();
+			doConnect();
+
+			return Status.SUCCESS;
+		}catch(Exception e){
+			logger.error("Connection redis server error: {}.", e.getMessage());
+			return Status.FAILURE;
+		}
+	}
+
+	@Override
+	public <R> R execute(final Command<RedisConnection, R> command) throws RedisException{
+		try{
+			return command.execute(this);
+		}catch(Exception e){
+			logger.error("Redis execute command failure: {}", e.getMessage(), e);
+			throw RedisExceptionUtils.convert(e);
+		}
 	}
 
 	@Override
@@ -217,6 +236,10 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 		doClose();
 	}
 
+	protected static String redisPassword(final String password){
+		return com.buession.lang.Constants.EMPTY_STRING.equals(password) ? null : password;
+	}
+
 	protected void initialized(){
 		if(initialized == false){
 			synchronized(this){
@@ -229,10 +252,6 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	}
 
 	protected abstract void internalInit();
-
-	protected static String redisPassword(final String password){
-		return com.buession.lang.Constants.EMPTY_STRING.equals(password) ? null : password;
-	}
 
 	protected abstract void doConnect() throws IOException;
 

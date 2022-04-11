@@ -24,13 +24,11 @@
  */
 package com.buession.redis.client;
 
-import com.buession.core.Executor;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.connection.RedisConnectionFactory;
 import com.buession.redis.client.connection.RedisConnectionUtils;
-import com.buession.redis.client.operations.*;
+import com.buession.redis.core.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import org.slf4j.Logger;
@@ -46,34 +44,6 @@ public abstract class AbstractRedisClient implements RedisClient {
 	private RedisConnection connection;
 
 	private boolean enableTransactionSupport = true;
-
-	protected ConnectionOperations connectionOperations = createConnectionOperations();
-
-	protected GeoOperations geoOperations = createGeoOperations();
-
-	protected HashOperations hashOperations = createHashOperations();
-
-	protected HyperLogLogOperations hyperLogLogOperations = createHyperLogLogOperations();
-
-	protected KeyOperations keyOperations = createKeyOperations();
-
-	protected ListOperations listOperations = createListOperations();
-
-	protected PubSubOperations pubSubOperations = createPubSubOperations();
-
-	protected ScriptingOperations scriptingOperations = createScriptingOperations();
-
-	protected ServerOperations serverOperations = createServerOperations();
-
-	protected SetOperations setOperations = createSetOperations();
-
-	protected SortedSetOperations sortedSetOperations = createSortedSetOperations();
-
-	protected StringOperations stringOperations = createStringOperations();
-
-	protected TransactionOperations transactionOperations = createTransactionOperations();
-
-	protected ClusterOperations clusterOperations = createClusterOperations();
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -115,13 +85,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
-	public <T, R> R execute(final Executor<T, R> executor, final ProtocolCommand command){
-		return execute(executor, command, null);
-	}
-
-	@Override
-	public <T, R> R execute(final Executor<T, R> executor, final ProtocolCommand command,
-							final CommandArguments arguments){
+	public <R> R execute(final Command<RedisConnection, R> command, final CommandArguments arguments){
 		RedisConnection connection;
 
 		long startTime = 0;
@@ -141,21 +105,21 @@ public abstract class AbstractRedisClient implements RedisClient {
 
 		if(logger.isDebugEnabled()){
 			if(arguments != null){
-				logger.debug("Execute command '{}' with arguments: {}", command, argumentsString);
+				logger.debug("Execute command '{}' with arguments: {}", command.getCommand(), argumentsString);
 			}else{
-				logger.debug("Execute command '{}'", command);
+				logger.debug("Execute command '{}'", command.getCommand());
 			}
 		}
 
 		try{
-			return connection.execute(executor);
+			return connection.execute(command);
 		}catch(RedisException e){
 			if(logger.isErrorEnabled()){
 				if(arguments != null){
-					logger.error("Execute command '{}' with arguments: {}, failure: {}", command, argumentsString,
-							e.getMessage(), e);
+					logger.error("Execute command '{}' with arguments: {}, failure: {}", command.getCommand(),
+							argumentsString, e.getMessage(), e);
 				}else{
-					logger.error("Execute command '{}', failure: {}", command, e.getMessage(), e);
+					logger.error("Execute command '{}', failure: {}", command.getCommand(), e.getMessage(), e);
 				}
 			}
 			throw e;
@@ -168,33 +132,5 @@ public abstract class AbstractRedisClient implements RedisClient {
 			RedisConnectionUtils.releaseConnection(connectionFactory, connection, enableTransactionSupport);
 		}
 	}
-
-	protected abstract ConnectionOperations createConnectionOperations();
-
-	protected abstract GeoOperations createGeoOperations();
-
-	protected abstract HashOperations createHashOperations();
-
-	protected abstract HyperLogLogOperations createHyperLogLogOperations();
-
-	protected abstract KeyOperations createKeyOperations();
-
-	protected abstract ListOperations createListOperations();
-
-	protected abstract PubSubOperations createPubSubOperations();
-
-	protected abstract ScriptingOperations createScriptingOperations();
-
-	protected abstract ServerOperations createServerOperations();
-
-	protected abstract SetOperations createSetOperations();
-
-	protected abstract SortedSetOperations createSortedSetOperations();
-
-	protected abstract StringOperations createStringOperations();
-
-	protected abstract TransactionOperations createTransactionOperations();
-
-	protected abstract ClusterOperations createClusterOperations();
 
 }

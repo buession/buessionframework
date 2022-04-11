@@ -24,18 +24,22 @@
  */
 package com.buession.redis.client.operations;
 
+import com.buession.redis.client.connection.RedisConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Redis 命令操作抽象类
  *
- * @param <CMD>
- * 		原始命令对象
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisOperations<CMD> implements RedisOperations<CMD> {
+public abstract class AbstractRedisOperations<C extends RedisConnection> implements RedisOperations<C> {
 
-	protected abstract boolean isTransaction();
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	protected abstract boolean isPipeline();
+	protected C connection;
 
 }

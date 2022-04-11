@@ -24,13 +24,11 @@
  */
 package com.buession.redis.client.connection.jedis;
 
-import com.buession.core.Executor;
 import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.RedisStandaloneConnection;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.client.connection.datasource.jedis.JedisDataSource;
-import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
@@ -186,21 +184,10 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 	}
 
 	@Override
-	public <C, R> R execute(Executor<C, R> executor) throws RedisException{
-		try{
-			return executor.execute((C) jedis);
-		}catch(Exception e){
-			logger.error("Redis execute command failure: ", e);
-			throw RedisExceptionUtils.convert(e);
-		}
-	}
-
-	@Override
 	public boolean isTransaction(){
-		return jedis != null && jedis.getClient().isInMulti();
+		return transaction != null;
 	}
 
-	@Override
 	public Pipeline pipeline(){
 		if(pipeline == null){
 			pipeline = new JedisPipeline(jedis.pipelined());

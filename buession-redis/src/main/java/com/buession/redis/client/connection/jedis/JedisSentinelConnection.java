@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.connection.jedis;
 
-import com.buession.core.Executor;
 import com.buession.core.utils.Assert;
 import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.RedisSentinelConnection;
@@ -37,7 +36,6 @@ import com.buession.redis.core.RedisNamedNode;
 import com.buession.redis.core.RedisNode;
 import com.buession.redis.core.RedisSentinelNode;
 import com.buession.redis.core.RedisServer;
-import com.buession.redis.exception.RedisException;
 import com.buession.redis.exception.RedisExceptionUtils;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.pipeline.jedis.JedisPipeline;
@@ -551,21 +549,10 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 	}
 
 	@Override
-	public <R> R execute(Executor<R> executor) throws RedisException{
-		try{
-			return executor.execute();
-		}catch(Exception e){
-			logger.error("Redis execute command failure: ", e);
-			throw RedisExceptionUtils.convert(e);
-		}
-	}
-
-	@Override
 	public boolean isTransaction(){
-		return jedis != null && jedis.getClient().isInMulti();
+		return transaction != null;
 	}
 
-	@Override
 	public Pipeline pipeline(){
 		if(pipeline == null){
 			pipeline = new JedisPipeline(jedis.pipelined());

@@ -25,20 +25,19 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
+import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.ClusterFailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
+import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.CommandNotSupported;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.JedisCluster;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Jedis 集群模式集群命令操作
@@ -46,7 +45,7 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisClusterClusterOperations extends AbstractClusterOperations<JedisCluster> {
+public final class JedisClusterClusterOperations extends AbstractClusterOperations<JedisClusterConnection> {
 
 	public JedisClusterClusterOperations(final JedisClusterClient client){
 		super(client);
@@ -54,173 +53,182 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 
 	@Override
 	public String clusterMyId(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_MY_ID);
+		final JedisClusterCommand<String> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_MY_ID);
+		return execute(command);
 	}
 
 	@Override
 	public Status clusterAddSlots(final int... slots){
 		final CommandArguments args = CommandArguments.create("slots", slots);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_ADDSLOTS, args);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_ADDSLOTS);
+		return execute(command, args);
 	}
 
 	@Override
-	public Map<Integer, RedisClusterServer> clusterSlots(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_SLOTS);
+	public List<ClusterSlot> clusterSlots(){
+		final JedisClusterCommand<List<ClusterSlot>> command = JedisClusterCommand.create(
+				ProtocolCommand.CLUSTER_SLOTS);
+		return execute(command);
+	}
+
+	@Override
+	public int clusterCountFailureReports(final String nodeId){
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		final JedisClusterCommand<Integer> command = JedisClusterCommand.create(
+				ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS);
+		return execute(command, args);
+	}
+
+	@Override
+	public int clusterCountFailureReports(final byte[] nodeId){
+		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
+		final JedisClusterCommand<Integer> command = JedisClusterCommand.create(
+				ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS);
+		return execute(command, args);
 	}
 
 	@Override
 	public long clusterCountKeysInSlot(final int slot){
 		final CommandArguments args = CommandArguments.create("slot", slot);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_COUNTKEYSINSLOT, args);
+		final JedisClusterCommand<Long> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_COUNTKEYSINSLOT);
+		return execute(command, args);
 	}
 
 	@Override
 	public Status clusterDelSlots(final int... slots){
 		final CommandArguments args = CommandArguments.create("slots", slots);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_FLUSHSLOTS, args);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_DELSLOTS);
+		return execute(command, args);
 	}
 
 	@Override
 	public Status clusterFlushSlots(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_FLUSHSLOTS);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_FLUSHSLOTS);
+		return execute(command);
 	}
 
 	@Override
 	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption){
 		final CommandArguments args = CommandArguments.create("clusterFailoverOption", clusterFailoverOption);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_FAILOVER, args);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_FAILOVER);
+		return execute(command, args);
 	}
 
 	@Override
 	public Status clusterForget(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_FORGET, args);
-	}
-
-	@Override
-	public Status clusterForget(final byte[] nodeId){
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_FORGET, args);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_FORGET);
+		return execute(command, args);
 	}
 
 	@Override
 	public List<String> clusterGetKeysInSlot(final int slot, final long count){
 		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_GETKEYSINSLOT, args);
+		final JedisClusterCommand<List<String>> command = JedisClusterCommand.create(
+				ProtocolCommand.CLUSTER_GETKEYSINSLOT);
+		return execute(command, args);
 	}
 
 	@Override
 	public long clusterKeySlot(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_KEYSLOT, args);
-	}
-
-	@Override
-	public long clusterKeySlot(final byte[] key){
-		return clusterKeySlot(SafeEncoder.encode(key));
+		final JedisClusterCommand<Long> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_GETKEYSINSLOT);
+		return execute(command, args);
 	}
 
 	@Override
 	public ClusterInfo clusterInfo(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_INFO);
+		final JedisClusterCommand<ClusterInfo> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_INFO);
+		return execute(command);
 	}
 
 	@Override
 	public Status clusterMeet(final String ip, final int port){
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_MEET, args);
-	}
-
-	@Override
-	public Status clusterMeet(final byte[] ip, final int port){
-		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_MEET, args);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_MEET);
+		return execute(command, args);
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterNodes(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_NODES);
+		final JedisClusterCommand<List<RedisClusterServer>> command = JedisClusterCommand.create(
+				ProtocolCommand.CLUSTER_NODES);
+		return execute(command);
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterSlaves(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_SLAVES, args);
-	}
-
-	@Override
-	public List<RedisClusterServer> clusterSlaves(final byte[] nodeId){
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_SLAVES, args);
+		final JedisClusterCommand<List<RedisClusterServer>> command = JedisClusterCommand.create(
+				ProtocolCommand.CLUSTER_SLAVES);
+		return execute(command, args);
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterReplicas(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_REPLICAS, args);
-	}
-
-	@Override
-	public List<RedisClusterServer> clusterReplicas(final byte[] nodeId){
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_REPLICAS, args);
+		final JedisClusterCommand<List<RedisClusterServer>> command = JedisClusterCommand.create(
+				ProtocolCommand.CLUSTER_REPLICAS);
+		return execute(command, args);
 	}
 
 	@Override
 	public Status clusterReplicate(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_REPLICATE, args);
-	}
-
-	@Override
-	public Status clusterReplicate(final byte[] nodeId){
-		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_REPLICATE, args);
-	}
-
-	@Override
-	public Status clusterReset(){
-		return clusterReset(ClusterResetOption.SOFT);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_REPLICATE);
+		return execute(command, args);
 	}
 
 	@Override
 	public Status clusterReset(final ClusterResetOption clusterResetOption){
 		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_RESET, args);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_RESET);
+		return execute(command, args);
 	}
 
 	@Override
 	public Status clusterSaveConfig(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_SAVECONFIG);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_SAVECONFIG);
+		return execute(command);
+	}
+
+	@Override
+	public Status clusterSetConfigEpoch(final long configEpoch){
+		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_SETCONFIGEPOCH);
+		return execute(command, args);
+	}
+
+	@Override
+	public BumpEpoch clusterBumpEpoch(){
+		final JedisClusterCommand<BumpEpoch> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_BUMPEPOCH);
+		return execute(command);
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId){
 		final CommandArguments args = CommandArguments.create("slot", slot).put("setSlotOption", setSlotOption)
 				.put("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_SETSLOT, args);
-	}
-
-	@Override
-	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId){
-		final CommandArguments args = CommandArguments.create("slot", slot).put("setSlotOption", setSlotOption)
-				.put("nodeId", nodeId);
-		return execute(CommandNotSupported.ALL, ProtocolCommand.CLUSTER_SETSLOT, args);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_SETSLOT);
+		return execute(command, args);
 	}
 
 	@Override
 	public Status asking(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.ASKING);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.ASKING);
+		return execute(command);
 	}
 
 	@Override
 	public Status readWrite(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.READWRITE);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.ASKING);
+		return execute(command);
 	}
 
 	@Override
 	public Status readOnly(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.READONLY);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.ASKING);
+		return execute(command);
 	}
 
 }

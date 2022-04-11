@@ -31,17 +31,17 @@ import com.buession.redis.core.Tuple;
 import java.util.Set;
 
 /**
- * {@link Tuple} 和 jedis {@link redis.clients.jedis.Tuple} 互转
+ * {@link Tuple} 和 jedis {@link redis.clients.jedis.resps.Tuple} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
 public interface TupleConverter<S, T> extends Converter<S, T> {
 
-	final class TupleExposeConverter implements TupleConverter<redis.clients.jedis.Tuple, Tuple> {
+	final class TupleExposeConverter implements TupleConverter<redis.clients.jedis.resps.Tuple, Tuple> {
 
 		@Override
-		public Tuple convert(final redis.clients.jedis.Tuple source){
+		public Tuple convert(final redis.clients.jedis.resps.Tuple source){
 			return new Tuple(source.getBinaryElement(), source.getScore());
 		}
 
@@ -53,8 +53,8 @@ public interface TupleConverter<S, T> extends Converter<S, T> {
 	 * @author Yong.Teng
 	 * @since 2.0.0
 	 */
-	final class SetTupleExposeConverter extends SetConverter<redis.clients.jedis.Tuple, Tuple>
-			implements TupleConverter<Set<redis.clients.jedis.Tuple>, Set<Tuple>> {
+	final class SetTupleExposeConverter extends SetConverter<redis.clients.jedis.resps.Tuple, Tuple>
+			implements TupleConverter<Set<redis.clients.jedis.resps.Tuple>, Set<Tuple>> {
 
 		public SetTupleExposeConverter(){
 			super(new TupleConverter.TupleExposeConverter());

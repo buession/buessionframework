@@ -22,36 +22,28 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis;
+package com.buession.redis.core.internal.convert.jedis;
 
-import com.buession.redis.client.RedisStandaloneClient;
-import com.buession.redis.client.connection.jedis.JedisConnection;
-import com.buession.redis.client.jedis.operations.JedisClusterOperations;
-import com.buession.redis.client.jedis.operations.JedisConnectionOperations;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.RedisClusterServer;
+
+import java.util.List;
 
 /**
- * jedis 单机模式客户端
+ * Jedis Cluster Replicas 命令结果转换为 {@link RedisClusterServer} 列表
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class JedisStandaloneClient extends AbstractJedisRedisClient implements RedisStandaloneClient {
+public interface ClusterReplicasConverter<S, T> extends Converter<S, T> {
 
-	public JedisStandaloneClient(){
-		super();
-	}
+	final class ClusterReplicasExposeConverter implements ClusterReplicasConverter<String, List<RedisClusterServer>> {
 
-	public JedisStandaloneClient(final JedisConnection connection){
-		super(connection);
-	}
+		@Override
+		public List<RedisClusterServer> convert(final String source){
+			return null;
+		}
 
-	@Override
-	public JedisClusterOperations clusterOps(){
-		return new JedisClusterOperations(this);
-	}
-
-	@Override
-	public JedisConnectionOperations connectionOps(){
-		return new JedisConnectionOperations(this);
 	}
 
 }

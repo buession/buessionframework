@@ -19,33 +19,18 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.exception;
+package com.buession.redis.core;
+
+import java.io.Serializable;
 
 /**
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class RestoreException extends RedisException {
+public class ClusterSlot implements Serializable {
 
-    public RestoreException(){
-        super();
-    }
-
-    public RestoreException(String message){
-        super(message);
-    }
-
-    public RestoreException(String message, Throwable cause){
-        super(message, cause);
-    }
-
-    public RestoreException(Throwable cause){
-        super(cause);
-    }
-
-    public RestoreException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+	private final static long serialVersionUID = -809787517243228575L;
 }

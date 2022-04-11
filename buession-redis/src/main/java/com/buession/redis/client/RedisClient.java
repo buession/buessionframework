@@ -24,8 +24,10 @@
  */
 package com.buession.redis.client;
 
-import com.buession.core.Executor;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.operations.ClusterOperations;
+import com.buession.redis.client.operations.ConnectionOperations;
+import com.buession.redis.core.Command;
 import com.buession.redis.core.command.*;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -33,9 +35,9 @@ import com.buession.redis.pipeline.Pipeline;
 /**
  * @author Yong.Teng
  */
-public interface RedisClient extends ClusterCommands, ConnectionCommands, GeoCommands, HashCommands,
+public interface RedisClient /*extends GeoCommands, HashCommands,
 		HyperLogLogCommands, KeyCommands, ListCommands, PubSubCommands, ScriptingCommands, ServerCommands, SetCommands,
-		SortedSetCommands, StringCommands, TransactionCommands {
+		SortedSetCommands, StringCommands, TransactionCommands*/ {
 
 	RedisConnection getConnection();
 
@@ -43,9 +45,15 @@ public interface RedisClient extends ClusterCommands, ConnectionCommands, GeoCom
 
 	Pipeline pipeline();
 
-	<T, R> R execute(final Executor<T, R> executor, final ProtocolCommand command) throws RedisException;
+	ClusterOperations<? extends RedisConnection> clusterOps();
 
-	<T, R> R execute(final Executor<T, R> executor, final ProtocolCommand command, final CommandArguments arguments)
+	ConnectionOperations<? extends RedisConnection> connectionOps();
+
+	default <R> R execute(final Command<RedisConnection, R> command) throws RedisException{
+		return execute(command, null);
+	}
+
+	<R> R execute(final Command<RedisConnection, R> command, final CommandArguments arguments)
 			throws RedisException;
 
 }

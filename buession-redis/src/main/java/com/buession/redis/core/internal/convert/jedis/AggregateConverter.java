@@ -26,7 +26,7 @@ package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.Aggregate;
-import redis.clients.jedis.ZParams;
+import redis.clients.jedis.params.ZParams;
 
 /**
  * {@link Aggregate} 和 Jedis {@link ZParams.Aggregate} 互转

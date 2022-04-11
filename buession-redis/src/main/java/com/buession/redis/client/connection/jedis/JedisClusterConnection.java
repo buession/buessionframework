@@ -24,9 +24,7 @@
  */
 package com.buession.redis.client.connection.jedis;
 
-import com.buession.core.Executor;
 import com.buession.redis.client.connection.RedisClusterConnection;
-import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 
 import java.io.IOException;
@@ -61,16 +59,10 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 	}
 
 	@Override
-	public <C, R> R execute(Executor<C, R> executor) throws RedisException{
-		return null;
-	}
-
-	@Override
 	public boolean isTransaction(){
 		return false;
 	}
 
-	@Override
 	public Pipeline pipeline(){
 		return null;
 	}

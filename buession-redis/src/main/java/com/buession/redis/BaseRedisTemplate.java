@@ -39,6 +39,7 @@ import com.buession.redis.core.ClusterFailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
+import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.GeoRadius;
@@ -94,298 +95,295 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public String clusterMyId(){
-		return execute((client)->client.clusterMyId());
+		return clusterOpsExecute((ops)->ops.clusterMyId());
 	}
 
 	@Override
 	public Status clusterAddSlots(final int... slots){
-		return execute((client)->client.clusterAddSlots(slots));
+		return clusterOpsExecute((ops)->ops.clusterAddSlots(slots));
 	}
 
 	@Override
-	public Map<Integer, RedisClusterServer> clusterSlots(){
-		return execute((client)->client.clusterSlots());
+	public List<ClusterSlot> clusterSlots(){
+		return clusterOpsExecute((ops)->ops.clusterSlots());
 	}
 
 	@Override
 	public int clusterCountFailureReports(final String nodeId){
-		return execute((client)->client.clusterCountFailureReports(nodeId));
+		return clusterOpsExecute((ops)->ops.clusterCountFailureReports(nodeId));
 	}
 
 	@Override
 	public int clusterCountFailureReports(final byte[] nodeId){
-		return execute((client)->client.clusterCountFailureReports(nodeId));
+		return clusterOpsExecute((ops)->ops.clusterCountFailureReports(nodeId));
 	}
 
 	@Override
-	public int clusterCountKeysInSlot(final int slot){
-		return execute((client)->client.clusterCountKeysInSlot(slot));
+	public long clusterCountKeysInSlot(final int slot){
+		return clusterOpsExecute((ops)->ops.clusterCountKeysInSlot(slot));
 	}
 
 	@Override
 	public Status clusterDelSlots(final int... slots){
-		return execute((client)->client.clusterDelSlots(slots));
+		return clusterOpsExecute((ops)->ops.clusterDelSlots(slots));
 	}
 
 	@Override
 	public Status clusterFlushSlots(){
-		return execute((client)->client.clusterFlushSlots());
+		return clusterOpsExecute((ops)->ops.clusterFlushSlots());
 	}
 
 	@Override
 	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption){
-		return execute((client)->client.clusterFailover(clusterFailoverOption));
+		return clusterOpsExecute((ops)->ops.clusterFailover(clusterFailoverOption));
 	}
 
 	@Override
 	public Status clusterForget(final String nodeId){
-		return execute((client)->client.clusterForget(nodeId));
+		return clusterOpsExecute((ops)->ops.clusterForget(nodeId));
 	}
 
 	@Override
 	public Status clusterForget(final byte[] nodeId){
-		return execute((client)->client.clusterForget(nodeId));
+		return clusterOpsExecute((ops)->ops.clusterForget(nodeId));
 	}
 
 	@Override
 	public List<String> clusterGetKeysInSlot(final int slot, final long count){
-		return execute((client)->client.clusterGetKeysInSlot(slot, count));
+		return clusterOpsExecute((ops)->ops.clusterGetKeysInSlot(slot, count));
 	}
 
 	@Override
 	public long clusterKeySlot(final String key){
-		return execute((client)->client.clusterKeySlot(key));
+		return clusterOpsExecute((ops)->ops.clusterKeySlot(key));
 	}
 
 	@Override
 	public long clusterKeySlot(final byte[] key){
-		return execute((client)->client.clusterKeySlot(key));
+		return clusterOpsExecute((ops)->ops.clusterKeySlot(key));
 	}
 
 	@Override
 	public ClusterInfo clusterInfo(){
-		return execute((client)->client.clusterInfo());
+		return clusterOpsExecute((ops)->ops.clusterInfo());
 	}
 
 	@Override
 	public Status clusterMeet(final String ip, final int port){
-		return execute((client)->client.clusterMeet(ip, port));
+		return clusterOpsExecute((ops)->ops.clusterMeet(ip, port));
 	}
 
 	@Override
 	public Status clusterMeet(final byte[] ip, final int port){
-		return execute((client)->client.clusterMeet(ip, port));
+		return clusterOpsExecute((ops)->ops.clusterMeet(ip, port));
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterNodes(){
-		return execute((client)->client.clusterNodes());
+		return clusterOpsExecute((ops)->ops.clusterNodes());
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterSlaves(final String nodeId){
-		return execute((client)->client.clusterSlaves(nodeId));
+		return clusterOpsExecute((ops)->ops.clusterSlaves(nodeId));
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterSlaves(final byte[] nodeId){
-		return execute((client)->client.clusterSlaves(nodeId));
+		return clusterOpsExecute((ops)->ops.clusterSlaves(nodeId));
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterReplicas(final String nodeId){
-		return execute((client)->client.clusterReplicas(nodeId));
+		return clusterOpsExecute((ops)->ops.clusterReplicas(nodeId));
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterReplicas(final byte[] nodeId){
-		return execute((client)->client.clusterReplicas(nodeId));
+		return clusterOpsExecute((ops)->ops.clusterReplicas(nodeId));
 	}
 
 	@Override
 	public Status clusterReplicate(final String nodeId){
-		return execute((client)->client.clusterReplicate(nodeId));
+		return clusterOpsExecute((ops)->ops.clusterReplicate(nodeId));
 	}
 
 	@Override
 	public Status clusterReplicate(final byte[] nodeId){
-		return execute((client)->client.clusterReplicate(nodeId));
+		return clusterOpsExecute((ops)->ops.clusterReplicate(nodeId));
 	}
 
 	@Override
 	public Status clusterReset(){
-		return execute((client)->client.clusterReset());
+		return clusterOpsExecute((ops)->ops.clusterReset());
 	}
 
 	@Override
 	public Status clusterReset(final ClusterResetOption clusterResetOption){
-		return execute((client)->client.clusterReset(clusterResetOption));
+		return clusterOpsExecute((ops)->ops.clusterReset(clusterResetOption));
 	}
 
 	@Override
 	public Status clusterSaveConfig(){
-		return execute((client)->client.clusterSaveConfig());
+		return clusterOpsExecute((ops)->ops.clusterSaveConfig());
 	}
 
 	@Override
-	public Status clusterSetConfigEpoch(final String configEpoch){
-		return execute((client)->client.clusterSetConfigEpoch(configEpoch));
-	}
-
-	@Override
-	public Status clusterSetConfigEpoch(final byte[] configEpoch){
-		return execute((client)->client.clusterSetConfigEpoch(configEpoch));
+	public Status clusterSetConfigEpoch(final long configEpoch){
+		return clusterOpsExecute((ops)->ops.clusterSetConfigEpoch(configEpoch));
 	}
 
 	@Override
 	public BumpEpoch clusterBumpEpoch(){
-		return execute((client)->client.clusterBumpEpoch());
+		return clusterOpsExecute((ops)->ops.clusterBumpEpoch());
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId){
-		return execute((client)->client.clusterSetSlot(slot, setSlotOption, nodeId));
+		return clusterOpsExecute((ops)->ops.clusterSetSlot(slot, setSlotOption, nodeId));
 	}
 
 	@Override
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId){
-		return execute((client)->client.clusterSetSlot(slot, setSlotOption, nodeId));
+		return clusterOpsExecute((ops)->ops.clusterSetSlot(slot, setSlotOption, nodeId));
 	}
 
 	@Override
 	public Status asking(){
-		return execute((client)->client.asking());
+		return clusterOpsExecute((ops)->ops.asking());
 	}
 
 	@Override
 	public Status readWrite(){
-		return execute((client)->client.readWrite());
+		return clusterOpsExecute((ops)->ops.readWrite());
 	}
 
 	@Override
 	public Status readOnly(){
-		return execute((client)->client.readOnly());
+		return clusterOpsExecute((ops)->ops.readOnly());
 	}
 
 	@Override
 	public Status auth(final String user, final String password){
-		return execute((client)->client.auth(user, password));
+		return connectionOpsExecute((ops)->ops.auth(user, password));
 	}
 
 	@Override
 	public Status auth(final byte[] user, final byte[] password){
-		return execute((client)->client.auth(user, password));
+		return connectionOpsExecute((ops)->ops.auth(user, password));
 	}
 
 	@Override
 	public Status auth(final String password){
-		return execute((client)->client.auth(password));
+		return connectionOpsExecute((ops)->ops.auth(password));
 	}
 
 	@Override
 	public Status auth(final byte[] password){
-		return execute((client)->client.auth(password));
+		return connectionOpsExecute((ops)->ops.auth(password));
 	}
 
 	@Override
 	public String echo(final String str){
-		return execute((client)->client.echo(str));
+		return connectionOpsExecute((ops)->ops.echo(str));
 	}
 
 	@Override
 	public byte[] echo(final byte[] str){
-		return execute((client)->client.echo(str));
+		return connectionOpsExecute((ops)->ops.echo(str));
 	}
 
 	@Override
 	public Status ping(){
-		return execute((client)->client.ping());
+		return connectionOpsExecute((ops)->ops.ping());
 	}
 
 	@Override
 	public Status reset(){
-		return execute((client)->client.reset());
+		return connectionOpsExecute((ops)->ops.reset());
 	}
 
 	@Override
 	public Status quit(){
-		return execute((client)->client.quit());
+		return connectionOpsExecute((ops)->ops.quit());
 	}
 
 	@Override
 	public Status select(final int db){
-		return execute((client)->client.select(db));
+		return connectionOpsExecute((ops)->ops.select(db));
 	}
 
 	@Override
 	public Status clientCaching(final boolean isYes){
-		return execute((client)->client.clientCaching(isYes));
+		return connectionOpsExecute((ops)->ops.clientCaching(isYes));
 	}
 
 	@Override
-	public Long clientId(){
-		return execute((client)->client.clientId());
+	public long clientId(){
+		return connectionOpsExecute((ops)->ops.clientId());
 	}
 
 	@Override
 	public Status clientSetName(final String name){
-		return execute((client)->client.clientSetName(name));
+		return connectionOpsExecute((ops)->ops.clientSetName(name));
 	}
 
 	@Override
 	public Status clientSetName(final byte[] name){
-		return execute((client)->client.clientSetName(name));
+		return connectionOpsExecute((ops)->ops.clientSetName(name));
 	}
 
 	@Override
 	public String clientGetName(){
-		return execute((client)->client.clientGetName());
+		return connectionOpsExecute((ops)->ops.clientGetName());
 	}
 
 	@Override
 	public Integer clientGetRedir(){
-		return execute((client)->client.clientGetRedir());
+		return connectionOpsExecute((ops)->ops.clientGetRedir());
 	}
 
 	@Override
 	public List<Client> clientList(){
-		return execute((client)->client.clientList());
+		return connectionOpsExecute((ops)->ops.clientList());
 	}
 
 	@Override
 	public List<Client> clientList(final ClientType clientType){
-		return execute((client)->client.clientList(clientType));
+		return connectionOpsExecute((ops)->ops.clientList(clientType));
 	}
 
 	@Override
 	public Client clientInfo(){
-		return execute((client)->client.clientInfo());
+		return connectionOpsExecute((ops)->ops.clientInfo());
 	}
 
 	@Override
 	public Status clientPause(final int timeout){
-		return execute((client)->client.clientPause(timeout));
+		return connectionOpsExecute((ops)->ops.clientPause(timeout));
 	}
 
 	@Override
 	public Status clientReply(final ClientReply option){
-		return execute((client)->client.clientReply(option));
+		return connectionOpsExecute((ops)->ops.clientReply(option));
 	}
 
 	@Override
 	public Status clientKill(final String host, final int port){
-		return execute((client)->client.clientKill(host, port));
+		return connectionOpsExecute((ops)->ops.clientKill(host, port));
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId){
-		return execute((client)->client.clientUnblock(clientId));
+		return connectionOpsExecute((ops)->ops.clientUnblock(clientId));
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type){
-		return execute((client)->client.clientUnblock(clientId, type));
+		return connectionOpsExecute((ops)->ops.clientUnblock(clientId, type));
 	}
+
+	/*
 
 	@Override
 	public Long geoAdd(final String key, final String member, final double longitude, final double latitude){
@@ -552,7 +550,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Long hDel(final String key, final String... fields){
+	public long hDel(final String key, final String... fields){
 		return execute((client)->client.hDel(makeRawKey(key), fields));
 	}
 
@@ -2142,13 +2140,13 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Set<String> sInter(final String key, final String... keys){
-		return execute((client)->client.sInter(makeRawKey(key), makeRawKeys(keys)));
+	public Set<String> sInter(final String... keys){
+		return execute((client)->client.sInter(makeRawKeys(keys)));
 	}
 
 	@Override
-	public Set<byte[]> sInter(final byte[] key, final byte[]... keys){
-		return execute((client)->client.sInter(makeByteKey(key), makeByteKeys(keys)));
+	public Set<byte[]> sInter(final byte[]... keys){
+		return execute((client)->client.sInter(makeByteKeys(keys)));
 	}
 
 	@Override
@@ -2374,91 +2372,83 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
-	public Long zAdd(final String key, final Map<String, Number> members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return execute((client)->client.zAdd(makeRawKey(key), members), ProtocolCommand.ZADD, args);
+	public Long zAdd(final String key, final Map<String, Double> members){
+		return execute((client)->client.zAdd(makeRawKey(key), members));
 	}
 
 	@Override
-	public Long zAdd(final byte[] key, final Map<byte[], Number> members){
-		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return execute((client)->client.zAdd(makeByteKey(key), members), ProtocolCommand.ZADD, args);
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members){
+		return execute((client)->client.zAdd(makeByteKey(key), members));
+	}
+
+	@Override
+	public Long zAdd(final String key, final Map<String, Double> members, final ZAddArgument argument){
+		return execute((client)->client.zAdd(makeRawKey(key), members, argument));
+	}
+
+	@Override
+	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final ZAddArgument argument){
+		return execute((client)->client.zAdd(makeByteKey(key), members, argument));
 	}
 
 	@Override
 	public Long zCard(final String key){
-		return execute((client)->client.zCard(makeRawKey(key)), ProtocolCommand.ZCARD,
-				new CommandArguments("key", key));
+		return execute((client)->client.zCard(makeRawKey(key)));
 	}
 
 	@Override
 	public Long zCard(final byte[] key){
-		return execute((client)->client.zCard(makeByteKey(key)), ProtocolCommand.ZCARD,
-				new CommandArguments("key", key));
+		return execute((client)->client.zCard(makeByteKey(key)));
 	}
 
 	@Override
 	public Long zCount(final String key, final double min, final double max){
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zCount(makeRawKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+		return execute((client)->client.zCount(makeRawKey(key), min, max));
 	}
 
 	@Override
 	public Long zCount(final byte[] key, final double min, final double max){
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zCount(makeByteKey(key), min, max), ProtocolCommand.ZCOUNT, args);
-	}
-
-	@Override
-	public Long zCount(final String key, final long min, final long max){
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zCount(makeRawKey(key), min, max), ProtocolCommand.ZCOUNT, args);
-	}
-
-	@Override
-	public Long zCount(final byte[] key, final long min, final long max){
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zCount(makeByteKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+		return execute((client)->client.zCount(makeByteKey(key), min, max));
 	}
 
 	@Override
 	public Long zCount(final String key, final String min, final String max){
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zCount(makeRawKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+		return execute((client)->client.zCount(makeRawKey(key), min, max));
 	}
 
 	@Override
 	public Long zCount(final byte[] key, final byte[] min, final byte[] max){
-		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zCount(makeByteKey(key), min, max), ProtocolCommand.ZCOUNT, args);
+		return execute((client)->client.zCount(makeByteKey(key), min, max));
+	}
+
+	@Override
+	public Set<String> zDiff(final String key, final String... keys){
+		return execute((client)->client.zDiff(makeRawKey(key), makeRawKeys(keys)));
+	}
+
+	@Override
+	public Set<byte[]> zDiff(final byte[] key, final byte[]... keys){
+		return execute((client)->client.zDiff(makeByteKey(key), makeByteKeys(keys)));
+	}
+
+	@Override
+	public Long zDiffStore(final String destKey, final String... keys){
+		return execute((client)->client.zDiffStore(makeRawKey(destKey), makeRawKeys(keys)));
+	}
+
+	@Override
+	public Long zDiffStore(final byte[] destKey, final byte[]... keys){
+		return execute((client)->client.zDiffStore(makeByteKey(destKey), makeByteKeys(keys)));
 	}
 
 	@Override
 	public Double zIncrBy(final String key, final String member, final double increment){
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
-				.put("increment", increment);
-		return execute((client)->client.zIncrBy(makeRawKey(key), member, increment), ProtocolCommand.ZINCRBY, args);
+		return execute((client)->client.zIncrBy(makeRawKey(key), member, increment));
 	}
 
 	@Override
 	public Double zIncrBy(final byte[] key, final byte[] member, final double increment){
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
-				.put("increment", increment);
-		return execute((client)->client.zIncrBy(makeByteKey(key), member, increment), ProtocolCommand.ZINCRBY, args);
-	}
-
-	@Override
-	public Double zIncrBy(final String key, final String member, final long increment){
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
-				.put("increment", increment);
-		return execute((client)->client.zIncrBy(makeRawKey(key), member, increment), ProtocolCommand.ZINCRBY, args);
-	}
-
-	@Override
-	public Double zIncrBy(final byte[] key, final byte[] member, final long increment){
-		final CommandArguments args = CommandArguments.create("key", key).put("member", member)
-				.put("increment", increment);
-		return execute((client)->client.zIncrBy(makeByteKey(key), member, increment), ProtocolCommand.ZINCRBY, args);
+		return execute((client)->client.zIncrBy(makeByteKey(key), member, increment));
 	}
 
 	@Override
@@ -4062,5 +4052,5 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Status unwatch(){
 		return execute((client)->client.unwatch());
 	}
-
+*/
 }

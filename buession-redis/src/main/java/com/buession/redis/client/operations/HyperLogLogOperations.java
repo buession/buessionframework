@@ -24,16 +24,17 @@
  */
 package com.buession.redis.client.operations;
 
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.command.HyperLogLogCommands;
 
 /**
  * HyperLogLog 命令操作接口
  *
- * @param <CMD>
- * 		原始命令对象
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
  */
-public interface HyperLogLogOperations<CMD> extends HyperLogLogCommands, RedisOperations<CMD> {
+public interface HyperLogLogOperations<C extends RedisConnection> extends HyperLogLogCommands, RedisOperations<C> {
 
 }

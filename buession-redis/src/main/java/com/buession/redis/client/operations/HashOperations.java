@@ -24,16 +24,17 @@
  */
 package com.buession.redis.client.operations;
 
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.command.HashCommands;
 
 /**
  * 哈希表命令操作接口
  *
- * @param <CMD>
- * 		原始命令对象
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
  */
-public interface HashOperations<CMD> extends HashCommands, RedisOperations<CMD> {
+public interface HashOperations<C extends RedisConnection> extends HashCommands, RedisOperations<C> {
 
 }

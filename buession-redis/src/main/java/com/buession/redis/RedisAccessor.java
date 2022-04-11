@@ -34,8 +34,12 @@ import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.client.jedis.JedisSentinelClient;
+import com.buession.redis.client.jedis.operations.JedisClusterClusterOperations;
+import com.buession.redis.client.jedis.operations.JedisClusterOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelClusterOperations;
+import com.buession.redis.client.operations.ClusterOperations;
+import com.buession.redis.client.operations.ConnectionOperations;
 import com.buession.redis.core.Options;
-import com.buession.redis.core.SessionCallback;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.serializer.JacksonJsonSerializer;
@@ -66,7 +70,11 @@ public abstract class RedisAccessor implements Closeable {
 
 	protected AtomicInteger index = new AtomicInteger(-1);
 
-	{
+	protected ClusterOperations<? extends RedisConnection> clusterOps;
+
+	protected ConnectionOperations<? extends RedisConnection> connectionOps;
+
+	static{
 		DEFAULT_OPTIONS.setSerializer(DEFAULT_SERIALIZER);
 	}
 
@@ -113,9 +121,11 @@ public abstract class RedisAccessor implements Closeable {
 	}
 
 	public Pipeline pipeline(){
-		return execute((cmd)->client.pipeline());
+		//return execute((cmd)->client.pipeline());
+		return null;
 	}
 
+	/*
 	public <R> R execute(final SessionCallback<R> callback) throws RedisException{
 		Assert.isNull(callback, "callback cloud not be null.");
 
@@ -126,6 +136,8 @@ public abstract class RedisAccessor implements Closeable {
 		}
 	}
 
+	 */
+
 	@Override
 	public void close() throws IOException{
 		if(connection != null){
@@ -133,18 +145,22 @@ public abstract class RedisAccessor implements Closeable {
 		}
 	}
 
-	protected <R> R doExecute(final Executor<RedisClient, R> executor){
+	protected <OPS, R> R execute(final OPS ops, final Executor<OPS, R> executor){
 		checkInitialized();
 
 		if(isTransactionOrPipeline()){
 			index.getAndIncrement();
 		}
 
-		return executor.execute(client);
+		return executor.execute(ops);
 	}
 
-	protected <R> R execute(final Executor<RedisClient, R> executor){
-		return doExecute(executor);
+	protected <R> R clusterOpsExecute(final Executor<ClusterOperations<? extends RedisConnection>, R> executor){
+		return execute(clusterOps, executor);
+	}
+
+	protected <R> R connectionOpsExecute(final Executor<ConnectionOperations<? extends RedisConnection>, R> executor){
+		return execute(connectionOps, executor);
 	}
 
 	protected RedisClient doGetRedisClient(RedisConnection connection) throws RedisException{
@@ -153,6 +169,8 @@ public abstract class RedisAccessor implements Closeable {
 
 			jedisClient.setEnableTransactionSupport(enableTransactionSupport);
 
+			clusterOps = new JedisClusterOperations(jedisClient);
+
 			return jedisClient;
 		}else if(connection instanceof JedisSentinelConnection){
 			JedisSentinelClient jedisSentinelClient = new JedisSentinelClient(
@@ -160,12 +178,16 @@ public abstract class RedisAccessor implements Closeable {
 
 			jedisSentinelClient.setEnableTransactionSupport(enableTransactionSupport);
 
+			clusterOps = new JedisSentinelClusterOperations(jedisSentinelClient);
+
 			return jedisSentinelClient;
 		}else if(connection instanceof JedisClusterConnection){
 			JedisClusterClient jedisClusterClient = new JedisClusterClient(
 					(JedisClusterConnection) connection);
 
 			jedisClusterClient.setEnableTransactionSupport(enableTransactionSupport);
+
+			clusterOps = new JedisClusterClusterOperations(jedisClusterClient);
 
 			return jedisClusterClient;
 		}else{

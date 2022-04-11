@@ -24,46 +24,36 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.Converter;
 import com.buession.lang.Status;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ConnectionOperations;
-import com.buession.redis.core.Client;
-import com.buession.redis.core.command.CommandNotSupported;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.PingResultConverter;
-import com.buession.redis.core.internal.convert.jedis.ClientTypeConverter;
-import com.buession.redis.core.internal.convert.jedis.ClientUnblockTypeConverter;
-import com.buession.redis.utils.ClientUtil;
-
-import java.util.List;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
  * Jedis 连接命令操作抽象类
  *
- * @param <CMD>
- * 		Jedis 原始命令对象
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public abstract class AbstractConnectionOperations<CMD> extends AbstractJedisRedisOperations<CMD>
-		implements ConnectionOperations<CMD> {
-
-	protected final static PingResultConverter PING_RESULT_CONVERTER = new PingResultConverter();
-
-	protected final static ClientTypeConverter.ClientTypeJedisConverter CLIENT_TYPE_JEDIS_CONVERTER = new ClientTypeConverter.ClientTypeJedisConverter();
-
-	protected final static Converter<String, List<Client>> CLIENT_LIST_CONVERTER = ClientUtil::parse;
-
-	protected final static ClientUnblockTypeConverter.ClientUnblockJedisConverter CLIENT_UNBLOCK_JEDIS_CONVERTER = new ClientUnblockTypeConverter.ClientUnblockJedisConverter();
+public abstract class AbstractConnectionOperations<C extends JedisRedisConnection>
+		extends AbstractJedisRedisOperations<C> implements ConnectionOperations<C> {
 
 	public AbstractConnectionOperations(final JedisRedisClient client){
 		super(client);
 	}
 
 	@Override
-	public Status reset(){
-		return execute(CommandNotSupported.ALL, ProtocolCommand.RESET);
+	public Status auth(final byte[] user, final byte[] password){
+		return auth(SafeEncoder.encode(user), SafeEncoder.encode(password));
+	}
+
+	@Override
+	public Status auth(final byte[] password){
+		return auth(SafeEncoder.encode(password));
 	}
 
 }

@@ -33,9 +33,9 @@ import com.buession.redis.utils.SafeEncoder;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractRedisTemplate extends RedisAccessor implements ClusterCommands, ConnectionCommands,
+public abstract class AbstractRedisTemplate extends RedisAccessor implements ClusterCommands, ConnectionCommands/*,
 		GeoCommands, HashCommands, HyperLogLogCommands, KeyCommands, ListCommands, PubSubCommands, ScriptingCommands,
-		ServerCommands, SetCommands, SortedSetCommands, StringCommands, TransactionCommands {
+		ServerCommands, SetCommands, SortedSetCommands, StringCommands, TransactionCommands*/ {
 
 	/**
 	 * 构造函数
@@ -54,7 +54,7 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Clu
 		super(connection);
 	}
 
-	protected final String makeRawKey(final String key){
+	protected final String rawKey(final String key){
 		String prefix = getOptions().getPrefix();
 
 		if(Validate.isEmpty(prefix)){
@@ -68,7 +68,7 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Clu
 		return sb.toString();
 	}
 
-	protected final String[] makeRawKeys(final String[] keys){
+	protected final String[] rawKeys(final String[] keys){
 		String prefix = getOptions().getPrefix();
 
 		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
@@ -78,18 +78,18 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Clu
 		String[] rawKeys = new String[keys.length];
 
 		for(int i = 0; i < keys.length; i++){
-			rawKeys[i] = makeRawKey(keys[i]);
+			rawKeys[i] = rawKey(keys[i]);
 		}
 
 		return rawKeys;
 	}
 
-	protected final byte[] makeByteKey(byte[] key){
+	protected final byte[] rawKey(byte[] key){
 		String prefix = getOptions().getPrefix();
 		return Validate.isEmpty(prefix) ? key : ByteUtils.concat(SafeEncoder.encode(prefix), key);
 	}
 
-	protected final byte[][] makeByteKeys(final byte[][] keys){
+	protected final byte[][] rawKeys(final byte[][] keys){
 		String prefix = getOptions().getPrefix();
 
 		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){

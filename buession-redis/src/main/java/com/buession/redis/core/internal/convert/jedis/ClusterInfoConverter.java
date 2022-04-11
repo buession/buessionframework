@@ -22,27 +22,26 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
+package com.buession.redis.core.internal.convert.jedis;
 
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.ScriptingOperations;
-import com.buession.redis.core.internal.convert.jedis.FlushModeConverter;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.ClusterInfo;
 
 /**
- * Jedis Script 命令操作抽象类
- *
- * @param <CMD>
- * 		Jedis 原始命令对象
+ * Jedis Cluster Info 命令结果转换为 {@link ClusterInfo}
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public abstract class AbstractScriptingOperations<CMD> extends AbstractJedisRedisOperations<CMD>
-		implements ScriptingOperations<CMD> {
+public interface ClusterInfoConverter<S, T> extends Converter<S, T> {
 
-	protected final static FlushModeConverter.FlushModeJedisConverter FLUSH_MODE_JEDIS_CONVERTER = new FlushModeConverter.FlushModeJedisConverter();
+	final class ClusterInfoExposeConverter implements ClusterInfoConverter<String, ClusterInfo> {
 
-	public AbstractScriptingOperations(final JedisRedisClient client){
-		super(client);
+		@Override
+		public ClusterInfo convert(final String source){
+			return null;
+		}
+
 	}
 
 }

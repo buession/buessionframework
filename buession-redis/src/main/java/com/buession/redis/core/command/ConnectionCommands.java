@@ -180,7 +180,7 @@ public interface ConnectionCommands extends RedisCommands {
 	 *
 	 * @return 当前连接的 ID
 	 */
-	Long clientId();
+	long clientId();
 
 	/**
 	 * 为当前连接分配一个名字

@@ -22,33 +22,16 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
-
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.ListOperations;
-import com.buession.redis.core.internal.convert.jedis.DirectionConverter;
-import com.buession.redis.core.internal.convert.jedis.LPosArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.ListPositionConverter;
+package com.buession.redis.core;
 
 /**
- * Jedis 列表命令操作抽象类
- *
- * @param <CMD>
- * 		Jedis 原始命令对象
- *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public abstract class AbstractListOperations<CMD> extends AbstractJedisRedisOperations<CMD>
-		implements ListOperations<CMD> {
+public enum GtLt {
 
-	protected final static DirectionConverter.DirectionJedisConverter DIRECTION_JEDIS_CONVERTER = new DirectionConverter.DirectionJedisConverter();
-
-	protected final static ListPositionConverter.ListPositionJedisConverter LIST_POSITION_JEDIS_CONVERTER = new ListPositionConverter.ListPositionJedisConverter();
-
-	protected final static LPosArgumentConverter.LPosArgumentJedisConverter L_POS_ARGUMENT_JEDIS_CONVERTER = new LPosArgumentConverter.LPosArgumentJedisConverter();
-
-	public AbstractListOperations(final JedisRedisClient client){
-		super(client);
-	}
+	GT,
+	
+	LT
 
 }

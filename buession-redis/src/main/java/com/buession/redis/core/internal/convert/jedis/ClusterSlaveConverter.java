@@ -19,33 +19,33 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.exception;
+package com.buession.redis.core.internal.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.Direction;
+import com.buession.redis.core.RedisClusterServer;
+import redis.clients.jedis.args.ListDirection;
+
+import java.util.List;
 
 /**
+ * Jedis Cluster Slaves 命令结果转换为 {@link RedisClusterServer}
+ *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class RenameException extends RedisException {
+public interface ClusterSlaveConverter<S, T> extends Converter<S, T> {
 
-    public RenameException(){
-        super();
-    }
+	final class ClusterSlaveExposeConverter implements ClusterSlaveConverter<String, RedisClusterServer> {
 
-    public RenameException(String message){
-        super(message);
-    }
+		@Override
+		public RedisClusterServer convert(final String source){
+			return null;
+		}
 
-    public RenameException(String message, Throwable cause){
-        super(message, cause);
-    }
+	}
 
-    public RenameException(Throwable cause){
-        super(cause);
-    }
-
-    public RenameException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }

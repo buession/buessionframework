@@ -25,11 +25,10 @@
 package com.buession.redis.client.connection;
 
 import com.buession.core.Destroyable;
-import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
 import com.buession.redis.client.connection.datasource.DataSource;
-import com.buession.redis.pipeline.Pipeline;
+import com.buession.redis.core.Command;
 import com.buession.redis.exception.RedisException;
 
 import java.io.Closeable;
@@ -123,10 +122,8 @@ public interface RedisConnection extends Destroyable, Closeable {
 	/**
 	 * 执行 Redis 命令
 	 *
-	 * @param executor
+	 * @param command
 	 * 		命令执行器
-	 * @param <C>
-	 * 		原始命令对象
 	 * @param <R>
 	 * 		返回值类型
 	 *
@@ -135,7 +132,7 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 * @throws RedisException
 	 * 		Redis Exception
 	 */
-	<C, R> R execute(final Executor<C, R> executor) throws RedisException;
+	<R> R execute(final Command<RedisConnection, R> command) throws RedisException;
 
 	/**
 	 * 当前是否处于事务状态
@@ -143,13 +140,6 @@ public interface RedisConnection extends Destroyable, Closeable {
 	 * @return 处于事务状态，则返回 true; 否则，返回 false
 	 */
 	boolean isTransaction();
-
-	/**
-	 * 获取管道
-	 *
-	 * @return 管道
-	 */
-	Pipeline pipeline();
 
 	/**
 	 * 当前是否处于管道状态

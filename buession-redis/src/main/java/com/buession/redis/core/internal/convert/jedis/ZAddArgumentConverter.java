@@ -19,33 +19,65 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2018 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.exception;
+package com.buession.redis.core.internal.convert.jedis;
+
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.SortedSetCommands;
+import redis.clients.jedis.params.ZAddParams;
+
+import java.util.Objects;
 
 /**
+ * {@link SortedSetCommands.ZAddArgument} 和 jedis {@link ZAddParams} 互转
+ *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public class IncrException extends RedisException {
+public interface ZAddArgumentConverter<S, T> extends Converter<S, T> {
 
-    public IncrException(){
-        super();
-    }
+	final class ZAddArgumentJedisConverter
+			implements ZAddArgumentConverter<SortedSetCommands.ZAddArgument, ZAddParams> {
 
-    public IncrException(String message){
-        super(message);
-    }
+		@Override
+		public ZAddParams convert(final SortedSetCommands.ZAddArgument source){
+			final ZAddParams zAddParams = new ZAddParams();
 
-    public IncrException(String message, Throwable cause){
-        super(message, cause);
-    }
+			if(source.getNxXx() != null){
+				switch(source.getNxXx()){
+					case NX:
+						zAddParams.nx();
+						break;
+					case XX:
+						zAddParams.xx();
+						break;
+					default:
+						break;
+				}
+			}
 
-    public IncrException(Throwable cause){
-        super(cause);
-    }
+			if(source.getGtLt() != null){
+				switch(source.getGtLt()){
+					case GT:
+						zAddParams.gt();
+						break;
+					case LT:
+						zAddParams.lt();
+						break;
+					default:
+						break;
+				}
+			}
 
-    public IncrException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace){
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
+			if(Objects.equals(source.getCh(), Boolean.TRUE)){
+				zAddParams.ch();
+			}
+
+			return zAddParams;
+		}
+
+	}
+
 }

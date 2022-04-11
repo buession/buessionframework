@@ -24,16 +24,17 @@
  */
 package com.buession.redis.client.operations;
 
+import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.command.PubSubCommands;
 
 /**
  * 发布订阅命令操作接口
  *
- * @param <CMD>
- * 		原始命令对象
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
  */
-public interface PubSubOperations<CMD> extends PubSubCommands, RedisOperations<CMD> {
+public interface PubSubOperations<C extends RedisConnection> extends PubSubCommands, RedisOperations<C> {
 
 }

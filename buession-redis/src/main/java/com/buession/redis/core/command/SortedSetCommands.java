@@ -25,7 +25,9 @@
 package com.buession.redis.core.command;
 
 import com.buession.redis.core.Aggregate;
+import com.buession.redis.core.GtLt;
 import com.buession.redis.core.KeyedZSetElement;
+import com.buession.redis.core.NxXx;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 
@@ -97,9 +99,7 @@ public interface SortedSetCommands extends RedisCommands {
 	/**
 	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/sorted_set/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -108,14 +108,12 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final String key, final Map<String, Number> members);
+	Long zAdd(final String key, final Map<String, Double> members);
 
 	/**
 	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/sorted_set/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -124,13 +122,44 @@ public interface SortedSetCommands extends RedisCommands {
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	Long zAdd(final byte[] key, final Map<byte[], Number> members);
+	Long zAdd(final byte[] key, final Map<byte[], Double> members);
+
+	/**
+	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个 member 元素及其 score
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	Long zAdd(final String key, final Map<String, Double> members, final ZAddArgument argument);
+
+	/**
+	 * 将一个或多个 member 元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		一个或多个 member 元素及其 score
+	 * @param argument
+	 * 		参数
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	Long zAdd(final byte[] key, final Map<byte[], Double> members, final ZAddArgument argument);
 
 	/**
 	 * 获取有序集 key 的基数
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcard.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zcard.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcard.html" target="_blank">http://redisdoc.com/sorted_set/zcard.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -142,8 +171,7 @@ public interface SortedSetCommands extends RedisCommands {
 	/**
 	 * 获取有序集 key 的基数
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcard.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zcard.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcard.html" target="_blank">http://redisdoc.com/sorted_set/zcard.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -155,8 +183,7 @@ public interface SortedSetCommands extends RedisCommands {
 	/**
 	 * 获取有序集 key 中，score 值在 min 和 max 之间（包括 score 值等于 min 或 max ）的成员的数量
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcount.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zcount.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcount.html" target="_blank">http://redisdoc.com/sorted_set/zcount.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -172,8 +199,7 @@ public interface SortedSetCommands extends RedisCommands {
 	/**
 	 * 获取有序集 key 中，score 值在 min 和 max 之间（包括 score 值等于 min 或 max ）的成员的数量
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcount.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zcount.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcount.html" target="_blank">http://redisdoc.com/sorted_set/zcount.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -189,42 +215,7 @@ public interface SortedSetCommands extends RedisCommands {
 	/**
 	 * 获取有序集 key 中，score 值在 min 和 max 之间（包括 score 值等于 min 或 max ）的成员的数量
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcount.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zcount.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return score 值在 min 和 max 之间的成员的数量
-	 */
-	Long zCount(final String key, final long min, final long max);
-
-	/**
-	 * 获取有序集 key 中，score 值在 min 和 max 之间（包括 score 值等于 min 或 max ）的成员的数量
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcount.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zcount.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param min
-	 * 		最小 score
-	 * @param max
-	 * 		最大 score
-	 *
-	 * @return score 值在 min 和 max 之间的成员的数量
-	 */
-	Long zCount(final byte[] key, final long min, final long max);
-
-	/**
-	 * 获取有序集 key 中，score 值在 min 和 max 之间（包括 score 值等于 min 或 max ）的成员的数量
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcount.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zcount.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcount.html" target="_blank">http://redisdoc.com/sorted_set/zcount.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -240,8 +231,7 @@ public interface SortedSetCommands extends RedisCommands {
 	/**
 	 * 获取有序集 key 中，score 值在 min 和 max 之间（包括 score 值等于 min 或 max ）的成员的数量
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcount.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zcount.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zcount.html" target="_blank">http://redisdoc.com/sorted_set/zcount.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -255,10 +245,65 @@ public interface SortedSetCommands extends RedisCommands {
 	Long zCount(final byte[] key, final byte[] min, final byte[] max);
 
 	/**
+	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return The result of the difference
+	 */
+	Set<String> zDiff(final String key, final String... keys);
+
+	/**
+	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return The result of the difference
+	 */
+	Set<byte[]> zDiff(final byte[] key, final byte[]... keys);
+
+	/**
+	 * Computes the difference between the first and all successive input sorted sets and stores the result in destination
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zdiffstore/" target="_blank">https://redis.io/commands/zdiffstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long zDiffStore(final String destKey, final String... keys);
+
+	/**
+	 * Computes the difference between the first and all successive input sorted sets and stores the result in destination
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zdiffstore/" target="_blank">https://redis.io/commands/zdiffstore/</a></p>
+	 *
+	 * @param destKey
+	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 *
+	 * @return 结果集中的元素数量
+	 */
+	Long zDiffStore(final byte[] destKey, final byte[]... keys);
+
+	/**
 	 * 为有序集 key 的成员 member 的 score 值加上增量 increment
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zincrby.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zincrby.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zincrby.html" target="_blank">http://redisdoc.com/sorted_set/zincrby.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -274,8 +319,7 @@ public interface SortedSetCommands extends RedisCommands {
 	/**
 	 * 为有序集 key 的成员 member 的 score 值加上增量 increment
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zincrby.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zincrby.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zincrby.html" target="_blank">http://redisdoc.com/sorted_set/zincrby.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -289,44 +333,33 @@ public interface SortedSetCommands extends RedisCommands {
 	Double zIncrBy(final byte[] key, final byte[] member, final double increment);
 
 	/**
-	 * 为有序集 key 的成员 member 的 score 值加上增量 increment
+	 * This command is similar to ZINTERSTORE, but instead of storing the resulting sorted set, it is returned to the client
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zincrby.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zincrby.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
 	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		member 元素
-	 * @param increment
-	 * 		增量
+	 * @param keys
+	 * 		一个或多个 Key
 	 *
-	 * @return member 成员的新 score 值
+	 * @return The result of intersection
 	 */
-	Double zIncrBy(final String key, final String member, final long increment);
+	Long zInter(final String... keys);
 
 	/**
-	 * 为有序集 key 的成员 member 的 score 值加上增量 increment
+	 * This command is similar to ZINTERSTORE, but instead of storing the resulting sorted set, it is returned to the client
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zincrby.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zincrby.html</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
 	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		member 元素
-	 * @param increment
-	 * 		增量
+	 * @param keys
+	 * 		一个或多个 Key
 	 *
-	 * @return member 成员的新 score 值
+	 * @return The result of intersection
 	 */
-	Double zIncrBy(final byte[] key, final byte[] member, final long increment);
+	Long zInter(final byte[]... keys);
 
 	/**
 	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zinterstore.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zinterstore.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zinterstore.html" target="_blank">http://redisdoc.com/sorted_set/zinterstore.html</a></p>
 	 *
 	 * @param destKey
 	 * 		目标 Key
@@ -340,8 +373,7 @@ public interface SortedSetCommands extends RedisCommands {
 	/**
 	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zinterstore.html" target="_blank">http://redisdoc
-	 * .com/sorted_set/zinterstore.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zinterstore.html" target="_blank">http://redisdoc.com/sorted_set/zinterstore.html</a></p>
 	 *
 	 * @param destKey
 	 * 		目标 Key
@@ -3096,5 +3128,110 @@ public interface SortedSetCommands extends RedisCommands {
 	 * @return 保存到 destKey 的结果集的基数
 	 */
 	Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double[] weights, final byte[]... keys);
+
+	class ZAddArgument {
+
+		/**
+		 * 更新成员方式：
+		 * 1）NxXx.NX：不更新存在的成员，只添加新成员
+		 * 2）NxXx.XX：仅更新存在的成员，不添加新成员
+		 */
+		private NxXx nxXx;
+
+		/**
+		 * 更新新的分值方式：
+		 * 1) GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+		 * 2) GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+		 */
+		private GtLt gtLt;
+
+		/**
+		 * 是否返回变更成员的数量。
+		 * 变更的成员是指 新增成员 和 score值更新的成员，命令指明的和之前score值相同的成员不计在内。
+		 * 注意: 在通常情况下，ZADD返回值只计算新添加成员的数量
+		 */
+		private Boolean ch;
+
+		/**
+		 * 返回更新成员方式
+		 *
+		 * @return 更新成员方式
+		 */
+		public NxXx getNxXx(){
+			return nxXx;
+		}
+
+		/**
+		 * 返回更新新的分值方式
+		 *
+		 * @return 更新新的分值方式
+		 */
+		public GtLt getGtLt(){
+			return gtLt;
+		}
+
+		/**
+		 * 返回是否返回变更成员的数量
+		 *
+		 * @return 是否返回变更成员的数量
+		 */
+		public Boolean getCh(){
+			return ch;
+		}
+
+		public static class Builder {
+
+			private final ZAddArgument zAddArgument = new ZAddArgument();
+
+			private Builder(){
+
+			}
+
+			public static Builder create(){
+				return new Builder();
+			}
+
+			/**
+			 * 设置更新成员方式
+			 *
+			 * @param nxXx
+			 * 		更新成员方式
+			 *
+			 * @return Builder
+			 */
+			public Builder nxXX(NxXx nxXx){
+				zAddArgument.nxXx = nxXx;
+				return this;
+			}
+
+			/**
+			 * 更新新的分值方式
+			 *
+			 * @param gtLt
+			 * 		更新新的分值方式
+			 *
+			 * @return Builder
+			 */
+			public Builder gtLt(GtLt gtLt){
+				zAddArgument.gtLt = gtLt;
+				return this;
+			}
+
+			/**
+			 * 设置返回变更成员的数量
+			 *
+			 * @return Builder
+			 */
+			public Builder ch(){
+				zAddArgument.ch = true;
+				return this;
+			}
+
+			public ZAddArgument build(){
+				return zAddArgument;
+			}
+
+		}
+	}
 
 }

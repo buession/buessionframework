@@ -31,6 +31,8 @@ import com.buession.redis.core.command.ProtocolCommand;
  */
 public class NotSupportedTransactionCommandException extends NotSupportedCommandException {
 
+	private static final long serialVersionUID = -3940419124680209461L;
+
 	public NotSupportedTransactionCommandException(){
 	}
 
@@ -50,8 +52,4 @@ public class NotSupportedTransactionCommandException extends NotSupportedCommand
 		super(cause);
 	}
 
-	public NotSupportedTransactionCommandException(String message, Throwable cause, boolean enableSuppression,
-												   boolean writableStackTrace){
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
 }

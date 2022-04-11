@@ -22,24 +22,14 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.client.jedis.operations;
-
-import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.HyperLogLogOperations;
+package com.buession.redis.core.command.args;
 
 /**
- * Jedis 地理 HyperLogLog 命令操作抽象类
- *
- * @param <CMD>
- * 		Jedis 原始命令对象
+ * GEO 参数
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public abstract class AbstractHyperLogLogOperations<CMD> extends AbstractJedisRedisOperations<CMD>
-		implements HyperLogLogOperations<CMD> {
-
-	public AbstractHyperLogLogOperations(final JedisRedisClient client){
-		super(client);
-	}
+public class GeoRadiusArgument {
 
 }

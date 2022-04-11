@@ -30,6 +30,7 @@ import com.buession.redis.core.ClusterFailoverOption;
 import com.buession.redis.core.ClusterInfo;
 import com.buession.redis.core.ClusterResetOption;
 import com.buession.redis.core.ClusterSetSlotOption;
+import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.RedisClusterServer;
 
 import java.util.List;
@@ -73,7 +74,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 哈希槽和 Redis 实例映射关系
 	 */
-	Map<Integer, RedisClusterServer> clusterSlots();
+	List<ClusterSlot> clusterSlots();
 
 	/**
 	 * The command returns the number of failure reports for the specified node
@@ -367,21 +368,7 @@ public interface ClusterCommands extends RedisCommands {
 	 *
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
-	Status clusterSetConfigEpoch(final String configEpoch);
-
-	/**
-	 * 为一个全新的节点设置指定的 config epoch，仅在如下情况下有效：
-	 * 1）节点的节点信息表为空
-	 * 2）节点的当前 config epoch 为 0
-	 *
-	 * <p>详情说明 <a href="http://www.redis.cn/commands/cluster-set-config-epoch.html" target="_blank">http://www.redis.cn/commands/cluster-set-config-epoch.html</a></p>
-	 *
-	 * @param configEpoch
-	 * 		Config Epoch
-	 *
-	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	Status clusterSetConfigEpoch(final byte[] configEpoch);
+	Status clusterSetConfigEpoch(final long configEpoch);
 
 	/**
 	 * The CLUSTER BUMPEPOCH command triggers an increment to the cluster’s config epoch from the connected node.
