@@ -22,56 +22,26 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.Converter;
-import org.springframework.lang.Nullable;
-
-import java.util.function.Supplier;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.HyperLogLogOperations;
 
 /**
- * 事务、管道异步结果
+ * Jedis HyperLogLog 命令操作抽象类
  *
- * @param <T>
- * 		Response
- * @param <SV>
- * 		原始结果类型
- * @param <TV>
- * 		目标结果类型
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public abstract class FutureResult<T, SV, TV> implements Supplier<SV> {
+public abstract class AbstractHyperLogLogOperations<C extends JedisRedisConnection>
+		extends AbstractJedisRedisOperations<C> implements HyperLogLogOperations<C> {
 
-	private final T holder;
-
-	private final Converter<SV, TV> converter;
-
-	public FutureResult(final T holder){
-		this(holder, null);
-	}
-
-	@SuppressWarnings("unchecked")
-	public FutureResult(final T holder, final Converter<SV, TV> converter){
-		this.holder = holder;
-		this.converter = converter != null ? converter : val->(TV) val;
-	}
-
-	public T getHolder(){
-		return holder;
-	}
-
-	/**
-	 * 将 事务、管道
-	 *
-	 * @param result
-	 * 		事务、管道原始返回结果
-	 *
-	 * @return 转换结果
-	 */
-	@Nullable
-	public TV convert(@Nullable SV result){
-		return result == null ? null : converter.convert(result);
+	public AbstractHyperLogLogOperations(final JedisRedisClient client){
+		super(client);
 	}
 
 }

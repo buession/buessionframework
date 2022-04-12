@@ -28,6 +28,10 @@ import com.buession.redis.client.RedisStandaloneClient;
 import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.jedis.operations.JedisClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisConnectionOperations;
+import com.buession.redis.client.jedis.operations.JedisGeoOperations;
+import com.buession.redis.client.jedis.operations.JedisHashOperations;
+import com.buession.redis.client.jedis.operations.JedisHyperLogLogOperations;
+import com.buession.redis.client.jedis.operations.JedisKeyOperations;
 
 /**
  * jedis 单机模式客户端
@@ -52,6 +56,26 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	@Override
 	public JedisConnectionOperations connectionOps(){
 		return new JedisConnectionOperations(this);
+	}
+
+	@Override
+	public JedisGeoOperations geoOps(){
+		return new JedisGeoOperations(this);
+	}
+
+	@Override
+	public JedisHashOperations hashOps(){
+		return new JedisHashOperations(this);
+	}
+
+	@Override
+	public JedisHyperLogLogOperations hyperLogLogOps(){
+		return new JedisHyperLogLogOperations(this);
+	}
+
+	@Override
+	public JedisKeyOperations keyOps(){
+		return new JedisKeyOperations(this);
 	}
 
 }

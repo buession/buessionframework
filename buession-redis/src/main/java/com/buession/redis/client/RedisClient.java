@@ -27,6 +27,10 @@ package com.buession.redis.client;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.client.operations.ConnectionOperations;
+import com.buession.redis.client.operations.GeoOperations;
+import com.buession.redis.client.operations.HashOperations;
+import com.buession.redis.client.operations.HyperLogLogOperations;
+import com.buession.redis.client.operations.KeyOperations;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.command.*;
 import com.buession.redis.exception.RedisException;
@@ -35,8 +39,8 @@ import com.buession.redis.pipeline.Pipeline;
 /**
  * @author Yong.Teng
  */
-public interface RedisClient /*extends GeoCommands, HashCommands,
-		HyperLogLogCommands, KeyCommands, ListCommands, PubSubCommands, ScriptingCommands, ServerCommands, SetCommands,
+public interface RedisClient /*extends
+		ListCommands, PubSubCommands, ScriptingCommands, ServerCommands, SetCommands,
 		SortedSetCommands, StringCommands, TransactionCommands*/ {
 
 	RedisConnection getConnection();
@@ -48,6 +52,14 @@ public interface RedisClient /*extends GeoCommands, HashCommands,
 	ClusterOperations<? extends RedisConnection> clusterOps();
 
 	ConnectionOperations<? extends RedisConnection> connectionOps();
+
+	GeoOperations<? extends RedisConnection> geoOps();
+
+	HashOperations<? extends RedisConnection> hashOps();
+
+	HyperLogLogOperations<? extends RedisConnection> hyperLogLogOps();
+
+	KeyOperations<? extends RedisConnection> keyOps();
 
 	default <R> R execute(final Command<RedisConnection, R> command) throws RedisException{
 		return execute(command, null);

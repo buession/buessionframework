@@ -57,7 +57,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	Long del(final String... keys);
+	long del(final String... keys);
 
 	/**
 	 * 删除给定的一个或多个 key
@@ -69,7 +69,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	Long del(final byte[]... keys);
+	long del(final byte[]... keys);
 
 	/**
 	 * 序列化给定 key ，并返回被序列化的值

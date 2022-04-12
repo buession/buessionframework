@@ -28,6 +28,10 @@ import com.buession.redis.client.RedisSentinelClient;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.operations.JedisSentinelClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelConnectionOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelGeoOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelHashOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelHyperLogLogOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelKeyOperations;
 
 /**
  * jedis 哨兵模式客户端
@@ -53,6 +57,26 @@ public class JedisSentinelClient extends AbstractJedisRedisClient implements Red
 	@Override
 	public JedisSentinelConnectionOperations connectionOps(){
 		return new JedisSentinelConnectionOperations(this);
+	}
+
+	@Override
+	public JedisSentinelGeoOperations geoOps(){
+		return new JedisSentinelGeoOperations(this);
+	}
+
+	@Override
+	public JedisSentinelHashOperations hashOps(){
+		return new JedisSentinelHashOperations(this);
+	}
+
+	@Override
+	public JedisSentinelHyperLogLogOperations hyperLogLogOps(){
+		return new JedisSentinelHyperLogLogOperations(this);
+	}
+
+	@Override
+	public JedisSentinelKeyOperations keyOps(){
+		return new JedisSentinelKeyOperations(this);
 	}
 
 }

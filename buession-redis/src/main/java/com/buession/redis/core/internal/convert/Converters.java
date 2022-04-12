@@ -44,6 +44,21 @@ public interface Converters {
 
 	OkStatusConverter OK_STATUS_CONVERTER = new OkStatusConverter();
 
+	PingResultConverter PING_RESULT_CONVERTER = new PingResultConverter();
+
+	Converter<byte[], String> BINARY_TO_STRING_CONVERTER = new Converter<byte[], String>() {
+
+		@Nullable
+		@Override
+		public String convert(final byte[] source){
+			return SafeEncoder.encode(source);
+		}
+
+	};
+
+	PredicateStatusConverter<Long> ONE_STATUS_CONVERTER = new PredicateStatusConverter<>(
+			(val)->val == 1);
+
 	PredicateStatusConverter<Long> LONG_ZERO_ONE_STATUS_CONVERTER = new PredicateStatusConverter<>(
 			(val)->val == 0 || val == 1);
 
@@ -58,8 +73,6 @@ public interface Converters {
 		}
 
 	};
-
-	PingResultConverter PING_RESULT_CONVERTER = new PingResultConverter();
 
 	InfoConverter INFO_CONVERTER = new InfoConverter();
 

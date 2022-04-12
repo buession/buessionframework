@@ -37,6 +37,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
+import redis.clients.jedis.Transaction;
 
 /**
  * Jedis Redis 命令操作接口
@@ -80,23 +81,14 @@ public interface JedisRedisOperations<C extends JedisRedisConnection> extends Re
 
 		private Executor<Pipeline, Response<R>> pipelineExecutor;
 
+		private Executor<Transaction, Response<R>> transactionExecutor;
+
 		public JedisCommand(final ProtocolCommand command){
 			super(command);
 		}
 
 		public static <R> JedisCommand<R> create(final ProtocolCommand command){
 			return new JedisCommand<>(command);
-		}
-
-		public JedisCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor){
-			this.pipelineExecutor = executor;
-			return this;
-		}
-
-		public <SR> JedisCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
-											 final Converter<SR, R> converter){
-			this.pipelineExecutor = context->converter.convert(executor.execute(context));
-			return this;
 		}
 
 		public JedisCommand<R> general(final Executor<Jedis, R> executor){
@@ -109,11 +101,34 @@ public interface JedisRedisOperations<C extends JedisRedisConnection> extends Re
 			return this;
 		}
 
+		public JedisCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor){
+			this.pipelineExecutor = executor;
+			return this;
+		}
+
+		public <SR> JedisCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
+											 final Converter<SR, R> converter){
+			//this.pipelineExecutor = context->converter.convert(executor.execute(context));
+			return this;
+		}
+
+		public JedisCommand<R> transaction(final Executor<Transaction, Response<R>> executor){
+			this.transactionExecutor = executor;
+			return this;
+		}
+
+		public <SR> JedisCommand<R> transaction(final Executor<Transaction, Response<SR>> executor,
+												final Converter<SR, R> converter){
+			//this.transactionExecutor = context->converter.convert(executor.execute(context));
+			return this;
+		}
+
 		@Override
 		public R execute(final JedisConnection connection){
 			if(connection.isPipeline()){
 				pipelineExecutor.execute(null);
 			}else if(connection.isTransaction()){
+				transactionExecutor.execute(null);
 			}else{
 				return executor.execute(null);
 			}
@@ -128,23 +143,14 @@ public interface JedisRedisOperations<C extends JedisRedisConnection> extends Re
 
 		private Executor<Pipeline, Response<R>> pipelineExecutor;
 
+		private Executor<Transaction, Response<R>> transactionExecutor;
+
 		public JedisSentinelCommand(final ProtocolCommand command){
 			super(command);
 		}
 
 		public static <R> JedisSentinelCommand<R> create(final ProtocolCommand command){
 			return new JedisSentinelCommand<>(command);
-		}
-
-		public JedisSentinelCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor){
-			this.pipelineExecutor = executor;
-			return this;
-		}
-
-		public <SR> JedisSentinelCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
-													 final Converter<SR, R> converter){
-			this.pipelineExecutor = context->converter.convert(executor.execute(context));
-			return this;
 		}
 
 		public JedisSentinelCommand<R> general(Executor<Jedis, R> executor){
@@ -158,11 +164,34 @@ public interface JedisRedisOperations<C extends JedisRedisConnection> extends Re
 			return this;
 		}
 
+		public JedisSentinelCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor){
+			this.pipelineExecutor = executor;
+			return this;
+		}
+
+		public <SR> JedisSentinelCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
+													 final Converter<SR, R> converter){
+			//this.pipelineExecutor = context->converter.convert(executor.execute(context));
+			return this;
+		}
+
+		public JedisSentinelCommand<R> transaction(final Executor<Transaction, Response<R>> executor){
+			this.transactionExecutor = executor;
+			return this;
+		}
+
+		public <SR> JedisSentinelCommand<R> transaction(final Executor<Transaction, Response<SR>> executor,
+														final Converter<SR, R> converter){
+			//this.transactionExecutor = context->converter.convert(executor.execute(context));
+			return this;
+		}
+
 		@Override
 		public R execute(final JedisSentinelConnection connection){
 			if(connection.isPipeline()){
 				pipelineExecutor.execute(null);
 			}else if(connection.isTransaction()){
+				transactionExecutor.execute(null);
 			}else{
 				return executor.execute(null);
 			}
@@ -176,6 +205,8 @@ public interface JedisRedisOperations<C extends JedisRedisConnection> extends Re
 		protected Executor<JedisCluster, R> executor;
 
 		private Executor<Pipeline, Response<R>> pipelineExecutor;
+
+		private Executor<Transaction, Response<R>> transactionExecutor;
 
 		public JedisClusterCommand(final ProtocolCommand command){
 			super(command);
@@ -203,7 +234,18 @@ public interface JedisRedisOperations<C extends JedisRedisConnection> extends Re
 
 		public <SR> JedisClusterCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
 													final Converter<SR, R> converter){
-			this.pipelineExecutor = context->converter.convert(executor.execute(context));
+			//this.pipelineExecutor = context->converter.convert(executor.execute(context));
+			return this;
+		}
+
+		public JedisClusterCommand<R> transaction(final Executor<Transaction, Response<R>> executor){
+			this.transactionExecutor = executor;
+			return this;
+		}
+
+		public <SR> JedisClusterCommand<R> transaction(final Executor<Transaction, Response<SR>> executor,
+													   final Converter<SR, R> converter){
+			//this.transactionExecutor = context->converter.convert(executor.execute(context));
 			return this;
 		}
 
@@ -212,6 +254,7 @@ public interface JedisRedisOperations<C extends JedisRedisConnection> extends Re
 			if(connection.isPipeline()){
 				pipelineExecutor.execute(null);
 			}else if(connection.isTransaction()){
+				transactionExecutor.execute(null);
 			}else{
 				return executor.execute(null);
 			}

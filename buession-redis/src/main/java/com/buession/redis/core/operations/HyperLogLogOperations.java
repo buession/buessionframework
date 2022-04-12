@@ -39,8 +39,7 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 	/**
 	 * 将元素添加到指定的 HyperLogLog 里面
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/hyperloglog/pfadd.html" target="_blank">http://redisdoc.com/hyperloglog/pfadd.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/pfadd.html" target="_blank">http://redisdoc.com/hyperloglog/pfadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -56,8 +55,7 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 	/**
 	 * 将元素添加到指定的 HyperLogLog 里面
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/hyperloglog/pfadd.html" target="_blank">http://redisdoc.com/hyperloglog/pfadd.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/pfadd.html" target="_blank">http://redisdoc.com/hyperloglog/pfadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -73,8 +71,7 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 	/**
 	 * 将多个 HyperLogLog 合并（merge）为一个 HyperLogLog，并保存到 destKey 中
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/hyperloglog/pfmerge.html" target="_blank">http://redisdoc.com/hyperloglog/pfmerge.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/pfmerge.html" target="_blank">http://redisdoc.com/hyperloglog/pfmerge.html</a></p>
 	 *
 	 * @param destKey
 	 * 		目标 Key
@@ -90,8 +87,7 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 	/**
 	 * 将多个 HyperLogLog 合并（merge）为一个 HyperLogLog，并保存到 destKey 中
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/hyperloglog/pfmerge.html" target="_blank">http://redisdoc.com/hyperloglog/pfmerge.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/pfmerge.html" target="_blank">http://redisdoc.com/hyperloglog/pfmerge.html</a></p>
 	 *
 	 * @param destKey
 	 * 		目标 Key
@@ -107,6 +103,8 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 	/**
 	 * 获取储存在给定键的 HyperLogLog 的近似基数
 	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pfcount.html" target="_blank">https://www.redis.com.cn/commands/pfcount.html</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 *
@@ -118,6 +116,8 @@ public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperati
 
 	/**
 	 * 获取储存在给定键的 HyperLogLog 的近似基数
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/pfcount.html" target="_blank">https://www.redis.com.cn/commands/pfcount.html</a></p>
 	 *
 	 * @param key
 	 * 		Key

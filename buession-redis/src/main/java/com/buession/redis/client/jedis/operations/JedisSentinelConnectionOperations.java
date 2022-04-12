@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.PredicateStatusConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.JedisSentinelClient;
@@ -34,10 +33,7 @@ import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.core.internal.convert.jedis.ClientConverter;
-import com.buession.redis.core.internal.convert.jedis.ClientTypeConverter;
-import com.buession.redis.core.internal.convert.jedis.ClientUnblockTypeConverter;
+import com.buession.redis.core.internal.convert.jedis.JedisConverters;
 
 import java.util.List;
 
@@ -57,7 +53,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	public Status auth(final String user, final String password){
 		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.AUTH)
-				.general((cmd)->cmd.auth(user, password), Converters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.auth(user, password), JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -65,7 +61,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	public Status auth(final String password){
 		final CommandArguments args = CommandArguments.create("password", password);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.AUTH)
-				.general((cmd)->cmd.auth(password), Converters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.auth(password), JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -88,7 +84,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	@Override
 	public Status ping(){
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.PING)
-				.general((cmd)->cmd.ping(), Converters.PING_RESULT_CONVERTER);
+				.general((cmd)->cmd.ping(), JedisConverters.PING_RESULT_CONVERTER);
 		return execute(command);
 	}
 
@@ -101,7 +97,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	@Override
 	public Status quit(){
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.QUIT)
-				.general((cmd)->cmd.quit(), Converters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.quit(), JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command);
 	}
 
@@ -110,8 +106,8 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	public Status select(final int db){
 		final CommandArguments args = CommandArguments.create("db", db);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SELECT)
-				.pipeline((cmd)->cmd.select(db), Converters.OK_STATUS_CONVERTER)
-				.general((cmd)->cmd.select(db), Converters.OK_STATUS_CONVERTER);
+				.pipeline((cmd)->cmd.select(db), JedisConverters.OK_STATUS_CONVERTER)
+				.general((cmd)->cmd.select(db), JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -133,7 +129,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	public Status clientSetName(final String name){
 		final CommandArguments args = CommandArguments.create("name", name);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.CLIENT_SETNAME)
-				.general((cmd)->cmd.clientSetname(name), Converters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.clientSetname(name), JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -141,7 +137,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	public Status clientSetName(final byte[] name){
 		final CommandArguments args = CommandArguments.create("name", name);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.CLIENT_SETNAME)
-				.general((cmd)->cmd.clientSetname(name), Converters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.clientSetname(name), JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -162,25 +158,24 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	public List<Client> clientList(){
 		final JedisSentinelCommand<List<Client>> command = JedisSentinelCommand.<List<Client>>create(
 						ProtocolCommand.CLIENT_LIST)
-				.general((cmd)->cmd.clientList(), new ClientConverter.ClientListExposeConverter());
+				.general((cmd)->cmd.clientList(), JedisConverters.CLIENT_LIST_RESULT_CONVERTER);
 		return execute(command);
 	}
 
 	@Override
 	public List<Client> clientList(final ClientType clientType){
 		final CommandArguments args = CommandArguments.create("clientType", clientType);
-		final ClientTypeConverter.ClientTypeJedisConverter clientTypeJedisConverter = new ClientTypeConverter.ClientTypeJedisConverter();
 		final JedisSentinelCommand<List<Client>> command = JedisSentinelCommand.<List<Client>>create(
 						ProtocolCommand.CLIENT_LIST)
-				.general((cmd)->cmd.clientList(clientTypeJedisConverter.convert(clientType)),
-						new ClientConverter.ClientListExposeConverter());
+				.general((cmd)->cmd.clientList(JedisConverters.CLIENT_TYPE_CONVERTER.convert(clientType)),
+						JedisConverters.CLIENT_LIST_RESULT_CONVERTER);
 		return execute(command, args);
 	}
 
 	@Override
 	public Client clientInfo(){
 		final JedisSentinelCommand<Client> command = JedisSentinelCommand.<Client>create(ProtocolCommand.CLIENT_INFO)
-				.general((cmd)->cmd.clientInfo(), new ClientConverter.ClientExposeConverter());
+				.general((cmd)->cmd.clientInfo(), JedisConverters.CLIENT_RESULT_CONVERTER);
 		return execute(command);
 	}
 
@@ -188,7 +183,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	public Status clientPause(final int timeout){
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.CLIENT_PAUSE)
-				.general((cmd)->cmd.clientPause(timeout), Converters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.clientPause(timeout), JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -203,7 +198,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	public Status clientKill(final String host, final int port){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.CLIENT_PAUSE)
-				.general((cmd)->cmd.clientKill(host + ":" + port), Converters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.clientKill(host + ":" + port), JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -211,17 +206,16 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	public Status clientUnblock(final int clientId){
 		final CommandArguments args = CommandArguments.create("clientId", clientId);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.CLIENT_UNBLOCK)
-				.general((cmd)->cmd.clientUnblock(clientId, null), new PredicateStatusConverter<>((val)->val == 1));
+				.general((cmd)->cmd.clientUnblock(clientId, null), JedisConverters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type){
 		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
-		final ClientUnblockTypeConverter.ClientUnblockJedisConverter converter = new ClientUnblockTypeConverter.ClientUnblockJedisConverter();
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.CLIENT_UNBLOCK)
-				.general((cmd)->cmd.clientUnblock(clientId, converter.convert(type)),
-						new PredicateStatusConverter<>((val)->val == 1));
+				.general((cmd)->cmd.clientUnblock(clientId, JedisConverters.CLIENT_UNBLOCK_CONVERTER.convert(type)),
+						JedisConverters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 

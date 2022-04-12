@@ -383,695 +383,691 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		return connectionOpsExecute((ops)->ops.clientUnblock(clientId, type));
 	}
 
-	/*
-
 	@Override
-	public Long geoAdd(final String key, final String member, final double longitude, final double latitude){
-		return execute((client)->client.geoAdd(makeRawKey(key), member, longitude, latitude));
+	public long geoAdd(final String key, final String member, final double longitude, final double latitude){
+		return geoOpsExecute((ops)->ops.geoAdd(rawKey(key), member, longitude, latitude));
 	}
 
 	@Override
-	public Long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
-		return execute((client)->client.geoAdd(makeByteKey(key), member, longitude, latitude));
+	public long geoAdd(final byte[] key, final byte[] member, final double longitude, final double latitude){
+		return geoOpsExecute((ops)->ops.geoAdd(rawKey(key), member, longitude, latitude));
 	}
 
 	@Override
-	public Long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
-		return execute((client)->client.geoAdd(makeRawKey(key), memberCoordinates));
+	public long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
+		return geoOpsExecute((ops)->ops.geoAdd(rawKey(key), memberCoordinates));
 	}
 
 	@Override
-	public Long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
-		return execute((client)->client.geoAdd(makeByteKey(key), memberCoordinates));
+	public long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
+		return geoOpsExecute((ops)->ops.geoAdd(rawKey(key), memberCoordinates));
 	}
 
 	@Override
 	public List<String> geoHash(final String key, final String... members){
-		return execute((client)->client.geoHash(makeRawKey(key), members));
+		return geoOpsExecute((ops)->ops.geoHash(rawKey(key), members));
 	}
 
 	@Override
 	public List<byte[]> geoHash(final byte[] key, final byte[]... members){
-		return execute((client)->client.geoHash(makeByteKey(key), members));
+		return geoOpsExecute((ops)->ops.geoHash(rawKey(key), members));
 	}
 
 	@Override
 	public List<Geo> geoPos(final String key, final String... members){
-		return execute((client)->client.geoPos(makeRawKey(key), members));
+		return geoOpsExecute((ops)->ops.geoPos(rawKey(key), members));
 	}
 
 	@Override
 	public List<Geo> geoPos(final byte[] key, final byte[]... members){
-		return execute((client)->client.geoPos(makeByteKey(key), members));
+		return geoOpsExecute((ops)->ops.geoPos(rawKey(key), members));
 	}
 
 	@Override
-	public Double geoDist(final String key, final String member1, final String member2){
-		return execute((client)->client.geoDist(makeRawKey(key), member1, member2));
+	public double geoDist(final String key, final String member1, final String member2){
+		return geoOpsExecute((ops)->ops.geoDist(rawKey(key), member1, member2));
 	}
 
 	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
-		return execute((client)->client.geoDist(makeByteKey(key), member1, member2));
+	public double geoDist(final byte[] key, final byte[] member1, final byte[] member2){
+		return geoOpsExecute((ops)->ops.geoDist(rawKey(key), member1, member2));
 	}
 
 	@Override
-	public Double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
-		return execute((client)->client.geoDist(makeRawKey(key), member1, member2, unit));
+	public double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
+		return geoOpsExecute((ops)->ops.geoDist(rawKey(key), member1, member2, unit));
 	}
 
 	@Override
-	public Double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
-		return execute((client)->client.geoDist(makeByteKey(key), member1, member2, unit));
+	public double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
+		return geoOpsExecute((ops)->ops.geoDist(rawKey(key), member1, member2, unit));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit){
-		return execute((client)->client.geoRadius(makeRawKey(key), longitude, latitude, radius, unit));
+		return geoOpsExecute((ops)->ops.geoRadius(rawKey(key), longitude, latitude, radius, unit));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit){
-		return execute((client)->client.geoRadius(makeByteKey(key), longitude, latitude, radius, unit));
+		return geoOpsExecute((ops)->ops.geoRadius(rawKey(key), longitude, latitude, radius, unit));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final String key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit,
 									 final GeoRadiusArgument geoRadiusArgument){
-		return execute(
-				(client)->client.geoRadius(makeRawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
+		return geoOpsExecute((ops)->ops.geoRadius(rawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadius(final byte[] key, final double longitude, final double latitude,
 									 final double radius, final GeoUnit unit,
 									 final GeoRadiusArgument geoRadiusArgument){
-		return execute(
-				(client)->client.geoRadius(makeByteKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
+		return geoOpsExecute((ops)->ops.geoRadius(rawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit){
-		return execute((client)->client.geoRadiusRo(makeRawKey(key), longitude, latitude, radius, unit));
+		return geoOpsExecute((ops)->ops.geoRadiusRo(rawKey(key), longitude, latitude, radius, unit));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit){
-		return execute((client)->client.geoRadiusRo(makeByteKey(key), longitude, latitude, radius, unit));
+		return geoOpsExecute((ops)->ops.geoRadiusRo(rawKey(key), longitude, latitude, radius, unit));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final String key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit,
 									   final GeoRadiusArgument geoRadiusArgument){
-		return execute(
-				(client)->client.geoRadiusRo(makeRawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
+		return geoOpsExecute((ops)->ops.geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusRo(final byte[] key, final double longitude, final double latitude,
 									   final double radius, final GeoUnit unit,
 									   final GeoRadiusArgument geoRadiusArgument){
-		return execute(
-				(client)->client.geoRadiusRo(makeByteKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
+		return geoOpsExecute((ops)->ops.geoRadiusRo(rawKey(key), longitude, latitude, radius, unit, geoRadiusArgument));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 											 final GeoUnit unit){
-		return execute((client)->client.geoRadiusByMember(makeRawKey(key), member, radius, unit));
+		return geoOpsExecute((ops)->ops.geoRadiusByMember(rawKey(key), member, radius, unit));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 											 final GeoUnit unit){
-		return execute((client)->client.geoRadiusByMember(makeByteKey(key), member, radius, unit));
+		return geoOpsExecute((ops)->ops.geoRadiusByMember(rawKey(key), member, radius, unit));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final String key, final String member, final double radius,
 											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
-		return execute((client)->client.geoRadiusByMember(makeRawKey(key), member, radius, unit, geoRadiusArgument));
+		return geoOpsExecute((ops)->ops.geoRadiusByMember(rawKey(key), member, radius, unit, geoRadiusArgument));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMember(final byte[] key, final byte[] member, final double radius,
 											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
-		return execute((client)->client.geoRadiusByMember(makeByteKey(key), member, radius, unit, geoRadiusArgument));
+		return geoOpsExecute((ops)->ops.geoRadiusByMember(rawKey(key), member, radius, unit, geoRadiusArgument));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
 											   final GeoUnit unit){
-		return execute((client)->client.geoRadiusByMemberRo(makeRawKey(key), member, radius, unit));
+		return geoOpsExecute((ops)->ops.geoRadiusByMemberRo(rawKey(key), member, radius, unit));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
 											   final GeoUnit unit){
-		return execute((client)->client.geoRadiusByMemberRo(makeByteKey(key), member, radius, unit));
+		return geoOpsExecute((ops)->ops.geoRadiusByMemberRo(rawKey(key), member, radius, unit));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final String key, final String member, final double radius,
 											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
-		return execute((client)->client.geoRadiusByMemberRo(makeRawKey(key), member, radius, unit, geoRadiusArgument));
+		return geoOpsExecute((ops)->ops.geoRadiusByMemberRo(rawKey(key), member, radius, unit, geoRadiusArgument));
 	}
 
 	@Override
 	public List<GeoRadius> geoRadiusByMemberRo(final byte[] key, final byte[] member, final double radius,
 											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
-		return execute((client)->client.geoRadiusByMemberRo(makeByteKey(key), member, radius, unit, geoRadiusArgument));
+		return geoOpsExecute((ops)->ops.geoRadiusByMemberRo(rawKey(key), member, radius, unit, geoRadiusArgument));
 	}
 
 	@Override
 	public long hDel(final String key, final String... fields){
-		return execute((client)->client.hDel(makeRawKey(key), fields));
+		return hashOpsExecute((ops)->ops.hDel(rawKey(key), fields));
 	}
 
 	@Override
-	public Long hDel(final byte[] key, final byte[]... fields){
-		return execute((client)->client.hDel(makeByteKey(key), fields));
+	public long hDel(final byte[] key, final byte[]... fields){
+		return hashOpsExecute((ops)->ops.hDel(rawKey(key), fields));
 	}
 
 	@Override
 	public boolean hExists(final String key, final String field){
-		return execute((client)->client.hExists(makeRawKey(key), field));
+		return hashOpsExecute((ops)->ops.hExists(rawKey(key), field));
 	}
 
 	@Override
 	public boolean hExists(final byte[] key, final byte[] field){
-		return execute((client)->client.hExists(makeByteKey(key), field));
+		return hashOpsExecute((ops)->ops.hExists(rawKey(key), field));
 	}
 
 	@Override
 	public String hGet(final String key, final String field){
-		return execute((client)->client.hGet(makeRawKey(key), field));
+		return hashOpsExecute((ops)->ops.hGet(rawKey(key), field));
 	}
 
 	@Override
 	public byte[] hGet(final byte[] key, final byte[] field){
-		return execute((client)->client.hGet(makeByteKey(key), field));
+		return hashOpsExecute((ops)->ops.hGet(rawKey(key), field));
 	}
 
 	@Override
 	public Map<String, String> hGetAll(final String key){
-		return execute((client)->client.hGetAll(makeRawKey(key)));
+		return hashOpsExecute((ops)->ops.hGetAll(rawKey(key)));
 	}
 
 	@Override
 	public Map<byte[], byte[]> hGetAll(final byte[] key){
-		return execute((client)->client.hGetAll(makeByteKey(key)));
+		return hashOpsExecute((ops)->ops.hGetAll(rawKey(key)));
 	}
 
 	@Override
-	public Long hIncrBy(final String key, final String field, final long value){
-		return execute((client)->client.hIncrBy(makeRawKey(key), field, value));
+	public long hIncrBy(final String key, final String field, final long value){
+		return hashOpsExecute((ops)->ops.hIncrBy(rawKey(key), field, value));
 	}
 
 	@Override
-	public Long hIncrBy(final byte[] key, final byte[] field, final long value){
-		return execute((client)->client.hIncrBy(makeByteKey(key), field, value));
+	public long hIncrBy(final byte[] key, final byte[] field, final long value){
+		return hashOpsExecute((ops)->ops.hIncrBy(rawKey(key), field, value));
 	}
 
 	@Override
-	public Double hIncrByFloat(final String key, final String field, final double value){
-		return execute((client)->client.hIncrByFloat(makeRawKey(key), field, value));
+	public double hIncrByFloat(final String key, final String field, final double value){
+		return hashOpsExecute((ops)->ops.hIncrByFloat(rawKey(key), field, value));
 	}
 
 	@Override
-	public Double hIncrByFloat(final byte[] key, final byte[] field, final double value){
-		return execute((client)->client.hIncrByFloat(makeByteKey(key), field, value));
+	public double hIncrByFloat(final byte[] key, final byte[] field, final double value){
+		return hashOpsExecute((ops)->ops.hIncrByFloat(rawKey(key), field, value));
 	}
 
 	@Override
 	public Set<String> hKeys(final String key){
-		return execute((client)->client.hKeys(makeRawKey(key)));
+		return hashOpsExecute((ops)->ops.hKeys(rawKey(key)));
 	}
 
 	@Override
 	public Set<byte[]> hKeys(final byte[] key){
-		return execute((client)->client.hKeys(makeByteKey(key)));
+		return hashOpsExecute((ops)->ops.hKeys(rawKey(key)));
 	}
 
 	@Override
-	public Long hLen(final String key){
-		return execute((client)->client.hLen(makeRawKey(key)));
+	public long hLen(final String key){
+		return hashOpsExecute((ops)->ops.hLen(rawKey(key)));
 	}
 
 	@Override
-	public Long hLen(final byte[] key){
-		return execute((client)->client.hLen(makeByteKey(key)));
+	public long hLen(final byte[] key){
+		return hashOpsExecute((ops)->ops.hLen(rawKey(key)));
 	}
 
 	@Override
 	public List<String> hMGet(final String key, final String... fields){
-		return execute((client)->client.hMGet(makeRawKey(key), fields));
+		return hashOpsExecute((ops)->ops.hMGet(rawKey(key), fields));
 	}
 
 	@Override
 	public List<byte[]> hMGet(final byte[] key, final byte[]... fields){
-		return execute((client)->client.hMGet(makeByteKey(key), fields));
+		return hashOpsExecute((ops)->ops.hMGet(rawKey(key), fields));
 	}
 
 	@Override
 	public Status hMSet(final String key, final Map<String, String> data){
-		return execute((client)->client.hMSet(makeRawKey(key), data));
+		return hashOpsExecute((ops)->ops.hMSet(rawKey(key), data));
 	}
 
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
-		return execute((client)->client.hMSet(key, data));
+		return hashOpsExecute((ops)->ops.hMSet(rawKey(key), data));
 	}
 
 	@Override
 	public String hRandField(final String key){
-		return execute((client)->client.hRandField(key));
+		return hashOpsExecute((ops)->ops.hRandField(rawKey(key)));
 	}
 
 	@Override
 	public byte[] hRandField(final byte[] key){
-		return execute((client)->client.hRandField(key));
+		return hashOpsExecute((ops)->ops.hRandField(rawKey(key)));
 	}
 
 	@Override
 	public List<String> hRandField(final String key, final long count){
-		return execute((client)->client.hRandField(key, count));
+		return hashOpsExecute((ops)->ops.hRandField(rawKey(key), count));
 	}
 
 	@Override
 	public List<byte[]> hRandField(final byte[] key, final long count){
-		return execute((client)->client.hRandField(key, count));
+		return hashOpsExecute((ops)->ops.hRandField(rawKey(key), count));
 	}
 
 	@Override
 	public Map<String, String> hRandFieldWithValues(final String key, final long count){
-		return execute((client)->client.hRandFieldWithValues(key, count));
+		return hashOpsExecute((ops)->ops.hRandFieldWithValues(rawKey(key), count));
 	}
 
 	@Override
 	public Map<byte[], byte[]> hRandFieldWithValues(final byte[] key, final long count){
-		return execute((client)->client.hRandFieldWithValues(key, count));
+		return hashOpsExecute((ops)->ops.hRandFieldWithValues(rawKey(key), count));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor){
-		return execute((client)->client.hScan(makeRawKey(key), cursor));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor){
-		return execute((client)->client.hScan(makeByteKey(key), cursor));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor){
-		return execute((client)->client.hScan(makeRawKey(key), cursor));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor){
-		return execute((client)->client.hScan(makeByteKey(key), cursor));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern){
-		return execute((client)->client.hScan(makeRawKey(key), cursor, pattern));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern){
-		return execute((client)->client.hScan(makeByteKey(key), cursor, pattern));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
-		return execute((client)->client.hScan(makeRawKey(key), cursor, pattern));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		return execute((client)->client.hScan(makeByteKey(key), cursor, pattern));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final long count){
-		return execute((client)->client.hScan(makeRawKey(key), cursor, count));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor, count));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final long count){
-		return execute((client)->client.hScan(makeByteKey(key), cursor, count));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor, count));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count){
-		return execute((client)->client.hScan(makeRawKey(key), cursor, count));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor, count));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count){
-		return execute((client)->client.hScan(makeByteKey(key), cursor, count));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor, count));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final long cursor, final String pattern,
 												 final long count){
-		return execute((client)->client.hScan(makeRawKey(key), cursor, pattern, count));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final long cursor, final byte[] pattern,
 												 final long count){
-		return execute((client)->client.hScan(makeByteKey(key), cursor, pattern, count));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
 												 final long count){
-		return execute((client)->client.hScan(makeRawKey(key), cursor, pattern, count));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 												 final long count){
-		return execute((client)->client.hScan(makeByteKey(key), cursor, pattern, count));
+		return hashOpsExecute((ops)->ops.hScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
-	public Status hSet(final String key, final String field, final String value){
-		return execute((client)->client.hSet(makeRawKey(key), field, value));
+	public long hSet(final String key, final String field, final String value){
+		return hashOpsExecute((ops)->ops.hSet(rawKey(key), field, value));
 	}
 
 	@Override
-	public Status hSet(final byte[] key, final byte[] field, final byte[] value){
-		return execute((client)->client.hSet(makeByteKey(key), field, value));
+	public long hSet(final byte[] key, final byte[] field, final byte[] value){
+		return hashOpsExecute((ops)->ops.hSet(rawKey(key), field, value));
 	}
 
 	@Override
 	public Status hSetNx(final String key, final String field, final String value){
-		return execute((client)->client.hSetNx(makeRawKey(key), field, value));
+		return hashOpsExecute((ops)->ops.hSetNx(rawKey(key), field, value));
 	}
 
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
-		return execute((client)->client.hSetNx(makeByteKey(key), field, value));
+		return hashOpsExecute((ops)->ops.hSetNx(rawKey(key), field, value));
 	}
 
 	@Override
-	public Long hStrLen(final String key, final String field){
-		return execute((client)->client.hStrLen(makeRawKey(key), field));
+	public long hStrLen(final String key, final String field){
+		return hashOpsExecute((ops)->ops.hStrLen(rawKey(key), field));
 	}
 
 	@Override
-	public Long hStrLen(final byte[] key, final byte[] field){
-		return execute((client)->client.hStrLen(makeByteKey(key), field));
+	public long hStrLen(final byte[] key, final byte[] field){
+		return hashOpsExecute((ops)->ops.hStrLen(rawKey(key), field));
 	}
 
 	@Override
 	public List<String> hVals(final String key){
-		return execute((client)->client.hVals(makeRawKey(key)));
+		return hashOpsExecute((ops)->ops.hVals(rawKey(key)));
 	}
 
 	@Override
 	public List<byte[]> hVals(final byte[] key){
-		return execute((client)->client.hVals(makeByteKey(key)));
+		return hashOpsExecute((ops)->ops.hVals(rawKey(key)));
 	}
 
 	@Override
 	public Status pfAdd(final String key, final String... elements){
-		return execute((client)->client.pfAdd(makeRawKey(key), elements));
+		return hyperLogLogOpsExecute((ops)->ops.pfAdd(rawKey(key), elements));
 	}
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements){
-		return execute((client)->client.pfAdd(makeByteKey(key), elements));
+		return hyperLogLogOpsExecute((ops)->ops.pfAdd(rawKey(key), elements));
 	}
 
 	@Override
 	public Status pfMerge(final String destKey, final String... keys){
-		return execute((client)->client.pfMerge(makeRawKey(destKey), makeRawKeys(keys)));
+		return hyperLogLogOpsExecute((ops)->ops.pfMerge(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
-		return execute((client)->client.pfMerge(makeByteKey(destKey), makeByteKeys(keys)));
+		return hyperLogLogOpsExecute((ops)->ops.pfMerge(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
-	public Long pfCount(final String... keys){
-		return execute((client)->client.pfCount(makeRawKeys(keys)));
+	public long pfCount(final String... keys){
+		return hyperLogLogOpsExecute((ops)->ops.pfCount(rawKeys(keys)));
 	}
 
 	@Override
-	public Long pfCount(final byte[]... keys){
-		return execute((client)->client.pfCount(makeByteKeys(keys)));
+	public long pfCount(final byte[]... keys){
+		return hyperLogLogOpsExecute((ops)->ops.pfCount(rawKeys(keys)));
 	}
 
 	@Override
-	public Long del(final String... keys){
-		return execute((client)->client.del(makeRawKeys(keys)));
+	public long del(final String... keys){
+		return keyOpsExecute((ops)->ops.del(rawKeys(keys)));
 	}
 
 	@Override
-	public Long del(final byte[]... keys){
-		return execute((client)->client.del(makeByteKeys(keys)));
+	public long del(final byte[]... keys){
+		return keyOpsExecute((ops)->ops.del(rawKeys(keys)));
 	}
 
 	@Override
 	public String dump(final String key){
-		return execute((client)->client.dump(makeRawKey(key)));
+		return keyOpsExecute((ops)->ops.dump(rawKey(key)));
 	}
 
 	@Override
 	public byte[] dump(final byte[] key){
-		return execute((client)->client.dump(makeByteKey(key)));
+		return keyOpsExecute((ops)->ops.dump(rawKey(key)));
 	}
 
 	@Override
 	public boolean exists(final String key){
-		return execute((client)->client.exists(makeRawKey(key)));
+		return keyOpsExecute((ops)->ops.exists(rawKey(key)));
 	}
 
 	@Override
 	public boolean exists(final byte[] key){
-		return execute((client)->client.exists(makeByteKey(key)));
+		return keyOpsExecute((ops)->ops.exists(rawKey(key)));
 	}
 
 	@Override
 	public long exists(final String... keys){
-		return execute((client)->client.exists(makeRawKeys(keys)));
+		return keyOpsExecute((ops)->ops.exists(rawKeys(keys)));
 	}
 
 	@Override
 	public long exists(final byte[]... keys){
-		return execute((client)->client.exists(makeByteKeys(keys)));
+		return keyOpsExecute((ops)->ops.exists(rawKeys(keys)));
 	}
+
+	/*
 
 	@Override
 	public Status expire(final String key, final int lifetime){
-		return execute((client)->client.expire(makeRawKey(key), lifetime));
+		return execute((client)->client.expire(rawKey(key), lifetime));
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime){
-		return execute((client)->client.expire(makeByteKey(key), lifetime));
+		return execute((client)->client.expire(rawKey(key), lifetime));
 	}
 
 	@Override
 	public Status expire(final String key, final int lifetime, final ExpireOption expireOption){
-		return execute((client)->client.expire(makeRawKey(key), lifetime, expireOption));
+		return execute((client)->client.expire(rawKey(key), lifetime, expireOption));
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption){
-		return execute((client)->client.expire(makeByteKey(key), lifetime, expireOption));
+		return execute((client)->client.expire(rawKey(key), lifetime, expireOption));
 	}
 
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp){
-		return execute((client)->client.expireAt(makeRawKey(key), unixTimestamp));
+		return execute((client)->client.expireAt(rawKey(key), unixTimestamp));
 	}
 
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp){
-		return execute((client)->client.expireAt(makeByteKey(key), unixTimestamp));
+		return execute((client)->client.expireAt(rawKey(key), unixTimestamp));
 	}
 
 	@Override
 	public Status pExpire(final String key, final int lifetime){
-		return execute((client)->client.pExpire(makeRawKey(key), lifetime));
+		return execute((client)->client.pExpire(rawKey(key), lifetime));
 	}
 
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime){
-		return execute((client)->client.pExpire(makeByteKey(key), lifetime));
+		return execute((client)->client.pExpire(rawKey(key), lifetime));
 	}
 
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp){
-		return execute((client)->client.pExpireAt(makeRawKey(key), unixTimestamp));
+		return execute((client)->client.pExpireAt(rawKey(key), unixTimestamp));
 	}
 
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp){
-		return execute((client)->client.pExpireAt(makeByteKey(key), unixTimestamp));
+		return execute((client)->client.pExpireAt(rawKey(key), unixTimestamp));
 	}
 
 	@Override
 	public Status persist(final String key){
-		return execute((client)->client.persist(makeRawKey(key)));
+		return execute((client)->client.persist(rawKey(key)));
 	}
 
 	@Override
 	public Status persist(final byte[] key){
-		return execute((client)->client.persist(makeByteKey(key)));
+		return execute((client)->client.persist(rawKey(key)));
 	}
 
 	@Override
 	public Long ttl(final String key){
-		return execute((client)->client.ttl(makeRawKey(key)));
+		return execute((client)->client.ttl(rawKey(key)));
 	}
 
 	@Override
 	public Long ttl(final byte[] key){
-		return execute((client)->client.ttl(makeByteKey(key)));
+		return execute((client)->client.ttl(rawKey(key)));
 	}
 
 	@Override
 	public Long pTtl(final String key){
-		return execute((client)->client.pTtl(makeRawKey(key)));
+		return execute((client)->client.pTtl(rawKey(key)));
 	}
 
 	@Override
 	public Long pTtl(final byte[] key){
-		return execute((client)->client.pTtl(makeByteKey(key)));
+		return execute((client)->client.pTtl(rawKey(key)));
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey){
-		return execute((client)->client.copy(makeRawKey(key), makeRawKey(destKey)));
+		return execute((client)->client.copy(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey){
-		return execute((client)->client.copy(makeByteKey(key), makeByteKey(destKey)));
+		return execute((client)->client.copy(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final int db){
-		return execute((client)->client.copy(makeRawKey(key), makeRawKey(destKey), db));
+		return execute((client)->client.copy(rawKey(key), rawKey(destKey), db));
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db){
-		return execute((client)->client.copy(makeByteKey(key), makeByteKey(destKey), db));
+		return execute((client)->client.copy(rawKey(key), rawKey(destKey), db));
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final boolean replace){
-		return execute((client)->client.copy(makeRawKey(key), makeRawKey(destKey), replace));
+		return execute((client)->client.copy(rawKey(key), rawKey(destKey), replace));
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final boolean replace){
-		return execute((client)->client.copy(makeByteKey(key), makeByteKey(destKey), replace));
+		return execute((client)->client.copy(rawKey(key), rawKey(destKey), replace));
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final int db, final boolean replace){
-		return execute((client)->client.copy(makeRawKey(key), makeRawKey(destKey), db, replace));
+		return execute((client)->client.copy(rawKey(key), rawKey(destKey), db, replace));
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace){
-		return execute((client)->client.copy(makeByteKey(key), makeByteKey(destKey), db, replace));
+		return execute((client)->client.copy(rawKey(key), rawKey(destKey), db, replace));
 	}
 
 	@Override
 	public Status move(final String key, final int db){
-		return execute((client)->client.move(makeRawKey(key), db));
+		return execute((client)->client.move(rawKey(key), db));
 	}
 
 	@Override
 	public Status move(final byte[] key, final int db){
-		return execute((client)->client.move(makeByteKey(key), db));
+		return execute((client)->client.move(rawKey(key), db));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys){
-		return execute((client)->client.migrate(host, port, db, timeout, makeRawKeys(keys)));
+		return execute((client)->client.migrate(host, port, db, timeout, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys){
-		return execute((client)->client.migrate(host, port, db, timeout, makeByteKeys(keys)));
+		return execute((client)->client.migrate(host, port, db, timeout, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout,
 						  final MigrateOperation operation, final String... keys){
-		return execute((client)->client.migrate(host, port, db, timeout, operation, makeRawKeys(keys)));
+		return execute((client)->client.migrate(host, port, db, timeout, operation, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout,
 						  final MigrateOperation operation, final byte[]... keys){
-		return execute((client)->client.migrate(host, port, db, timeout, operation, makeByteKeys(keys)));
+		return execute((client)->client.migrate(host, port, db, timeout, operation, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
 						  final String... keys){
-		return execute((client)->client.migrate(host, port, db, password, timeout, makeRawKeys(keys)));
+		return execute((client)->client.migrate(host, port, db, password, timeout, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
 						  final byte[]... keys){
-		return execute((client)->client.migrate(host, port, db, password, timeout, makeByteKeys(keys)));
+		return execute((client)->client.migrate(host, port, db, password, timeout, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
 						  final MigrateOperation operation, final String... keys){
-		return execute((client)->client.migrate(host, port, db, password, timeout, operation, makeRawKeys(keys)));
+		return execute((client)->client.migrate(host, port, db, password, timeout, operation, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
 						  final MigrateOperation operation, final byte[]... keys){
-		return execute((client)->client.migrate(host, port, db, password, timeout, operation, makeByteKeys(keys)));
+		return execute((client)->client.migrate(host, port, db, password, timeout, operation, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final String user, final String password,
 						  final int timeout, final String... keys){
-		return execute((client)->client.migrate(host, port, db, user, password, timeout, makeRawKeys(keys)));
+		return execute((client)->client.migrate(host, port, db, user, password, timeout, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
 						  final int timeout, final byte[]... keys){
-		return execute((client)->client.migrate(host, port, db, user, password, timeout, makeByteKeys(keys)));
+		return execute((client)->client.migrate(host, port, db, user, password, timeout, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final String user, final String password,
 						  final int timeout, final MigrateOperation operation, final String... keys){
-		return execute((client)->client.migrate(host, port, db, user, password, timeout, operation, makeRawKeys(keys)));
+		return execute((client)->client.migrate(host, port, db, user, password, timeout, operation, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
 						  final int timeout, final MigrateOperation operation, final byte[]... keys){
 		return execute(
-				(client)->client.migrate(host, port, db, user, password, timeout, operation, makeByteKeys(keys)));
+				(client)->client.migrate(host, port, db, user, password, timeout, operation, rawKeys(keys)));
 	}
 
 	@Override
@@ -1091,44 +1087,44 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Status rename(final String key, final String newKey){
-		return execute((client)->client.rename(makeRawKey(key), makeRawKey(newKey)));
+		return execute((client)->client.rename(rawKey(key), rawKey(newKey)));
 	}
 
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey){
-		return execute((client)->client.rename(makeByteKey(key), makeByteKey(newKey)));
+		return execute((client)->client.rename(rawKey(key), rawKey(newKey)));
 	}
 
 	@Override
 	public Status renameNx(final String key, final String newKey){
-		return execute((client)->client.renameNx(makeRawKey(key), makeRawKey(newKey)));
+		return execute((client)->client.renameNx(rawKey(key), rawKey(newKey)));
 	}
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey){
-		return execute((client)->client.renameNx(makeByteKey(key), makeByteKey(newKey)));
+		return execute((client)->client.renameNx(rawKey(key), rawKey(newKey)));
 	}
 
 	@Override
 	public Status restore(final String key, final byte[] serializedValue, final int ttl){
-		return execute((client)->client.restore(makeRawKey(key), serializedValue, ttl));
+		return execute((client)->client.restore(rawKey(key), serializedValue, ttl));
 	}
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
-		return execute((client)->client.restore(makeByteKey(key), serializedValue, ttl));
+		return execute((client)->client.restore(rawKey(key), serializedValue, ttl));
 	}
 
 	@Override
 	public Status restore(final String key, final byte[] serializedValue, final int ttl,
 						  final RestoreArgument argument){
-		return execute((client)->client.restore(makeRawKey(key), serializedValue, ttl, argument));
+		return execute((client)->client.restore(rawKey(key), serializedValue, ttl, argument));
 	}
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
 						  final RestoreArgument argument){
-		return execute((client)->client.restore(makeByteKey(key), serializedValue, ttl, argument));
+		return execute((client)->client.restore(rawKey(key), serializedValue, ttl, argument));
 	}
 
 	@Override
@@ -1203,72 +1199,72 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public List<String> sort(final String key){
-		return execute((client)->client.sort(makeRawKey(key)));
+		return execute((client)->client.sort(rawKey(key)));
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key){
-		return execute((client)->client.sort(makeByteKey(key)));
+		return execute((client)->client.sort(rawKey(key)));
 	}
 
 	@Override
 	public List<String> sort(final String key, final SortArgument sortArgument){
-		return execute((client)->client.sort(makeRawKey(key), sortArgument));
+		return execute((client)->client.sort(rawKey(key), sortArgument));
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument){
-		return execute((client)->client.sort(makeByteKey(key), sortArgument));
+		return execute((client)->client.sort(rawKey(key), sortArgument));
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey){
-		return execute((client)->client.sort(makeRawKey(key), makeRawKey(destKey)));
+		return execute((client)->client.sort(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey){
-		return execute((client)->client.sort(makeByteKey(key), makeByteKey(destKey)));
+		return execute((client)->client.sort(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
 	public Long sort(final String key, final String destKey, final SortArgument sortArgument){
-		return execute((client)->client.sort(makeRawKey(key), makeRawKey(destKey), sortArgument));
+		return execute((client)->client.sort(rawKey(key), rawKey(destKey), sortArgument));
 	}
 
 	@Override
 	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
-		return execute((client)->client.sort(makeByteKey(key), makeByteKey(destKey), sortArgument));
+		return execute((client)->client.sort(rawKey(key), rawKey(destKey), sortArgument));
 	}
 
 	@Override
 	public Long touch(final String... keys){
-		return execute((client)->client.touch(makeRawKeys(keys)));
+		return execute((client)->client.touch(rawKeys(keys)));
 	}
 
 	@Override
 	public Long touch(final byte[]... keys){
-		return execute((client)->client.touch(makeByteKeys(keys)));
+		return execute((client)->client.touch(rawKeys(keys)));
 	}
 
 	@Override
 	public Type type(final String key){
-		return execute((client)->client.type(makeRawKey(key)));
+		return execute((client)->client.type(rawKey(key)));
 	}
 
 	@Override
 	public Type type(final byte[] key){
-		return execute((client)->client.type(makeByteKey(key)));
+		return execute((client)->client.type(rawKey(key)));
 	}
 
 	@Override
 	public Long unlink(final String... keys){
-		return execute((client)->client.unlink(makeRawKeys(keys)));
+		return execute((client)->client.unlink(rawKeys(keys)));
 	}
 
 	@Override
 	public Long unlink(final byte[]... keys){
-		return execute((client)->client.unlink(makeByteKeys(keys)));
+		return execute((client)->client.unlink(rawKeys(keys)));
 	}
 
 	@Override
@@ -1278,264 +1274,264 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public ObjectEncoding objectEncoding(final String key){
-		return execute((client)->client.objectEncoding(makeRawKey(key)));
+		return execute((client)->client.objectEncoding(rawKey(key)));
 	}
 
 	@Override
 	public ObjectEncoding objectEncoding(final byte[] key){
-		return execute((client)->client.objectEncoding(makeByteKey(key)));
+		return execute((client)->client.objectEncoding(rawKey(key)));
 	}
 
 	@Override
 	public Long objectFreq(final String key){
-		return execute((client)->client.objectFreq(makeRawKey(key)));
+		return execute((client)->client.objectFreq(rawKey(key)));
 	}
 
 	@Override
 	public Long objectFreq(final byte[] key){
-		return execute((client)->client.objectFreq(makeByteKey(key)));
+		return execute((client)->client.objectFreq(rawKey(key)));
 	}
 
 	@Override
 	public Long objectIdleTime(final String key){
-		return execute((client)->client.objectIdleTime(makeRawKey(key)));
+		return execute((client)->client.objectIdleTime(rawKey(key)));
 	}
 
 	@Override
 	public Long objectIdleTime(final byte[] key){
-		return execute((client)->client.objectIdleTime(makeByteKey(key)));
+		return execute((client)->client.objectIdleTime(rawKey(key)));
 	}
 
 	@Override
 	public Long objectRefcount(final String key){
-		return execute((client)->client.objectRefcount(makeRawKey(key)));
+		return execute((client)->client.objectRefcount(rawKey(key)));
 	}
 
 	@Override
 	public Long objectRefcount(final byte[] key){
-		return execute((client)->client.objectRefcount(makeByteKey(key)));
+		return execute((client)->client.objectRefcount(rawKey(key)));
 	}
 
 	@Override
 	public String lIndex(final String key, final long index){
-		return execute((client)->client.lIndex(makeRawKey(key), index));
+		return execute((client)->client.lIndex(rawKey(key), index));
 	}
 
 	@Override
 	public byte[] lIndex(final byte[] key, final long index){
-		return execute((client)->client.lIndex(makeByteKey(key), index));
+		return execute((client)->client.lIndex(rawKey(key), index));
 	}
 
 	@Override
 	public Long lInsert(final String key, final ListPosition position, final String pivot, final String value){
-		return execute((client)->client.lInsert(makeRawKey(key), position, pivot, value));
+		return execute((client)->client.lInsert(rawKey(key), position, pivot, value));
 	}
 
 	@Override
 	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value){
-		return execute((client)->client.lInsert(makeByteKey(key), position, pivot, value));
+		return execute((client)->client.lInsert(rawKey(key), position, pivot, value));
 	}
 
 	@Override
 	public Status lSet(final String key, final long index, final String value){
-		return execute((client)->client.lSet(makeRawKey(key), index, value));
+		return execute((client)->client.lSet(rawKey(key), index, value));
 	}
 
 	@Override
 	public Status lSet(final byte[] key, final long index, final byte[] value){
-		return execute((client)->client.lSet(makeByteKey(key), index, value));
+		return execute((client)->client.lSet(rawKey(key), index, value));
 	}
 
 	@Override
 	public Long lLen(final String key){
-		return execute((client)->client.lLen(makeRawKey(key)));
+		return execute((client)->client.lLen(rawKey(key)));
 	}
 
 	@Override
 	public Long lLen(final byte[] key){
-		return execute((client)->client.lLen(makeByteKey(key)));
+		return execute((client)->client.lLen(rawKey(key)));
 	}
 
 	@Override
 	public List<String> lRange(final String key, final long start, final long end){
-		return execute((client)->client.lRange(makeRawKey(key), start, end));
+		return execute((client)->client.lRange(rawKey(key), start, end));
 	}
 
 	@Override
 	public List<byte[]> lRange(final byte[] key, final long start, final long end){
-		return execute((client)->client.lRange(makeByteKey(key), start, end));
+		return execute((client)->client.lRange(rawKey(key), start, end));
 	}
 
 	@Override
 	public Long lPos(final String key, final String element){
-		return execute((client)->client.lPos(makeRawKey(key), element));
+		return execute((client)->client.lPos(rawKey(key), element));
 	}
 
 	@Override
 	public Long lPos(final byte[] key, final byte[] element){
-		return execute((client)->client.lPos(makeByteKey(key), element));
+		return execute((client)->client.lPos(rawKey(key), element));
 	}
 
 	@Override
 	public Long lPos(final String key, final String element, final LPosArgument lPosArgument){
-		return execute((client)->client.lPos(makeRawKey(key), element, lPosArgument));
+		return execute((client)->client.lPos(rawKey(key), element, lPosArgument));
 	}
 
 	@Override
 	public Long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument){
-		return execute((client)->client.lPos(makeByteKey(key), element, lPosArgument));
+		return execute((client)->client.lPos(rawKey(key), element, lPosArgument));
 	}
 
 	@Override
 	public List<Long> lPos(final String key, String element, final LPosArgument lPosArgument, final long count){
-		return execute((client)->client.lPos(makeRawKey(key), element, lPosArgument, count));
+		return execute((client)->client.lPos(rawKey(key), element, lPosArgument, count));
 	}
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count){
-		return execute((client)->client.lPos(makeByteKey(key), element, lPosArgument, count));
+		return execute((client)->client.lPos(rawKey(key), element, lPosArgument, count));
 	}
 
 	@Override
 	public Long lRem(final String key, final String value, final long count){
-		return execute((client)->client.lRem(makeRawKey(key), value, count));
+		return execute((client)->client.lRem(rawKey(key), value, count));
 	}
 
 	@Override
 	public Long lRem(final byte[] key, final byte[] value, final long count){
-		return execute((client)->client.lRem(makeByteKey(key), value, count));
+		return execute((client)->client.lRem(rawKey(key), value, count));
 	}
 
 	@Override
 	public Status lTrim(final String key, final long start, final long end){
-		return execute((client)->client.lTrim(makeRawKey(key), start, end));
+		return execute((client)->client.lTrim(rawKey(key), start, end));
 	}
 
 	@Override
 	public Status lTrim(final byte[] key, final long start, final long end){
-		return execute((client)->client.lTrim(makeByteKey(key), start, end));
+		return execute((client)->client.lTrim(rawKey(key), start, end));
 	}
 
 	@Override
 	public String lMove(final String key, final String destKey, final Direction from, final Direction to){
-		return execute((client)->client.lMove(makeRawKey(destKey), makeRawKey(destKey), from, to));
+		return execute((client)->client.lMove(rawKey(destKey), rawKey(destKey), from, to));
 	}
 
 	@Override
 	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
-		return execute((client)->client.lMove(makeByteKey(key), makeByteKey(destKey), from, to));
+		return execute((client)->client.lMove(rawKey(key), rawKey(destKey), from, to));
 	}
 
 	@Override
 	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
 						 final int timeout){
-		return execute((client)->client.blMove(makeRawKey(destKey), makeRawKey(destKey), from, to, timeout));
+		return execute((client)->client.blMove(rawKey(destKey), rawKey(destKey), from, to, timeout));
 	}
 
 	@Override
 	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 						 final int timeout){
-		return execute((client)->client.blMove(makeByteKey(key), makeByteKey(destKey), from, to, timeout));
+		return execute((client)->client.blMove(rawKey(key), rawKey(destKey), from, to, timeout));
 	}
 
 	@Override
 	public List<String> blPop(final String[] keys, final int timeout){
-		return execute((client)->client.blPop(makeRawKeys(keys), timeout));
+		return execute((client)->client.blPop(rawKeys(keys), timeout));
 	}
 
 	@Override
 	public List<byte[]> blPop(final byte[][] keys, final int timeout){
-		return execute((client)->client.blPop(makeByteKeys(keys), timeout));
+		return execute((client)->client.blPop(rawKeys(keys), timeout));
 	}
 
 	@Override
 	public List<String> brPop(final String[] keys, final int timeout){
-		return execute((client)->client.brPop(makeRawKeys(keys), timeout));
+		return execute((client)->client.brPop(rawKeys(keys), timeout));
 	}
 
 	@Override
 	public List<byte[]> brPop(final byte[][] keys, final int timeout){
-		return execute((client)->client.brPop(makeByteKeys(keys), timeout));
+		return execute((client)->client.brPop(rawKeys(keys), timeout));
 	}
 
 	@Override
 	public String brPoplPush(final String key, final String destKey, final int timeout){
-		return execute((client)->client.brPoplPush(makeRawKey(key), makeRawKey(destKey), timeout));
+		return execute((client)->client.brPoplPush(rawKey(key), rawKey(destKey), timeout));
 	}
 
 	@Override
 	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout){
-		return execute((client)->client.brPoplPush(makeByteKey(key), makeByteKey(destKey), timeout));
+		return execute((client)->client.brPoplPush(rawKey(key), rawKey(destKey), timeout));
 	}
 
 	@Override
 	public String lPop(final String key){
-		return execute((client)->client.lPop(makeRawKey(key)));
+		return execute((client)->client.lPop(rawKey(key)));
 	}
 
 	@Override
 	public byte[] lPop(final byte[] key){
-		return execute((client)->client.lPop(makeByteKey(key)));
+		return execute((client)->client.lPop(rawKey(key)));
 	}
 
 	@Override
 	public Long lPush(final String key, final String... values){
-		return execute((client)->client.lPush(makeRawKey(key), values));
+		return execute((client)->client.lPush(rawKey(key), values));
 	}
 
 	@Override
 	public Long lPush(final byte[] key, final byte[]... values){
-		return execute((client)->client.lPush(makeByteKey(key), values));
+		return execute((client)->client.lPush(rawKey(key), values));
 	}
 
 	@Override
 	public Long lPushX(final String key, final String... values){
-		return execute((client)->client.lPushX(makeRawKey(key), values));
+		return execute((client)->client.lPushX(rawKey(key), values));
 	}
 
 	@Override
 	public Long lPushX(final byte[] key, final byte[]... values){
-		return execute((client)->client.lPushX(makeByteKey(key), values));
+		return execute((client)->client.lPushX(rawKey(key), values));
 	}
 
 	@Override
 	public String rPop(final String key){
-		return execute((client)->client.rPop(makeRawKey(key)));
+		return execute((client)->client.rPop(rawKey(key)));
 	}
 
 	@Override
 	public byte[] rPop(final byte[] key){
-		return execute((client)->client.rPop(makeByteKey(key)));
+		return execute((client)->client.rPop(rawKey(key)));
 	}
 
 	@Override
 	public String rPoplPush(final String key, final String destKey){
-		return execute((client)->client.rPoplPush(makeRawKey(key), makeRawKey(destKey)));
+		return execute((client)->client.rPoplPush(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
 	public byte[] rPoplPush(final byte[] key, final byte[] destKey){
-		return execute((client)->client.rPoplPush(makeByteKey(key), makeByteKey(destKey)));
+		return execute((client)->client.rPoplPush(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
 	public Long rPush(final String key, final String... values){
-		return execute((client)->client.rPush(makeRawKey(key), values));
+		return execute((client)->client.rPush(rawKey(key), values));
 	}
 
 	@Override
 	public Long rPush(final byte[] key, final byte[]... values){
-		return execute((client)->client.rPush(makeByteKey(key), values));
+		return execute((client)->client.rPush(rawKey(key), values));
 	}
 
 	@Override
 	public Long rPushX(final String key, final String... values){
-		return execute((client)->client.rPushX(makeRawKey(key), values));
+		return execute((client)->client.rPushX(rawKey(key), values));
 	}
 
 	@Override
 	public Long rPushX(final byte[] key, final byte[]... values){
-		return execute((client)->client.rPushX(makeByteKey(key), values));
+		return execute((client)->client.rPushX(rawKey(key), values));
 	}
 
 	@Override
@@ -2101,367 +2097,367 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Long sAdd(final String key, final String... members){
-		return execute((client)->client.sAdd(makeRawKey(key), members));
+		return execute((client)->client.sAdd(rawKey(key), members));
 	}
 
 	@Override
 	public Long sAdd(final byte[] key, final byte[]... members){
-		return execute((client)->client.sAdd(makeByteKey(key), members));
+		return execute((client)->client.sAdd(rawKey(key), members));
 	}
 
 	@Override
 	public Long sCard(final String key){
-		return execute((client)->client.sCard(makeRawKey(key)));
+		return execute((client)->client.sCard(rawKey(key)));
 	}
 
 	@Override
 	public Long sCard(final byte[] key){
-		return execute((client)->client.sCard(makeByteKey(key)));
+		return execute((client)->client.sCard(rawKey(key)));
 	}
 
 	@Override
 	public Set<String> sDiff(final String key, final String... keys){
-		return execute((client)->client.sDiff(makeRawKey(key), makeRawKeys(keys)));
+		return execute((client)->client.sDiff(rawKey(key), rawKeys(keys)));
 	}
 
 	@Override
 	public Set<byte[]> sDiff(final byte[] key, final byte[]... keys){
-		return execute((client)->client.sDiff(makeByteKey(key), makeByteKeys(keys)));
+		return execute((client)->client.sDiff(rawKey(key), rawKeys(keys)));
 	}
 
 	@Override
 	public Long sDiffStore(final String destKey, final String... keys){
-		return execute((client)->client.sDiffStore(makeRawKey(destKey), makeRawKeys(keys)));
+		return execute((client)->client.sDiffStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public Long sDiffStore(final byte[] destKey, final byte[]... keys){
-		return execute((client)->client.sDiffStore(makeByteKey(destKey), makeByteKeys(keys)));
+		return execute((client)->client.sDiffStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public Set<String> sInter(final String... keys){
-		return execute((client)->client.sInter(makeRawKeys(keys)));
+		return execute((client)->client.sInter(rawKeys(keys)));
 	}
 
 	@Override
 	public Set<byte[]> sInter(final byte[]... keys){
-		return execute((client)->client.sInter(makeByteKeys(keys)));
+		return execute((client)->client.sInter(rawKeys(keys)));
 	}
 
 	@Override
 	public Long sInterStore(final String destKey, final String... keys){
-		return execute((client)->client.sDiffStore(makeRawKey(destKey), makeRawKeys(keys)));
+		return execute((client)->client.sDiffStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public Long sInterStore(final byte[] destKey, final byte[]... keys){
-		return execute((client)->client.sDiffStore(makeByteKey(destKey), makeByteKeys(keys)));
+		return execute((client)->client.sDiffStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public boolean sisMember(final String key, final String member){
-		return execute((client)->client.sisMember(makeRawKey(key), member));
+		return execute((client)->client.sisMember(rawKey(key), member));
 	}
 
 	@Override
 	public boolean sisMember(final byte[] key, final byte[] member){
-		return execute((client)->client.sisMember(makeByteKey(key), member));
+		return execute((client)->client.sisMember(rawKey(key), member));
 	}
 
 	@Override
 	public Set<String> sMembers(final String key){
-		return execute((client)->client.sMembers(makeRawKey(key)));
+		return execute((client)->client.sMembers(rawKey(key)));
 	}
 
 	@Override
 	public Set<byte[]> sMembers(final byte[] key){
-		return execute((client)->client.sMembers(makeByteKey(key)));
+		return execute((client)->client.sMembers(rawKey(key)));
 	}
 
 	@Override
 	public Boolean sIsMember(final String key, final String member){
-		return execute((client)->client.sIsMember(makeRawKey(key), member));
+		return execute((client)->client.sIsMember(rawKey(key), member));
 	}
 
 	@Override
 	public Boolean sIsMember(final byte[] key, final byte[] member){
-		return execute((client)->client.sIsMember(makeByteKey(key), member));
+		return execute((client)->client.sIsMember(rawKey(key), member));
 	}
 
 	@Override
 	public Status sMove(final String key, final String destKey, final String member){
-		return execute((client)->client.sMove(makeRawKey(key), makeRawKey(destKey), member));
+		return execute((client)->client.sMove(rawKey(key), rawKey(destKey), member));
 	}
 
 	@Override
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member){
-		return execute((client)->client.sMove(makeByteKey(key), makeByteKey(destKey), member));
+		return execute((client)->client.sMove(rawKey(key), rawKey(destKey), member));
 	}
 
 	@Override
 	public String sPop(final String key){
-		return execute((client)->client.sPop(makeRawKey(key)));
+		return execute((client)->client.sPop(rawKey(key)));
 	}
 
 	@Override
 	public byte[] sPop(final byte[] key){
-		return execute((client)->client.sPop(makeByteKey(key)));
+		return execute((client)->client.sPop(rawKey(key)));
 	}
 
 	@Override
 	public Set<String> sPop(final String key, final long count){
-		return execute((client)->client.sPop(makeRawKey(key, count)));
+		return execute((client)->client.sPop(rawKey(key, count)));
 	}
 
 	@Override
 	public Set<byte[]> sPop(final byte[] key, final long count){
-		return execute((client)->client.sPop(makeByteKey(key, count)));
+		return execute((client)->client.sPop(rawKey(key, count)));
 	}
 
 	@Override
 	public String sRandMember(final String key){
-		return execute((client)->client.sRandMember(makeRawKey(key)));
+		return execute((client)->client.sRandMember(rawKey(key)));
 	}
 
 	@Override
 	public byte[] sRandMember(final byte[] key){
-		return execute((client)->client.sRandMember(makeByteKey(key)));
+		return execute((client)->client.sRandMember(rawKey(key)));
 	}
 
 	@Override
 	public Set<String> sRandMember(final String key, final long count){
-		return execute((client)->client.sRandMember(makeRawKey(key), count));
+		return execute((client)->client.sRandMember(rawKey(key), count));
 	}
 
 	@Override
 	public Set<byte[]> sRandMember(final byte[] key, final long count){
-		return execute((client)->client.sRandMember(makeByteKey(key), count));
+		return execute((client)->client.sRandMember(rawKey(key), count));
 	}
 
 	@Override
 	public Long sRem(final String key, final String... members){
-		return execute((client)->client.sRem(makeRawKey(key), members));
+		return execute((client)->client.sRem(rawKey(key), members));
 	}
 
 	@Override
 	public Long sRem(final byte[] key, final byte[]... members){
-		return execute((client)->client.sRem(makeByteKey(key), members));
+		return execute((client)->client.sRem(rawKey(key), members));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final long cursor){
-		return execute((client)->client.sScan(makeRawKey(key), cursor));
+		return execute((client)->client.sScan(rawKey(key), cursor));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor){
-		return execute((client)->client.sScan(makeByteKey(key), cursor));
+		return execute((client)->client.sScan(rawKey(key), cursor));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor){
-		return execute((client)->client.sScan(makeRawKey(key), cursor));
+		return execute((client)->client.sScan(rawKey(key), cursor));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor){
-		return execute((client)->client.sScan(makeByteKey(key), cursor));
+		return execute((client)->client.sScan(rawKey(key), cursor));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern){
-		return execute((client)->client.sScan(makeRawKey(key), cursor, pattern));
+		return execute((client)->client.sScan(rawKey(key), cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern){
-		return execute((client)->client.sScan(makeByteKey(key), cursor, pattern));
+		return execute((client)->client.sScan(rawKey(key), cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern){
-		return execute((client)->client.sScan(makeRawKey(key), cursor, pattern));
+		return execute((client)->client.sScan(rawKey(key), cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern){
-		return execute((client)->client.sScan(makeByteKey(key), cursor, pattern));
+		return execute((client)->client.sScan(rawKey(key), cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final long cursor, final long count){
-		return execute((client)->client.sScan(makeRawKey(key), cursor, count));
+		return execute((client)->client.sScan(rawKey(key), cursor, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final long count){
-		return execute((client)->client.sScan(makeByteKey(key), cursor, count));
+		return execute((client)->client.sScan(rawKey(key), cursor, count));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final long count){
-		return execute((client)->client.sScan(makeRawKey(key), cursor, count));
+		return execute((client)->client.sScan(rawKey(key), cursor, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final long count){
-		return execute((client)->client.sScan(makeByteKey(key), cursor, count));
+		return execute((client)->client.sScan(rawKey(key), cursor, count));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final long cursor, final String pattern, final long count){
-		return execute((client)->client.sScan(makeRawKey(key), cursor, pattern, count));
+		return execute((client)->client.sScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final long cursor, final byte[] pattern, final long count){
-		return execute((client)->client.sScan(makeByteKey(key), cursor, pattern, count));
+		return execute((client)->client.sScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<String>> sScan(final String key, final String cursor, final String pattern,
 										  final long count){
-		return execute((client)->client.sScan(makeRawKey(key), cursor, pattern, count));
+		return execute((client)->client.sScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> sScan(final byte[] key, final byte[] cursor, final byte[] pattern,
 										  final long count){
-		return execute((client)->client.sScan(makeByteKey(key), cursor, pattern, count));
+		return execute((client)->client.sScan(rawKey(key), cursor, pattern, count));
 	}
 
 	@Override
 	public Set<String> sUnion(final String key, final String... keys){
-		return execute((client)->client.sUnion(makeRawKey(key), makeRawKeys(keys)));
+		return execute((client)->client.sUnion(rawKey(key), rawKeys(keys)));
 	}
 
 	@Override
 	public Set<byte[]> sUnion(final byte[] key, final byte[]... keys){
-		return execute((client)->client.sUnion(makeByteKey(key), makeByteKeys(keys)));
+		return execute((client)->client.sUnion(rawKey(key), rawKeys(keys)));
 	}
 
 	@Override
 	public Long sUnionStore(final String destKey, final String... keys){
-		return execute((client)->client.sUnionStore(makeRawKey(destKey), makeRawKeys(keys)));
+		return execute((client)->client.sUnionStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public Long sUnionStore(final byte[] destKey, final byte[]... keys){
-		return execute((client)->client.sUnionStore(makeByteKey(destKey), makeByteKeys(keys)));
+		return execute((client)->client.sUnionStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public KeyedZSetElement bzPopMin(final String[] keys, final int timeout){
-		return execute((client)->client.bzPopMin(makeRawKeys(keys), timeout));
+		return execute((client)->client.bzPopMin(rawKeys(keys), timeout));
 	}
 
 	@Override
 	public KeyedZSetElement bzPopMin(final byte[][] keys, final int timeout){
-		return execute((client)->client.bzPopMin(makeByteKeys(keys), timeout));
+		return execute((client)->client.bzPopMin(rawKeys(keys), timeout));
 	}
 
 	@Override
 	public KeyedZSetElement bzPopMax(final String[] keys, final int timeout){
-		return execute((client)->client.bzPopMax(makeRawKeys(keys), timeout));
+		return execute((client)->client.bzPopMax(rawKeys(keys), timeout));
 	}
 
 	@Override
 	public KeyedZSetElement bzPopMax(final byte[][] keys, final int timeout){
-		return execute((client)->client.bzPopMax(makeByteKeys(keys), timeout));
+		return execute((client)->client.bzPopMax(rawKeys(keys), timeout));
 	}
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members){
-		return execute((client)->client.zAdd(makeRawKey(key), members));
+		return execute((client)->client.zAdd(rawKey(key), members));
 	}
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members){
-		return execute((client)->client.zAdd(makeByteKey(key), members));
+		return execute((client)->client.zAdd(rawKey(key), members));
 	}
 
 	@Override
 	public Long zAdd(final String key, final Map<String, Double> members, final ZAddArgument argument){
-		return execute((client)->client.zAdd(makeRawKey(key), members, argument));
+		return execute((client)->client.zAdd(rawKey(key), members, argument));
 	}
 
 	@Override
 	public Long zAdd(final byte[] key, final Map<byte[], Double> members, final ZAddArgument argument){
-		return execute((client)->client.zAdd(makeByteKey(key), members, argument));
+		return execute((client)->client.zAdd(rawKey(key), members, argument));
 	}
 
 	@Override
 	public Long zCard(final String key){
-		return execute((client)->client.zCard(makeRawKey(key)));
+		return execute((client)->client.zCard(rawKey(key)));
 	}
 
 	@Override
 	public Long zCard(final byte[] key){
-		return execute((client)->client.zCard(makeByteKey(key)));
+		return execute((client)->client.zCard(rawKey(key)));
 	}
 
 	@Override
 	public Long zCount(final String key, final double min, final double max){
-		return execute((client)->client.zCount(makeRawKey(key), min, max));
+		return execute((client)->client.zCount(rawKey(key), min, max));
 	}
 
 	@Override
 	public Long zCount(final byte[] key, final double min, final double max){
-		return execute((client)->client.zCount(makeByteKey(key), min, max));
+		return execute((client)->client.zCount(rawKey(key), min, max));
 	}
 
 	@Override
 	public Long zCount(final String key, final String min, final String max){
-		return execute((client)->client.zCount(makeRawKey(key), min, max));
+		return execute((client)->client.zCount(rawKey(key), min, max));
 	}
 
 	@Override
 	public Long zCount(final byte[] key, final byte[] min, final byte[] max){
-		return execute((client)->client.zCount(makeByteKey(key), min, max));
+		return execute((client)->client.zCount(rawKey(key), min, max));
 	}
 
 	@Override
 	public Set<String> zDiff(final String key, final String... keys){
-		return execute((client)->client.zDiff(makeRawKey(key), makeRawKeys(keys)));
+		return execute((client)->client.zDiff(rawKey(key), rawKeys(keys)));
 	}
 
 	@Override
 	public Set<byte[]> zDiff(final byte[] key, final byte[]... keys){
-		return execute((client)->client.zDiff(makeByteKey(key), makeByteKeys(keys)));
+		return execute((client)->client.zDiff(rawKey(key), rawKeys(keys)));
 	}
 
 	@Override
 	public Long zDiffStore(final String destKey, final String... keys){
-		return execute((client)->client.zDiffStore(makeRawKey(destKey), makeRawKeys(keys)));
+		return execute((client)->client.zDiffStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public Long zDiffStore(final byte[] destKey, final byte[]... keys){
-		return execute((client)->client.zDiffStore(makeByteKey(destKey), makeByteKeys(keys)));
+		return execute((client)->client.zDiffStore(rawKey(destKey), rawKeys(keys)));
 	}
 
 	@Override
 	public Double zIncrBy(final String key, final String member, final double increment){
-		return execute((client)->client.zIncrBy(makeRawKey(key), member, increment));
+		return execute((client)->client.zIncrBy(rawKey(key), member, increment));
 	}
 
 	@Override
 	public Double zIncrBy(final byte[] key, final byte[] member, final double increment){
-		return execute((client)->client.zIncrBy(makeByteKey(key), member, increment));
+		return execute((client)->client.zIncrBy(rawKey(key), member, increment));
 	}
 
 	@Override
 	public Long zInterStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return execute((client)->client.zInterStore(makeRawKey(destKey), makeRawKeys(keys)),
+		return execute((client)->client.zInterStore(rawKey(destKey), rawKeys(keys)),
 				ProtocolCommand.ZINTERSTORE, args);
 	}
 
 	@Override
 	public Long zInterStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return execute((client)->client.zInterStore(makeByteKey(destKey), makeByteKeys(keys)),
+		return execute((client)->client.zInterStore(rawKey(destKey), rawKeys(keys)),
 				ProtocolCommand.ZINTERSTORE, args);
 	}
 
@@ -2469,7 +2465,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Long zInterStore(final String destKey, final Aggregate aggregate, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("aggregate", aggregate)
 				.put("keys", keys);
-		return execute((client)->client.zInterStore(makeRawKey(destKey), aggregate, makeRawKeys(keys)),
+		return execute((client)->client.zInterStore(rawKey(destKey), aggregate, rawKeys(keys)),
 				ProtocolCommand.ZINTERSTORE, args);
 	}
 
@@ -2477,7 +2473,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Long zInterStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("aggregate", aggregate)
 				.put("keys", keys);
-		return execute((client)->client.zInterStore(makeByteKey(destKey), aggregate, makeByteKeys(keys)),
+		return execute((client)->client.zInterStore(rawKey(destKey), aggregate, rawKeys(keys)),
 				ProtocolCommand.ZINTERSTORE, args);
 	}
 
@@ -2485,7 +2481,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Long zInterStore(final String destKey, final double[] weights, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("weights", weights)
 				.put("keys", keys);
-		return execute((client)->client.zInterStore(makeRawKey(destKey), weights, makeRawKeys(keys)),
+		return execute((client)->client.zInterStore(rawKey(destKey), weights, rawKeys(keys)),
 				ProtocolCommand.ZINTERSTORE, args);
 	}
 
@@ -2493,7 +2489,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Long zInterStore(final byte[] destKey, final double[] weights, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("weights", weights)
 				.put("keys", keys);
-		return execute((client)->client.zInterStore(makeByteKey(destKey), weights, makeByteKeys(keys)),
+		return execute((client)->client.zInterStore(rawKey(destKey), weights, rawKeys(keys)),
 				ProtocolCommand.ZINTERSTORE, args);
 	}
 
@@ -2502,7 +2498,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 							final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("aggregate", aggregate)
 				.put("weights", weights).put("keys", keys);
-		return execute((client)->client.zInterStore(makeRawKey(destKey), aggregate, weights, makeRawKeys(keys)),
+		return execute((client)->client.zInterStore(rawKey(destKey), aggregate, weights, rawKeys(keys)),
 				ProtocolCommand.ZINTERSTORE, args);
 	}
 
@@ -2511,104 +2507,104 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 							final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("aggregate", aggregate)
 				.put("weights", weights).put("keys", keys);
-		return execute((client)->client.zInterStore(makeByteKey(destKey), aggregate, weights, makeByteKeys(keys)),
+		return execute((client)->client.zInterStore(rawKey(destKey), aggregate, weights, rawKeys(keys)),
 				ProtocolCommand.ZINTERSTORE, args);
 	}
 
 	@Override
 	public Long zLexCount(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zLexCount(makeRawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+		return execute((client)->client.zLexCount(rawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
 	}
 
 	@Override
 	public Long zLexCount(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zLexCount(makeByteKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+		return execute((client)->client.zLexCount(rawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
 	}
 
 	@Override
 	public Long zLexCount(final String key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zLexCount(makeRawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+		return execute((client)->client.zLexCount(rawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
 	}
 
 	@Override
 	public Long zLexCount(final byte[] key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zLexCount(makeByteKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+		return execute((client)->client.zLexCount(rawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
 	}
 
 	@Override
 	public Long zLexCount(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zLexCount(makeRawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+		return execute((client)->client.zLexCount(rawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
 	}
 
 	@Override
 	public Long zLexCount(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zLexCount(makeByteKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
+		return execute((client)->client.zLexCount(rawKey(key), min, max), ProtocolCommand.ZLEXCOUNT, args);
 	}
 
 	@Override
 	public Set<String> zRange(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.zRange(makeRawKey(key), start, end), ProtocolCommand.ZRANGE, args);
+		return execute((client)->client.zRange(rawKey(key), start, end), ProtocolCommand.ZRANGE, args);
 	}
 
 	@Override
 	public Set<byte[]> zRange(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.zRange(makeByteKey(key), start, end), ProtocolCommand.ZRANGE, args);
+		return execute((client)->client.zRange(rawKey(key), start, end), ProtocolCommand.ZRANGE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRangeWithScores(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.zRangeWithScores(makeRawKey(key), start, end), ProtocolCommand.ZRANGE, args);
+		return execute((client)->client.zRangeWithScores(rawKey(key), start, end), ProtocolCommand.ZRANGE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRangeWithScores(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.zRangeWithScores(makeByteKey(key), start, end), ProtocolCommand.ZRANGE, args);
+		return execute((client)->client.zRangeWithScores(rawKey(key), start, end), ProtocolCommand.ZRANGE, args);
 	}
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+		return execute((client)->client.zRangeByLex(rawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
 	}
 
 	@Override
 	public Set<byte[]> zRangeByLex(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+		return execute((client)->client.zRangeByLex(rawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
 	}
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+		return execute((client)->client.zRangeByLex(rawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
 	}
 
 	@Override
 	public Set<byte[]> zRangeByLex(final byte[] key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+		return execute((client)->client.zRangeByLex(rawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
 	}
 
 	@Override
 	public Set<String> zRangeByLex(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+		return execute((client)->client.zRangeByLex(rawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
 	}
 
 	@Override
 	public Set<byte[]> zRangeByLex(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
+		return execute((client)->client.zRangeByLex(rawKey(key), min, max), ProtocolCommand.ZRANGEBYLEX, args);
 	}
 
 	@Override
@@ -2616,7 +2612,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 								   final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByLex(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYLEX, args);
 	}
 
@@ -2625,7 +2621,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 								   final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByLex(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByLex(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYLEX, args);
 	}
 
@@ -2634,7 +2630,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 								   final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByLex(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYLEX, args);
 	}
 
@@ -2643,7 +2639,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 								   final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByLex(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByLex(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYLEX, args);
 	}
 
@@ -2652,7 +2648,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 								   final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByLex(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByLex(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYLEX, args);
 	}
 
@@ -2661,46 +2657,46 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 								   final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByLex(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByLex(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYLEX, args);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+		return execute((client)->client.zRangeByScore(rawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<byte[]> zRangeByScore(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE,
+		return execute((client)->client.zRangeByScore(rawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE,
 				args);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+		return execute((client)->client.zRangeByScore(rawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<byte[]> zRangeByScore(final byte[] key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE,
+		return execute((client)->client.zRangeByScore(rawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE,
 				args);
 	}
 
 	@Override
 	public Set<String> zRangeByScore(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
+		return execute((client)->client.zRangeByScore(rawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<byte[]> zRangeByScore(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE,
+		return execute((client)->client.zRangeByScore(rawKey(key), min, max), ProtocolCommand.ZRANGEBYSCORE,
 				args);
 	}
 
@@ -2709,7 +2705,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 									 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByScore(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByScore(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
@@ -2718,7 +2714,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 									 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByScore(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByScore(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
@@ -2727,7 +2723,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 									 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByScore(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByScore(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
@@ -2736,7 +2732,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 									 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByScore(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByScore(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
@@ -2745,7 +2741,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 									 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByScore(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByScore(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
@@ -2754,49 +2750,49 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 									 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByScore(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByScore(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max),
+		return execute((client)->client.zRangeByScoreWithScores(rawKey(key), min, max),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max),
+		return execute((client)->client.zRangeByScoreWithScores(rawKey(key), min, max),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max),
+		return execute((client)->client.zRangeByScoreWithScores(rawKey(key), min, max),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max),
+		return execute((client)->client.zRangeByScoreWithScores(rawKey(key), min, max),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max),
+		return execute((client)->client.zRangeByScoreWithScores(rawKey(key), min, max),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max),
+		return execute((client)->client.zRangeByScoreWithScores(rawKey(key), min, max),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
@@ -2805,7 +2801,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 											  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByScoreWithScores(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
@@ -2814,7 +2810,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 											  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByScoreWithScores(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
@@ -2823,7 +2819,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 											  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByScoreWithScores(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
@@ -2832,7 +2828,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 											  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByScoreWithScores(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
@@ -2841,7 +2837,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 											  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByScoreWithScores(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByScoreWithScores(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
@@ -2850,245 +2846,245 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 											  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRangeByScoreWithScores(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRangeByScoreWithScores(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Long zRank(final String key, final String member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return execute((client)->client.zRank(makeRawKey(key), member), ProtocolCommand.ZRANK, args);
+		return execute((client)->client.zRank(rawKey(key), member), ProtocolCommand.ZRANK, args);
 	}
 
 	@Override
 	public Long zRank(final byte[] key, final byte[] member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return execute((client)->client.zRank(makeByteKey(key), member), ProtocolCommand.ZRANK, args);
+		return execute((client)->client.zRank(rawKey(key), member), ProtocolCommand.ZRANK, args);
 	}
 
 	@Override
 	public Tuple zPopMax(final String key){
-		return execute((client)->client.zPopMax(makeRawKey(key)), ProtocolCommand.ZPOPMAX,
+		return execute((client)->client.zPopMax(rawKey(key)), ProtocolCommand.ZPOPMAX,
 				new CommandArguments("key", key));
 	}
 
 	@Override
 	public Tuple zPopMax(final byte[] key){
-		return execute((client)->client.zPopMax(makeByteKey(key)), ProtocolCommand.ZPOPMAX,
+		return execute((client)->client.zPopMax(rawKey(key)), ProtocolCommand.ZPOPMAX,
 				new CommandArguments("key", key));
 	}
 
 	@Override
 	public Set<Tuple> zPopMax(final String key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return execute((client)->client.zPopMax(makeRawKey(key), count), ProtocolCommand.ZPOPMAX, args);
+		return execute((client)->client.zPopMax(rawKey(key), count), ProtocolCommand.ZPOPMAX, args);
 	}
 
 	@Override
 	public Set<Tuple> zPopMax(final byte[] key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return execute((client)->client.zPopMax(makeByteKey(key), count), ProtocolCommand.ZPOPMAX, args);
+		return execute((client)->client.zPopMax(rawKey(key), count), ProtocolCommand.ZPOPMAX, args);
 	}
 
 	@Override
 	public Tuple zPopMin(final String key){
-		return execute((client)->client.zPopMin(makeRawKey(key)), ProtocolCommand.ZPOPMIN,
+		return execute((client)->client.zPopMin(rawKey(key)), ProtocolCommand.ZPOPMIN,
 				new CommandArguments("key", key));
 	}
 
 	@Override
 	public Tuple zPopMin(final byte[] key){
-		return execute((client)->client.zPopMin(makeByteKey(key)), ProtocolCommand.ZPOPMIN,
+		return execute((client)->client.zPopMin(rawKey(key)), ProtocolCommand.ZPOPMIN,
 				new CommandArguments("key", key));
 	}
 
 	@Override
 	public Set<Tuple> zPopMin(final String key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return execute((client)->client.zPopMin(makeRawKey(key), count), ProtocolCommand.ZPOPMIN, args);
+		return execute((client)->client.zPopMin(rawKey(key), count), ProtocolCommand.ZPOPMIN, args);
 	}
 
 	@Override
 	public Set<Tuple> zPopMin(final byte[] key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		return execute((client)->client.zPopMin(makeByteKey(key), count), ProtocolCommand.ZPOPMIN, args);
+		return execute((client)->client.zPopMin(rawKey(key), count), ProtocolCommand.ZPOPMIN, args);
 	}
 
 	@Override
 	public Long zRem(final String key, final String... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return execute((client)->client.zRem(makeRawKey(key), members), ProtocolCommand.ZREM, args);
+		return execute((client)->client.zRem(rawKey(key), members), ProtocolCommand.ZREM, args);
 	}
 
 	@Override
 	public Long zRem(final byte[] key, final byte[]... members){
 		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
-		return execute((client)->client.zRem(makeByteKey(key), members), ProtocolCommand.ZREM, args);
+		return execute((client)->client.zRem(rawKey(key), members), ProtocolCommand.ZREM, args);
 	}
 
 	@Override
 	public Long zRemRangeByLex(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRemRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX,
+		return execute((client)->client.zRemRangeByLex(rawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX,
 				args);
 	}
 
 	@Override
 	public Long zRemRangeByLex(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRemRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX,
+		return execute((client)->client.zRemRangeByLex(rawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX,
 				args);
 	}
 
 	@Override
 	public Long zRemRangeByLex(final String key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRemRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX,
+		return execute((client)->client.zRemRangeByLex(rawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX,
 				args);
 	}
 
 	@Override
 	public Long zRemRangeByLex(final byte[] key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRemRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX,
+		return execute((client)->client.zRemRangeByLex(rawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX,
 				args);
 	}
 
 	@Override
 	public Long zRemRangeByLex(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRemRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX,
+		return execute((client)->client.zRemRangeByLex(rawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX,
 				args);
 	}
 
 	@Override
 	public Long zRemRangeByLex(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRemRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX,
+		return execute((client)->client.zRemRangeByLex(rawKey(key), min, max), ProtocolCommand.ZREMRANGEBYLEX,
 				args);
 	}
 
 	@Override
 	public Long zRemRangeByScore(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRemRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE,
+		return execute((client)->client.zRemRangeByScore(rawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE,
 				args);
 	}
 
 	@Override
 	public Long zRemRangeByScore(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRemRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE
+		return execute((client)->client.zRemRangeByScore(rawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE
 				, args);
 	}
 
 	@Override
 	public Long zRemRangeByScore(final String key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRemRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE,
+		return execute((client)->client.zRemRangeByScore(rawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE,
 				args);
 	}
 
 	@Override
 	public Long zRemRangeByScore(final byte[] key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRemRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE
+		return execute((client)->client.zRemRangeByScore(rawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE
 				, args);
 	}
 
 	@Override
 	public Long zRemRangeByScore(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRemRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE,
+		return execute((client)->client.zRemRangeByScore(rawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE,
 				args);
 	}
 
 	@Override
 	public Long zRemRangeByScore(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRemRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE
+		return execute((client)->client.zRemRangeByScore(rawKey(key), min, max), ProtocolCommand.ZREMRANGEBYSCORE
 				, args);
 	}
 
 	@Override
 	public Long zRemRangeByRank(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.zRemRangeByRank(makeRawKey(key), start, end), ProtocolCommand.ZREMRANGEBYRANK,
+		return execute((client)->client.zRemRangeByRank(rawKey(key), start, end), ProtocolCommand.ZREMRANGEBYRANK,
 				args);
 	}
 
 	@Override
 	public Long zRemRangeByRank(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.zRemRangeByRank(makeByteKey(key), start, end), ProtocolCommand.ZREMRANGEBYRANK
+		return execute((client)->client.zRemRangeByRank(rawKey(key), start, end), ProtocolCommand.ZREMRANGEBYRANK
 				, args);
 	}
 
 	@Override
 	public Set<String> zRevRange(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.zRevRange(makeRawKey(key), start, end), ProtocolCommand.ZREVRANGE, args);
+		return execute((client)->client.zRevRange(rawKey(key), start, end), ProtocolCommand.ZREVRANGE, args);
 	}
 
 	@Override
 	public Set<byte[]> zRevRange(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.zRevRange(makeByteKey(key), start, end), ProtocolCommand.ZREVRANGE, args);
+		return execute((client)->client.zRevRange(rawKey(key), start, end), ProtocolCommand.ZREVRANGE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeWithScores(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.zRevRangeWithScores(makeRawKey(key), start, end), ProtocolCommand.ZREVRANGE,
+		return execute((client)->client.zRevRangeWithScores(rawKey(key), start, end), ProtocolCommand.ZREVRANGE,
 				args);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeWithScores(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.zRevRangeWithScores(makeByteKey(key), start, end), ProtocolCommand.ZREVRANGE,
+		return execute((client)->client.zRevRangeWithScores(rawKey(key), start, end), ProtocolCommand.ZREVRANGE,
 				args);
 	}
 
 	@Override
 	public Set<String> zRevRangeByLex(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX,
+		return execute((client)->client.zRevRangeByLex(rawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX,
 				args);
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByLex(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX,
+		return execute((client)->client.zRevRangeByLex(rawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX,
 				args);
 	}
 
 	@Override
 	public Set<String> zRevRangeByLex(final String key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX,
+		return execute((client)->client.zRevRangeByLex(rawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX,
 				args);
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByLex(final byte[] key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX,
+		return execute((client)->client.zRevRangeByLex(rawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX,
 				args);
 	}
 
 	@Override
 	public Set<String> zRevRangeByLex(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX,
+		return execute((client)->client.zRevRangeByLex(rawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX,
 				args);
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByLex(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX,
+		return execute((client)->client.zRevRangeByLex(rawKey(key), min, max), ProtocolCommand.ZREVRANGEBYLEX,
 				args);
 	}
 
@@ -3097,7 +3093,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 									  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByLex(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYLEX, args);
 	}
 
@@ -3106,7 +3102,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 									  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByLex(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYLEX, args);
 	}
 
@@ -3115,7 +3111,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 									  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByLex(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYLEX, args);
 	}
 
@@ -3124,7 +3120,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 									  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByLex(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYLEX, args);
 	}
 
@@ -3133,7 +3129,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 									  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByLex(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByLex(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYLEX, args);
 	}
 
@@ -3142,49 +3138,49 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 									  final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByLex(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByLex(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYLEX, args);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE,
+		return execute((client)->client.zRevRangeByScore(rawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE,
 				args);
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByScore(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE
+		return execute((client)->client.zRevRangeByScore(rawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE
 				, args);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE,
+		return execute((client)->client.zRevRangeByScore(rawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE,
 				args);
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByScore(final byte[] key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE
+		return execute((client)->client.zRevRangeByScore(rawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE
 				, args);
 	}
 
 	@Override
 	public Set<String> zRevRangeByScore(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE,
+		return execute((client)->client.zRevRangeByScore(rawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE,
 				args);
 	}
 
 	@Override
 	public Set<byte[]> zRevRangeByScore(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE
+		return execute((client)->client.zRevRangeByScore(rawKey(key), min, max), ProtocolCommand.ZREVRANGEBYSCORE
 				, args);
 	}
 
@@ -3193,7 +3189,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 										final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByScore(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
@@ -3202,7 +3198,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 										final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByScore(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
@@ -3211,7 +3207,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 										final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByScore(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
@@ -3220,7 +3216,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 										final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByScore(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
@@ -3229,7 +3225,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 										final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByScore(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByScore(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
@@ -3238,49 +3234,49 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 										final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByScore(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByScore(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max),
+		return execute((client)->client.zRevRangeByScoreWithScores(rawKey(key), min, max),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final double min, final double max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max),
+		return execute((client)->client.zRevRangeByScoreWithScores(rawKey(key), min, max),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max),
+		return execute((client)->client.zRevRangeByScoreWithScores(rawKey(key), min, max),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final long min, final long max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max),
+		return execute((client)->client.zRevRangeByScoreWithScores(rawKey(key), min, max),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final String key, final String min, final String max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max),
+		return execute((client)->client.zRevRangeByScoreWithScores(rawKey(key), min, max),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Set<Tuple> zRevRangeByScoreWithScores(final byte[] key, final byte[] min, final byte[] max){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
-		return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max),
+		return execute((client)->client.zRevRangeByScoreWithScores(rawKey(key), min, max),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
@@ -3290,7 +3286,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 												 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
@@ -3300,7 +3296,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 												 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
@@ -3309,7 +3305,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 												 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
@@ -3318,7 +3314,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 												 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
@@ -3327,7 +3323,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 												 final long offset, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByScoreWithScores(makeRawKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
@@ -3336,145 +3332,145 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 												 final long offset, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max)
 				.put("offset", offset).put("count", count);
-		return execute((client)->client.zRevRangeByScoreWithScores(makeByteKey(key), min, max, offset, count),
+		return execute((client)->client.zRevRangeByScoreWithScores(rawKey(key), min, max, offset, count),
 				ProtocolCommand.ZREVRANGEBYSCORE, args);
 	}
 
 	@Override
 	public Long zRevRank(final String key, final String member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return execute((client)->client.zRevRank(makeRawKey(key), member), ProtocolCommand.ZREVRANK, args);
+		return execute((client)->client.zRevRank(rawKey(key), member), ProtocolCommand.ZREVRANK, args);
 	}
 
 	@Override
 	public Long zRevRank(final byte[] key, final byte[] member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return execute((client)->client.zRevRank(makeByteKey(key), member), ProtocolCommand.ZREVRANK, args);
+		return execute((client)->client.zRevRank(rawKey(key), member), ProtocolCommand.ZREVRANK, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final long cursor){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return execute((client)->client.zScan(makeRawKey(key), cursor), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return execute((client)->client.zScan(makeByteKey(key), cursor), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return execute((client)->client.zScan(makeRawKey(key), cursor), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
-		return execute((client)->client.zScan(makeByteKey(key), cursor), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		return execute((client)->client.zScan(makeRawKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		return execute((client)->client.zScan(makeByteKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		return execute((client)->client.zScan(makeRawKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
-		return execute((client)->client.zScan(makeByteKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor, pattern), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		return execute((client)->client.zScan(makeRawKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		return execute((client)->client.zScan(makeByteKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		return execute((client)->client.zScan(makeRawKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
-		return execute((client)->client.zScan(makeByteKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor, count), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		return execute((client)->client.zScan(makeRawKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		return execute((client)->client.zScan(makeByteKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final String key, final String cursor, final String pattern, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
-		return execute((client)->client.zScan(makeRawKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public ScanResult<List<Tuple>> zScan(final byte[] key, final byte[] cursor, final byte[] pattern, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put(
 				"pattern", pattern).put("count", count);
-		return execute((client)->client.zScan(makeByteKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
+		return execute((client)->client.zScan(rawKey(key), cursor, pattern, count), ProtocolCommand.ZSCAN, args);
 	}
 
 	@Override
 	public Double zScore(final String key, final String member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return execute((client)->client.zScore(makeRawKey(key), member), ProtocolCommand.ZSCORE, args);
+		return execute((client)->client.zScore(rawKey(key), member), ProtocolCommand.ZSCORE, args);
 	}
 
 	@Override
 	public Double zScore(final byte[] key, final byte[] member){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member);
-		return execute((client)->client.zScore(makeByteKey(key), member), ProtocolCommand.ZSCORE, args);
+		return execute((client)->client.zScore(rawKey(key), member), ProtocolCommand.ZSCORE, args);
 	}
 
 	@Override
 	public Long zUnionStore(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return execute((client)->client.zUnionStore(makeRawKey(destKey), makeRawKeys(keys)),
+		return execute((client)->client.zUnionStore(rawKey(destKey), rawKeys(keys)),
 				ProtocolCommand.ZUNIONSTORE, args);
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return execute((client)->client.zUnionStore(makeByteKey(destKey), makeByteKeys(keys)),
+		return execute((client)->client.zUnionStore(rawKey(destKey), rawKeys(keys)),
 				ProtocolCommand.ZUNIONSTORE, args);
 	}
 
@@ -3482,7 +3478,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Long zUnionStore(final String destKey, final Aggregate aggregate, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("aggregate", aggregate)
 				.put("keys", keys);
-		return execute((client)->client.zUnionStore(makeRawKey(destKey), aggregate, makeRawKeys(keys)),
+		return execute((client)->client.zUnionStore(rawKey(destKey), aggregate, rawKeys(keys)),
 				ProtocolCommand.ZUNIONSTORE, args);
 	}
 
@@ -3490,21 +3486,21 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("aggregate", aggregate)
 				.put("keys", keys);
-		return execute((client)->client.zUnionStore(makeByteKey(destKey), aggregate, makeByteKeys(keys)),
+		return execute((client)->client.zUnionStore(rawKey(destKey), aggregate, rawKeys(keys)),
 				ProtocolCommand.ZUNIONSTORE, args);
 	}
 
 	@Override
 	public Long zUnionStore(final String destKey, final double[] weights, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return execute((client)->client.zUnionStore(makeRawKey(destKey), weights, makeRawKeys(keys)),
+		return execute((client)->client.zUnionStore(rawKey(destKey), weights, rawKeys(keys)),
 				ProtocolCommand.ZUNIONSTORE, args);
 	}
 
 	@Override
 	public Long zUnionStore(final byte[] destKey, final double[] weights, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		return execute((client)->client.zUnionStore(makeByteKey(destKey), weights, makeByteKeys(keys)),
+		return execute((client)->client.zUnionStore(rawKey(destKey), weights, rawKeys(keys)),
 				ProtocolCommand.ZUNIONSTORE, args);
 	}
 
@@ -3513,7 +3509,7 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 							final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("aggregate", aggregate)
 				.put("keys", keys);
-		return execute((client)->client.zUnionStore(makeRawKey(destKey), aggregate, weights, makeRawKeys(keys)),
+		return execute((client)->client.zUnionStore(rawKey(destKey), aggregate, weights, rawKeys(keys)),
 				ProtocolCommand.ZUNIONSTORE, args);
 	}
 
@@ -3522,75 +3518,75 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 							final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("aggregate", aggregate)
 				.put("keys", keys);
-		return execute((client)->client.zUnionStore(makeByteKey(destKey), aggregate, weights, makeByteKeys(keys)),
+		return execute((client)->client.zUnionStore(rawKey(destKey), aggregate, weights, rawKeys(keys)),
 				ProtocolCommand.ZUNIONSTORE, args);
 	}
 
 	@Override
 	public Long append(final String key, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.append(makeRawKey(key), value), ProtocolCommand.APPEND, args);
+		return execute((client)->client.append(rawKey(key), value), ProtocolCommand.APPEND, args);
 	}
 
 	@Override
 	public Long append(final byte[] key, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.append(makeByteKey(key), value), ProtocolCommand.APPEND, args);
+		return execute((client)->client.append(rawKey(key), value), ProtocolCommand.APPEND, args);
 	}
 
 	@Override
 	public Long bitCount(final String key){
-		return execute((client)->client.bitCount(makeRawKey(key)), ProtocolCommand.BITCOUNT,
+		return execute((client)->client.bitCount(rawKey(key)), ProtocolCommand.BITCOUNT,
 				new CommandArguments("key", key));
 	}
 
 	@Override
 	public Long bitCount(final byte[] key){
-		return execute((client)->client.bitCount(makeByteKey(key)), ProtocolCommand.BITCOUNT,
+		return execute((client)->client.bitCount(rawKey(key)), ProtocolCommand.BITCOUNT,
 				new CommandArguments("key", key));
 	}
 
 	@Override
 	public Long bitCount(final String key, final int start, final int end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.bitCount(makeRawKey(key), start, end), ProtocolCommand.BITCOUNT, args);
+		return execute((client)->client.bitCount(rawKey(key), start, end), ProtocolCommand.BITCOUNT, args);
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final int start, final int end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.bitCount(makeByteKey(key), start, end), ProtocolCommand.BITCOUNT, args);
+		return execute((client)->client.bitCount(rawKey(key), start, end), ProtocolCommand.BITCOUNT, args);
 	}
 
 	@Override
 	public Long bitCount(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.bitCount(makeRawKey(key), start, end), ProtocolCommand.BITCOUNT, args);
+		return execute((client)->client.bitCount(rawKey(key), start, end), ProtocolCommand.BITCOUNT, args);
 	}
 
 	@Override
 	public Long bitCount(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.bitCount(makeByteKey(key), start, end), ProtocolCommand.BITCOUNT, args);
+		return execute((client)->client.bitCount(rawKey(key), start, end), ProtocolCommand.BITCOUNT, args);
 	}
 
 	@Override
 	public List<Long> bitField(final String key, final String... arguments){
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", arguments);
-		return execute((client)->client.bitField(makeRawKey(key), arguments), ProtocolCommand.BITFIELD, args);
+		return execute((client)->client.bitField(rawKey(key), arguments), ProtocolCommand.BITFIELD, args);
 	}
 
 	@Override
 	public List<Long> bitField(final byte[] key, final byte[]... arguments){
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", arguments);
-		return execute((client)->client.bitField(makeByteKey(key), arguments), ProtocolCommand.BITFIELD, args);
+		return execute((client)->client.bitField(rawKey(key), arguments), ProtocolCommand.BITFIELD, args);
 	}
 
 	@Override
 	public Long bitOp(final BitOperation operation, final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
 				.put("keys", keys);
-		return execute((client)->client.bitOp(operation, makeRawKey(destKey), makeRawKeys(keys)),
+		return execute((client)->client.bitOp(operation, rawKey(destKey), rawKeys(keys)),
 				ProtocolCommand.BITOP, args);
 	}
 
@@ -3598,245 +3594,245 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
 				.put("keys", keys);
-		return execute((client)->client.bitOp(operation, makeByteKey(destKey), makeByteKeys(keys)),
+		return execute((client)->client.bitOp(operation, rawKey(destKey), rawKeys(keys)),
 				ProtocolCommand.BITOP, args);
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.bitPos(makeRawKey(key), value), ProtocolCommand.BITPOS, args);
+		return execute((client)->client.bitPos(rawKey(key), value), ProtocolCommand.BITPOS, args);
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.bitPos(makeByteKey(key), value), ProtocolCommand.BITPOS, args);
+		return execute((client)->client.bitPos(rawKey(key), value), ProtocolCommand.BITPOS, args);
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final int start, final int end){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
 				.put("end", end);
-		return execute((client)->client.bitPos(makeRawKey(key), value, start, end), ProtocolCommand.BITPOS, args);
+		return execute((client)->client.bitPos(rawKey(key), value, start, end), ProtocolCommand.BITPOS, args);
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final int start, final int end){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
 				.put("end", end);
-		return execute((client)->client.bitPos(makeByteKey(key), value, start, end), ProtocolCommand.BITPOS, args);
+		return execute((client)->client.bitPos(rawKey(key), value, start, end), ProtocolCommand.BITPOS, args);
 	}
 
 	@Override
 	public Long bitPos(final String key, final boolean value, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
 				.put("end", end);
-		return execute((client)->client.bitPos(makeRawKey(key), value, start, end), ProtocolCommand.BITPOS, args);
+		return execute((client)->client.bitPos(rawKey(key), value, start, end), ProtocolCommand.BITPOS, args);
 	}
 
 	@Override
 	public Long bitPos(final byte[] key, final boolean value, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
 				.put("end", end);
-		return execute((client)->client.bitPos(makeByteKey(key), value, start, end), ProtocolCommand.BITPOS, args);
+		return execute((client)->client.bitPos(rawKey(key), value, start, end), ProtocolCommand.BITPOS, args);
 	}
 
 	@Override
 	public Long decr(final String key){
-		return execute((client)->client.decr(makeRawKey(key)), ProtocolCommand.DECR, new CommandArguments("key", key));
+		return execute((client)->client.decr(rawKey(key)), ProtocolCommand.DECR, new CommandArguments("key", key));
 	}
 
 	@Override
 	public Long decr(final byte[] key){
-		return execute((client)->client.decr(makeByteKey(key)), ProtocolCommand.DECR, new CommandArguments("key", key));
+		return execute((client)->client.decr(rawKey(key)), ProtocolCommand.DECR, new CommandArguments("key", key));
 	}
 
 	@Override
 	public Long decrBy(final String key, final int value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.decrBy(makeRawKey(key), value), ProtocolCommand.DECRBY, args);
+		return execute((client)->client.decrBy(rawKey(key), value), ProtocolCommand.DECRBY, args);
 	}
 
 	@Override
 	public Long decrBy(final byte[] key, final int value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.decrBy(makeByteKey(key), value), ProtocolCommand.DECRBY, args);
+		return execute((client)->client.decrBy(rawKey(key), value), ProtocolCommand.DECRBY, args);
 	}
 
 	@Override
 	public Long decrBy(final String key, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.decrBy(makeRawKey(key), value), ProtocolCommand.DECRBY, args);
+		return execute((client)->client.decrBy(rawKey(key), value), ProtocolCommand.DECRBY, args);
 	}
 
 	@Override
 	public Long decrBy(final byte[] key, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.decrBy(makeByteKey(key), value), ProtocolCommand.DECRBY, args);
+		return execute((client)->client.decrBy(rawKey(key), value), ProtocolCommand.DECRBY, args);
 	}
 
 	@Override
 	public String get(final String key){
-		return execute((client)->client.get(makeRawKey(key)), ProtocolCommand.GET, new CommandArguments("key", key));
+		return execute((client)->client.get(rawKey(key)), ProtocolCommand.GET, new CommandArguments("key", key));
 	}
 
 	@Override
 	public byte[] get(final byte[] key){
-		return execute((client)->client.get(makeByteKey(key)), ProtocolCommand.GET, new CommandArguments("key", key));
+		return execute((client)->client.get(rawKey(key)), ProtocolCommand.GET, new CommandArguments("key", key));
 	}
 
 	@Override
 	public Status getBit(final String key, final int offset){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		return execute((client)->client.getBit(makeRawKey(key), offset), ProtocolCommand.GETBIT, args);
+		return execute((client)->client.getBit(rawKey(key), offset), ProtocolCommand.GETBIT, args);
 	}
 
 	@Override
 	public Status getBit(final byte[] key, final int offset){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		return execute((client)->client.getBit(makeByteKey(key), offset), ProtocolCommand.GETBIT, args);
+		return execute((client)->client.getBit(rawKey(key), offset), ProtocolCommand.GETBIT, args);
 	}
 
 	@Override
 	public Status getBit(final String key, final long offset){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		return execute((client)->client.getBit(makeRawKey(key), offset), ProtocolCommand.GETBIT, args);
+		return execute((client)->client.getBit(rawKey(key), offset), ProtocolCommand.GETBIT, args);
 	}
 
 	@Override
 	public Status getBit(final byte[] key, final long offset){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		return execute((client)->client.getBit(makeByteKey(key), offset), ProtocolCommand.GETBIT, args);
+		return execute((client)->client.getBit(rawKey(key), offset), ProtocolCommand.GETBIT, args);
 	}
 
 	@Override
 	public String getRange(final String key, final int start, final int end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.getRange(makeRawKey(key), start, end), ProtocolCommand.GETRANGE, args);
+		return execute((client)->client.getRange(rawKey(key), start, end), ProtocolCommand.GETRANGE, args);
 	}
 
 	@Override
 	public byte[] getRange(final byte[] key, final int start, final int end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.getRange(makeByteKey(key), start, end), ProtocolCommand.GETRANGE, args);
+		return execute((client)->client.getRange(rawKey(key), start, end), ProtocolCommand.GETRANGE, args);
 	}
 
 	@Override
 	public String getRange(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.getRange(makeRawKey(key), start, end), ProtocolCommand.GETRANGE, args);
+		return execute((client)->client.getRange(rawKey(key), start, end), ProtocolCommand.GETRANGE, args);
 	}
 
 	@Override
 	public byte[] getRange(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.getRange(makeByteKey(key), start, end), ProtocolCommand.GETRANGE, args);
+		return execute((client)->client.getRange(rawKey(key), start, end), ProtocolCommand.GETRANGE, args);
 	}
 
 	@Override
 	public String getSet(final String key, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.getSet(makeRawKey(key), value), ProtocolCommand.GETSET, args);
+		return execute((client)->client.getSet(rawKey(key), value), ProtocolCommand.GETSET, args);
 	}
 
 	@Override
 	public byte[] getSet(final byte[] key, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.getSet(makeByteKey(key), value), ProtocolCommand.GETSET, args);
+		return execute((client)->client.getSet(rawKey(key), value), ProtocolCommand.GETSET, args);
 	}
 
 	@Override
 	public String getEx(final String key, final GetExArgument getExArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		return execute((client)->client.getEx(makeRawKey(key), getExArgument), ProtocolCommand.GETEX, args);
+		return execute((client)->client.getEx(rawKey(key), getExArgument), ProtocolCommand.GETEX, args);
 	}
 
 	@Override
 	public byte[] getEx(byte[] key, GetExArgument getExArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		return execute((client)->client.getEx(makeByteKey(key), getExArgument), ProtocolCommand.GETEX, args);
+		return execute((client)->client.getEx(rawKey(key), getExArgument), ProtocolCommand.GETEX, args);
 	}
 
 	@Override
 	public String getDel(final String key){
-		return execute((client)->client.getDel(makeRawKey(key)), ProtocolCommand.GETDEL,
+		return execute((client)->client.getDel(rawKey(key)), ProtocolCommand.GETDEL,
 				new CommandArguments("key", key));
 	}
 
 	@Override
 	public byte[] getDel(byte[] key){
-		return execute((client)->client.getDel(makeByteKey(key)), ProtocolCommand.GETDEL,
+		return execute((client)->client.getDel(rawKey(key)), ProtocolCommand.GETDEL,
 				new CommandArguments("key", key));
 	}
 
 	@Override
 	public Long incr(final String key){
-		return execute((client)->client.incr(makeRawKey(key)), ProtocolCommand.INCR, new CommandArguments("key", key));
+		return execute((client)->client.incr(rawKey(key)), ProtocolCommand.INCR, new CommandArguments("key", key));
 	}
 
 	@Override
 	public Long incr(final byte[] key){
-		return execute((client)->client.incr(makeByteKey(key)), ProtocolCommand.INCR, new CommandArguments("key", key));
+		return execute((client)->client.incr(rawKey(key)), ProtocolCommand.INCR, new CommandArguments("key", key));
 	}
 
 	@Override
 	public Long incrBy(final String key, final int value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrBy(makeRawKey(key), value), ProtocolCommand.INCRBY, args);
+		return execute((client)->client.incrBy(rawKey(key), value), ProtocolCommand.INCRBY, args);
 	}
 
 	@Override
 	public Long incrBy(final byte[] key, final int value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrBy(makeByteKey(key), value), ProtocolCommand.INCRBY, args);
+		return execute((client)->client.incrBy(rawKey(key), value), ProtocolCommand.INCRBY, args);
 	}
 
 	@Override
 	public Long incrBy(final String key, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrBy(makeRawKey(key), value), ProtocolCommand.INCRBY, args);
+		return execute((client)->client.incrBy(rawKey(key), value), ProtocolCommand.INCRBY, args);
 	}
 
 	@Override
 	public Long incrBy(final byte[] key, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrBy(makeByteKey(key), value), ProtocolCommand.INCRBY, args);
+		return execute((client)->client.incrBy(rawKey(key), value), ProtocolCommand.INCRBY, args);
 	}
 
 	@Override
 	public Double incrByFloat(final String key, final float value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrByFloat(makeRawKey(key), value), ProtocolCommand.INCRBYFLOAT, args);
+		return execute((client)->client.incrByFloat(rawKey(key), value), ProtocolCommand.INCRBYFLOAT, args);
 	}
 
 	@Override
 	public Double incrByFloat(final byte[] key, final float value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrByFloat(makeByteKey(key), value), ProtocolCommand.INCRBYFLOAT, args);
+		return execute((client)->client.incrByFloat(rawKey(key), value), ProtocolCommand.INCRBYFLOAT, args);
 	}
 
 	@Override
 	public Double incrByFloat(final String key, final double value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrByFloat(makeRawKey(key), value), ProtocolCommand.INCRBYFLOAT, args);
+		return execute((client)->client.incrByFloat(rawKey(key), value), ProtocolCommand.INCRBYFLOAT, args);
 	}
 
 	@Override
 	public Double incrByFloat(final byte[] key, final double value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrByFloat(makeByteKey(key), value), ProtocolCommand.INCRBYFLOAT, args);
+		return execute((client)->client.incrByFloat(rawKey(key), value), ProtocolCommand.INCRBYFLOAT, args);
 	}
 
 	@Override
 	public List<String> mGet(final String... keys){
-		return execute((client)->client.mGet(makeRawKeys(keys)), ProtocolCommand.MGET,
+		return execute((client)->client.mGet(rawKeys(keys)), ProtocolCommand.MGET,
 				new CommandArguments("keys", keys));
 	}
 
 	@Override
 	public List<byte[]> mGet(final byte[]... keys){
-		return execute((client)->client.mGet(makeByteKeys(keys)), ProtocolCommand.MGET,
+		return execute((client)->client.mGet(rawKeys(keys)), ProtocolCommand.MGET,
 				new CommandArguments("keys", keys));
 	}
 
@@ -3853,171 +3849,171 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	@Override
 	public Status pSetEx(final String key, final String value, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		return execute((client)->client.pSetEx(makeRawKey(key), value, lifetime), ProtocolCommand.PSETEX, args);
+		return execute((client)->client.pSetEx(rawKey(key), value, lifetime), ProtocolCommand.PSETEX, args);
 	}
 
 	@Override
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		return execute((client)->client.pSetEx(makeByteKey(key), value, lifetime), ProtocolCommand.PSETEX, args);
+		return execute((client)->client.pSetEx(rawKey(key), value, lifetime), ProtocolCommand.PSETEX, args);
 	}
 
 	@Override
 	public Status set(final String key, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.set(makeRawKey(key), value), ProtocolCommand.SET, args);
+		return execute((client)->client.set(rawKey(key), value), ProtocolCommand.SET, args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.set(makeByteKey(key), value), ProtocolCommand.SET, args);
+		return execute((client)->client.set(rawKey(key), value), ProtocolCommand.SET, args);
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetArgument setArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value)
 				.put("setArgument", setArgument);
-		return execute((client)->client.set(makeRawKey(key), value, setArgument), ProtocolCommand.SET, args);
+		return execute((client)->client.set(rawKey(key), value, setArgument), ProtocolCommand.SET, args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value)
 				.put("setArgument", setArgument);
-		return execute((client)->client.set(makeByteKey(key), value, setArgument), ProtocolCommand.SET, args);
+		return execute((client)->client.set(rawKey(key), value, setArgument), ProtocolCommand.SET, args);
 	}
 
 	@Override
 	public Status setBit(final String key, final int offset, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(makeRawKey(key), offset, value), ProtocolCommand.SETBIT, args);
+		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
 	}
 
 	@Override
 	public Status setBit(final byte[] key, final int offset, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(makeByteKey(key), offset, value), ProtocolCommand.SETBIT, args);
+		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
 	}
 
 	@Override
 	public Status setBit(final String key, final long offset, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(makeRawKey(key), offset, value), ProtocolCommand.SETBIT, args);
+		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
 	}
 
 	@Override
 	public Status setBit(final byte[] key, final long offset, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(makeByteKey(key), offset, value), ProtocolCommand.SETBIT, args);
+		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
 	}
 
 	@Override
 	public Status setBit(final String key, final int offset, final boolean value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(makeRawKey(key), offset, value), ProtocolCommand.SETBIT, args);
+		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
 	}
 
 	@Override
 	public Status setBit(final byte[] key, final int offset, final boolean value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(makeByteKey(key), offset, value), ProtocolCommand.SETBIT, args);
+		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
 	}
 
 	@Override
 	public Status setBit(final String key, final long offset, final boolean value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(makeRawKey(key), offset, value), ProtocolCommand.SETBIT, args);
+		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
 	}
 
 	@Override
 	public Status setBit(final byte[] key, final long offset, final boolean value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(makeByteKey(key), offset, value), ProtocolCommand.SETBIT, args);
+		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
 	}
 
 	@Override
 	public Status setEx(final String key, final String value, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		return execute((client)->client.setEx(makeRawKey(key), value, lifetime), ProtocolCommand.SETEX, args);
+		return execute((client)->client.setEx(rawKey(key), value, lifetime), ProtocolCommand.SETEX, args);
 	}
 
 	@Override
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		return execute((client)->client.setEx(makeByteKey(key), value, lifetime), ProtocolCommand.SETEX, args);
+		return execute((client)->client.setEx(rawKey(key), value, lifetime), ProtocolCommand.SETEX, args);
 	}
 
 	@Override
 	public Status setNx(final String key, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.setNx(makeRawKey(key), value), ProtocolCommand.SETNX, args);
+		return execute((client)->client.setNx(rawKey(key), value), ProtocolCommand.SETNX, args);
 	}
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.setNx(makeByteKey(key), value), ProtocolCommand.SETNX, args);
+		return execute((client)->client.setNx(rawKey(key), value), ProtocolCommand.SETNX, args);
 	}
 
 	@Override
 	public Long setRange(final String key, final int offset, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setRange(makeRawKey(key), offset, value), ProtocolCommand.SETRANGE, args);
+		return execute((client)->client.setRange(rawKey(key), offset, value), ProtocolCommand.SETRANGE, args);
 	}
 
 	@Override
 	public Long setRange(final byte[] key, final int offset, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setRange(makeByteKey(key), offset, value), ProtocolCommand.SETRANGE, args);
+		return execute((client)->client.setRange(rawKey(key), offset, value), ProtocolCommand.SETRANGE, args);
 	}
 
 	@Override
 	public Long setRange(final String key, final long offset, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setRange(makeRawKey(key), offset, value), ProtocolCommand.SETRANGE, args);
+		return execute((client)->client.setRange(rawKey(key), offset, value), ProtocolCommand.SETRANGE, args);
 	}
 
 	@Override
 	public Long setRange(final byte[] key, final long offset, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setRange(makeByteKey(key), offset, value), ProtocolCommand.SETRANGE, args);
+		return execute((client)->client.setRange(rawKey(key), offset, value), ProtocolCommand.SETRANGE, args);
 	}
 
 	@Override
 	public Long strlen(final String key){
-		return execute((client)->client.strlen(makeRawKey(key)), ProtocolCommand.STRLEN,
+		return execute((client)->client.strlen(rawKey(key)), ProtocolCommand.STRLEN,
 				new CommandArguments("key", key));
 	}
 
 	@Override
 	public Long strlen(final byte[] key){
-		return execute((client)->client.strlen(makeByteKey(key)), ProtocolCommand.STRLEN,
+		return execute((client)->client.strlen(rawKey(key)), ProtocolCommand.STRLEN,
 				new CommandArguments("key", key));
 	}
 
 	@Override
 	public String substr(final String key, final int start, final int end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.substr(makeRawKey(key), start, end), ProtocolCommand.SUBSTR, args);
+		return execute((client)->client.substr(rawKey(key), start, end), ProtocolCommand.SUBSTR, args);
 	}
 
 	@Override
 	public byte[] substr(final byte[] key, final int start, final int end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.substr(makeByteKey(key), start, end), ProtocolCommand.SUBSTR, args);
+		return execute((client)->client.substr(rawKey(key), start, end), ProtocolCommand.SUBSTR, args);
 	}
 
 	@Override
 	public String substr(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.substr(makeRawKey(key), start, end), ProtocolCommand.SUBSTR, args);
+		return execute((client)->client.substr(rawKey(key), start, end), ProtocolCommand.SUBSTR, args);
 	}
 
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.substr(makeByteKey(key), start, end), ProtocolCommand.SUBSTR, args);
+		return execute((client)->client.substr(rawKey(key), start, end), ProtocolCommand.SUBSTR, args);
 	}
 
 	@Override
@@ -4040,12 +4036,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Status watch(final String... keys){
-		return execute((client)->client.watch(makeRawKeys(keys)));
+		return execute((client)->client.watch(rawKeys(keys)));
 	}
 
 	@Override
 	public Status watch(final byte[]... keys){
-		return execute((client)->client.watch(makeByteKeys(keys)));
+		return execute((client)->client.watch(rawKeys(keys)));
 	}
 
 	@Override

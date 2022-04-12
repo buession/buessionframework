@@ -22,14 +22,26 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command.args;
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.GeoOperations;
 
 /**
- * GEO 参数
+ * Jedis 地理位置命令操作抽象类
+ *
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class GeoRadiusArgument {
+public abstract class AbstractGeoOperations<C extends JedisRedisConnection>
+		extends AbstractJedisRedisOperations<C> implements GeoOperations<C> {
+
+	public AbstractGeoOperations(final JedisRedisClient client){
+		super(client);
+	}
 
 }

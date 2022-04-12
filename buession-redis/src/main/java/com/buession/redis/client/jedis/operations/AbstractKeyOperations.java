@@ -22,8 +22,26 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
+package com.buession.redis.client.jedis.operations;
+
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.KeyOperations;
+
 /**
+ * Jedis Key 命令操作抽象类
+ *
+ * @param <C>
+ * 		连接对象
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-package com.buession.redis.core.command.args;
+public abstract class AbstractKeyOperations<C extends JedisRedisConnection> extends AbstractJedisRedisOperations<C>
+		implements KeyOperations<C> {
+
+	public AbstractKeyOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+}

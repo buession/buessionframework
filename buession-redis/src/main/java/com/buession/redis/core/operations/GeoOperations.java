@@ -43,8 +43,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -55,15 +54,14 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	default Long geoAdd(final String key, final String member, final Geo geo){
+	default long geoAdd(final String key, final String member, final Geo geo){
 		return geoAdd(key, member, geo.getLongitude(), geo.getLatitude());
 	}
 
 	/**
 	 * 将给定的空间元素（经度、纬度、名字）添加到指定的键里面
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/geoadd.html" target="_blank">http://redisdoc.com/geo/geoadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -74,7 +72,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 *
 	 * @return 新添加到键里面的空间元素数量，不包括那些已经存在但是被更新的元素
 	 */
-	default Long geoAdd(final byte[] key, final byte[] member, final Geo geo){
+	default long geoAdd(final byte[] key, final byte[] member, final Geo geo){
 		return geoAdd(key, member, geo.getLongitude(), geo.getLatitude());
 	}
 
