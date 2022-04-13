@@ -40,13 +40,14 @@ public interface MigrateOperationConverter<S, T> extends Converter<S, T> {
 
 		@Override
 		public MigrateParams convert(final MigrateOperation source){
+			final MigrateParams migrateParams = new MigrateParams();
 			switch(source){
 				case COPY:
-					return MigrateParams.migrateParams().copy();
+					return migrateParams.copy();
 				case REPLACE:
-					return MigrateParams.migrateParams().replace();
+					return migrateParams.replace();
 				default:
-					return MigrateParams.migrateParams();
+					return migrateParams;
 			}
 		}
 

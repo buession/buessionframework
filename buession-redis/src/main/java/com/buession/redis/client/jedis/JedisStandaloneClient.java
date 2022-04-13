@@ -32,6 +32,7 @@ import com.buession.redis.client.jedis.operations.JedisGeoOperations;
 import com.buession.redis.client.jedis.operations.JedisHashOperations;
 import com.buession.redis.client.jedis.operations.JedisHyperLogLogOperations;
 import com.buession.redis.client.jedis.operations.JedisKeyOperations;
+import com.buession.redis.client.jedis.operations.JedisListOperations;
 
 /**
  * jedis 单机模式客户端
@@ -76,6 +77,11 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	@Override
 	public JedisKeyOperations keyOps(){
 		return new JedisKeyOperations(this);
+	}
+
+	@Override
+	public JedisListOperations listOps(){
+		return new JedisListOperations(this);
 	}
 
 }

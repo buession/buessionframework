@@ -502,11 +502,11 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @param destKey
 	 * 		目标 Key
 	 * @param from
-	 * @param timeout
-	 * 		超时时间
 	 * 		第一个或最后一个元素
 	 * @param to
 	 * 		第一个或最后一个元素
+	 * @param timeout
+	 * 		超时时间
 	 * @param <V>
 	 * 		元素值类型
 	 *

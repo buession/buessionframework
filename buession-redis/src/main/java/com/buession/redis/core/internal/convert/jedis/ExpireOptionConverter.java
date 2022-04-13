@@ -25,32 +25,33 @@
 package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.ListCommands;
-import redis.clients.jedis.params.LPosParams;
+import com.buession.redis.core.ExpireOption;
+import redis.clients.jedis.args.ExpiryOption;
 
 /**
- * {@link ListCommands.LPosArgument} 和 jedis {@link LPosParams} 互转
+ * {@link ExpireOption} 和 jedis {@link ExpiryOption} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface LPosArgumentConverter<S, T> extends Converter<S, T> {
+public interface ExpireOptionConverter<S, T> extends Converter<S, T> {
 
-	final class LPosArgumentJedisConverter implements LPosArgumentConverter<ListCommands.LPosArgument, LPosParams> {
+	final class ExpireOptionJedisConverter implements ExpireOptionConverter<ExpireOption, ExpiryOption> {
 
 		@Override
-		public LPosParams convert(final ListCommands.LPosArgument source){
-			final LPosParams lPosParams = new LPosParams();
-
-			if(source.getRank() != null){
-				lPosParams.rank(source.getRank());
+		public ExpiryOption convert(final ExpireOption source){
+			switch(source){
+				case NX:
+					return ExpiryOption.NX;
+				case XX:
+					return ExpiryOption.XX;
+				case GT:
+					return ExpiryOption.GT;
+				case LT:
+					return ExpiryOption.LT;
+				default:
+					return null;
 			}
-
-			if(source.getMaxLen() != null){
-				lPosParams.maxlen(source.getMaxLen());
-			}
-
-			return lPosParams;
 		}
 
 	}

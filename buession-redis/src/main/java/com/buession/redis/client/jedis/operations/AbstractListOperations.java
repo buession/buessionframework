@@ -22,37 +22,26 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.ListCommands;
-import redis.clients.jedis.params.LPosParams;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.ListOperations;
 
 /**
- * {@link ListCommands.LPosArgument} 和 jedis {@link LPosParams} 互转
+ * Jedis 列表命令操作抽象类
+ *
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface LPosArgumentConverter<S, T> extends Converter<S, T> {
+public abstract class AbstractListOperations<C extends JedisRedisConnection> extends AbstractJedisRedisOperations<C>
+		implements ListOperations<C> {
 
-	final class LPosArgumentJedisConverter implements LPosArgumentConverter<ListCommands.LPosArgument, LPosParams> {
-
-		@Override
-		public LPosParams convert(final ListCommands.LPosArgument source){
-			final LPosParams lPosParams = new LPosParams();
-
-			if(source.getRank() != null){
-				lPosParams.rank(source.getRank());
-			}
-
-			if(source.getMaxLen() != null){
-				lPosParams.maxlen(source.getMaxLen());
-			}
-
-			return lPosParams;
-		}
-
+	public AbstractListOperations(final JedisRedisClient client){
+		super(client);
 	}
 
 }

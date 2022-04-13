@@ -32,7 +32,9 @@ import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
+import com.buession.redis.utils.SafeEncoder;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
@@ -323,7 +325,7 @@ public interface KeyCommands extends RedisCommands {
 	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
 	 * 否则，以秒为单位，返回 key 的剩余生存时间
 	 */
-	Long ttl(final String key);
+	long ttl(final String key);
 
 	/**
 	 * 获取给定 key 的剩余生存时间
@@ -337,7 +339,7 @@ public interface KeyCommands extends RedisCommands {
 	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
 	 * 否则，以秒为单位，返回 key 的剩余生存时间
 	 */
-	Long ttl(final byte[] key);
+	long ttl(final byte[] key);
 
 	/**
 	 * 获取给定 key 的剩余生存时间
@@ -351,7 +353,7 @@ public interface KeyCommands extends RedisCommands {
 	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
 	 * 否则，以毫秒为单位，返回 key 的剩余生存时间
 	 */
-	Long pTtl(final String key);
+	long pTtl(final String key);
 
 	/**
 	 * 获取给定 key 的剩余生存时间
@@ -365,7 +367,7 @@ public interface KeyCommands extends RedisCommands {
 	 * 当 key 存在但没有设置剩余生存时间时，返回 -1 。
 	 * 否则，以毫秒为单位，返回 key 的剩余生存时间
 	 */
-	Long pTtl(final byte[] key);
+	long pTtl(final byte[] key);
 
 	/**
 	 * Copy the value stored at the source key to the destination key
@@ -1246,7 +1248,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 排序结果的元素数量
 	 */
-	Long sort(final String key, final String destKey);
+	long sort(final String key, final String destKey);
 
 	/**
 	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
@@ -1261,24 +1263,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 排序结果的元素数量
 	 */
-	Long sort(final byte[] key, final byte[] destKey);
-
-	/**
-	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
-	 * 如果被指定的 key 已存在，那么原有的值将被排序结果覆盖
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param destKey
-	 * 		目标 key
-	 * @param sortArgument
-	 * 		排序参数
-	 *
-	 * @return 排序结果的元素数量
-	 */
-	Long sort(final String key, final String destKey, final SortArgument sortArgument);
+	long sort(final byte[] key, final byte[] destKey);
 
 	/**
 	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
@@ -1295,7 +1280,24 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 排序结果的元素数量
 	 */
-	Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument);
+	long sort(final String key, final String destKey, final SortArgument sortArgument);
+
+	/**
+	 * 保存给定列表、集合、有序集合 key 中经过排序的元素到 destKey；
+	 * 如果被指定的 key 已存在，那么原有的值将被排序结果覆盖
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/database/sort.html" target="_blank">http://redisdoc.com/database/sort.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param destKey
+	 * 		目标 key
+	 * @param sortArgument
+	 * 		排序参数
+	 *
+	 * @return 排序结果的元素数量
+	 */
+	long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument);
 
 	/**
 	 * 修改指定一个或多个 key 最后访问时间
@@ -1307,7 +1309,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 操作的 key 的数量
 	 */
-	Long touch(final String... keys);
+	long touch(final String... keys);
 
 	/**
 	 * 修改指定一个或多个 key 最后访问时间
@@ -1319,7 +1321,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 操作的 key 的数量
 	 */
-	Long touch(final byte[]... keys);
+	long touch(final byte[]... keys);
 
 	/**
 	 * 获取 key 所储存的值的类型
@@ -1356,7 +1358,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	Long unlink(final String... keys);
+	long unlink(final String... keys);
 
 	/**
 	 * 删除给定的一个或多个 key，该命令会在另一个线程中回收内存，因此它是非阻塞的。
@@ -1369,7 +1371,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	Long unlink(final byte[]... keys);
+	long unlink(final byte[]... keys);
 
 	/**
 	 * 阻塞当前客户端，直到所有以前的写命令都成功的传输和指定的slaves确认
@@ -1383,7 +1385,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return 被删除 key 的数量
 	 */
-	Long wait(final int replicas, final int timeout);
+	long wait(final int replicas, final int timeout);
 
 	/**
 	 * 返回指定 key 对应 value 所使用的内部表示
@@ -1419,7 +1421,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return The counter’s value
 	 */
-	Long objectFreq(final String key);
+	long objectFreq(final String key);
 
 	/**
 	 * This command returns the logarithmic access frequency counter of a Redis object stored a key
@@ -1431,7 +1433,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return The counter’s value
 	 */
-	Long objectFreq(final byte[] key);
+	long objectFreq(final byte[] key);
 
 	/**
 	 * 返回指定 key 对应的 value 自被存储之后空闲的时间（单位：秒）
@@ -1443,7 +1445,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return key 对应的 value 自被存储之后空闲的时间（单位：秒）
 	 */
-	Long objectIdleTime(final String key);
+	long objectIdleTime(final String key);
 
 	/**
 	 * 返回指定 key 对应的 value 自被存储之后空闲的时间（单位：秒）
@@ -1455,7 +1457,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return key 对应的 value 自被存储之后空闲的时间（单位：秒）
 	 */
-	Long objectIdleTime(final byte[] key);
+	long objectIdleTime(final byte[] key);
 
 	/**
 	 * 返回指定 key 所对应 value 被引用的次数
@@ -1467,7 +1469,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return key 所对应 value 被引用的次数
 	 */
-	Long objectRefcount(final String key);
+	long objectRefcount(final String key);
 
 	/**
 	 * 返回指定 key 所对应 value 被引用的次数
@@ -1479,7 +1481,7 @@ public interface KeyCommands extends RedisCommands {
 	 *
 	 * @return key 所对应 value 被引用的次数
 	 */
-	Long objectRefcount(final byte[] key);
+	long objectRefcount(final byte[] key);
 
 	/**
 	 * Restore 参数
@@ -1528,6 +1530,29 @@ public interface KeyCommands extends RedisCommands {
 			return frequency;
 		}
 
+		@Override
+		public String toString(){
+			final StringJoiner stringJoiner = new StringJoiner(",", "{", "}");
+
+			if(replace != null){
+				stringJoiner.add("replace=" + replace);
+			}
+
+			if(absTtl != null){
+				stringJoiner.add("absTtl=" + absTtl);
+			}
+
+			if(idleTime != null){
+				stringJoiner.add("idleTime=" + idleTime);
+			}
+
+			if(frequency != null){
+				stringJoiner.add("frequency=" + frequency);
+			}
+
+			return stringJoiner.toString();
+		}
+
 		public static class Builder {
 
 			private final RestoreArgument restoreArgument = new RestoreArgument();
@@ -1574,13 +1599,15 @@ public interface KeyCommands extends RedisCommands {
 	 */
 	class SortArgument {
 
-		private String by;
+		private byte[] by;
 
 		private Order order;
 
 		private Limit limit;
 
-		private String alpha;
+		private byte[][] getPatterns;
+
+		private Boolean alpha;
 
 		private SortArgument(){
 
@@ -1591,7 +1618,7 @@ public interface KeyCommands extends RedisCommands {
 		 *
 		 * @return 可以让 uid 按其他键的元素来排序模式
 		 */
-		public String getBy(){
+		public byte[] getBy(){
 			return by;
 		}
 
@@ -1614,11 +1641,20 @@ public interface KeyCommands extends RedisCommands {
 		}
 
 		/**
+		 * 获取通过外部 key 排序模式
+		 *
+		 * @return 通过外部 key 排序模式
+		 */
+		public byte[][] getGetPatterns(){
+			return getPatterns;
+		}
+
+		/**
 		 * 使用对字符串进行排序
 		 *
 		 * @return 使用对字符串进行排序
 		 */
-		public String getAlpha(){
+		public Boolean getAlpha(){
 			return alpha;
 		}
 
@@ -1627,7 +1663,7 @@ public interface KeyCommands extends RedisCommands {
 			final StringJoiner stringJoiner = new StringJoiner(",", "{", "}");
 
 			if(by != null){
-				stringJoiner.add("by=" + by);
+				stringJoiner.add("by=" + SafeEncoder.encode(by));
 			}
 
 			if(order != null){
@@ -1636,6 +1672,10 @@ public interface KeyCommands extends RedisCommands {
 
 			if(limit != null){
 				stringJoiner.add("limit=" + limit);
+			}
+
+			if(getPatterns != null){
+				stringJoiner.add("get patterns=" + Arrays.toString(getPatterns));
 			}
 
 			if(alpha != null){
@@ -1665,6 +1705,19 @@ public interface KeyCommands extends RedisCommands {
 			 * @return Builder
 			 */
 			public Builder by(String pattern){
+				sortArgument.by = SafeEncoder.encode(pattern);
+				return this;
+			}
+
+			/**
+			 * 设置可以让 uid 按其他键的元素来排序
+			 *
+			 * @param pattern
+			 * 		模式
+			 *
+			 * @return Builder
+			 */
+			public Builder by(byte[] pattern){
 				sortArgument.by = pattern;
 				return this;
 			}
@@ -1718,12 +1771,45 @@ public interface KeyCommands extends RedisCommands {
 			}
 
 			/**
+			 * 设置通过外部 key 排序模式
+			 *
+			 * @param patterns
+			 * 		外部 key 模式
+			 *
+			 * @return Builder
+			 */
+			public Builder getPatterns(byte[]... patterns){
+				sortArgument.getPatterns = patterns;
+				return this;
+			}
+
+			/**
+			 * 设置通过外部 key 排序模式
+			 *
+			 * @param patterns
+			 * 		外部 key 模式
+			 *
+			 * @return Builder
+			 */
+			public Builder getPatterns(String... patterns){
+				if(patterns != null){
+					sortArgument.getPatterns = new byte[patterns.length][];
+
+					for(int i = 0; i < patterns.length; i++){
+						sortArgument.getPatterns[i] = SafeEncoder.encode(patterns[i]);
+					}
+				}
+
+				return this;
+			}
+
+			/**
 			 * SORT 命令默认排序对象为数字，当需要对字符串进行排序时，需要显式地在 SORT 命令之后添加 ALPHA 修饰符
 			 *
 			 * @return 使用对字符串进行排序
 			 */
 			public Builder alpha(){
-				sortArgument.alpha = "ALPHA";
+				sortArgument.alpha = true;
 				return this;
 			}
 

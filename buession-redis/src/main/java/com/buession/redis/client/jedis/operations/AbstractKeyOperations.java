@@ -24,9 +24,13 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.utils.NumberUtils;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.KeyOperations;
+import com.buession.redis.core.ScanResult;
+
+import java.util.List;
 
 /**
  * Jedis Key 命令操作抽象类
@@ -42,6 +46,36 @@ public abstract class AbstractKeyOperations<C extends JedisRedisConnection> exte
 
 	public AbstractKeyOperations(final JedisRedisClient client){
 		super(client);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final long cursor){
+		return scan(Long.toString(cursor));
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final long cursor, final String pattern){
+		return scan(Long.toString(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
+		return scan(NumberUtils.long2bytes(cursor), pattern);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final long cursor, final long count){
+		return scan(Long.toString(cursor), count);
+	}
+
+	@Override
+	public ScanResult<List<String>> scan(final long cursor, final String pattern, final long count){
+		return scan(Long.toString(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final long count){
+		return scan(NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
 }

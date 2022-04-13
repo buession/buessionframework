@@ -62,8 +62,6 @@ import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.AclUser;
-import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
 
 import java.util.List;
 import java.util.Map;
@@ -867,672 +865,671 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		return keyOpsExecute((ops)->ops.exists(rawKeys(keys)));
 	}
 
-	/*
-
 	@Override
 	public Status expire(final String key, final int lifetime){
-		return execute((client)->client.expire(rawKey(key), lifetime));
+		return keyOpsExecute((ops)->ops.expire(rawKey(key), lifetime));
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime){
-		return execute((client)->client.expire(rawKey(key), lifetime));
+		return keyOpsExecute((ops)->ops.expire(rawKey(key), lifetime));
 	}
 
 	@Override
 	public Status expire(final String key, final int lifetime, final ExpireOption expireOption){
-		return execute((client)->client.expire(rawKey(key), lifetime, expireOption));
+		return keyOpsExecute((ops)->ops.expire(rawKey(key), lifetime, expireOption));
 	}
 
 	@Override
 	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption){
-		return execute((client)->client.expire(rawKey(key), lifetime, expireOption));
+		return keyOpsExecute((ops)->ops.expire(rawKey(key), lifetime, expireOption));
 	}
 
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp){
-		return execute((client)->client.expireAt(rawKey(key), unixTimestamp));
+		return keyOpsExecute((ops)->ops.expireAt(rawKey(key), unixTimestamp));
 	}
 
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp){
-		return execute((client)->client.expireAt(rawKey(key), unixTimestamp));
+		return keyOpsExecute((ops)->ops.expireAt(rawKey(key), unixTimestamp));
 	}
 
 	@Override
 	public Status pExpire(final String key, final int lifetime){
-		return execute((client)->client.pExpire(rawKey(key), lifetime));
+		return keyOpsExecute((ops)->ops.pExpire(rawKey(key), lifetime));
 	}
 
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime){
-		return execute((client)->client.pExpire(rawKey(key), lifetime));
+		return keyOpsExecute((ops)->ops.pExpire(rawKey(key), lifetime));
 	}
 
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp){
-		return execute((client)->client.pExpireAt(rawKey(key), unixTimestamp));
+		return keyOpsExecute((ops)->ops.pExpireAt(rawKey(key), unixTimestamp));
 	}
 
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp){
-		return execute((client)->client.pExpireAt(rawKey(key), unixTimestamp));
+		return keyOpsExecute((ops)->ops.pExpireAt(rawKey(key), unixTimestamp));
 	}
 
 	@Override
 	public Status persist(final String key){
-		return execute((client)->client.persist(rawKey(key)));
+		return keyOpsExecute((ops)->ops.persist(rawKey(key)));
 	}
 
 	@Override
 	public Status persist(final byte[] key){
-		return execute((client)->client.persist(rawKey(key)));
+		return keyOpsExecute((ops)->ops.persist(rawKey(key)));
 	}
 
 	@Override
-	public Long ttl(final String key){
-		return execute((client)->client.ttl(rawKey(key)));
+	public long ttl(final String key){
+		return keyOpsExecute((ops)->ops.ttl(rawKey(key)));
 	}
 
 	@Override
-	public Long ttl(final byte[] key){
-		return execute((client)->client.ttl(rawKey(key)));
+	public long ttl(final byte[] key){
+		return keyOpsExecute((ops)->ops.ttl(rawKey(key)));
 	}
 
 	@Override
-	public Long pTtl(final String key){
-		return execute((client)->client.pTtl(rawKey(key)));
+	public long pTtl(final String key){
+		return keyOpsExecute((ops)->ops.pTtl(rawKey(key)));
 	}
 
 	@Override
-	public Long pTtl(final byte[] key){
-		return execute((client)->client.pTtl(rawKey(key)));
+	public long pTtl(final byte[] key){
+		return keyOpsExecute((ops)->ops.pTtl(rawKey(key)));
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey){
-		return execute((client)->client.copy(rawKey(key), rawKey(destKey)));
+		return keyOpsExecute((ops)->ops.copy(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey){
-		return execute((client)->client.copy(rawKey(key), rawKey(destKey)));
+		return keyOpsExecute((ops)->ops.copy(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final int db){
-		return execute((client)->client.copy(rawKey(key), rawKey(destKey), db));
+		return keyOpsExecute((ops)->ops.copy(rawKey(key), rawKey(destKey), db));
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db){
-		return execute((client)->client.copy(rawKey(key), rawKey(destKey), db));
+		return keyOpsExecute((ops)->ops.copy(rawKey(key), rawKey(destKey), db));
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final boolean replace){
-		return execute((client)->client.copy(rawKey(key), rawKey(destKey), replace));
+		return keyOpsExecute((ops)->ops.copy(rawKey(key), rawKey(destKey), replace));
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final boolean replace){
-		return execute((client)->client.copy(rawKey(key), rawKey(destKey), replace));
+		return keyOpsExecute((ops)->ops.copy(rawKey(key), rawKey(destKey), replace));
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey, final int db, final boolean replace){
-		return execute((client)->client.copy(rawKey(key), rawKey(destKey), db, replace));
+		return keyOpsExecute((ops)->ops.copy(rawKey(key), rawKey(destKey), db, replace));
 	}
 
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace){
-		return execute((client)->client.copy(rawKey(key), rawKey(destKey), db, replace));
+		return keyOpsExecute((ops)->ops.copy(rawKey(key), rawKey(destKey), db, replace));
 	}
 
 	@Override
 	public Status move(final String key, final int db){
-		return execute((client)->client.move(rawKey(key), db));
+		return keyOpsExecute((ops)->ops.move(rawKey(key), db));
 	}
 
 	@Override
 	public Status move(final byte[] key, final int db){
-		return execute((client)->client.move(rawKey(key), db));
+		return keyOpsExecute((ops)->ops.move(rawKey(key), db));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys){
-		return execute((client)->client.migrate(host, port, db, timeout, rawKeys(keys)));
+		return keyOpsExecute((ops)->ops.migrate(host, port, db, timeout, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys){
-		return execute((client)->client.migrate(host, port, db, timeout, rawKeys(keys)));
+		return keyOpsExecute((ops)->ops.migrate(host, port, db, timeout, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout,
 						  final MigrateOperation operation, final String... keys){
-		return execute((client)->client.migrate(host, port, db, timeout, operation, rawKeys(keys)));
+		return keyOpsExecute((ops)->ops.migrate(host, port, db, timeout, operation, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final int timeout,
 						  final MigrateOperation operation, final byte[]... keys){
-		return execute((client)->client.migrate(host, port, db, timeout, operation, rawKeys(keys)));
+		return keyOpsExecute((ops)->ops.migrate(host, port, db, timeout, operation, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
 						  final String... keys){
-		return execute((client)->client.migrate(host, port, db, password, timeout, rawKeys(keys)));
+		return keyOpsExecute((ops)->ops.migrate(host, port, db, password, timeout, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
 						  final byte[]... keys){
-		return execute((client)->client.migrate(host, port, db, password, timeout, rawKeys(keys)));
+		return keyOpsExecute((ops)->ops.migrate(host, port, db, password, timeout, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final String password, final int timeout,
 						  final MigrateOperation operation, final String... keys){
-		return execute((client)->client.migrate(host, port, db, password, timeout, operation, rawKeys(keys)));
+		return keyOpsExecute((ops)->ops.migrate(host, port, db, password, timeout, operation, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] password, final int timeout,
 						  final MigrateOperation operation, final byte[]... keys){
-		return execute((client)->client.migrate(host, port, db, password, timeout, operation, rawKeys(keys)));
+		return keyOpsExecute((ops)->ops.migrate(host, port, db, password, timeout, operation, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final String user, final String password,
 						  final int timeout, final String... keys){
-		return execute((client)->client.migrate(host, port, db, user, password, timeout, rawKeys(keys)));
+		return keyOpsExecute((ops)->ops.migrate(host, port, db, user, password, timeout, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
 						  final int timeout, final byte[]... keys){
-		return execute((client)->client.migrate(host, port, db, user, password, timeout, rawKeys(keys)));
+		return keyOpsExecute((ops)->ops.migrate(host, port, db, user, password, timeout, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final String user, final String password,
 						  final int timeout, final MigrateOperation operation, final String... keys){
-		return execute((client)->client.migrate(host, port, db, user, password, timeout, operation, rawKeys(keys)));
+		return keyOpsExecute((ops)->ops.migrate(host, port, db, user, password, timeout, operation, rawKeys(keys)));
 	}
 
 	@Override
 	public Status migrate(final String host, final int port, final int db, final byte[] user, final byte[] password,
 						  final int timeout, final MigrateOperation operation, final byte[]... keys){
-		return execute(
-				(client)->client.migrate(host, port, db, user, password, timeout, operation, rawKeys(keys)));
+		return keyOpsExecute((ops)->ops.migrate(host, port, db, user, password, timeout, operation, rawKeys(keys)));
 	}
 
 	@Override
 	public Set<String> keys(final String pattern){
-		return execute((client)->client.keys(pattern));
+		return keyOpsExecute((ops)->ops.keys(pattern));
 	}
 
 	@Override
 	public Set<byte[]> keys(final byte[] pattern){
-		return execute((client)->client.keys(pattern));
+		return keyOpsExecute((ops)->ops.keys(pattern));
 	}
 
 	@Override
 	public String randomKey(){
-		return execute((client)->client.randomKey());
+		return keyOpsExecute((ops)->ops.randomKey());
 	}
 
 	@Override
 	public Status rename(final String key, final String newKey){
-		return execute((client)->client.rename(rawKey(key), rawKey(newKey)));
+		return keyOpsExecute((ops)->ops.rename(rawKey(key), rawKey(newKey)));
 	}
 
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey){
-		return execute((client)->client.rename(rawKey(key), rawKey(newKey)));
+		return keyOpsExecute((ops)->ops.rename(rawKey(key), rawKey(newKey)));
 	}
 
 	@Override
 	public Status renameNx(final String key, final String newKey){
-		return execute((client)->client.renameNx(rawKey(key), rawKey(newKey)));
+		return keyOpsExecute((ops)->ops.renameNx(rawKey(key), rawKey(newKey)));
 	}
 
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey){
-		return execute((client)->client.renameNx(rawKey(key), rawKey(newKey)));
+		return keyOpsExecute((ops)->ops.renameNx(rawKey(key), rawKey(newKey)));
 	}
 
 	@Override
 	public Status restore(final String key, final byte[] serializedValue, final int ttl){
-		return execute((client)->client.restore(rawKey(key), serializedValue, ttl));
+		return keyOpsExecute((ops)->ops.restore(rawKey(key), serializedValue, ttl));
 	}
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
-		return execute((client)->client.restore(rawKey(key), serializedValue, ttl));
+		return keyOpsExecute((ops)->ops.restore(rawKey(key), serializedValue, ttl));
 	}
 
 	@Override
 	public Status restore(final String key, final byte[] serializedValue, final int ttl,
 						  final RestoreArgument argument){
-		return execute((client)->client.restore(rawKey(key), serializedValue, ttl, argument));
+		return keyOpsExecute((ops)->ops.restore(rawKey(key), serializedValue, ttl, argument));
 	}
 
 	@Override
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl,
 						  final RestoreArgument argument){
-		return execute((client)->client.restore(rawKey(key), serializedValue, ttl, argument));
+		return keyOpsExecute((ops)->ops.restore(rawKey(key), serializedValue, ttl, argument));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final long cursor){
-		return execute((client)->client.scan(cursor));
+		return keyOpsExecute((ops)->ops.scan(cursor));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor){
-		return execute((client)->client.scan(cursor));
+		return keyOpsExecute((ops)->ops.scan(cursor));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor){
-		return execute((client)->client.scan(cursor));
+		return keyOpsExecute((ops)->ops.scan(cursor));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final long cursor, final String pattern){
-		return execute((client)->client.scan(cursor, pattern));
+		return keyOpsExecute((ops)->ops.scan(cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern){
-		return execute((client)->client.scan(cursor, pattern));
+		return keyOpsExecute((ops)->ops.scan(cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern){
-		return execute((client)->client.scan(cursor, pattern));
+		return keyOpsExecute((ops)->ops.scan(cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
-		return execute((client)->client.scan(cursor, pattern));
+		return keyOpsExecute((ops)->ops.scan(cursor, pattern));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final long cursor, final long count){
-		return execute((client)->client.scan(cursor, count));
+		return keyOpsExecute((ops)->ops.scan(cursor, count));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final long count){
-		return execute((client)->client.scan(cursor, count));
+		return keyOpsExecute((ops)->ops.scan(cursor, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final long count){
-		return execute((client)->client.scan(cursor, count));
+		return keyOpsExecute((ops)->ops.scan(cursor, count));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final long cursor, final String pattern, final long count){
-		return execute((client)->client.scan(cursor, pattern, count));
+		return keyOpsExecute((ops)->ops.scan(cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final long cursor, final byte[] pattern, final long count){
-		return execute((client)->client.scan(cursor, pattern, count));
+		return keyOpsExecute((ops)->ops.scan(cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern, final long count){
-		return execute((client)->client.scan(cursor, pattern, count));
+		return keyOpsExecute((ops)->ops.scan(cursor, pattern, count));
 	}
 
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count){
-		return execute((client)->client.scan(cursor, pattern, count));
+		return keyOpsExecute((ops)->ops.scan(cursor, pattern, count));
 	}
 
 	@Override
 	public List<String> sort(final String key){
-		return execute((client)->client.sort(rawKey(key)));
+		return keyOpsExecute((ops)->ops.sort(rawKey(key)));
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key){
-		return execute((client)->client.sort(rawKey(key)));
+		return keyOpsExecute((ops)->ops.sort(rawKey(key)));
 	}
 
 	@Override
 	public List<String> sort(final String key, final SortArgument sortArgument){
-		return execute((client)->client.sort(rawKey(key), sortArgument));
+		return keyOpsExecute((ops)->ops.sort(rawKey(key), sortArgument));
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument){
-		return execute((client)->client.sort(rawKey(key), sortArgument));
+		return keyOpsExecute((ops)->ops.sort(rawKey(key), sortArgument));
 	}
 
 	@Override
-	public Long sort(final String key, final String destKey){
-		return execute((client)->client.sort(rawKey(key), rawKey(destKey)));
+	public long sort(final String key, final String destKey){
+		return keyOpsExecute((ops)->ops.sort(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
-	public Long sort(final byte[] key, final byte[] destKey){
-		return execute((client)->client.sort(rawKey(key), rawKey(destKey)));
+	public long sort(final byte[] key, final byte[] destKey){
+		return keyOpsExecute((ops)->ops.sort(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
-	public Long sort(final String key, final String destKey, final SortArgument sortArgument){
-		return execute((client)->client.sort(rawKey(key), rawKey(destKey), sortArgument));
+	public long sort(final String key, final String destKey, final SortArgument sortArgument){
+		return keyOpsExecute((ops)->ops.sort(rawKey(key), rawKey(destKey), sortArgument));
 	}
 
 	@Override
-	public Long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
-		return execute((client)->client.sort(rawKey(key), rawKey(destKey), sortArgument));
+	public long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
+		return keyOpsExecute((ops)->ops.sort(rawKey(key), rawKey(destKey), sortArgument));
 	}
 
 	@Override
-	public Long touch(final String... keys){
-		return execute((client)->client.touch(rawKeys(keys)));
+	public long touch(final String... keys){
+		return keyOpsExecute((ops)->ops.touch(rawKeys(keys)));
 	}
 
 	@Override
-	public Long touch(final byte[]... keys){
-		return execute((client)->client.touch(rawKeys(keys)));
+	public long touch(final byte[]... keys){
+		return keyOpsExecute((ops)->ops.touch(rawKeys(keys)));
 	}
 
 	@Override
 	public Type type(final String key){
-		return execute((client)->client.type(rawKey(key)));
+		return keyOpsExecute((ops)->ops.type(rawKey(key)));
 	}
 
 	@Override
 	public Type type(final byte[] key){
-		return execute((client)->client.type(rawKey(key)));
+		return keyOpsExecute((ops)->ops.type(rawKey(key)));
 	}
 
 	@Override
-	public Long unlink(final String... keys){
-		return execute((client)->client.unlink(rawKeys(keys)));
+	public long unlink(final String... keys){
+		return keyOpsExecute((ops)->ops.unlink(rawKeys(keys)));
 	}
 
 	@Override
-	public Long unlink(final byte[]... keys){
-		return execute((client)->client.unlink(rawKeys(keys)));
+	public long unlink(final byte[]... keys){
+		return keyOpsExecute((ops)->ops.unlink(rawKeys(keys)));
 	}
 
 	@Override
-	public Long wait(final int replicas, final int timeout){
-		return execute((client)->client.wait(replicas, timeout));
+	public long wait(final int replicas, final int timeout){
+		return keyOpsExecute((ops)->ops.wait(replicas, timeout));
 	}
 
 	@Override
 	public ObjectEncoding objectEncoding(final String key){
-		return execute((client)->client.objectEncoding(rawKey(key)));
+		return keyOpsExecute((ops)->ops.objectEncoding(rawKey(key)));
 	}
 
 	@Override
 	public ObjectEncoding objectEncoding(final byte[] key){
-		return execute((client)->client.objectEncoding(rawKey(key)));
+		return keyOpsExecute((ops)->ops.objectEncoding(rawKey(key)));
 	}
 
 	@Override
-	public Long objectFreq(final String key){
-		return execute((client)->client.objectFreq(rawKey(key)));
+	public long objectFreq(final String key){
+		return keyOpsExecute((ops)->ops.objectFreq(rawKey(key)));
 	}
 
 	@Override
-	public Long objectFreq(final byte[] key){
-		return execute((client)->client.objectFreq(rawKey(key)));
+	public long objectFreq(final byte[] key){
+		return keyOpsExecute((ops)->ops.objectFreq(rawKey(key)));
 	}
 
 	@Override
-	public Long objectIdleTime(final String key){
-		return execute((client)->client.objectIdleTime(rawKey(key)));
+	public long objectIdleTime(final String key){
+		return keyOpsExecute((ops)->ops.objectIdleTime(rawKey(key)));
 	}
 
 	@Override
-	public Long objectIdleTime(final byte[] key){
-		return execute((client)->client.objectIdleTime(rawKey(key)));
+	public long objectIdleTime(final byte[] key){
+		return keyOpsExecute((ops)->ops.objectIdleTime(rawKey(key)));
 	}
 
 	@Override
-	public Long objectRefcount(final String key){
-		return execute((client)->client.objectRefcount(rawKey(key)));
+	public long objectRefcount(final String key){
+		return keyOpsExecute((ops)->ops.objectRefcount(rawKey(key)));
 	}
 
 	@Override
-	public Long objectRefcount(final byte[] key){
-		return execute((client)->client.objectRefcount(rawKey(key)));
+	public long objectRefcount(final byte[] key){
+		return keyOpsExecute((ops)->ops.objectRefcount(rawKey(key)));
 	}
 
 	@Override
 	public String lIndex(final String key, final long index){
-		return execute((client)->client.lIndex(rawKey(key), index));
+		return listOpsExecute((ops)->ops.lIndex(rawKey(key), index));
 	}
 
 	@Override
 	public byte[] lIndex(final byte[] key, final long index){
-		return execute((client)->client.lIndex(rawKey(key), index));
+		return listOpsExecute((ops)->ops.lIndex(rawKey(key), index));
 	}
 
 	@Override
-	public Long lInsert(final String key, final ListPosition position, final String pivot, final String value){
-		return execute((client)->client.lInsert(rawKey(key), position, pivot, value));
+	public long lInsert(final String key, final ListPosition position, final String pivot, final String value){
+		return listOpsExecute((ops)->ops.lInsert(rawKey(key), position, pivot, value));
 	}
 
 	@Override
-	public Long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value){
-		return execute((client)->client.lInsert(rawKey(key), position, pivot, value));
+	public long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value){
+		return listOpsExecute((ops)->ops.lInsert(rawKey(key), position, pivot, value));
 	}
 
 	@Override
 	public Status lSet(final String key, final long index, final String value){
-		return execute((client)->client.lSet(rawKey(key), index, value));
+		return listOpsExecute((ops)->ops.lSet(rawKey(key), index, value));
 	}
 
 	@Override
 	public Status lSet(final byte[] key, final long index, final byte[] value){
-		return execute((client)->client.lSet(rawKey(key), index, value));
+		return listOpsExecute((ops)->ops.lSet(rawKey(key), index, value));
 	}
 
 	@Override
-	public Long lLen(final String key){
-		return execute((client)->client.lLen(rawKey(key)));
+	public long lLen(final String key){
+		return listOpsExecute((ops)->ops.lLen(rawKey(key)));
 	}
 
 	@Override
-	public Long lLen(final byte[] key){
-		return execute((client)->client.lLen(rawKey(key)));
+	public long lLen(final byte[] key){
+		return listOpsExecute((ops)->ops.lLen(rawKey(key)));
 	}
 
 	@Override
 	public List<String> lRange(final String key, final long start, final long end){
-		return execute((client)->client.lRange(rawKey(key), start, end));
+		return listOpsExecute((ops)->ops.lRange(rawKey(key), start, end));
 	}
 
 	@Override
 	public List<byte[]> lRange(final byte[] key, final long start, final long end){
-		return execute((client)->client.lRange(rawKey(key), start, end));
+		return listOpsExecute((ops)->ops.lRange(rawKey(key), start, end));
 	}
 
 	@Override
-	public Long lPos(final String key, final String element){
-		return execute((client)->client.lPos(rawKey(key), element));
+	public long lPos(final String key, final String element){
+		return listOpsExecute((ops)->ops.lPos(rawKey(key), element));
 	}
 
 	@Override
-	public Long lPos(final byte[] key, final byte[] element){
-		return execute((client)->client.lPos(rawKey(key), element));
+	public long lPos(final byte[] key, final byte[] element){
+		return listOpsExecute((ops)->ops.lPos(rawKey(key), element));
 	}
 
 	@Override
-	public Long lPos(final String key, final String element, final LPosArgument lPosArgument){
-		return execute((client)->client.lPos(rawKey(key), element, lPosArgument));
+	public long lPos(final String key, final String element, final LPosArgument lPosArgument){
+		return listOpsExecute((ops)->ops.lPos(rawKey(key), element, lPosArgument));
 	}
 
 	@Override
-	public Long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument){
-		return execute((client)->client.lPos(rawKey(key), element, lPosArgument));
+	public long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument){
+		return listOpsExecute((ops)->ops.lPos(rawKey(key), element, lPosArgument));
 	}
 
 	@Override
 	public List<Long> lPos(final String key, String element, final LPosArgument lPosArgument, final long count){
-		return execute((client)->client.lPos(rawKey(key), element, lPosArgument, count));
+		return listOpsExecute((ops)->ops.lPos(rawKey(key), element, lPosArgument, count));
 	}
 
 	@Override
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count){
-		return execute((client)->client.lPos(rawKey(key), element, lPosArgument, count));
+		return listOpsExecute((ops)->ops.lPos(rawKey(key), element, lPosArgument, count));
 	}
 
 	@Override
-	public Long lRem(final String key, final String value, final long count){
-		return execute((client)->client.lRem(rawKey(key), value, count));
+	public long lRem(final String key, final String value, final long count){
+		return listOpsExecute((ops)->ops.lRem(rawKey(key), value, count));
 	}
 
 	@Override
-	public Long lRem(final byte[] key, final byte[] value, final long count){
-		return execute((client)->client.lRem(rawKey(key), value, count));
+	public long lRem(final byte[] key, final byte[] value, final long count){
+		return listOpsExecute((ops)->ops.lRem(rawKey(key), value, count));
 	}
 
 	@Override
 	public Status lTrim(final String key, final long start, final long end){
-		return execute((client)->client.lTrim(rawKey(key), start, end));
+		return listOpsExecute((ops)->ops.lTrim(rawKey(key), start, end));
 	}
 
 	@Override
 	public Status lTrim(final byte[] key, final long start, final long end){
-		return execute((client)->client.lTrim(rawKey(key), start, end));
+		return listOpsExecute((ops)->ops.lTrim(rawKey(key), start, end));
 	}
 
 	@Override
 	public String lMove(final String key, final String destKey, final Direction from, final Direction to){
-		return execute((client)->client.lMove(rawKey(destKey), rawKey(destKey), from, to));
+		return listOpsExecute((ops)->ops.lMove(rawKey(destKey), rawKey(destKey), from, to));
 	}
 
 	@Override
 	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
-		return execute((client)->client.lMove(rawKey(key), rawKey(destKey), from, to));
+		return listOpsExecute((ops)->ops.lMove(rawKey(key), rawKey(destKey), from, to));
 	}
 
 	@Override
 	public String blMove(final String key, final String destKey, final Direction from, final Direction to,
 						 final int timeout){
-		return execute((client)->client.blMove(rawKey(destKey), rawKey(destKey), from, to, timeout));
+		return listOpsExecute((ops)->ops.blMove(rawKey(destKey), rawKey(destKey), from, to, timeout));
 	}
 
 	@Override
 	public byte[] blMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to,
 						 final int timeout){
-		return execute((client)->client.blMove(rawKey(key), rawKey(destKey), from, to, timeout));
+		return listOpsExecute((ops)->ops.blMove(rawKey(key), rawKey(destKey), from, to, timeout));
 	}
 
 	@Override
 	public List<String> blPop(final String[] keys, final int timeout){
-		return execute((client)->client.blPop(rawKeys(keys), timeout));
+		return listOpsExecute((ops)->ops.blPop(rawKeys(keys), timeout));
 	}
 
 	@Override
 	public List<byte[]> blPop(final byte[][] keys, final int timeout){
-		return execute((client)->client.blPop(rawKeys(keys), timeout));
+		return listOpsExecute((ops)->ops.blPop(rawKeys(keys), timeout));
 	}
 
 	@Override
 	public List<String> brPop(final String[] keys, final int timeout){
-		return execute((client)->client.brPop(rawKeys(keys), timeout));
+		return listOpsExecute((ops)->ops.brPop(rawKeys(keys), timeout));
 	}
 
 	@Override
 	public List<byte[]> brPop(final byte[][] keys, final int timeout){
-		return execute((client)->client.brPop(rawKeys(keys), timeout));
+		return listOpsExecute((ops)->ops.brPop(rawKeys(keys), timeout));
 	}
 
 	@Override
 	public String brPoplPush(final String key, final String destKey, final int timeout){
-		return execute((client)->client.brPoplPush(rawKey(key), rawKey(destKey), timeout));
+		return listOpsExecute((ops)->ops.brPoplPush(rawKey(key), rawKey(destKey), timeout));
 	}
 
 	@Override
 	public byte[] brPoplPush(final byte[] key, final byte[] destKey, final int timeout){
-		return execute((client)->client.brPoplPush(rawKey(key), rawKey(destKey), timeout));
+		return listOpsExecute((ops)->ops.brPoplPush(rawKey(key), rawKey(destKey), timeout));
 	}
 
 	@Override
 	public String lPop(final String key){
-		return execute((client)->client.lPop(rawKey(key)));
+		return listOpsExecute((ops)->ops.lPop(rawKey(key)));
 	}
 
 	@Override
 	public byte[] lPop(final byte[] key){
-		return execute((client)->client.lPop(rawKey(key)));
+		return listOpsExecute((ops)->ops.lPop(rawKey(key)));
 	}
 
 	@Override
-	public Long lPush(final String key, final String... values){
-		return execute((client)->client.lPush(rawKey(key), values));
+	public long lPush(final String key, final String... values){
+		return listOpsExecute((ops)->ops.lPush(rawKey(key), values));
 	}
 
 	@Override
-	public Long lPush(final byte[] key, final byte[]... values){
-		return execute((client)->client.lPush(rawKey(key), values));
+	public long lPush(final byte[] key, final byte[]... values){
+		return listOpsExecute((ops)->ops.lPush(rawKey(key), values));
 	}
 
 	@Override
-	public Long lPushX(final String key, final String... values){
-		return execute((client)->client.lPushX(rawKey(key), values));
+	public long lPushX(final String key, final String... values){
+		return listOpsExecute((ops)->ops.lPushX(rawKey(key), values));
 	}
 
 	@Override
-	public Long lPushX(final byte[] key, final byte[]... values){
-		return execute((client)->client.lPushX(rawKey(key), values));
+	public long lPushX(final byte[] key, final byte[]... values){
+		return listOpsExecute((ops)->ops.lPushX(rawKey(key), values));
 	}
 
 	@Override
 	public String rPop(final String key){
-		return execute((client)->client.rPop(rawKey(key)));
+		return listOpsExecute((ops)->ops.rPop(rawKey(key)));
 	}
 
 	@Override
 	public byte[] rPop(final byte[] key){
-		return execute((client)->client.rPop(rawKey(key)));
+		return listOpsExecute((ops)->ops.rPop(rawKey(key)));
 	}
 
 	@Override
 	public String rPoplPush(final String key, final String destKey){
-		return execute((client)->client.rPoplPush(rawKey(key), rawKey(destKey)));
+		return listOpsExecute((ops)->ops.rPoplPush(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
 	public byte[] rPoplPush(final byte[] key, final byte[] destKey){
-		return execute((client)->client.rPoplPush(rawKey(key), rawKey(destKey)));
+		return listOpsExecute((ops)->ops.rPoplPush(rawKey(key), rawKey(destKey)));
 	}
 
 	@Override
-	public Long rPush(final String key, final String... values){
-		return execute((client)->client.rPush(rawKey(key), values));
+	public long rPush(final String key, final String... values){
+		return listOpsExecute((ops)->ops.rPush(rawKey(key), values));
 	}
 
 	@Override
-	public Long rPush(final byte[] key, final byte[]... values){
-		return execute((client)->client.rPush(rawKey(key), values));
+	public long rPush(final byte[] key, final byte[]... values){
+		return listOpsExecute((ops)->ops.rPush(rawKey(key), values));
 	}
 
 	@Override
-	public Long rPushX(final String key, final String... values){
-		return execute((client)->client.rPushX(rawKey(key), values));
+	public long rPushX(final String key, final String... values){
+		return listOpsExecute((ops)->ops.rPushX(rawKey(key), values));
 	}
 
 	@Override
-	public Long rPushX(final byte[] key, final byte[]... values){
-		return execute((client)->client.rPushX(rawKey(key), values));
+	public long rPushX(final byte[] key, final byte[]... values){
+		return listOpsExecute((ops)->ops.rPushX(rawKey(key), values));
 	}
+
+	/*
 
 	@Override
 	public void pSubscribe(final String[] patterns, final PubSubListener<String> pubSubListener){

@@ -34,30 +34,13 @@ import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.client.jedis.JedisSentinelClient;
-import com.buession.redis.client.jedis.operations.JedisClusterClusterOperations;
-import com.buession.redis.client.jedis.operations.JedisClusterConnectionOperations;
-import com.buession.redis.client.jedis.operations.JedisClusterGeoOperations;
-import com.buession.redis.client.jedis.operations.JedisClusterHashOperations;
-import com.buession.redis.client.jedis.operations.JedisClusterHyperLogLogOperations;
-import com.buession.redis.client.jedis.operations.JedisClusterKeyOperations;
-import com.buession.redis.client.jedis.operations.JedisClusterOperations;
-import com.buession.redis.client.jedis.operations.JedisConnectionOperations;
-import com.buession.redis.client.jedis.operations.JedisGeoOperations;
-import com.buession.redis.client.jedis.operations.JedisHashOperations;
-import com.buession.redis.client.jedis.operations.JedisHyperLogLogOperations;
-import com.buession.redis.client.jedis.operations.JedisKeyOperations;
-import com.buession.redis.client.jedis.operations.JedisSentinelClusterOperations;
-import com.buession.redis.client.jedis.operations.JedisSentinelConnectionOperations;
-import com.buession.redis.client.jedis.operations.JedisSentinelGeoOperations;
-import com.buession.redis.client.jedis.operations.JedisSentinelHashOperations;
-import com.buession.redis.client.jedis.operations.JedisSentinelHyperLogLogOperations;
-import com.buession.redis.client.jedis.operations.JedisSentinelKeyOperations;
 import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.client.operations.ConnectionOperations;
 import com.buession.redis.client.operations.GeoOperations;
 import com.buession.redis.client.operations.HashOperations;
 import com.buession.redis.client.operations.HyperLogLogOperations;
 import com.buession.redis.client.operations.KeyOperations;
+import com.buession.redis.client.operations.ListOperations;
 import com.buession.redis.core.Options;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -100,6 +83,8 @@ public abstract class RedisAccessor implements Closeable {
 	protected HyperLogLogOperations<? extends RedisConnection> hyperLogLogOps;
 
 	protected KeyOperations<? extends RedisConnection> keyOps;
+
+	protected ListOperations<? extends RedisConnection> listOps;
 
 	static{
 		DEFAULT_OPTIONS.setSerializer(DEFAULT_SERIALIZER);
@@ -145,6 +130,14 @@ public abstract class RedisAccessor implements Closeable {
 		}
 
 		client = doGetRedisClient(connection);
+
+		clusterOps = client.clusterOps();
+		connectionOps = client.connectionOps();
+		geoOps = client.geoOps();
+		hashOps = client.hashOps();
+		hyperLogLogOps = client.hyperLogLogOps();
+		keyOps = client.keyOps();
+		listOps = client.listOps();
 	}
 
 	public Pipeline pipeline(){
@@ -206,18 +199,15 @@ public abstract class RedisAccessor implements Closeable {
 		return execute(keyOps, executor);
 	}
 
+	protected <R> R listOpsExecute(final Executor<ListOperations<? extends RedisConnection>, R> executor){
+		return execute(listOps, executor);
+	}
+
 	protected RedisClient doGetRedisClient(RedisConnection connection) throws RedisException{
 		if(connection instanceof JedisConnection){
 			JedisStandaloneClient jedisClient = new JedisStandaloneClient((JedisConnection) connection);
 
 			jedisClient.setEnableTransactionSupport(enableTransactionSupport);
-
-			clusterOps = new JedisClusterOperations(jedisClient);
-			connectionOps = new JedisConnectionOperations(jedisClient);
-			geoOps = new JedisGeoOperations(jedisClient);
-			hashOps = new JedisHashOperations(jedisClient);
-			hyperLogLogOps = new JedisHyperLogLogOperations(jedisClient);
-			keyOps = new JedisKeyOperations(jedisClient);
 
 			return jedisClient;
 		}else if(connection instanceof JedisSentinelConnection){
@@ -226,26 +216,12 @@ public abstract class RedisAccessor implements Closeable {
 
 			jedisSentinelClient.setEnableTransactionSupport(enableTransactionSupport);
 
-			clusterOps = new JedisSentinelClusterOperations(jedisSentinelClient);
-			connectionOps = new JedisSentinelConnectionOperations(jedisSentinelClient);
-			geoOps = new JedisSentinelGeoOperations(jedisSentinelClient);
-			hashOps = new JedisSentinelHashOperations(jedisSentinelClient);
-			hyperLogLogOps = new JedisSentinelHyperLogLogOperations(jedisSentinelClient);
-			keyOps = new JedisSentinelKeyOperations(jedisSentinelClient);
-
 			return jedisSentinelClient;
 		}else if(connection instanceof JedisClusterConnection){
 			JedisClusterClient jedisClusterClient = new JedisClusterClient(
 					(JedisClusterConnection) connection);
 
 			jedisClusterClient.setEnableTransactionSupport(enableTransactionSupport);
-
-			clusterOps = new JedisClusterClusterOperations(jedisClusterClient);
-			connectionOps = new JedisClusterConnectionOperations(jedisClusterClient);
-			geoOps = new JedisClusterGeoOperations(jedisClusterClient);
-			hashOps = new JedisClusterHashOperations(jedisClusterClient);
-			hyperLogLogOps = new JedisClusterHyperLogLogOperations(jedisClusterClient);
-			keyOps = new JedisClusterKeyOperations(jedisClusterClient);
 
 			return jedisClusterClient;
 		}else{

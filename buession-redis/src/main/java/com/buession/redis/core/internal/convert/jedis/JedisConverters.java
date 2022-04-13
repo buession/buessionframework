@@ -24,13 +24,19 @@
  */
 package com.buession.redis.core.internal.convert.jedis;
 
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.EnumConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.MapConverter;
+import com.buession.core.utils.EnumUtils;
 import com.buession.lang.Geo;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.GeoRadius;
+import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.RedisClusterServer;
+import com.buession.redis.core.Type;
 import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.resps.GeoRadiusResponse;
 
@@ -60,6 +66,20 @@ public interface JedisConverters extends Converters {
 	GeoUnitConverter.GeoUnitJedisConverter GEO_UNIT_CONVERTER = new GeoUnitConverter.GeoUnitJedisConverter();
 
 	GeoRadiusArgumentConverter.GeoRadiusArgumentJedisConverter GEO_RADIUS_ARGUMENT_CONVERTER = new GeoRadiusArgumentConverter.GeoRadiusArgumentJedisConverter();
+
+	ExpireOptionConverter.ExpireOptionJedisConverter EXPIRE_OPTION_CONVERTER = new ExpireOptionConverter.ExpireOptionJedisConverter();
+
+	MigrateOperationConverter.MigrateOperationJedisConverter MIGRATE_OPERATION_CONVERTER = new MigrateOperationConverter.MigrateOperationJedisConverter();
+
+	RestoreArgumentConverter.RestoreArgumentJedisConverter RESTORE_ARGUMENT_CONVERTER = new RestoreArgumentConverter.RestoreArgumentJedisConverter();
+
+	SortArgumentConverter.SortArgumentJedisConverter SORT_ARGUMENT_CONVERTER = new SortArgumentConverter.SortArgumentJedisConverter();
+
+	ListPositionConverter.ListPositionJedisConverter LIST_POSITION_CONVERTER = new ListPositionConverter.ListPositionJedisConverter();
+
+	LPosArgumentConverter.LPosArgumentJedisConverter L_POS_ARGUMENT_CONVERTER = new LPosArgumentConverter.LPosArgumentJedisConverter();
+
+	DirectionConverter.DirectionJedisConverter DIRECTION_CONVERTER = new DirectionConverter.DirectionJedisConverter();
 	/**
 	 * end param converter
 	 */
@@ -98,6 +118,17 @@ public interface JedisConverters extends Converters {
 	ScanResultConverter.MapScanResultExposeConverter<String, String> STRING_MAP_SCAN_RESULT_RESULT_CONVERTER = new ScanResultConverter.MapScanResultExposeConverter<>();
 
 	ScanResultConverter.MapScanResultExposeConverter<byte[], byte[]> BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER = new ScanResultConverter.MapScanResultExposeConverter<>();
+
+	ScanResultConverter.ListScanResultExposeConverter<String> STRING_LIST_SCAN_RESULT_RESULT_CONVERTER = new ScanResultConverter.ListScanResultExposeConverter<>();
+
+	ScanResultConverter.ListScanResultExposeConverter<byte[]> BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER = new ScanResultConverter.ListScanResultExposeConverter<>();
+
+	EnumConverter<Type> TYPE_RESULT_CONVERTER = new EnumConverter<>(Type.class);
+
+	EnumConverter<ObjectEncoding> STRING_OBJECT_ENCODING_RESULT_CONVERTER = new EnumConverter<>(ObjectEncoding.class);
+
+	Converter<byte[], ObjectEncoding> BINARY_OBJECT_ENCODING_RESULT_CONVERTER = (value)->EnumUtils.getEnumIgnoreCase(
+			ObjectEncoding.class, SafeEncoder.encode(value).toUpperCase());
 	/**
 	 * end result converter
 	 */

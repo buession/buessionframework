@@ -63,7 +63,11 @@ public interface SortArgumentConverter<S, T> extends Converter<S, T> {
 				sortingParams.limit((int) limit.getOffset(), (int) limit.getCount());
 			}
 
-			if(source.getAlpha() != null){
+			if(source.getGetPatterns() != null){
+				sortingParams.get(source.getGetPatterns());
+			}
+
+			if(source.getAlpha()){
 				sortingParams.alpha();
 			}
 

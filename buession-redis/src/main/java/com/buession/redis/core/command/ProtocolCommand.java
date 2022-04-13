@@ -252,6 +252,14 @@ public enum ProtocolCommand {
 	UNLINK(ProtocolCommandGroup.KEY, "rw"),
 
 	WAIT(ProtocolCommandGroup.KEY, "rw"),
+
+	OBJECT_ENCODING(ProtocolCommandGroup.KEY, "r"),
+
+	OBJECT_REFQ(ProtocolCommandGroup.KEY, "r"),
+
+	OBJECT_IDLETIME(ProtocolCommandGroup.KEY, "r"),
+
+	OBJECT_REFCOUNT(ProtocolCommandGroup.KEY, "r"),
 	/** key command end **/
 
 	/**
@@ -390,8 +398,6 @@ public enum ProtocolCommand {
 	MEMORY_DOCTOR(ProtocolCommandGroup.SERVER, "r"),
 
 	MONITOR(ProtocolCommandGroup.SERVER, "rw"),
-
-	OBJECT(ProtocolCommandGroup.SERVER, "r"),
 
 	REPLICAOF(ProtocolCommandGroup.SERVER, "rw"),
 

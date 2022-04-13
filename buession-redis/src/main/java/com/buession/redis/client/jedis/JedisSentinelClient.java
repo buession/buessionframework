@@ -32,6 +32,7 @@ import com.buession.redis.client.jedis.operations.JedisSentinelGeoOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelHashOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelHyperLogLogOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelKeyOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelListOperations;
 
 /**
  * jedis 哨兵模式客户端
@@ -77,6 +78,11 @@ public class JedisSentinelClient extends AbstractJedisRedisClient implements Red
 	@Override
 	public JedisSentinelKeyOperations keyOps(){
 		return new JedisSentinelKeyOperations(this);
+	}
+
+	@Override
+	public JedisSentinelListOperations listOps(){
+		return new JedisSentinelListOperations(this);
 	}
 
 }

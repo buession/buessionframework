@@ -41,7 +41,7 @@ public interface RestoreArgumentConverter<S, T> extends Converter<S, T> {
 
 		@Override
 		public RestoreParams convert(final KeyCommands.RestoreArgument source){
-			final RestoreParams restoreParams = RestoreParams.restoreParams();
+			final RestoreParams restoreParams = new RestoreParams();
 
 			if(source.isReplace() != null){
 				restoreParams.replace();

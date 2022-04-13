@@ -32,6 +32,7 @@ import com.buession.redis.client.jedis.operations.JedisClusterGeoOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterHashOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterHyperLogLogOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterKeyOperations;
+import com.buession.redis.client.jedis.operations.JedisClusterListOperations;
 
 /**
  * jedis 集群模式客户端
@@ -77,6 +78,11 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	@Override
 	public JedisClusterKeyOperations keyOps(){
 		return new JedisClusterKeyOperations(this);
+	}
+
+	@Override
+	public JedisClusterListOperations listOps(){
+		return new JedisClusterListOperations(this);
 	}
 
 }
