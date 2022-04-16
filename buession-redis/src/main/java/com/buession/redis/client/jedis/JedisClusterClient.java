@@ -39,6 +39,7 @@ import com.buession.redis.client.jedis.operations.JedisClusterServerOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterSetOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterSortedSetOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterStringOperations;
+import com.buession.redis.client.jedis.operations.JedisClusterTransactionOperations;
 
 /**
  * jedis 集群模式客户端
@@ -119,6 +120,11 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	@Override
 	public JedisClusterStringOperations stringOperations(){
 		return new JedisClusterStringOperations(this);
+	}
+
+	@Override
+	public JedisClusterTransactionOperations transactionOperations(){
+		return new JedisClusterTransactionOperations(this);
 	}
 
 }

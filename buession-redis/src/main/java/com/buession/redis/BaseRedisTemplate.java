@@ -3622,5 +3622,38 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public byte[] substr(final byte[] key, final long start, final long end){
 		return stringOpsOpsExecute((ops)->ops.substr(key, start, end));
 	}
-	
+
+	@Override
+	public Status multi(){
+		return transactionOpsExecute((ops)->ops.multi());
+	}
+
+	@Override
+	public List<Object> exec(){
+		return transactionOpsExecute((ops)->ops.exec());
+	}
+
+	@Override
+	public void discard(){
+		transactionOpsExecute((ops)->{
+			ops.discard();
+			return null;
+		});
+	}
+
+	@Override
+	public Status watch(final String... keys){
+		return transactionOpsExecute((ops)->ops.watch(keys));
+	}
+
+	@Override
+	public Status watch(final byte[]... keys){
+		return transactionOpsExecute((ops)->ops.watch(keys));
+	}
+
+	@Override
+	public Status unwatch(){
+		return transactionOpsExecute((ops)->ops.unwatch());
+	}
+
 }

@@ -19,20 +19,29 @@
  * +-------------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										       |
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
- * | Copyright @ 2013-2020 Buession.com Inc.														       |
+ * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
+package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.core.command.TransactionCommands;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.TransactionOperations;
 
 /**
- * 事务运算
+ * Jedis 事务命令操作抽象类
  *
- * <p>详情说明 <a href="http://redisdoc.com/transaction/index.html" target="_blank">http://redisdoc.com/transaction/index.html</a></p>
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface TransactionOperations extends TransactionCommands, RedisOperations {
+public abstract class AbstractTransactionOperations<C extends JedisRedisConnection>
+		extends AbstractJedisRedisOperations<C> implements TransactionOperations<C> {
+
+	public AbstractTransactionOperations(final JedisRedisClient client){
+		super(client);
+	}
 
 }

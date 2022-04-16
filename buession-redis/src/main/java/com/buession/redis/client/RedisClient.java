@@ -38,6 +38,7 @@ import com.buession.redis.client.operations.ServerOperations;
 import com.buession.redis.client.operations.SetOperations;
 import com.buession.redis.client.operations.SortedSetOperations;
 import com.buession.redis.client.operations.StringOperations;
+import com.buession.redis.client.operations.TransactionOperations;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.command.*;
 import com.buession.redis.exception.RedisException;
@@ -79,6 +80,8 @@ public interface RedisClient {
 	SortedSetOperations<? extends RedisConnection> sortedSetOperations();
 
 	StringOperations<? extends RedisConnection> stringOperations();
+
+	TransactionOperations<? extends RedisConnection> transactionOperations();
 
 	default <R> R execute(final Command<RedisConnection, R> command) throws RedisException{
 		return execute(command, null);
