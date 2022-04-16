@@ -29,7 +29,7 @@ import redis.clients.jedis.params.ScanParams;
 /**
  * @author Yong.Teng
  */
-public class JedisScanParams extends ScanParams {
+public final class JedisScanParams extends ScanParams {
 
 	public JedisScanParams(){
 		super();

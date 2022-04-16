@@ -77,78 +77,9 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	}
 
 	/**
-	 * 获取位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geohash.html" target="_blank">http://redisdoc.com/geo/geohash.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 *
-	 * @return Geohash 数组
-	 */
-	default String geoHash(final String key, final String member){
-		List<String> result = geoHash(key, new String[]{member});
-		return result == null ? null : result.get(0);
-	}
-
-	/**
-	 * 获取位置元素的 <a href="https://en.wikipedia.org/wiki/Geohashh" target="_blank">Geohash</a> 表示
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geohash.html" target="_blank">http://redisdoc.com/geo/geohash.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		位置元素
-	 *
-	 * @return Geohash 数组
-	 */
-	default byte[] geoHash(final byte[] key, final byte[] member){
-		List<byte[]> result = geoHash(key, new byte[][]{member});
-		return result == null ? null : result.get(0);
-	}
-
-	/**
-	 * 从键里面返回所有给定位置元素的位置（经度和纬度）
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geopos.html" target="_blank">http://redisdoc.com/geo/geopos.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		名字
-	 *
-	 * @return 经纬度
-	 */
-	default Geo geoPos(final String key, final String member){
-		List<Geo> result = geoPos(key, new String[]{member});
-		return result == null ? null : result.get(0);
-	}
-
-	/**
-	 * 从键里面返回所有给定位置元素的位置（经度和纬度）
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/geo/geopos.html" target="_blank">http://redisdoc.com/geo/geopos.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		名字
-	 *
-	 * @return 经纬度
-	 */
-	default Geo geoPos(final byte[] key, final byte[] member){
-		List<Geo> result = geoPos(key, new byte[][]{member});
-		return result == null ? null : result.get(0);
-	}
-
-	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -169,8 +100,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -191,8 +121,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -210,8 +139,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -229,8 +157,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -251,8 +178,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -272,8 +198,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -296,8 +221,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -320,8 +244,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -342,8 +265,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -364,8 +286,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -388,8 +309,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * 以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadius.html" target="_blank">http://redisdoc.com/geo/georadius.html</a></p>
 	 *
 	 * @param key
 	 * 		KeyG
@@ -412,8 +332,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * Read-only variant of the GEORADIUS command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -434,8 +353,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * Read-only variant of the GEORADIUS command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -456,8 +374,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * Read-only variant of the GEORADIUS command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -475,8 +392,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * Read-only variant of the GEORADIUS command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -494,8 +410,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * Read-only variant of the GEORADIUS command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -516,8 +431,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * Read-only variant of the GEORADIUS command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -537,8 +451,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * Read-only variant of the GEORADIUS command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -561,8 +474,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * Read-only variant of the GEORADIUS command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -585,8 +497,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * Read-only variant of the GEORADIUS command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -607,8 +518,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * Read-only variant of the GEORADIUS command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -629,8 +539,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * Read-only variant of the GEORADIUS command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -653,8 +562,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	/**
 	 * Read-only variant of the GEORADIUS command
 	 *
-	 * <p>详情说明
-	 * <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
+	 * <p>详情说明 <a href="https://redis.io/commands/georadius_ro/" target="_blank">https://redis.io/commands/georadius_ro/</a></p>
 	 *
 	 * @param key
 	 * 		KeyG
@@ -678,10 +586,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 找出位于指定范围内的元素，
 	 * 但是 GEORADIUSBYMEMBER 的中心点是由给定的位置元素决定的，而不是像 GEORADIUS 那样，使用输入的经度和纬度来决定中心点
 	 *
-	 * <p>详情说明
-	 *
-	 * <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc
-	 * .com/geo/georadiusbymember.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -700,8 +605,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 找出位于指定范围内的元素，
 	 * 但是 GEORADIUSBYMEMBER 的中心点是由给定的位置元素决定的，而不是像 GEORADIUS 那样，使用输入的经度和纬度来决定中心点
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -720,8 +624,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 找出位于指定范围内的元素，
 	 * 但是 GEORADIUSBYMEMBER 的中心点是由给定的位置元素决定的，而不是像 GEORADIUS 那样，使用输入的经度和纬度来决定中心点
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -743,8 +646,7 @@ public interface GeoOperations extends GeoCommands, RedisOperations {
 	 * 找出位于指定范围内的元素，
 	 * 但是 GEORADIUSBYMEMBER 的中心点是由给定的位置元素决定的，而不是像 GEORADIUS 那样，使用输入的经度和纬度来决定中心点
 	 *
-	 * <p>详情说明
-	 * <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/geo/georadiusbymember.html" target="_blank">http://redisdoc.com/geo/georadiusbymember.html</a></p>
 	 *
 	 * @param key
 	 * 		Key

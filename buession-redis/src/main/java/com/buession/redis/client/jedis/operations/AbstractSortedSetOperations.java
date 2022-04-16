@@ -24,19 +24,17 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.lang.Status;
+import com.buession.core.utils.NumberUtils;
 import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
-import com.buession.redis.client.operations.ClusterOperations;
-import com.buession.redis.core.ClusterResetOption;
-import com.buession.redis.core.ClusterSetSlotOption;
-import com.buession.redis.core.RedisClusterServer;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.redis.client.operations.SortedSetOperations;
+import com.buession.redis.core.ScanResult;
+import com.buession.redis.core.Tuple;
 
 import java.util.List;
 
 /**
- * Jedis 集群命令操作抽象类
+ * Jedis 有序集合命令操作抽象类
  *
  * @param <C>
  * 		连接对象
@@ -44,46 +42,51 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractClusterOperations<C extends JedisRedisConnection> extends AbstractJedisRedisOperations<C>
-		implements ClusterOperations<C> {
+public abstract class AbstractSortedSetOperations<C extends JedisRedisConnection>
+		extends AbstractJedisRedisOperations<C> implements SortedSetOperations<C> {
 
-	public AbstractClusterOperations(final JedisRedisClient client){
+	public AbstractSortedSetOperations(final JedisRedisClient client){
 		super(client);
 	}
 
 	@Override
-	public Status clusterForget(final byte[] nodeId){
-		return clusterForget(SafeEncoder.encode(nodeId));
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor){
+		return zScan(key, Long.toString(cursor));
 	}
 
 	@Override
-	public long clusterKeySlot(final byte[] key){
-		return clusterKeySlot(SafeEncoder.encode(key));
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor){
+		return zScan(key, NumberUtils.long2bytes(cursor));
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterSlaves(final byte[] nodeId){
-		return clusterSlaves(SafeEncoder.encode(nodeId));
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern){
+		return zScan(key, Long.toString(cursor), pattern);
 	}
 
 	@Override
-	public List<RedisClusterServer> clusterReplicas(final byte[] nodeId){
-		return clusterReplicas(SafeEncoder.encode(nodeId));
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern){
+		return zScan(key, NumberUtils.long2bytes(cursor), pattern);
 	}
 
 	@Override
-	public Status clusterReplicate(final byte[] nodeId){
-		return clusterReplicate(SafeEncoder.encode(nodeId));
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final long count){
+		return zScan(key, Long.toString(cursor), Long.toString(count));
 	}
 
 	@Override
-	public Status clusterReset(){
-		return clusterReset(ClusterResetOption.SOFT);
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final long count){
+		return zScan(key, NumberUtils.long2bytes(cursor), NumberUtils.long2bytes(count));
 	}
 
 	@Override
-	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final byte[] nodeId){
-		return clusterSetSlot(slot, setSlotOption, SafeEncoder.encode(nodeId));
+	public ScanResult<List<Tuple>> zScan(final String key, final long cursor, final String pattern, final long count){
+		return zScan(key, Long.toString(cursor), pattern, count);
+	}
+
+	@Override
+	public ScanResult<List<Tuple>> zScan(final byte[] key, final long cursor, final byte[] pattern, final long count){
+		return zScan(key, NumberUtils.long2bytes(cursor), pattern, count);
 	}
 
 }

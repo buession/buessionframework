@@ -22,17 +22,45 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
+package com.buession.redis.core.internal.jedis;
 
-import com.buession.redis.core.command.HyperLogLogCommands;
+import redis.clients.jedis.params.FailoverParams;
 
 /**
- * HyperLogLog 运算
- *
- * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a></p>
- *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperations {
+public class JedisFailoverParams extends FailoverParams {
+
+	public JedisFailoverParams(final String host, final int port){
+		super();
+		to(host, port);
+	}
+
+	public JedisFailoverParams(final String host, final int port, final int timeout){
+		this(host, port);
+		timeout(timeout);
+	}
+
+	public JedisFailoverParams(final String host, final int port, final boolean force){
+		this(host, port);
+
+		if(force){
+			force();
+		}
+	}
+
+	public JedisFailoverParams(final String host, final int port, final int timeout, final boolean force){
+		this(host, port, timeout);
+
+		if(force){
+			force();
+		}
+	}
+
+	public JedisFailoverParams(final int timeout){
+		super();
+		timeout(timeout);
+	}
 
 }

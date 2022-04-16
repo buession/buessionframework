@@ -44,6 +44,16 @@ public interface Converters {
 
 	OkStatusConverter OK_STATUS_CONVERTER = new OkStatusConverter();
 
+	Converter<byte[], Status> BINARY_OK_STATUS_CONVERTER = new Converter<byte[], Status>() {
+
+		@Nullable
+		@Override
+		public Status convert(final byte[] source){
+			return Objects.equals(Constants.OK_BINARY, source) ? Status.SUCCESS : Status.FAILURE;
+		}
+
+	};
+
 	PingResultConverter PING_RESULT_CONVERTER = new PingResultConverter();
 
 	Converter<byte[], String> BINARY_TO_STRING_CONVERTER = new Converter<byte[], String>() {
@@ -64,21 +74,11 @@ public interface Converters {
 
 	Converter<Long, Status> LONG_STATUS_CONVERTER = new PredicateStatusConverter<>((val)->val > 0);
 
-	Converter<byte[], Status> BINARY_OK_STATUS_CONVERTER = new Converter<byte[], Status>() {
-
-		@Nullable
-		@Override
-		public Status convert(final byte[] source){
-			return Objects.equals(Constants.OK_BINARY, source) ? Status.SUCCESS : Status.FAILURE;
-		}
-
-	};
-
 	InfoConverter INFO_CONVERTER = new InfoConverter();
 
 	BooleanStatusConverter BOOLEAN_STATUS_CONVERTER = new BooleanStatusConverter();
 
-	ListConverter<String, byte[]> STRING_LIST_TO_STRING_LIST_CONVERTER = new ListConverter<>(SafeEncoder::encode);
+	ListConverter<String, byte[]> STRING_LIST_TO_BINARY_LIST_CONVERTER = new ListConverter<>(SafeEncoder::encode);
 
 	Converter<byte[][], String[]> BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER = new Converter<byte[][], String[]>() {
 

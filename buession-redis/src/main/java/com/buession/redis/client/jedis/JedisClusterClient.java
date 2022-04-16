@@ -33,6 +33,11 @@ import com.buession.redis.client.jedis.operations.JedisClusterHashOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterHyperLogLogOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterKeyOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterListOperations;
+import com.buession.redis.client.jedis.operations.JedisClusterPubSubOperations;
+import com.buession.redis.client.jedis.operations.JedisClusterScriptingOperations;
+import com.buession.redis.client.jedis.operations.JedisClusterServerOperations;
+import com.buession.redis.client.jedis.operations.JedisClusterSetOperations;
+import com.buession.redis.client.jedis.operations.JedisClusterSortedSetOperations;
 
 /**
  * jedis 集群模式客户端
@@ -51,38 +56,63 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 	}
 
 	@Override
-	public JedisClusterClusterOperations clusterOps(){
+	public JedisClusterClusterOperations clusterOperations(){
 		return new JedisClusterClusterOperations(this);
 	}
 
 	@Override
-	public JedisClusterConnectionOperations connectionOps(){
+	public JedisClusterConnectionOperations connectionOperations(){
 		return new JedisClusterConnectionOperations(this);
 	}
 
 	@Override
-	public JedisClusterGeoOperations geoOps(){
+	public JedisClusterGeoOperations geoOperations(){
 		return new JedisClusterGeoOperations(this);
 	}
 
 	@Override
-	public JedisClusterHashOperations hashOps(){
+	public JedisClusterHashOperations hashOperations(){
 		return new JedisClusterHashOperations(this);
 	}
 
 	@Override
-	public JedisClusterHyperLogLogOperations hyperLogLogOps(){
+	public JedisClusterHyperLogLogOperations hyperLogLogOperations(){
 		return new JedisClusterHyperLogLogOperations(this);
 	}
 
 	@Override
-	public JedisClusterKeyOperations keyOps(){
+	public JedisClusterKeyOperations keyOperations(){
 		return new JedisClusterKeyOperations(this);
 	}
 
 	@Override
-	public JedisClusterListOperations listOps(){
+	public JedisClusterListOperations listOperations(){
 		return new JedisClusterListOperations(this);
+	}
+
+	@Override
+	public JedisClusterPubSubOperations pubSubOperations(){
+		return new JedisClusterPubSubOperations(this);
+	}
+
+	@Override
+	public JedisClusterScriptingOperations scriptingOperations(){
+		return new JedisClusterScriptingOperations(this);
+	}
+
+	@Override
+	public JedisClusterServerOperations serverOperations(){
+		return new JedisClusterServerOperations(this);
+	}
+
+	@Override
+	public JedisClusterSetOperations setOperations(){
+		return new JedisClusterSetOperations(this);
+	}
+
+	@Override
+	public JedisClusterSortedSetOperations sortedSetOperations(){
+		return new JedisClusterSortedSetOperations(this);
 	}
 
 }

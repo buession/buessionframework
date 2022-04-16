@@ -699,13 +699,14 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final String pattern){
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
+		final JedisScanParams params = new JedisScanParams(pattern);
 		final JedisSentinelCommand<ScanResult<List<String>>> command = JedisSentinelCommand.<ScanResult<List<String>>>create(
 						ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, new JedisScanParams(pattern)),
+				.general((cmd)->cmd.scan(cursor, params),
 						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, new JedisScanParams(pattern)),
+				.pipeline((cmd)->cmd.scan(cursor, params),
 						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, new JedisScanParams(pattern)),
+				.transaction((cmd)->cmd.scan(cursor, params),
 						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -713,13 +714,14 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
+		final JedisScanParams params = new JedisScanParams(pattern);
 		final JedisSentinelCommand<ScanResult<List<byte[]>>> command = JedisSentinelCommand.<ScanResult<List<byte[]>>>create(
 						ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, new JedisScanParams(pattern)),
+				.general((cmd)->cmd.scan(cursor, params),
 						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, new JedisScanParams(pattern)),
+				.pipeline((cmd)->cmd.scan(cursor, params),
 						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, new JedisScanParams(pattern)),
+				.transaction((cmd)->cmd.scan(cursor, params),
 						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -727,13 +729,14 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	@Override
 	public ScanResult<List<String>> scan(final String cursor, final long count){
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
+		final JedisScanParams params = new JedisScanParams(count);
 		final JedisSentinelCommand<ScanResult<List<String>>> command = JedisSentinelCommand.<ScanResult<List<String>>>create(
 						ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, new JedisScanParams(count)),
+				.general((cmd)->cmd.scan(cursor, params),
 						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, new JedisScanParams(count)),
+				.pipeline((cmd)->cmd.scan(cursor, params),
 						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, new JedisScanParams(count)),
+				.transaction((cmd)->cmd.scan(cursor, params),
 						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -741,13 +744,14 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final long count){
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
+		final JedisScanParams params = new JedisScanParams(count);
 		final JedisSentinelCommand<ScanResult<List<byte[]>>> command = JedisSentinelCommand.<ScanResult<List<byte[]>>>create(
 						ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, new JedisScanParams(count)),
+				.general((cmd)->cmd.scan(cursor, params),
 						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, new JedisScanParams(count)),
+				.pipeline((cmd)->cmd.scan(cursor, params),
 						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, new JedisScanParams(count)),
+				.transaction((cmd)->cmd.scan(cursor, params),
 						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -756,13 +760,14 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public ScanResult<List<String>> scan(final String cursor, final String pattern, final long count){
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
+		final JedisScanParams params = new JedisScanParams(pattern, count);
 		final JedisSentinelCommand<ScanResult<List<String>>> command = JedisSentinelCommand.<ScanResult<List<String>>>create(
 						ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, new JedisScanParams(pattern, count)),
+				.general((cmd)->cmd.scan(cursor, params),
 						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, new JedisScanParams(pattern, count)),
+				.pipeline((cmd)->cmd.scan(cursor, params),
 						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, new JedisScanParams(pattern, count)),
+				.transaction((cmd)->cmd.scan(cursor, params),
 						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -771,13 +776,14 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern, final long count){
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
+		final JedisScanParams params = new JedisScanParams(pattern, count);
 		final JedisSentinelCommand<ScanResult<List<byte[]>>> command = JedisSentinelCommand.<ScanResult<List<byte[]>>>create(
 						ProtocolCommand.SCAN)
-				.general((cmd)->cmd.scan(cursor, new JedisScanParams(pattern, count)),
+				.general((cmd)->cmd.scan(cursor, params),
 						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.scan(cursor, new JedisScanParams(pattern, count)),
+				.pipeline((cmd)->cmd.scan(cursor, params),
 						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.scan(cursor, new JedisScanParams(pattern, count)),
+				.transaction((cmd)->cmd.scan(cursor, params),
 						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER);
 		return execute(command, args);
 	}

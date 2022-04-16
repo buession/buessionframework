@@ -33,6 +33,11 @@ import com.buession.redis.client.jedis.operations.JedisSentinelHashOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelHyperLogLogOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelKeyOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelListOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelPubSubOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelScriptingOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelServerOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelSetOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelSortedSetOperations;
 
 /**
  * jedis 哨兵模式客户端
@@ -51,38 +56,63 @@ public class JedisSentinelClient extends AbstractJedisRedisClient implements Red
 	}
 
 	@Override
-	public JedisSentinelClusterOperations clusterOps(){
+	public JedisSentinelClusterOperations clusterOperations(){
 		return new JedisSentinelClusterOperations(this);
 	}
 
 	@Override
-	public JedisSentinelConnectionOperations connectionOps(){
+	public JedisSentinelConnectionOperations connectionOperations(){
 		return new JedisSentinelConnectionOperations(this);
 	}
 
 	@Override
-	public JedisSentinelGeoOperations geoOps(){
+	public JedisSentinelGeoOperations geoOperations(){
 		return new JedisSentinelGeoOperations(this);
 	}
 
 	@Override
-	public JedisSentinelHashOperations hashOps(){
+	public JedisSentinelHashOperations hashOperations(){
 		return new JedisSentinelHashOperations(this);
 	}
 
 	@Override
-	public JedisSentinelHyperLogLogOperations hyperLogLogOps(){
+	public JedisSentinelHyperLogLogOperations hyperLogLogOperations(){
 		return new JedisSentinelHyperLogLogOperations(this);
 	}
 
 	@Override
-	public JedisSentinelKeyOperations keyOps(){
+	public JedisSentinelKeyOperations keyOperations(){
 		return new JedisSentinelKeyOperations(this);
 	}
 
 	@Override
-	public JedisSentinelListOperations listOps(){
+	public JedisSentinelListOperations listOperations(){
 		return new JedisSentinelListOperations(this);
+	}
+
+	@Override
+	public JedisSentinelPubSubOperations pubSubOperations(){
+		return new JedisSentinelPubSubOperations(this);
+	}
+
+	@Override
+	public JedisSentinelScriptingOperations scriptingOperations(){
+		return new JedisSentinelScriptingOperations(this);
+	}
+
+	@Override
+	public JedisSentinelServerOperations serverOperations(){
+		return new JedisSentinelServerOperations(this);
+	}
+
+	@Override
+	public JedisSentinelSetOperations setOperations(){
+		return new JedisSentinelSetOperations(this);
+	}
+
+	@Override
+	public JedisSentinelSortedSetOperations sortedSetOperations(){
+		return new JedisSentinelSortedSetOperations(this);
 	}
 
 }

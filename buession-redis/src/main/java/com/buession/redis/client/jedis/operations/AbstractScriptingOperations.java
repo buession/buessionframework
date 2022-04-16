@@ -22,62 +22,26 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.SortedSetCommands;
-import redis.clients.jedis.params.ZAddParams;
-
-import java.util.Objects;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.ScriptingOperations;
 
 /**
- * {@link SortedSetCommands.ZAddArgument} 和 jedis {@link ZAddParams} 互转
+ * Jedis Script 命令操作抽象类
+ *
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ZAddArgumentConverter<S, T> extends Converter<S, T> {
+public abstract class AbstractScriptingOperations<C extends JedisRedisConnection>
+		extends AbstractJedisRedisOperations<C> implements ScriptingOperations<C> {
 
-	final class ZAddArgumentJedisConverter
-			implements ZAddArgumentConverter<SortedSetCommands.ZAddArgument, ZAddParams> {
-
-		@Override
-		public ZAddParams convert(final SortedSetCommands.ZAddArgument source){
-			final ZAddParams zAddParams = new ZAddParams();
-
-			if(source.getNxXx() != null){
-				switch(source.getNxXx()){
-					case NX:
-						zAddParams.nx();
-						break;
-					case XX:
-						zAddParams.xx();
-						break;
-					default:
-						break;
-				}
-			}
-
-			if(source.getGtLt() != null){
-				switch(source.getGtLt()){
-					case GT:
-						zAddParams.gt();
-						break;
-					case LT:
-						zAddParams.lt();
-						break;
-					default:
-						break;
-				}
-			}
-
-			if(Objects.equals(source.getCh(), Boolean.TRUE)){
-				zAddParams.ch();
-			}
-
-			return zAddParams;
-		}
-
+	public AbstractScriptingOperations(final JedisRedisClient client){
+		super(client);
 	}
 
 }

@@ -24,10 +24,7 @@
  */
 package com.buession.redis.core.operations;
 
-import com.buession.core.validator.Validate;
 import com.buession.redis.core.command.ScriptingCommands;
-
-import java.util.List;
 
 /**
  * LUA 脚本运算
@@ -37,99 +34,5 @@ import java.util.List;
  * @author Yong.Teng
  */
 public interface ScriptingOperations extends ScriptingCommands, RedisOperations {
-
-	/**
-	 * 对 Lua 脚本进行求值
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a></p>
-	 *
-	 * @param script
-	 * 		脚本程序
-	 * @param param
-	 * 		键名参数
-	 *
-	 * @return 求值结果
-	 */
-	default Object eval(final String script, final String param){
-		return eval(script, new String[]{param});
-	}
-
-	/**
-	 * 对 Lua 脚本进行求值
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/eval.html" target="_blank">http://redisdoc.com/script/eval.html</a></p>
-	 *
-	 * @param script
-	 * 		脚本程序
-	 * @param param
-	 * 		键名参数
-	 *
-	 * @return 求值结果
-	 */
-	default Object eval(final byte[] script, final byte[] param){
-		return eval(script, new byte[][]{param});
-	}
-
-	/**
-	 * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a></p>
-	 *
-	 * @param digest
-	 * 		SHA1 校验码
-	 * @param param
-	 * 		键名参数
-	 *
-	 * @return 根据 SHA1 校验码，对脚本的求值结果
-	 */
-	default Object evalSha(final String digest, final String param){
-		return evalSha(digest, new String[]{param});
-	}
-
-	/**
-	 * 根据给定的 SHA1 校验码，对缓存在服务器中的脚本进行求值
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/evalsha.html" target="_blank">http://redisdoc.com/script/evalsha.html</a></p>
-	 *
-	 * @param digest
-	 * 		SHA1 校验码
-	 * @param param
-	 * 		键名参数
-	 *
-	 * @return 根据 SHA1 校验码，对脚本的求值结果
-	 */
-	default Object evalSha(final byte[] digest, final byte[] param){
-		return evalSha(digest, new byte[][]{param});
-	}
-
-	/**
-	 * 根据 SHA1 校验和，检测校验和所指定的脚本是否已经被保存在缓存当中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/script_exists.html" target="_blank">http://redisdoc.com/script/script_exists.html</a></p>
-	 *
-	 * @param sha1
-	 * 		SHA1 校验和
-	 *
-	 * @return 返回一个包含布尔值，true 表示脚本已经在缓存里面了；false 表示脚本不存在于缓存
-	 */
-	default Boolean scriptExists(final String sha1){
-		List<Boolean> result = scriptExists(new String[]{sha1});
-		return Validate.isEmpty(result) ? null : result.get(0);
-	}
-
-	/**
-	 * 根据 SHA1 校验和，检测校验和所指定的脚本是否已经被保存在缓存当中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/script/script_exists.html" target="_blank">http://redisdoc.com/script/script_exists.html</a></p>
-	 *
-	 * @param sha1
-	 * 		SHA1 校验和
-	 *
-	 * @return 返回一个包含布尔值，true 表示脚本已经在缓存里面了；false 表示脚本不存在于缓存
-	 */
-	default Boolean scriptExists(final byte[] sha1){
-		List<Boolean> result = scriptExists(new byte[][]{sha1});
-		return Validate.isEmpty(result) ? null : result.get(0);
-	}
 
 }

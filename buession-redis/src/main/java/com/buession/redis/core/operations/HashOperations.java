@@ -25,7 +25,6 @@
 package com.buession.redis.core.operations;
 
 import com.buession.core.serializer.type.TypeReference;
-import com.buession.core.utils.StatusUtils;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.core.ScanResult;
@@ -44,70 +43,6 @@ import java.util.Map;
 public interface HashOperations extends HashCommands, RedisOperations {
 
 	/**
-	 * 删除哈希表 key 中的指定域
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hdel.html" target="_blank">http://redisdoc.com/hash/hdel.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 *
-	 * @return 操作结果，成功删除的域的数量 为 0 时，返回 Status.FAILURE；否则返回 Status.SUCCESS
-	 */
-	default Status hDel(final String key, final String field){
-		return StatusUtils.valueOf(hDel(key, new String[]{field}) > 0);
-	}
-
-	/**
-	 * 删除哈希表 key 中的指定域
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hdel.html" target="_blank">http://redisdoc.com/hash/hdel.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 *
-	 * @return 操作结果，成功删除的域的数量 为 0 时，返回 Status.FAILURE；否则返回 Status.SUCCESS
-	 */
-	default Status hDel(final byte[] key, final byte[] field){
-		return StatusUtils.valueOf(hDel(key, new byte[][]{field}) > 0);
-	}
-
-	/**
-	 * 删除哈希表 key 中的指定域
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hdel.html" target="_blank">http://redisdoc.com/hash/hdel.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 *
-	 * @return 操作结果，成功删除的域的数量 为 0 时，返回 Status.FAILURE；否则返回 Status.SUCCESS
-	 */
-	default Status hDelete(final String key, final String field){
-		return hDel(key, field);
-	}
-
-	/**
-	 * 删除哈希表 key 中的指定域
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hdel.html" target="_blank">http://redisdoc.com/hash/hdel.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param field
-	 * 		域
-	 *
-	 * @return 操作结果，成功删除的域的数量 为 0 时，返回 Status.FAILURE；否则返回 Status.SUCCESS
-	 */
-	default Status hDelete(final byte[] key, final byte[] field){
-		return hDel(key, field);
-	}
-
-	/**
 	 * 删除哈希表 key 中的一个或多个指定域
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/hash/hdel.html" target="_blank">http://redisdoc.com/hash/hdel.html</a></p>
@@ -119,7 +54,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 被成功删除的域的数量
 	 */
-	default Long hDelete(final String key, final String... fields){
+	default long hDelete(final String key, final String... fields){
 		return hDel(key, fields);
 	}
 
@@ -135,7 +70,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 被成功删除的域的数量
 	 */
-	default Long hDelete(final byte[] key, final byte[]... fields){
+	default long hDelete(final byte[] key, final byte[]... fields){
 		return hDel(key, fields);
 	}
 
@@ -346,8 +281,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	/**
 	 * 为哈希表 key 中的域 field 的值加上减量 increment
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -358,15 +292,14 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default Long hDecrBy(final String key, final String field, final long value){
+	default long hDecrBy(final String key, final String field, final long value){
 		return hIncrBy(key, field, value > 0 ? value * -1 : value);
 	}
 
 	/**
 	 * 为哈希表 key 中的域 field 的值加上减量 increment
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby
-	 * .html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hincrby.html" target="_blank">http://redisdoc.com/hash/hincrby.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -377,7 +310,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default Long hDecrBy(final byte[] key, final byte[] field, final long value){
+	default long hDecrBy(final byte[] key, final byte[] field, final long value){
 		return hIncrBy(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -395,7 +328,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default Double hDecrByFloat(final String key, final String field, final double value){
+	default double hDecrByFloat(final String key, final String field, final double value){
 		return hIncrByFloat(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -413,7 +346,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 *
 	 * @return 哈希表 key 中域 field 减量 increment 后的值
 	 */
-	default Double hDecrByFloat(final byte[] key, final byte[] field, final double value){
+	default double hDecrByFloat(final byte[] key, final byte[] field, final double value){
 		return hIncrByFloat(key, field, value > 0 ? value * -1 : value);
 	}
 
@@ -733,8 +666,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -752,8 +684,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -773,8 +704,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -794,8 +724,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -811,8 +740,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为对象
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -828,8 +756,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -847,8 +774,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 clazz 指定的对象
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -866,8 +792,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -887,8 +812,7 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	/**
 	 * 迭代哈希键 key 中的键值对，并将值反序列化为 type 指定的对象
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a>
-	 * </p>
+	 * <p>详情说明 <a href="http://redisdoc.com/hash/hscan.html" target="_blank">http://redisdoc.com/hash/hscan.html</a></p>
 	 *
 	 * @param key
 	 * 		Key

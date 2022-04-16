@@ -26,18 +26,13 @@ package com.buession.redis.core.operations;
 
 import com.buession.core.builder.MapBuilder;
 import com.buession.core.serializer.type.TypeReference;
-import com.buession.lang.KeyValue;
 import com.buession.redis.core.Aggregate;
-import com.buession.redis.core.KeyedZSetElement;
+import com.buession.redis.core.GtLt;
+import com.buession.redis.core.NxXx;
 import com.buession.redis.core.command.SortedSetCommands;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * 有序集合运算
@@ -47,66 +42,6 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  */
 public interface SortedSetOperations extends SortedSetCommands, RedisOperations {
-
-	/**
-	 * 从非空的第一个有序集中弹出得分最小的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMIN 的阻塞变体；
-	 * 当没有成员可以从任何给定的有序集中弹出时，它会阻塞连接
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/bzpopmin.html" target="_blank">https://www.redis.com.cn/commands/bzpopmin.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param timeout
-	 * 		阻塞的最长时间；为 0 时，则无限期地阻塞，单位：秒
-	 */
-	default KeyedZSetElement bzPopMin(final String key, final int timeout){
-		return bzPopMin(new String[]{key}, timeout);
-	}
-
-	/**
-	 * 从非空的第一个有序集中弹出得分最小的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMIN 的阻塞变体；
-	 * 当没有成员可以从任何给定的有序集中弹出时，它会阻塞连接
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/bzpopmin.html" target="_blank">https://www.redis.com.cn/commands/bzpopmin.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param timeout
-	 * 		阻塞的最长时间；为 0 时，则无限期地阻塞，单位：秒
-	 */
-	default KeyedZSetElement bzPopMin(final byte[] key, final int timeout){
-		return bzPopMin(new byte[][]{key}, timeout);
-	}
-
-	/**
-	 * 从非空的第一个有序集中弹出得分最高的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMAX 的阻塞变体；
-	 * 当没有成员可以从任何给定的有序集中弹出时，它会阻塞连接
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/bzpopmax.html" target="_blank">https://www.redis.com.cn/commands/bzpopmax.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param timeout
-	 * 		阻塞的最长时间；为 0 时，则无限期地阻塞，单位：秒
-	 */
-	default KeyedZSetElement bzPopMax(final String key, final int timeout){
-		return bzPopMax(new String[]{key}, timeout);
-	}
-
-	/**
-	 * 从非空的第一个有序集中弹出得分最高的成员，按照命令中 key 出现的顺序检查；是有序集 ZPOPMAX 的阻塞变体；
-	 * 当没有成员可以从任何给定的有序集中弹出时，它会阻塞连接
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/bzpopmax.html" target="_blank">https://www.redis.com.cn/commands/bzpopmax.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param timeout
-	 * 		阻塞的最长时间；为 0 时，则无限期地阻塞，单位：秒
-	 */
-	default KeyedZSetElement bzPopMax(final byte[] key, final int timeout){
-		return bzPopMax(new byte[][]{key}, timeout);
-	}
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -155,13 +90,37 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 		score
 	 * @param member
 	 * 		元素
-	 * @param argument
-	 * 		参数
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final String key, final double score, final String member, final ZAddArgument argument){
-		return zAdd(key, MapBuilder.of(member, score), argument);
+	default long zAdd(final String key, final double score, final String member, final NxXx nxXx){
+		return zAdd(key, MapBuilder.of(member, score), nxXx);
+	}
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx){
+		return zAdd(key, MapBuilder.of(member, score), nxXx);
 	}
 
 	/**
@@ -175,13 +134,291 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 		score
 	 * @param member
 	 * 		元素
-	 * @param argument
-	 * 		参数
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Long zAdd(final byte[] key, final double score, final byte[] member, final ZAddArgument argument){
-		return zAdd(key, MapBuilder.of(member, score), argument);
+	default long zAdd(final String key, final double score, final String member, final GtLt gtLt){
+		return zAdd(key, MapBuilder.of(member, score), gtLt);
+	}
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default long zAdd(final byte[] key, final double score, final byte[] member, final GtLt gtLt){
+		return zAdd(key, MapBuilder.of(member, score), gtLt);
+	}
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default long zAdd(final String key, final double score, final String member, final boolean ch){
+		return zAdd(key, MapBuilder.of(member, score), ch);
+	}
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default long zAdd(final byte[] key, final double score, final byte[] member, final boolean ch){
+		return zAdd(key, MapBuilder.of(member, score), ch);
+	}
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default long zAdd(final String key, final double score, final String member, final NxXx nxXx, final GtLt gtLt){
+		return zAdd(key, MapBuilder.of(member, score), nxXx, gtLt);
+	}
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final GtLt gtLt){
+		return zAdd(key, MapBuilder.of(member, score), nxXx, gtLt);
+	}
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default long zAdd(final String key, final double score, final String member, final NxXx nxXx, final boolean ch){
+		return zAdd(key, MapBuilder.of(member, score), nxXx, ch);
+	}
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final boolean ch){
+		return zAdd(key, MapBuilder.of(member, score), nxXx, ch);
+	}
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default long zAdd(final String key, final double score, final String member, final GtLt gtLt, final boolean ch){
+		return zAdd(key, MapBuilder.of(member, score), gtLt, ch);
+	}
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default long zAdd(final byte[] key, final double score, final byte[] member, final GtLt gtLt, final boolean ch){
+		return zAdd(key, MapBuilder.of(member, score), gtLt, ch);
+	}
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default long zAdd(final String key, final double score, final String member, final NxXx nxXx, final GtLt gtLt,
+					  final boolean ch){
+		return zAdd(key, MapBuilder.of(member, score), nxXx, gtLt, ch);
+	}
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">http://redisdoc.com/sorted_set/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	default long zAdd(final byte[] key, final double score, final byte[] member, final NxXx nxXx, final GtLt gtLt,
+					  final boolean ch){
+		return zAdd(key, MapBuilder.of(member, score), nxXx, gtLt, ch);
 	}
 
 	/**
@@ -200,7 +437,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> Long zAdd(final String key, final double score, final V member);
+	<V> long zAdd(final String key, final double score, final V member);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -218,7 +455,7 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> Long zAdd(final byte[] key, final double score, final V member);
+	<V> long zAdd(final byte[] key, final double score, final V member);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -231,14 +468,16 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 		score
 	 * @param member
 	 * 		元素
-	 * @param argument
-	 * 		参数
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
 	 * @param <V>
 	 * 		元素值类型
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> Long zAdd(final String key, final double score, final V member, final ZAddArgument argument);
+	<V> long zAdd(final String key, final double score, final V member, final NxXx nxXx);
 
 	/**
 	 * 将元素及其 score 值加入到有序集 key 当中
@@ -251,82 +490,350 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 * 		score
 	 * @param member
 	 * 		元素
-	 * @param argument
-	 * 		参数
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
 	 * @param <V>
 	 * 		元素值类型
 	 *
 	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	<V> Long zAdd(final byte[] key, final double score, final V member, final ZAddArgument argument);
+	<V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx);
 
 	/**
-	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
+	 * 将元素及其 score 值加入到有序集 key 当中
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param <V>
+	 * 		元素值类型
 	 *
-	 * @return The result of the difference
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Set<String> zDiff(final String key){
-		return zDiff(key, (String) null);
-	}
+	<V> long zAdd(final String key, final double score, final V member, final GtLt gtLt);
 
 	/**
-	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
+	 * 将元素及其 score 值加入到有序集 key 当中
 	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param <V>
+	 * 		元素值类型
 	 *
-	 * @return The result of the difference
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
 	 */
-	default Set<byte[]> zDiff(final byte[] key){
-		return zDiff(key, (byte[]) null);
-	}
+	<V> long zAdd(final byte[] key, final double score, final V member, final GtLt gtLt);
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	<V> long zAdd(final String key, final double score, final V member, final boolean ch);
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	<V> long zAdd(final byte[] key, final double score, final V member, final boolean ch);
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	<V> long zAdd(final String key, final double score, final V member, final NxXx nxXx, final GtLt gtLt);
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	<V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final GtLt gtLt);
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	<V> long zAdd(final String key, final double score, final V member, final NxXx nxXx, final boolean ch);
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	<V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final boolean ch);
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	<V> long zAdd(final String key, final double score, final V member, final GtLt gtLt, final boolean ch);
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	<V> long zAdd(final byte[] key, final double score, final V member, final GtLt gtLt, final boolean ch);
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	<V> long zAdd(final String key, final double score, final V member, final NxXx nxXx, final GtLt gtLt,
+				  final boolean ch);
+
+	/**
+	 * 将元素及其 score 值加入到有序集 key 当中
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zadd.html" target="_blank">https://www.redis.com.cn/commands/zadd.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param score
+	 * 		score
+	 * @param member
+	 * 		元素
+	 * @param nxXx
+	 * 		更新成员方式：
+	 * 		1）NxXx.NX：不更新存在的成员，只添加新成员
+	 * 		2）NxXx.XX：仅更新存在的成员，不添加新成员
+	 * @param gtLt
+	 * 		更新新的分值方式：
+	 * 		1）GtLt.LT: 更新新的分值比当前分值小的成员，不存在则新增
+	 * 		2）GtLt.GT: 更新新的分值比当前分值大的成员，不存在则新增
+	 * @param ch
+	 * 		是否返回变更成员的数量；变更的成员是指新增成员 和 score值更新的成员，命令指明的和之前 score 值相同的成员不计在内；
+	 * 		在通常情况下，ZADD返回值只计算新添加成员的数量
+	 * @param <V>
+	 * 		元素值类型
+	 *
+	 * @return 被成功添加的新成员的数量，不包括那些被更新的、已经存在的成员
+	 */
+	<V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final GtLt gtLt,
+				  final boolean ch);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return The result of the difference
 	 */
-	default <V> Set<V> zDiffObject(final String key){
-		return zDiffObject(key, (String[]) null);
-	}
+	<V> Set<V> zDiffObject(final String[] keys);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param <V>
 	 * 		值类型
 	 *
 	 * @return The result of the difference
 	 */
-	default <V> Set<V> zDiffObject(final byte[] key){
-		return zDiffObject(key, (byte[][]) null);
-	}
+	<V> Set<V> zDiffObject(final byte[][] keys);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param clazz
 	 * 		值对象类
 	 * @param <V>
@@ -334,17 +841,15 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return The result of the difference
 	 */
-	default <V> Set<V> zDiffObject(final String key, final Class<V> clazz){
-		return zDiffObject(key, null, clazz);
-	}
+	<V> Set<V> zDiffObject(final String[] keys, final Class<V> clazz);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param clazz
 	 * 		值对象类
 	 * @param <V>
@@ -352,17 +857,15 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return The result of the difference
 	 */
-	default <V> Set<V> zDiffObject(final byte[] key, final Class<V> clazz){
-		return zDiffObject(key, null, clazz);
-	}
+	<V> Set<V> zDiffObject(final byte[][] keys, final Class<V> clazz);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param type
 	 * 		值类型引用
 	 * @param <V>
@@ -372,105 +875,13 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see com.buession.core.serializer.type.TypeReference
 	 */
-	default <V> Set<V> zDiffObject(final String key, final TypeReference<V> type){
-		return zDiffObject(key, null, type);
-	}
+	<V> Set<V> zDiffObject(final String[] keys, final TypeReference<V> type);
 
 	/**
 	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
 	 *
-	 * @param key
-	 * 		Key
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return The result of the difference
-	 *
-	 * @see com.buession.core.serializer.type.TypeReference
-	 */
-	default <V> Set<V> zDiffObject(final byte[] key, final TypeReference<V> type){
-		return zDiffObject(key, null, type);
-	}
-
-	/**
-	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return The result of the difference
-	 */
-	<V> Set<V> zDiffObject(final String key, final String[] keys);
-
-	/**
-	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return The result of the difference
-	 */
-	<V> Set<V> zDiffObject(final byte[] key, final byte[][] keys);
-
-	/**
-	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return The result of the difference
-	 */
-	<V> Set<V> zDiffObject(final String key, final String[] keys, final Class<V> clazz);
-
-	/**
-	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return The result of the difference
-	 */
-	<V> Set<V> zDiffObject(final byte[] key, final byte[][] keys, final Class<V> clazz);
-
-	/**
-	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
-	 *
-	 * @param key
-	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 * @param type
@@ -482,58 +893,20 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @see com.buession.core.serializer.type.TypeReference
 	 */
-	<V> Set<V> zDiffObject(final String key, final String[] keys, final TypeReference<V> type);
+	<V> Set<V> zDiffObject(final byte[][] keys, final TypeReference<V> type);
 
 	/**
-	 * This command is similar to ZDIFFSTORE, but instead of storing the resulting sorted set, it is returned to the client
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zdiff/" target="_blank">https://redis.io/commands/zdiff/</a></p>
+	 * 为有序集 key 的成员 member 的 score 值加上增量一
 	 *
 	 * @param key
 	 * 		Key
-	 * @param keys
-	 * 		一个或多个 Key
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
+	 * @param member
+	 * 		member 元素
 	 *
-	 * @return The result of the difference
-	 *
-	 * @see com.buession.core.serializer.type.TypeReference
+	 * @return member 成员的新 score 值
 	 */
-	<V> Set<V> zDiffObject(final byte[] key, final byte[][] keys, final TypeReference<V> type);
-
-	/**
-	 * Computes the difference between the first and all successive input sorted sets and stores the result in destination
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zdiffstore/" target="_blank">https://redis.io/commands/zdiffstore/</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	default Long zDiffStore(final String destKey, final String key){
-		return zDiffStore(destKey, new String[]{key});
-	}
-
-	/**
-	 * Computes the difference between the first and all successive input sorted sets and stores the result in destination
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/zdiffstore/" target="_blank">https://redis.io/commands/zdiffstore/</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	default Long zDiffStore(final byte[] destKey, final byte[] key){
-		return zDiffStore(destKey, new byte[][]{key});
+	default double zIncr(final String key, final String member){
+		return zIncrBy(key, 1, member);
 	}
 
 	/**
@@ -546,12 +919,12 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default Double zIncr(final String key, final String member){
-		return zIncrBy(key, member, 1);
+	default double zIncr(final byte[] key, final byte[] member){
+		return zIncrBy(key, 1, member);
 	}
 
 	/**
-	 * 为有序集 key 的成员 member 的 score 值加上增量一
+	 * 为有序集 key 的成员 member 的 score 值加上减量一
 	 *
 	 * @param key
 	 * 		Key
@@ -560,140 +933,1664 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return member 成员的新 score 值
 	 */
-	default Double zIncr(final byte[] key, final byte[] member){
-		return zIncrBy(key, member, 1);
+	default double zDecr(final String key, final String member){
+		return zIncrBy(key, -1, member);
 	}
 
 	/**
-	 * 计算给定的一个有序集的交集，并将该交集储存到 destKey 中
+	 * 为有序集 key 的成员 member 的 score 值加上减量一
 	 *
-	 * @param destKey
-	 * 		目标 Key
 	 * @param key
 	 * 		Key
+	 * @param member
+	 * 		member 元素
 	 *
-	 * @return 保存到 destKey 结果集的基数
+	 * @return member 成员的新 score 值
 	 */
-	default Long zInterStore(final String destKey, final String key){
-		return zInterStore(destKey, new String[]{key});
+	default double zDecr(final byte[] key, final byte[] member){
+		return zIncrBy(key, -1, member);
 	}
 
 	/**
-	 * 计算给定的一个有序集的交集，并将该交集储存到 destKey 中
+	 * 为有序集 key 的成员 member 的 score 值加上减量 increment
 	 *
-	 * @param destKey
-	 * 		目标 Key
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zincrby.html" target="_blank">http://redisdoc.com/sorted_set/zincrby.html</a></p>
+	 *
 	 * @param key
 	 * 		Key
+	 * @param increment
+	 * 		增量
+	 * @param member
+	 * 		member 元素
 	 *
-	 * @return 保存到 destKey 结果集的基数
+	 * @return member 成员的新 score 值
 	 */
-	default Long zInterStore(final byte[] destKey, final byte[] key){
-		return zInterStore(destKey, new byte[][]{key});
+	default double zDecrBy(final String key, final double increment, final String member){
+		return zIncrBy(key, increment * -1, member);
 	}
 
 	/**
-	 * 计算给定的一个有序集的交集，并将该交集储存到 destKey 中
+	 * 为有序集 key 的成员 member 的 score 值加上减量 increment
 	 *
-	 * @param destKey
-	 * 		目标 Key
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zincrby.html" target="_blank">http://redisdoc.com/sorted_set/zincrby.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param increment
+	 * 		增量
+	 * @param member
+	 * 		member 元素
+	 *
+	 * @return member 成员的新 score 值
+	 */
+	default double zDecrBy(final byte[] key, final double increment, final byte[] member){
+		return zIncrBy(key, increment * -1, member);
+	}
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> Set<V> zInterObject(final String[] keys);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> Set<V> zInterObject(final byte[][] keys);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> Set<V> zInterObject(final String[] keys, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> Set<V> zInterObject(final byte[][] keys, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zInterObject(final String[] keys, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zInterObject(final byte[][] keys, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param aggregate
-	 * 		并集的结果集的聚合方式
-	 * @param key
-	 * 		Key
+	 *        {@link Aggregate}
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 保存到 destKey 结果集的基数
+	 * @return 有序集合的交集反序列为对象
 	 */
-	default Long zInterStore(final String destKey, final Aggregate aggregate, final String key){
-		return zInterStore(destKey, aggregate, new String[]{key});
-	}
+	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate);
 
 	/**
-	 * 计算给定的一个有序集的交集，并将该交集储存到 destKey 中
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为对象
 	 *
-	 * @param destKey
-	 * 		目标 Key
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param aggregate
-	 * 		并集的结果集的聚合方式
-	 * @param key
-	 * 		Key
+	 *        {@link Aggregate}
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 保存到 destKey 结果集的基数
+	 * @return 有序集合的交集反序列为对象
 	 */
-	default Long zInterStore(final byte[] destKey, final Aggregate aggregate, final byte[] key){
-		return zInterStore(destKey, aggregate, new byte[][]{key});
-	}
+	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate);
 
 	/**
-	 * 计算给定的一个有序集的交集，并将该交集储存到 destKey 中
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
 	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param weight
-	 * 		有序集的乘法因子
-	 * @param key
-	 * 		Key
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
 	 *
-	 * @return 保存到 destKey 结果集的基数
-	 */
-	default Long zInterStore(final String destKey, final double weight, final String key){
-		return zInterStore(destKey, new double[]{weight}, new String[]{key});
-	}
-
-	/**
-	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param weight
-	 * 		有序集的乘法因子
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 保存到 destKey 结果集的基数
-	 */
-	default Long zInterStore(final byte[] destKey, final double weight, final byte[] key){
-		return zInterStore(destKey, new double[]{weight}, new byte[][]{key});
-	}
-
-	/**
-	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
-	 *
-	 * @param destKey
-	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param aggregate
-	 * 		并集的结果集的聚合方式
-	 * @param weight
-	 * 		有序集的乘法因子
-	 * @param key
-	 * 		Key
+	 *        {@link Aggregate}
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 保存到 destKey 结果集的基数
+	 * @return 有序集合的交集反序列为对象
 	 */
-	default Long zInterStore(final String destKey, final Aggregate aggregate, final double weight, final String key){
-		return zInterStore(destKey, aggregate, new double[]{weight}, new String[]{key});
-	}
+	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz);
 
 	/**
-	 * 计算给定的一个或多个有序集的交集，并将该交集储存到 destKey 中
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
 	 *
-	 * @param destKey
-	 * 		目标 Key
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param aggregate
-	 * 		并集的结果集的聚合方式
-	 * @param weight
-	 * 		有序集的乘法因子
+	 *        {@link Aggregate}
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 *        {@link Aggregate}
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 *        {@link Aggregate}
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> Set<V> zInterObject(final String[] keys, final double[] weights);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> Set<V> zInterObject(final byte[][] keys, final double[] weights);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> Set<V> zInterObject(final String[] keys, final double[] weights, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> Set<V> zInterObject(final byte[][] keys, final double[] weights, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zInterObject(final String[] keys, final double[] weights, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zInterObject(final byte[][] keys, final double[] weights, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 *        {@link Aggregate}
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 *        {@link Aggregate}
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return The result of intersection
+	 */
+	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 *        {@link Aggregate}
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+							final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 *        {@link Aggregate}
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 */
+	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+							final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 *        {@link Aggregate}
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合的交集反序列为对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+							final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集合的交集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zinter/" target="_blank">https://redis.io/commands/zinter/</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 *        {@link Aggregate}
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return The result of intersection
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+							final TypeReference<V> type);
+
+	/**
+	 * 返回有序集合 key 中的一个随机元素，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zrandmember/" target="_blank">https://redis.io/commands/zrandmember/</a></p>
+	 *
 	 * @param key
 	 * 		Key
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 保存到 destKey 结果集的基数
+	 * @return 有序集合 key 中的一个随机元素反序列化后的对象
 	 */
-	default Long zInterStore(final byte[] destKey, final Aggregate aggregate, final double weight, final byte[] key){
-		return zInterStore(destKey, aggregate, new double[]{weight}, new byte[][]{key});
-	}
+	<V> V zRandMemberObject(final String key);
+
+	/**
+	 * 返回有序集合 key 中的一个随机元素，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zrandmember/" target="_blank">https://redis.io/commands/zrandmember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合 key 中的一个随机元素反序列化后的对象
+	 */
+	<V> V zRandMemberObject(final byte[] key);
+
+	/**
+	 * 返回有序集合 key 中的一个随机元素，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zrandmember/" target="_blank">https://redis.io/commands/zrandmember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合 key 中的一个随机元素反序列化后的对象
+	 */
+	<V> V zRandMemberObject(final String key, final Class<V> clazz);
+
+	/**
+	 * 返回有序集合 key 中的一个随机元素，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zrandmember/" target="_blank">https://redis.io/commands/zrandmember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合 key 中的一个随机元素反序列化后的对象
+	 */
+	<V> V zRandMemberObject(final byte[] key, final Class<V> clazz);
+
+	/**
+	 * 返回有序集合 key 中的一个随机元素，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zrandmember/" target="_blank">https://redis.io/commands/zrandmember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合 key 中的一个随机元素反序列化后的对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V zRandMemberObject(final String key, final TypeReference<V> type);
+
+	/**
+	 * 返回有序集合 key 中的一个随机元素，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zrandmember/" target="_blank">https://redis.io/commands/zrandmember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合 key 中的一个随机元素反序列化后的对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> V zRandMemberObject(final byte[] key, final TypeReference<V> type);
+
+	/**
+	 * 返回有序集合 key 中的 count 个随机元素，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zrandmember/" target="_blank">https://redis.io/commands/zrandmember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合 key 中的随机元素反序列化后的对象
+	 */
+	<V> List<V> zRandMemberObject(final String key, final long count);
+
+	/**
+	 * 返回有序集合 key 中的 count 个随机元素，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zrandmember/" target="_blank">https://redis.io/commands/zrandmember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合 key 中的随机元素反序列化后的对象
+	 */
+	<V> List<V> zRandMemberObject(final byte[] key, final long count);
+
+	/**
+	 * 返回有序集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zrandmember/" target="_blank">https://redis.io/commands/zrandmember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合 key 中的随机元素反序列化后的对象
+	 */
+	<V> List<V> zRandMemberObject(final String key, final long count, final Class<V> clazz);
+
+	/**
+	 * 返回有序集合 key 中的 count 个随机元素，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zrandmember/" target="_blank">https://redis.io/commands/zrandmember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合 key 中的随机元素反序列化后的对象
+	 */
+	<V> List<V> zRandMemberObject(final byte[] key, final long count, final Class<V> clazz);
+
+	/**
+	 * 返回有序集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zrandmember/" target="_blank">https://redis.io/commands/zrandmember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合 key 中的随机元素反序列化后的对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRandMemberObject(final String key, final long count, final TypeReference<V> type);
+
+	/**
+	 * 返回有序集合 key 中的 count 个随机元素，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/zrandmember/" target="_blank">https://redis.io/commands/zrandmember/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param count
+	 * 		需要返回的元素数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 有序集合 key 中的随机元素反序列化后的对象
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRandMemberObject(final byte[] key, final long count, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列为对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRangeObject(final String key, final long start, final long end);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列为对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRangeObject(final byte[] key, final long start, final long end);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRangeObject(final String key, final long start, final long end, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 type 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeObject(final String key, final long start, final long end, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 type 指定的对象；其中成员的位置按 score 值递增(从小到大)来排序；
+	 * 具有相同 score 值的成员按字典序来排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrange.html" target="_blank">http://redisdoc.com/sorted_set/zrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，反序列化为对象的有序集成员的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
+	 */
+	<V> List<V> zRangeByLexObject(final String key, final double min, final double max);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
+	 */
+	<V> List<V> zRangeByLexObject(final byte[] key, final double min, final double max);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
+	 */
+	<V> List<V> zRangeByLexObject(final String key, final double min, final double max, final Class<V> clazz);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
+	 */
+	<V> List<V> zRangeByLexObject(final byte[] key, final double min, final double max, final Class<V> clazz);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeByLexObject(final String key, final double min, final double max, final TypeReference<V> type);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeByLexObject(final byte[] key, final double min, final double max, final TypeReference<V> type);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
+	 */
+	<V> List<V> zRangeByLexObject(final String key, final String min, final String max);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
+	 */
+	<V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
+	 */
+	<V> List<V> zRangeByLexObject(final String key, final String min, final String max, final Class<V> clazz);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
+	 */
+	<V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeByLexObject(final String key, final String min, final String max, final TypeReference<V> type);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内的成员反序列化为对象后的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列为对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final String key, final double min, final double max);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列为对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列为对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final String key, final String min, final String max);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列为对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列为对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
+									final long count);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列为对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
+									final long count);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
+									final long count, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
+									final long count, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
+									final long count, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
+									final long count, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列为对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
+									final long count);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列为对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+									final long count);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
+									final long count, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+									final long count, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
+									final long count, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，所有 score 值介于 min 和 max 之间（包括等于 min 或 max ）的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递增（从小到大）次序排列，具有相同 score 值的成员按字典序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+									final long count, final TypeReference<V> type);
 
 	/**
 	 * 移除有序集 key 中的成员，不存在的成员将被忽略
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrem.html" target="_blank">http://redisdoccom/sorted_set/zrem.html</a></p>
 	 *
 	 * @param key
 	 * 		Key
@@ -702,13 +2599,15 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功移除的成员的数量，不包括被忽略的成员
 	 */
-	default Long zRem(final String key, final String member){
+	default long zRem(final String key, final String member){
 		return zRem(key, new String[]{member});
 	}
 
 	/**
 	 * 移除有序集 key 中的成员，不存在的成员将被忽略
 	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrem.html" target="_blank">http://redisdoccom/sorted_set/zrem.html</a></p>
+	 *
 	 * @param key
 	 * 		Key
 	 * @param member
@@ -716,136 +2615,1744 @@ public interface SortedSetOperations extends SortedSetCommands, RedisOperations 
 	 *
 	 * @return 被成功移除的成员的数量，不包括被忽略的成员
 	 */
-	default Long zRem(final byte[] key, final byte[] member){
+	default long zRem(final byte[] key, final byte[] member){
 		return zRem(key, new byte[][]{member});
 	}
 
 	/**
-	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
+	 * 获取有序集 key 中，指定区间内的成员，并反序列为对象；其中成员的位置按 score 值递减（从大到小）来排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
 	 *
-	 * @param destKey
-	 * 		目标 Key
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrange.html" target="_blank">http://redisdoc.com/sorted_set/zrevrange.html</a></p>
+	 *
 	 * @param key
 	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 保存到 destKey 的结果集的基数
+	 * @return 指定区间内，有序集成员反序列化为对象后的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	default Long zUnionStore(final String destKey, final String key){
-		return zUnionStore(destKey, new String[]{key});
-	}
+	<V> List<V> zRevRangeObject(final String key, final long start, final long end);
 
 	/**
-	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
+	 * 获取有序集 key 中，指定区间内的成员，并反序列为对象；其中成员的位置按 score 值递减（从大到小）来排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
 	 *
-	 * @param destKey
-	 * 		目标 Key
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrange.html" target="_blank">http://redisdoc.com/sorted_set/zrevrange.html</a></p>
+	 *
 	 * @param key
 	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 保存到 destKey 的结果集的基数
+	 * @return 指定区间内，有序集成员反序列化为对象后的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
 	 */
-	default Long zUnionStore(final byte[] destKey, final byte[] key){
-		return zUnionStore(destKey, new byte[][]{key});
-	}
+	<V> List<V> zRevRangeObject(final byte[] key, final long start, final long end);
 
 	/**
-	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递减（从大到小）来排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
 	 *
-	 * @param destKey
-	 * 		目标 Key
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrange.html" target="_blank">http://redisdoc.com/sorted_set/zrevrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象后的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRevRangeObject(final String key, final long start, final long end, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 clazz 指定的对象；其中成员的位置按 score 值递减（从大到小）来排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrange.html" target="_blank">http://redisdoc.com/sorted_set/zrevrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象后的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 */
+	<V> List<V> zRevRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 type 指定的对象；其中成员的位置按 score 值递减（从大到小）来排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrange.html" target="_blank">http://redisdoc.com/sorted_set/zrevrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象后的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeObject(final String key, final long start, final long end, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，指定区间内的成员，并反序列化为 type 指定的对象；其中成员的位置按 score 值递减（从大到小）来排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列；
+	 * 也可以使用负数下标，以 -1 表示最后一个成员，-2 表示倒数第二个成员，以此类推
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrange.html" target="_blank">http://redisdoc.com/sorted_set/zrevrange.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		开始位置
+	 * @param end
+	 * 		结束位置
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象后的列表；
+	 * 当 start 的值比有序集的最大下标还要大，或是 start &gt; end 时，返回一个空列表；
+	 * 当 end 参数的值比有序集的最大下标还要大时，最多返回到 end
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final String key, final double min, final double max);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final Class<V> clazz);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final Class<V> clazz);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final TypeReference<V> type);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final TypeReference<V> type);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final String key, final String min, final String max);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final Class<V> clazz);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final TypeReference<V> type);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final TypeReference<V> type);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
+									 final long count);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
+									 final long count);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
+									 final long count, final Class<V> clazz);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
+									 final long count, final Class<V> clazz);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
+									 final long count, final TypeReference<V> type);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
+									 final long count, final TypeReference<V> type);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
+									 final long count);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+									 final long count);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
+									 final long count, final Class<V> clazz);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 */
+	<V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+									 final long count, final Class<V> clazz);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
+									 final long count, final TypeReference<V> type);
+
+	/**
+	 * 当有序集合的所有成员都具有相同的分值时，有序集合的元素会根据成员的字典序来进行排序，
+	 * 而这个命令则可以返回给定的有序集合键 key 中，值介于 min 和 max 之间的成员，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrangebylex.html" target="_blank">http://redisdoc.com/sorted_set/zrangebylex.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回个数
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 包含了有序集合在指定范围内反序列化为对象后的成员列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+									 final long count, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列为对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列为对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max,
+									   final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max,
+									   final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列为对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列为对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max,
+									   final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
+									   final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列为对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
+									   final long count);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列为对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
+									   final long count);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
+									   final long count, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
+									   final long count, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
+									   final long count, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
+									   final long count, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列为对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
+									   final long count);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列为对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+									   final long count);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
+									   final long count, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 clazz 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 */
+	<V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+									   final long count, final Class<V> clazz);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
+									   final long count, final TypeReference<V> type);
+
+	/**
+	 * 获取有序集 key 中，score 值介于 min 和 max 之间（包括等于 min 或 max ）的所有的成员，并反序列化为 type 指定的对象；
+	 * 有序集成员按 score 值递减（从大到小）的次序排列；
+	 * 具有相同 score 值的成员按字典序的逆序排列
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/sorted_set/zrevrangebyscore.html" target="_blank">http://redisdoc.com/sorted_set/zrevrangebyscore.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param min
+	 * 		最小 score
+	 * @param max
+	 * 		最大 score
+	 * @param offset
+	 * 		偏移量
+	 * @param count
+	 * 		返回数量
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 指定区间内，有序集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+									   final long count, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 反序列化为对象后的集合并集
+	 */
+	<V> Set<V> zUnionObject(final String[] keys);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 反序列化为对象后的集合并集
+	 */
+	<V> Set<V> zUnionObject(final byte[][] keys);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 反序列化为对象后的集合并集
+	 */
+	<V> Set<V> zUnionObject(final String[] keys, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 反序列化为对象后的集合并集
+	 */
+	<V> Set<V> zUnionObject(final byte[][] keys, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 反序列化为对象后的集合并集
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zUnionObject(final String[] keys, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 反序列化为对象后的集合并集
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zUnionObject(final byte[][] keys, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param aggregate
 	 * 		并集的结果集的聚合方式
-	 * @param key
-	 * 		Key
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 保存到 destKey 的结果集的基数
+	 * @return 并集成员反序列化为对象的列表
 	 */
-	default Long zUnionStore(final String destKey, final Aggregate aggregate, final String key){
-		return zUnionStore(destKey, aggregate, new String[]{key});
-	}
+	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate);
 
 	/**
-	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
+	 * 计算给定的一个或多个有序集的并集，并反序列为对象
 	 *
-	 * @param destKey
-	 * 		目标 Key
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param aggregate
 	 * 		并集的结果集的聚合方式
-	 * @param key
-	 * 		Key
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 保存到 destKey 的结果集的基数
+	 * @return 并集成员反序列化为对象的列表
 	 */
-	default Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final byte[] key){
-		return zUnionStore(destKey, aggregate, new byte[][]{key});
-	}
+	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate);
 
 	/**
-	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
 	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param weight
-	 * 		有序集的乘法因子
-	 * @param key
-	 * 		Key
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
 	 *
-	 * @return 保存到 destKey 的结果集的基数
-	 */
-	default Long zUnionStore(final String destKey, final double weight, final String key){
-		return zUnionStore(destKey, new double[]{weight}, new String[]{key});
-	}
-
-	/**
-	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param weight
-	 * 		有序集的乘法因子
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 保存到 destKey 的结果集的基数
-	 */
-	default Long zUnionStore(final byte[] destKey, final double weight, final byte[] key){
-		return zUnionStore(destKey, new double[]{weight}, new byte[][]{key});
-	}
-
-	/**
-	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
-	 *
-	 * @param destKey
-	 * 		目标 Key
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param aggregate
 	 * 		并集的结果集的聚合方式
-	 * @param weight
-	 * 		有序集的乘法因子
-	 * @param key
-	 * 		Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 保存到 destKey 的结果集的基数
+	 * @return 并集成员反序列化为对象的列表
 	 */
-	default Long zUnionStore(final String destKey, final Aggregate aggregate, final double weight, final String key){
-		return zUnionStore(destKey, aggregate, new double[]{weight}, new String[]{key});
-	}
+	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz);
 
 	/**
-	 * 计算给定的一个有序集的并集，并将该并集储存到 destKey
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
 	 *
-	 * @param destKey
-	 * 		目标 Key
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
 	 * @param aggregate
 	 * 		并集的结果集的聚合方式
-	 * @param weight
-	 * 		有序集的乘法因子
-	 * @param key
-	 * 		Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 保存到 destKey 的结果集的基数
+	 * @return 并集成员反序列化为对象的列表
 	 */
-	default Long zUnionStore(final byte[] destKey, final Aggregate aggregate, final double weight, final byte[] key){
-		return zUnionStore(destKey, aggregate, new double[]{weight}, new byte[][]{key});
-	}
+	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 */
+	<V> Set<V> zUnionObject(final String[] keys, final double[] weights);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 */
+	<V> Set<V> zUnionObject(final byte[][] keys, final double[] weights);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 */
+	<V> Set<V> zUnionObject(final String[] keys, final double[] weights, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 */
+	<V> Set<V> zUnionObject(final byte[][] keys, final double[] weights, final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zUnionObject(final String[] keys, final double[] weights, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zUnionObject(final byte[][] keys, final double[] weights, final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 */
+	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列为对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 */
+	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 */
+	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+							final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 clazz 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 */
+	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+							final Class<V> clazz);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+							final TypeReference<V> type);
+
+	/**
+	 * 计算给定的一个或多个有序集的并集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/zunion.html" target="_blank">https://www.redis.com.cn/commands/zunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param aggregate
+	 * 		并集的结果集的聚合方式
+	 * @param weights
+	 * 		每个给定有序集的乘法因子
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+							final TypeReference<V> type);
 
 }

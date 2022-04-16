@@ -74,7 +74,7 @@ public interface PubSubCommands extends RedisCommands {
 	 *
 	 * @return 接收到信息 message 的订阅者数量
 	 */
-	Long publish(final String channel, final String message);
+	long publish(final String channel, final String message);
 
 	/**
 	 * 将信息 message 发送到指定的频道 channel
@@ -88,7 +88,7 @@ public interface PubSubCommands extends RedisCommands {
 	 *
 	 * @return 接收到信息 message 的订阅者数量
 	 */
-	Long publish(final byte[] channel, final byte[] message);
+	long publish(final byte[] channel, final byte[] message);
 
 	/**
 	 * 列出当前 active channels 活跃是指信道含有一个或多个订阅者(不包括从模式接收订阅的客户端)
@@ -134,7 +134,7 @@ public interface PubSubCommands extends RedisCommands {
 	 *
 	 * @return 阅模式的数量
 	 */
-	Long pubsubNumPat();
+	long pubsubNumPat();
 
 	/**
 	 * 列出指定信道的订阅者个数(不包括订阅模式的客户端订阅者)

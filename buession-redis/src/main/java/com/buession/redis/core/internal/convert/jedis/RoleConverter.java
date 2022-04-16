@@ -22,17 +22,27 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
+package com.buession.redis.core.internal.convert.jedis;
 
-import com.buession.redis.core.command.HyperLogLogCommands;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.Role;
+import redis.clients.jedis.resps.AccessControlLogEntry;
 
 /**
- * HyperLogLog 运算
- *
- * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a></p>
+ * {@link Role} 和 jedis {@link AccessControlLogEntry} 互转
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperations {
+public interface RoleConverter<S, T> extends Converter<S, T> {
+
+	final class RoleExposeConverter implements RoleConverter<Object, Role> {
+
+		@Override
+		public Role convert(final Object source){
+			return null;
+		}
+
+	}
 
 }

@@ -22,17 +22,16 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
-
-import com.buession.redis.core.command.HyperLogLogCommands;
+package com.buession.redis.core;
 
 /**
- * HyperLogLog 运算
- *
- * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a></p>
- *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperations {
+public enum ZRangeBy {
+
+	BYSCORE,
+	
+	BYLEX,
 
 }

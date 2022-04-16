@@ -28,17 +28,26 @@ import com.buession.core.converter.Converter;
 import com.buession.core.converter.EnumConverter;
 import com.buession.core.converter.ListConverter;
 import com.buession.core.converter.MapConverter;
+import com.buession.core.converter.SetConverter;
 import com.buession.core.utils.EnumUtils;
 import com.buession.lang.Geo;
+import com.buession.redis.core.AclLog;
 import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.GeoRadius;
+import com.buession.redis.core.Module;
 import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.RedisClusterServer;
+import com.buession.redis.core.Role;
+import com.buession.redis.core.SlowLog;
+import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.RedisServerTimeConverter;
 import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.GeoCoordinate;
+import redis.clients.jedis.resps.AccessControlLogEntry;
 import redis.clients.jedis.resps.GeoRadiusResponse;
+import redis.clients.jedis.resps.Slowlog;
 
 /**
  * @author Yong.Teng
@@ -80,6 +89,8 @@ public interface JedisConverters extends Converters {
 	LPosArgumentConverter.LPosArgumentJedisConverter L_POS_ARGUMENT_CONVERTER = new LPosArgumentConverter.LPosArgumentJedisConverter();
 
 	DirectionConverter.DirectionJedisConverter DIRECTION_CONVERTER = new DirectionConverter.DirectionJedisConverter();
+
+	FlushModeConverter.FlushModeJedisConverter FLUSH_MODE_CONVERTER = new FlushModeConverter.FlushModeJedisConverter();
 	/**
 	 * end param converter
 	 */
@@ -123,12 +134,42 @@ public interface JedisConverters extends Converters {
 
 	ScanResultConverter.ListScanResultExposeConverter<byte[]> BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER = new ScanResultConverter.ListScanResultExposeConverter<>();
 
+	ScanResultConverter.ListTupleScanResultExposeConverter LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER = new ScanResultConverter.ListTupleScanResultExposeConverter();
+
 	EnumConverter<Type> TYPE_RESULT_CONVERTER = new EnumConverter<>(Type.class);
 
 	EnumConverter<ObjectEncoding> STRING_OBJECT_ENCODING_RESULT_CONVERTER = new EnumConverter<>(ObjectEncoding.class);
 
 	Converter<byte[], ObjectEncoding> BINARY_OBJECT_ENCODING_RESULT_CONVERTER = (value)->EnumUtils.getEnumIgnoreCase(
 			ObjectEncoding.class, SafeEncoder.encode(value).toUpperCase());
+
+	AclUserConverter.AclUserExposeConverter ACL_USER_RESULT_CONVERTER = new AclUserConverter.AclUserExposeConverter();
+
+	ListConverter<AccessControlLogEntry, AclLog> LIST_ACL_LOG_RESULT_CONVERTER = new ListConverter<>(
+			new AclLogConverter.AclLogExposeConverter());
+
+	ListConverter<redis.clients.jedis.Module, Module> LIST_MODULE_RESULT_CONVERTER = new ListConverter<>(
+			new ModuleConverter.ModuleExposeConverter());
+
+	ListConverter<Object, Role> LIST_ROLE_RESULT_CONVERTER = new ListConverter<>(
+			new RoleConverter.RoleExposeConverter());
+
+	ListConverter<Slowlog, SlowLog> LIST_SLOW_LOG_RESULT_CONVERTER = new ListConverter<>(
+			new SlowLogConverter.SlowLogExposeConverter());
+
+	RedisServerTimeConverter REDIS_SERVER_TIME_RESULT_CONVERTER = new RedisServerTimeConverter();
+
+	KeyedZSetElementConverter.KeyedZSetElementExposeConverter KEYED_Z_SET_ELEMENT_RESULT_CONVERTER = new KeyedZSetElementConverter.KeyedZSetElementExposeConverter();
+
+	KeyedZSetElementConverter.BinaryDataKeyedZSetElementExposeConverter BINARY_DATA_KEYED_Z_SET_ELEMENT_RESULT_CONVERTER = new KeyedZSetElementConverter.BinaryDataKeyedZSetElementExposeConverter();
+
+	TupleConverter.TupleExposeConverter TUPLE_RESULT_CONVERTER = new TupleConverter.TupleExposeConverter();
+
+	SetConverter<redis.clients.jedis.resps.Tuple, Tuple> SET_TUPLE_RESULT_CONVERTER = new SetConverter<>(
+			TUPLE_RESULT_CONVERTER);
+
+	ListConverter<redis.clients.jedis.resps.Tuple, Tuple> LIST_TUPLE_RESULT_CONVERTER = new ListConverter<>(
+			TUPLE_RESULT_CONVERTER);
 	/**
 	 * end result converter
 	 */

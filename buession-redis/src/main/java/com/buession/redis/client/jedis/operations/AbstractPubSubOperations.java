@@ -22,17 +22,26 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
+package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.core.command.HyperLogLogCommands;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.PubSubOperations;
 
 /**
- * HyperLogLog 运算
+ * Jedis Pub/Sub 命令操作抽象类
  *
- * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a></p>
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperations {
+public abstract class AbstractPubSubOperations<C extends JedisRedisConnection> extends AbstractJedisRedisOperations<C>
+		implements PubSubOperations<C> {
+
+	public AbstractPubSubOperations(final JedisRedisClient client){
+		super(client);
+	}
 
 }

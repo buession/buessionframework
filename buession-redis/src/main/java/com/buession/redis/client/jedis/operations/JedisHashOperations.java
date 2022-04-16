@@ -318,13 +318,14 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisConne
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
+		final JedisScanParams params = new JedisScanParams(pattern);
 		final JedisCommand<ScanResult<Map<String, String>>> command = JedisCommand.<ScanResult<Map<String, String>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern)),
+				.general((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern)),
+				.pipeline((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern)),
+				.transaction((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -332,13 +333,14 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisConne
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final byte[] pattern){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
+		final JedisScanParams params = new JedisScanParams(pattern);
 		final JedisCommand<ScanResult<Map<byte[], byte[]>>> command = JedisCommand.<ScanResult<Map<byte[], byte[]>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern)),
+				.general((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern)),
+				.pipeline((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern)),
+				.transaction((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -346,13 +348,14 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisConne
 	@Override
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
+		final JedisScanParams params = new JedisScanParams(count);
 		final JedisCommand<ScanResult<Map<String, String>>> command = JedisCommand.<ScanResult<Map<String, String>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, new JedisScanParams(count)),
+				.general((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor, new JedisScanParams(count)),
+				.pipeline((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor, new JedisScanParams(count)),
+				.transaction((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -360,13 +363,14 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisConne
 	@Override
 	public ScanResult<Map<byte[], byte[]>> hScan(final byte[] key, final byte[] cursor, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("count", count);
+		final JedisScanParams params = new JedisScanParams(count);
 		final JedisCommand<ScanResult<Map<byte[], byte[]>>> command = JedisCommand.<ScanResult<Map<byte[], byte[]>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, new JedisScanParams(count)),
+				.general((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor, new JedisScanParams(count)),
+				.pipeline((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor, new JedisScanParams(count)),
+				.transaction((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -375,13 +379,14 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisConne
 	public ScanResult<Map<String, String>> hScan(final String key, final String cursor, final String pattern,
 												 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern);
+		final JedisScanParams params = new JedisScanParams(pattern, count);
 		final JedisCommand<ScanResult<Map<String, String>>> command = JedisCommand.<ScanResult<Map<String, String>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern, count)),
+				.general((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern, count)),
+				.pipeline((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern, count)),
+				.transaction((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -391,13 +396,14 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisConne
 												 final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
+		final JedisScanParams params = new JedisScanParams(pattern, count);
 		final JedisCommand<ScanResult<Map<byte[], byte[]>>> command = JedisCommand.<ScanResult<Map<byte[], byte[]>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern, count)),
+				.general((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern, count)),
+				.pipeline((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor, new JedisScanParams(pattern, count)),
+				.transaction((cmd)->cmd.hscan(key, cursor, params),
 						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -405,26 +411,25 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisConne
 	@Override
 	public long hSet(final String key, final String field, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
-		final JedisCommand<Long> command = JedisCommand.<Long>create(
-						ProtocolCommand.HSET).general((cmd)->cmd.hset(key, field, value))
-				.pipeline((cmd)->cmd.hset(key, field, value)).transaction((cmd)->cmd.hset(key, field, value));
+		final JedisCommand<Long> command = JedisCommand.<Long>create(ProtocolCommand.HSET)
+				.general((cmd)->cmd.hset(key, field, value)).pipeline((cmd)->cmd.hset(key, field, value))
+				.transaction((cmd)->cmd.hset(key, field, value));
 		return execute(command, args);
 	}
 
 	@Override
 	public long hSet(final byte[] key, final byte[] field, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
-		final JedisCommand<Long> command = JedisCommand.<Long>create(
-						ProtocolCommand.HSET).general((cmd)->cmd.hset(key, field, value))
-				.pipeline((cmd)->cmd.hset(key, field, value)).transaction((cmd)->cmd.hset(key, field, value));
+		final JedisCommand<Long> command = JedisCommand.<Long>create(ProtocolCommand.HSET)
+				.general((cmd)->cmd.hset(key, field, value)).pipeline((cmd)->cmd.hset(key, field, value))
+				.transaction((cmd)->cmd.hset(key, field, value));
 		return execute(command, args);
 	}
 
 	@Override
 	public Status hSetNx(final String key, final String field, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(
-						ProtocolCommand.HSETNX)
+		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.HSETNX)
 				.general((cmd)->cmd.hsetnx(key, field, value), JedisConverters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.hsetnx(key, field, value), JedisConverters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.hsetnx(key, field, value), JedisConverters.ONE_STATUS_CONVERTER);
@@ -434,8 +439,7 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisConne
 	@Override
 	public Status hSetNx(final byte[] key, final byte[] field, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(
-						ProtocolCommand.HSETNX)
+		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.HSETNX)
 				.general((cmd)->cmd.hsetnx(key, field, value), JedisConverters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.hsetnx(key, field, value), JedisConverters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.hsetnx(key, field, value), JedisConverters.ONE_STATUS_CONVERTER);
@@ -445,36 +449,34 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisConne
 	@Override
 	public long hStrLen(final String key, final String field){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
-		final JedisCommand<Long> command = JedisCommand.<Long>create(
-						ProtocolCommand.HSTRLEN).general((cmd)->cmd.hstrlen(key, field))
-				.pipeline((cmd)->cmd.hstrlen(key, field)).transaction((cmd)->cmd.hstrlen(key, field));
+		final JedisCommand<Long> command = JedisCommand.<Long>create(ProtocolCommand.HSTRLEN)
+				.general((cmd)->cmd.hstrlen(key, field)).pipeline((cmd)->cmd.hstrlen(key, field))
+				.transaction((cmd)->cmd.hstrlen(key, field));
 		return execute(command, args);
 	}
 
 	@Override
 	public long hStrLen(final byte[] key, final byte[] field){
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field);
-		final JedisCommand<Long> command = JedisCommand.<Long>create(
-						ProtocolCommand.HSTRLEN).general((cmd)->cmd.hstrlen(key, field))
-				.pipeline((cmd)->cmd.hstrlen(key, field)).transaction((cmd)->cmd.hstrlen(key, field));
+		final JedisCommand<Long> command = JedisCommand.<Long>create(ProtocolCommand.HSTRLEN)
+				.general((cmd)->cmd.hstrlen(key, field)).pipeline((cmd)->cmd.hstrlen(key, field))
+				.transaction((cmd)->cmd.hstrlen(key, field));
 		return execute(command, args);
 	}
 
 	@Override
 	public List<String> hVals(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisCommand<List<String>> command = JedisCommand.<List<String>>create(
-						ProtocolCommand.HVALS).general((cmd)->cmd.hvals(key))
-				.pipeline((cmd)->cmd.hvals(key)).transaction((cmd)->cmd.hvals(key));
+		final JedisCommand<List<String>> command = JedisCommand.<List<String>>create(ProtocolCommand.HVALS)
+				.general((cmd)->cmd.hvals(key)).pipeline((cmd)->cmd.hvals(key)).transaction((cmd)->cmd.hvals(key));
 		return execute(command, args);
 	}
 
 	@Override
 	public List<byte[]> hVals(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisCommand<List<byte[]>> command = JedisCommand.<List<byte[]>>create(
-						ProtocolCommand.HVALS).general((cmd)->cmd.hvals(key))
-				.pipeline((cmd)->cmd.hvals(key)).transaction((cmd)->cmd.hvals(key));
+		final JedisCommand<List<byte[]>> command = JedisCommand.<List<byte[]>>create(ProtocolCommand.HVALS)
+				.general((cmd)->cmd.hvals(key)).pipeline((cmd)->cmd.hvals(key)).transaction((cmd)->cmd.hvals(key));
 		return execute(command, args);
 	}
 

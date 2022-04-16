@@ -155,24 +155,24 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/acl-deluser/" target="_blank">https://redis.io/commands/acl-deluser/</a></p>
 	 *
-	 * @param username
+	 * @param usernames
 	 * 		用户名
 	 *
-	 * @return 删除成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 * @return 删除用户数量
 	 */
-	Status aclDelUser(final String username);
+	long aclDelUser(final String... usernames);
 
 	/**
 	 * Delete all the specified ACL users and terminate all the connections that are authenticated with such users
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/acl-deluser/" target="_blank">https://redis.io/commands/acl-deluser/</a></p>
 	 *
-	 * @param username
+	 * @param usernames
 	 * 		用户名
 	 *
-	 * @return 删除成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 * @return 删除用户数量
 	 */
-	Status aclDelUser(final byte[] username);
+	long aclDelUser(final byte[]... usernames);
 
 	/**
 	 * ACL users need a solid password in order to authenticate to the server without security risks
@@ -345,7 +345,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 数据库的 key 的数量
 	 */
-	Long dbSize();
+	long dbSize();
 
 	/**
 	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
@@ -379,42 +379,12 @@ public interface ServerCommands extends RedisCommands {
 	 * 		主机地址
 	 * @param port
 	 * 		端口
-	 *
-	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
-	 */
-	Status failover(final byte[] host, final int port);
-
-	/**
-	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/failover/" target="_blank">https://redis.io/commands/failover/</a></p>
-	 *
-	 * @param host
-	 * 		主机地址
-	 * @param port
-	 * 		端口
 	 * @param timeout
 	 * 		超时（单位：毫秒）
 	 *
 	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
 	 */
 	Status failover(final String host, final int port, final int timeout);
-
-	/**
-	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/failover/" target="_blank">https://redis.io/commands/failover/</a></p>
-	 *
-	 * @param host
-	 * 		主机地址
-	 * @param port
-	 * 		端口
-	 * @param timeout
-	 * 		超时（单位：毫秒）
-	 *
-	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
-	 */
-	Status failover(final byte[] host, final int port, final int timeout);
 
 	/**
 	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
@@ -433,24 +403,6 @@ public interface ServerCommands extends RedisCommands {
 	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
 	 */
 	Status failover(final String host, final int port, final boolean isForce, final int timeout);
-
-	/**
-	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/failover/" target="_blank">https://redis.io/commands/failover/</a></p>
-	 *
-	 * @param host
-	 * 		主机地址
-	 * @param port
-	 * 		端口
-	 * @param isForce
-	 * 		是否强制
-	 * @param timeout
-	 * 		超时（单位：毫秒）
-	 *
-	 * @return Status.SUCCESS if the command was accepted and a coordinated failover is in progress
-	 */
-	Status failover(final byte[] host, final int port, final boolean isForce, final int timeout);
 
 	/**
 	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
@@ -534,7 +486,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 最近一次成功将数据保存到磁盘上的时间
 	 */
-	Long lastSave();
+	long lastSave();
 
 	/**
 	 * 列出 Redis 服务器遇到的不同类型的内存相关问题，并提供相应的解决建议
@@ -544,15 +496,6 @@ public interface ServerCommands extends RedisCommands {
 	 * @return Redis 服务器遇到的不同类型的内存相关问题，以及解决建议
 	 */
 	String memoryDoctor();
-
-	/**
-	 * The MEMORY MALLOC-STATS command provides an internal statistics report from the memory allocator
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/memory-malloc-stats/" target="_blank">https://redis.io/commands/memory-malloc-stats/</a></p>
-	 *
-	 * @return The memory allocator's internal statistics report
-	 */
-	String memoryMallocStats();
 
 	/**
 	 * The MEMORY PURGE command attempts to purge dirty pages so these can be reclaimed by the allocator
@@ -582,7 +525,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return the memory usage in bytes
 	 */
-	Long memoryUsage(final String key);
+	long memoryUsage(final String key);
 
 	/**
 	 * The MEMORY USAGE command reports the number of bytes that a key and its value require to be stored in RAM
@@ -594,21 +537,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return the memory usage in bytes
 	 */
-	Long memoryUsage(final byte[] key);
-
-	/**
-	 * The MEMORY USAGE command reports the number of bytes that a key and its value require to be stored in RAM
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/memory-usage/" target="_blank">https://redis.io/commands/memory-usage/</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param samples
-	 * 		Samples count
-	 *
-	 * @return the memory usage in bytes
-	 */
-	Long memoryUsage(final String key, final int samples);
+	long memoryUsage(final byte[] key);
 
 	/**
 	 * The MEMORY USAGE command reports the number of bytes that a key and its value require to be stored in RAM
@@ -622,7 +551,21 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return the memory usage in bytes
 	 */
-	Long memoryUsage(final byte[] key, final int samples);
+	long memoryUsage(final String key, final int samples);
+
+	/**
+	 * The MEMORY USAGE command reports the number of bytes that a key and its value require to be stored in RAM
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/memory-usage/" target="_blank">https://redis.io/commands/memory-usage/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param samples
+	 * 		Samples count
+	 *
+	 * @return the memory usage in bytes
+	 */
+	long memoryUsage(final byte[] key, final int samples);
 
 	/**
 	 * Returns information about the modules loaded to the server
@@ -768,7 +711,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return 实例在复制中担任的角色信息
 	 */
-	Role role();
+	List<Role> role();
 
 	/**
 	 * 执行一个同步保存操作，将当前 Redis 实例的所有数据快照(snapshot)以 RDB 文件的形式保存到硬盘；
@@ -833,7 +776,7 @@ public interface ServerCommands extends RedisCommands {
 	 *
 	 * @return The number of entries in the slow log
 	 */
-	Long slowLogLen();
+	long slowLogLen();
 
 	/**
 	 * This command resets the slow log, clearing all entries in it

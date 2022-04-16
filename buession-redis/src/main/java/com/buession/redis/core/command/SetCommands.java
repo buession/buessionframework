@@ -51,7 +51,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
 	 */
-	Long sAdd(final String key, final String... members);
+	long sAdd(final String key, final String... members);
 
 	/**
 	 * 将一个或多个 member 元素加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
@@ -65,7 +65,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
 	 */
-	Long sAdd(final byte[] key, final byte[]... members);
+	long sAdd(final byte[] key, final byte[]... members);
 
 	/**
 	 * 获取集合存储的key的基数 (集合元素的数量)
@@ -77,7 +77,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 集合的基数
 	 */
-	Long sCard(final String key);
+	long sCard(final String key);
 
 	/**
 	 * 获取集合存储的key的基数 (集合元素的数量)
@@ -89,35 +89,31 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 集合的基数
 	 */
-	Long sCard(final byte[] key);
+	long sCard(final byte[] key);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 *
 	 * @return 一个包含差集成员的列表
 	 */
-	Set<String> sDiff(final String key, final String... keys);
+	Set<String> sDiff(final String... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 *
 	 * @return 一个包含差集成员的列表
 	 */
-	Set<byte[]> sDiff(final byte[] key, final byte[]... keys);
+	Set<byte[]> sDiff(final byte[]... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
@@ -131,7 +127,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	Long sDiffStore(final String destKey, final String... keys);
+	long sDiffStore(final String destKey, final String... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
@@ -145,7 +141,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	Long sDiffStore(final byte[] destKey, final byte[]... keys);
+	long sDiffStore(final byte[] destKey, final byte[]... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
@@ -183,7 +179,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	Long sInterStore(final String destKey, final String... keys);
+	long sInterStore(final String destKey, final String... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
@@ -197,7 +193,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	Long sInterStore(final byte[] destKey, final byte[]... keys);
+	long sInterStore(final byte[] destKey, final byte[]... keys);
 
 	/**
 	 * 检测 member 元素是否集合 key 的成员
@@ -211,7 +207,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 存在时，返回 true；否则，返回 false
 	 */
-	boolean sisMember(final String key, final String member);
+	boolean sIsMember(final String key, final String member);
 
 	/**
 	 * 检测 member 元素是否集合 key 的成员
@@ -225,7 +221,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 存在时，返回 true；否则，返回 false
 	 */
-	boolean sisMember(final byte[] key, final byte[] member);
+	boolean sIsMember(final byte[] key, final byte[] member);
 
 	/**
 	 * 获取集合 key 中的所有成员
@@ -250,34 +246,6 @@ public interface SetCommands extends RedisCommands {
 	 * @return 集合中的所有成员
 	 */
 	Set<byte[]> sMembers(final byte[] key);
-
-	/**
-	 * 用于判断元素 member 是否集合 key 的成员
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/sismember.html" target="_blank">https://www.redis.com.cn/commands/sismember.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		成员
-	 *
-	 * @return 如果成员元素是集合的成员，返回 true；否则，返回 false
-	 */
-	Boolean sIsMember(final String key, final String member);
-
-	/**
-	 * 用于判断元素 member 是否集合 key 的成员
-	 *
-	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/sismember.html" target="_blank">https://www.redis.com.cn/commands/sismember.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		成员
-	 *
-	 * @return 如果成员元素是集合的成员，返回 true；否则，返回 false
-	 */
-	Boolean sIsMember(final byte[] key, final byte[] member);
 
 	/**
 	 * 将 member 元素从 source 集合移动到 destKey 集合 中
@@ -399,7 +367,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 集合 key 中的随机元素
 	 */
-	Set<String> sRandMember(final String key, final long count);
+	List<String> sRandMember(final String key, final long count);
 
 	/**
 	 * 返回集合 key 中的 count 个随机元素
@@ -413,7 +381,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 集合 key 中的随机元素
 	 */
-	Set<byte[]> sRandMember(final byte[] key, final long count);
+	List<byte[]> sRandMember(final byte[] key, final long count);
 
 	/**
 	 * 移除集合 key 中的一个或多个 member 元素，不存在的 member 元素会被忽略
@@ -427,7 +395,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
-	Long sRem(final String key, final String... members);
+	long sRem(final String key, final String... members);
 
 	/**
 	 * 移除集合 key 中的一个或多个 member 元素，不存在的 member 元素会被忽略
@@ -441,7 +409,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
-	Long sRem(final byte[] key, final byte[]... members);
+	long sRem(final byte[] key, final byte[]... members);
 
 	/**
 	 * 迭代集合键中的元素
@@ -704,28 +672,24 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 *
 	 * @return 并集成员的列表
 	 */
-	Set<String> sUnion(final String key, final String... keys);
+	Set<String> sUnion(final String... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 *
 	 * @return 并集成员的列表
 	 */
-	Set<byte[]> sUnion(final byte[] key, final byte[]... keys);
+	Set<byte[]> sUnion(final byte[]... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
@@ -739,7 +703,7 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	Long sUnionStore(final String destKey, final String... keys);
+	long sUnionStore(final String destKey, final String... keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
@@ -753,6 +717,6 @@ public interface SetCommands extends RedisCommands {
 	 *
 	 * @return 结果集中的元素数量
 	 */
-	Long sUnionStore(final byte[] destKey, final byte[]... keys);
+	long sUnionStore(final byte[] destKey, final byte[]... keys);
 
 }

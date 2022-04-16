@@ -40,36 +40,6 @@ import com.buession.redis.core.command.ClusterCommands;
 public interface ClusterOperations extends ClusterCommands, RedisOperations {
 
 	/**
-	 * 把一组 hash slots 分配给接收命令的节点
-	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-addslots.html" target="_blank">http://www.redis.cn/commands/cluster-addslots.html</a></p>
-	 *
-	 * @param slot
-	 * 		hash slot
-	 *
-	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	default Status clusterAddSlots(final int slot){
-		return clusterAddSlots(new int[]{slot});
-	}
-
-	/**
-	 * 使一个特定的 Redis Cluster 节点去忘记一个主节点正在负责的哈希槽
-	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-delslots.html" target="_blank">http://www.redis.cn/commands/cluster-delslots.html</a></p>
-	 *
-	 * @param slot
-	 * 		hash slot
-	 *
-	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	default Status clusterDelSlots(final int slot){
-		return clusterDelSlots(new int[]{slot});
-	}
-
-	/**
 	 * 用来连接不同的开启集群支持的 Redis 节点，以进入工作集群
 	 *
 	 * <p>详情说明
@@ -81,21 +51,6 @@ public interface ClusterOperations extends ClusterCommands, RedisOperations {
 	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
 	 */
 	default Status clusterMeet(final String ip){
-		return clusterMeet(ip, RedisNode.DEFAULT_PORT);
-	}
-
-	/**
-	 * 用来连接不同的开启集群支持的 Redis 节点，以进入工作集群
-	 *
-	 * <p>详情说明
-	 * <a href="http://www.redis.cn/commands/cluster-meet.html" target="_blank">http://www.redis.cn/commands/cluster-meet.html</a></p>
-	 *
-	 * @param ip
-	 * 		Redis 集群节点 IP
-	 *
-	 * @return 命令成功执行返回 Status.SUCCESS；否则返回 Status.FAILURE
-	 */
-	default Status clusterMeet(final byte[] ip){
 		return clusterMeet(ip, RedisNode.DEFAULT_PORT);
 	}
 

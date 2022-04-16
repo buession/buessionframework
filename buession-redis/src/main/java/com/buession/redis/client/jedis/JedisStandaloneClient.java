@@ -33,6 +33,11 @@ import com.buession.redis.client.jedis.operations.JedisHashOperations;
 import com.buession.redis.client.jedis.operations.JedisHyperLogLogOperations;
 import com.buession.redis.client.jedis.operations.JedisKeyOperations;
 import com.buession.redis.client.jedis.operations.JedisListOperations;
+import com.buession.redis.client.jedis.operations.JedisPubSubOperations;
+import com.buession.redis.client.jedis.operations.JedisScriptingOperations;
+import com.buession.redis.client.jedis.operations.JedisServerOperations;
+import com.buession.redis.client.jedis.operations.JedisSetOperations;
+import com.buession.redis.client.jedis.operations.JedisSortedSetOperations;
 
 /**
  * jedis 单机模式客户端
@@ -50,38 +55,63 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	}
 
 	@Override
-	public JedisClusterOperations clusterOps(){
+	public JedisClusterOperations clusterOperations(){
 		return new JedisClusterOperations(this);
 	}
 
 	@Override
-	public JedisConnectionOperations connectionOps(){
+	public JedisConnectionOperations connectionOperations(){
 		return new JedisConnectionOperations(this);
 	}
 
 	@Override
-	public JedisGeoOperations geoOps(){
+	public JedisGeoOperations geoOperations(){
 		return new JedisGeoOperations(this);
 	}
 
 	@Override
-	public JedisHashOperations hashOps(){
+	public JedisHashOperations hashOperations(){
 		return new JedisHashOperations(this);
 	}
 
 	@Override
-	public JedisHyperLogLogOperations hyperLogLogOps(){
+	public JedisHyperLogLogOperations hyperLogLogOperations(){
 		return new JedisHyperLogLogOperations(this);
 	}
 
 	@Override
-	public JedisKeyOperations keyOps(){
+	public JedisKeyOperations keyOperations(){
 		return new JedisKeyOperations(this);
 	}
 
 	@Override
-	public JedisListOperations listOps(){
+	public JedisListOperations listOperations(){
 		return new JedisListOperations(this);
+	}
+
+	@Override
+	public JedisPubSubOperations pubSubOperations(){
+		return new JedisPubSubOperations(this);
+	}
+
+	@Override
+	public JedisScriptingOperations scriptingOperations(){
+		return new JedisScriptingOperations(this);
+	}
+
+	@Override
+	public JedisServerOperations serverOperations(){
+		return new JedisServerOperations(this);
+	}
+
+	@Override
+	public JedisSetOperations setOperations(){
+		return new JedisSetOperations(this);
+	}
+
+	@Override
+	public JedisSortedSetOperations sortedSetOperations(){
+		return new JedisSortedSetOperations(this);
 	}
 
 }

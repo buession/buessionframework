@@ -41,38 +41,6 @@ import java.util.Date;
 public interface ServerOperations extends ServerCommands, RedisOperations {
 
 	/**
-	 * Create an ACL user with the specified rules or modify the rules of an existing user
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
-	 *
-	 * @param username
-	 * 		用户名
-	 * @param rule
-	 * 		the specified rule
-	 *
-	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
-	 */
-	default Status aclSetUser(final String username, final String rule){
-		return aclSetUser(username, new String[]{rule});
-	}
-
-	/**
-	 * Create an ACL user with the specified rules or modify the rules of an existing user
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/acl-setuser/" target="_blank">https://redis.io/commands/acl-setuser/</a></p>
-	 *
-	 * @param username
-	 * 		用户名
-	 * @param rule
-	 * 		the specified rule
-	 *
-	 * @return 操作成功，返回 Status.Success；否则，返回 Status.Failure
-	 */
-	default Status aclSetUser(final byte[] username, final byte[] rule){
-		return aclSetUser(username, new byte[][]{rule});
-	}
-
-	/**
 	 * This command will start a coordinated failover between the currently-connected-to master and one of its replicas
 	 *
 	 * <p>详情说明 <a href="https://redis.io/commands/failover/" target="_blank">https://redis.io/commands/failover/</a></p>
@@ -132,38 +100,6 @@ public interface ServerOperations extends ServerCommands, RedisOperations {
 	 */
 	default Date lastSaveAt(){
 		return new Date(lastSave());
-	}
-
-	/**
-	 * Returns information about the modules loaded to the server
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/module-load/" target="_blank">https://redis.io/commands/module-load/</a></p>
-	 *
-	 * @param path
-	 * 		Module Path
-	 * @param arg
-	 * 		Argument
-	 *
-	 * @return A list of loaded modules
-	 */
-	default Status moduleLoad(final String path, final String arg){
-		return moduleLoad(path, new String[]{arg});
-	}
-
-	/**
-	 * Returns information about the modules loaded to the server
-	 *
-	 * <p>详情说明 <a href="https://redis.io/commands/module-load/" target="_blank">https://redis.io/commands/module-load/</a></p>
-	 *
-	 * @param path
-	 * 		Module Path
-	 * @param arg
-	 * 		Argument
-	 *
-	 * @return A list of loaded modules
-	 */
-	default Status moduleLoad(final byte[] path, final byte[] arg){
-		return moduleLoad(path, new byte[][]{arg});
 	}
 
 	/**

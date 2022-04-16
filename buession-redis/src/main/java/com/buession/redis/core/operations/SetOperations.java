@@ -25,7 +25,6 @@
 package com.buession.redis.core.operations;
 
 import com.buession.core.serializer.type.TypeReference;
-import com.buession.core.validator.Validate;
 import com.buession.redis.core.command.SetCommands;
 
 import java.util.List;
@@ -41,7 +40,7 @@ import java.util.Set;
 public interface SetOperations extends SetCommands, RedisOperations {
 
 	/**
-	 * 将 member 元素加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
+	 * 将 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sadd.html" target="_blank">http://redisdoc.com/set/sadd.html</a></p>
 	 *
@@ -49,28 +48,12 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		Key
 	 * @param member
 	 * 		元素
+	 * @param <V>
+	 * 		元素值类型
 	 *
 	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
 	 */
-	default Long sAdd(final String key, final String member){
-		return sAdd(key, new String[]{member});
-	}
-
-	/**
-	 * 将 member 元素加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sadd.html" target="_blank">http://redisdoc.com/set/sadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		元素
-	 *
-	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
-	 */
-	default Long sAdd(final byte[] key, final byte[] member){
-		return sAdd(key, new byte[][]{member});
-	}
+	<V> long sAdd(final String key, final V member);
 
 	/**
 	 * 将 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
@@ -86,23 +69,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
 	 */
-	<V> Long sAdd(final String key, final V member);
-
-	/**
-	 * 将 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sadd.html" target="_blank">http://redisdoc.com/set/sadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		元素
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
-	 */
-	<V> Long sAdd(final byte[] key, final V member);
+	<V> long sAdd(final byte[] key, final V member);
 
 	/**
 	 * 将一个或多个 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
@@ -118,7 +85,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
 	 */
-	<V> Long sAdd(final String key, final V... members);
+	<V> long sAdd(final String key, final V... members);
 
 	/**
 	 * 将一个或多个 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
@@ -134,151 +101,13 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
 	 */
-	<V> Long sAdd(final byte[] key, final V... members);
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 一个包含差集成员的列表
-	 */
-	default Set<String> sDiff(final String key){
-		return sDiff(key, (String) null);
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
-	 *
-	 * @param key
-	 * 		一Key
-	 *
-	 * @return 一个包含差集成员的列表
-	 */
-	default Set<byte[]> sDiff(final byte[] key){
-		return sDiff(key, (byte[]) null);
-	}
+	<V> long sAdd(final byte[] key, final V... members);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 */
-	default <V> Set<V> sDiffObject(final String key){
-		return sDiffObject(key, (String[]) null);
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
-	 *
-	 * @param key
-	 * 		一Key
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 */
-	default <V> Set<V> sDiffObject(final byte[] key){
-		return sDiffObject(key, (byte[][]) null);
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 */
-	default <V> Set<V> sDiffObject(final String key, final Class<V> clazz){
-		return sDiffObject(key, null, clazz);
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 clazz 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
-	 *
-	 * @param key
-	 * 		一Key
-	 * @param clazz
-	 * 		值对象类
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 */
-	default <V> Set<V> sDiffObject(final byte[] key, final Class<V> clazz){
-		return sDiffObject(key, null, clazz);
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 *
-	 * @see com.buession.core.serializer.type.TypeReference
-	 */
-	default <V> Set<V> sDiffObject(final String key, final TypeReference<V> type){
-		return sDiffObject(key, null, type);
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 type 指定的对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
-	 *
-	 * @param key
-	 * 		一Key
-	 * @param type
-	 * 		值类型引用
-	 * @param <V>
-	 * 		值类型
-	 *
-	 * @return 一个包含差集成员反序列化为对象的列表
-	 *
-	 * @see com.buession.core.serializer.type.TypeReference
-	 */
-	default <V> Set<V> sDiffObject(final byte[] key, final TypeReference<V> type){
-		return sDiffObject(key, null, type);
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 * @param <V>
@@ -286,15 +115,13 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 一个包含差集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sDiffObject(final String key, final String[] keys);
+	<V> Set<V> sDiffObject(final String[] keys);
 
 	/**
 	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 * @param <V>
@@ -302,15 +129,13 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 一个包含差集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sDiffObject(final byte[] key, final byte[][] keys);
+	<V> Set<V> sDiffObject(final byte[][] keys);
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 clazz 指定的对象
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 * @param clazz
@@ -320,15 +145,13 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 一个包含差集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sDiffObject(final String key, final String[] keys, final Class<V> clazz);
+	<V> Set<V> sDiffObject(final String[] keys, final Class<V> clazz);
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 clazz 指定的对象
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
 	 *
-	 * @param key
-	 * 		一Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 * @param clazz
@@ -338,15 +161,13 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 一个包含差集成员反序列化为对象的列表
 	 */
-	<V> Set<V> sDiffObject(final byte[] key, final byte[][] keys, final Class<V> clazz);
+	<V> Set<V> sDiffObject(final byte[][] keys, final Class<V> clazz);
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 type 指定的对象
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列化为 type 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 * @param type
@@ -358,15 +179,13 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see com.buession.core.serializer.type.TypeReference
 	 */
-	<V> Set<V> sDiffObject(final String key, final String[] keys, final TypeReference<V> type);
+	<V> Set<V> sDiffObject(final String[] keys, final TypeReference<V> type);
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列为 type 指定的对象
+	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并反序列化为 type 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiff.html" target="_blank">http://redisdoc.com/set/sdiff.html</a></p>
 	 *
-	 * @param key
-	 * 		一Key
 	 * @param keys
 	 * 		一个或多个 Key
 	 * @param type
@@ -378,99 +197,103 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @see com.buession.core.serializer.type.TypeReference
 	 */
-	<V> Set<V> sDiffObject(final byte[] key, final byte[][] keys, final TypeReference<V> type);
+	<V> Set<V> sDiffObject(final byte[][] keys, final TypeReference<V> type);
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiffstore.html" target="_blank">http://redisdoc.com/set/sdiffstore.html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	default Long sDiffStore(final String destKey, final String key){
-		return sDiffStore(destKey, new String[]{key});
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合之间的差集，并保存到 destKey 中
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sdiffstore.html" target="_blank">http://redisdoc.com/set/sdiffstore.html</a></p>
-	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
-	 *
-	 * @return 结果集中的元素数量
-	 */
-	default Long sDiffStore(final byte[] destKey, final byte[] key){
-		return sDiffStore(destKey, new byte[][]{key});
-	}
-
-	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列为对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 交集成员的列表
+	 * @return 交集成员反序列化为对象的列表
 	 */
-	default Set<String> sInter(final String key){
-		return sInter(key, (String) null);
-	}
+	<V> Set<V> sInterObject(final String[] keys);
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列为对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 交集成员的列表
+	 * @return 交集成员反序列化为对象的列表
 	 */
-	default Set<byte[]> sInter(final byte[] key){
-		return sInter(key, (byte[]) null);
-	}
+	<V> Set<V> sInterObject(final byte[][] keys);
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列化为 clazz 指定的对象
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sinterstore.html" target="_blank">http://redisdoc.com/set/sinterstore.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 结果集中的元素数量
+	 * @return 交集成员反序列化为对象的列表
 	 */
-	default Long sInterStore(final String destKey, final String key){
-		return sInterStore(destKey, new String[]{key});
-	}
+	<V> Set<V> sInterObject(final String[] keys, final Class<V> clazz);
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并保存到 destKey 中
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列化为 clazz 指定的对象
 	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sinterstore.html" target="_blank">http://redisdoc.com/set/sinterstore.html</a></p>
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 结果集中的元素数量
+	 * @return 交集成员反序列化为对象的列表
 	 */
-	default Long sInterStore(final byte[] destKey, final byte[] key){
-		return sInterStore(destKey, new byte[][]{key});
-	}
+	<V> Set<V> sInterObject(final byte[][] keys, final Class<V> clazz);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 交集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> sInterObject(final String[] keys, final TypeReference<V> type);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的交集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sinter.html" target="_blank">http://redisdoc.com/set/sinter.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 交集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> sInterObject(final byte[][] keys, final TypeReference<V> type);
 
 	/**
 	 * 获取集合 key 中的所有成员反序列化后的对象
@@ -977,7 +800,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	<V> List<V> sRandMemberObject(final byte[] key, final long count, final TypeReference<V> type);
 
 	/**
-	 * 移除集合 key 中的 member 元素，不存在的 member 元素会被忽略
+	 * 移除集合 key 中的 member 序列化后的元素，不存在的 member 元素会被忽略
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/srem.html" target="_blank">http://redisdoc.com/set/srem.html</a></p>
 	 *
@@ -985,28 +808,12 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 * 		Key
 	 * @param member
 	 * 		元素
+	 * @param <V>
+	 * 		元素值类型
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
-	default Long sRem(final String key, final String member){
-		return sRem(key, new String[]{member});
-	}
-
-	/**
-	 * 移除集合 key 中的 member 元素，不存在的 member 元素会被忽略
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srem.html" target="_blank">http://redisdoc.com/set/srem.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		元素
-	 *
-	 * @return 被成功移除的元素的数量，不包括被忽略的元素
-	 */
-	default Long sRem(final byte[] key, final byte[] member){
-		return sRem(key, new byte[][]{member});
-	}
+	<V> long sRem(final String key, final V member);
 
 	/**
 	 * 移除集合 key 中的 member 序列化后的元素，不存在的 member 元素会被忽略
@@ -1022,23 +829,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
-	<V> Long sRem(final String key, final V member);
-
-	/**
-	 * 移除集合 key 中的 member 序列化后的元素，不存在的 member 元素会被忽略
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/srem.html" target="_blank">http://redisdoc.com/set/srem.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		元素
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被成功移除的元素的数量，不包括被忽略的元素
-	 */
-	<V> Long sRem(final byte[] key, final V member);
+	<V> long sRem(final byte[] key, final V member);
 
 	/**
 	 * 移除集合 key 中的一个或多个 member 序列化后的元素，不存在的 member 元素会被忽略
@@ -1054,7 +845,7 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
-	<V> Long sRem(final String key, final V... members);
+	<V> long sRem(final String key, final V... members);
 
 	/**
 	 * 移除集合 key 中的一个或多个 member 序列化后的元素，不存在的 member 元素会被忽略
@@ -1070,66 +861,102 @@ public interface SetOperations extends SetCommands, RedisOperations {
 	 *
 	 * @return 被成功移除的元素的数量，不包括被忽略的元素
 	 */
-	<V> Long sRem(final byte[] key, final V... members);
+	<V> long sRem(final byte[] key, final V... members);
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列为对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 并集成员的列表
+	 * @return 并集成员反序列化为对象的列表
 	 */
-	default Set<String> sUnion(final String key){
-		return sUnion(key, (String) null);
-	}
+	<V> Set<V> sUnionObject(final String[] keys);
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的并集
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列为对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a></p>
 	 *
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 并集成员的列表
+	 * @return 并集成员反序列化为对象的列表
 	 */
-	default Set<byte[]> sUnion(final byte[] key){
-		return sUnion(key, (byte[]) null);
-	}
+	<V> Set<V> sUnionObject(final byte[][] keys);
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 结果集中的元素数量
+	 * @return 并集成员反序列化为对象的列表
 	 */
-	default Long sUnionStore(final String destKey, final String key){
-		return sUnionStore(destKey, new String[]{key});
-	}
+	<V> Set<V> sUnionObject(final String[] keys, final Class<V> clazz);
 
 	/**
-	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并保存到 destKey 中
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列化为 clazz 指定的对象
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a></p>
 	 *
-	 * @param destKey
-	 * 		目标 Key
-	 * @param key
-	 * 		Key
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param clazz
+	 * 		值对象类
+	 * @param <V>
+	 * 		值类型
 	 *
-	 * @return 结果集中的元素数量
+	 * @return 并集成员反序列化为对象的列表
 	 */
-	default Long sUnionStore(final byte[] destKey, final byte[] key){
-		return sUnionStore(destKey, new byte[][]{key});
-	}
+	<V> Set<V> sUnionObject(final byte[][] keys, final Class<V> clazz);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> sUnionObject(final String[] keys, final TypeReference<V> type);
+
+	/**
+	 * 获取一个集合的全部成员，该集合是所有给定集合的并集，并反序列化为 type 指定的对象
+	 *
+	 * <p>详情说明 <a href="http://redisdoc.com/set/sunion.html" target="_blank">http://redisdoc.com/set/sunion.html</a></p>
+	 *
+	 * @param keys
+	 * 		一个或多个 Key
+	 * @param type
+	 * 		值类型引用
+	 * @param <V>
+	 * 		值类型
+	 *
+	 * @return 并集成员反序列化为对象的列表
+	 *
+	 * @see com.buession.core.serializer.type.TypeReference
+	 */
+	<V> Set<V> sUnionObject(final byte[][] keys, final TypeReference<V> type);
 
 }

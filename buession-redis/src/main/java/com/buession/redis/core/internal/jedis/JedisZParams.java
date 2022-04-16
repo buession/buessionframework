@@ -29,23 +29,62 @@ import redis.clients.jedis.params.ZParams;
 /**
  * @author Yong.Teng
  */
-public class JedisZParams extends ZParams {
+public final class JedisZParams extends ZParams {
 
+	/**
+	 * 构造函数
+	 */
 	public JedisZParams(){
 		super();
 	}
 
-	public JedisZParams(final Aggregate aggregate){
+	/**
+	 * 构造函数
+	 *
+	 * @param aggregate
+	 *        {@link Aggregate}
+	 */
+	public JedisZParams(final com.buession.redis.core.Aggregate aggregate){
 		aggregate(aggregate);
 	}
 
+	/**
+	 * 构造函数
+	 *
+	 * @param weights
+	 * 		权重
+	 */
 	public JedisZParams(final double... weights){
 		weights(weights);
 	}
 
-	public JedisZParams(final Aggregate aggregate, final double... weights){
+	/**
+	 * 构造函数
+	 *
+	 * @param aggregate
+	 *        {@link Aggregate}
+	 * @param weights
+	 * 		权重
+	 */
+	public JedisZParams(final com.buession.redis.core.Aggregate aggregate, final double... weights){
 		aggregate(aggregate);
 		weights(weights);
+	}
+
+	private void aggregate(final com.buession.redis.core.Aggregate aggregate){
+		switch(aggregate){
+			case MIN:
+				aggregate(Aggregate.MIN);
+				break;
+			case MAX:
+				aggregate(Aggregate.MAX);
+				break;
+			case SUM:
+				aggregate(Aggregate.SUM);
+				break;
+			default:
+				break;
+		}
 	}
 
 }

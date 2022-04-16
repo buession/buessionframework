@@ -41,6 +41,11 @@ import com.buession.redis.client.operations.HashOperations;
 import com.buession.redis.client.operations.HyperLogLogOperations;
 import com.buession.redis.client.operations.KeyOperations;
 import com.buession.redis.client.operations.ListOperations;
+import com.buession.redis.client.operations.PubSubOperations;
+import com.buession.redis.client.operations.ScriptingOperations;
+import com.buession.redis.client.operations.ServerOperations;
+import com.buession.redis.client.operations.SetOperations;
+import com.buession.redis.client.operations.SortedSetOperations;
 import com.buession.redis.core.Options;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
@@ -85,6 +90,16 @@ public abstract class RedisAccessor implements Closeable {
 	protected KeyOperations<? extends RedisConnection> keyOps;
 
 	protected ListOperations<? extends RedisConnection> listOps;
+
+	protected PubSubOperations<? extends RedisConnection> pubSubOps;
+
+	protected ScriptingOperations<? extends RedisConnection> scriptingOps;
+
+	protected ServerOperations<? extends RedisConnection> serverOps;
+
+	protected SetOperations<? extends RedisConnection> setOps;
+
+	protected SortedSetOperations<? extends RedisConnection> sortedSetOps;
 
 	static{
 		DEFAULT_OPTIONS.setSerializer(DEFAULT_SERIALIZER);
@@ -131,13 +146,18 @@ public abstract class RedisAccessor implements Closeable {
 
 		client = doGetRedisClient(connection);
 
-		clusterOps = client.clusterOps();
-		connectionOps = client.connectionOps();
-		geoOps = client.geoOps();
-		hashOps = client.hashOps();
-		hyperLogLogOps = client.hyperLogLogOps();
-		keyOps = client.keyOps();
-		listOps = client.listOps();
+		clusterOps = client.clusterOperations();
+		connectionOps = client.connectionOperations();
+		geoOps = client.geoOperations();
+		hashOps = client.hashOperations();
+		hyperLogLogOps = client.hyperLogLogOperations();
+		keyOps = client.keyOperations();
+		listOps = client.listOperations();
+		pubSubOps = client.pubSubOperations();
+		scriptingOps = client.scriptingOperations();
+		serverOps = client.serverOperations();
+		setOps = client.setOperations();
+		sortedSetOps = client.sortedSetOperations();
 	}
 
 	public Pipeline pipeline(){
@@ -201,6 +221,26 @@ public abstract class RedisAccessor implements Closeable {
 
 	protected <R> R listOpsExecute(final Executor<ListOperations<? extends RedisConnection>, R> executor){
 		return execute(listOps, executor);
+	}
+
+	protected <R> R pubSubOpsExecute(final Executor<PubSubOperations<? extends RedisConnection>, R> executor){
+		return execute(pubSubOps, executor);
+	}
+
+	protected <R> R scriptingOpsExecute(final Executor<ScriptingOperations<? extends RedisConnection>, R> executor){
+		return execute(scriptingOps, executor);
+	}
+
+	protected <R> R serverOpsExecute(final Executor<ServerOperations<? extends RedisConnection>, R> executor){
+		return execute(serverOps, executor);
+	}
+
+	protected <R> R setOpsExecute(final Executor<SetOperations<? extends RedisConnection>, R> executor){
+		return execute(setOps, executor);
+	}
+
+	protected <R> R sortedSetOpsExecute(final Executor<SortedSetOperations<? extends RedisConnection>, R> executor){
+		return execute(sortedSetOps, executor);
 	}
 
 	protected RedisClient doGetRedisClient(RedisConnection connection) throws RedisException{

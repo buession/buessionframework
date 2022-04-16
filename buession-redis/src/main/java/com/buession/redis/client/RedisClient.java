@@ -32,6 +32,11 @@ import com.buession.redis.client.operations.HashOperations;
 import com.buession.redis.client.operations.HyperLogLogOperations;
 import com.buession.redis.client.operations.KeyOperations;
 import com.buession.redis.client.operations.ListOperations;
+import com.buession.redis.client.operations.PubSubOperations;
+import com.buession.redis.client.operations.ScriptingOperations;
+import com.buession.redis.client.operations.ServerOperations;
+import com.buession.redis.client.operations.SetOperations;
+import com.buession.redis.client.operations.SortedSetOperations;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.command.*;
 import com.buession.redis.exception.RedisException;
@@ -48,19 +53,29 @@ public interface RedisClient {
 
 	Pipeline pipeline();
 
-	ClusterOperations<? extends RedisConnection> clusterOps();
+	ClusterOperations<? extends RedisConnection> clusterOperations();
 
-	ConnectionOperations<? extends RedisConnection> connectionOps();
+	ConnectionOperations<? extends RedisConnection> connectionOperations();
 
-	GeoOperations<? extends RedisConnection> geoOps();
+	GeoOperations<? extends RedisConnection> geoOperations();
 
-	HashOperations<? extends RedisConnection> hashOps();
+	HashOperations<? extends RedisConnection> hashOperations();
 
-	HyperLogLogOperations<? extends RedisConnection> hyperLogLogOps();
+	HyperLogLogOperations<? extends RedisConnection> hyperLogLogOperations();
 
-	KeyOperations<? extends RedisConnection> keyOps();
+	KeyOperations<? extends RedisConnection> keyOperations();
 
-	ListOperations<? extends RedisConnection> listOps();
+	ListOperations<? extends RedisConnection> listOperations();
+
+	PubSubOperations<? extends RedisConnection> pubSubOperations();
+
+	ScriptingOperations<? extends RedisConnection> scriptingOperations();
+
+	ServerOperations<? extends RedisConnection> serverOperations();
+
+	SetOperations<? extends RedisConnection> setOperations();
+
+	SortedSetOperations<? extends RedisConnection> sortedSetOperations();
 
 	default <R> R execute(final Command<RedisConnection, R> command) throws RedisException{
 		return execute(command, null);

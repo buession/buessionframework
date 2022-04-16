@@ -22,17 +22,48 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.operations;
+package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.core.command.HyperLogLogCommands;
+import com.buession.lang.Status;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.ServerOperations;
+import com.buession.redis.utils.SafeEncoder;
 
 /**
- * HyperLogLog 运算
+ * Jedis 服务端命令操作抽象类
  *
- * <p>详情说明 <a href="http://redisdoc.com/hyperloglog/index.html" target="_blank">http://redisdoc.com/hyperloglog/index.html</a></p>
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
+ * @since 2.0.0
  */
-public interface HyperLogLogOperations extends HyperLogLogCommands, RedisOperations {
+public abstract class AbstractServerOperations<C extends JedisRedisConnection> extends AbstractJedisRedisOperations<C>
+		implements ServerOperations<C> {
+
+	public AbstractServerOperations(final JedisRedisClient client){
+		super(client);
+	}
+
+	@Override
+	public Status moduleLoad(final byte[] path, final byte[]... arguments){
+		if(arguments == null){
+			return moduleLoad(SafeEncoder.encode(path));
+		}else{
+			final String[] args = new String[arguments.length];
+
+			for(int i = 0; i < arguments.length; i++){
+				args[i] = SafeEncoder.encode(arguments[i]);
+			}
+
+			return moduleLoad(SafeEncoder.encode(path), args);
+		}
+	}
+
+	@Override
+	public Status moduleUnLoad(final byte[] name){
+		return moduleUnLoad(SafeEncoder.encode(name));
+	}
 
 }
