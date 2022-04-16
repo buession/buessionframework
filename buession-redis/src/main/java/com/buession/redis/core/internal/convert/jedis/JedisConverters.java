@@ -91,6 +91,10 @@ public interface JedisConverters extends Converters {
 	DirectionConverter.DirectionJedisConverter DIRECTION_CONVERTER = new DirectionConverter.DirectionJedisConverter();
 
 	FlushModeConverter.FlushModeJedisConverter FLUSH_MODE_CONVERTER = new FlushModeConverter.FlushModeJedisConverter();
+
+	GetExArgumentConverter.GetExArgumentJedisConverter GET_EX_ARGUMENT_CONVERTER = new GetExArgumentConverter.GetExArgumentJedisConverter();
+
+	SetArgumentConverter.SetArgumentJedisConverter SET_ARGUMENT_CONVERTER = new SetArgumentConverter.SetArgumentJedisConverter();
 	/**
 	 * end param converter
 	 */

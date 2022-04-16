@@ -31,7 +31,6 @@ import com.buession.redis.core.GeoUnit;
 
 import java.util.List;
 import java.util.Map;
-import java.util.StringJoiner;
 
 /**
  * 地理位置命令
@@ -636,29 +635,12 @@ public interface GeoCommands extends RedisCommands {
 
 		@Override
 		public String toString(){
-			final StringJoiner stringJoiner = new StringJoiner(",", "{", "}");
-
-			if(withCoord != null){
-				stringJoiner.add("withCoord=" + withCoord);
-			}
-
-			if(withDist != null){
-				stringJoiner.add("withDist=" + withDist);
-			}
-
-			if(withHash != null){
-				stringJoiner.add("withHash=" + withHash);
-			}
-
-			if(order != null){
-				stringJoiner.add("order=" + order);
-			}
-
-			if(count != null){
-				stringJoiner.add("count=" + count);
-			}
-
-			return stringJoiner.toString();
+			return ArgumentStringBuilder.create().
+					add("withCoord", withCoord).
+					add("withDist", withDist).
+					add("withHash", withHash).
+					add("order", order).
+					add("count", count).build();
 		}
 
 		public static class Builder {

@@ -65,6 +65,7 @@ import com.buession.redis.core.Type;
 import com.buession.redis.core.AclUser;
 import com.buession.redis.core.ZRangeBy;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -3400,533 +3401,226 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 		return sortedSetOpsExecute((ops)->ops.zUnionStore(rawKey(destKey), rawKeys(keys), aggregate, weights));
 	}
 
-	/*
-
 	@Override
-	public Long append(final String key, final String value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.append(rawKey(key), value), ProtocolCommand.APPEND, args);
+	public long append(final String key, final String value){
+		return stringOpsOpsExecute((ops)->ops.append(rawKey(key), value));
 	}
 
 	@Override
-	public Long append(final byte[] key, final byte[] value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.append(rawKey(key), value), ProtocolCommand.APPEND, args);
+	public long append(final byte[] key, final byte[] value){
+		return stringOpsOpsExecute((ops)->ops.append(rawKey(key), value));
 	}
 
 	@Override
-	public Long bitCount(final String key){
-		return execute((client)->client.bitCount(rawKey(key)), ProtocolCommand.BITCOUNT,
-				new CommandArguments("key", key));
+	public long incr(final String key){
+		return stringOpsOpsExecute((ops)->ops.incr(rawKey(key)));
 	}
 
 	@Override
-	public Long bitCount(final byte[] key){
-		return execute((client)->client.bitCount(rawKey(key)), ProtocolCommand.BITCOUNT,
-				new CommandArguments("key", key));
+	public long incr(final byte[] key){
+		return stringOpsOpsExecute((ops)->ops.incr(rawKey(key)));
 	}
 
 	@Override
-	public Long bitCount(final String key, final int start, final int end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.bitCount(rawKey(key), start, end), ProtocolCommand.BITCOUNT, args);
+	public long incrBy(final String key, final long value){
+		return stringOpsOpsExecute((ops)->ops.incrBy(rawKey(key), value));
 	}
 
 	@Override
-	public Long bitCount(final byte[] key, final int start, final int end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.bitCount(rawKey(key), start, end), ProtocolCommand.BITCOUNT, args);
+	public long incrBy(final byte[] key, final long value){
+		return stringOpsOpsExecute((ops)->ops.incrBy(rawKey(key), value));
 	}
 
 	@Override
-	public Long bitCount(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.bitCount(rawKey(key), start, end), ProtocolCommand.BITCOUNT, args);
+	public double incrByFloat(final String key, final double value){
+		return stringOpsOpsExecute((ops)->ops.incrByFloat(rawKey(key), value));
 	}
 
 	@Override
-	public Long bitCount(final byte[] key, final long start, final long end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.bitCount(rawKey(key), start, end), ProtocolCommand.BITCOUNT, args);
+	public double incrByFloat(final byte[] key, final double value){
+		return stringOpsOpsExecute((ops)->ops.incrByFloat(rawKey(key), value));
 	}
 
 	@Override
-	public List<Long> bitField(final String key, final String... arguments){
-		final CommandArguments args = CommandArguments.create("key", key).put("arguments", arguments);
-		return execute((client)->client.bitField(rawKey(key), arguments), ProtocolCommand.BITFIELD, args);
+	public long decr(final String key){
+		return stringOpsOpsExecute((ops)->ops.decr(rawKey(key)));
 	}
 
 	@Override
-	public List<Long> bitField(final byte[] key, final byte[]... arguments){
-		final CommandArguments args = CommandArguments.create("key", key).put("arguments", arguments);
-		return execute((client)->client.bitField(rawKey(key), arguments), ProtocolCommand.BITFIELD, args);
+	public long decr(final byte[] key){
+		return stringOpsOpsExecute((ops)->ops.decr(rawKey(key)));
 	}
 
 	@Override
-	public Long bitOp(final BitOperation operation, final String destKey, final String... keys){
-		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
-				.put("keys", keys);
-		return execute((client)->client.bitOp(operation, rawKey(destKey), rawKeys(keys)),
-				ProtocolCommand.BITOP, args);
+	public long decrBy(final String key, final long value){
+		return stringOpsOpsExecute((ops)->ops.decrBy(rawKey(key), value));
 	}
 
 	@Override
-	public Long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys){
-		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
-				.put("keys", keys);
-		return execute((client)->client.bitOp(operation, rawKey(destKey), rawKeys(keys)),
-				ProtocolCommand.BITOP, args);
-	}
-
-	@Override
-	public Long bitPos(final String key, final boolean value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.bitPos(rawKey(key), value), ProtocolCommand.BITPOS, args);
-	}
-
-	@Override
-	public Long bitPos(final byte[] key, final boolean value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.bitPos(rawKey(key), value), ProtocolCommand.BITPOS, args);
-	}
-
-	@Override
-	public Long bitPos(final String key, final boolean value, final int start, final int end){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
-				.put("end", end);
-		return execute((client)->client.bitPos(rawKey(key), value, start, end), ProtocolCommand.BITPOS, args);
-	}
-
-	@Override
-	public Long bitPos(final byte[] key, final boolean value, final int start, final int end){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
-				.put("end", end);
-		return execute((client)->client.bitPos(rawKey(key), value, start, end), ProtocolCommand.BITPOS, args);
-	}
-
-	@Override
-	public Long bitPos(final String key, final boolean value, final long start, final long end){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
-				.put("end", end);
-		return execute((client)->client.bitPos(rawKey(key), value, start, end), ProtocolCommand.BITPOS, args);
-	}
-
-	@Override
-	public Long bitPos(final byte[] key, final boolean value, final long start, final long end){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
-				.put("end", end);
-		return execute((client)->client.bitPos(rawKey(key), value, start, end), ProtocolCommand.BITPOS, args);
-	}
-
-	@Override
-	public Long decr(final String key){
-		return execute((client)->client.decr(rawKey(key)), ProtocolCommand.DECR, new CommandArguments("key", key));
-	}
-
-	@Override
-	public Long decr(final byte[] key){
-		return execute((client)->client.decr(rawKey(key)), ProtocolCommand.DECR, new CommandArguments("key", key));
-	}
-
-	@Override
-	public Long decrBy(final String key, final int value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.decrBy(rawKey(key), value), ProtocolCommand.DECRBY, args);
-	}
-
-	@Override
-	public Long decrBy(final byte[] key, final int value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.decrBy(rawKey(key), value), ProtocolCommand.DECRBY, args);
-	}
-
-	@Override
-	public Long decrBy(final String key, final long value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.decrBy(rawKey(key), value), ProtocolCommand.DECRBY, args);
-	}
-
-	@Override
-	public Long decrBy(final byte[] key, final long value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.decrBy(rawKey(key), value), ProtocolCommand.DECRBY, args);
+	public long decrBy(final byte[] key, final long value){
+		return stringOpsOpsExecute((ops)->ops.decrBy(rawKey(key), value));
 	}
 
 	@Override
 	public String get(final String key){
-		return execute((client)->client.get(rawKey(key)), ProtocolCommand.GET, new CommandArguments("key", key));
+		return stringOpsOpsExecute((ops)->ops.get(rawKey(key)));
 	}
 
 	@Override
 	public byte[] get(final byte[] key){
-		return execute((client)->client.get(rawKey(key)), ProtocolCommand.GET, new CommandArguments("key", key));
-	}
-
-	@Override
-	public Status getBit(final String key, final int offset){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		return execute((client)->client.getBit(rawKey(key), offset), ProtocolCommand.GETBIT, args);
-	}
-
-	@Override
-	public Status getBit(final byte[] key, final int offset){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		return execute((client)->client.getBit(rawKey(key), offset), ProtocolCommand.GETBIT, args);
-	}
-
-	@Override
-	public Status getBit(final String key, final long offset){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		return execute((client)->client.getBit(rawKey(key), offset), ProtocolCommand.GETBIT, args);
-	}
-
-	@Override
-	public Status getBit(final byte[] key, final long offset){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		return execute((client)->client.getBit(rawKey(key), offset), ProtocolCommand.GETBIT, args);
-	}
-
-	@Override
-	public String getRange(final String key, final int start, final int end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.getRange(rawKey(key), start, end), ProtocolCommand.GETRANGE, args);
-	}
-
-	@Override
-	public byte[] getRange(final byte[] key, final int start, final int end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.getRange(rawKey(key), start, end), ProtocolCommand.GETRANGE, args);
-	}
-
-	@Override
-	public String getRange(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.getRange(rawKey(key), start, end), ProtocolCommand.GETRANGE, args);
-	}
-
-	@Override
-	public byte[] getRange(final byte[] key, final long start, final long end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.getRange(rawKey(key), start, end), ProtocolCommand.GETRANGE, args);
-	}
-
-	@Override
-	public String getSet(final String key, final String value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.getSet(rawKey(key), value), ProtocolCommand.GETSET, args);
-	}
-
-	@Override
-	public byte[] getSet(final byte[] key, final byte[] value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.getSet(rawKey(key), value), ProtocolCommand.GETSET, args);
+		return stringOpsOpsExecute((ops)->ops.get(rawKey(key)));
 	}
 
 	@Override
 	public String getEx(final String key, final GetExArgument getExArgument){
-		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		return execute((client)->client.getEx(rawKey(key), getExArgument), ProtocolCommand.GETEX, args);
+		return stringOpsOpsExecute((ops)->ops.getEx(rawKey(key), getExArgument));
 	}
 
 	@Override
-	public byte[] getEx(byte[] key, GetExArgument getExArgument){
-		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		return execute((client)->client.getEx(rawKey(key), getExArgument), ProtocolCommand.GETEX, args);
+	public byte[] getEx(final byte[] key, final GetExArgument getExArgument){
+		return stringOpsOpsExecute((ops)->ops.getEx(rawKey(key), getExArgument));
+	}
+
+	@Override
+	public String getSet(final String key, final String value){
+		return stringOpsOpsExecute((ops)->ops.getSet(rawKey(key), value));
+	}
+
+	@Override
+	public byte[] getSet(final byte[] key, final byte[] value){
+		return stringOpsOpsExecute((ops)->ops.getSet(rawKey(key), value));
 	}
 
 	@Override
 	public String getDel(final String key){
-		return execute((client)->client.getDel(rawKey(key)), ProtocolCommand.GETDEL,
-				new CommandArguments("key", key));
+		return stringOpsOpsExecute((ops)->ops.getDel(rawKey(key)));
 	}
 
 	@Override
-	public byte[] getDel(byte[] key){
-		return execute((client)->client.getDel(rawKey(key)), ProtocolCommand.GETDEL,
-				new CommandArguments("key", key));
-	}
-
-	@Override
-	public Long incr(final String key){
-		return execute((client)->client.incr(rawKey(key)), ProtocolCommand.INCR, new CommandArguments("key", key));
-	}
-
-	@Override
-	public Long incr(final byte[] key){
-		return execute((client)->client.incr(rawKey(key)), ProtocolCommand.INCR, new CommandArguments("key", key));
-	}
-
-	@Override
-	public Long incrBy(final String key, final int value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrBy(rawKey(key), value), ProtocolCommand.INCRBY, args);
-	}
-
-	@Override
-	public Long incrBy(final byte[] key, final int value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrBy(rawKey(key), value), ProtocolCommand.INCRBY, args);
-	}
-
-	@Override
-	public Long incrBy(final String key, final long value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrBy(rawKey(key), value), ProtocolCommand.INCRBY, args);
-	}
-
-	@Override
-	public Long incrBy(final byte[] key, final long value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrBy(rawKey(key), value), ProtocolCommand.INCRBY, args);
-	}
-
-	@Override
-	public Double incrByFloat(final String key, final float value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrByFloat(rawKey(key), value), ProtocolCommand.INCRBYFLOAT, args);
-	}
-
-	@Override
-	public Double incrByFloat(final byte[] key, final float value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrByFloat(rawKey(key), value), ProtocolCommand.INCRBYFLOAT, args);
-	}
-
-	@Override
-	public Double incrByFloat(final String key, final double value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrByFloat(rawKey(key), value), ProtocolCommand.INCRBYFLOAT, args);
-	}
-
-	@Override
-	public Double incrByFloat(final byte[] key, final double value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.incrByFloat(rawKey(key), value), ProtocolCommand.INCRBYFLOAT, args);
+	public byte[] getDel(final byte[] key){
+		return stringOpsOpsExecute((ops)->ops.getDel(rawKey(key)));
 	}
 
 	@Override
 	public List<String> mGet(final String... keys){
-		return execute((client)->client.mGet(rawKeys(keys)), ProtocolCommand.MGET,
-				new CommandArguments("keys", keys));
+		return stringOpsOpsExecute((ops)->ops.mGet(rawKeys(keys)));
 	}
 
 	@Override
 	public List<byte[]> mGet(final byte[]... keys){
-		return execute((client)->client.mGet(rawKeys(keys)), ProtocolCommand.MGET,
-				new CommandArguments("keys", keys));
+		return stringOpsOpsExecute((ops)->ops.mGet(rawKeys(keys)));
 	}
 
 	@Override
 	public Status mSet(final Map<String, String> values){
-		return execute((client)->client.mSet(values), ProtocolCommand.MSET, new CommandArguments("values", values));
+		final Map<String, String> newValues = new LinkedHashMap<>(values.size());
+
+		values.forEach((key, value)->{
+			newValues.put(rawKey(key), value);
+		});
+
+		return stringOpsOpsExecute((ops)->ops.mSet(newValues));
 	}
 
 	@Override
 	public Status mSetNx(final Map<String, String> values){
-		return execute((client)->client.mSetNx(values), ProtocolCommand.MSET, new CommandArguments("values", values));
+		final Map<String, String> newValues = new LinkedHashMap<>(values.size());
+
+		values.forEach((key, value)->{
+			newValues.put(rawKey(key), value);
+		});
+
+		return stringOpsOpsExecute((ops)->ops.mSetNx(newValues));
 	}
 
 	@Override
-	public Status pSetEx(final String key, final String value, final int lifetime){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		return execute((client)->client.pSetEx(rawKey(key), value, lifetime), ProtocolCommand.PSETEX, args);
+	public Status pSetEx(final String key, String value, int lifetime){
+		return stringOpsOpsExecute((ops)->ops.pSetEx(key, value, lifetime));
 	}
 
 	@Override
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		return execute((client)->client.pSetEx(rawKey(key), value, lifetime), ProtocolCommand.PSETEX, args);
+		return stringOpsOpsExecute((ops)->ops.pSetEx(key, value, lifetime));
 	}
 
 	@Override
 	public Status set(final String key, final String value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.set(rawKey(key), value), ProtocolCommand.SET, args);
+		return stringOpsOpsExecute((ops)->ops.set(key, value));
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.set(rawKey(key), value), ProtocolCommand.SET, args);
+		return stringOpsOpsExecute((ops)->ops.set(key, value));
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetArgument setArgument){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value)
-				.put("setArgument", setArgument);
-		return execute((client)->client.set(rawKey(key), value, setArgument), ProtocolCommand.SET, args);
+		return stringOpsOpsExecute((ops)->ops.set(key, value, setArgument));
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value)
-				.put("setArgument", setArgument);
-		return execute((client)->client.set(rawKey(key), value, setArgument), ProtocolCommand.SET, args);
-	}
-
-	@Override
-	public Status setBit(final String key, final int offset, final String value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
-	}
-
-	@Override
-	public Status setBit(final byte[] key, final int offset, final byte[] value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
-	}
-
-	@Override
-	public Status setBit(final String key, final long offset, final String value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
-	}
-
-	@Override
-	public Status setBit(final byte[] key, final long offset, final byte[] value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
-	}
-
-	@Override
-	public Status setBit(final String key, final int offset, final boolean value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
-	}
-
-	@Override
-	public Status setBit(final byte[] key, final int offset, final boolean value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
-	}
-
-	@Override
-	public Status setBit(final String key, final long offset, final boolean value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
-	}
-
-	@Override
-	public Status setBit(final byte[] key, final long offset, final boolean value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setBit(rawKey(key), offset, value), ProtocolCommand.SETBIT, args);
+		return stringOpsOpsExecute((ops)->ops.set(key, value, setArgument));
 	}
 
 	@Override
 	public Status setEx(final String key, final String value, final int lifetime){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		return execute((client)->client.setEx(rawKey(key), value, lifetime), ProtocolCommand.SETEX, args);
+		return stringOpsOpsExecute((ops)->ops.setEx(key, value, lifetime));
 	}
 
 	@Override
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		return execute((client)->client.setEx(rawKey(key), value, lifetime), ProtocolCommand.SETEX, args);
+		return stringOpsOpsExecute((ops)->ops.setEx(key, value, lifetime));
 	}
 
 	@Override
 	public Status setNx(final String key, final String value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.setNx(rawKey(key), value), ProtocolCommand.SETNX, args);
+		return stringOpsOpsExecute((ops)->ops.setNx(key, value));
 	}
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value){
-		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		return execute((client)->client.setNx(rawKey(key), value), ProtocolCommand.SETNX, args);
+		return stringOpsOpsExecute((ops)->ops.setNx(key, value));
 	}
 
 	@Override
-	public Long setRange(final String key, final int offset, final String value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setRange(rawKey(key), offset, value), ProtocolCommand.SETRANGE, args);
+	public long setRange(final String key, final long offset, final String value){
+		return stringOpsOpsExecute((ops)->ops.setRange(key, offset, value));
 	}
 
 	@Override
-	public Long setRange(final byte[] key, final int offset, final byte[] value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setRange(rawKey(key), offset, value), ProtocolCommand.SETRANGE, args);
+	public long setRange(final byte[] key, final long offset, final byte[] value){
+		return stringOpsOpsExecute((ops)->ops.setRange(key, offset, value));
 	}
 
 	@Override
-	public Long setRange(final String key, final long offset, final String value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setRange(rawKey(key), offset, value), ProtocolCommand.SETRANGE, args);
+	public String getRange(final String key, final long start, final long end){
+		return stringOpsOpsExecute((ops)->ops.getRange(key, start, end));
 	}
 
 	@Override
-	public Long setRange(final byte[] key, final long offset, final byte[] value){
-		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		return execute((client)->client.setRange(rawKey(key), offset, value), ProtocolCommand.SETRANGE, args);
+	public byte[] getRange(final byte[] key, final long start, final long end){
+		return stringOpsOpsExecute((ops)->ops.getRange(key, start, end));
 	}
 
 	@Override
-	public Long strlen(final String key){
-		return execute((client)->client.strlen(rawKey(key)), ProtocolCommand.STRLEN,
-				new CommandArguments("key", key));
+	public long strlen(final String key){
+		return stringOpsOpsExecute((ops)->ops.strlen(key));
 	}
 
 	@Override
-	public Long strlen(final byte[] key){
-		return execute((client)->client.strlen(rawKey(key)), ProtocolCommand.STRLEN,
-				new CommandArguments("key", key));
-	}
-
-	@Override
-	public String substr(final String key, final int start, final int end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.substr(rawKey(key), start, end), ProtocolCommand.SUBSTR, args);
-	}
-
-	@Override
-	public byte[] substr(final byte[] key, final int start, final int end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.substr(rawKey(key), start, end), ProtocolCommand.SUBSTR, args);
+	public long strlen(final byte[] key){
+		return stringOpsOpsExecute((ops)->ops.strlen(key));
 	}
 
 	@Override
 	public String substr(final String key, final long start, final long end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.substr(rawKey(key), start, end), ProtocolCommand.SUBSTR, args);
+		return stringOpsOpsExecute((ops)->ops.substr(key, start, end));
 	}
 
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end){
-		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		return execute((client)->client.substr(rawKey(key), start, end), ProtocolCommand.SUBSTR, args);
+		return stringOpsOpsExecute((ops)->ops.substr(key, start, end));
 	}
-
-	@Override
-	public Status multi(){
-		return execute((client)->client.multi());
-	}
-
-	@Override
-	public List<Object> exec(){
-		return execute((client)->client.exec());
-	}
-
-	@Override
-	public void discard(){
-		execute((client)->{
-			client.discard();
-			return null;
-		});
-	}
-
-	@Override
-	public Status watch(final String... keys){
-		return execute((client)->client.watch(rawKeys(keys)));
-	}
-
-	@Override
-	public Status watch(final byte[]... keys){
-		return execute((client)->client.watch(rawKeys(keys)));
-	}
-
-	@Override
-	public Status unwatch(){
-		return execute((client)->client.unwatch());
-	}
-*/
+	
 }

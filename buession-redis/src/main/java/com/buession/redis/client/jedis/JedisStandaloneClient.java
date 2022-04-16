@@ -38,6 +38,7 @@ import com.buession.redis.client.jedis.operations.JedisScriptingOperations;
 import com.buession.redis.client.jedis.operations.JedisServerOperations;
 import com.buession.redis.client.jedis.operations.JedisSetOperations;
 import com.buession.redis.client.jedis.operations.JedisSortedSetOperations;
+import com.buession.redis.client.jedis.operations.JedisStringOperations;
 
 /**
  * jedis 单机模式客户端
@@ -112,6 +113,11 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	@Override
 	public JedisSortedSetOperations sortedSetOperations(){
 		return new JedisSortedSetOperations(this);
+	}
+
+	@Override
+	public JedisStringOperations stringOperations(){
+		return new JedisStringOperations(this);
 	}
 
 }

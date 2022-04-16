@@ -37,7 +37,6 @@ import com.buession.redis.utils.SafeEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.StringJoiner;
 
 /**
  * KEY 命令
@@ -1532,25 +1531,11 @@ public interface KeyCommands extends RedisCommands {
 
 		@Override
 		public String toString(){
-			final StringJoiner stringJoiner = new StringJoiner(",", "{", "}");
-
-			if(replace != null){
-				stringJoiner.add("replace=" + replace);
-			}
-
-			if(absTtl != null){
-				stringJoiner.add("absTtl=" + absTtl);
-			}
-
-			if(idleTime != null){
-				stringJoiner.add("idleTime=" + idleTime);
-			}
-
-			if(frequency != null){
-				stringJoiner.add("frequency=" + frequency);
-			}
-
-			return stringJoiner.toString();
+			return ArgumentStringBuilder.create().
+					add("replace", replace).
+					add("absTtl", absTtl).
+					add("idleTime", idleTime).
+					add("frequency", frequency).build();
 		}
 
 		public static class Builder {
@@ -1660,29 +1645,21 @@ public interface KeyCommands extends RedisCommands {
 
 		@Override
 		public String toString(){
-			final StringJoiner stringJoiner = new StringJoiner(",", "{", "}");
+			final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
 
 			if(by != null){
-				stringJoiner.add("by=" + SafeEncoder.encode(by));
+				builder.add("by", SafeEncoder.encode(by));
 			}
 
-			if(order != null){
-				stringJoiner.add("order=" + order);
-			}
-
-			if(limit != null){
-				stringJoiner.add("limit=" + limit);
-			}
+			builder.add("order", order).add("limit", limit);
 
 			if(getPatterns != null){
-				stringJoiner.add("get patterns=" + Arrays.toString(getPatterns));
+				builder.add("get patterns", Arrays.toString(getPatterns));
 			}
 
-			if(alpha != null){
-				stringJoiner.add("alpha=" + alpha);
-			}
+			builder.add("alpha", alpha);
 
-			return stringJoiner.toString();
+			return builder.build();
 		}
 
 		public static class Builder {
