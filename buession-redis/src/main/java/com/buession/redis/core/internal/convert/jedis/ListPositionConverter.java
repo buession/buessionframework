@@ -28,28 +28,23 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.ListPosition;
 
 /**
- * {@link ListPosition} 和 jedis {@link redis.clients.jedis.args.ListPosition} 互转
+ * {@link ListPosition} 转换为 jedis {@link redis.clients.jedis.args.ListPosition}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ListPositionConverter<S, T> extends Converter<S, T> {
+public final class ListPositionConverter implements Converter<ListPosition, redis.clients.jedis.args.ListPosition> {
 
-	final class ListPositionJedisConverter
-			implements ListPositionConverter<ListPosition, redis.clients.jedis.args.ListPosition> {
-
-		@Override
-		public redis.clients.jedis.args.ListPosition convert(final ListPosition source){
-			switch(source){
-				case BEFORE:
-					return redis.clients.jedis.args.ListPosition.BEFORE;
-				case AFTER:
-					return redis.clients.jedis.args.ListPosition.AFTER;
-				default:
-					return null;
-			}
+	@Override
+	public redis.clients.jedis.args.ListPosition convert(final ListPosition source){
+		switch(source){
+			case BEFORE:
+				return redis.clients.jedis.args.ListPosition.BEFORE;
+			case AFTER:
+				return redis.clients.jedis.args.ListPosition.AFTER;
+			default:
+				return null;
 		}
-
 	}
 
 }

@@ -28,28 +28,23 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.FlushMode;
 
 /**
- * {@link FlushMode} 和 jedis {@link redis.clients.jedis.args.FlushMode} 互转
+ * {@link FlushMode} 转换为 jedis {@link redis.clients.jedis.args.FlushMode}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface FlushModeConverter<S, T> extends Converter<S, T> {
+public final class FlushModeConverter implements Converter<FlushMode, redis.clients.jedis.args.FlushMode> {
 
-	final class FlushModeJedisConverter
-			implements ListPositionConverter<FlushMode, redis.clients.jedis.args.FlushMode> {
-
-		@Override
-		public redis.clients.jedis.args.FlushMode convert(final FlushMode source){
-			switch(source){
-				case ASYNC:
-					return redis.clients.jedis.args.FlushMode.ASYNC;
-				case SYNC:
-					return redis.clients.jedis.args.FlushMode.SYNC;
-				default:
-					return null;
-			}
+	@Override
+	public redis.clients.jedis.args.FlushMode convert(final FlushMode source){
+		switch(source){
+			case ASYNC:
+				return redis.clients.jedis.args.FlushMode.ASYNC;
+			case SYNC:
+				return redis.clients.jedis.args.FlushMode.SYNC;
+			default:
+				return null;
 		}
-
 	}
 
 }

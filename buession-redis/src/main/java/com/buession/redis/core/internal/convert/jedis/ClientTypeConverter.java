@@ -28,34 +28,29 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.ClientType;
 
 /**
- * {@link ClientType} 和 jedis {@link redis.clients.jedis.args.ClientType} 互转
+ * {@link ClientType} 转换为 jedis {@link redis.clients.jedis.args.ClientType}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ClientTypeConverter<S, T> extends Converter<S, T> {
+public final class ClientTypeConverter implements Converter<ClientType, redis.clients.jedis.args.ClientType> {
 
-	final class ClientTypeJedisConverter
-			implements ClientTypeConverter<ClientType, redis.clients.jedis.args.ClientType> {
-
-		@Override
-		public redis.clients.jedis.args.ClientType convert(final ClientType source){
-			switch(source){
-				case NORMAL:
-					return redis.clients.jedis.args.ClientType.NORMAL;
-				case MASTER:
-					return redis.clients.jedis.args.ClientType.MASTER;
-				case SLAVE:
-					return redis.clients.jedis.args.ClientType.SLAVE;
-				case REPLICA:
-					return redis.clients.jedis.args.ClientType.REPLICA;
-				case PUBSUB:
-					return redis.clients.jedis.args.ClientType.PUBSUB;
-				default:
-					return null;
-			}
+	@Override
+	public redis.clients.jedis.args.ClientType convert(final ClientType source){
+		switch(source){
+			case NORMAL:
+				return redis.clients.jedis.args.ClientType.NORMAL;
+			case MASTER:
+				return redis.clients.jedis.args.ClientType.MASTER;
+			case SLAVE:
+				return redis.clients.jedis.args.ClientType.SLAVE;
+			case REPLICA:
+				return redis.clients.jedis.args.ClientType.REPLICA;
+			case PUBSUB:
+				return redis.clients.jedis.args.ClientType.PUBSUB;
+			default:
+				return null;
 		}
-
 	}
 
 }

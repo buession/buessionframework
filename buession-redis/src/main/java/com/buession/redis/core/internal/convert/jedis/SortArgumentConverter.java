@@ -30,50 +30,46 @@ import com.buession.redis.core.command.KeyCommands;
 import redis.clients.jedis.params.SortingParams;
 
 /**
- * {@link KeyCommands.SortArgument} 和 jedis {@link SortingParams} 互转
+ * {@link KeyCommands.SortArgument} 转换为 jedis {@link SortingParams}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface SortArgumentConverter<S, T> extends Converter<S, T> {
+public final class SortArgumentConverter implements Converter<KeyCommands.SortArgument, SortingParams> {
 
-	final class SortArgumentJedisConverter implements SortArgumentConverter<KeyCommands.SortArgument, SortingParams> {
+	@Override
+	public SortingParams convert(final KeyCommands.SortArgument source){
+		final SortingParams sortingParams = new SortingParams();
 
-		@Override
-		public SortingParams convert(final KeyCommands.SortArgument source){
-			final SortingParams sortingParams = new SortingParams();
-
-			if(source.getBy() != null){
-				sortingParams.by(source.getBy());
-			}
-
-			switch(source.getOrder()){
-				case ASC:
-					sortingParams.asc();
-					break;
-				case DESC:
-					sortingParams.desc();
-					break;
-				default:
-					break;
-			}
-
-			if(source.getLimit() != null){
-				Limit limit = source.getLimit();
-				sortingParams.limit((int) limit.getOffset(), (int) limit.getCount());
-			}
-
-			if(source.getGetPatterns() != null){
-				sortingParams.get(source.getGetPatterns());
-			}
-
-			if(source.getAlpha()){
-				sortingParams.alpha();
-			}
-
-			return sortingParams;
+		if(source.getBy() != null){
+			sortingParams.by(source.getBy());
 		}
 
+		switch(source.getOrder()){
+			case ASC:
+				sortingParams.asc();
+				break;
+			case DESC:
+				sortingParams.desc();
+				break;
+			default:
+				break;
+		}
+
+		if(source.getLimit() != null){
+			Limit limit = source.getLimit();
+			sortingParams.limit((int) limit.getOffset(), (int) limit.getCount());
+		}
+
+		if(source.getGetPatterns() != null){
+			sortingParams.get(source.getGetPatterns());
+		}
+
+		if(source.getAlpha()){
+			sortingParams.alpha();
+		}
+
+		return sortingParams;
 	}
 
 }

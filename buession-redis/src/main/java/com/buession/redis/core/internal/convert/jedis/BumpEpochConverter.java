@@ -33,15 +33,11 @@ import com.buession.redis.core.BumpEpoch;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface BumpEpochConverter<S, T> extends Converter<S, T> {
+public final class BumpEpochConverter implements Converter<String, BumpEpoch> {
 
-	final class BumpEpochExposeConverter implements BumpEpochConverter<String, BumpEpoch> {
-
-		@Override
-		public BumpEpoch convert(final String source){
-			return null;
-		}
-
+	@Override
+	public BumpEpoch convert(final String source){
+		return null;
 	}
 
 }

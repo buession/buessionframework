@@ -39,6 +39,7 @@ import com.buession.redis.client.jedis.operations.JedisScriptingOperations;
 import com.buession.redis.client.jedis.operations.JedisServerOperations;
 import com.buession.redis.client.jedis.operations.JedisSetOperations;
 import com.buession.redis.client.jedis.operations.JedisSortedSetOperations;
+import com.buession.redis.client.jedis.operations.JedisStreamOperations;
 import com.buession.redis.client.jedis.operations.JedisStringOperations;
 import com.buession.redis.client.jedis.operations.JedisTransactionOperations;
 
@@ -120,6 +121,11 @@ public class JedisStandaloneClient extends AbstractJedisRedisClient implements R
 	@Override
 	public JedisSortedSetOperations sortedSetOperations(){
 		return new JedisSortedSetOperations(this);
+	}
+
+	@Override
+	public JedisStreamOperations streamOperations(){
+		return new JedisStreamOperations(this);
 	}
 
 	@Override

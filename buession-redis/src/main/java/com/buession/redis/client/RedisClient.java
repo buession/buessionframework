@@ -38,6 +38,7 @@ import com.buession.redis.client.operations.ScriptingOperations;
 import com.buession.redis.client.operations.ServerOperations;
 import com.buession.redis.client.operations.SetOperations;
 import com.buession.redis.client.operations.SortedSetOperations;
+import com.buession.redis.client.operations.StreamOperations;
 import com.buession.redis.client.operations.StringOperations;
 import com.buession.redis.client.operations.TransactionOperations;
 import com.buession.redis.core.Command;
@@ -81,6 +82,8 @@ public interface RedisClient {
 	SetOperations<? extends RedisConnection> setOperations();
 
 	SortedSetOperations<? extends RedisConnection> sortedSetOperations();
+
+	StreamOperations<? extends RedisConnection> streamOperations();
 
 	StringOperations<? extends RedisConnection> stringOperations();
 

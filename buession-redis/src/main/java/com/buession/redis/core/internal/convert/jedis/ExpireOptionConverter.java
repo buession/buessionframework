@@ -29,31 +29,27 @@ import com.buession.redis.core.ExpireOption;
 import redis.clients.jedis.args.ExpiryOption;
 
 /**
- * {@link ExpireOption} 和 jedis {@link ExpiryOption} 互转
+ * {@link ExpireOption} 转换为 jedis {@link ExpiryOption}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ExpireOptionConverter<S, T> extends Converter<S, T> {
+public final class ExpireOptionConverter implements Converter<ExpireOption, ExpiryOption> {
 
-	final class ExpireOptionJedisConverter implements ExpireOptionConverter<ExpireOption, ExpiryOption> {
-
-		@Override
-		public ExpiryOption convert(final ExpireOption source){
-			switch(source){
-				case NX:
-					return ExpiryOption.NX;
-				case XX:
-					return ExpiryOption.XX;
-				case GT:
-					return ExpiryOption.GT;
-				case LT:
-					return ExpiryOption.LT;
-				default:
-					return null;
-			}
+	@Override
+	public ExpiryOption convert(final ExpireOption source){
+		switch(source){
+			case NX:
+				return ExpiryOption.NX;
+			case XX:
+				return ExpiryOption.XX;
+			case GT:
+				return ExpiryOption.GT;
+			case LT:
+				return ExpiryOption.LT;
+			default:
+				return null;
 		}
-
 	}
 
 }

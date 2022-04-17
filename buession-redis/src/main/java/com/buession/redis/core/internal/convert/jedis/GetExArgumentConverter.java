@@ -29,43 +29,38 @@ import com.buession.redis.core.command.StringCommands;
 import redis.clients.jedis.params.GetExParams;
 
 /**
- * {@link StringCommands.GetExArgument} 和 jedis {@link GetExParams} 互转
+ * {@link StringCommands.GetExArgument} 转换为 jedis {@link GetExParams}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface GetExArgumentConverter<S, T> extends Converter<S, T> {
+public final class GetExArgumentConverter implements Converter<StringCommands.GetExArgument, GetExParams> {
 
-	final class GetExArgumentJedisConverter
-			implements SetArgumentConverter<StringCommands.GetExArgument, GetExParams> {
+	@Override
+	public GetExParams convert(final StringCommands.GetExArgument source){
+		final GetExParams getExParams = new GetExParams();
 
-		@Override
-		public GetExParams convert(final StringCommands.GetExArgument source){
-			final GetExParams getExParams = new GetExParams();
-
-			if(source.getEx() != null){
-				getExParams.ex(source.getEx());
-			}
-
-			if(source.getPx() != null){
-				getExParams.px(source.getPx());
-			}
-
-			if(source.getExAt() != null){
-				getExParams.exAt(source.getEx());
-			}
-
-			if(source.getPxAt() != null){
-				getExParams.pxAt(source.getPx());
-			}
-
-			if(source.getPersist() != null){
-				getExParams.persist();
-			}
-
-			return getExParams;
+		if(source.getEx() != null){
+			getExParams.ex(source.getEx());
 		}
 
+		if(source.getPx() != null){
+			getExParams.px(source.getPx());
+		}
+
+		if(source.getExAt() != null){
+			getExParams.exAt(source.getEx());
+		}
+
+		if(source.getPxAt() != null){
+			getExParams.pxAt(source.getPx());
+		}
+
+		if(source.getPersist() != null){
+			getExParams.persist();
+		}
+
+		return getExParams;
 	}
 
 }

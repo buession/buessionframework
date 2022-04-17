@@ -148,12 +148,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public long bitOp(final BitOperation operation, final String destKey, final String... keys){
-		return bitMapOpsExecute((ops)->ops.bitOp(key, destKey, keys));
+		return bitMapOpsExecute((ops)->ops.bitOp(operation, destKey, keys));
 	}
 
 	@Override
 	public long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys){
-		return bitMapOpsExecute((ops)->ops.bitOp(key, destKey, keys));
+		return bitMapOpsExecute((ops)->ops.bitOp(operation, destKey, keys));
 	}
 
 	@Override

@@ -25,19 +25,24 @@
 package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.Tuple;
+import com.buession.redis.core.StreamEntry;
+import redis.clients.jedis.StreamEntryID;
 
 /**
- * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
+ * jedis {@link StreamEntryID} 转换为 jedis {@link StreamEntry}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
+public class StreamEntryConverter implements Converter<StreamEntryID, StreamEntry> {
 
 	@Override
-	public Tuple convert(final redis.clients.jedis.resps.Tuple source){
-		return new Tuple(source.getBinaryElement(), source.getScore());
+	public StreamEntry convert(final StreamEntryID source){
+		if(source != null){
+			return new StreamEntry(source.getTime(), source.getSequence());
+		}
+
+		return null;
 	}
 
 }

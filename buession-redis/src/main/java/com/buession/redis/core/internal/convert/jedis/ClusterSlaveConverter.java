@@ -37,15 +37,11 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ClusterSlaveConverter<S, T> extends Converter<S, T> {
+public final class ClusterSlaveConverter implements Converter<String, RedisClusterServer> {
 
-	final class ClusterSlaveExposeConverter implements ClusterSlaveConverter<String, RedisClusterServer> {
-
-		@Override
-		public RedisClusterServer convert(final String source){
-			return null;
-		}
-
+	@Override
+	public RedisClusterServer convert(final String source){
+		return null;
 	}
 
 }

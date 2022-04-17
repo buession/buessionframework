@@ -29,20 +29,16 @@ import com.buession.lang.Geo;
 import redis.clients.jedis.GeoCoordinate;
 
 /**
- * {@link Geo} 和 jedis {@link GeoCoordinate} 互转
+ * {@link Geo} 转换为 jedis {@link GeoCoordinate}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface GeoConverter<S, T> extends Converter<S, T> {
+public final class GeoConverter implements Converter<GeoCoordinate, Geo> {
 
-	final class GeoExposeConverter implements GeoConverter<GeoCoordinate, Geo> {
-
-		@Override
-		public Geo convert(final GeoCoordinate source){
-			return new Geo(source.getLongitude(), source.getLatitude());
-		}
-
+	@Override
+	public Geo convert(final GeoCoordinate source){
+		return new Geo(source.getLongitude(), source.getLatitude());
 	}
 
 }

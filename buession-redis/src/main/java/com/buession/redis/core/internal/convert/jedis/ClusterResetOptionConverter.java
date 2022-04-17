@@ -29,27 +29,23 @@ import com.buession.redis.core.ClusterResetOption;
 import redis.clients.jedis.args.ClusterResetType;
 
 /**
- * {@link ClusterResetOption} 和 Jedis {@link ClusterResetType} 互转
+ * {@link ClusterResetOption} 转换为 Jedis {@link ClusterResetType}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ClusterResetOptionConverter<S, T> extends Converter<S, T> {
+public final class ClusterResetOptionConverter implements Converter<ClusterResetOption, ClusterResetType> {
 
-	final class ClusterResetOptionJedisConverter implements Converter<ClusterResetOption, ClusterResetType> {
-
-		@Override
-		public ClusterResetType convert(final ClusterResetOption source){
-			switch(source){
-				case SOFT:
-					return ClusterResetType.SOFT;
-				case HARD:
-					return ClusterResetType.HARD;
-				default:
-					return null;
-			}
+	@Override
+	public ClusterResetType convert(final ClusterResetOption source){
+		switch(source){
+			case SOFT:
+				return ClusterResetType.SOFT;
+			case HARD:
+				return ClusterResetType.HARD;
+			default:
+				return null;
 		}
-
 	}
 
 }

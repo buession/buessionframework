@@ -39,11 +39,13 @@ import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLog;
+import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.RedisServerTimeConverter;
 import com.buession.redis.utils.SafeEncoder;
+import org.springframework.lang.Nullable;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.resps.AccessControlLogEntry;
 import redis.clients.jedis.resps.GeoRadiusResponse;
@@ -62,13 +64,13 @@ public interface JedisConverters extends Converters {
 
 	BitOperationConverter BIT_OPERATION_CONVERTER = new BitOperationConverter();
 
-	ClusterResetOptionConverter.ClusterResetOptionJedisConverter CLUSTER_RESET_OPTION_CONVERTER = new ClusterResetOptionConverter.ClusterResetOptionJedisConverter();
+	ClusterResetOptionConverter CLUSTER_RESET_OPTION_CONVERTER = new ClusterResetOptionConverter();
 
-	ClusterFailoverOptionConverter.ClusterFailoverOptionJedisConverter CLUSTER_FAILOVER_OPTION_CONVERTER = new ClusterFailoverOptionConverter.ClusterFailoverOptionJedisConverter();
+	ClusterFailoverOptionConverter CLUSTER_FAILOVER_OPTION_CONVERTER = new ClusterFailoverOptionConverter();
 
-	ClientTypeConverter.ClientTypeJedisConverter CLIENT_TYPE_CONVERTER = new ClientTypeConverter.ClientTypeJedisConverter();
+	ClientTypeConverter CLIENT_TYPE_CONVERTER = new ClientTypeConverter();
 
-	ClientUnblockTypeConverter.ClientUnblockJedisConverter CLIENT_UNBLOCK_CONVERTER = new ClientUnblockTypeConverter.ClientUnblockJedisConverter();
+	ClientUnblockTypeConverter CLIENT_UNBLOCK_CONVERTER = new ClientUnblockTypeConverter();
 
 	MapConverter<String, Geo, String, GeoCoordinate> STRING_MAP_GEO_CONVERTER = new MapConverter<>(
 			(source)->source, (value)->new GeoCoordinate(value.getLongitude(), value.getLatitude()));
@@ -76,27 +78,29 @@ public interface JedisConverters extends Converters {
 	MapConverter<byte[], Geo, byte[], GeoCoordinate> BINARY_MAP_GEO_CONVERTER = new MapConverter<>(
 			(source)->source, (value)->new GeoCoordinate(value.getLongitude(), value.getLatitude()));
 
-	GeoUnitConverter.GeoUnitJedisConverter GEO_UNIT_CONVERTER = new GeoUnitConverter.GeoUnitJedisConverter();
+	GeoUnitConverter GEO_UNIT_CONVERTER = new GeoUnitConverter();
 
-	GeoRadiusArgumentConverter.GeoRadiusArgumentJedisConverter GEO_RADIUS_ARGUMENT_CONVERTER = new GeoRadiusArgumentConverter.GeoRadiusArgumentJedisConverter();
+	GeoRadiusArgumentConverter GEO_RADIUS_ARGUMENT_CONVERTER = new GeoRadiusArgumentConverter();
 
-	ExpireOptionConverter.ExpireOptionJedisConverter EXPIRE_OPTION_CONVERTER = new ExpireOptionConverter.ExpireOptionJedisConverter();
+	ExpireOptionConverter EXPIRE_OPTION_CONVERTER = new ExpireOptionConverter();
 
-	RestoreArgumentConverter.RestoreArgumentJedisConverter RESTORE_ARGUMENT_CONVERTER = new RestoreArgumentConverter.RestoreArgumentJedisConverter();
+	RestoreArgumentConverter RESTORE_ARGUMENT_CONVERTER = new RestoreArgumentConverter();
 
-	SortArgumentConverter.SortArgumentJedisConverter SORT_ARGUMENT_CONVERTER = new SortArgumentConverter.SortArgumentJedisConverter();
+	SortArgumentConverter SORT_ARGUMENT_CONVERTER = new SortArgumentConverter();
 
-	ListPositionConverter.ListPositionJedisConverter LIST_POSITION_CONVERTER = new ListPositionConverter.ListPositionJedisConverter();
+	ListPositionConverter LIST_POSITION_CONVERTER = new ListPositionConverter();
 
-	LPosArgumentConverter.LPosArgumentJedisConverter L_POS_ARGUMENT_CONVERTER = new LPosArgumentConverter.LPosArgumentJedisConverter();
+	LPosArgumentConverter L_POS_ARGUMENT_CONVERTER = new LPosArgumentConverter();
 
-	DirectionConverter.DirectionJedisConverter DIRECTION_CONVERTER = new DirectionConverter.DirectionJedisConverter();
+	DirectionConverter DIRECTION_CONVERTER = new DirectionConverter();
 
-	FlushModeConverter.FlushModeJedisConverter FLUSH_MODE_CONVERTER = new FlushModeConverter.FlushModeJedisConverter();
+	FlushModeConverter FLUSH_MODE_CONVERTER = new FlushModeConverter();
 
-	GetExArgumentConverter.GetExArgumentJedisConverter GET_EX_ARGUMENT_CONVERTER = new GetExArgumentConverter.GetExArgumentJedisConverter();
+	GetExArgumentConverter GET_EX_ARGUMENT_CONVERTER = new GetExArgumentConverter();
 
-	SetArgumentConverter.SetArgumentJedisConverter SET_ARGUMENT_CONVERTER = new SetArgumentConverter.SetArgumentJedisConverter();
+	SetArgumentConverter SET_ARGUMENT_CONVERTER = new SetArgumentConverter();
+
+	XAddArgumentConverter X_ADD_ARGUMENT_CONVERTER = new XAddArgumentConverter();
 	/**
 	 * end param converter
 	 */
@@ -104,19 +108,18 @@ public interface JedisConverters extends Converters {
 	/**
 	 * start result converter
 	 */
-	ListConverter<Object, ClusterSlot> CLUSTER_SLOTS_CONVERTER = new ListConverter<>(
-			new ClusterSlotConverter.ClusterSlotExposeConverter());
+	ListConverter<Object, ClusterSlot> CLUSTER_SLOTS_CONVERTER = new ListConverter<>(new ClusterSlotConverter());
 
-	ClusterInfoConverter.ClusterInfoExposeConverter CLUSTER_INFO_RESULT_CONVERTER = new ClusterInfoConverter.ClusterInfoExposeConverter();
+	ClusterInfoConverter CLUSTER_INFO_RESULT_CONVERTER = new ClusterInfoConverter();
 
-	ClusterNodesConverter.ClusterNodesExposeConverter CLUSTER_NODES_RESULT_CONVERTER = new ClusterNodesConverter.ClusterNodesExposeConverter();
+	ClusterNodesConverter CLUSTER_NODES_RESULT_CONVERTER = new ClusterNodesConverter();
 
 	ListConverter<String, RedisClusterServer> CLUSTER_SLAVES_RESULT_CONVERTER = new ListConverter<>(
-			new ClusterSlaveConverter.ClusterSlaveExposeConverter());
+			new ClusterSlaveConverter());
 
-	ClusterReplicasConverter.ClusterReplicasExposeConverter CLUSTER_REPLICAS_RESULT_CONVERTER = new ClusterReplicasConverter.ClusterReplicasExposeConverter();
+	ClusterReplicasConverter CLUSTER_REPLICAS_RESULT_CONVERTER = new ClusterReplicasConverter();
 
-	BumpEpochConverter.BumpEpochExposeConverter BUMP_EPOCH_RESULT_CONVERTER = new BumpEpochConverter.BumpEpochExposeConverter();
+	BumpEpochConverter BUMP_EPOCH_RESULT_CONVERTER = new BumpEpochConverter();
 
 	ClientConverter.ClientListExposeConverter CLIENT_LIST_RESULT_CONVERTER = new ClientConverter.ClientListExposeConverter();
 
@@ -127,7 +130,7 @@ public interface JedisConverters extends Converters {
 
 	ListConverter<GeoRadiusResponse, GeoRadius> LIST_GEO_RADIUS_RESULT_CONVERTER = new ListConverter<>(
 			(source)->{
-				final GeoConverter.GeoExposeConverter geoExposeConverter = new GeoConverter.GeoExposeConverter();
+				final GeoConverter geoExposeConverter = new GeoConverter();
 				return new GeoRadius(source.getMember(), source.getDistance(),
 						geoExposeConverter.convert(source.getCoordinate()));
 			});
@@ -155,13 +158,11 @@ public interface JedisConverters extends Converters {
 			new AclLogConverter());
 
 	ListConverter<redis.clients.jedis.Module, Module> LIST_MODULE_RESULT_CONVERTER = new ListConverter<>(
-			new ModuleConverter.ModuleExposeConverter());
+			new ModuleConverter());
 
-	ListConverter<Object, Role> LIST_ROLE_RESULT_CONVERTER = new ListConverter<>(
-			new RoleConverter.RoleExposeConverter());
+	ListConverter<Object, Role> LIST_ROLE_RESULT_CONVERTER = new ListConverter<>(new RoleConverter());
 
-	ListConverter<Slowlog, SlowLog> LIST_SLOW_LOG_RESULT_CONVERTER = new ListConverter<>(
-			new SlowLogConverter());
+	ListConverter<Slowlog, SlowLog> LIST_SLOW_LOG_RESULT_CONVERTER = new ListConverter<>(new SlowLogConverter());
 
 	RedisServerTimeConverter REDIS_SERVER_TIME_RESULT_CONVERTER = new RedisServerTimeConverter();
 
@@ -169,13 +170,20 @@ public interface JedisConverters extends Converters {
 
 	KeyedZSetElementConverter.BinaryDataKeyedZSetElementExposeConverter BINARY_DATA_KEYED_Z_SET_ELEMENT_RESULT_CONVERTER = new KeyedZSetElementConverter.BinaryDataKeyedZSetElementExposeConverter();
 
-	TupleConverter.TupleExposeConverter TUPLE_RESULT_CONVERTER = new TupleConverter.TupleExposeConverter();
+	TupleConverter TUPLE_RESULT_CONVERTER = new TupleConverter();
 
 	SetConverter<redis.clients.jedis.resps.Tuple, Tuple> SET_TUPLE_RESULT_CONVERTER = new SetConverter<>(
 			TUPLE_RESULT_CONVERTER);
 
 	ListConverter<redis.clients.jedis.resps.Tuple, Tuple> LIST_TUPLE_RESULT_CONVERTER = new ListConverter<>(
 			TUPLE_RESULT_CONVERTER);
+
+	StreamEntryConverter STREAM_ENTRY_RESULT_CONVERTER = new StreamEntryConverter();
+
+	Converter<byte[], StreamEntry> BINARY_STREAM_ENTRY_RESULT_CONVERTER = (source)->{
+		String id = SafeEncoder.encode(source);
+		return new StreamEntry(id);
+	};
 	/**
 	 * end result converter
 	 */

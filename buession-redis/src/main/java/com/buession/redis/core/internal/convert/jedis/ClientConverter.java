@@ -30,7 +30,6 @@ import com.buession.core.utils.KeyValueParser;
 import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.redis.core.Client;
-import org.springframework.lang.Nullable;
 import redis.clients.jedis.Protocol;
 
 import java.util.ArrayList;
@@ -129,7 +128,6 @@ public interface ClientConverter<S, T> extends Converter<S, T> {
 
 		private final ClientExposeConverter converter = new ClientExposeConverter();
 
-		@Nullable
 		@Override
 		public List<Client> convert(final String source){
 			if(Validate.isBlank(source)){

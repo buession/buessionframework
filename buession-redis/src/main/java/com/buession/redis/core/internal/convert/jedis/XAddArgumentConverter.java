@@ -25,19 +25,46 @@
 package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.Tuple;
+import com.buession.redis.core.command.StreamCommands;
+import redis.clients.jedis.params.XAddParams;
 
 /**
- * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
+ * {@link StreamCommands.XAddArgument} 转换为 jedis {@link XAddParams}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
+public class XAddArgumentConverter implements Converter<StreamCommands.XAddArgument, XAddParams> {
 
 	@Override
-	public Tuple convert(final redis.clients.jedis.resps.Tuple source){
-		return new Tuple(source.getBinaryElement(), source.getScore());
+	public XAddParams convert(final StreamCommands.XAddArgument source){
+		final XAddParams xAddParams = XAddParams.xAddParams();
+
+		if(source.getMaxLen() != null){
+			xAddParams.maxLen(source.getMaxLen());
+		}
+
+		if(source.getApproximateTrimming() == true){
+			xAddParams.approximateTrimming();
+		}
+
+		if(source.getExactTrimming() == true){
+			xAddParams.exactTrimming();
+		}
+
+		if(source.getNoMkStream() == true){
+			xAddParams.noMkStream();
+		}
+
+		if(source.getMinId() != null){
+			xAddParams.minId(source.getMinId());
+		}
+
+		if(source.getLimit() != null){
+			xAddParams.limit(source.getLimit());
+		}
+
+		return xAddParams;
 	}
 
 }

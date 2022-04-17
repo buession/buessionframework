@@ -22,22 +22,18 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.redis.core.operations;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.Tuple;
+import com.buession.redis.core.command.StreamCommands;
 
 /**
- * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
+ * Stream 命令
+ *
+ * <p>详情说明 <a href="https://redis.io/commands/?group=stream" target="_blank">https://redis.io/commands/?group=stream</a></p>
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
-
-	@Override
-	public Tuple convert(final redis.clients.jedis.resps.Tuple source){
-		return new Tuple(source.getBinaryElement(), source.getScore());
-	}
+public interface StreamOperations extends StreamCommands, RedisOperations {
 
 }

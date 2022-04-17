@@ -22,22 +22,26 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.Tuple;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.StreamOperations;
 
 /**
- * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
+ * Jedis Stream 命令操作抽象类
+ *
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
+public abstract class AbstractStreamOperations<C extends JedisRedisConnection> extends AbstractJedisRedisOperations<C>
+		implements StreamOperations<C> {
 
-	@Override
-	public Tuple convert(final redis.clients.jedis.resps.Tuple source){
-		return new Tuple(source.getBinaryElement(), source.getScore());
+	public AbstractStreamOperations(final JedisRedisClient client){
+		super(client);
 	}
 
 }

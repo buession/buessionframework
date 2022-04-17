@@ -33,15 +33,11 @@ import com.buession.redis.core.ClusterInfo;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ClusterInfoConverter<S, T> extends Converter<S, T> {
+public final class ClusterInfoConverter implements Converter<String, ClusterInfo> {
 
-	final class ClusterInfoExposeConverter implements ClusterInfoConverter<String, ClusterInfo> {
-
-		@Override
-		public ClusterInfo convert(final String source){
-			return null;
-		}
-
+	@Override
+	public ClusterInfo convert(final String source){
+		return null;
 	}
 
 }

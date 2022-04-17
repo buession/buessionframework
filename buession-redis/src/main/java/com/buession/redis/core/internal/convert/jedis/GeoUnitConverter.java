@@ -28,31 +28,27 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.GeoUnit;
 
 /**
- * {@link GeoUnit} 和 jedis {@link redis.clients.jedis.args.GeoUnit} 互转
+ * {@link GeoUnit} 转换为 jedis {@link redis.clients.jedis.args.GeoUnit}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface GeoUnitConverter<S, T> extends Converter<S, T> {
+public final class GeoUnitConverter implements Converter<GeoUnit, redis.clients.jedis.args.GeoUnit> {
 
-	final class GeoUnitJedisConverter implements GeoUnitConverter<GeoUnit, redis.clients.jedis.args.GeoUnit> {
-
-		@Override
-		public redis.clients.jedis.args.GeoUnit convert(final GeoUnit source){
-			switch(source){
-				case M:
-					return redis.clients.jedis.args.GeoUnit.M;
-				case KM:
-					return redis.clients.jedis.args.GeoUnit.KM;
-				case MI:
-					return redis.clients.jedis.args.GeoUnit.MI;
-				case FT:
-					return redis.clients.jedis.args.GeoUnit.FT;
-				default:
-					return null;
-			}
+	@Override
+	public redis.clients.jedis.args.GeoUnit convert(final GeoUnit source){
+		switch(source){
+			case M:
+				return redis.clients.jedis.args.GeoUnit.M;
+			case KM:
+				return redis.clients.jedis.args.GeoUnit.KM;
+			case MI:
+				return redis.clients.jedis.args.GeoUnit.MI;
+			case FT:
+				return redis.clients.jedis.args.GeoUnit.FT;
+			default:
+				return null;
 		}
-
 	}
 
 }

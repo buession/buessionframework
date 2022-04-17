@@ -564,8 +564,36 @@ public enum ProtocolCommand {
 	ZINTER(ProtocolCommandGroup.SORTEDSET),
 
 	ZRANDMEMBER(ProtocolCommandGroup.SORTEDSET),
+
+	ZUNION(ProtocolCommandGroup.SORTEDSET),
 	/**
 	 * sorted set command end
+	 **/
+
+	/**
+	 * stream command start
+	 **/
+	XACK(ProtocolCommandGroup.STREAM),
+
+	XADD(ProtocolCommandGroup.STREAM),
+	
+	XLEN(ProtocolCommandGroup.TRANSACTION),
+	XDEL(ProtocolCommandGroup.TRANSACTION),
+	XTRIM(ProtocolCommandGroup.TRANSACTION),
+	XRANGE(ProtocolCommandGroup.TRANSACTION),
+	XREVRANGE(ProtocolCommandGroup.TRANSACTION),
+	XREAD(ProtocolCommandGroup.TRANSACTION),
+
+	XGROUP(ProtocolCommandGroup.TRANSACTION),
+	XREADGROUP(ProtocolCommandGroup.TRANSACTION),
+	XPENDING(ProtocolCommandGroup.TRANSACTION),
+	XCLAIM(ProtocolCommandGroup.TRANSACTION),
+	XAUTOCLAIM(ProtocolCommandGroup.TRANSACTION),
+	XINFO(ProtocolCommandGroup.TRANSACTION),
+	SMISMEMBER(ProtocolCommandGroup.TRANSACTION),
+	STRALGO(ProtocolCommandGroup.TRANSACTION),
+	/**
+	 * stream command end
 	 **/
 
 	/**
@@ -631,27 +659,7 @@ public enum ProtocolCommand {
 	 **/
 
 
-	ZUNION(ProtocolCommandGroup.TRANSACTION),
-
-	SENTINEL(ProtocolCommandGroup.TRANSACTION),
-
-
-	XADD(ProtocolCommandGroup.TRANSACTION),
-	XLEN(ProtocolCommandGroup.TRANSACTION),
-	XDEL(ProtocolCommandGroup.TRANSACTION),
-	XTRIM(ProtocolCommandGroup.TRANSACTION),
-	XRANGE(ProtocolCommandGroup.TRANSACTION),
-	XREVRANGE(ProtocolCommandGroup.TRANSACTION),
-	XREAD(ProtocolCommandGroup.TRANSACTION),
-	XACK(ProtocolCommandGroup.TRANSACTION),
-	XGROUP(ProtocolCommandGroup.TRANSACTION),
-	XREADGROUP(ProtocolCommandGroup.TRANSACTION),
-	XPENDING(ProtocolCommandGroup.TRANSACTION),
-	XCLAIM(ProtocolCommandGroup.TRANSACTION),
-	XAUTOCLAIM(ProtocolCommandGroup.TRANSACTION),
-	XINFO(ProtocolCommandGroup.TRANSACTION),
-	SMISMEMBER(ProtocolCommandGroup.TRANSACTION),
-	STRALGO(ProtocolCommandGroup.TRANSACTION);
+	SENTINEL(ProtocolCommandGroup.TRANSACTION);
 
 	private final ProtocolCommandGroup group;
 

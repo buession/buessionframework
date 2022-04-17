@@ -32,48 +32,44 @@ import redis.clients.jedis.params.SetParams;
 import java.util.Objects;
 
 /**
- * {@link StringCommands.SetArgument} 和 jedis {@link SetParams} 互转
+ * {@link StringCommands.SetArgument} 转换为 jedis {@link SetParams}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface SetArgumentConverter<S, T> extends Converter<S, T> {
+public final class SetArgumentConverter implements Converter<StringCommands.SetArgument, SetParams> {
 
-	final class SetArgumentJedisConverter implements SetArgumentConverter<StringCommands.SetArgument, SetParams> {
+	@Override
+	public SetParams convert(final StringCommands.SetArgument source){
+		final SetParams setParams = new SetParams();
 
-		@Override
-		public SetParams convert(final StringCommands.SetArgument source){
-			final SetParams setParams = new SetParams();
-
-			if(source.getEx() != null){
-				setParams.ex(source.getEx());
-			}
-
-			if(source.getExAt() != null){
-				setParams.exAt(source.getExAt());
-			}
-
-			if(source.getPx() != null){
-				setParams.px(source.getPx().intValue());
-			}
-
-			if(source.getPxAt() != null){
-				setParams.px(source.getPxAt());
-			}
-
-			if(source.getNxXx() == NxXx.NX){
-				setParams.nx();
-			}else if(source.getNxXx() == NxXx.XX){
-				setParams.xx();
-			}
-
-			if(Objects.equals(source.getKeepTtl(), Boolean.TRUE)){
-				setParams.keepttl();
-			}
-
-			return setParams;
+		if(source.getEx() != null){
+			setParams.ex(source.getEx());
 		}
 
+		if(source.getExAt() != null){
+			setParams.exAt(source.getExAt());
+		}
+
+		if(source.getPx() != null){
+			setParams.px(source.getPx().intValue());
+		}
+
+		if(source.getPxAt() != null){
+			setParams.px(source.getPxAt());
+		}
+
+		if(source.getNxXx() == NxXx.NX){
+			setParams.nx();
+		}else if(source.getNxXx() == NxXx.XX){
+			setParams.xx();
+		}
+
+		if(Objects.equals(source.getKeepTtl(), Boolean.TRUE)){
+			setParams.keepttl();
+		}
+
+		return setParams;
 	}
 
 }

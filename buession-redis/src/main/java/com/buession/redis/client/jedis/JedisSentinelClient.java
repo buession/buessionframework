@@ -39,6 +39,7 @@ import com.buession.redis.client.jedis.operations.JedisSentinelScriptingOperatio
 import com.buession.redis.client.jedis.operations.JedisSentinelServerOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelSetOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelSortedSetOperations;
+import com.buession.redis.client.jedis.operations.JedisSentinelStreamOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelStringOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelTransactionOperations;
 
@@ -121,6 +122,11 @@ public class JedisSentinelClient extends AbstractJedisRedisClient implements Red
 	@Override
 	public JedisSentinelSortedSetOperations sortedSetOperations(){
 		return new JedisSentinelSortedSetOperations(this);
+	}
+
+	@Override
+	public JedisSentinelStreamOperations streamOperations(){
+		return new JedisSentinelStreamOperations(this);
 	}
 
 	@Override

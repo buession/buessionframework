@@ -29,27 +29,23 @@ import com.buession.redis.core.Direction;
 import redis.clients.jedis.args.ListDirection;
 
 /**
- * {@link Direction} 和 jedis {@link ListDirection} 互转
+ * {@link Direction} 转换为 jedis {@link ListDirection}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface DirectionConverter<S, T> extends Converter<S, T> {
+public final class DirectionConverter implements Converter<Direction, ListDirection> {
 
-	final class DirectionJedisConverter implements DirectionConverter<Direction, ListDirection> {
-
-		@Override
-		public ListDirection convert(final Direction source){
-			switch(source){
-				case LEFT:
-					return ListDirection.LEFT;
-				case RIGHT:
-					return ListDirection.RIGHT;
-				default:
-					return null;
-			}
+	@Override
+	public ListDirection convert(final Direction source){
+		switch(source){
+			case LEFT:
+				return ListDirection.LEFT;
+			case RIGHT:
+				return ListDirection.RIGHT;
+			default:
+				return null;
 		}
-
 	}
 
 }

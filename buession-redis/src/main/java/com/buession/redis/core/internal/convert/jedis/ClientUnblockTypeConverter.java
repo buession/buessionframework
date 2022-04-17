@@ -29,28 +29,23 @@ import com.buession.redis.core.ClientUnblockType;
 import redis.clients.jedis.args.UnblockType;
 
 /**
- * {@link ClientUnblockType} 和 jedis {@link UnblockType} 互转
+ * {@link ClientUnblockType} 转换为 jedis {@link UnblockType}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ClientUnblockTypeConverter<S, T> extends Converter<S, T> {
+public final class ClientUnblockTypeConverter implements Converter<ClientUnblockType, UnblockType> {
 
-	final class ClientUnblockJedisConverter
-			implements ClientUnblockTypeConverter<ClientUnblockType, UnblockType> {
-
-		@Override
-		public UnblockType convert(final ClientUnblockType source){
-			switch(source){
-				case TIMEOUT:
-					return UnblockType.TIMEOUT;
-				case ERROR:
-					return UnblockType.ERROR;
-				default:
-					return null;
-			}
+	@Override
+	public UnblockType convert(final ClientUnblockType source){
+		switch(source){
+			case TIMEOUT:
+				return UnblockType.TIMEOUT;
+			case ERROR:
+				return UnblockType.ERROR;
+			default:
+				return null;
 		}
-
 	}
 
 }

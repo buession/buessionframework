@@ -28,28 +28,24 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.ClusterFailoverOption;
 
 /**
- * {@link ClusterFailoverOption} 和 jedis {@link redis.clients.jedis.args.ClusterFailoverOption} 互转
+ * {@link ClusterFailoverOption} 转换为 jedis {@link redis.clients.jedis.args.ClusterFailoverOption}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ClusterFailoverOptionConverter<S, T> extends Converter<S, T> {
+public final class ClusterFailoverOptionConverter
+		implements Converter<ClusterFailoverOption, redis.clients.jedis.args.ClusterFailoverOption> {
 
-	final class ClusterFailoverOptionJedisConverter
-			implements BitOperationConverter<ClusterFailoverOption, redis.clients.jedis.args.ClusterFailoverOption> {
-
-		@Override
-		public redis.clients.jedis.args.ClusterFailoverOption convert(final ClusterFailoverOption source){
-			switch(source){
-				case FORCE:
-					return redis.clients.jedis.args.ClusterFailoverOption.FORCE;
-				case TAKEOVER:
-					return redis.clients.jedis.args.ClusterFailoverOption.TAKEOVER;
-				default:
-					return null;
-			}
+	@Override
+	public redis.clients.jedis.args.ClusterFailoverOption convert(final ClusterFailoverOption source){
+		switch(source){
+			case FORCE:
+				return redis.clients.jedis.args.ClusterFailoverOption.FORCE;
+			case TAKEOVER:
+				return redis.clients.jedis.args.ClusterFailoverOption.TAKEOVER;
+			default:
+				return null;
 		}
-
 	}
 
 }

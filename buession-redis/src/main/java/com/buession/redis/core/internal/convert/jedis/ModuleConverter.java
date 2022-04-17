@@ -28,20 +28,16 @@ import com.buession.core.converter.Converter;
 import com.buession.redis.core.Module;
 
 /**
- * {@link com.buession.redis.core.Module} 和 jedis {@link redis.clients.jedis.Module} 互转
+ * jedis {@link redis.clients.jedis.Module} 转换为 {@link com.buession.redis.core.Module}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ModuleConverter<S, T> extends Converter<S, T> {
+public final class ModuleConverter implements Converter<redis.clients.jedis.Module, Module> {
 
-	final class ModuleExposeConverter implements ModuleConverter<redis.clients.jedis.Module, Module> {
-
-		@Override
-		public Module convert(final redis.clients.jedis.Module source){
-			return new Module(source.getName(), source.getVersion());
-		}
-
+	@Override
+	public Module convert(final redis.clients.jedis.Module source){
+		return new Module(source.getName(), source.getVersion());
 	}
 
 }

@@ -29,39 +29,34 @@ import com.buession.redis.core.command.KeyCommands;
 import redis.clients.jedis.params.RestoreParams;
 
 /**
- * {@link KeyCommands.RestoreArgument} 和 jedis {@link RestoreParams} 互转
+ * {@link KeyCommands.RestoreArgument} 转换为 jedis {@link RestoreParams}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface RestoreArgumentConverter<S, T> extends Converter<S, T> {
+public final class RestoreArgumentConverter implements Converter<KeyCommands.RestoreArgument, RestoreParams> {
 
-	final class RestoreArgumentJedisConverter
-			implements RestoreArgumentConverter<KeyCommands.RestoreArgument, RestoreParams> {
+	@Override
+	public RestoreParams convert(final KeyCommands.RestoreArgument source){
+		final RestoreParams restoreParams = new RestoreParams();
 
-		@Override
-		public RestoreParams convert(final KeyCommands.RestoreArgument source){
-			final RestoreParams restoreParams = new RestoreParams();
-
-			if(source.isReplace() != null){
-				restoreParams.replace();
-			}
-
-			if(source.isAbsTtl() != null){
-				restoreParams.absTtl();
-			}
-
-			if(source.getIdleTime() != null){
-				restoreParams.idleTime(source.getIdleTime());
-			}
-
-			if(source.getFrequency() != null){
-				restoreParams.frequency(source.getFrequency());
-			}
-
-			return restoreParams;
+		if(source.isReplace() != null){
+			restoreParams.replace();
 		}
 
+		if(source.isAbsTtl() != null){
+			restoreParams.absTtl();
+		}
+
+		if(source.getIdleTime() != null){
+			restoreParams.idleTime(source.getIdleTime());
+		}
+
+		if(source.getFrequency() != null){
+			restoreParams.frequency(source.getFrequency());
+		}
+
+		return restoreParams;
 	}
 
 }

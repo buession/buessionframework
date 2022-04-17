@@ -22,22 +22,80 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.redis.core;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.Tuple;
+import com.buession.core.utils.StringUtils;
+
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
- * jedis {@link redis.clients.jedis.resps.Tuple} 转换为 {@link Tuple}
- *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
+public class StreamEntry implements Comparable<StreamEntry>, Serializable {
+
+	private final static long serialVersionUID = -4487927281373256508L;
+
+	private final long time;
+
+	private final long sequence;
+
+	public StreamEntry(){
+		this(0L, 0L);
+	}
+
+	public StreamEntry(final String id){
+		String[] split = StringUtils.split(id, '-');
+		this.time = Long.parseLong(split[0]);
+		this.sequence = Long.parseLong(split[1]);
+	}
+
+	public StreamEntry(final long time){
+		this(time, 0L);
+	}
+
+	public StreamEntry(final long time, final long sequence){
+		this.time = time;
+		this.sequence = sequence;
+	}
+
+	public long getTime(){
+		return time;
+	}
+
+	public long getSequence(){
+		return sequence;
+	}
 
 	@Override
-	public Tuple convert(final redis.clients.jedis.resps.Tuple source){
-		return new Tuple(source.getBinaryElement(), source.getScore());
+	public int compareTo(StreamEntry other){
+		int timeCompare = Long.compare(this.time, other.time);
+		return timeCompare != 0 ? timeCompare : Long.compare(this.sequence, other.sequence);
+	}
+
+	@Override
+	public int hashCode(){
+		return Objects.hash(time, sequence);
+	}
+
+	@Override
+	public boolean equals(Object obj){
+		if(obj == this){
+			return true;
+		}
+
+		if(obj instanceof StreamEntry){
+			StreamEntry that = (StreamEntry) obj;
+			return that.time == time && that.sequence == sequence;
+		}
+
+		return false;
+	}
+
+	@Override
+	public String toString(){
+		return time + "-" + sequence;
 	}
 
 }

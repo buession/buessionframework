@@ -35,15 +35,11 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ClusterReplicasConverter<S, T> extends Converter<S, T> {
+public final class ClusterReplicasConverter implements Converter<String, List<RedisClusterServer>> {
 
-	final class ClusterReplicasExposeConverter implements ClusterReplicasConverter<String, List<RedisClusterServer>> {
-
-		@Override
-		public List<RedisClusterServer> convert(final String source){
-			return null;
-		}
-
+	@Override
+	public List<RedisClusterServer> convert(final String source){
+		return null;
 	}
 
 }

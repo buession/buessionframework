@@ -33,15 +33,11 @@ import com.buession.redis.core.ClusterSlot;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ClusterSlotConverter<S, T> extends Converter<S, T> {
+public final class ClusterSlotConverter implements Converter<Object, ClusterSlot> {
 
-	final class ClusterSlotExposeConverter implements ClusterSlotConverter<Object, ClusterSlot> {
-
-		@Override
-		public ClusterSlot convert(final Object source){
-			return null;
-		}
-
+	@Override
+	public ClusterSlot convert(final Object source){
+		return null;
 	}
 
 }

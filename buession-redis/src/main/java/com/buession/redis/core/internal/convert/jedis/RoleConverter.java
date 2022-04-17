@@ -29,20 +29,16 @@ import com.buession.redis.core.Role;
 import redis.clients.jedis.resps.AccessControlLogEntry;
 
 /**
- * {@link Role} 和 jedis {@link AccessControlLogEntry} 互转
+ * jedis {@link AccessControlLogEntry} 转换为 {@link Role}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface RoleConverter<S, T> extends Converter<S, T> {
+public final class RoleConverter implements Converter<Object, Role> {
 
-	final class RoleExposeConverter implements RoleConverter<Object, Role> {
-
-		@Override
-		public Role convert(final Object source){
-			return null;
-		}
-
+	@Override
+	public Role convert(final Object source){
+		return null;
 	}
 
 }

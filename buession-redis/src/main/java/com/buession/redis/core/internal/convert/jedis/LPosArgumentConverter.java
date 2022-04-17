@@ -29,30 +29,26 @@ import com.buession.redis.core.command.ListCommands;
 import redis.clients.jedis.params.LPosParams;
 
 /**
- * {@link ListCommands.LPosArgument} 和 jedis {@link LPosParams} 互转
+ * {@link ListCommands.LPosArgument} 转换为 jedis {@link LPosParams}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface LPosArgumentConverter<S, T> extends Converter<S, T> {
+public final class LPosArgumentConverter implements Converter<ListCommands.LPosArgument, LPosParams> {
 
-	final class LPosArgumentJedisConverter implements LPosArgumentConverter<ListCommands.LPosArgument, LPosParams> {
+	@Override
+	public LPosParams convert(final ListCommands.LPosArgument source){
+		final LPosParams lPosParams = new LPosParams();
 
-		@Override
-		public LPosParams convert(final ListCommands.LPosArgument source){
-			final LPosParams lPosParams = new LPosParams();
-
-			if(source.getRank() != null){
-				lPosParams.rank(source.getRank());
-			}
-
-			if(source.getMaxLen() != null){
-				lPosParams.maxlen(source.getMaxLen());
-			}
-
-			return lPosParams;
+		if(source.getRank() != null){
+			lPosParams.rank(source.getRank());
 		}
 
+		if(source.getMaxLen() != null){
+			lPosParams.maxlen(source.getMaxLen());
+		}
+
+		return lPosParams;
 	}
 
 }
