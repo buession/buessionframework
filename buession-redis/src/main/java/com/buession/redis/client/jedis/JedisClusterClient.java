@@ -26,6 +26,7 @@ package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.RedisClusterClient;
 import com.buession.redis.client.connection.jedis.JedisClusterConnection;
+import com.buession.redis.client.jedis.operations.JedisClusterBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterConnectionOperations;
 import com.buession.redis.client.jedis.operations.JedisClusterGeoOperations;
@@ -55,6 +56,11 @@ public class JedisClusterClient extends AbstractJedisRedisClient implements Redi
 
 	public JedisClusterClient(final JedisClusterConnection connection){
 		super(connection);
+	}
+
+	@Override
+	public JedisClusterBitMapOperations bitMapOperations(){
+		return new JedisClusterBitMapOperations(this);
 	}
 
 	@Override

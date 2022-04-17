@@ -35,10 +35,9 @@ import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.jedis.JedisMigrateParams;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
-import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.args.ExpiryOption;
-import redis.clients.jedis.params.MigrateParams;
 import redis.clients.jedis.params.RestoreParams;
 import redis.clients.jedis.params.SortingParams;
 
@@ -384,11 +383,10 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("keys", keys);
-		final MigrateParams migrateParams = JedisConverters.MIGRATE_OPERATION_CONVERTER.convert(null);
+		final JedisMigrateParams params = new JedisMigrateParams();
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
 						JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
@@ -397,11 +395,10 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("keys", keys);
-		final MigrateParams migrateParams = JedisConverters.MIGRATE_OPERATION_CONVERTER.convert(null);
+		final JedisMigrateParams params = new JedisMigrateParams();
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
 						JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
@@ -411,11 +408,10 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final MigrateOperation operation, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("operation", operation).put("keys", keys);
-		final MigrateParams migrateParams = JedisConverters.MIGRATE_OPERATION_CONVERTER.convert(operation);
+		final JedisMigrateParams params = new JedisMigrateParams(operation);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
 						JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
@@ -425,11 +421,10 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final MigrateOperation operation, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("operation", operation).put("keys", keys);
-		final MigrateParams migrateParams = JedisConverters.MIGRATE_OPERATION_CONVERTER.convert(operation);
+		final JedisMigrateParams params = new JedisMigrateParams(operation);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
 						JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
@@ -439,11 +434,10 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("keys", keys);
-		final MigrateParams migrateParams = JedisConverters.MIGRATE_OPERATION_CONVERTER.convert(null).auth(password);
+		final JedisMigrateParams params = new JedisMigrateParams(password);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
 						JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
@@ -453,12 +447,10 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("keys", keys);
-		final MigrateParams migrateParams = JedisConverters.MIGRATE_OPERATION_CONVERTER.convert(null)
-				.auth(SafeEncoder.encode(password));
+		final JedisMigrateParams params = new JedisMigrateParams(password);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
 						JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
@@ -468,12 +460,10 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final MigrateOperation operation, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("operation", operation).put("keys", keys);
-		final MigrateParams migrateParams = JedisConverters.MIGRATE_OPERATION_CONVERTER.convert(operation)
-				.auth(password);
+		final JedisMigrateParams params = new JedisMigrateParams(operation, password);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
 						JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
@@ -483,12 +473,10 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final MigrateOperation operation, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("operation", operation).put("keys", keys);
-		final MigrateParams migrateParams = JedisConverters.MIGRATE_OPERATION_CONVERTER.convert(operation)
-				.auth(SafeEncoder.encode(password));
+		final JedisMigrateParams params = new JedisMigrateParams(operation, password);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
 						JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
@@ -498,12 +486,10 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final int timeout, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", keys);
-		final MigrateParams migrateParams = JedisConverters.MIGRATE_OPERATION_CONVERTER.convert(null)
-				.auth2(user, password);
+		final JedisMigrateParams params = new JedisMigrateParams(user, password);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
 						JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
@@ -513,12 +499,10 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 						  final int timeout, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", keys);
-		final MigrateParams migrateParams = JedisConverters.MIGRATE_OPERATION_CONVERTER.convert(null)
-				.auth2(SafeEncoder.encode(user), SafeEncoder.encode(password));
+		final JedisMigrateParams params = new JedisMigrateParams(user, password);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
 						JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
@@ -529,12 +513,10 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", keys);
-		final MigrateParams migrateParams = JedisConverters.MIGRATE_OPERATION_CONVERTER.convert(operation)
-				.auth2(user, password);
+		final JedisMigrateParams params = new JedisMigrateParams(operation, user, password);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
 						JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}
@@ -545,12 +527,10 @@ public final class JedisSentinelKeyOperations extends AbstractKeyOperations<Jedi
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", keys);
-		final MigrateParams migrateParams = JedisConverters.MIGRATE_OPERATION_CONVERTER.convert(operation)
-				.auth2(SafeEncoder.encode(user), SafeEncoder.encode(password));
+		final JedisMigrateParams params = new JedisMigrateParams(operation, user, password);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, migrateParams, keys),
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
 						JedisConverters.OK_STATUS_CONVERTER);
 		return execute(command, args);
 	}

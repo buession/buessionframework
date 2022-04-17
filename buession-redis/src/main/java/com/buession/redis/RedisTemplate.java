@@ -51,7 +51,8 @@ import java.util.stream.Collectors;
  *
  * @author Yong.Teng
  */
-public class RedisTemplate extends BaseRedisTemplate implements ClusterOperations, ConnectionOperations, GeoOperations/*,
+public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations, ClusterOperations,
+		ConnectionOperations, GeoOperations/*,
 		HashOperations, HyperLogLogOperations, KeyOperations, ListOperations, PubSubOperations, ScriptingOperations,
 		ServerOperations, SetOperations, SortedSetOperations, StringOperations, TransactionOperations*/ {
 

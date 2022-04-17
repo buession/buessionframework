@@ -22,57 +22,70 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert;
+package com.buession.redis.core.internal.jedis;
 
-import com.buession.core.converter.BooleanStatusConverter;
-import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.core.converter.PredicateStatusConverter;
+import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.utils.SafeEncoder;
-import org.springframework.lang.Nullable;
+import redis.clients.jedis.params.MigrateParams;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface Converters {
+public class JedisMigrateParams extends MigrateParams {
 
-	OkStatusConverter OK_STATUS_CONVERTER = new OkStatusConverter();
+	public JedisMigrateParams(){
+		super();
+	}
 
-	PingResultConverter PING_RESULT_CONVERTER = new PingResultConverter();
-
-	Converter<byte[], String> BINARY_TO_STRING_CONVERTER = new Converter<byte[], String>() {
-
-		@Nullable
-		@Override
-		public String convert(final byte[] source){
-			return SafeEncoder.encode(source);
+	public JedisMigrateParams(final MigrateOperation migrateOperation){
+		super();
+		switch(migrateOperation){
+			case COPY:
+				copy();
+				break;
+			case REPLACE:
+				replace();
+				break;
+			default:
+				break;
 		}
+	}
 
-	};
+	public JedisMigrateParams(final String password){
+		super();
+		auth(password);
+	}
 
-	PredicateStatusConverter<Long> ONE_STATUS_CONVERTER = new PredicateStatusConverter<>((val)->val == 1);
+	public JedisMigrateParams(final byte[] password){
+		this(SafeEncoder.encode(password));
+	}
 
-	InfoConverter INFO_CONVERTER = new InfoConverter();
+	public JedisMigrateParams(final String username, final String password){
+		super();
+		auth2(username, password);
+	}
 
-	BooleanStatusConverter BOOLEAN_STATUS_CONVERTER = new BooleanStatusConverter();
+	public JedisMigrateParams(final byte[] username, final byte[] password){
+		this(SafeEncoder.encode(username), SafeEncoder.encode(password));
+	}
 
-	ListConverter<String, byte[]> STRING_LIST_TO_BINARY_LIST_CONVERTER = new ListConverter<>(SafeEncoder::encode);
+	public JedisMigrateParams(final MigrateOperation migrateOperation, final String password){
+		this(migrateOperation);
+		auth(password);
+	}
 
-	Converter<byte[][], String[]> BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER = new Converter<byte[][], String[]>() {
+	public JedisMigrateParams(final MigrateOperation migrateOperation, final byte[] password){
+		this(migrateOperation, SafeEncoder.encode(password));
+	}
 
-		@Nullable
-		@Override
-		public String[] convert(final byte[][] source){
-			final String[] result = new String[source.length];
+	public JedisMigrateParams(final MigrateOperation migrateOperation, final String username, final String password){
+		this(migrateOperation);
+		auth2(username, password);
+	}
 
-			for(int i = 0; i < source.length; i++){
-				result[i] = SafeEncoder.encode(source[i]);
-			}
-
-			return result;
-		}
-
-	};
+	public JedisMigrateParams(final MigrateOperation migrateOperation, final byte[] username, final byte[] password){
+		this(migrateOperation, SafeEncoder.encode(username), SafeEncoder.encode(password));
+	}
 
 }

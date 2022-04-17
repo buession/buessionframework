@@ -30,26 +30,22 @@ import com.buession.redis.core.SlowLog;
 import redis.clients.jedis.resps.Slowlog;
 
 /**
- * {@link SlowLog} 和 jedis {@link Slowlog} 互转
+ * {@link SlowLog} 转换为 jedis {@link Slowlog}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface SlowLogConverter<S, T> extends Converter<S, T> {
+public final class SlowLogConverter implements Converter<Slowlog, SlowLog> {
 
-	final class SlowLogExposeConverter implements AclUserConverter<Slowlog, SlowLog> {
+	@Override
+	public SlowLog convert(final Slowlog source){
+		final Client client = new Client();
 
-		@Override
-		public SlowLog convert(final Slowlog source){
-			final Client client = new Client();
+		client.setHost(source.getClientIpPort().getHost());
+		client.setPort(source.getClientIpPort().getPort());
 
-			client.setHost(source.getClientIpPort().getHost());
-			client.setPort(source.getClientIpPort().getPort());
-
-			return new SlowLog(source.getId(), source.getTimeStamp(), source.getExecutionTime(), source.getArgs(),
-					client, source.getClientName());
-		}
-
+		return new SlowLog(source.getId(), source.getTimeStamp(), source.getExecutionTime(), source.getArgs(),
+				client, source.getClientName());
 	}
 
 }

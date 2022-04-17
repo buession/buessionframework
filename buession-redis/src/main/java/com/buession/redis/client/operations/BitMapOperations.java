@@ -22,35 +22,20 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.redis.client.operations;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.MigrateOperation;
-import redis.clients.jedis.params.MigrateParams;
+import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.command.BitMapCommands;
 
 /**
- * {@link MigrateOperation} 和 jedis {@link MigrateParams} 互转
+ * BitMap 命令操作接口
+ *
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface MigrateOperationConverter<S, T> extends Converter<S, T> {
-
-	final class MigrateOperationJedisConverter implements MigrateOperationConverter<MigrateOperation, MigrateParams> {
-
-		@Override
-		public MigrateParams convert(final MigrateOperation source){
-			final MigrateParams migrateParams = new MigrateParams();
-			switch(source){
-				case COPY:
-					return migrateParams.copy();
-				case REPLACE:
-					return migrateParams.replace();
-				default:
-					return migrateParams;
-			}
-		}
-
-	}
+public interface BitMapOperations<C extends RedisConnection> extends BitMapCommands, RedisOperations<C> {
 
 }

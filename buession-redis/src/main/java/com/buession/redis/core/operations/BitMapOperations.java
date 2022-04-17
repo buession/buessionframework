@@ -22,23 +22,18 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.redis.core.operations;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.AclUser;
-import redis.clients.jedis.resps.AccessControlUser;
+import com.buession.redis.core.command.BitMapCommands;
 
 /**
- * {@link AclUser} 转换为 jedis {@link AccessControlUser}
+ * BitMap 命令
+ *
+ * <p>详情说明 <a href="https://redis.io/commands/?group=bitmap" target="_blank">https://redis.io/commands/?group=bitmap</a></p>
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class AclUserConverter implements Converter<AccessControlUser, AclUser> {
-
-	@Override
-	public AclUser convert(final AccessControlUser source){
-		return new AclUser(source.getFlags(), source.getKeys(), source.getPassword(), source.getCommands());
-	}
+public interface BitMapOperations extends BitMapCommands, RedisOperations {
 
 }

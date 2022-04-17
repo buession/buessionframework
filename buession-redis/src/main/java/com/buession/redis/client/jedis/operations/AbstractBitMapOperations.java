@@ -22,23 +22,26 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.AclUser;
-import redis.clients.jedis.resps.AccessControlUser;
+import com.buession.redis.client.connection.jedis.JedisRedisConnection;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.operations.BitMapOperations;
 
 /**
- * {@link AclUser} 转换为 jedis {@link AccessControlUser}
+ * Jedis BitMap 命令操作抽象类
+ *
+ * @param <C>
+ * 		连接对象
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class AclUserConverter implements Converter<AccessControlUser, AclUser> {
+public abstract class AbstractBitMapOperations<C extends JedisRedisConnection> extends AbstractJedisRedisOperations<C>
+		implements BitMapOperations<C> {
 
-	@Override
-	public AclUser convert(final AccessControlUser source){
-		return new AclUser(source.getFlags(), source.getKeys(), source.getPassword(), source.getCommands());
+	public AbstractBitMapOperations(final JedisRedisClient client){
+		super(client);
 	}
 
 }

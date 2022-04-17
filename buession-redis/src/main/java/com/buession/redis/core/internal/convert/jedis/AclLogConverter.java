@@ -31,25 +31,21 @@ import com.buession.redis.core.Client;
 import redis.clients.jedis.resps.AccessControlLogEntry;
 
 /**
- * {@link AclLog} 和 jedis {@link AccessControlLogEntry} 互转
+ * {@link AclLog} 转换为 jedis {@link AccessControlLogEntry}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface AclLogConverter<S, T> extends Converter<S, T> {
+public final class AclLogConverter implements Converter<AccessControlLogEntry, AclLog> {
 
-	final class AclLogExposeConverter implements AclUserConverter<AccessControlLogEntry, AclLog> {
+	@Override
+	public AclLog convert(final AccessControlLogEntry source){
+		final Client client = new Client();
 
-		@Override
-		public AclLog convert(final AccessControlLogEntry source){
-			final Client client = new Client();
+		BeanUtils.populate(client, source.getClientInfo());
 
-			BeanUtils.populate(client, source.getClientInfo());
-
-			return new AclLog(source.getCount(), source.getReason(), source.getContext(), source.getObject(),
-					source.getUsername(), source.getAgeSeconds(), client, source.getlogEntry());
-		}
-
+		return new AclLog(source.getCount(), source.getReason(), source.getContext(), source.getObject(),
+				source.getUsername(), source.getAgeSeconds(), client, source.getlogEntry());
 	}
 
 }

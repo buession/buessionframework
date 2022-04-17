@@ -22,36 +22,16 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
-
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.Aggregate;
-import redis.clients.jedis.params.ZParams;
+package com.buession.redis.core;
 
 /**
- * {@link Aggregate} 和 Jedis {@link ZParams.Aggregate} 互转
- *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface AggregateConverter<S, T> extends Converter<S, T> {
+public enum BitCountOption {
 
-	final class AggregateJedisConverter implements Converter<Aggregate, ZParams.Aggregate> {
+	BYTE,
 
-		@Override
-		public ZParams.Aggregate convert(final Aggregate source){
-			switch(source){
-				case MIN:
-					return ZParams.Aggregate.MIN;
-				case MAX:
-					return ZParams.Aggregate.MAX;
-				case SUM:
-					return ZParams.Aggregate.SUM;
-				default:
-					return null;
-			}
-		}
-
-	}
+	BIT
 
 }

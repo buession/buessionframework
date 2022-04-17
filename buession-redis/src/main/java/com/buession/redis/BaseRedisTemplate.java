@@ -29,6 +29,8 @@ import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Aggregate;
+import com.buession.redis.core.BitCountOption;
+import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientReply;
@@ -92,6 +94,106 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	 */
 	public BaseRedisTemplate(RedisConnection connection){
 		super(connection);
+	}
+
+	@Override
+	public long bitCount(final String key){
+		return bitMapOpsExecute((ops)->ops.bitCount(key));
+	}
+
+	@Override
+	public long bitCount(final byte[] key){
+		return bitMapOpsExecute((ops)->ops.bitCount(key));
+	}
+
+	@Override
+	public long bitCount(final String key, final long start, final long end){
+		return bitMapOpsExecute((ops)->ops.bitCount(key, start, end));
+	}
+
+	@Override
+	public long bitCount(final byte[] key, final long start, final long end){
+		return bitMapOpsExecute((ops)->ops.bitCount(key, start, end));
+	}
+
+	@Override
+	public long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption){
+		return bitMapOpsExecute((ops)->ops.bitCount(key, start, end, bitCountOption));
+	}
+
+	@Override
+	public long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption){
+		return bitMapOpsExecute((ops)->ops.bitCount(key, start, end, bitCountOption));
+	}
+
+	@Override
+	public List<Long> bitField(final String key, final String... arguments){
+		return bitMapOpsExecute((ops)->ops.bitField(key, arguments));
+	}
+
+	@Override
+	public List<Long> bitField(final byte[] key, final byte[]... arguments){
+		return bitMapOpsExecute((ops)->ops.bitField(key, arguments));
+	}
+
+	@Override
+	public List<Long> bitFieldRo(final String key, final String... arguments){
+		return bitMapOpsExecute((ops)->ops.bitFieldRo(key, arguments));
+	}
+
+	@Override
+	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments){
+		return bitMapOpsExecute((ops)->ops.bitFieldRo(key, arguments));
+	}
+
+	@Override
+	public long bitOp(final BitOperation operation, final String destKey, final String... keys){
+		return bitMapOpsExecute((ops)->ops.bitOp(key, destKey, keys));
+	}
+
+	@Override
+	public long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys){
+		return bitMapOpsExecute((ops)->ops.bitOp(key, destKey, keys));
+	}
+
+	@Override
+	public long bitPos(final String key, final boolean value){
+		return bitMapOpsExecute((ops)->ops.bitPos(key, value));
+	}
+
+	@Override
+	public long bitPos(final byte[] key, final boolean value){
+		return bitMapOpsExecute((ops)->ops.bitPos(key, value));
+	}
+
+	@Override
+	public long bitPos(final String key, final boolean value, final long start, final long end){
+		return bitMapOpsExecute((ops)->ops.bitPos(key, value, start, end));
+	}
+
+	@Override
+	public long bitPos(final byte[] key, final boolean value, final long start, final long end){
+		return bitMapOpsExecute((ops)->ops.bitPos(key, value, start, end));
+	}
+
+	@Override
+	public boolean getBit(final String key, final long offset){
+		return bitMapOpsExecute((ops)->ops.getBit(key, offset));
+	}
+
+	@Override
+	public boolean getBit(final byte[] key, final long offset){
+		return bitMapOpsExecute((ops)->ops.getBit(key, offset));
+	}
+
+	@Override
+	public boolean setBit(final String key, final long offset, final boolean value){
+		return bitMapOpsExecute((ops)->ops.setBit(key, offset, value));
+	}
+
+	@Override
+	public boolean setBit(final byte[] key, final long offset, final boolean value){
+		return bitMapOpsExecute((ops)->ops.setBit(key, offset, value));
 	}
 
 	@Override

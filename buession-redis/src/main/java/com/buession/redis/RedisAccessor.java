@@ -34,6 +34,7 @@ import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.client.jedis.JedisSentinelClient;
+import com.buession.redis.client.operations.BitMapOperations;
 import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.client.operations.ConnectionOperations;
 import com.buession.redis.client.operations.GeoOperations;
@@ -78,6 +79,8 @@ public abstract class RedisAccessor implements Closeable {
 	protected boolean enableTransactionSupport = false;
 
 	protected AtomicInteger index = new AtomicInteger(-1);
+
+	protected BitMapOperations<? extends RedisConnection> bitMapOps;
 
 	protected ClusterOperations<? extends RedisConnection> clusterOps;
 
@@ -152,6 +155,7 @@ public abstract class RedisAccessor implements Closeable {
 
 		client = doGetRedisClient(connection);
 
+		bitMapOps = client.bitMapOperations();
 		clusterOps = client.clusterOperations();
 		connectionOps = client.connectionOperations();
 		geoOps = client.geoOperations();
@@ -201,6 +205,10 @@ public abstract class RedisAccessor implements Closeable {
 		}
 
 		return executor.execute(ops);
+	}
+
+	protected <R> R bitMapOpsExecute(final Executor<BitMapOperations<? extends RedisConnection>, R> executor){
+		return execute(bitMapOps, executor);
 	}
 
 	protected <R> R clusterOpsExecute(final Executor<ClusterOperations<? extends RedisConnection>, R> executor){

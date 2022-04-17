@@ -29,6 +29,8 @@ package com.buession.redis.core.command;
  */
 public enum ProtocolCommandGroup {
 
+	BITMAP("BitMap"),
+
 	CLUSTER("Cluster"),
 
 	CONNECTION("Connection"),

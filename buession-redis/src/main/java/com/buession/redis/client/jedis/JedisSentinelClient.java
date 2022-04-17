@@ -26,6 +26,7 @@ package com.buession.redis.client.jedis;
 
 import com.buession.redis.client.RedisSentinelClient;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
+import com.buession.redis.client.jedis.operations.JedisSentinelBitMapOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelClusterOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelConnectionOperations;
 import com.buession.redis.client.jedis.operations.JedisSentinelGeoOperations;
@@ -55,6 +56,11 @@ public class JedisSentinelClient extends AbstractJedisRedisClient implements Red
 
 	public JedisSentinelClient(final JedisSentinelConnection connection){
 		super(connection);
+	}
+
+	@Override
+	public JedisSentinelBitMapOperations bitMapOperations(){
+		return new JedisSentinelBitMapOperations(this);
 	}
 
 	@Override

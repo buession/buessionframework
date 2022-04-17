@@ -29,31 +29,27 @@ import com.buession.redis.core.BitOperation;
 import redis.clients.jedis.args.BitOP;
 
 /**
- * {@link BitOperation} 和 jedis {@link BitOP} 互转
+ * {@link BitOperation} 转换为 jedis {@link BitOP}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface BitOperationConverter<S, T> extends Converter<S, T> {
+public final class BitOperationConverter implements Converter<BitOperation, BitOP> {
 
-	final class BitOperationJedisConverter implements BitOperationConverter<BitOperation, BitOP> {
-
-		@Override
-		public BitOP convert(final BitOperation source){
-			switch(source){
-				case AND:
-					return BitOP.AND;
-				case OR:
-					return BitOP.OR;
-				case NOT:
-					return BitOP.NOT;
-				case XOR:
-					return BitOP.XOR;
-				default:
-					return null;
-			}
+	@Override
+	public BitOP convert(final BitOperation source){
+		switch(source){
+			case AND:
+				return BitOP.AND;
+			case OR:
+				return BitOP.OR;
+			case NOT:
+				return BitOP.NOT;
+			case XOR:
+				return BitOP.XOR;
+			default:
+				return null;
 		}
-
 	}
 
 }

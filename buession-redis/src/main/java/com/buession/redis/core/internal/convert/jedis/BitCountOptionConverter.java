@@ -25,20 +25,27 @@
 package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.AclUser;
-import redis.clients.jedis.resps.AccessControlUser;
+import com.buession.redis.core.BitCountOption;
 
 /**
- * {@link AclUser} 转换为 jedis {@link AccessControlUser}
+ * {@link BitCountOption} 转换为 Jedis {@link redis.clients.jedis.args.BitCountOption} 互转
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class AclUserConverter implements Converter<AccessControlUser, AclUser> {
+public final class BitCountOptionConverter
+		implements Converter<BitCountOption, redis.clients.jedis.args.BitCountOption> {
 
 	@Override
-	public AclUser convert(final AccessControlUser source){
-		return new AclUser(source.getFlags(), source.getKeys(), source.getPassword(), source.getCommands());
+	public redis.clients.jedis.args.BitCountOption convert(final BitCountOption source){
+		switch(source){
+			case BYTE:
+				return redis.clients.jedis.args.BitCountOption.BYTE;
+			case BIT:
+				return redis.clients.jedis.args.BitCountOption.BIT;
+			default:
+				return null;
+		}
 	}
 
 }

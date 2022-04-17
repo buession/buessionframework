@@ -30,6 +30,25 @@ import com.buession.core.utils.StringUtils;
  * @author Yong.Teng
  */
 public enum ProtocolCommand {
+	/**
+	 * bitmat command start
+	 **/
+	BITCOUNT(ProtocolCommandGroup.BITMAP),
+
+	BITFIELD(ProtocolCommandGroup.BITMAP),
+
+	BITFIELD_RO(ProtocolCommandGroup.BITMAP),
+
+	BITOP(ProtocolCommandGroup.BITMAP),
+
+	BITPOS(ProtocolCommandGroup.BITMAP),
+
+	GETBIT(ProtocolCommandGroup.BITMAP),
+
+	SETBIT(ProtocolCommandGroup.BITMAP),
+	/**
+	 * bitmat command end
+	 **/
 
 	/**
 	 * cluster command start
@@ -554,21 +573,11 @@ public enum ProtocolCommand {
 	 **/
 	APPEND(ProtocolCommandGroup.STRING),
 
-	BITCOUNT(ProtocolCommandGroup.STRING),
-
-	BITFIELD(ProtocolCommandGroup.STRING),
-
-	BITOP(ProtocolCommandGroup.STRING),
-
-	BITPOS(ProtocolCommandGroup.STRING),
-
 	DECR(ProtocolCommandGroup.STRING),
 
 	DECRBY(ProtocolCommandGroup.STRING),
 
 	GET(ProtocolCommandGroup.STRING),
-
-	GETBIT(ProtocolCommandGroup.STRING),
 
 	GETRANGE(ProtocolCommandGroup.STRING),
 
@@ -593,8 +602,6 @@ public enum ProtocolCommand {
 	PSETEX(ProtocolCommandGroup.STRING),
 
 	SET(ProtocolCommandGroup.STRING),
-
-	SETBIT(ProtocolCommandGroup.STRING),
 
 	SETEX(ProtocolCommandGroup.STRING),
 
@@ -643,7 +650,6 @@ public enum ProtocolCommand {
 	XCLAIM(ProtocolCommandGroup.TRANSACTION),
 	XAUTOCLAIM(ProtocolCommandGroup.TRANSACTION),
 	XINFO(ProtocolCommandGroup.TRANSACTION),
-	BITFIELD_RO(ProtocolCommandGroup.TRANSACTION),
 	SMISMEMBER(ProtocolCommandGroup.TRANSACTION),
 	STRALGO(ProtocolCommandGroup.TRANSACTION);
 

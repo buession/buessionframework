@@ -58,6 +58,10 @@ public interface JedisConverters extends Converters {
 	/**
 	 * start param converter
 	 */
+	BitCountOptionConverter BIT_COUNT_OPTION_CONVERTER = new BitCountOptionConverter();
+
+	BitOperationConverter BIT_OPERATION_CONVERTER = new BitOperationConverter();
+
 	ClusterResetOptionConverter.ClusterResetOptionJedisConverter CLUSTER_RESET_OPTION_CONVERTER = new ClusterResetOptionConverter.ClusterResetOptionJedisConverter();
 
 	ClusterFailoverOptionConverter.ClusterFailoverOptionJedisConverter CLUSTER_FAILOVER_OPTION_CONVERTER = new ClusterFailoverOptionConverter.ClusterFailoverOptionJedisConverter();
@@ -77,8 +81,6 @@ public interface JedisConverters extends Converters {
 	GeoRadiusArgumentConverter.GeoRadiusArgumentJedisConverter GEO_RADIUS_ARGUMENT_CONVERTER = new GeoRadiusArgumentConverter.GeoRadiusArgumentJedisConverter();
 
 	ExpireOptionConverter.ExpireOptionJedisConverter EXPIRE_OPTION_CONVERTER = new ExpireOptionConverter.ExpireOptionJedisConverter();
-
-	MigrateOperationConverter.MigrateOperationJedisConverter MIGRATE_OPERATION_CONVERTER = new MigrateOperationConverter.MigrateOperationJedisConverter();
 
 	RestoreArgumentConverter.RestoreArgumentJedisConverter RESTORE_ARGUMENT_CONVERTER = new RestoreArgumentConverter.RestoreArgumentJedisConverter();
 
@@ -145,12 +147,12 @@ public interface JedisConverters extends Converters {
 	EnumConverter<ObjectEncoding> STRING_OBJECT_ENCODING_RESULT_CONVERTER = new EnumConverter<>(ObjectEncoding.class);
 
 	Converter<byte[], ObjectEncoding> BINARY_OBJECT_ENCODING_RESULT_CONVERTER = (value)->EnumUtils.getEnumIgnoreCase(
-			ObjectEncoding.class, SafeEncoder.encode(value).toUpperCase());
+			ObjectEncoding.class, SafeEncoder.encode(value));
 
-	AclUserConverter.AclUserExposeConverter ACL_USER_RESULT_CONVERTER = new AclUserConverter.AclUserExposeConverter();
+	AclUserConverter ACL_USER_RESULT_CONVERTER = new AclUserConverter();
 
 	ListConverter<AccessControlLogEntry, AclLog> LIST_ACL_LOG_RESULT_CONVERTER = new ListConverter<>(
-			new AclLogConverter.AclLogExposeConverter());
+			new AclLogConverter());
 
 	ListConverter<redis.clients.jedis.Module, Module> LIST_MODULE_RESULT_CONVERTER = new ListConverter<>(
 			new ModuleConverter.ModuleExposeConverter());
@@ -159,7 +161,7 @@ public interface JedisConverters extends Converters {
 			new RoleConverter.RoleExposeConverter());
 
 	ListConverter<Slowlog, SlowLog> LIST_SLOW_LOG_RESULT_CONVERTER = new ListConverter<>(
-			new SlowLogConverter.SlowLogExposeConverter());
+			new SlowLogConverter());
 
 	RedisServerTimeConverter REDIS_SERVER_TIME_RESULT_CONVERTER = new RedisServerTimeConverter();
 
