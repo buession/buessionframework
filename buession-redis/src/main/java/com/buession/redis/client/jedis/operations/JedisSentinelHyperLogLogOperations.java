@@ -30,6 +30,7 @@ import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
 
 /**
  * Jedis 哨兵模式 HyperLogLog 命令操作
@@ -67,9 +68,9 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 	public Status pfMerge(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.PFMERGE)
-				.general((cmd)->cmd.pfmerge(destKey, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pfmerge(destKey, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pfmerge(destKey, keys), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -77,9 +78,9 @@ public final class JedisSentinelHyperLogLogOperations extends AbstractHyperLogLo
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.PFMERGE)
-				.general((cmd)->cmd.pfmerge(destKey, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pfmerge(destKey, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pfmerge(destKey, keys), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 

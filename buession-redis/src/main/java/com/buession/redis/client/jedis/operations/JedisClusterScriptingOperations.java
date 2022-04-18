@@ -31,6 +31,8 @@ import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
+import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -196,20 +198,20 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 	@Override
 	public Status scriptFlush(){
 		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.SCRIPT_FLUSH)
-				.general((cmd)->cmd.scriptFlush((String) null), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.scriptFlush((String) null), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.scriptFlush((String) null), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.scriptFlush((String) null), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.scriptFlush((String) null), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.scriptFlush((String) null), OkStatusConverter.INSTANCE);
 		return execute(command);
 	}
 
 	@Override
 	public Status scriptFlush(final FlushMode mode){
 		final CommandArguments args = CommandArguments.create("mode", mode);
-		final redis.clients.jedis.args.FlushMode flushMode = JedisConverters.FLUSH_MODE_CONVERTER.convert(mode);
+		final redis.clients.jedis.args.FlushMode flushMode = FlushModeConverter.INSTANCE.convert(mode);
 		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.SCRIPT_FLUSH)
-				.general((cmd)->cmd.scriptFlush((String) null, flushMode), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.scriptFlush((String) null, flushMode), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.scriptFlush((String) null, flushMode), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.scriptFlush((String) null, flushMode), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.scriptFlush((String) null, flushMode), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.scriptFlush((String) null, flushMode), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -236,9 +238,9 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 	@Override
 	public Status scriptKill(){
 		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.SCRIPT_KILL)
-				.general((cmd)->cmd.scriptKill((String) null), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.scriptKill((String) null), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.scriptKill((String) null), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.scriptKill((String) null), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.scriptKill((String) null), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.scriptKill((String) null), OkStatusConverter.INSTANCE);
 		return execute(command);
 	}
 

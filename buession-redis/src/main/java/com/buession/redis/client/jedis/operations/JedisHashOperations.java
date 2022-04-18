@@ -31,6 +31,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 
 import java.util.List;
@@ -221,55 +222,55 @@ public final class JedisHashOperations extends AbstractHashOperations<JedisConne
 	public Status hMSet(final String key, final Map<String, String> data){
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(
-						ProtocolCommand.HMGET).general((cmd)->cmd.hmset(key, data), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.hmset(key, data), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.hmset(key, data), JedisConverters.OK_STATUS_CONVERTER);
+						ProtocolCommand.HMGET).general((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(
-						ProtocolCommand.HMGET).general((cmd)->cmd.hmset(key, data), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.hmset(key, data), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.hmset(key, data), JedisConverters.OK_STATUS_CONVERTER);
+		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.HMGET)
+				.general((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
 	public String hRandField(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisCommand<String> command = JedisCommand.<String>create(
-						ProtocolCommand.HRANDFIELD).general((cmd)->cmd.hrandfield(key))
-				.pipeline((cmd)->cmd.hrandfield(key)).transaction((cmd)->cmd.hrandfield(key));
+		final JedisCommand<String> command = JedisCommand.<String>create(ProtocolCommand.HRANDFIELD)
+				.general((cmd)->cmd.hrandfield(key)).pipeline((cmd)->cmd.hrandfield(key))
+				.transaction((cmd)->cmd.hrandfield(key));
 		return execute(command, args);
 	}
 
 	@Override
 	public byte[] hRandField(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisCommand<byte[]> command = JedisCommand.<byte[]>create(
-						ProtocolCommand.HRANDFIELD).general((cmd)->cmd.hrandfield(key))
-				.pipeline((cmd)->cmd.hrandfield(key)).transaction((cmd)->cmd.hrandfield(key));
+		final JedisCommand<byte[]> command = JedisCommand.<byte[]>create(ProtocolCommand.HRANDFIELD)
+				.general((cmd)->cmd.hrandfield(key)).pipeline((cmd)->cmd.hrandfield(key))
+				.transaction((cmd)->cmd.hrandfield(key));
 		return execute(command, args);
 	}
 
 	@Override
 	public List<String> hRandField(final String key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final JedisCommand<List<String>> command = JedisCommand.<List<String>>create(
-						ProtocolCommand.HRANDFIELD).general((cmd)->cmd.hrandfield(key, count))
-				.pipeline((cmd)->cmd.hrandfield(key, count)).transaction((cmd)->cmd.hrandfield(key, count));
+		final JedisCommand<List<String>> command = JedisCommand.<List<String>>create(ProtocolCommand.HRANDFIELD)
+				.general((cmd)->cmd.hrandfield(key, count)).pipeline((cmd)->cmd.hrandfield(key, count))
+				.transaction((cmd)->cmd.hrandfield(key, count));
 		return execute(command, args);
 	}
 
 	@Override
 	public List<byte[]> hRandField(final byte[] key, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
-		final JedisCommand<List<byte[]>> command = JedisCommand.<List<byte[]>>create(
-						ProtocolCommand.HRANDFIELD).general((cmd)->cmd.hrandfield(key, count))
-				.pipeline((cmd)->cmd.hrandfield(key, count)).transaction((cmd)->cmd.hrandfield(key, count));
+		final JedisCommand<List<byte[]>> command = JedisCommand.<List<byte[]>>create(ProtocolCommand.HRANDFIELD)
+				.general((cmd)->cmd.hrandfield(key, count)).pipeline((cmd)->cmd.hrandfield(key, count))
+				.transaction((cmd)->cmd.hrandfield(key, count));
 		return execute(command, args);
 	}
 

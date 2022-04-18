@@ -31,25 +31,22 @@ import redis.clients.jedis.BuilderFactory;
 import java.util.List;
 
 /**
- * {@link KeyedZSetElement} 和 jedis {@link redis.clients.jedis.resps.KeyedZSetElement} 互转
+ * jedis {@link redis.clients.jedis.resps.KeyedZSetElement} 转换为 {@link KeyedZSetElement}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface KeyedZSetElementConverter<S, T> extends Converter<S, T> {
+public final class KeyedZSetElementConverter
+		implements Converter<redis.clients.jedis.resps.KeyedZSetElement, KeyedZSetElement> {
 
-	final class KeyedZSetElementExposeConverter
-			implements KeyedZSetElementConverter<redis.clients.jedis.resps.KeyedZSetElement, KeyedZSetElement> {
+	public final static KeyedZSetElementConverter INSTANCE = new KeyedZSetElementConverter();
 
-		@Override
-		public KeyedZSetElement convert(final redis.clients.jedis.resps.KeyedZSetElement source){
-			return new KeyedZSetElement(source.getKey(), source.getElement(), source.getScore());
-		}
-
+	@Override
+	public KeyedZSetElement convert(final redis.clients.jedis.resps.KeyedZSetElement source){
+		return new KeyedZSetElement(source.getKey(), source.getElement(), source.getScore());
 	}
 
-	final class BinaryDataKeyedZSetElementExposeConverter
-			implements KeyedZSetElementConverter<List<byte[]>, KeyedZSetElement> {
+	final static class BinaryDataKeyedZSetElementExposeConverter implements Converter<List<byte[]>, KeyedZSetElement> {
 
 		@Override
 		public KeyedZSetElement convert(final List<byte[]> source){

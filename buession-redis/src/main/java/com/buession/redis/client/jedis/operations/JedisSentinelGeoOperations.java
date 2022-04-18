@@ -32,6 +32,8 @@ import com.buession.redis.core.GeoUnit;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.params.GeoRadiusArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.params.GeoUnitConverter;
 import redis.clients.jedis.GeoCoordinate;
 import redis.clients.jedis.params.GeoRadiusParam;
 
@@ -75,7 +77,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	@Override
 	public long geoAdd(final String key, final Map<String, Geo> memberCoordinates){
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		final Map<String, GeoCoordinate> geoCoordinates = JedisConverters.STRING_MAP_GEO_CONVERTER.convert(
+		final Map<String, GeoCoordinate> geoCoordinates = com.buession.redis.core.internal.convert.jedis.params.GeoConverter.STRING_MAP_CONVERTER.convert(
 				memberCoordinates);
 		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.GEOADD)
 				.general((cmd)->cmd.geoadd(key, geoCoordinates)).pipeline((cmd)->cmd.geoadd(key, geoCoordinates))
@@ -86,7 +88,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	@Override
 	public long geoAdd(final byte[] key, final Map<byte[], Geo> memberCoordinates){
 		final CommandArguments args = CommandArguments.create("key", key).put("memberCoordinates", memberCoordinates);
-		final Map<byte[], GeoCoordinate> geoCoordinates = JedisConverters.BINARY_MAP_GEO_CONVERTER.convert(
+		final Map<byte[], GeoCoordinate> geoCoordinates = com.buession.redis.core.internal.convert.jedis.params.GeoConverter.BINARY_MAP_CONVERTER.convert(
 				memberCoordinates);
 		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.GEOADD)
 				.general((cmd)->cmd.geoadd(key, geoCoordinates)).pipeline((cmd)->cmd.geoadd(key, geoCoordinates))
@@ -158,7 +160,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	public double geoDist(final String key, final String member1, final String member2, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
 		final JedisSentinelCommand<Double> command = JedisSentinelCommand.<Double>create(
 						ProtocolCommand.GEODIST).general((cmd)->cmd.geodist(key, member1, member2, geoUnit))
 				.pipeline((cmd)->cmd.geodist(key, member1, member2, geoUnit))
@@ -170,7 +172,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 	public double geoDist(final byte[] key, final byte[] member1, final byte[] member2, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member1", member1)
 				.put("member2", member2).put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
 		final JedisSentinelCommand<Double> command = JedisSentinelCommand.<Double>create(
 						ProtocolCommand.GEODIST).general((cmd)->cmd.geodist(key, member1, member2, geoUnit))
 				.pipeline((cmd)->cmd.geodist(key, member1, member2, geoUnit))
@@ -183,7 +185,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 									 final double radius, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUS)
 				.general((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit),
@@ -200,7 +202,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 									 final double radius, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUS)
 				.general((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit),
@@ -219,15 +221,15 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisConverters.GEO_RADIUS_ARGUMENT_CONVERTER.convert(geoRadiusArgument);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
+		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUS)
-				.general((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+				.general((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+				.pipeline((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+				.transaction((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -239,15 +241,15 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisConverters.GEO_RADIUS_ARGUMENT_CONVERTER.convert(geoRadiusArgument);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
+		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUS)
-				.general((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+				.general((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+				.pipeline((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+				.transaction((cmd)->cmd.georadius(key, longitude, latitude, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -257,7 +259,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 									   final double radius, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUS_RO)
 				.general((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit),
@@ -274,7 +276,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 									   final double radius, final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUS_RO)
 				.general((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit),
@@ -293,15 +295,15 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisConverters.GEO_RADIUS_ARGUMENT_CONVERTER.convert(geoRadiusArgument);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
+		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUS_RO)
-				.general((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+				.general((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+				.pipeline((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+				.transaction((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -313,15 +315,15 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("longitude", longitude)
 				.put("latitude", latitude).put("radius", radius).put("unit", unit)
 				.put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisConverters.GEO_RADIUS_ARGUMENT_CONVERTER.convert(geoRadiusArgument);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
+		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUS_RO)
-				.general((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+				.general((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+				.pipeline((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, geoRadiusParam),
+				.transaction((cmd)->cmd.georadiusReadonly(key, longitude, latitude, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -331,7 +333,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											 final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUSBYMEMBER)
 				.general((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit),
@@ -348,7 +350,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											 final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUSBYMEMBER)
 				.general((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit),
@@ -365,15 +367,15 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisConverters.GEO_RADIUS_ARGUMENT_CONVERTER.convert(geoRadiusArgument);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
+		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUSBYMEMBER)
-				.general((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, geoRadiusParam),
+				.general((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, geoRadiusParam),
+				.pipeline((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, geoRadiusParam),
+				.transaction((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -383,15 +385,15 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											 final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisConverters.GEO_RADIUS_ARGUMENT_CONVERTER.convert(geoRadiusArgument);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
+		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUSBYMEMBER)
-				.general((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, geoRadiusParam),
+				.general((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, geoRadiusParam),
+				.pipeline((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, geoRadiusParam),
+				.transaction((cmd)->cmd.georadiusByMember(key, member, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -401,7 +403,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											   final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUSBYMEMBER)
 				.general((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit),
@@ -418,7 +420,7 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											   final GeoUnit unit){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUSBYMEMBER)
 				.general((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit),
@@ -435,15 +437,15 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisConverters.GEO_RADIUS_ARGUMENT_CONVERTER.convert(geoRadiusArgument);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
+		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUSBYMEMBER)
-				.general((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, geoRadiusParam),
+				.general((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, geoRadiusParam),
+				.pipeline((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, geoRadiusParam),
+				.transaction((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER);
 		return execute(command, args);
 	}
@@ -453,15 +455,15 @@ public final class JedisSentinelGeoOperations extends AbstractGeoOperations<Jedi
 											   final GeoUnit unit, final GeoRadiusArgument geoRadiusArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("member", member).put("radius", radius)
 				.put("unit", unit).put("geoRadiusArgument", geoRadiusArgument);
-		final redis.clients.jedis.args.GeoUnit geoUnit = JedisConverters.GEO_UNIT_CONVERTER.convert(unit);
-		final GeoRadiusParam geoRadiusParam = JedisConverters.GEO_RADIUS_ARGUMENT_CONVERTER.convert(geoRadiusArgument);
+		final redis.clients.jedis.args.GeoUnit geoUnit = GeoUnitConverter.INSTANCE.convert(unit);
+		final GeoRadiusParam param = GeoRadiusArgumentConverter.INSTANCE.convert(geoRadiusArgument);
 		final JedisSentinelCommand<List<GeoRadius>> command = JedisSentinelCommand.<List<GeoRadius>>create(
 						ProtocolCommand.GEORADIUSBYMEMBER)
-				.general((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, geoRadiusParam),
+				.general((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, geoRadiusParam),
+				.pipeline((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, geoRadiusParam),
+				.transaction((cmd)->cmd.georadiusByMemberReadonly(key, member, radius, geoUnit, param),
 						JedisConverters.LIST_GEO_RADIUS_RESULT_CONVERTER);
 		return execute(command, args);
 	}

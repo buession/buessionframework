@@ -31,6 +31,7 @@ import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 
 import java.util.List;
@@ -220,20 +221,20 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 	@Override
 	public Status hMSet(final String key, final Map<String, String> data){
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(
-						ProtocolCommand.HMGET).general((cmd)->cmd.hmset(key, data), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.hmset(key, data), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.hmset(key, data), JedisConverters.OK_STATUS_CONVERTER);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.HMGET)
+				.general((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status hMSet(final byte[] key, final Map<byte[], byte[]> data){
 		final CommandArguments args = CommandArguments.create("key", key).put("data", data);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(
-						ProtocolCommand.HMGET).general((cmd)->cmd.hmset(key, data), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.hmset(key, data), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.hmset(key, data), JedisConverters.OK_STATUS_CONVERTER);
+		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.HMGET)
+				.general((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.hmset(key, data), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 

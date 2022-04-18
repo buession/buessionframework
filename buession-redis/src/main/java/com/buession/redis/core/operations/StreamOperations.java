@@ -36,4 +36,36 @@ import com.buession.redis.core.command.StreamCommands;
  */
 public interface StreamOperations extends StreamCommands, RedisOperations {
 
+	/**
+	 * The XACK command removes one or multiple messages from the Pending Entries List (PEL) of a stream consumer group
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xack/" target="_blank">https://redis.io/commands/xack/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param group
+	 * 		Group
+	 * @param ids
+	 * 		一个或多个 ID
+	 *
+	 * @return The command returns the number of messages successfully acknowledged
+	 */
+	long xAck(final String key, final String group, final String... ids);
+
+	/**
+	 * The XACK command removes one or multiple messages from the Pending Entries List (PEL) of a stream consumer group
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xack/" target="_blank">https://redis.io/commands/xack/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param group
+	 * 		Group
+	 * @param ids
+	 * 		一个或多个 ID
+	 *
+	 * @return The command returns the number of messages successfully acknowledged
+	 */
+	long xAck(final byte[] key, final byte[] group, final byte[]... ids);
+
 }

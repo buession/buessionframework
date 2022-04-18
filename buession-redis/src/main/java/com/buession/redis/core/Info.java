@@ -25,13 +25,13 @@
 package com.buession.redis.core;
 
 import com.buession.core.utils.PropertiesUtils;
+import com.buession.core.utils.StringUtils;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Constants;
 import com.buession.net.Multiplexing;
 import com.buession.lang.Status;
 import com.buession.lang.Uptime;
 import com.buession.net.HostAndPort;
-import com.buession.redis.utils.InfoUtil;
 import org.apache.commons.lang3.arch.Processor;
 
 import java.io.Serializable;
@@ -207,14 +207,171 @@ public class Info implements Serializable {
 	}
 
 	public String toPrettyString(){
-		return InfoUtil.toPrettyString(server, clients, memory, persistence, stats, replication, sentinel, cpu, cluster,
-				keyspace);
+		final StringBuilder sb = new StringBuilder();
+		String lineSeparator = System.lineSeparator();
+		boolean init = false;
+
+		if(server != null){
+			init = true;
+			sb.append("server:").append(lineSeparator).append(server.toPrettyString());
+		}
+
+		if(clients != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("clients:").append(lineSeparator).append(clients.toPrettyString());
+		}
+
+		if(memory != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("memory:").append(lineSeparator).append(memory.toPrettyString());
+		}
+
+		if(persistence != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("persistence:").append(lineSeparator).append(persistence.toPrettyString());
+		}
+
+		if(stats != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("stats:").append(lineSeparator).append(stats.toPrettyString());
+		}
+
+		if(replication != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("replication:").append(lineSeparator).append(replication.toPrettyString());
+		}
+
+		if(sentinel != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("sentinel:").append(lineSeparator).append(sentinel.toPrettyString());
+		}
+
+		if(cpu != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("cpu:").append(lineSeparator).append(cpu.toPrettyString());
+		}
+
+		if(cluster != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			init = true;
+			sb.append("cluster:").append(lineSeparator).append(cluster.toPrettyString());
+		}
+
+		if(keyspace != null){
+			if(init){
+				sb.append(lineSeparator).append(lineSeparator);
+			}
+			sb.append("keyspace:").append(lineSeparator).append(StringUtils.join(keyspace, lineSeparator));
+		}
+
+		return sb.toString();
 	}
 
 	@Override
 	public String toString(){
-		return InfoUtil.asString(server, clients, memory, persistence, stats, replication, sentinel, cpu, cluster,
-				keyspace);
+		final StringBuilder sb = new StringBuilder();
+		boolean init = false;
+
+		if(server != null){
+			init = true;
+			sb.append("server=").append('[').append(server).append(']');
+		}
+
+		if(clients != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("clients=").append('[').append(clients).append(']').append(", ");
+		}
+
+		if(memory != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("memory=").append('[').append(memory).append(']');
+		}
+
+		if(persistence != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("persistence=").append('[').append(persistence).append(']');
+		}
+
+		if(stats != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("stats=").append('[').append(stats).append(']');
+		}
+
+		if(replication != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("replication=").append('[').append(replication).append(']');
+		}
+
+		if(sentinel != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("sentinel=").append('[').append(sentinel).append(']');
+		}
+
+		if(cpu != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("cpu=").append('[').append(cpu).append(']');
+		}
+
+		if(cluster != null){
+			if(init){
+				sb.append(", ");
+			}
+			init = true;
+			sb.append("cluster=").append('[').append(cluster).append(']');
+		}
+
+		if(keyspace != null){
+			if(init){
+				sb.append(", ");
+			}
+			sb.append("keyspace=").append('[').append(keyspace).append(']');
+		}
+
+		return sb.toString();
 	}
 
 	protected static Double getPercent(final Properties properties, final String key){

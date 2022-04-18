@@ -31,6 +31,8 @@ import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.params.BitCountOptionConverter;
+import com.buession.redis.core.internal.convert.jedis.params.BitOperationConverter;
 import redis.clients.jedis.args.BitOP;
 import redis.clients.jedis.params.BitPosParams;
 
@@ -58,7 +60,7 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 	}
 
 	@Override
-	
+
 	public long bitCount(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.BITCOUNT)
@@ -89,7 +91,7 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 	public long bitCount(final String key, final long start, final long end, final BitCountOption bitCountOption){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end)
 				.put("bitCountOption", bitCountOption);
-		final redis.clients.jedis.args.BitCountOption option = JedisConverters.BIT_COUNT_OPTION_CONVERTER.convert(
+		final redis.clients.jedis.args.BitCountOption option = BitCountOptionConverter.INSTANCE.convert(
 				bitCountOption);
 		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.BITCOUNT)
 				.general((cmd)->cmd.bitcount(key, start, end, option))
@@ -102,7 +104,7 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 	public long bitCount(final byte[] key, final long start, final long end, final BitCountOption bitCountOption){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end)
 				.put("bitCountOption", bitCountOption);
-		final redis.clients.jedis.args.BitCountOption option = JedisConverters.BIT_COUNT_OPTION_CONVERTER.convert(
+		final redis.clients.jedis.args.BitCountOption option = BitCountOptionConverter.INSTANCE.convert(
 				bitCountOption);
 		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.BITCOUNT)
 				.general((cmd)->cmd.bitcount(key, start, end, option))
@@ -159,7 +161,7 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 	public long bitOp(final BitOperation operation, final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
 				.put("keys", keys);
-		final BitOP bitOP = JedisConverters.BIT_OPERATION_CONVERTER.convert(operation);
+		final BitOP bitOP = BitOperationConverter.INSTANCE.convert(operation);
 		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.BITOP)
 				.general((cmd)->cmd.bitop(bitOP, destKey, keys)).pipeline((cmd)->cmd.bitop(bitOP, destKey, keys))
 				.transaction((cmd)->cmd.bitop(bitOP, destKey, keys));
@@ -170,7 +172,7 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 	public long bitOp(final BitOperation operation, final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
 				.put("keys", keys);
-		final BitOP bitOP = JedisConverters.BIT_OPERATION_CONVERTER.convert(operation);
+		final BitOP bitOP = BitOperationConverter.INSTANCE.convert(operation);
 		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.BITOP)
 				.general((cmd)->cmd.bitop(bitOP, destKey, keys)).pipeline((cmd)->cmd.bitop(bitOP, destKey, keys))
 				.transaction((cmd)->cmd.bitop(bitOP, destKey, keys));

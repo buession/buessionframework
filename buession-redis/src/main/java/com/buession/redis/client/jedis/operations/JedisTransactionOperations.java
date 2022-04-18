@@ -33,6 +33,7 @@ import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.TransactionResultConverter;
 import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
 import redis.clients.jedis.Builder;
 import redis.clients.jedis.Response;
 
@@ -110,7 +111,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 	public Status watch(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.WATCH)
-				.general((cmd)->cmd.watch(keys), JedisConverters.OK_STATUS_CONVERTER)
+				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
 					@Override
@@ -118,7 +119,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 						return cmd.watch(keys);
 					}
 
-				}), JedisConverters.OK_STATUS_CONVERTER);
+				}), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -126,7 +127,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 	public Status watch(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.WATCH)
-				.general((cmd)->cmd.watch(keys), JedisConverters.OK_STATUS_CONVERTER)
+				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
 					@Override
@@ -134,14 +135,14 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 						return cmd.watch(keys);
 					}
 
-				}), JedisConverters.OK_STATUS_CONVERTER);
+				}), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status unwatch(){
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.UNWATCH)
-				.general((cmd)->cmd.unwatch(), JedisConverters.OK_STATUS_CONVERTER)
+				.general((cmd)->cmd.unwatch(), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
 					@Override
@@ -149,7 +150,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 						return cmd.unwatch();
 					}
 
-				}), JedisConverters.OK_STATUS_CONVERTER);
+				}), OkStatusConverter.INSTANCE);
 		return execute(command);
 	}
 

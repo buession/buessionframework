@@ -35,6 +35,10 @@ import com.buession.redis.core.Type;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
+import com.buession.redis.core.internal.convert.jedis.params.RestoreArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.params.SortArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
 import com.buession.redis.core.internal.jedis.JedisMigrateParams;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 import redis.clients.jedis.args.ExpiryOption;
@@ -148,7 +152,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 	public Status expire(final String key, final int lifetime, final ExpireOption expireOption){
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
 				.put("expireOption", expireOption);
-		final ExpiryOption expiryOption = JedisConverters.EXPIRE_OPTION_CONVERTER.convert(expireOption);
+		final ExpiryOption expiryOption = ExpireOptionConverter.INSTANCE.convert(expireOption);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.EXPIRE)
 				.general((cmd)->cmd.expire(key, lifetime, expiryOption), JedisConverters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), JedisConverters.ONE_STATUS_CONVERTER)
@@ -160,7 +164,7 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 	public Status expire(final byte[] key, final int lifetime, final ExpireOption expireOption){
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
 				.put("expireOption", expireOption);
-		final ExpiryOption expiryOption = JedisConverters.EXPIRE_OPTION_CONVERTER.convert(expireOption);
+		final ExpiryOption expiryOption = ExpireOptionConverter.INSTANCE.convert(expireOption);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.EXPIRE)
 				.general((cmd)->cmd.expire(key, lifetime, expiryOption), JedisConverters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), JedisConverters.ONE_STATUS_CONVERTER)
@@ -385,9 +389,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 				.put("timeout", timeout).put("keys", keys);
 		final JedisMigrateParams params = new JedisMigrateParams();
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -397,9 +400,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 				.put("timeout", timeout).put("keys", keys);
 		final JedisMigrateParams params = new JedisMigrateParams();
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -410,9 +412,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 				.put("timeout", timeout).put("operation", operation).put("keys", keys);
 		final JedisMigrateParams params = new JedisMigrateParams(operation);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -423,9 +424,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 				.put("timeout", timeout).put("operation", operation).put("keys", keys);
 		final JedisMigrateParams params = new JedisMigrateParams(operation);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -436,9 +436,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 				.put("password", password).put("timeout", timeout).put("keys", keys);
 		final JedisMigrateParams params = new JedisMigrateParams(password);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -449,9 +448,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 				.put("password", password).put("timeout", timeout).put("keys", keys);
 		final JedisMigrateParams params = new JedisMigrateParams(password);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -462,9 +460,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 				.put("password", password).put("timeout", timeout).put("operation", operation).put("keys", keys);
 		final JedisMigrateParams params = new JedisMigrateParams(operation, password);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -475,9 +472,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 				.put("password", password).put("timeout", timeout).put("operation", operation).put("keys", keys);
 		final JedisMigrateParams params = new JedisMigrateParams(operation, password);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -488,9 +484,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", keys);
 		final JedisMigrateParams params = new JedisMigrateParams(user, password);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -501,9 +496,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", keys);
 		final JedisMigrateParams params = new JedisMigrateParams(user, password);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -515,9 +509,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 				.put("keys", keys);
 		final JedisMigrateParams params = new JedisMigrateParams(operation, user, password);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -529,9 +522,8 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 				.put("keys", keys);
 		final JedisMigrateParams params = new JedisMigrateParams(operation, user, password);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MIGRATE)
-				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.migrate(host, port, db, timeout, params, keys), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -564,9 +556,9 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 	public Status rename(final String key, final String newKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.RENAME)
-				.general((cmd)->cmd.rename(key, newKey), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.rename(key, newKey), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.rename(key, newKey), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -574,9 +566,9 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 	public Status rename(final byte[] key, final byte[] newKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.RENAME)
-				.general((cmd)->cmd.rename(key, newKey), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.rename(key, newKey), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.rename(key, newKey), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -605,9 +597,9 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -616,9 +608,9 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -627,14 +619,11 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 						  final RestoreArgument argument){
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl).put("argument", argument);
-		final RestoreParams restoreParams = JedisConverters.RESTORE_ARGUMENT_CONVERTER.convert(argument);
+		final RestoreParams params = RestoreArgumentConverter.INSTANCE.convert(argument);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue, restoreParams),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, restoreParams),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, restoreParams),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -643,14 +632,11 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 						  final RestoreArgument argument){
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl).put("argument", argument);
-		final RestoreParams restoreParams = JedisConverters.RESTORE_ARGUMENT_CONVERTER.convert(argument);
+		final RestoreParams params = RestoreArgumentConverter.INSTANCE.convert(argument);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.RESTORE)
-				.general((cmd)->cmd.restore(key, ttl, serializedValue, restoreParams),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, restoreParams),
-						JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, restoreParams),
-						JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -769,20 +755,20 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 	@Override
 	public List<String> sort(final String key, final SortArgument sortArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
-		final SortingParams soringParams = JedisConverters.SORT_ARGUMENT_CONVERTER.convert(sortArgument);
+		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
 		final JedisCommand<List<String>> command = JedisCommand.<List<String>>create(ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, soringParams)).pipeline((cmd)->cmd.sort(key, soringParams))
-				.transaction((cmd)->cmd.sort(key, soringParams));
+				.general((cmd)->cmd.sort(key, params)).pipeline((cmd)->cmd.sort(key, params))
+				.transaction((cmd)->cmd.sort(key, params));
 		return execute(command, args);
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
-		final SortingParams soringParams = JedisConverters.SORT_ARGUMENT_CONVERTER.convert(sortArgument);
+		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
 		final JedisCommand<List<byte[]>> command = JedisCommand.<List<byte[]>>create(ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, soringParams)).pipeline((cmd)->cmd.sort(key, soringParams))
-				.transaction((cmd)->cmd.sort(key, soringParams));
+				.general((cmd)->cmd.sort(key, params)).pipeline((cmd)->cmd.sort(key, params))
+				.transaction((cmd)->cmd.sort(key, params));
 		return execute(command, args);
 	}
 
@@ -808,11 +794,10 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 	public long sort(final String key, final String destKey, final SortArgument sortArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("sortArgument", sortArgument);
-		final SortingParams soringParams = JedisConverters.SORT_ARGUMENT_CONVERTER.convert(sortArgument);
+		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
 		final JedisCommand<Long> command = JedisCommand.<Long>create(ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, soringParams, destKey))
-				.pipeline((cmd)->cmd.sort(key, soringParams, destKey))
-				.transaction((cmd)->cmd.sort(key, soringParams, destKey));
+				.general((cmd)->cmd.sort(key, params, destKey)).pipeline((cmd)->cmd.sort(key, params, destKey))
+				.transaction((cmd)->cmd.sort(key, params, destKey));
 		return execute(command, args);
 	}
 
@@ -820,11 +805,10 @@ public final class JedisKeyOperations extends AbstractKeyOperations<JedisConnect
 	public long sort(final byte[] key, final byte[] destKey, final SortArgument sortArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("sortArgument", sortArgument);
-		final SortingParams soringParams = JedisConverters.SORT_ARGUMENT_CONVERTER.convert(sortArgument);
+		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
 		final JedisCommand<Long> command = JedisCommand.<Long>create(ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, soringParams, destKey))
-				.pipeline((cmd)->cmd.sort(key, soringParams, destKey))
-				.transaction((cmd)->cmd.sort(key, soringParams, destKey));
+				.general((cmd)->cmd.sort(key, params, destKey)).pipeline((cmd)->cmd.sort(key, params, destKey))
+				.transaction((cmd)->cmd.sort(key, params, destKey));
 		return execute(command, args);
 	}
 

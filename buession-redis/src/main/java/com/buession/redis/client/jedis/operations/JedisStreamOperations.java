@@ -27,14 +27,18 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.StreamEntry;
+import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.StreamEntryIdConverter;
+import com.buession.redis.core.internal.convert.jedis.params.XAddArgumentConverter;
+import com.buession.redis.core.internal.jedis.JedisXAutoClaimParams;
 import com.buession.redis.utils.SafeEncoder;
-import redis.clients.jedis.BuilderFactory;
 import redis.clients.jedis.StreamEntryID;
 import redis.clients.jedis.params.XAddParams;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,7 +54,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisC
 	}
 
 	@Override
-	public long xAck(final String key, final String group, final String... ids){
+	public long xAck(final String key, final String group, final StreamEntryId... ids){
 		final CommandArguments args = CommandArguments.create("key", key).put("group", group).put("ids", ids);
 		final StreamEntryID[] streamEntryIDS = ids == null ? null : new StreamEntryID[ids.length];
 
@@ -68,57 +72,194 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisC
 	}
 
 	@Override
-	public long xAck(byte[] key, byte[] group, byte[]... ids){
+	public long xAck(final byte[] key, final byte[] group, final StreamEntryId... ids){
 		final CommandArguments args = CommandArguments.create("key", key).put("group", group).put("ids", ids);
 		final JedisCommand<Long> command = JedisCommand.<Long>create(ProtocolCommand.XACK)
-				.general((cmd)->cmd.xack(key, group, ids))
-				.pipeline((cmd)->cmd.xack(key, group, ids))
+				.general((cmd)->cmd.xack(key, group, ids)).pipeline((cmd)->cmd.xack(key, group, ids))
 				.transaction((cmd)->cmd.xack(key, group, ids));
 		return execute(command, args);
 	}
 
 	@Override
-	public StreamEntry xAdd(final String key, final String id, final Map<String, String> hash){
+	public StreamEntryId xAdd(final String key, final String id, final Map<String, String> hash){
 		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash);
-		final JedisCommand<StreamEntry> command = JedisCommand.<StreamEntry>create(ProtocolCommand.XADD)
-				.general((cmd)->cmd.xadd(key, new StreamEntryID(id), hash),
-						JedisConverters.STREAM_ENTRY_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.xadd(key, new StreamEntryID(id), hash),
-						JedisConverters.STREAM_ENTRY_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.xadd(key, new StreamEntryID(id), hash),
-						JedisConverters.STREAM_ENTRY_RESULT_CONVERTER);
+		final StreamEntryID streamEntryID = new StreamEntryID(id);
+		final JedisCommand<StreamEntryId> command = JedisCommand.<StreamEntryId>create(ProtocolCommand.XADD)
+				.general((cmd)->cmd.xadd(key, streamEntryID, hash), StreamEntryIdConverter.INSTANCE)
+				.pipeline((cmd)->cmd.xadd(key, streamEntryID, hash), StreamEntryIdConverter.INSTANCE)
+				.transaction((cmd)->cmd.xadd(key, streamEntryID, hash), StreamEntryIdConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
-	public StreamEntry xAdd(final byte[] key, final byte[] id, final Map<byte[], byte[]> hash){
+	public StreamEntryId xAdd(final byte[] key, final byte[] id, final Map<byte[], byte[]> hash){
 		return xAdd(SafeEncoder.encode(key), SafeEncoder.encode(id),
 				JedisConverters.BINARY_MAP_TO_STRING_MAP_CONVERTER.convert(hash));
 	}
 
 	@Override
-	public StreamEntry xAdd(final String key, final String id, final Map<String, String> hash,
-							final XAddArgument xAddArgument){
+	public StreamEntryId xAdd(final String key, final String id, final Map<String, String> hash,
+							  final XAddArgument xAddArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash)
 				.put("xAddArgument", xAddArgument);
-		final XAddParams params = JedisConverters.X_ADD_ARGUMENT_CONVERTER.convert(xAddArgument).id(id);
-		final JedisCommand<StreamEntry> command = JedisCommand.<StreamEntry>create(ProtocolCommand.XADD)
-				.general((cmd)->cmd.xadd(key, hash, params), JedisConverters.STREAM_ENTRY_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.xadd(key, hash, params), JedisConverters.STREAM_ENTRY_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.xadd(key, hash, params), JedisConverters.STREAM_ENTRY_RESULT_CONVERTER);
+		final XAddParams params = XAddArgumentConverter.INSTANCE.convert(xAddArgument).id(id);
+		final JedisCommand<StreamEntryId> command = JedisCommand.<StreamEntryId>create(ProtocolCommand.XADD)
+				.general((cmd)->cmd.xadd(key, hash, params), StreamEntryIdConverter.INSTANCE)
+				.pipeline((cmd)->cmd.xadd(key, hash, params), StreamEntryIdConverter.INSTANCE)
+				.transaction((cmd)->cmd.xadd(key, hash, params), StreamEntryIdConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
-	public StreamEntry xAdd(final byte[] key, final byte[] id, final Map<byte[], byte[]> hash,
-							final XAddArgument xAddArgument){
+	public StreamEntryId xAdd(final byte[] key, final byte[] id, final Map<byte[], byte[]> hash,
+							  final XAddArgument xAddArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash)
 				.put("xAddArgument", xAddArgument);
-		final XAddParams params = JedisConverters.X_ADD_ARGUMENT_CONVERTER.convert(xAddArgument).id(id);
-		final JedisCommand<StreamEntry> command = JedisCommand.<StreamEntry>create(ProtocolCommand.XADD)
+		final XAddParams params = XAddArgumentConverter.INSTANCE.convert(xAddArgument).id(id);
+		final JedisCommand<StreamEntryId> command = JedisCommand.<StreamEntryId>create(ProtocolCommand.XADD)
 				.general((cmd)->cmd.xadd(key, hash, params), JedisConverters.BINARY_STREAM_ENTRY_RESULT_CONVERTER)
 				.pipeline((cmd)->cmd.xadd(key, hash, params), JedisConverters.BINARY_STREAM_ENTRY_RESULT_CONVERTER)
 				.transaction((cmd)->cmd.xadd(key, hash, params), JedisConverters.BINARY_STREAM_ENTRY_RESULT_CONVERTER);
 		return execute(command, args);
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String group,
+															final String consumerName, final int minIdleTime,
+															final String start){
+		final CommandArguments args = CommandArguments.create("key", key).put("group", group)
+				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start);
+		final StreamEntryID streamEntryID = new StreamEntryID(start);
+		final JedisXAutoClaimParams params = new JedisXAutoClaimParams();
+		final JedisCommand<Map<StreamEntryId, List<StreamEntry>>> command = JedisCommand.<Map<StreamEntryId, List<StreamEntry>>>create(
+						ProtocolCommand.XAUTOCLAIM)
+				.general((cmd)->cmd.xautoclaim(key, group, consumerName, minIdleTime, streamEntryID, params),
+						JedisConverters.MAP_STREAM_ENTRY_RESULT_CONVERTER)
+				.pipeline((cmd)->cmd.xautoclaim(key, group, consumerName, minIdleTime, streamEntryID, params),
+						JedisConverters.MAP_STREAM_ENTRY_RESULT_CONVERTER)
+				.transaction(
+						(cmd)->cmd.xautoclaim(key, group, consumerName, minIdleTime, streamEntryID, params),
+						JedisConverters.MAP_STREAM_ENTRY_RESULT_CONVERTER);
+		return execute(command, args);
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] group,
+															final byte[] consumerName, final int minIdleTime,
+															final byte[] start){
+		return xAutoClaim(SafeEncoder.encode(key), SafeEncoder.encode(group), SafeEncoder.encode(consumerName),
+				minIdleTime, SafeEncoder.encode(start));
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String group,
+															final String consumerName, final int minIdleTime,
+															final String start, final long count){
+		final CommandArguments args = CommandArguments.create("key", key).put("group", group)
+				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
+				.put("count", count);
+		final StreamEntryID streamEntryID = new StreamEntryID(start);
+		final JedisXAutoClaimParams params = new JedisXAutoClaimParams(count);
+		final JedisCommand<Map<StreamEntryId, List<StreamEntry>>> command = JedisCommand.<Map<StreamEntryId, List<StreamEntry>>>create(
+						ProtocolCommand.XAUTOCLAIM)
+				.general((cmd)->cmd.xautoclaim(key, group, consumerName, minIdleTime, streamEntryID, params),
+						JedisConverters.MAP_STREAM_ENTRY_RESULT_CONVERTER)
+				.pipeline((cmd)->cmd.xautoclaim(key, group, consumerName, minIdleTime, streamEntryID, params),
+						JedisConverters.MAP_STREAM_ENTRY_RESULT_CONVERTER)
+				.transaction(
+						(cmd)->cmd.xautoclaim(key, group, consumerName, minIdleTime, streamEntryID, params),
+						JedisConverters.MAP_STREAM_ENTRY_RESULT_CONVERTER);
+		return execute(command, args);
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] group,
+															final byte[] consumerName, final int minIdleTime,
+															final byte[] start, final long count){
+		return xAutoClaim(SafeEncoder.encode(key), SafeEncoder.encode(group), SafeEncoder.encode(consumerName),
+				minIdleTime, SafeEncoder.encode(start), count);
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String group,
+																	final String consumerName, final int minIdleTime,
+																	final String start){
+		final CommandArguments args = CommandArguments.create("key", key).put("group", group)
+				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
+				.put("count");
+		final StreamEntryID streamEntryID = new StreamEntryID(start);
+		final JedisXAutoClaimParams params = new JedisXAutoClaimParams();
+		final JedisCommand<Map<StreamEntryId, List<StreamEntryId>>> command = JedisCommand.<Map<StreamEntryId, List<StreamEntryId>>>create(
+						ProtocolCommand.XAUTOCLAIM)
+				.general((cmd)->cmd.xautoclaimJustId(key, group, consumerName, minIdleTime, streamEntryID, params),
+						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER)
+				.pipeline((cmd)->cmd.xautoclaimJustId(key, group, consumerName, minIdleTime, streamEntryID, params),
+						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER)
+				.transaction(
+						(cmd)->cmd.xautoclaimJustId(key, group, consumerName, minIdleTime, streamEntryID, params),
+						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER);
+		return execute(command, args);
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] group,
+																	final byte[] consumerName, final int minIdleTime,
+																	final byte[] start){
+		return xAutoClaimJustId(SafeEncoder.encode(key), SafeEncoder.encode(group), SafeEncoder.encode(consumerName),
+				minIdleTime, SafeEncoder.encode(start));
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String group,
+																	final String consumerName, final int minIdleTime,
+																	final String start, final long count){
+		final CommandArguments args = CommandArguments.create("key", key).put("group", group)
+				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
+				.put("count", count);
+		final StreamEntryID streamEntryID = new StreamEntryID(start);
+		final JedisXAutoClaimParams params = new JedisXAutoClaimParams(count);
+		final JedisCommand<Map<StreamEntryId, List<StreamEntryId>>> command = JedisCommand.<Map<StreamEntryId, List<StreamEntryId>>>create(
+						ProtocolCommand.XAUTOCLAIM)
+				.general((cmd)->cmd.xautoclaimJustId(key, group, consumerName, minIdleTime, streamEntryID, params),
+						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER)
+				.pipeline((cmd)->cmd.xautoclaimJustId(key, group, consumerName, minIdleTime, streamEntryID, params),
+						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER)
+				.transaction(
+						(cmd)->cmd.xautoclaimJustId(key, group, consumerName, minIdleTime, streamEntryID, params),
+						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER);
+		return execute(command, args);
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] group,
+																	final byte[] consumerName, final int minIdleTime,
+																	final byte[] start, final long count){
+		return xAutoClaimJustId(SafeEncoder.encode(key), SafeEncoder.encode(group), SafeEncoder.encode(consumerName),
+				minIdleTime, SafeEncoder.encode(start), count);
+	}
+
+	@Override
+	public List<StreamEntry> xClaim(final String key, final String group, final String consumerName,
+									final int minIdleTime, final String... ids){
+		final CommandArguments args = CommandArguments.create("key", key).put("group", group)
+				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("ids", ids);
+		final StreamEntryID streamEntryID = new StreamEntryID(start);
+		final JedisXAutoClaimParams params = new JedisXAutoClaimParams(count);
+		final JedisCommand<Map<StreamEntryId, List<StreamEntryId>>> command = JedisCommand.<Map<StreamEntryId, List<StreamEntryId>>>create(
+						ProtocolCommand.XAUTOCLAIM)
+				.general((cmd)->cmd.xclaim(key, group, consumerName, minIdleTime, params, streamEntryID),
+						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER)
+				.pipeline((cmd)->cmd.xclaim(key, group, consumerName, minIdleTime, params, streamEntryID),
+						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER)
+				.transaction(
+						(cmd)->cmd.xclaim(key, group, consumerName, minIdleTime, params, streamEntryID),
+						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER);
+		return execute(command, args);
+	}
+
+	@Override
+	public List<StreamEntry> xClaim(final byte[] key, final byte[] group, final byte[] consumerName,
+									final int minIdleTime, final byte[]... ids){
+		return null;
 	}
 }

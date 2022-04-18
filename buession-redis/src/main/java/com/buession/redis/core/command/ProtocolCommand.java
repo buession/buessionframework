@@ -576,7 +576,11 @@ public enum ProtocolCommand {
 	XACK(ProtocolCommandGroup.STREAM),
 
 	XADD(ProtocolCommandGroup.STREAM),
-	
+
+	XAUTOCLAIM(ProtocolCommandGroup.STREAM),
+
+	XCLAIM(ProtocolCommandGroup.STREAM),
+
 	XLEN(ProtocolCommandGroup.TRANSACTION),
 	XDEL(ProtocolCommandGroup.TRANSACTION),
 	XTRIM(ProtocolCommandGroup.TRANSACTION),
@@ -587,8 +591,6 @@ public enum ProtocolCommand {
 	XGROUP(ProtocolCommandGroup.TRANSACTION),
 	XREADGROUP(ProtocolCommandGroup.TRANSACTION),
 	XPENDING(ProtocolCommandGroup.TRANSACTION),
-	XCLAIM(ProtocolCommandGroup.TRANSACTION),
-	XAUTOCLAIM(ProtocolCommandGroup.TRANSACTION),
 	XINFO(ProtocolCommandGroup.TRANSACTION),
 	SMISMEMBER(ProtocolCommandGroup.TRANSACTION),
 	STRALGO(ProtocolCommandGroup.TRANSACTION),

@@ -30,6 +30,9 @@ import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.params.GetExArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.params.SetArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
 import redis.clients.jedis.params.GetExParams;
 import redis.clients.jedis.params.SetParams;
 
@@ -176,20 +179,20 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisC
 	@Override
 	public String getEx(final String key, final GetExArgument getExArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		final GetExParams getExParams = JedisConverters.GET_EX_ARGUMENT_CONVERTER.convert(getExArgument);
+		final GetExParams params = GetExArgumentConverter.INSTANCE.convert(getExArgument);
 		final JedisCommand<String> command = JedisCommand.<String>create(ProtocolCommand.GETEX)
-				.general((cmd)->cmd.getEx(key, getExParams)).pipeline((cmd)->cmd.getEx(key, getExParams))
-				.transaction((cmd)->cmd.getEx(key, getExParams));
+				.general((cmd)->cmd.getEx(key, params)).pipeline((cmd)->cmd.getEx(key, params))
+				.transaction((cmd)->cmd.getEx(key, params));
 		return execute(command, args);
 	}
 
 	@Override
 	public byte[] getEx(final byte[] key, final GetExArgument getExArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
-		final GetExParams getExParams = JedisConverters.GET_EX_ARGUMENT_CONVERTER.convert(getExArgument);
+		final GetExParams params = GetExArgumentConverter.INSTANCE.convert(getExArgument);
 		final JedisCommand<byte[]> command = JedisCommand.<byte[]>create(ProtocolCommand.GETEX)
-				.general((cmd)->cmd.getEx(key, getExParams)).pipeline((cmd)->cmd.getEx(key, getExParams))
-				.transaction((cmd)->cmd.getEx(key, getExParams));
+				.general((cmd)->cmd.getEx(key, params)).pipeline((cmd)->cmd.getEx(key, params))
+				.transaction((cmd)->cmd.getEx(key, params));
 		return execute(command, args);
 	}
 
@@ -255,9 +258,9 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisC
 
 		final String[] keysValues = temp.toArray(new String[0]);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MSET)
-				.general((cmd)->cmd.mset(keysValues), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.mset(keysValues), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.mset(keysValues), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.mset(keysValues), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.mset(keysValues), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.mset(keysValues), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -283,9 +286,9 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisC
 	public Status pSetEx(final String key, final String value, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.PSETEX)
-				.general((cmd)->cmd.psetex(key, lifetime, value), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.psetex(key, lifetime, value), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.psetex(key, lifetime, value), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -293,9 +296,9 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisC
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.PSETEX)
-				.general((cmd)->cmd.psetex(key, lifetime, value), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.psetex(key, lifetime, value), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.psetex(key, lifetime, value), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -303,9 +306,9 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisC
 	public Status set(final String key, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.SET)
-				.general((cmd)->cmd.set(key, value), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.set(key, value), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.set(key, value), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -313,31 +316,31 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisC
 	public Status set(final byte[] key, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.SET)
-				.general((cmd)->cmd.set(key, value), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.set(key, value), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.set(key, value), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetArgument setArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final SetParams setParams = JedisConverters.SET_ARGUMENT_CONVERTER.convert(setArgument);
+		final SetParams params = SetArgumentConverter.INSTANCE.convert(setArgument);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.SET)
-				.general((cmd)->cmd.set(key, value, setParams), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.set(key, value, setParams), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.set(key, value, setParams), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final SetParams setParams = JedisConverters.SET_ARGUMENT_CONVERTER.convert(setArgument);
+		final SetParams params = SetArgumentConverter.INSTANCE.convert(setArgument);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.SET)
-				.general((cmd)->cmd.set(key, value, setParams), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.set(key, value, setParams), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.set(key, value, setParams), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -345,9 +348,9 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisC
 	public Status setEx(final String key, final String value, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setex(key, lifetime, value), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.setex(key, lifetime, value), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.setex(key, lifetime, value), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -355,9 +358,9 @@ public final class JedisStringOperations extends AbstractStringOperations<JedisC
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setex(key, lifetime, value), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.setex(key, lifetime, value), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.setex(key, lifetime, value), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 

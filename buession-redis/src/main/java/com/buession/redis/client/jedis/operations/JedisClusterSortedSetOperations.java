@@ -37,6 +37,7 @@ import com.buession.redis.core.ZRangeBy;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.KeyedZSetElementConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 import com.buession.redis.core.internal.jedis.JedisZAddParams;
 import com.buession.redis.core.internal.jedis.JedisZParams;
@@ -148,9 +149,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
 		final JedisClusterCommand<KeyedZSetElement> command = JedisClusterCommand.<KeyedZSetElement>create(
 						ProtocolCommand.BZPOPMIN)
-				.general((cmd)->cmd.bzpopmin(timeout, keys), JedisConverters.KEYED_Z_SET_ELEMENT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.bzpopmin(timeout, keys), JedisConverters.KEYED_Z_SET_ELEMENT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.bzpopmin(timeout, keys), JedisConverters.KEYED_Z_SET_ELEMENT_RESULT_CONVERTER);
+				.general((cmd)->cmd.bzpopmin(timeout, keys), KeyedZSetElementConverter.INSTANCE)
+				.pipeline((cmd)->cmd.bzpopmin(timeout, keys), KeyedZSetElementConverter.INSTANCE)
+				.transaction((cmd)->cmd.bzpopmin(timeout, keys), KeyedZSetElementConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -173,9 +174,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys).put("timeout", timeout);
 		final JedisClusterCommand<KeyedZSetElement> command = JedisClusterCommand.<KeyedZSetElement>create(
 						ProtocolCommand.BZPOPMAX)
-				.general((cmd)->cmd.bzpopmax(timeout, keys), JedisConverters.KEYED_Z_SET_ELEMENT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.bzpopmax(timeout, keys), JedisConverters.KEYED_Z_SET_ELEMENT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.bzpopmax(timeout, keys), JedisConverters.KEYED_Z_SET_ELEMENT_RESULT_CONVERTER);
+				.general((cmd)->cmd.bzpopmax(timeout, keys), KeyedZSetElementConverter.INSTANCE)
+				.pipeline((cmd)->cmd.bzpopmax(timeout, keys), KeyedZSetElementConverter.INSTANCE)
+				.transaction((cmd)->cmd.bzpopmax(timeout, keys), KeyedZSetElementConverter.INSTANCE);
 		return execute(command, args);
 	}
 

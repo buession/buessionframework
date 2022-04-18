@@ -32,6 +32,10 @@ import com.buession.redis.core.ListPosition;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.params.DirectionConverter;
+import com.buession.redis.core.internal.convert.jedis.params.LPosArgumentConverter;
+import com.buession.redis.core.internal.convert.jedis.params.ListPositionConverter;
+import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
 import redis.clients.jedis.args.ListDirection;
 import redis.clients.jedis.params.LPosParams;
 
@@ -71,7 +75,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisConne
 	public long lInsert(final String key, final ListPosition position, final String pivot, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("position", position).put("pivot", pivot)
 				.put("value", value);
-		final redis.clients.jedis.args.ListPosition pos = JedisConverters.LIST_POSITION_CONVERTER.convert(position);
+		final redis.clients.jedis.args.ListPosition pos = ListPositionConverter.INSTANCE.convert(position);
 		final JedisCommand<Long> command = JedisCommand.<Long>create(ProtocolCommand.LINSERT)
 				.general((cmd)->cmd.linsert(key, pos, pivot, value))
 				.pipeline((cmd)->cmd.linsert(key, pos, pivot, value))
@@ -83,7 +87,7 @@ public final class JedisListOperations extends AbstractListOperations<JedisConne
 	public long lInsert(final byte[] key, final ListPosition position, final byte[] pivot, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("position", position).put("pivot", pivot)
 				.put("value", value);
-		final redis.clients.jedis.args.ListPosition pos = JedisConverters.LIST_POSITION_CONVERTER.convert(position);
+		final redis.clients.jedis.args.ListPosition pos = ListPositionConverter.INSTANCE.convert(position);
 		final JedisCommand<Long> command = JedisCommand.<Long>create(ProtocolCommand.LINSERT)
 				.general((cmd)->cmd.linsert(key, pos, pivot, value))
 				.pipeline((cmd)->cmd.linsert(key, pos, pivot, value))
@@ -95,9 +99,9 @@ public final class JedisListOperations extends AbstractListOperations<JedisConne
 	public Status lSet(final String key, final long index, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index).put("value", value);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.LINSERT)
-				.general((cmd)->cmd.lset(key, index, value), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.lset(key, index, value), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.lset(key, index, value), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -105,9 +109,9 @@ public final class JedisListOperations extends AbstractListOperations<JedisConne
 	public Status lSet(final byte[] key, final long index, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("index", index).put("value", value);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.LINSERT)
-				.general((cmd)->cmd.lset(key, index, value), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.lset(key, index, value), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.lset(key, index, value), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.lset(key, index, value), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -166,20 +170,20 @@ public final class JedisListOperations extends AbstractListOperations<JedisConne
 	@Override
 	public long lPos(final String key, final String element, final LPosArgument lPosArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument);
-		final LPosParams lPosParams = JedisConverters.L_POS_ARGUMENT_CONVERTER.convert(lPosArgument);
+		final LPosParams params = LPosArgumentConverter.INSTANCE.convert(lPosArgument);
 		final JedisCommand<Long> command = JedisCommand.<Long>create(ProtocolCommand.LPOS)
-				.general((cmd)->cmd.lpos(key, element, lPosParams)).pipeline((cmd)->cmd.lpos(key, element, lPosParams))
-				.transaction((cmd)->cmd.lpos(key, element, lPosParams));
+				.general((cmd)->cmd.lpos(key, element, params)).pipeline((cmd)->cmd.lpos(key, element, params))
+				.transaction((cmd)->cmd.lpos(key, element, params));
 		return execute(command, args);
 	}
 
 	@Override
 	public long lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument);
-		final LPosParams lPosParams = JedisConverters.L_POS_ARGUMENT_CONVERTER.convert(lPosArgument);
+		final LPosParams params = LPosArgumentConverter.INSTANCE.convert(lPosArgument);
 		final JedisCommand<Long> command = JedisCommand.<Long>create(ProtocolCommand.LPOS)
-				.general((cmd)->cmd.lpos(key, element, lPosParams)).pipeline((cmd)->cmd.lpos(key, element, lPosParams))
-				.transaction((cmd)->cmd.lpos(key, element, lPosParams));
+				.general((cmd)->cmd.lpos(key, element, params)).pipeline((cmd)->cmd.lpos(key, element, params))
+				.transaction((cmd)->cmd.lpos(key, element, params));
 		return execute(command, args);
 	}
 
@@ -187,11 +191,11 @@ public final class JedisListOperations extends AbstractListOperations<JedisConne
 	public List<Long> lPos(final String key, final String element, final LPosArgument lPosArgument, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument)
 				.put("count", count);
-		final LPosParams lPosParams = JedisConverters.L_POS_ARGUMENT_CONVERTER.convert(lPosArgument);
+		final LPosParams params = LPosArgumentConverter.INSTANCE.convert(lPosArgument);
 		final JedisCommand<List<Long>> command = JedisCommand.<List<Long>>create(ProtocolCommand.LPOS)
-				.general((cmd)->cmd.lpos(key, element, lPosParams, count))
-				.pipeline((cmd)->cmd.lpos(key, element, lPosParams, count))
-				.transaction((cmd)->cmd.lpos(key, element, lPosParams, count));
+				.general((cmd)->cmd.lpos(key, element, params, count))
+				.pipeline((cmd)->cmd.lpos(key, element, params, count))
+				.transaction((cmd)->cmd.lpos(key, element, params, count));
 		return execute(command, args);
 	}
 
@@ -199,11 +203,11 @@ public final class JedisListOperations extends AbstractListOperations<JedisConne
 	public List<Long> lPos(final byte[] key, final byte[] element, final LPosArgument lPosArgument, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("lPosArgument", lPosArgument)
 				.put("count", count);
-		final LPosParams lPosParams = JedisConverters.L_POS_ARGUMENT_CONVERTER.convert(lPosArgument);
+		final LPosParams params = LPosArgumentConverter.INSTANCE.convert(lPosArgument);
 		final JedisCommand<List<Long>> command = JedisCommand.<List<Long>>create(ProtocolCommand.LPOS)
-				.general((cmd)->cmd.lpos(key, element, lPosParams, count))
-				.pipeline((cmd)->cmd.lpos(key, element, lPosParams, count))
-				.transaction((cmd)->cmd.lpos(key, element, lPosParams, count));
+				.general((cmd)->cmd.lpos(key, element, params, count))
+				.pipeline((cmd)->cmd.lpos(key, element, params, count))
+				.transaction((cmd)->cmd.lpos(key, element, params, count));
 		return execute(command, args);
 	}
 
@@ -229,9 +233,9 @@ public final class JedisListOperations extends AbstractListOperations<JedisConne
 	public Status lTrim(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.LTRIM)
-				.general((cmd)->cmd.ltrim(key, start, end), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.ltrim(key, start, end), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.ltrim(key, start, end), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -239,9 +243,9 @@ public final class JedisListOperations extends AbstractListOperations<JedisConne
 	public Status lTrim(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.LTRIM)
-				.general((cmd)->cmd.ltrim(key, start, end), JedisConverters.OK_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.ltrim(key, start, end), JedisConverters.OK_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.ltrim(key, start, end), JedisConverters.OK_STATUS_CONVERTER);
+				.general((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE)
+				.transaction((cmd)->cmd.ltrim(key, start, end), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -249,8 +253,8 @@ public final class JedisListOperations extends AbstractListOperations<JedisConne
 	public String lMove(final String key, final String destKey, final Direction from, final Direction to){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to);
-		final ListDirection fromDirection = JedisConverters.DIRECTION_CONVERTER.convert(from);
-		final ListDirection toDirection = JedisConverters.DIRECTION_CONVERTER.convert(to);
+		final ListDirection fromDirection = DirectionConverter.INSTANCE.convert(from);
+		final ListDirection toDirection = DirectionConverter.INSTANCE.convert(to);
 		final JedisCommand<String> command = JedisCommand.<String>create(ProtocolCommand.LMOVE)
 				.general((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
 				.pipeline((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
@@ -262,8 +266,8 @@ public final class JedisListOperations extends AbstractListOperations<JedisConne
 	public byte[] lMove(final byte[] key, final byte[] destKey, final Direction from, final Direction to){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to);
-		final ListDirection fromDirection = JedisConverters.DIRECTION_CONVERTER.convert(from);
-		final ListDirection toDirection = JedisConverters.DIRECTION_CONVERTER.convert(to);
+		final ListDirection fromDirection = DirectionConverter.INSTANCE.convert(from);
+		final ListDirection toDirection = DirectionConverter.INSTANCE.convert(to);
 		final JedisCommand<byte[]> command = JedisCommand.<byte[]>create(ProtocolCommand.LMOVE)
 				.general((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
 				.pipeline((cmd)->cmd.lmove(key, destKey, fromDirection, toDirection))
@@ -276,8 +280,8 @@ public final class JedisListOperations extends AbstractListOperations<JedisConne
 						 final int timeout){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to).put("timeout", timeout);
-		final ListDirection fromDirection = JedisConverters.DIRECTION_CONVERTER.convert(from);
-		final ListDirection toDirection = JedisConverters.DIRECTION_CONVERTER.convert(to);
+		final ListDirection fromDirection = DirectionConverter.INSTANCE.convert(from);
+		final ListDirection toDirection = DirectionConverter.INSTANCE.convert(to);
 		final JedisCommand<String> command = JedisCommand.<String>create(ProtocolCommand.BLMOVE)
 				.general((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))
 				.pipeline((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))
@@ -290,8 +294,8 @@ public final class JedisListOperations extends AbstractListOperations<JedisConne
 						 final int timeout){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("from", from)
 				.put("to", to).put("timeout", timeout);
-		final ListDirection fromDirection = JedisConverters.DIRECTION_CONVERTER.convert(from);
-		final ListDirection toDirection = JedisConverters.DIRECTION_CONVERTER.convert(to);
+		final ListDirection fromDirection = DirectionConverter.INSTANCE.convert(from);
+		final ListDirection toDirection = DirectionConverter.INSTANCE.convert(to);
 		final JedisCommand<byte[]> command = JedisCommand.<byte[]>create(ProtocolCommand.BLMOVE)
 				.general((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))
 				.pipeline((cmd)->cmd.blmove(key, destKey, fromDirection, toDirection, timeout))

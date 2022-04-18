@@ -43,90 +43,88 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ClientConverter<S, T> extends Converter<S, T> {
+public final class ClientConverter implements Converter<String, Client> {
 
-	final class ClientExposeConverter implements ClientConverter<String, Client> {
+	public final static ClientConverter INSTANCE = new ClientConverter();
 
-		@Override
-		public Client convert(final String source){
-			String[] properties = StringUtils.splitByWholeSeparatorPreserveAllTokens(source, " ");
+	@Override
+	public Client convert(final String source){
+		String[] properties = StringUtils.splitByWholeSeparatorPreserveAllTokens(source, " ");
 
-			if(Validate.isEmpty(properties)){
-				return null;
-			}
-
-			Client client = new Client();
-			KeyValueParser keyValueParser;
-
-			for(String property : properties){
-				keyValueParser = new KeyValueParser(property, '=');
-
-				if("id".equals(keyValueParser.getKey())){
-					client.setId(keyValueParser.getIntValue());
-				}else if("addr".equals(keyValueParser.getKey())){
-					int ci = keyValueParser.getValue().indexOf(':');
-
-					client.setAddr(keyValueParser.getValue());
-					client.setHost(keyValueParser.getValue().substring(0, ci));
-					client.setPort(Integer.parseInt(keyValueParser.getValue().substring(ci + 1)));
-				}else if("name".equals(keyValueParser.getKey())){
-					client.setName(keyValueParser.getValue());
-				}else if("fd".equals(keyValueParser.getKey())){
-					client.setFd(keyValueParser.getIntValue());
-				}else if("age".equals(keyValueParser.getKey())){
-					client.setAge(keyValueParser.getIntValue());
-				}else if("idle".equals(keyValueParser.getKey())){
-					client.setIdle(keyValueParser.getIntValue());
-				}else if("flags".equals(keyValueParser.getKey())){
-					String[] flagsArr = StringUtils.splitByWholeSeparatorPreserveAllTokens(keyValueParser.getValue(),
-							",");
-
-					if(flagsArr != null){
-						Set<Client.Flag> flags = new LinkedHashSet<>(flagsArr.length);
-
-						for(String s : flagsArr){
-							Client.Flag flag = EnumUtils.valueOf(Client.Flag.class, s);
-
-							if(flag != null){
-								flags.add(flag);
-							}
-						}
-
-						client.setFlags(flags);
-					}
-				}else if("db".equals(keyValueParser.getKey())){
-					client.setDb(keyValueParser.getIntValue());
-				}else if("sub".equals(keyValueParser.getKey())){
-					client.setSub(keyValueParser.getIntValue());
-				}else if("psub".equals(keyValueParser.getKey())){
-					client.setPsub(keyValueParser.getIntValue());
-				}else if("multi".equals(keyValueParser.getKey())){
-					client.setMulti(keyValueParser.getIntValue());
-				}else if("qbuf".equals(keyValueParser.getKey())){
-					client.setQBuf(keyValueParser.getIntValue());
-				}else if("qbuf-free".equals(keyValueParser.getKey())){
-					client.setQBufFree(keyValueParser.getIntValue());
-				}else if("obl".equals(keyValueParser.getKey())){
-					client.setObl(keyValueParser.getIntValue());
-				}else if("oll".equals(keyValueParser.getKey())){
-					client.setOll(keyValueParser.getIntValue());
-				}else if("omem".equals(keyValueParser.getKey())){
-					client.setOmem(keyValueParser.getIntValue());
-				}else if("events".equals(keyValueParser.getKey())){
-					client.setEvents(keyValueParser.getEnumValue(Client.Event.class));
-				}else if("cmd".equals(keyValueParser.getKey())){
-					client.setCmd(keyValueParser.getEnumValue(Protocol.Command.class));
-				}
-			}
-
-			return client;
+		if(Validate.isEmpty(properties)){
+			return null;
 		}
 
+		Client client = new Client();
+		KeyValueParser keyValueParser;
+
+		for(String property : properties){
+			keyValueParser = new KeyValueParser(property, '=');
+
+			if("id".equals(keyValueParser.getKey())){
+				client.setId(keyValueParser.getIntValue());
+			}else if("addr".equals(keyValueParser.getKey())){
+				int ci = keyValueParser.getValue().indexOf(':');
+
+				client.setAddr(keyValueParser.getValue());
+				client.setHost(keyValueParser.getValue().substring(0, ci));
+				client.setPort(Integer.parseInt(keyValueParser.getValue().substring(ci + 1)));
+			}else if("name".equals(keyValueParser.getKey())){
+				client.setName(keyValueParser.getValue());
+			}else if("fd".equals(keyValueParser.getKey())){
+				client.setFd(keyValueParser.getIntValue());
+			}else if("age".equals(keyValueParser.getKey())){
+				client.setAge(keyValueParser.getIntValue());
+			}else if("idle".equals(keyValueParser.getKey())){
+				client.setIdle(keyValueParser.getIntValue());
+			}else if("flags".equals(keyValueParser.getKey())){
+				String[] flagsArr = StringUtils.splitByWholeSeparatorPreserveAllTokens(keyValueParser.getValue(),
+						",");
+
+				if(flagsArr != null){
+					Set<Client.Flag> flags = new LinkedHashSet<>(flagsArr.length);
+
+					for(String s : flagsArr){
+						Client.Flag flag = EnumUtils.valueOf(Client.Flag.class, s);
+
+						if(flag != null){
+							flags.add(flag);
+						}
+					}
+
+					client.setFlags(flags);
+				}
+			}else if("db".equals(keyValueParser.getKey())){
+				client.setDb(keyValueParser.getIntValue());
+			}else if("sub".equals(keyValueParser.getKey())){
+				client.setSub(keyValueParser.getIntValue());
+			}else if("psub".equals(keyValueParser.getKey())){
+				client.setPsub(keyValueParser.getIntValue());
+			}else if("multi".equals(keyValueParser.getKey())){
+				client.setMulti(keyValueParser.getIntValue());
+			}else if("qbuf".equals(keyValueParser.getKey())){
+				client.setQBuf(keyValueParser.getIntValue());
+			}else if("qbuf-free".equals(keyValueParser.getKey())){
+				client.setQBufFree(keyValueParser.getIntValue());
+			}else if("obl".equals(keyValueParser.getKey())){
+				client.setObl(keyValueParser.getIntValue());
+			}else if("oll".equals(keyValueParser.getKey())){
+				client.setOll(keyValueParser.getIntValue());
+			}else if("omem".equals(keyValueParser.getKey())){
+				client.setOmem(keyValueParser.getIntValue());
+			}else if("events".equals(keyValueParser.getKey())){
+				client.setEvents(keyValueParser.getEnumValue(Client.Event.class));
+			}else if("cmd".equals(keyValueParser.getKey())){
+				client.setCmd(keyValueParser.getEnumValue(Protocol.Command.class));
+			}
+		}
+
+		return client;
 	}
 
-	final class ClientListExposeConverter implements ClientConverter<String, List<Client>> {
+	final static class ClientListExposeConverter implements Converter<String, List<Client>> {
 
-		private final ClientExposeConverter converter = new ClientExposeConverter();
+		public final static ClientListExposeConverter INSTANCE = new ClientListExposeConverter();
 
 		@Override
 		public List<Client> convert(final String source){
@@ -138,8 +136,9 @@ public interface ClientConverter<S, T> extends Converter<S, T> {
 			List<Client> result = new ArrayList<>(clients.length);
 
 			if(Validate.isNotEmpty(clients)){
+
 				for(String s : clients){
-					Client client = converter.convert(s);
+					Client client = ClientConverter.INSTANCE.convert(s);
 
 					if(client != null){
 						result.add(client);
