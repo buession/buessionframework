@@ -30,8 +30,9 @@ import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.JedisConverters;
-import com.buession.redis.core.internal.convert.jedis.StreamEntryIdConverter;
+import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.jedis.response.StreamEntryConverter;
+import com.buession.redis.core.internal.convert.jedis.response.StreamEntryIdConverter;
 import com.buession.redis.core.internal.convert.jedis.params.XAddArgumentConverter;
 import com.buession.redis.core.internal.jedis.JedisXAutoClaimParams;
 import com.buession.redis.utils.SafeEncoder;
@@ -94,7 +95,7 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisC
 	@Override
 	public StreamEntryId xAdd(final byte[] key, final byte[] id, final Map<byte[], byte[]> hash){
 		return xAdd(SafeEncoder.encode(key), SafeEncoder.encode(id),
-				JedisConverters.BINARY_MAP_TO_STRING_MAP_CONVERTER.convert(hash));
+				Converters.BINARY_MAP_TO_STRING_MAP_CONVERTER.convert(hash));
 	}
 
 	@Override
@@ -117,9 +118,12 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisC
 				.put("xAddArgument", xAddArgument);
 		final XAddParams params = XAddArgumentConverter.INSTANCE.convert(xAddArgument).id(id);
 		final JedisCommand<StreamEntryId> command = JedisCommand.<StreamEntryId>create(ProtocolCommand.XADD)
-				.general((cmd)->cmd.xadd(key, hash, params), JedisConverters.BINARY_STREAM_ENTRY_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.xadd(key, hash, params), JedisConverters.BINARY_STREAM_ENTRY_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.xadd(key, hash, params), JedisConverters.BINARY_STREAM_ENTRY_RESULT_CONVERTER);
+				.general((cmd)->cmd.xadd(key, hash, params),
+						StreamEntryIdConverter.BinaryStreamEntryIdConverter.INSTANCE)
+				.pipeline((cmd)->cmd.xadd(key, hash, params),
+						StreamEntryIdConverter.BinaryStreamEntryIdConverter.INSTANCE)
+				.transaction((cmd)->cmd.xadd(key, hash, params),
+						StreamEntryIdConverter.BinaryStreamEntryIdConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -134,12 +138,12 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisC
 		final JedisCommand<Map<StreamEntryId, List<StreamEntry>>> command = JedisCommand.<Map<StreamEntryId, List<StreamEntry>>>create(
 						ProtocolCommand.XAUTOCLAIM)
 				.general((cmd)->cmd.xautoclaim(key, group, consumerName, minIdleTime, streamEntryID, params),
-						JedisConverters.MAP_STREAM_ENTRY_RESULT_CONVERTER)
+						StreamEntryConverter.MapStreamEntryConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xautoclaim(key, group, consumerName, minIdleTime, streamEntryID, params),
-						JedisConverters.MAP_STREAM_ENTRY_RESULT_CONVERTER)
+						StreamEntryConverter.MapStreamEntryConverter.INSTANCE)
 				.transaction(
 						(cmd)->cmd.xautoclaim(key, group, consumerName, minIdleTime, streamEntryID, params),
-						JedisConverters.MAP_STREAM_ENTRY_RESULT_CONVERTER);
+						StreamEntryConverter.MapStreamEntryConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -163,12 +167,12 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisC
 		final JedisCommand<Map<StreamEntryId, List<StreamEntry>>> command = JedisCommand.<Map<StreamEntryId, List<StreamEntry>>>create(
 						ProtocolCommand.XAUTOCLAIM)
 				.general((cmd)->cmd.xautoclaim(key, group, consumerName, minIdleTime, streamEntryID, params),
-						JedisConverters.MAP_STREAM_ENTRY_RESULT_CONVERTER)
+						StreamEntryConverter.MapStreamEntryConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xautoclaim(key, group, consumerName, minIdleTime, streamEntryID, params),
-						JedisConverters.MAP_STREAM_ENTRY_RESULT_CONVERTER)
+						StreamEntryConverter.MapStreamEntryConverter.INSTANCE)
 				.transaction(
 						(cmd)->cmd.xautoclaim(key, group, consumerName, minIdleTime, streamEntryID, params),
-						JedisConverters.MAP_STREAM_ENTRY_RESULT_CONVERTER);
+						StreamEntryConverter.MapStreamEntryConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -192,12 +196,12 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisC
 		final JedisCommand<Map<StreamEntryId, List<StreamEntryId>>> command = JedisCommand.<Map<StreamEntryId, List<StreamEntryId>>>create(
 						ProtocolCommand.XAUTOCLAIM)
 				.general((cmd)->cmd.xautoclaimJustId(key, group, consumerName, minIdleTime, streamEntryID, params),
-						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER)
+						StreamEntryIdConverter.MapStreamEntryIdConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xautoclaimJustId(key, group, consumerName, minIdleTime, streamEntryID, params),
-						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER)
+						StreamEntryIdConverter.MapStreamEntryIdConverter.INSTANCE)
 				.transaction(
 						(cmd)->cmd.xautoclaimJustId(key, group, consumerName, minIdleTime, streamEntryID, params),
-						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER);
+						StreamEntryIdConverter.MapStreamEntryIdConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -221,12 +225,12 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisC
 		final JedisCommand<Map<StreamEntryId, List<StreamEntryId>>> command = JedisCommand.<Map<StreamEntryId, List<StreamEntryId>>>create(
 						ProtocolCommand.XAUTOCLAIM)
 				.general((cmd)->cmd.xautoclaimJustId(key, group, consumerName, minIdleTime, streamEntryID, params),
-						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER)
+						StreamEntryIdConverter.MapStreamEntryIdConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xautoclaimJustId(key, group, consumerName, minIdleTime, streamEntryID, params),
-						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER)
+						StreamEntryIdConverter.MapStreamEntryIdConverter.INSTANCE)
 				.transaction(
 						(cmd)->cmd.xautoclaimJustId(key, group, consumerName, minIdleTime, streamEntryID, params),
-						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER);
+						StreamEntryIdConverter.MapStreamEntryIdConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -248,12 +252,12 @@ public final class JedisStreamOperations extends AbstractStreamOperations<JedisC
 		final JedisCommand<Map<StreamEntryId, List<StreamEntryId>>> command = JedisCommand.<Map<StreamEntryId, List<StreamEntryId>>>create(
 						ProtocolCommand.XAUTOCLAIM)
 				.general((cmd)->cmd.xclaim(key, group, consumerName, minIdleTime, params, streamEntryID),
-						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER)
+						StreamEntryIdConverter.MapStreamEntryIdConverter.INSTANCE)
 				.pipeline((cmd)->cmd.xclaim(key, group, consumerName, minIdleTime, params, streamEntryID),
-						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER)
+						StreamEntryIdConverter.MapStreamEntryIdConverter.INSTANCE)
 				.transaction(
 						(cmd)->cmd.xclaim(key, group, consumerName, minIdleTime, params, streamEntryID),
-						JedisConverters.MAP_STREAM_ENTRY_ID_RESULT_CONVERTER);
+						StreamEntryIdConverter.MapStreamEntryIdConverter.INSTANCE);
 		return execute(command, args);
 	}
 

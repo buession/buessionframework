@@ -29,7 +29,7 @@ import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.GetExArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.params.SetArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
@@ -278,9 +278,9 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 
 		final String[] keysValues = temp.toArray(new String[0]);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MSETNX)
-				.general((cmd)->cmd.msetnx(keysValues), JedisConverters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.msetnx(keysValues), JedisConverters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.msetnx(keysValues), JedisConverters.ONE_STATUS_CONVERTER);
+				.general((cmd)->cmd.msetnx(keysValues), Converters.ONE_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.msetnx(keysValues), Converters.ONE_STATUS_CONVERTER)
+				.transaction((cmd)->cmd.msetnx(keysValues), Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -370,9 +370,9 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	public Status setNx(final String key, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setnx(key, value), JedisConverters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.setnx(key, value), JedisConverters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.setnx(key, value), JedisConverters.ONE_STATUS_CONVERTER);
+				.general((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
+				.transaction((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -380,9 +380,9 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	public Status setNx(final byte[] key, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setnx(key, value), JedisConverters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.setnx(key, value), JedisConverters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.setnx(key, value), JedisConverters.ONE_STATUS_CONVERTER);
+				.general((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
+				.transaction((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 

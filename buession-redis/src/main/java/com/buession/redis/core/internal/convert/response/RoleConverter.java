@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.Role;
 import redis.clients.jedis.resps.AccessControlLogEntry;
 
@@ -37,6 +38,8 @@ import redis.clients.jedis.resps.AccessControlLogEntry;
 public final class RoleConverter implements Converter<Object, Role> {
 
 	public final static RoleConverter INSTANCE = new RoleConverter();
+
+	public final static ListConverter<Object, Role> LIST_CONVERTER = new ListConverter<>(RoleConverter.INSTANCE);
 
 	@Override
 	public Role convert(final Object source){

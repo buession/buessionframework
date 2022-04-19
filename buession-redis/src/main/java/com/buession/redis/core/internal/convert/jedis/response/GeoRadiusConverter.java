@@ -21,10 +21,31 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */package com.buession.redis.core.internal.convert.jedis.response;/**
- * 
+ */
+package com.buession.redis.core.internal.convert.jedis.response;
+
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.GeoRadius;
+import redis.clients.jedis.resps.GeoRadiusResponse;
+
+/**
+ * jedis {@link GeoRadiusResponse} 转换为 {@link GeoRadius}
  *
  * @author Yong.Teng
  * @since 2.0.0
- */public class GeoRadiusConverter {
+ */
+public class GeoRadiusConverter implements Converter<GeoRadiusResponse, GeoRadius> {
+
+	public final static GeoRadiusConverter INSTANCE = new GeoRadiusConverter();
+
+	public final static ListConverter<GeoRadiusResponse, GeoRadius> LIST_CONVERTER = new ListConverter<>(
+			GeoRadiusConverter.INSTANCE);
+
+	@Override
+	public GeoRadius convert(final GeoRadiusResponse source){
+		return new GeoRadius(source.getMember(), source.getDistance(),
+				GeoConverter.INSTANCE.convert(source.getCoordinate()));
+	}
+
 }

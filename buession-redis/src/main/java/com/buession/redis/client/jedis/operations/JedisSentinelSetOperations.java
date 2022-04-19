@@ -30,7 +30,8 @@ import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.Converters;
+import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 
 import java.util.List;
@@ -194,9 +195,9 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	public Status sMove(final String key, final String destKey, final String member){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("member", member);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SMOVE)
-				.general((cmd)->cmd.smove(key, destKey, member), JedisConverters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.smove(key, destKey, member), JedisConverters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.smove(key, destKey, member), JedisConverters.ONE_STATUS_CONVERTER);
+				.general((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
+				.transaction((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -204,9 +205,9 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 	public Status sMove(final byte[] key, final byte[] destKey, final byte[] member){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("member", member);
 		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SMOVE)
-				.general((cmd)->cmd.smove(key, destKey, member), JedisConverters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.smove(key, destKey, member), JedisConverters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.smove(key, destKey, member), JedisConverters.ONE_STATUS_CONVERTER);
+				.general((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER)
+				.transaction((cmd)->cmd.smove(key, destKey, member), Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -301,9 +302,12 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		final JedisSentinelCommand<ScanResult<List<String>>> command = JedisSentinelCommand.<ScanResult<List<String>>>create(
 						ProtocolCommand.SSCAN)
-				.general((cmd)->cmd.sscan(key, cursor), JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.sscan(key, cursor), JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.sscan(key, cursor), JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER);
+				.general((cmd)->cmd.sscan(key, cursor),
+						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+				.pipeline((cmd)->cmd.sscan(key, cursor),
+						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
+				.transaction((cmd)->cmd.sscan(key, cursor),
+						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -312,9 +316,12 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		final JedisSentinelCommand<ScanResult<List<byte[]>>> command = JedisSentinelCommand.<ScanResult<List<byte[]>>>create(
 						ProtocolCommand.SSCAN)
-				.general((cmd)->cmd.sscan(key, cursor), JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.sscan(key, cursor), JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.sscan(key, cursor), JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER);
+				.general((cmd)->cmd.sscan(key, cursor),
+						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+				.pipeline((cmd)->cmd.sscan(key, cursor),
+						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
+				.transaction((cmd)->cmd.sscan(key, cursor),
+						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -325,11 +332,11 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 		final JedisSentinelCommand<ScanResult<List<String>>> command = JedisSentinelCommand.<ScanResult<List<String>>>create(
 						ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.transaction((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -340,11 +347,11 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 		final JedisSentinelCommand<ScanResult<List<byte[]>>> command = JedisSentinelCommand.<ScanResult<List<byte[]>>>create(
 						ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.transaction((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -355,11 +362,11 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 		final JedisSentinelCommand<ScanResult<List<String>>> command = JedisSentinelCommand.<ScanResult<List<String>>>create(
 						ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.transaction((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -370,11 +377,11 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 		final JedisSentinelCommand<ScanResult<List<byte[]>>> command = JedisSentinelCommand.<ScanResult<List<byte[]>>>create(
 						ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.transaction((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -387,11 +394,11 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 		final JedisSentinelCommand<ScanResult<List<String>>> command = JedisSentinelCommand.<ScanResult<List<String>>>create(
 						ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.transaction((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.STRING_LIST_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -404,11 +411,11 @@ public final class JedisSentinelSetOperations extends AbstractSetOperations<Jedi
 		final JedisSentinelCommand<ScanResult<List<byte[]>>> command = JedisSentinelCommand.<ScanResult<List<byte[]>>>create(
 						ProtocolCommand.SSCAN)
 				.general((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.transaction((cmd)->cmd.sscan(key, cursor, params),
-						JedisConverters.BINARY_LIST_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER);
 		return execute(command, args);
 	}
 

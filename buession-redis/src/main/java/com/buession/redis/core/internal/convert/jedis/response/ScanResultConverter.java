@@ -22,10 +22,9 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 
@@ -40,23 +39,7 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface ScanResultConverter<S, T> extends Converter<S, T> {
-
-	/**
-	 * {@link redis.clients.jedis.resps.ScanResult}&lt;S&gt; 转换为 {@link ScanResult}&lt;T&gt;
-	 *
-	 * @param <S>
-	 * 		原始类型，{@link redis.clients.jedis.resps.ScanResult} 泛型参数
-	 * @param <T>
-	 * 		目标类型，{@link ScanResult} 泛型参数
-	 *
-	 * @author Yong.Teng
-	 * @since 1.2.1
-	 */
-	interface ScanResultExposeConverter<S, T>
-			extends ScanResultConverter<redis.clients.jedis.resps.ScanResult<S>, ScanResult<T>> {
-
-	}
+public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis.resps.ScanResult<S>, ScanResult<T>> {
 
 	/**
 	 * jedis {@link redis.clients.jedis.resps.ScanResult} 转换为 {@link java.util.List}&lt;ScanResult&gt;
@@ -64,7 +47,11 @@ public interface ScanResultConverter<S, T> extends Converter<S, T> {
 	 * @author Yong.Teng
 	 * @since 2.0.0
 	 */
-	final class ListScanResultExposeConverter<S> implements ScanResultExposeConverter<S, List<S>> {
+	final class ListScanResultConverter<S> implements ScanResultConverter<S, List<S>> {
+
+		public final static ListScanResultConverter<String> STRING_LIST_CONVERTER = new ListScanResultConverter<>();
+
+		public final static ListScanResultConverter<byte[]> BINARY_LIST_CONVERTER = new ListScanResultConverter<>();
 
 		@Override
 		public ScanResult<List<S>> convert(final redis.clients.jedis.resps.ScanResult<S> source){
@@ -80,16 +67,15 @@ public interface ScanResultConverter<S, T> extends Converter<S, T> {
 	 * @since 2.0.0
 	 */
 	final class ListTupleScanResultConverter
-			implements ScanResultExposeConverter<redis.clients.jedis.resps.Tuple, List<Tuple>> {
+			implements ScanResultConverter<redis.clients.jedis.resps.Tuple, List<Tuple>> {
 
 		public final static ListTupleScanResultConverter INSTANCE = new ListTupleScanResultConverter();
 
 		@Override
 		public ScanResult<List<Tuple>> convert(
 				final redis.clients.jedis.resps.ScanResult<redis.clients.jedis.resps.Tuple> source){
-			final ListConverter<redis.clients.jedis.resps.Tuple, Tuple> converter =
-					new ListConverter<>((item)->new Tuple(item.getBinaryElement(), item.getScore()));
-			return new com.buession.redis.core.ScanResult<>(source.getCursor(), converter.convert(source.getResult()));
+			return new com.buession.redis.core.ScanResult<>(source.getCursor(),
+					TupleConverter.LIST_CONVERTER.convert(source.getResult()));
 		}
 
 	}
@@ -106,7 +92,11 @@ public interface ScanResultConverter<S, T> extends Converter<S, T> {
 	 * @author Yong.Teng
 	 * @since 2.0.0
 	 */
-	final class MapScanResultExposeConverter<K, V> implements ScanResultExposeConverter<Map.Entry<K, V>, Map<K, V>> {
+	final class MapScanResultConverter<K, V> implements ScanResultConverter<Map.Entry<K, V>, Map<K, V>> {
+
+		public final static MapScanResultConverter<String, String> STRING_MAP_CONVERTER = new MapScanResultConverter<>();
+
+		public final static MapScanResultConverter<byte[], byte[]> BINARY_MAP_CONVERTER = new MapScanResultConverter<>();
 
 		@Override
 		public ScanResult<Map<K, V>> convert(redis.clients.jedis.resps.ScanResult<Map.Entry<K, V>> source){

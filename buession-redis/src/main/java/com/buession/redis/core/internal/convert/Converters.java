@@ -22,28 +22,44 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.redis.core.internal.convert;
 
+import com.buession.core.converter.ArrayConverter;
+import com.buession.core.converter.BinaryEnumConverter;
+import com.buession.core.converter.BooleanStatusConverter;
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.internal.convert.Converters;
+import com.buession.core.converter.EnumConverter;
+import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.MapConverter;
+import com.buession.core.converter.PredicateStatusConverter;
+import com.buession.redis.core.ObjectEncoding;
+import com.buession.redis.core.Type;
 import com.buession.redis.utils.SafeEncoder;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface JedisConverters extends Converters {
+public interface Converters {
 
+	Converter<byte[], String> BINARY_TO_STRING_CONVERTER = SafeEncoder::encode;
 
-	/**
-	 * start result converter
-	 */
+	PredicateStatusConverter<Long> ONE_STATUS_CONVERTER = new PredicateStatusConverter<>((val)->val == 1L);
 
-	Converter<byte[], StreamEntryId> BINARY_STREAM_ENTRY_RESULT_CONVERTER = (source)->new StreamEntryId(
-			SafeEncoder.encode(source));
-	/**
-	 * end result converter
-	 */
+	BooleanStatusConverter BOOLEAN_STATUS_CONVERTER = new BooleanStatusConverter();
+
+	ListConverter<String, byte[]> STRING_LIST_TO_BINARY_LIST_CONVERTER = new ListConverter<>(SafeEncoder::encode);
+
+	MapConverter<byte[], byte[], String, String> BINARY_MAP_TO_STRING_MAP_CONVERTER = new MapConverter<>(
+			SafeEncoder::encode, SafeEncoder::encode);
+
+	Converter<byte[][], String[]> BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER = new ArrayConverter<>(SafeEncoder::encode);
+
+	EnumConverter<Type> TYPE_RESULT_CONVERTER = new EnumConverter<>(Type.class);
+
+	EnumConverter<ObjectEncoding> STRING_OBJECT_ENCODING_RESULT_CONVERTER = new EnumConverter<>(ObjectEncoding.class);
+
+	Converter<byte[], ObjectEncoding> BINARY_OBJECT_ENCODING_RESULT_CONVERTER = new BinaryEnumConverter<>(
+			ObjectEncoding.class);
 
 }

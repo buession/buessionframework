@@ -36,8 +36,9 @@ import com.buession.redis.core.Tuple;
 import com.buession.redis.core.ZRangeBy;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.JedisConverters;
-import com.buession.redis.core.internal.convert.jedis.KeyedZSetElementConverter;
+import com.buession.redis.core.internal.convert.jedis.response.KeyedZSetElementConverter;
+import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
+import com.buession.redis.core.internal.convert.jedis.response.TupleConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 import com.buession.redis.core.internal.jedis.JedisZAddParams;
 import com.buession.redis.core.internal.jedis.JedisZParams;
@@ -64,9 +65,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Tuple zPopMin(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		final JedisClusterCommand<Tuple> command = JedisClusterCommand.<Tuple>create(ProtocolCommand.ZPOPMIN)
-				.general((cmd)->cmd.zpopmin(key), JedisConverters.TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zpopmin(key), JedisConverters.TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zpopmin(key), JedisConverters.TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE)
+				.pipeline((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE)
+				.transaction((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -74,9 +75,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Tuple zPopMin(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		final JedisClusterCommand<Tuple> command = JedisClusterCommand.<Tuple>create(ProtocolCommand.ZPOPMIN)
-				.general((cmd)->cmd.zpopmin(key), JedisConverters.TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zpopmin(key), JedisConverters.TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zpopmin(key), JedisConverters.TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE)
+				.pipeline((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE)
+				.transaction((cmd)->cmd.zpopmin(key), TupleConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -85,9 +86,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZPOPMIN)
-				.general((cmd)->cmd.zpopmin(key, (int) count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zpopmin(key, (int) count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zpopmin(key, (int) count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -96,9 +97,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZPOPMIN)
-				.general((cmd)->cmd.zpopmin(key, (int) count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zpopmin(key, (int) count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zpopmin(key, (int) count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zpopmin(key, (int) count), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -106,9 +107,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Tuple zPopMax(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		final JedisClusterCommand<Tuple> command = JedisClusterCommand.<Tuple>create(ProtocolCommand.ZPOPMAX)
-				.general((cmd)->cmd.zpopmax(key), JedisConverters.TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zpopmax(key), JedisConverters.TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zpopmax(key), JedisConverters.TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE)
+				.pipeline((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE)
+				.transaction((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -116,9 +117,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Tuple zPopMax(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		final JedisClusterCommand<Tuple> command = JedisClusterCommand.<Tuple>create(ProtocolCommand.ZPOPMAX)
-				.general((cmd)->cmd.zpopmax(key), JedisConverters.TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zpopmax(key), JedisConverters.TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zpopmax(key), JedisConverters.TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE)
+				.pipeline((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE)
+				.transaction((cmd)->cmd.zpopmax(key), TupleConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -127,9 +128,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZPOPMAX)
-				.general((cmd)->cmd.zpopmax(key, (int) count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zpopmax(key, (int) count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zpopmax(key, (int) count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -138,9 +139,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZPOPMAX)
-				.general((cmd)->cmd.zpopmax(key, (int) count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zpopmax(key, (int) count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zpopmax(key, (int) count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zpopmax(key, (int) count), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -161,11 +162,11 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisClusterCommand<KeyedZSetElement> command = JedisClusterCommand.<KeyedZSetElement>create(
 						ProtocolCommand.BZPOPMIN)
 				.general((cmd)->cmd.bzpopmin(timeout, keys),
-						JedisConverters.BINARY_DATA_KEYED_Z_SET_ELEMENT_RESULT_CONVERTER)
+						KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter.INSTANCE)
 				.pipeline((cmd)->cmd.bzpopmin(timeout, keys),
-						JedisConverters.BINARY_DATA_KEYED_Z_SET_ELEMENT_RESULT_CONVERTER)
+						KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter.INSTANCE)
 				.transaction((cmd)->cmd.bzpopmin(timeout, keys),
-						JedisConverters.BINARY_DATA_KEYED_Z_SET_ELEMENT_RESULT_CONVERTER);
+						KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -186,11 +187,11 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisClusterCommand<KeyedZSetElement> command = JedisClusterCommand.<KeyedZSetElement>create(
 						ProtocolCommand.BZPOPMIN)
 				.general((cmd)->cmd.bzpopmax(timeout, keys),
-						JedisConverters.BINARY_DATA_KEYED_Z_SET_ELEMENT_RESULT_CONVERTER)
+						KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter.INSTANCE)
 				.pipeline((cmd)->cmd.bzpopmax(timeout, keys),
-						JedisConverters.BINARY_DATA_KEYED_Z_SET_ELEMENT_RESULT_CONVERTER)
+						KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter.INSTANCE)
 				.transaction((cmd)->cmd.bzpopmax(timeout, keys),
-						JedisConverters.BINARY_DATA_KEYED_Z_SET_ELEMENT_RESULT_CONVERTER);
+						KeyedZSetElementConverter.BinaryDataKeyedZSetElementConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -434,9 +435,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Set<Tuple> zDiffWithScores(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZDIFF)
-				.general((cmd)->cmd.zdiffWithScores(keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zdiffWithScores(keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zdiffWithScores(keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -444,9 +445,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public Set<Tuple> zDiffWithScores(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZDIFF)
-				.general((cmd)->cmd.zdiffWithScores(keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zdiffWithScores(keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zdiffWithScores(keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zdiffWithScores(keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -577,9 +578,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final ZParams params = new JedisZParams();
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZINTER)
-				.general((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -588,9 +589,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final ZParams params = new JedisZParams();
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZINTER)
-				.general((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -599,9 +600,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZINTER)
-				.general((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -610,9 +611,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
 		final ZParams params = new JedisZParams(aggregate);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZINTER)
-				.general((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -621,9 +622,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZINTER)
-				.general((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -632,9 +633,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
 		final ZParams params = new JedisZParams(weights);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZINTER)
-				.general((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -644,9 +645,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZINTER)
-				.general((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -656,9 +657,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.put("weights", weights);
 		final ZParams params = new JedisZParams(aggregate, weights);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZINTER)
-				.general((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zinterWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zinterWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -856,9 +857,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZRANDMEMBER)
-				.general((cmd)->cmd.zrandmemberWithScores(key, count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrandmemberWithScores(key, count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrandmemberWithScores(key, count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -867,9 +868,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("count", count);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZRANDMEMBER)
-				.general((cmd)->cmd.zrandmemberWithScores(key, count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrandmemberWithScores(key, count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrandmemberWithScores(key, count), JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrandmemberWithScores(key, count), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -878,8 +879,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final JedisClusterCommand<List<String>> command = JedisClusterCommand.<List<String>>create(
 						ProtocolCommand.ZRANGE)
-				.general((cmd)->cmd.zrange(key, start, end))
-				.pipeline((cmd)->cmd.zrange(key, start, end))
+				.general((cmd)->cmd.zrange(key, start, end)).pipeline((cmd)->cmd.zrange(key, start, end))
 				.transaction((cmd)->cmd.zrange(key, start, end));
 		return execute(command, args);
 	}
@@ -889,8 +889,7 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final JedisClusterCommand<List<byte[]>> command = JedisClusterCommand.<List<byte[]>>create(
 						ProtocolCommand.ZRANGE)
-				.general((cmd)->cmd.zrange(key, start, end))
-				.pipeline((cmd)->cmd.zrange(key, start, end))
+				.general((cmd)->cmd.zrange(key, start, end)).pipeline((cmd)->cmd.zrange(key, start, end))
 				.transaction((cmd)->cmd.zrange(key, start, end));
 		return execute(command, args);
 	}
@@ -899,9 +898,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public List<Tuple> zRangeWithScores(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(ProtocolCommand.ZRANGE)
-				.general((cmd)->cmd.zrangeWithScores(key, start, end), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrangeWithScores(key, start, end), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrangeWithScores(key, start, end), JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -909,9 +908,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 	public List<Tuple> zRangeWithScores(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(ProtocolCommand.ZRANGE)
-				.general((cmd)->cmd.zrangeWithScores(key, start, end), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrangeWithScores(key, start, end), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrangeWithScores(key, start, end), JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1114,11 +1113,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZRANGEBYSCORE)
-				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1127,11 +1124,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZRANGEBYSCORE)
-				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1140,11 +1135,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZRANGEBYSCORE)
-				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1153,11 +1146,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZRANGEBYSCORE)
-				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1169,11 +1160,11 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+						TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1185,11 +1176,11 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+						TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1201,11 +1192,11 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+						TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1217,11 +1208,11 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZRANGEBYSCORE)
 				.general((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+						TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1580,10 +1571,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZREVRANGE)
-				.general((cmd)->cmd.zrevrangeWithScores(key, start, end), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrevrangeWithScores(key, start, end), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrevrangeWithScores(key, start, end),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1592,10 +1582,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZREVRANGE)
-				.general((cmd)->cmd.zrevrangeWithScores(key, start, end), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrevrangeWithScores(key, start, end), JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrevrangeWithScores(key, start, end),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrevrangeWithScores(key, start, end), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1766,12 +1755,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZREVRANGEBYSCORE)
-				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1780,12 +1766,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZREVRANGEBYSCORE)
-				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1794,12 +1777,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZREVRANGEBYSCORE)
-				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1808,12 +1788,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("min", min).put("max", max);
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZREVRANGEBYSCORE)
-				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER)
+				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max), TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1825,11 +1802,11 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+						TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1841,11 +1818,11 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+						TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1857,11 +1834,11 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+						TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1873,11 +1850,11 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisClusterCommand<List<Tuple>> command = JedisClusterCommand.<List<Tuple>>create(
 						ProtocolCommand.ZREVRANGEBYSCORE)
 				.general((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.pipeline((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER)
+						TupleConverter.LIST_CONVERTER)
 				.transaction((cmd)->cmd.zrevrangeByScoreWithScores(key, min, max, (int) offset, (int) count),
-						JedisConverters.LIST_TUPLE_RESULT_CONVERTER);
+						TupleConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -1905,9 +1882,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		final JedisClusterCommand<ScanResult<List<Tuple>>> command = JedisClusterCommand.<ScanResult<List<Tuple>>>create(
 						ProtocolCommand.ZSCAN)
-				.general((cmd)->cmd.zscan(key, cursor), JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zscan(key, cursor), JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zscan(key, cursor), JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER);
+				.general((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
+				.pipeline((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
+				.transaction((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -1916,9 +1893,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		final JedisClusterCommand<ScanResult<List<Tuple>>> command = JedisClusterCommand.<ScanResult<List<Tuple>>>create(
 						ProtocolCommand.ZSCAN)
-				.general((cmd)->cmd.zscan(key, cursor), JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zscan(key, cursor), JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zscan(key, cursor), JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER);
+				.general((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
+				.pipeline((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
+				.transaction((cmd)->cmd.zscan(key, cursor), ScanResultConverter.ListTupleScanResultConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -1928,11 +1905,12 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisScanParams params = new JedisScanParams(pattern);
 		final JedisClusterCommand<ScanResult<List<Tuple>>> command = JedisClusterCommand.<ScanResult<List<Tuple>>>create(
 						ProtocolCommand.ZSCAN)
-				.general((cmd)->cmd.zscan(key, cursor, params), JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
+				.general((cmd)->cmd.zscan(key, cursor, params),
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor, params),
-						JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.transaction((cmd)->cmd.zscan(key, cursor, params),
-						JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -1942,11 +1920,12 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisScanParams params = new JedisScanParams(pattern);
 		final JedisClusterCommand<ScanResult<List<Tuple>>> command = JedisClusterCommand.<ScanResult<List<Tuple>>>create(
 						ProtocolCommand.ZSCAN)
-				.general((cmd)->cmd.zscan(key, cursor, params), JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
+				.general((cmd)->cmd.zscan(key, cursor, params),
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor, params),
-						JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.transaction((cmd)->cmd.zscan(key, cursor, params),
-						JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -1956,11 +1935,12 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisScanParams params = new JedisScanParams(count);
 		final JedisClusterCommand<ScanResult<List<Tuple>>> command = JedisClusterCommand.<ScanResult<List<Tuple>>>create(
 						ProtocolCommand.ZSCAN)
-				.general((cmd)->cmd.zscan(key, cursor, params), JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
+				.general((cmd)->cmd.zscan(key, cursor, params),
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor, params),
-						JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.transaction((cmd)->cmd.zscan(key, cursor, params),
-						JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -1970,11 +1950,12 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisScanParams params = new JedisScanParams(count);
 		final JedisClusterCommand<ScanResult<List<Tuple>>> command = JedisClusterCommand.<ScanResult<List<Tuple>>>create(
 						ProtocolCommand.ZSCAN)
-				.general((cmd)->cmd.zscan(key, cursor, params), JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
+				.general((cmd)->cmd.zscan(key, cursor, params),
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor, params),
-						JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.transaction((cmd)->cmd.zscan(key, cursor, params),
-						JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -1985,11 +1966,12 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisScanParams params = new JedisScanParams(pattern, count);
 		final JedisClusterCommand<ScanResult<List<Tuple>>> command = JedisClusterCommand.<ScanResult<List<Tuple>>>create(
 						ProtocolCommand.ZSCAN)
-				.general((cmd)->cmd.zscan(key, cursor, params), JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
+				.general((cmd)->cmd.zscan(key, cursor, params),
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor, params),
-						JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.transaction((cmd)->cmd.zscan(key, cursor, params),
-						JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -2000,11 +1982,12 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final JedisScanParams params = new JedisScanParams(pattern, count);
 		final JedisClusterCommand<ScanResult<List<Tuple>>> command = JedisClusterCommand.<ScanResult<List<Tuple>>>create(
 						ProtocolCommand.ZSCAN)
-				.general((cmd)->cmd.zscan(key, cursor, params), JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
+				.general((cmd)->cmd.zscan(key, cursor, params),
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.pipeline((cmd)->cmd.zscan(key, cursor, params),
-						JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE)
 				.transaction((cmd)->cmd.zscan(key, cursor, params),
-						JedisConverters.LIST_TUPLE_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.ListTupleScanResultConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -2113,9 +2096,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final JedisZParams params = new JedisZParams();
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZUNION)
-				.general((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -2124,9 +2107,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys);
 		final JedisZParams params = new JedisZParams();
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZUNION)
-				.general((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -2135,9 +2118,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZUNION)
-				.general((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -2146,9 +2129,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys).put("aggregate", aggregate);
 		final JedisZParams params = new JedisZParams(aggregate);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZUNION)
-				.general((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -2157,9 +2140,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZUNION)
-				.general((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -2168,9 +2151,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 		final CommandArguments args = CommandArguments.create("keys", keys).put("weights", weights);
 		final JedisZParams params = new JedisZParams(weights);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZUNION)
-				.general((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -2180,9 +2163,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZUNION)
-				.general((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -2192,9 +2175,9 @@ public final class JedisClusterSortedSetOperations extends AbstractSortedSetOper
 				.put("weights", weights);
 		final JedisZParams params = new JedisZParams(aggregate, weights);
 		final JedisClusterCommand<Set<Tuple>> command = JedisClusterCommand.<Set<Tuple>>create(ProtocolCommand.ZUNION)
-				.general((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.zunionWithScores(params, keys), JedisConverters.SET_TUPLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.pipeline((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER)
+				.transaction((cmd)->cmd.zunionWithScores(params, keys), TupleConverter.SET_CONVERTER);
 		return execute(command, args);
 	}
 

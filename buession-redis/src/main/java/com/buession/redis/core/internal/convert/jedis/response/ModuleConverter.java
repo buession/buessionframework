@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.Module;
 
 /**
@@ -36,6 +37,9 @@ import com.buession.redis.core.Module;
 public final class ModuleConverter implements Converter<redis.clients.jedis.Module, Module> {
 
 	public final static ModuleConverter INSTANCE = new ModuleConverter();
+
+	public final static ListConverter<redis.clients.jedis.Module, Module> LIST_CONVERTER = new ListConverter<>(
+			ModuleConverter.INSTANCE);
 
 	@Override
 	public Module convert(final redis.clients.jedis.Module source){

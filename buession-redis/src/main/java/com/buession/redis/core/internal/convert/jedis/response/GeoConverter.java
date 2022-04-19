@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.lang.Geo;
 import redis.clients.jedis.GeoCoordinate;
 
@@ -37,6 +38,8 @@ import redis.clients.jedis.GeoCoordinate;
 public final class GeoConverter implements Converter<GeoCoordinate, Geo> {
 
 	public final static GeoConverter INSTANCE = new GeoConverter();
+
+	public final static ListConverter<GeoCoordinate, Geo> LIST_CONVERTER = new ListConverter<>(GeoConverter.INSTANCE);
 
 	@Override
 	public Geo convert(final GeoCoordinate source){

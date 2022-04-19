@@ -22,11 +22,12 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.StreamEntryID;
 
 import java.util.LinkedHashMap;
@@ -46,6 +47,17 @@ public final class StreamEntryIdConverter implements Converter<StreamEntryID, St
 	@Override
 	public StreamEntryId convert(final StreamEntryID source){
 		return new StreamEntryId(source.getTime(), source.getSequence());
+	}
+
+	public final static class BinaryStreamEntryIdConverter implements Converter<byte[], StreamEntryId> {
+
+		public final static BinaryStreamEntryIdConverter INSTANCE = new BinaryStreamEntryIdConverter();
+
+		@Override
+		public StreamEntryId convert(final byte[] source){
+			return new StreamEntryId(SafeEncoder.encode(source));
+		}
+		
 	}
 
 	public final static class MapStreamEntryIdConverter implements

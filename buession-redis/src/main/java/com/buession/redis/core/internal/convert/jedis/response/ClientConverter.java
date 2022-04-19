@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.utils.EnumUtils;
@@ -122,9 +122,9 @@ public final class ClientConverter implements Converter<String, Client> {
 		return client;
 	}
 
-	final static class ClientListExposeConverter implements Converter<String, List<Client>> {
+	public final static class ClientListConverter implements Converter<String, List<Client>> {
 
-		public final static ClientListExposeConverter INSTANCE = new ClientListExposeConverter();
+		public final static ClientListConverter INSTANCE = new ClientListConverter();
 
 		@Override
 		public List<Client> convert(final String source){

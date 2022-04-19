@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.SlowLog;
 import redis.clients.jedis.resps.Slowlog;
@@ -38,6 +39,8 @@ import redis.clients.jedis.resps.Slowlog;
 public final class SlowLogConverter implements Converter<Slowlog, SlowLog> {
 
 	public final static SlowLogConverter INSTANCE = new SlowLogConverter();
+
+	public final static ListConverter<Slowlog, SlowLog> LIST_CONVERTER = new ListConverter<>(SlowLogConverter.INSTANCE);
 
 	@Override
 	public SlowLog convert(final Slowlog source){

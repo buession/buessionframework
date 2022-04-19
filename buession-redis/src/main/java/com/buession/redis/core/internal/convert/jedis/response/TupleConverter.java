@@ -22,9 +22,11 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.core.converter.SetConverter;
 import com.buession.redis.core.Tuple;
 
 /**
@@ -36,6 +38,12 @@ import com.buession.redis.core.Tuple;
 public final class TupleConverter implements Converter<redis.clients.jedis.resps.Tuple, Tuple> {
 
 	public final static TupleConverter INSTANCE = new TupleConverter();
+
+	public final static SetConverter<redis.clients.jedis.resps.Tuple, Tuple> SET_CONVERTER = new SetConverter<>(
+			TupleConverter.INSTANCE);
+
+	public final static ListConverter<redis.clients.jedis.resps.Tuple, Tuple> LIST_CONVERTER = new ListConverter<>(
+			TupleConverter.INSTANCE);
 
 	@Override
 	public Tuple convert(final redis.clients.jedis.resps.Tuple source){

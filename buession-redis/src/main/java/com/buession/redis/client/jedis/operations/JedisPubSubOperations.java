@@ -29,7 +29,7 @@ import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.PubSubListener;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.pubsub.jedis.DefaultBinaryJedisPubSub;
 import com.buession.redis.pubsub.jedis.DefaultJedisPubSub;
 import com.buession.redis.utils.SafeEncoder;
@@ -112,7 +112,7 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisC
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
 		final JedisCommand<List<byte[]>> command = JedisCommand.<List<byte[]>>create(ProtocolCommand.PUBSUB_CHANNELS)
 				.general((cmd)->cmd.pubsubChannels(SafeEncoder.encode(pattern)),
-						JedisConverters.STRING_LIST_TO_BINARY_LIST_CONVERTER);
+						Converters.STRING_LIST_TO_BINARY_LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -137,7 +137,7 @@ public final class JedisPubSubOperations extends AbstractPubSubOperations<JedisC
 		final JedisCommand<Map<byte[], Long>> command = JedisCommand.<Map<byte[], Long>>create(
 				ProtocolCommand.PUBSUB_NUMSUB).general((cmd)->{
 			final Map<String, Long> temp = cmd.pubsubNumSub(
-					JedisConverters.BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER.convert(channels));
+					Converters.BINARY_ARRAY_TO_STRING_ARRAY_CONVERTER.convert(channels));
 			final Map<byte[], Long> result = new HashMap<>(temp.size());
 
 			temp.forEach((key, value)->{

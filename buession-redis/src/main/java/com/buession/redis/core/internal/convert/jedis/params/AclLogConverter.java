@@ -26,6 +26,7 @@ package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.beans.BeanUtils;
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Client;
 import redis.clients.jedis.resps.AccessControlLogEntry;
@@ -39,6 +40,9 @@ import redis.clients.jedis.resps.AccessControlLogEntry;
 public final class AclLogConverter implements Converter<AccessControlLogEntry, AclLog> {
 
 	public final static AclLogConverter INSTANCE = new AclLogConverter();
+
+	public final static ListConverter<AccessControlLogEntry, AclLog> LIST_CONVERTER = new ListConverter<>(
+			AclLogConverter.INSTANCE);
 
 	@Override
 	public AclLog convert(final AccessControlLogEntry source){

@@ -30,8 +30,9 @@ import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 
 import java.util.List;
@@ -299,9 +300,11 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		final JedisClusterCommand<ScanResult<Map<String, String>>> command = JedisClusterCommand.<ScanResult<Map<String, String>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor), JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor), JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor), JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER);
+				.general((cmd)->cmd.hscan(key, cursor), ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
+				.pipeline((cmd)->cmd.hscan(key, cursor),
+						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
+				.transaction((cmd)->cmd.hscan(key, cursor),
+						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -310,9 +313,11 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 		final CommandArguments args = CommandArguments.create("key", key).put("cursor", cursor);
 		final JedisClusterCommand<ScanResult<Map<byte[], byte[]>>> command = JedisClusterCommand.<ScanResult<Map<byte[], byte[]>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor), JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.pipeline((cmd)->cmd.hscan(key, cursor), JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
-				.transaction((cmd)->cmd.hscan(key, cursor), JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER);
+				.general((cmd)->cmd.hscan(key, cursor), ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
+				.pipeline((cmd)->cmd.hscan(key, cursor),
+						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
+				.transaction((cmd)->cmd.hscan(key, cursor),
+						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -322,11 +327,12 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 		final JedisScanParams params = new JedisScanParams(pattern);
 		final JedisClusterCommand<ScanResult<Map<String, String>>> command = JedisClusterCommand.<ScanResult<Map<String, String>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, params), JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor, params),
+						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.hscan(key, cursor, params),
-						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
 				.transaction((cmd)->cmd.hscan(key, cursor, params),
-						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -336,11 +342,12 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 		final JedisScanParams params = new JedisScanParams(pattern);
 		final JedisClusterCommand<ScanResult<Map<byte[], byte[]>>> command = JedisClusterCommand.<ScanResult<Map<byte[], byte[]>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, params), JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor, params),
+						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.hscan(key, cursor, params),
-						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
 				.transaction((cmd)->cmd.hscan(key, cursor, params),
-						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -350,11 +357,12 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 		final JedisScanParams params = new JedisScanParams(count);
 		final JedisClusterCommand<ScanResult<Map<String, String>>> command = JedisClusterCommand.<ScanResult<Map<String, String>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, params), JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor, params),
+						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.hscan(key, cursor, params),
-						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
 				.transaction((cmd)->cmd.hscan(key, cursor, params),
-						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -364,11 +372,12 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 		final JedisScanParams params = new JedisScanParams(count);
 		final JedisClusterCommand<ScanResult<Map<byte[], byte[]>>> command = JedisClusterCommand.<ScanResult<Map<byte[], byte[]>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, params), JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor, params),
+						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.hscan(key, cursor, params),
-						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
 				.transaction((cmd)->cmd.hscan(key, cursor, params),
-						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -379,11 +388,12 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 		final JedisScanParams params = new JedisScanParams(pattern, count);
 		final JedisClusterCommand<ScanResult<Map<String, String>>> command = JedisClusterCommand.<ScanResult<Map<String, String>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, params), JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor, params),
+						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.hscan(key, cursor, params),
-						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER)
 				.transaction((cmd)->cmd.hscan(key, cursor, params),
-						JedisConverters.STRING_MAP_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.MapScanResultConverter.STRING_MAP_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -395,11 +405,12 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 		final JedisScanParams params = new JedisScanParams(pattern, count);
 		final JedisClusterCommand<ScanResult<Map<byte[], byte[]>>> command = JedisClusterCommand.<ScanResult<Map<byte[], byte[]>>>create(
 						ProtocolCommand.HSCAN)
-				.general((cmd)->cmd.hscan(key, cursor, params), JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
+				.general((cmd)->cmd.hscan(key, cursor, params),
+						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
 				.pipeline((cmd)->cmd.hscan(key, cursor, params),
-						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER)
+						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER)
 				.transaction((cmd)->cmd.hscan(key, cursor, params),
-						JedisConverters.BINARY_MAP_SCAN_RESULT_RESULT_CONVERTER);
+						ScanResultConverter.MapScanResultConverter.BINARY_MAP_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -426,9 +437,9 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(
 						ProtocolCommand.HSETNX)
-				.general((cmd)->cmd.hsetnx(key, field, value), JedisConverters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.hsetnx(key, field, value), JedisConverters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.hsetnx(key, field, value), JedisConverters.ONE_STATUS_CONVERTER);
+				.general((cmd)->cmd.hsetnx(key, field, value), Converters.ONE_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.hsetnx(key, field, value), Converters.ONE_STATUS_CONVERTER)
+				.transaction((cmd)->cmd.hsetnx(key, field, value), Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -437,9 +448,9 @@ public final class JedisClusterHashOperations extends AbstractHashOperations<Jed
 		final CommandArguments args = CommandArguments.create("key", key).put("field", field).put("value", value);
 		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(
 						ProtocolCommand.HSETNX)
-				.general((cmd)->cmd.hsetnx(key, field, value), JedisConverters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.hsetnx(key, field, value), JedisConverters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.hsetnx(key, field, value), JedisConverters.ONE_STATUS_CONVERTER);
+				.general((cmd)->cmd.hsetnx(key, field, value), Converters.ONE_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.hsetnx(key, field, value), Converters.ONE_STATUS_CONVERTER)
+				.transaction((cmd)->cmd.hsetnx(key, field, value), Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 

@@ -40,12 +40,15 @@ import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.params.AclLogConverter;
 import com.buession.redis.core.internal.convert.jedis.params.AclUserConverter;
 import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
 import com.buession.redis.core.internal.convert.jedis.response.InfoConverter;
+import com.buession.redis.core.internal.convert.jedis.response.ModuleConverter;
 import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.jedis.response.RedisServerTimeConverter;
+import com.buession.redis.core.internal.convert.jedis.response.SlowLogConverter;
+import com.buession.redis.core.internal.convert.response.RoleConverter;
 import com.buession.redis.core.internal.jedis.JedisFailoverParams;
 import redis.clients.jedis.JedisMonitor;
 import redis.clients.jedis.args.SaveMode;
@@ -185,7 +188,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisC
 	@Override
 	public List<AclLog> aclLog(){
 		final JedisCommand<List<AclLog>> command = JedisCommand.<List<AclLog>>create(ProtocolCommand.ACL_LOG)
-				.general((cmd)->cmd.aclLog(), JedisConverters.LIST_ACL_LOG_RESULT_CONVERTER);
+				.general((cmd)->cmd.aclLog(), AclLogConverter.LIST_CONVERTER);
 		return execute(command);
 	}
 
@@ -193,7 +196,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisC
 	public List<AclLog> aclLog(final long count){
 		final CommandArguments args = CommandArguments.create("count", count);
 		final JedisCommand<List<AclLog>> command = JedisCommand.<List<AclLog>>create(ProtocolCommand.ACL_LOG)
-				.general((cmd)->cmd.aclLog((int) count), JedisConverters.LIST_ACL_LOG_RESULT_CONVERTER);
+				.general((cmd)->cmd.aclLog((int) count), AclLogConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -428,7 +431,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisC
 	@Override
 	public List<Module> moduleList(){
 		final JedisCommand<List<Module>> command = JedisCommand.<List<Module>>create(ProtocolCommand.MODULE_LIST)
-				.general((cmd)->cmd.moduleList(), JedisConverters.LIST_MODULE_RESULT_CONVERTER);
+				.general((cmd)->cmd.moduleList(), ModuleConverter.LIST_CONVERTER);
 		return execute(command);
 	}
 
@@ -482,11 +485,10 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisC
 
 	@Override
 	public void sync(){
-		final JedisCommand<Void> command = JedisCommand.<Void>create(ProtocolCommand.SYNC)
-				.pipeline((cmd)->{
-					cmd.sync();
-					return null;
-				});
+		final JedisCommand<Void> command = JedisCommand.<Void>create(ProtocolCommand.SYNC).pipeline((cmd)->{
+			cmd.sync();
+			return null;
+		});
 		execute(command);
 	}
 
@@ -509,7 +511,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisC
 	@Override
 	public List<Role> role(){
 		final JedisCommand<List<Role>> command = JedisCommand.<List<Role>>create(ProtocolCommand.ROLE)
-				.general((cmd)->cmd.role(), JedisConverters.LIST_ROLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.role(), RoleConverter.LIST_CONVERTER);
 		return execute(command);
 	}
 
@@ -522,30 +524,28 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisC
 
 	@Override
 	public void shutdown(){
-		final JedisCommand<Void> command = JedisCommand.<Void>create(ProtocolCommand.SHUTDOWN)
-				.general((cmd)->{
-					cmd.shutdown();
-					return null;
-				});
+		final JedisCommand<Void> command = JedisCommand.<Void>create(ProtocolCommand.SHUTDOWN).general((cmd)->{
+			cmd.shutdown();
+			return null;
+		});
 		execute(command);
 	}
 
 	@Override
 	public void shutdown(final boolean save){
 		final CommandArguments args = CommandArguments.create("save", save);
-		final JedisCommand<Void> command = JedisCommand.<Void>create(ProtocolCommand.SHUTDOWN)
-				.general((cmd)->{
-					final SaveMode saveMode = save ? SaveMode.SAVE : SaveMode.NOSAVE;
-					cmd.shutdown(saveMode);
-					return null;
-				});
+		final JedisCommand<Void> command = JedisCommand.<Void>create(ProtocolCommand.SHUTDOWN).general((cmd)->{
+			final SaveMode saveMode = save ? SaveMode.SAVE : SaveMode.NOSAVE;
+			cmd.shutdown(saveMode);
+			return null;
+		});
 		execute(command, args);
 	}
 
 	@Override
 	public List<SlowLog> slowLogGet(){
 		final JedisCommand<List<SlowLog>> command = JedisCommand.<List<SlowLog>>create(ProtocolCommand.SLOWLOG_GET)
-				.general((cmd)->cmd.slowlogGet(), JedisConverters.LIST_SLOW_LOG_RESULT_CONVERTER);
+				.general((cmd)->cmd.slowlogGet(), SlowLogConverter.LIST_CONVERTER);
 		return execute(command);
 	}
 
@@ -553,7 +553,7 @@ public final class JedisServerOperations extends AbstractServerOperations<JedisC
 	public List<SlowLog> slowLogGet(final long count){
 		final CommandArguments args = CommandArguments.create("count", count);
 		final JedisCommand<List<SlowLog>> command = JedisCommand.<List<SlowLog>>create(ProtocolCommand.SLOWLOG_GET)
-				.general((cmd)->cmd.slowlogGet(count), JedisConverters.LIST_SLOW_LOG_RESULT_CONVERTER);
+				.general((cmd)->cmd.slowlogGet(count), SlowLogConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 

@@ -33,8 +33,8 @@ import com.buession.redis.core.ClientType;
 import com.buession.redis.core.ClientUnblockType;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.ClientConverter;
-import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.response.ClientConverter;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.ClientTypeConverter;
 import com.buession.redis.core.internal.convert.jedis.params.ClientUnblockTypeConverter;
 import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
@@ -162,7 +162,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public List<Client> clientList(){
 		final JedisCommand<List<Client>> command = JedisCommand.<List<Client>>create(ProtocolCommand.CLIENT_LIST)
-				.general((cmd)->cmd.clientList(), JedisConverters.CLIENT_LIST_RESULT_CONVERTER);
+				.general((cmd)->cmd.clientList(), ClientConverter.ClientListConverter.INSTANCE);
 		return execute(command);
 	}
 
@@ -171,7 +171,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 		final CommandArguments args = CommandArguments.create("clientType", clientType);
 		final JedisCommand<List<Client>> command = JedisCommand.<List<Client>>create(ProtocolCommand.CLIENT_LIST)
 				.general((cmd)->cmd.clientList(ClientTypeConverter.INSTANCE.convert(clientType)),
-						JedisConverters.CLIENT_LIST_RESULT_CONVERTER);
+						ClientConverter.ClientListConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -209,7 +209,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	public Status clientUnblock(final int clientId){
 		final CommandArguments args = CommandArguments.create("clientId", clientId);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.CLIENT_UNBLOCK)
-				.general((cmd)->cmd.clientUnblock(clientId, null), JedisConverters.ONE_STATUS_CONVERTER);
+				.general((cmd)->cmd.clientUnblock(clientId, null), Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -218,7 +218,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
 		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.CLIENT_UNBLOCK)
 				.general((cmd)->cmd.clientUnblock(clientId, ClientUnblockTypeConverter.INSTANCE.convert(type)),
-						JedisConverters.ONE_STATUS_CONVERTER);
+						Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 

@@ -36,7 +36,6 @@ import com.buession.redis.core.ClusterSlot;
 import com.buession.redis.core.RedisClusterServer;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.JedisConverters;
 import com.buession.redis.core.internal.convert.jedis.params.ClusterFailoverOptionConverter;
 import com.buession.redis.core.internal.convert.jedis.response.BumpEpochConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ClusterInfoConverter;

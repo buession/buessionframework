@@ -30,7 +30,6 @@ import com.buession.redis.core.BitCountOption;
 import com.buession.redis.core.BitOperation;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.JedisConverters;
 import com.buession.redis.core.internal.convert.jedis.params.BitCountOptionConverter;
 import com.buession.redis.core.internal.convert.jedis.params.BitOperationConverter;
 import redis.clients.jedis.args.BitOP;

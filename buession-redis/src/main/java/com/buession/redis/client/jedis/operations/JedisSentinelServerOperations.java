@@ -40,12 +40,15 @@ import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.jedis.params.AclLogConverter;
 import com.buession.redis.core.internal.convert.jedis.params.AclUserConverter;
 import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
 import com.buession.redis.core.internal.convert.jedis.response.InfoConverter;
+import com.buession.redis.core.internal.convert.jedis.response.ModuleConverter;
 import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.jedis.response.RedisServerTimeConverter;
+import com.buession.redis.core.internal.convert.jedis.response.SlowLogConverter;
+import com.buession.redis.core.internal.convert.response.RoleConverter;
 import com.buession.redis.core.internal.jedis.JedisFailoverParams;
 import redis.clients.jedis.JedisMonitor;
 import redis.clients.jedis.args.SaveMode;
@@ -186,7 +189,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	public List<AclLog> aclLog(){
 		final JedisSentinelCommand<List<AclLog>> command = JedisSentinelCommand.<List<AclLog>>create(
 						ProtocolCommand.ACL_LOG)
-				.general((cmd)->cmd.aclLog(), JedisConverters.LIST_ACL_LOG_RESULT_CONVERTER);
+				.general((cmd)->cmd.aclLog(), AclLogConverter.LIST_CONVERTER);
 		return execute(command);
 	}
 
@@ -195,7 +198,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("count", count);
 		final JedisSentinelCommand<List<AclLog>> command = JedisSentinelCommand.<List<AclLog>>create(
 						ProtocolCommand.ACL_LOG)
-				.general((cmd)->cmd.aclLog((int) count), JedisConverters.LIST_ACL_LOG_RESULT_CONVERTER);
+				.general((cmd)->cmd.aclLog((int) count), AclLogConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -433,7 +436,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	public List<Module> moduleList(){
 		final JedisSentinelCommand<List<Module>> command = JedisSentinelCommand.<List<Module>>create(
 						ProtocolCommand.MODULE_LIST)
-				.general((cmd)->cmd.moduleList(), JedisConverters.LIST_MODULE_RESULT_CONVERTER);
+				.general((cmd)->cmd.moduleList(), ModuleConverter.LIST_CONVERTER);
 		return execute(command);
 	}
 
@@ -514,7 +517,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	@Override
 	public List<Role> role(){
 		final JedisSentinelCommand<List<Role>> command = JedisSentinelCommand.<List<Role>>create(ProtocolCommand.ROLE)
-				.general((cmd)->cmd.role(), JedisConverters.LIST_ROLE_RESULT_CONVERTER);
+				.general((cmd)->cmd.role(), RoleConverter.LIST_CONVERTER);
 		return execute(command);
 	}
 
@@ -551,7 +554,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	public List<SlowLog> slowLogGet(){
 		final JedisSentinelCommand<List<SlowLog>> command = JedisSentinelCommand.<List<SlowLog>>create(
 						ProtocolCommand.SLOWLOG_GET)
-				.general((cmd)->cmd.slowlogGet(), JedisConverters.LIST_SLOW_LOG_RESULT_CONVERTER);
+				.general((cmd)->cmd.slowlogGet(), SlowLogConverter.LIST_CONVERTER);
 		return execute(command);
 	}
 
@@ -560,7 +563,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("count", count);
 		final JedisSentinelCommand<List<SlowLog>> command = JedisSentinelCommand.<List<SlowLog>>create(
 						ProtocolCommand.SLOWLOG_GET)
-				.general((cmd)->cmd.slowlogGet(count), JedisConverters.LIST_SLOW_LOG_RESULT_CONVERTER);
+				.general((cmd)->cmd.slowlogGet(count), SlowLogConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 

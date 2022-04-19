@@ -29,7 +29,7 @@ import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.JedisConverters;
+import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
 
 /**
@@ -48,9 +48,9 @@ public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLog
 	public Status pfAdd(final String key, final String... elements){
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", elements);
 		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.PFADD)
-				.general((cmd)->cmd.pfadd(key, elements), JedisConverters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pfadd(key, elements), JedisConverters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pfadd(key, elements), JedisConverters.ONE_STATUS_CONVERTER);
+				.general((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
+				.transaction((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -58,9 +58,9 @@ public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLog
 	public Status pfAdd(final byte[] key, final byte[]... elements){
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", elements);
 		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.PFADD)
-				.general((cmd)->cmd.pfadd(key, elements), JedisConverters.ONE_STATUS_CONVERTER)
-				.pipeline((cmd)->cmd.pfadd(key, elements), JedisConverters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pfadd(key, elements), JedisConverters.ONE_STATUS_CONVERTER);
+				.general((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
+				.pipeline((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
+				.transaction((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
