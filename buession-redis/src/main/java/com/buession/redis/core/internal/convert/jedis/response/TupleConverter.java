@@ -40,10 +40,10 @@ public final class TupleConverter implements Converter<redis.clients.jedis.resps
 	public final static TupleConverter INSTANCE = new TupleConverter();
 
 	public final static SetConverter<redis.clients.jedis.resps.Tuple, Tuple> SET_CONVERTER = new SetConverter<>(
-			TupleConverter.INSTANCE);
+			INSTANCE);
 
 	public final static ListConverter<redis.clients.jedis.resps.Tuple, Tuple> LIST_CONVERTER = new ListConverter<>(
-			TupleConverter.INSTANCE);
+			INSTANCE);
 
 	@Override
 	public Tuple convert(final redis.clients.jedis.resps.Tuple source){

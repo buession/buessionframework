@@ -42,27 +42,29 @@ public final class GeoRadiusArgumentConverter implements Converter<GeoCommands.G
 	public GeoRadiusParam convert(final GeoCommands.GeoRadiusArgument source){
 		final GeoRadiusParam geoRadiusParam = new GeoRadiusParam();
 
-		if(source.isWithCoord()){
+		if(Boolean.TRUE.equals(source.isWithCoord())){
 			geoRadiusParam.withCoord();
 		}
 
-		if(source.isWithDist()){
+		if(Boolean.TRUE.equals(source.isWithDist())){
 			geoRadiusParam.withDist();
 		}
 
-		if(source.isWithHash()){
+		if(Boolean.TRUE.equals(source.isWithHash())){
 			geoRadiusParam.withHash();
 		}
 
-		switch(source.getOrder()){
-			case ASC:
-				geoRadiusParam.sortAscending();
-				break;
-			case DESC:
-				geoRadiusParam.sortDescending();
-				break;
-			default:
-				break;
+		if(source.getOrder() != null){
+			switch(source.getOrder()){
+				case ASC:
+					geoRadiusParam.sortAscending();
+					break;
+				case DESC:
+					geoRadiusParam.sortDescending();
+					break;
+				default:
+					break;
+			}
 		}
 
 		if(source.getCount() != null){

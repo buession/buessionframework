@@ -1639,7 +1639,7 @@ public interface KeyCommands extends RedisCommands {
 		 *
 		 * @return 使用对字符串进行排序
 		 */
-		public Boolean getAlpha(){
+		public Boolean isAlpha(){
 			return alpha;
 		}
 

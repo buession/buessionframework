@@ -34,6 +34,8 @@ import redis.clients.jedis.params.XClaimParams;
  */
 public final class XClaimArgumentConverter implements Converter<StreamCommands.XClaimArgument, XClaimParams> {
 
+	public final static XClaimArgumentConverter INSTANCE = new XClaimArgumentConverter();
+
 	@Override
 	public XClaimParams convert(final StreamCommands.XClaimArgument source){
 		final XClaimParams xClaimParams = new XClaimParams();
@@ -50,7 +52,7 @@ public final class XClaimArgumentConverter implements Converter<StreamCommands.X
 			xClaimParams.retryCount(source.getRetryCount());
 		}
 
-		if(source.getForce() == true){
+		if(Boolean.TRUE.equals(source.isForce())){
 			xClaimParams.force();
 		}
 

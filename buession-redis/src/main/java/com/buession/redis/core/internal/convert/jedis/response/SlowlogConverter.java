@@ -22,47 +22,35 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.StringCommands;
-import redis.clients.jedis.params.GetExParams;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.Client;
+import com.buession.redis.core.SlowLog;
+import redis.clients.jedis.resps.Slowlog;
 
 /**
- * {@link StringCommands.GetExArgument} 转换为 jedis {@link GetExParams}
+ * jedis {@link Slowlog} 转换为 {@link SlowLog}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class GetExArgumentConverter implements Converter<StringCommands.GetExArgument, GetExParams> {
+public final class SlowlogConverter implements Converter<Slowlog, SlowLog> {
 
-	public final static GetExArgumentConverter INSTANCE = new GetExArgumentConverter();
+	public final static SlowlogConverter INSTANCE = new SlowlogConverter();
+
+	public final static ListConverter<Slowlog, SlowLog> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
-	public GetExParams convert(final StringCommands.GetExArgument source){
-		final GetExParams getExParams = new GetExParams();
+	public SlowLog convert(final Slowlog source){
+		final Client client = new Client();
 
-		if(source.getEx() != null){
-			getExParams.ex(source.getEx());
-		}
+		client.setHost(source.getClientIpPort().getHost());
+		client.setPort(source.getClientIpPort().getPort());
 
-		if(source.getPx() != null){
-			getExParams.px(source.getPx());
-		}
-
-		if(source.getExAt() != null){
-			getExParams.exAt(source.getEx());
-		}
-
-		if(source.getPxAt() != null){
-			getExParams.pxAt(source.getPx());
-		}
-
-		if(Boolean.TRUE.equals(source.isPersist())){
-			getExParams.persist();
-		}
-
-		return getExParams;
+		return new SlowLog(source.getId(), source.getTimeStamp(), source.getExecutionTime(), source.getArgs(),
+				client, source.getClientName());
 	}
 
 }

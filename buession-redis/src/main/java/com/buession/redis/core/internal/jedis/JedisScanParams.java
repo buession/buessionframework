@@ -45,33 +45,33 @@ public final class JedisScanParams extends ScanParams {
 		match(pattern);
 	}
 
-	public JedisScanParams(final Integer count){
+	public JedisScanParams(final int count){
 		super();
 		count(count);
 	}
 
-	public JedisScanParams(final String pattern, final Integer count){
-		super();
-		match(pattern);
-		count(count);
-	}
-
-	public JedisScanParams(final byte[] pattern, final Integer count){
+	public JedisScanParams(final String pattern, final int count){
 		super();
 		match(pattern);
 		count(count);
 	}
 
-	public JedisScanParams(final Long count){
-		this(count.intValue());
+	public JedisScanParams(final byte[] pattern, final int count){
+		super();
+		match(pattern);
+		count(count);
 	}
 
-	public JedisScanParams(final String pattern, final Long count){
-		this(pattern, count.intValue());
+	public JedisScanParams(final long count){
+		this((int) count);
 	}
 
-	public JedisScanParams(final byte[] pattern, final Long count){
-		this(pattern, count.intValue());
+	public JedisScanParams(final String pattern, final long count){
+		this(pattern, (int) count);
+	}
+
+	public JedisScanParams(final byte[] pattern, final long count){
+		this(pattern, (int) count);
 	}
 
 }

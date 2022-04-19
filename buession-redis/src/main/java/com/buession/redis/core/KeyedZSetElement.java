@@ -24,7 +24,6 @@
  */
 package com.buession.redis.core;
 
-import com.buession.core.utils.comparator.ByteArrayComparable;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.Arrays;
@@ -76,24 +75,6 @@ public class KeyedZSetElement extends Tuple {
 		}
 
 		return false;
-	}
-
-	public int compareTo(KeyedZSetElement that){
-		int compScore = Double.compare(this.getScore(), that.getScore());
-
-		if(compScore != 0){
-			return compScore;
-		}else{
-			ByteArrayComparable comparable = new ByteArrayComparable(this.getBinaryElement());
-
-			compScore = comparable.compareTo(that.getBinaryElement());
-			if(compScore != 0){
-				return compScore;
-			}else{
-				comparable = new ByteArrayComparable(this.key);
-				return comparable.compareTo(that.key);
-			}
-		}
 	}
 
 	@Override

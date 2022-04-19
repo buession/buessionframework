@@ -22,47 +22,25 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.StringCommands;
-import redis.clients.jedis.params.GetExParams;
+import com.buession.redis.core.AclUser;
+import redis.clients.jedis.resps.AccessControlUser;
 
 /**
- * {@link StringCommands.GetExArgument} 转换为 jedis {@link GetExParams}
+ * jedis {@link AccessControlUser} 转换为 {@link AclUser}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class GetExArgumentConverter implements Converter<StringCommands.GetExArgument, GetExParams> {
+public final class AccessControlUserConverter implements Converter<AccessControlUser, AclUser> {
 
-	public final static GetExArgumentConverter INSTANCE = new GetExArgumentConverter();
+	public final static AccessControlUserConverter INSTANCE = new AccessControlUserConverter();
 
 	@Override
-	public GetExParams convert(final StringCommands.GetExArgument source){
-		final GetExParams getExParams = new GetExParams();
-
-		if(source.getEx() != null){
-			getExParams.ex(source.getEx());
-		}
-
-		if(source.getPx() != null){
-			getExParams.px(source.getPx());
-		}
-
-		if(source.getExAt() != null){
-			getExParams.exAt(source.getEx());
-		}
-
-		if(source.getPxAt() != null){
-			getExParams.pxAt(source.getPx());
-		}
-
-		if(Boolean.TRUE.equals(source.isPersist())){
-			getExParams.persist();
-		}
-
-		return getExParams;
+	public AclUser convert(final AccessControlUser source){
+		return new AclUser(source.getFlags(), source.getKeys(), source.getPassword(), source.getCommands());
 	}
 
 }

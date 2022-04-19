@@ -24,8 +24,11 @@
  */
 package com.buession.redis.core.command;
 
+import com.buession.lang.Status;
+import com.buession.redis.core.StreamConsumer;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.StreamGroup;
 
 import java.util.List;
 import java.util.Map;
@@ -346,7 +349,7 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<StreamEntry> xClaim(final String key, final String group, final String consumerName, final int minIdleTime,
-							 final String... ids);
+							 final StreamEntryId... ids);
 
 	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
@@ -368,7 +371,389 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntry} 列表
 	 */
 	List<StreamEntry> xClaim(final byte[] key, final byte[] group, final byte[] consumerName, final int minIdleTime,
-							 final byte[]... ids);
+							 final StreamEntryId... ids);
+
+	/**
+	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
+	 * so that the new owner is the consumer specified as the command argument
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xclaim/" target="_blank">https://redis.io/commands/xclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param group
+	 * 		Group
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param ids
+	 * 		一个或多个 ID
+	 * @param xClaimArgument
+	 *        {@link XClaimArgument}
+	 *
+	 * @return {@link StreamEntry} 列表
+	 */
+	List<StreamEntry> xClaim(final String key, final String group, final String consumerName, final int minIdleTime,
+							 final StreamEntryId[] ids, final XClaimArgument xClaimArgument);
+
+	/**
+	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
+	 * so that the new owner is the consumer specified as the command argument
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param group
+	 * 		Group
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param ids
+	 * 		一个或多个 ID
+	 * @param xClaimArgument
+	 *        {@link XClaimArgument}
+	 *
+	 * @return {@link StreamEntry} 列表
+	 */
+	List<StreamEntry> xClaim(final byte[] key, final byte[] group, final byte[] consumerName, final int minIdleTime,
+							 final StreamEntryId[] ids, final XClaimArgument xClaimArgument);
+
+	/**
+	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
+	 * so that the new owner is the consumer specified as the command argument
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xclaim/" target="_blank">https://redis.io/commands/xclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param group
+	 * 		Group
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param ids
+	 * 		一个或多个 ID
+	 *
+	 * @return {@link StreamEntryId} 列表
+	 */
+	List<StreamEntryId> xClaimJustId(final String key, final String group, final String consumerName,
+									 final int minIdleTime, final StreamEntryId... ids);
+
+	/**
+	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
+	 * so that the new owner is the consumer specified as the command argument
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xclaim/" target="_blank">https://redis.io/commands/xclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param group
+	 * 		Group
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param ids
+	 * 		一个或多个 ID
+	 *
+	 * @return {@link StreamEntryId} 列表
+	 */
+	List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] group, final byte[] consumerName,
+									 final int minIdleTime, final StreamEntryId... ids);
+
+	/**
+	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
+	 * so that the new owner is the consumer specified as the command argument
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xclaim/" target="_blank">https://redis.io/commands/xclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param group
+	 * 		Group
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param ids
+	 * 		一个或多个 ID
+	 * @param xClaimArgument
+	 *        {@link XClaimArgument}
+	 *
+	 * @return {@link StreamEntryId} 列表
+	 */
+	List<StreamEntryId> xClaimJustId(final String key, final String group, final String consumerName,
+									 final int minIdleTime, final StreamEntryId[] ids,
+									 final XClaimArgument xClaimArgument);
+
+	/**
+	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
+	 * so that the new owner is the consumer specified as the command argument
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xclaim/" target="_blank">https://redis.io/commands/xclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param group
+	 * 		Group
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param ids
+	 * 		一个或多个 ID
+	 * @param xClaimArgument
+	 *        {@link XClaimArgument}
+	 *
+	 * @return {@link StreamEntryId} 列表
+	 */
+	List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] group, final byte[] consumerName,
+									 final int minIdleTime, final StreamEntryId[] ids,
+									 final XClaimArgument xClaimArgument);
+
+	/**
+	 * Removes the specified entries from a stream, and returns the number of entries deleted
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xdel/" target="_blank">https://redis.io/commands/xdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ids
+	 * 		一个或多个 ID
+	 *
+	 * @return The number of entries actually deleted
+	 */
+	long xDel(final String key, final StreamEntryId... ids);
+
+	/**
+	 * Removes the specified entries from a stream, and returns the number of entries deleted
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xdel/" target="_blank">https://redis.io/commands/xdel/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param ids
+	 * 		一个或多个 ID
+	 *
+	 * @return The number of entries actually deleted
+	 */
+	long xDel(final byte[] key, final StreamEntryId... ids);
+
+	/**
+	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-create/" target="_blank">https://redis.io/commands/xgroup-create/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 * @param makeStream
+	 * 		Can use the optional MKSTREAM subcommand as the last argument after the id to automatically create the stream (with length of 0)
+	 *
+	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status xGroupCreate(final String key, final String groupName, final StreamEntryId id, final boolean makeStream);
+
+	/**
+	 * This command creates a new consumer group uniquely identified by groupname for the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-create/" target="_blank">https://redis.io/commands/xgroup-create/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 * @param makeStream
+	 * 		Can use the optional MKSTREAM subcommand as the last argument after the id to automatically create the stream (with length of 0)
+	 *
+	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id, final boolean makeStream);
+
+	/**
+	 * Create a consumer named consumername in the consumer group groupname of the stream that's stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-createconsumer/" target="_blank">https://redis.io/commands/xgroup-createconsumer/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 *
+	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status xGroupCreateConsumer(final String key, final String groupName, final String consumerName);
+
+	/**
+	 * Create a consumer named consumername in the consumer group groupname of the stream that's stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-createconsumer/" target="_blank">https://redis.io/commands/xgroup-createconsumer/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 *
+	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status xGroupCreateConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName);
+
+	/**
+	 * The XGROUP DELCONSUMER command deletes a consumer from the consumer group
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-delconsumer/" target="_blank">https://redis.io/commands/xgroup-delconsumer/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 *
+	 * @return 删除数量
+	 */
+	long xGroupDelConsumer(final String key, final String groupName, final String consumerName);
+
+	/**
+	 * The XGROUP DELCONSUMER command deletes a consumer from the consumer group
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-delconsumer/" target="_blank">https://redis.io/commands/xgroup-delconsumer/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 *
+	 * @return 删除数量
+	 */
+	long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName);
+
+	/**
+	 * The XGROUP DESTROY command completely destroys a consumer group
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-destroy/" target="_blank">https://redis.io/commands/xgroup-destroy/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 *
+	 * @return 销毁成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status xGroupDestroy(final String key, final String groupName);
+
+	/**
+	 * The XGROUP DESTROY command completely destroys a consumer group
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-destroy/" target="_blank">https://redis.io/commands/xgroup-destroy/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 *
+	 * @return 销毁成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status xGroupDestroy(final byte[] key, final byte[] groupName);
+
+	/**
+	 * Normally, a consumer group's last delivered ID is set when the group is created with XGROUP CREATE
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-setid/" target="_blank">https://redis.io/commands/xgroup-setid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 *
+	 * @return 销毁成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status xGroupSetId(final String key, final String groupName, final StreamEntryId id);
+
+	/**
+	 * Normally, a consumer group's last delivered ID is set when the group is created with XGROUP CREATE
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xgroup-setid/" target="_blank">https://redis.io/commands/xgroup-setid/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param id
+	 * 		ID
+	 *
+	 * @return 销毁成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
+	 */
+	Status xGroupSetId(final byte[] key, final byte[] groupName, final StreamEntryId id);
+
+	/**
+	 * This command returns the list of consumers that belong to the groupname consumer group of the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xinfo-consumers/" target="_blank">https://redis.io/commands/xinfo-consumers/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 *
+	 * @return {@link StreamConsumer} 列表
+	 */
+	List<StreamConsumer> xInfoConsumers(final String key, final String groupName);
+
+	/**
+	 * This command returns the list of consumers that belong to the groupname consumer group of the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xinfo-consumers/" target="_blank">https://redis.io/commands/xinfo-consumers/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 *
+	 * @return {@link StreamConsumer} 列表
+	 */
+	List<StreamConsumer> xInfoConsumers(final byte[] key, final byte[] groupName);
+
+	/**
+	 * This command returns the list of all consumers groups of the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xinfo-groups/" target="_blank">https://redis.io/commands/xinfo-groups/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return {@link StreamGroup} 列表
+	 */
+	List<StreamGroup> xInfoGroups(final String key);
+
+	/**
+	 * This command returns the list of all consumers groups of the stream stored at key
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xinfo-groups/" target="_blank">https://redis.io/commands/xinfo-groups/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 *
+	 * @return {@link StreamGroup} 列表
+	 */
+	List<StreamGroup> xInfoGroups(final byte[] key);
 
 	class XAddArgument {
 
@@ -388,15 +773,15 @@ public interface StreamCommands extends RedisCommands {
 			return maxLen;
 		}
 
-		public Boolean getApproximateTrimming(){
+		public Boolean isApproximateTrimming(){
 			return approximateTrimming;
 		}
 
-		public Boolean getExactTrimming(){
+		public Boolean isExactTrimming(){
 			return exactTrimming;
 		}
 
-		public Boolean getNoMkStream(){
+		public Boolean isNoMkStream(){
 			return noMkStream;
 		}
 
@@ -491,7 +876,7 @@ public interface StreamCommands extends RedisCommands {
 			return retryCount;
 		}
 
-		public Boolean getForce(){
+		public Boolean isForce(){
 			return force;
 		}
 

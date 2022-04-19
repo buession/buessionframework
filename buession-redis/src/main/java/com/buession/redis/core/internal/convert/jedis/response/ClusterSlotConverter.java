@@ -38,8 +38,7 @@ public final class ClusterSlotConverter implements Converter<Object, ClusterSlot
 
 	public final static ClusterSlotConverter INSTANCE = new ClusterSlotConverter();
 
-	public final static ListConverter<Object, ClusterSlot> LIST_CONVERTER = new ListConverter<>(
-			ClusterSlotConverter.INSTANCE);
+	public final static ListConverter<Object, ClusterSlot> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
 	public ClusterSlot convert(final Object source){

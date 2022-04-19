@@ -224,6 +224,36 @@ public interface SetCommands extends RedisCommands {
 	boolean sIsMember(final byte[] key, final byte[] member);
 
 	/**
+	 * 检查给定的 member 是不是特定集合的成员
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/smismember.html" target="_blank">https://www.redis.com.cn/commands/smismember.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		成员列表
+	 *
+	 * @return 命令中member 出现的顺序，返回是否是集合成员的判断；
+	 * 如果 member 是集合成员返回 true，如果member 不是集合成员返回 false
+	 */
+	List<Boolean> smIsMember(final String key, final String... members);
+
+	/**
+	 * 检查给定的 member 是不是特定集合的成员
+	 *
+	 * <p>详情说明 <a href="https://www.redis.com.cn/commands/smismember.html" target="_blank">https://www.redis.com.cn/commands/smismember.html</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param members
+	 * 		成员列表
+	 *
+	 * @return 命令中member 出现的顺序，返回是否是集合成员的判断；
+	 * 如果 member 是集合成员返回 true，如果member 不是集合成员返回 false
+	 */
+	List<Boolean> smIsMember(final byte[] key, final byte[]... members);
+
+	/**
 	 * 获取集合 key 中的所有成员
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/smembers.html" target="_blank">http://redisdoc.com/set/smembers.html</a></p>

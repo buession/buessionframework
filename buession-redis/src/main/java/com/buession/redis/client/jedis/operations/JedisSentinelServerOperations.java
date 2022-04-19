@@ -40,15 +40,15 @@ import com.buession.redis.core.Role;
 import com.buession.redis.core.SlowLog;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.core.internal.convert.jedis.params.AclLogConverter;
-import com.buession.redis.core.internal.convert.jedis.params.AclUserConverter;
+import com.buession.redis.core.internal.convert.jedis.response.AccessControlLogEntryConverter;
+import com.buession.redis.core.internal.convert.jedis.response.AccessControlUserConverter;
 import com.buession.redis.core.internal.convert.jedis.params.FlushModeConverter;
 import com.buession.redis.core.internal.convert.jedis.response.InfoConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ModuleConverter;
-import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.jedis.response.RedisServerTimeConverter;
-import com.buession.redis.core.internal.convert.jedis.response.SlowLogConverter;
-import com.buession.redis.core.internal.convert.response.RoleConverter;
+import com.buession.redis.core.internal.convert.jedis.response.SlowlogConverter;
+import com.buession.redis.core.internal.convert.jedis.response.RoleConverter;
 import com.buession.redis.core.internal.jedis.JedisFailoverParams;
 import redis.clients.jedis.JedisMonitor;
 import redis.clients.jedis.args.SaveMode;
@@ -110,7 +110,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	public AclUser aclGetUser(final String username){
 		final CommandArguments args = CommandArguments.create("username", username);
 		final JedisSentinelCommand<AclUser> command = JedisSentinelCommand.<AclUser>create(ProtocolCommand.ACL_GETUSER)
-				.general((cmd)->cmd.aclGetUser(username), AclUserConverter.INSTANCE);
+				.general((cmd)->cmd.aclGetUser(username), AccessControlUserConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -118,7 +118,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	public AclUser aclGetUser(final byte[] username){
 		final CommandArguments args = CommandArguments.create("username", username);
 		final JedisSentinelCommand<AclUser> command = JedisSentinelCommand.<AclUser>create(ProtocolCommand.ACL_GETUSER)
-				.general((cmd)->cmd.aclGetUser(username), AclUserConverter.INSTANCE);
+				.general((cmd)->cmd.aclGetUser(username), AccessControlUserConverter.INSTANCE);
 		return execute(command, args);
 	}
 
@@ -189,7 +189,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	public List<AclLog> aclLog(){
 		final JedisSentinelCommand<List<AclLog>> command = JedisSentinelCommand.<List<AclLog>>create(
 						ProtocolCommand.ACL_LOG)
-				.general((cmd)->cmd.aclLog(), AclLogConverter.LIST_CONVERTER);
+				.general((cmd)->cmd.aclLog(), AccessControlLogEntryConverter.LIST_CONVERTER);
 		return execute(command);
 	}
 
@@ -198,7 +198,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("count", count);
 		final JedisSentinelCommand<List<AclLog>> command = JedisSentinelCommand.<List<AclLog>>create(
 						ProtocolCommand.ACL_LOG)
-				.general((cmd)->cmd.aclLog((int) count), AclLogConverter.LIST_CONVERTER);
+				.general((cmd)->cmd.aclLog((int) count), AccessControlLogEntryConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 
@@ -554,7 +554,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 	public List<SlowLog> slowLogGet(){
 		final JedisSentinelCommand<List<SlowLog>> command = JedisSentinelCommand.<List<SlowLog>>create(
 						ProtocolCommand.SLOWLOG_GET)
-				.general((cmd)->cmd.slowlogGet(), SlowLogConverter.LIST_CONVERTER);
+				.general((cmd)->cmd.slowlogGet(), SlowlogConverter.LIST_CONVERTER);
 		return execute(command);
 	}
 
@@ -563,7 +563,7 @@ public final class JedisSentinelServerOperations extends AbstractServerOperation
 		final CommandArguments args = CommandArguments.create("count", count);
 		final JedisSentinelCommand<List<SlowLog>> command = JedisSentinelCommand.<List<SlowLog>>create(
 						ProtocolCommand.SLOWLOG_GET)
-				.general((cmd)->cmd.slowlogGet(count), SlowLogConverter.LIST_CONVERTER);
+				.general((cmd)->cmd.slowlogGet(count), SlowlogConverter.LIST_CONVERTER);
 		return execute(command, args);
 	}
 

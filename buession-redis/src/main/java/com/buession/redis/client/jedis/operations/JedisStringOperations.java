@@ -32,7 +32,7 @@ import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.GetExArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.params.SetArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import redis.clients.jedis.params.GetExParams;
 import redis.clients.jedis.params.SetParams;
 

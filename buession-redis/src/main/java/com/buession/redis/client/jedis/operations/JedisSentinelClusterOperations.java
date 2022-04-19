@@ -44,7 +44,7 @@ import com.buession.redis.core.internal.convert.jedis.response.ClusterReplicasCo
 import com.buession.redis.core.internal.convert.jedis.response.ClusterResetOptionConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ClusterSlaveConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ClusterSlotConverter;
-import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 
 import java.util.List;
 

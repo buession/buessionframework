@@ -34,7 +34,7 @@ import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.convert.jedis.params.DirectionConverter;
 import com.buession.redis.core.internal.convert.jedis.params.LPosArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.params.ListPositionConverter;
-import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import redis.clients.jedis.args.ListDirection;
 import redis.clients.jedis.params.LPosParams;
 

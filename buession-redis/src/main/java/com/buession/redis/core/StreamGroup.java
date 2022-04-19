@@ -22,47 +22,70 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.StringCommands;
-import redis.clients.jedis.params.GetExParams;
+import java.io.Serializable;
+import java.util.Map;
+import java.util.StringJoiner;
 
 /**
- * {@link StringCommands.GetExArgument} 转换为 jedis {@link GetExParams}
+ * Stream Group
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class GetExArgumentConverter implements Converter<StringCommands.GetExArgument, GetExParams> {
+public class StreamGroup implements Serializable {
 
-	public final static GetExArgumentConverter INSTANCE = new GetExArgumentConverter();
+	private final static long serialVersionUID = -3992031318445262909L;
 
-	@Override
-	public GetExParams convert(final StringCommands.GetExArgument source){
-		final GetExParams getExParams = new GetExParams();
+	private final String name;
 
-		if(source.getEx() != null){
-			getExParams.ex(source.getEx());
-		}
+	private final long consumers;
 
-		if(source.getPx() != null){
-			getExParams.px(source.getPx());
-		}
+	private final long pending;
 
-		if(source.getExAt() != null){
-			getExParams.exAt(source.getEx());
-		}
+	private final StreamEntryId lastDeliveredId;
 
-		if(source.getPxAt() != null){
-			getExParams.pxAt(source.getPx());
-		}
+	private final Map<String, Object> infos;
 
-		if(Boolean.TRUE.equals(source.isPersist())){
-			getExParams.persist();
-		}
-
-		return getExParams;
+	public StreamGroup(final String name, final long consumers, final long pending, final StreamEntryId lastDeliveredId,
+					   final Map<String, Object> infos){
+		this.name = name;
+		this.consumers = consumers;
+		this.pending = pending;
+		this.lastDeliveredId = lastDeliveredId;
+		this.infos = infos;
 	}
 
+	public String getName(){
+		return name;
+	}
+
+	public long getConsumers(){
+		return consumers;
+	}
+
+	public long getPending(){
+		return pending;
+	}
+
+	public StreamEntryId getLastDeliveredId(){
+		return lastDeliveredId;
+	}
+
+	public Map<String, Object> getInfos(){
+		return infos;
+	}
+
+	@Override
+	public String toString(){
+		return new StringJoiner(", ", "[", "]")
+				.add("name='" + name + "'")
+				.add("consumers=" + consumers)
+				.add("pending=" + pending)
+				.add("lastDeliveredId=" + lastDeliveredId)
+				.add("infos=" + infos)
+				.toString();
+	}
+	
 }

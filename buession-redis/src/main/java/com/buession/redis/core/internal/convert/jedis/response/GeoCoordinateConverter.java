@@ -22,47 +22,28 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.StringCommands;
-import redis.clients.jedis.params.GetExParams;
+import com.buession.core.converter.ListConverter;
+import com.buession.lang.Geo;
+import redis.clients.jedis.GeoCoordinate;
 
 /**
- * {@link StringCommands.GetExArgument} 转换为 jedis {@link GetExParams}
+ * jedis {@link GeoCoordinate} 转换为 {@link Geo}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class GetExArgumentConverter implements Converter<StringCommands.GetExArgument, GetExParams> {
+public final class GeoCoordinateConverter implements Converter<GeoCoordinate, Geo> {
 
-	public final static GetExArgumentConverter INSTANCE = new GetExArgumentConverter();
+	public final static GeoCoordinateConverter INSTANCE = new GeoCoordinateConverter();
+
+	public final static ListConverter<GeoCoordinate, Geo> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
-	public GetExParams convert(final StringCommands.GetExArgument source){
-		final GetExParams getExParams = new GetExParams();
-
-		if(source.getEx() != null){
-			getExParams.ex(source.getEx());
-		}
-
-		if(source.getPx() != null){
-			getExParams.px(source.getPx());
-		}
-
-		if(source.getExAt() != null){
-			getExParams.exAt(source.getEx());
-		}
-
-		if(source.getPxAt() != null){
-			getExParams.pxAt(source.getPx());
-		}
-
-		if(Boolean.TRUE.equals(source.isPersist())){
-			getExParams.persist();
-		}
-
-		return getExParams;
+	public Geo convert(final GeoCoordinate source){
+		return new Geo(source.getLongitude(), source.getLatitude());
 	}
 
 }

@@ -67,7 +67,7 @@ public final class SetArgumentConverter implements Converter<StringCommands.SetA
 			setParams.xx();
 		}
 
-		if(Objects.equals(source.getKeepTtl(), Boolean.TRUE)){
+		if(Boolean.TRUE.equals(source.isKeepTtl())){
 			setParams.keepttl();
 		}
 

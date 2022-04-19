@@ -703,7 +703,7 @@ public interface StringCommands extends RedisCommands {
 		 *
 		 * @return the time to live associated with the key
 		 */
-		public Boolean getKeepTtl(){
+		public Boolean isKeepTtl(){
 			return keepTtl;
 		}
 
@@ -885,7 +885,7 @@ public interface StringCommands extends RedisCommands {
 		 *
 		 * @return 设置键是否持久化
 		 */
-		public Boolean getPersist(){
+		public Boolean isPersist(){
 			return persist;
 		}
 

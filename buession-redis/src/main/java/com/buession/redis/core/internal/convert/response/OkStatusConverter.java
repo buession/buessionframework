@@ -22,7 +22,7 @@
  * | Copyright @ 2013-2021 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.utils.StatusUtils;

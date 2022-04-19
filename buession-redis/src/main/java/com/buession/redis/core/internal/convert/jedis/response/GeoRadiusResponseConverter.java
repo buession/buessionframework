@@ -22,25 +22,29 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.AclUser;
-import redis.clients.jedis.resps.AccessControlUser;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.GeoRadius;
+import redis.clients.jedis.resps.GeoRadiusResponse;
 
 /**
- * {@link AclUser} 转换为 jedis {@link AccessControlUser}
+ * jedis {@link GeoRadiusResponse} 转换为 {@link GeoRadius}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class AclUserConverter implements Converter<AccessControlUser, AclUser> {
+public class GeoRadiusResponseConverter implements Converter<GeoRadiusResponse, GeoRadius> {
 
-	public final static AclUserConverter INSTANCE = new AclUserConverter();
+	public final static GeoRadiusResponseConverter INSTANCE = new GeoRadiusResponseConverter();
+
+	public final static ListConverter<GeoRadiusResponse, GeoRadius> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
-	public AclUser convert(final AccessControlUser source){
-		return new AclUser(source.getFlags(), source.getKeys(), source.getPassword(), source.getCommands());
+	public GeoRadius convert(final GeoRadiusResponse source){
+		return new GeoRadius(source.getMember(), source.getDistance(),
+				GeoCoordinateConverter.INSTANCE.convert(source.getCoordinate()));
 	}
 
 }

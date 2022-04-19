@@ -22,36 +22,28 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.jedis.response;
 
-import com.buession.beans.BeanUtils;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.redis.core.AclLog;
-import com.buession.redis.core.Client;
+import com.buession.redis.core.Role;
 import redis.clients.jedis.resps.AccessControlLogEntry;
 
 /**
- * {@link AclLog} 转换为 jedis {@link AccessControlLogEntry}
+ * jedis {@link AccessControlLogEntry} 转换为 {@link Role}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class AclLogConverter implements Converter<AccessControlLogEntry, AclLog> {
+public final class RoleConverter implements Converter<Object, Role> {
 
-	public final static AclLogConverter INSTANCE = new AclLogConverter();
+	public final static RoleConverter INSTANCE = new RoleConverter();
 
-	public final static ListConverter<AccessControlLogEntry, AclLog> LIST_CONVERTER = new ListConverter<>(
-			AclLogConverter.INSTANCE);
+	public final static ListConverter<Object, Role> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
-	public AclLog convert(final AccessControlLogEntry source){
-		final Client client = new Client();
-
-		BeanUtils.populate(client, source.getClientInfo());
-
-		return new AclLog(source.getCount(), source.getReason(), source.getContext(), source.getObject(),
-				source.getUsername(), source.getAgeSeconds(), client, source.getlogEntry());
+	public Role convert(final Object source){
+		return null;
 	}
 
 }

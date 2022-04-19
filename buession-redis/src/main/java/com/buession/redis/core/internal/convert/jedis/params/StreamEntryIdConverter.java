@@ -22,30 +22,28 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core.internal.convert.jedis.params;
 
+import com.buession.core.converter.ArrayConverter;
 import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.redis.core.GeoRadius;
-import redis.clients.jedis.resps.GeoRadiusResponse;
+import com.buession.redis.core.StreamEntryId;
+import redis.clients.jedis.StreamEntryID;
 
 /**
- * jedis {@link GeoRadiusResponse} 转换为 {@link GeoRadius}
+ * {@link StreamEntryId} 转换为 jedis {@link StreamEntryID}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class GeoRadiusConverter implements Converter<GeoRadiusResponse, GeoRadius> {
+public final class StreamEntryIdConverter implements Converter<StreamEntryId, StreamEntryID> {
 
-	public final static GeoRadiusConverter INSTANCE = new GeoRadiusConverter();
+	public final static StreamEntryIdConverter INSTANCE = new StreamEntryIdConverter();
 
-	public final static ListConverter<GeoRadiusResponse, GeoRadius> LIST_CONVERTER = new ListConverter<>(
-			GeoRadiusConverter.INSTANCE);
+	public final static ArrayConverter<StreamEntryId, StreamEntryID> ARRAY_CONVERTER = new ArrayConverter<>(INSTANCE);
 
 	@Override
-	public GeoRadius convert(final GeoRadiusResponse source){
-		return new GeoRadius(source.getMember(), source.getDistance(),
-				GeoConverter.INSTANCE.convert(source.getCoordinate()));
+	public StreamEntryID convert(final StreamEntryId source){
+		return new StreamEntryID(source.getTime(), source.getSequence());
 	}
 
 }

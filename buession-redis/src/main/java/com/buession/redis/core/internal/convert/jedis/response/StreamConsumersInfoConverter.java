@@ -22,47 +22,29 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.StringCommands;
-import redis.clients.jedis.params.GetExParams;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.StreamConsumer;
+import redis.clients.jedis.resps.StreamConsumersInfo;
 
 /**
- * {@link StringCommands.GetExArgument} 转换为 jedis {@link GetExParams}
+ * jedis {@link StreamConsumersInfo} 转换为 {@link StreamConsumer}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class GetExArgumentConverter implements Converter<StringCommands.GetExArgument, GetExParams> {
+public class StreamConsumersInfoConverter implements Converter<StreamConsumersInfo, StreamConsumer> {
 
-	public final static GetExArgumentConverter INSTANCE = new GetExArgumentConverter();
+	public final static StreamConsumersInfoConverter INSTANCE = new StreamConsumersInfoConverter();
+
+	public final static ListConverter<StreamConsumersInfo, StreamConsumer> LIST_CONVERTER = new ListConverter<>(
+			INSTANCE);
 
 	@Override
-	public GetExParams convert(final StringCommands.GetExArgument source){
-		final GetExParams getExParams = new GetExParams();
-
-		if(source.getEx() != null){
-			getExParams.ex(source.getEx());
-		}
-
-		if(source.getPx() != null){
-			getExParams.px(source.getPx());
-		}
-
-		if(source.getExAt() != null){
-			getExParams.exAt(source.getEx());
-		}
-
-		if(source.getPxAt() != null){
-			getExParams.pxAt(source.getPx());
-		}
-
-		if(Boolean.TRUE.equals(source.isPersist())){
-			getExParams.persist();
-		}
-
-		return getExParams;
+	public StreamConsumer convert(final StreamConsumersInfo source){
+		return new StreamConsumer(source.getName(), source.getIdle(), source.getPending(), source.getConsumerInfo());
 	}
 
 }

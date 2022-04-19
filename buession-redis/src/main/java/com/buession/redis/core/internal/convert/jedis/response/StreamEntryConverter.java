@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
 import redis.clients.jedis.StreamEntryID;
@@ -44,9 +45,12 @@ public final class StreamEntryConverter implements Converter<redis.clients.jedis
 
 	public final static StreamEntryConverter INSTANCE = new StreamEntryConverter();
 
+	public final static ListConverter<redis.clients.jedis.resps.StreamEntry, StreamEntry> LIST_CONVERTER = new ListConverter<>(
+			INSTANCE);
+
 	@Override
 	public StreamEntry convert(final redis.clients.jedis.resps.StreamEntry source){
-		return new StreamEntry(StreamEntryIdConverter.INSTANCE.convert(source.getID()), source.getFields());
+		return new StreamEntry(StreamEntryIDConverter.INSTANCE.convert(source.getID()), source.getFields());
 	}
 
 	public final static class MapStreamEntryConverter implements
@@ -62,9 +66,9 @@ public final class StreamEntryConverter implements Converter<redis.clients.jedis
 			if(source.getValue() != null){
 				final List<StreamEntry> streamEntries = source.getValue().stream()
 						.map(StreamEntryConverter.INSTANCE::convert).collect(Collectors.toList());
-				result.put(StreamEntryIdConverter.INSTANCE.convert(source.getKey()), streamEntries);
+				result.put(StreamEntryIDConverter.INSTANCE.convert(source.getKey()), streamEntries);
 			}else{
-				result.put(StreamEntryIdConverter.INSTANCE.convert(source.getKey()), null);
+				result.put(StreamEntryIDConverter.INSTANCE.convert(source.getKey()), null);
 			}
 
 			return result;

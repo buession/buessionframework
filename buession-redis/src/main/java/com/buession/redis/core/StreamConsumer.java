@@ -22,28 +22,61 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.response;
+package com.buession.redis.core;
 
-import com.buession.core.converter.Converter;
-import com.buession.core.converter.ListConverter;
-import com.buession.lang.Geo;
-import redis.clients.jedis.GeoCoordinate;
+import java.io.Serializable;
+import java.util.Map;
+import java.util.StringJoiner;
 
 /**
- * jedis {@link GeoCoordinate} 转换为 {@link Geo}
+ * Stream Consumer
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class GeoConverter implements Converter<GeoCoordinate, Geo> {
+public class StreamConsumer implements Serializable {
 
-	public final static GeoConverter INSTANCE = new GeoConverter();
+	private final static long serialVersionUID = 1432302411997199283L;
 
-	public final static ListConverter<GeoCoordinate, Geo> LIST_CONVERTER = new ListConverter<>(GeoConverter.INSTANCE);
+	private final String name;
+
+	private final long idle;
+
+	private final long pending;
+
+	private final Map<String, Object> infos;
+
+	public StreamConsumer(final String name, final long idle, final long pending, final Map<String, Object> infos){
+		this.name = name;
+		this.idle = idle;
+		this.pending = pending;
+		this.infos = infos;
+	}
+
+	public String getName(){
+		return name;
+	}
+
+	public long getIdle(){
+		return idle;
+	}
+
+	public long getPending(){
+		return pending;
+	}
+
+	public Map<String, Object> getInfos(){
+		return infos;
+	}
 
 	@Override
-	public Geo convert(final GeoCoordinate source){
-		return new Geo(source.getLongitude(), source.getLatitude());
+	public String toString(){
+		return new StringJoiner(", ", "[", "]")
+				.add("name='" + name + "'")
+				.add("idle=" + idle)
+				.add("pending=" + pending)
+				.add("infos=" + infos)
+				.toString();
 	}
 
 }

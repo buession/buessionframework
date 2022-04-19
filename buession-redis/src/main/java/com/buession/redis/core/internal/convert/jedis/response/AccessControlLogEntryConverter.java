@@ -24,33 +24,34 @@
  */
 package com.buession.redis.core.internal.convert.jedis.response;
 
+import com.buession.beans.BeanUtils;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.AclLog;
 import com.buession.redis.core.Client;
-import com.buession.redis.core.SlowLog;
-import redis.clients.jedis.resps.Slowlog;
+import redis.clients.jedis.resps.AccessControlLogEntry;
 
 /**
- * jedis {@link Slowlog} 转换为 {@link SlowLog}
+ * jedis {@link AccessControlLogEntry} 转换为 {@link AclLog}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class SlowLogConverter implements Converter<Slowlog, SlowLog> {
+public final class AccessControlLogEntryConverter implements Converter<AccessControlLogEntry, AclLog> {
 
-	public final static SlowLogConverter INSTANCE = new SlowLogConverter();
+	public final static AccessControlLogEntryConverter INSTANCE = new AccessControlLogEntryConverter();
 
-	public final static ListConverter<Slowlog, SlowLog> LIST_CONVERTER = new ListConverter<>(SlowLogConverter.INSTANCE);
+	public final static ListConverter<AccessControlLogEntry, AclLog> LIST_CONVERTER = new ListConverter<>(
+			AccessControlLogEntryConverter.INSTANCE);
 
 	@Override
-	public SlowLog convert(final Slowlog source){
+	public AclLog convert(final AccessControlLogEntry source){
 		final Client client = new Client();
 
-		client.setHost(source.getClientIpPort().getHost());
-		client.setPort(source.getClientIpPort().getPort());
+		BeanUtils.populate(client, source.getClientInfo());
 
-		return new SlowLog(source.getId(), source.getTimeStamp(), source.getExecutionTime(), source.getArgs(),
-				client, source.getClientName());
+		return new AclLog(source.getCount(), source.getReason(), source.getContext(), source.getObject(),
+				source.getUsername(), source.getAgeSeconds(), client, source.getlogEntry());
 	}
 
 }

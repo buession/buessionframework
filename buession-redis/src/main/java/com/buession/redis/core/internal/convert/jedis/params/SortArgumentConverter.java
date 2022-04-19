@@ -67,7 +67,7 @@ public final class SortArgumentConverter implements Converter<KeyCommands.SortAr
 			sortingParams.get(source.getGetPatterns());
 		}
 
-		if(source.getAlpha()){
+		if(Boolean.TRUE.equals(source.isAlpha())){
 			sortingParams.alpha();
 		}
 

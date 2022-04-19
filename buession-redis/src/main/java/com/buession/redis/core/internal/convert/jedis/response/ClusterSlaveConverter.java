@@ -38,8 +38,7 @@ public final class ClusterSlaveConverter implements Converter<String, RedisClust
 
 	public final static ClusterSlaveConverter INSTANCE = new ClusterSlaveConverter();
 
-	public final static ListConverter<String, RedisClusterServer> LIST_CONVERTER = new ListConverter<>(
-			ClusterSlaveConverter.INSTANCE);
+	public final static ListConverter<String, RedisClusterServer> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
 	public RedisClusterServer convert(final String source){

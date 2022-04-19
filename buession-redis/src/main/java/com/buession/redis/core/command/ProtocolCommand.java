@@ -481,6 +481,8 @@ public enum ProtocolCommand {
 
 	SISMEMBER(ProtocolCommandGroup.SET),
 
+	SMISMEMBER(ProtocolCommandGroup.SET),
+
 	SMEMBERS(ProtocolCommandGroup.SET),
 
 	SMOVE(ProtocolCommandGroup.SET),
@@ -581,18 +583,32 @@ public enum ProtocolCommand {
 
 	XCLAIM(ProtocolCommandGroup.STREAM),
 
+	XDEL(ProtocolCommandGroup.STREAM),
+
+	XGROUP_CREATE(ProtocolCommandGroup.STREAM),
+
+	XGROUP_CREATECONSUMER(ProtocolCommandGroup.STREAM),
+
+	XGROUP_DELCONSUMER(ProtocolCommandGroup.STREAM),
+
+	XGROUP_DESTROY(ProtocolCommandGroup.STREAM),
+
+	XGROUP_SETID(ProtocolCommandGroup.STREAM),
+
+	XINFO_CONSUMERS(ProtocolCommandGroup.STREAM),
+
+	XINFO_GROUPS(ProtocolCommandGroup.STREAM),
+
 	XLEN(ProtocolCommandGroup.TRANSACTION),
-	XDEL(ProtocolCommandGroup.TRANSACTION),
 	XTRIM(ProtocolCommandGroup.TRANSACTION),
 	XRANGE(ProtocolCommandGroup.TRANSACTION),
 	XREVRANGE(ProtocolCommandGroup.TRANSACTION),
 	XREAD(ProtocolCommandGroup.TRANSACTION),
 
-	XGROUP(ProtocolCommandGroup.TRANSACTION),
+
 	XREADGROUP(ProtocolCommandGroup.TRANSACTION),
 	XPENDING(ProtocolCommandGroup.TRANSACTION),
 	XINFO(ProtocolCommandGroup.TRANSACTION),
-	SMISMEMBER(ProtocolCommandGroup.TRANSACTION),
 	STRALGO(ProtocolCommandGroup.TRANSACTION),
 	/**
 	 * stream command end

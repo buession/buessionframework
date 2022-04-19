@@ -2244,6 +2244,16 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	}
 
 	@Override
+	public List<Boolean> smIsMember(final String key, final String... members){
+		return setOpsExecute((ops)->ops.smIsMember(rawKey(key), members));
+	}
+
+	@Override
+	public List<Boolean> smIsMember(final byte[] key, final byte[]... members){
+		return setOpsExecute((ops)->ops.smIsMember(rawKey(key), members));
+	}
+
+	@Override
 	public Set<String> sMembers(final String key){
 		return setOpsExecute((ops)->ops.sMembers(rawKey(key)));
 	}

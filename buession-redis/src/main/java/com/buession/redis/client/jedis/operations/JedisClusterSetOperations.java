@@ -172,6 +172,26 @@ public final class JedisClusterSetOperations extends AbstractSetOperations<Jedis
 	}
 
 	@Override
+	public List<Boolean> smIsMember(final String key, final String... members){
+		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
+		final JedisClusterCommand<List<Boolean>> command = JedisClusterCommand.<List<Boolean>>create(
+						ProtocolCommand.SMISMEMBER)
+				.general((cmd)->cmd.smismember(key, members)).pipeline((cmd)->cmd.smismember(key, members))
+				.transaction((cmd)->cmd.smismember(key, members));
+		return execute(command, args);
+	}
+
+	@Override
+	public List<Boolean> smIsMember(final byte[] key, final byte[]... members){
+		final CommandArguments args = CommandArguments.create("key", key).put("members", members);
+		final JedisClusterCommand<List<Boolean>> command = JedisClusterCommand.<List<Boolean>>create(
+						ProtocolCommand.SMISMEMBER)
+				.general((cmd)->cmd.smismember(key, members)).pipeline((cmd)->cmd.smismember(key, members))
+				.transaction((cmd)->cmd.smismember(key, members));
+		return execute(command, args);
+	}
+
+	@Override
 	public Set<String> sMembers(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
 		final JedisClusterCommand<Set<String>> command = JedisClusterCommand.<Set<String>>create(

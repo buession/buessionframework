@@ -30,7 +30,7 @@ import redis.clients.jedis.params.FailoverParams;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class JedisFailoverParams extends FailoverParams {
+public final class JedisFailoverParams extends FailoverParams {
 
 	public JedisFailoverParams(final String host, final int port){
 		super();

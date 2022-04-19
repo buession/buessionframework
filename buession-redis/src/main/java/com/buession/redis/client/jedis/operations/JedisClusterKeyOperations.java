@@ -38,7 +38,7 @@ import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.core.internal.convert.jedis.params.ExpireOptionConverter;
 import com.buession.redis.core.internal.convert.jedis.params.RestoreArgumentConverter;
 import com.buession.redis.core.internal.convert.jedis.params.SortArgumentConverter;
-import com.buession.redis.core.internal.convert.jedis.response.OkStatusConverter;
+import com.buession.redis.core.internal.convert.response.OkStatusConverter;
 import com.buession.redis.core.internal.convert.jedis.response.ScanResultConverter;
 import com.buession.redis.core.internal.jedis.JedisScanParams;
 import redis.clients.jedis.args.ExpiryOption;

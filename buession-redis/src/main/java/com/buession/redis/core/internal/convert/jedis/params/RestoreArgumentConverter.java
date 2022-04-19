@@ -42,11 +42,11 @@ public final class RestoreArgumentConverter implements Converter<KeyCommands.Res
 	public RestoreParams convert(final KeyCommands.RestoreArgument source){
 		final RestoreParams restoreParams = new RestoreParams();
 
-		if(source.isReplace() != null){
+		if(Boolean.TRUE.equals(source.isReplace())){
 			restoreParams.replace();
 		}
 
-		if(source.isAbsTtl() != null){
+		if(Boolean.TRUE.equals(source.isAbsTtl())){
 			restoreParams.absTtl();
 		}
 

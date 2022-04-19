@@ -35,14 +35,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * jedis {@link StreamEntryID} 转换为 jedis {@link StreamEntryId}
+ * jedis {@link StreamEntryID} 转换为 {@link StreamEntryId}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class StreamEntryIdConverter implements Converter<StreamEntryID, StreamEntryId> {
+public final class StreamEntryIDConverter implements Converter<StreamEntryID, StreamEntryId> {
 
-	public final static StreamEntryIdConverter INSTANCE = new StreamEntryIdConverter();
+	public final static StreamEntryIDConverter INSTANCE = new StreamEntryIDConverter();
+
+	public final static ListConverter<StreamEntryID, StreamEntryId> LIST_CONVERTER = new ListConverter<>(INSTANCE);
 
 	@Override
 	public StreamEntryId convert(final StreamEntryID source){
@@ -57,7 +59,7 @@ public final class StreamEntryIdConverter implements Converter<StreamEntryID, St
 		public StreamEntryId convert(final byte[] source){
 			return new StreamEntryId(SafeEncoder.encode(source));
 		}
-		
+
 	}
 
 	public final static class MapStreamEntryIdConverter implements
@@ -66,7 +68,7 @@ public final class StreamEntryIdConverter implements Converter<StreamEntryID, St
 		public final static MapStreamEntryIdConverter INSTANCE = new MapStreamEntryIdConverter();
 
 		private final static ListConverter<StreamEntryID, StreamEntryId> LIST_ENTRY_ID_CONVERTER = new ListConverter<>(
-				StreamEntryIdConverter.INSTANCE);
+				StreamEntryIDConverter.INSTANCE);
 
 		@Override
 		public Map<StreamEntryId, List<StreamEntryId>> convert(
@@ -75,9 +77,9 @@ public final class StreamEntryIdConverter implements Converter<StreamEntryID, St
 
 			if(source.getValue() != null){
 				final List<StreamEntryId> streamEntryIdS = LIST_ENTRY_ID_CONVERTER.convert(source.getValue());
-				result.put(StreamEntryIdConverter.INSTANCE.convert(source.getKey()), streamEntryIdS);
+				result.put(StreamEntryIDConverter.INSTANCE.convert(source.getKey()), streamEntryIdS);
 			}else{
-				result.put(StreamEntryIdConverter.INSTANCE.convert(source.getKey()), null);
+				result.put(StreamEntryIDConverter.INSTANCE.convert(source.getKey()), null);
 			}
 
 			return result;

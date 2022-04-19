@@ -107,5 +107,4 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 
 	}
 
-
 }

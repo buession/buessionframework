@@ -22,28 +22,30 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.response;
+package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
-import com.buession.redis.core.Role;
-import redis.clients.jedis.resps.AccessControlLogEntry;
+import com.buession.redis.core.StreamGroup;
+import redis.clients.jedis.resps.StreamGroupInfo;
 
 /**
- * jedis {@link AccessControlLogEntry} 转换为 {@link Role}
+ * jedis {@link StreamGroupInfo} 转换为 {@link StreamGroup}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class RoleConverter implements Converter<Object, Role> {
+public class StreamGroupInfoConverter implements Converter<StreamGroupInfo, StreamGroup> {
 
-	public final static RoleConverter INSTANCE = new RoleConverter();
+	public final static StreamGroupInfoConverter INSTANCE = new StreamGroupInfoConverter();
 
-	public final static ListConverter<Object, Role> LIST_CONVERTER = new ListConverter<>(RoleConverter.INSTANCE);
+	public final static ListConverter<StreamGroupInfo, StreamGroup> LIST_CONVERTER = new ListConverter<>(
+			INSTANCE);
 
 	@Override
-	public Role convert(final Object source){
-		return null;
+	public StreamGroup convert(final StreamGroupInfo source){
+		return new StreamGroup(source.getName(), source.getConsumers(), source.getPending(),
+				StreamEntryIDConverter.INSTANCE.convert(source.getLastDeliveredId()), source.getGroupInfo());
 	}
 
 }

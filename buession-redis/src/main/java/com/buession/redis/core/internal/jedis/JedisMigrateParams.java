@@ -32,7 +32,7 @@ import redis.clients.jedis.params.MigrateParams;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class JedisMigrateParams extends MigrateParams {
+public final class JedisMigrateParams extends MigrateParams {
 
 	public JedisMigrateParams(){
 		super();

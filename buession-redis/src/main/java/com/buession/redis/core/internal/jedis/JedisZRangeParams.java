@@ -32,7 +32,7 @@ import redis.clients.jedis.params.ZRangeParams;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class JedisZRangeParams extends ZRangeParams {
+public final class JedisZRangeParams extends ZRangeParams {
 
 	public JedisZRangeParams(final int min, final int max){
 		super(min, max);
@@ -59,11 +59,7 @@ public class JedisZRangeParams extends ZRangeParams {
 	}
 
 	public JedisZRangeParams(final ZRangeBy by, final long min, final long max, final boolean rev){
-		this(by, min, max);
-
-		if(rev){
-			rev();
-		}
+		this(by, (int) min, (int) max, rev);
 	}
 
 	public JedisZRangeParams(final ZRangeBy by, final int min, final int max, final long offset, final long count){
@@ -85,11 +81,7 @@ public class JedisZRangeParams extends ZRangeParams {
 	}
 
 	public JedisZRangeParams(final long min, final long max, final boolean rev){
-		this(min, max);
-
-		if(rev){
-			rev();
-		}
+		this((int) min, (int) max, rev);
 	}
 
 	public JedisZRangeParams(final int min, final int max, final long offset, final long count){

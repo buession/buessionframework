@@ -46,15 +46,15 @@ public final class XAddArgumentConverter implements Converter<StreamCommands.XAd
 			xAddParams.maxLen(source.getMaxLen());
 		}
 
-		if(source.getApproximateTrimming() == true){
+		if(Boolean.TRUE.equals(source.isApproximateTrimming())){
 			xAddParams.approximateTrimming();
 		}
 
-		if(source.getExactTrimming() == true){
+		if(Boolean.TRUE.equals(source.isExactTrimming())){
 			xAddParams.exactTrimming();
 		}
 
-		if(source.getNoMkStream() == true){
+		if(Boolean.TRUE.equals(source.isNoMkStream())){
 			xAddParams.noMkStream();
 		}
 

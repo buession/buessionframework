@@ -39,7 +39,7 @@ public final class ModuleConverter implements Converter<redis.clients.jedis.Modu
 	public final static ModuleConverter INSTANCE = new ModuleConverter();
 
 	public final static ListConverter<redis.clients.jedis.Module, Module> LIST_CONVERTER = new ListConverter<>(
-			ModuleConverter.INSTANCE);
+			INSTANCE);
 
 	@Override
 	public Module convert(final redis.clients.jedis.Module source){
