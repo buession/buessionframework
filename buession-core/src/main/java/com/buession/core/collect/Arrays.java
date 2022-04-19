@@ -24,6 +24,7 @@
  */
 package com.buession.core.collect;
 
+import com.buession.core.utils.Assert;
 import com.buession.core.utils.StringUtils;
 import com.buession.lang.Constants;
 
@@ -2508,6 +2509,242 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 	 */
 	public static String[] toStringArray(final boolean[] a){
 		return toStringArray(toObject(a));
+	}
+
+	/**
+	 * 合并数组
+	 *
+	 * @param a
+	 * 		待合并的数组
+	 * @param b
+	 * 		待合并的数组
+	 *
+	 * @return 合并后的数组
+	 */
+	public static byte[] merge(final byte[] a, final byte[]... b){
+		Assert.isNull(a, "Source array cloud not be null.");
+
+		if(b == null){
+			return clone(a);
+		}else{
+			byte[] result = a;
+
+			for(byte[] item : b){
+				result = addAll(result, item);
+			}
+
+			return result;
+		}
+	}
+
+	/**
+	 * 合并数组
+	 *
+	 * @param a
+	 * 		待合并的数组
+	 * @param b
+	 * 		待合并的数组
+	 *
+	 * @return 合并后的数组
+	 */
+	public static char[] merge(final char[] a, final char[]... b){
+		Assert.isNull(a, "Source array cloud not be null.");
+
+		if(b == null){
+			return clone(a);
+		}else{
+			char[] result = a;
+
+			for(char[] item : b){
+				result = addAll(result, item);
+			}
+
+			return result;
+		}
+	}
+
+	/**
+	 * 合并数组
+	 *
+	 * @param a
+	 * 		待合并的数组
+	 * @param b
+	 * 		待合并的数组
+	 *
+	 * @return 合并后的数组
+	 */
+	public static boolean[] merge(final boolean[] a, final boolean[]... b){
+		Assert.isNull(a, "Source array cloud not be null.");
+
+		if(b == null){
+			return clone(a);
+		}else{
+			boolean[] result = a;
+
+			for(boolean[] item : b){
+				result = addAll(result, item);
+			}
+
+			return result;
+		}
+	}
+
+	/**
+	 * 合并数组
+	 *
+	 * @param a
+	 * 		待合并的数组
+	 * @param b
+	 * 		待合并的数组
+	 *
+	 * @return 合并后的数组
+	 */
+	public static short[] merge(final short[] a, final short[]... b){
+		Assert.isNull(a, "Source array cloud not be null.");
+
+		if(b == null){
+			return clone(a);
+		}else{
+			short[] result = a;
+
+			for(short[] item : b){
+				result = addAll(result, item);
+			}
+
+			return result;
+		}
+	}
+
+	/**
+	 * 合并数组
+	 *
+	 * @param a
+	 * 		待合并的数组
+	 * @param b
+	 * 		待合并的数组
+	 *
+	 * @return 合并后的数组
+	 */
+	public static int[] merge(final int[] a, final int[]... b){
+		Assert.isNull(a, "Source array cloud not be null.");
+
+		if(b == null){
+			return clone(a);
+		}else{
+			int[] result = a;
+
+			for(int[] item : b){
+				result = addAll(result, item);
+			}
+
+			return result;
+		}
+	}
+
+	/**
+	 * 合并数组
+	 *
+	 * @param a
+	 * 		待合并的数组
+	 * @param b
+	 * 		待合并的数组
+	 *
+	 * @return 合并后的数组
+	 */
+	public static long[] merge(final long[] a, final long[]... b){
+		Assert.isNull(a, "Source array cloud not be null.");
+
+		if(b == null){
+			return clone(a);
+		}else{
+			long[] result = a;
+
+			for(long[] item : b){
+				result = addAll(result, item);
+			}
+
+			return result;
+		}
+	}
+
+	/**
+	 * 合并数组
+	 *
+	 * @param a
+	 * 		待合并的数组
+	 * @param b
+	 * 		待合并的数组
+	 *
+	 * @return 合并后的数组
+	 */
+	public static float[] merge(final float[] a, final float[]... b){
+		Assert.isNull(a, "Source array cloud not be null.");
+
+		if(b == null){
+			return clone(a);
+		}else{
+			float[] result = a;
+
+			for(float[] item : b){
+				result = addAll(result, item);
+			}
+
+			return result;
+		}
+	}
+
+	/**
+	 * 合并数组
+	 *
+	 * @param a
+	 * 		待合并的数组
+	 * @param b
+	 * 		待合并的数组
+	 *
+	 * @return 合并后的数组
+	 */
+	public static double[] merge(final double[] a, final double[]... b){
+		Assert.isNull(a, "Source array cloud not be null.");
+
+		if(b == null){
+			return clone(a);
+		}else{
+			double[] result = a;
+
+			for(double[] item : b){
+				result = addAll(result, item);
+			}
+
+			return result;
+		}
+	}
+
+	/**
+	 * 合并数组
+	 *
+	 * @param a
+	 * 		待合并的数组
+	 * @param b
+	 * 		待合并的数组
+	 * @param <T>
+	 * 		数据对象类型
+	 *
+	 * @return 合并后的数组
+	 */
+	public static <T> T[] merge(final T[] a, final T[]... b){
+		Assert.isNull(a, "Source array cloud not be null.");
+
+		if(b == null){
+			return clone(a);
+		}else{
+			T[] result = a;
+
+			for(T[] item : b){
+				result = addAll(result, item);
+			}
+
+			return result;
+		}
 	}
 
 }

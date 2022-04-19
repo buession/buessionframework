@@ -48,8 +48,10 @@ public final class StreamEntryIdConverter implements Converter<StreamEntryID, St
 		return new StreamEntryId(source.getTime(), source.getSequence());
 	}
 
-	final static class MapStreamEntryIdConverter implements
+	public final static class MapStreamEntryIdConverter implements
 			Converter<Map.Entry<StreamEntryID, List<StreamEntryID>>, Map<StreamEntryId, List<StreamEntryId>>> {
+
+		public final static MapStreamEntryIdConverter INSTANCE = new MapStreamEntryIdConverter();
 
 		private final static ListConverter<StreamEntryID, StreamEntryId> LIST_ENTRY_ID_CONVERTER = new ListConverter<>(
 				StreamEntryIdConverter.INSTANCE);

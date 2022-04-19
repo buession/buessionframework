@@ -79,8 +79,10 @@ public interface ScanResultConverter<S, T> extends Converter<S, T> {
 	 * @author Yong.Teng
 	 * @since 2.0.0
 	 */
-	final class ListTupleScanResultExposeConverter
+	final class ListTupleScanResultConverter
 			implements ScanResultExposeConverter<redis.clients.jedis.resps.Tuple, List<Tuple>> {
+
+		public final static ListTupleScanResultConverter INSTANCE = new ListTupleScanResultConverter();
 
 		@Override
 		public ScanResult<List<Tuple>> convert(

@@ -22,54 +22,52 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.core.converter;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamEntry;
-import com.buession.redis.core.StreamEntryId;
-import redis.clients.jedis.StreamEntryID;
+import com.buession.core.collect.Arrays;
 
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * jedis {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link StreamEntry}
+ * 数组转换器
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class StreamEntryConverter implements Converter<redis.clients.jedis.resps.StreamEntry, StreamEntry> {
+public class ArrayConverter<S, T> implements Converter<S[], T[]> {
 
-	private final static StreamEntryIdConverter STREAM_ENTRY_ID_CONVERTER = new StreamEntryIdConverter();
+	/**
+	 * 数组 item 转换器
+	 */
+	private final Converter<S, T> itemConverter;
 
-	@Override
-	public StreamEntry convert(final redis.clients.jedis.resps.StreamEntry source){
-		return new StreamEntry(STREAM_ENTRY_ID_CONVERTER.convert(source.getID()), source.getFields());
+	/**
+	 * 构造函数
+	 *
+	 * @param itemConverter
+	 * 		List item 转换器
+	 */
+	public ArrayConverter(final Converter<S, T> itemConverter){
+		this.itemConverter = itemConverter;
 	}
 
-	final static class MapStreamEntryConverter implements
-			Converter<Map.Entry<StreamEntryID, List<redis.clients.jedis.resps.StreamEntry>>, Map<StreamEntryId, List<StreamEntry>>> {
+	@Override
+	@SuppressWarnings("unchecked")
+	public T[] convert(final S[] source){
+		if(source == null){
+			return null;
+		}else{
+			final T[] result = (T[]) new Object[source.length];
 
-		private final static StreamEntryConverter STREAM_ENTRY_CONVERTER = new StreamEntryConverter();
-
-		@Override
-		public Map<StreamEntryId, List<StreamEntry>> convert(
-				final Map.Entry<StreamEntryID, List<redis.clients.jedis.resps.StreamEntry>> source){
-			final Map<StreamEntryId, List<StreamEntry>> result = new LinkedHashMap<>();
-
-			if(source.getValue() != null){
-				final List<StreamEntry> streamEntries = source.getValue().stream()
-						.map(STREAM_ENTRY_CONVERTER::convert).collect(Collectors.toList());
-				result.put(STREAM_ENTRY_ID_CONVERTER.convert(source.getKey()), streamEntries);
-			}else{
-				result.put(STREAM_ENTRY_ID_CONVERTER.convert(source.getKey()), null);
+			for(int i = 0; i < source.length; i++){
+				result[i] = itemConverter.convert(source[i]);
 			}
 
 			return result;
 		}
-
 	}
 
 }

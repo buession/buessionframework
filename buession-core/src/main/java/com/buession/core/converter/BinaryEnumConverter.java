@@ -22,28 +22,46 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis;
+package com.buession.core.converter;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.core.utils.Assert;
+import com.buession.core.utils.EnumUtils;
 
 /**
+ * 枚举转换器
+ *
  * @author Yong.Teng
- * @since 2.0.0
+ * @since 1.2.1
  */
-public interface JedisConverters extends Converters {
+public class EnumConverter<E extends Enum<E>> implements Converter<String, E> {
 
+	private final Class<E> enumType;
 
 	/**
-	 * start result converter
+	 * 构造函数
+	 *
+	 * @param enumType
+	 * 		枚举类型
 	 */
+	public EnumConverter(final Class<E> enumType){
+		this.enumType = enumType;
+	}
 
-	Converter<byte[], StreamEntryId> BINARY_STREAM_ENTRY_RESULT_CONVERTER = (source)->new StreamEntryId(
-			SafeEncoder.encode(source));
-	/**
-	 * end result converter
-	 */
+	@Override
+	public E convert(final String source){
+		Assert.isNull(source, "CharSequence cloud not be null.");
+
+		E result = EnumUtils.valueOf(enumType, source);
+
+		if(result == null){
+			result = EnumUtils.valueOf(enumType, source.toUpperCase());
+		}
+
+		if(result == null){
+			result = EnumUtils.valueOf(enumType, source.toLowerCase());
+		}
+
+		return result;
+	}
 
 }

@@ -21,42 +21,10 @@
  * | Author: Yong.Teng <webmaster@buession.com> 													       |
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
- */
-package com.buession.redis.core.internal.convert.jedis;
-
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.KeyedZSetElement;
-import redis.clients.jedis.BuilderFactory;
-
-import java.util.List;
-
-/**
- * jedis {@link redis.clients.jedis.resps.KeyedZSetElement} 转换为 {@link KeyedZSetElement}
+ */package com.buession.redis.core.internal.convert.jedis.response;/**
+ * 
  *
  * @author Yong.Teng
  * @since 2.0.0
- */
-public final class KeyedZSetElementConverter
-		implements Converter<redis.clients.jedis.resps.KeyedZSetElement, KeyedZSetElement> {
-
-	public final static KeyedZSetElementConverter INSTANCE = new KeyedZSetElementConverter();
-
-	@Override
-	public KeyedZSetElement convert(final redis.clients.jedis.resps.KeyedZSetElement source){
-		return new KeyedZSetElement(source.getKey(), source.getElement(), source.getScore());
-	}
-
-	final static class BinaryDataKeyedZSetElementExposeConverter implements Converter<List<byte[]>, KeyedZSetElement> {
-
-		@Override
-		public KeyedZSetElement convert(final List<byte[]> source){
-			if(source.isEmpty()){
-				return null;
-			}
-
-			return new KeyedZSetElement(source.get(0), source.get(1), BuilderFactory.DOUBLE.build(source.get(2)));
-		}
-
-	}
-
+ */public class GeoRadiusConverter {
 }

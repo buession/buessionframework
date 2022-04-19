@@ -25,25 +25,40 @@
 package com.buession.redis.core.internal.convert.jedis;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.core.internal.convert.Converters;
-import com.buession.redis.utils.SafeEncoder;
+import com.buession.redis.core.KeyedZSetElement;
+import redis.clients.jedis.BuilderFactory;
+
+import java.util.List;
 
 /**
+ * jedis {@link redis.clients.jedis.resps.KeyedZSetElement} 转换为 {@link KeyedZSetElement}
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface JedisConverters extends Converters {
+public final class KeyedZSetElementConverter
+		implements Converter<redis.clients.jedis.resps.KeyedZSetElement, KeyedZSetElement> {
 
+	public final static KeyedZSetElementConverter INSTANCE = new KeyedZSetElementConverter();
 
-	/**
-	 * start result converter
-	 */
+	@Override
+	public KeyedZSetElement convert(final redis.clients.jedis.resps.KeyedZSetElement source){
+		return new KeyedZSetElement(source.getKey(), source.getElement(), source.getScore());
+	}
 
-	Converter<byte[], StreamEntryId> BINARY_STREAM_ENTRY_RESULT_CONVERTER = (source)->new StreamEntryId(
-			SafeEncoder.encode(source));
-	/**
-	 * end result converter
-	 */
+	public final static class BinaryDataKeyedZSetElementConverter implements Converter<List<byte[]>, KeyedZSetElement> {
+
+		public final static BinaryDataKeyedZSetElementConverter INSTANCE = new BinaryDataKeyedZSetElementConverter();
+
+		@Override
+		public KeyedZSetElement convert(final List<byte[]> source){
+			if(source.isEmpty()){
+				return null;
+			}
+
+			return new KeyedZSetElement(source.get(0), source.get(1), BuilderFactory.DOUBLE.build(source.get(2)));
+		}
+
+	}
 
 }
