@@ -10,6 +10,9 @@ Changes in version 2.0.0 (2022-02-22)
 *【新增】ListBuilder 增加 addIfPresent 方法，值为 null，不添加到 List 中
 *【新增】System Property 工具类
 *【变化】ListBuilder、MapBuilder、SetBuilder、QueueBuilder 从包 com.buession.core.utils 迁移至包 com.buession.core.builder
+*【新增】数组转换器 com.buession.core.converter.ArrayConverter
+*【新增】字节数组转枚举转换器 com.buession.core.converter.BinaryEnumConverter
+*【新增】com.buession.core.collect.Arrays 增加数组合并方法
 
 Changes in version 1.3.2 (2021-11-10)
 -------------------------------------

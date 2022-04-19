@@ -28,7 +28,7 @@ import com.buession.core.utils.Assert;
 import com.buession.core.utils.EnumUtils;
 
 /**
- * 枚举转换器
+ * 枚举转换器，将字符串转换为枚举
  *
  * @author Yong.Teng
  * @since 1.2.1
@@ -49,7 +49,7 @@ public class EnumConverter<E extends Enum<E>> implements Converter<String, E> {
 
 	@Override
 	public E convert(final String source){
-		Assert.isNull(source, "CharSequence cloud not be null.");
+		Assert.isNull(source, "String cloud not be null.");
 
 		E result = EnumUtils.valueOf(enumType, source);
 

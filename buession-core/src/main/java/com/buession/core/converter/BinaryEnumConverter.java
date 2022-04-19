@@ -27,15 +27,20 @@ package com.buession.core.converter;
 import com.buession.core.utils.Assert;
 import com.buession.core.utils.EnumUtils;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 /**
- * 枚举转换器
+ * 枚举转换器，将 byte 数组转换为枚举
  *
  * @author Yong.Teng
  * @since 1.2.1
  */
-public class EnumConverter<E extends Enum<E>> implements Converter<String, E> {
+public class BinaryEnumConverter<E extends Enum<E>> implements Converter<byte[], E> {
 
 	private final Class<E> enumType;
+
+	private final Charset charset;
 
 	/**
 	 * 构造函数
@@ -43,22 +48,36 @@ public class EnumConverter<E extends Enum<E>> implements Converter<String, E> {
 	 * @param enumType
 	 * 		枚举类型
 	 */
-	public EnumConverter(final Class<E> enumType){
+	public BinaryEnumConverter(final Class<E> enumType){
+		this(enumType, StandardCharsets.UTF_8);
+	}
+
+	/**
+	 * 构造函数
+	 *
+	 * @param enumType
+	 * 		枚举类型
+	 * @param charset
+	 * 		字符串
+	 */
+	public BinaryEnumConverter(final Class<E> enumType, final Charset charset){
 		this.enumType = enumType;
+		this.charset = charset;
 	}
 
 	@Override
-	public E convert(final String source){
-		Assert.isNull(source, "CharSequence cloud not be null.");
+	public E convert(final byte[] source){
+		Assert.isNull(source, "Source byte cloud not be null.");
+		final String str = new String(source, charset);
 
-		E result = EnumUtils.valueOf(enumType, source);
+		E result = EnumUtils.valueOf(enumType, str);
 
 		if(result == null){
-			result = EnumUtils.valueOf(enumType, source.toUpperCase());
+			result = EnumUtils.valueOf(enumType, str.toUpperCase());
 		}
 
 		if(result == null){
-			result = EnumUtils.valueOf(enumType, source.toLowerCase());
+			result = EnumUtils.valueOf(enumType, str.toLowerCase());
 		}
 
 		return result;
