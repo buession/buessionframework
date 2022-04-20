@@ -24,83 +24,83 @@
  */
 package com.buession.redis.core;
 
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.utils.SafeEncoder;
-
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
+public class StreamFull implements Serializable {
 
-	private final static long serialVersionUID = -4487927281373256508L;
+	private final static long serialVersionUID = -4336316668706617743L;
 
-	private final long time;
+	private final long length;
 
-	private final long sequence;
+	private final long radixTreeKeys;
 
-	public StreamEntryId(){
-		this(0L, 0L);
+	private final long radixTreeNodes;
+
+	private final List<StreamGroupFull> groups;
+
+	private final StreamEntryId lastGeneratedId;
+
+	private final List<StreamEntry> entries;
+
+	private final Map<String, Object> infos;
+
+	public StreamFull(final long length, final long radixTreeKeys, final long radixTreeNodes,
+					  final List<StreamGroupFull> groups, final StreamEntryId lastGeneratedId,
+					  final List<StreamEntry> entries, final Map<String, Object> infos){
+		this.length = length;
+		this.radixTreeKeys = radixTreeKeys;
+		this.radixTreeNodes = radixTreeNodes;
+		this.groups = groups;
+		this.lastGeneratedId = lastGeneratedId;
+		this.entries = entries;
+		this.infos = infos;
 	}
 
-	public StreamEntryId(final String id){
-		String[] split = StringUtils.split(id, '-');
-		this.time = Long.parseLong(split[0]);
-		this.sequence = Long.parseLong(split[1]);
+	public long getLength(){
+		return length;
 	}
 
-	public StreamEntryId(final byte[] id){
-		this(SafeEncoder.encode(id));
+	public long getRadixTreeKeys(){
+		return radixTreeKeys;
 	}
 
-	public StreamEntryId(final long time){
-		this(time, 0L);
+	public long getRadixTreeNodes(){
+		return radixTreeNodes;
 	}
 
-	public StreamEntryId(final long time, final long sequence){
-		this.time = time;
-		this.sequence = sequence;
+	public List<StreamGroupFull> getGroups(){
+		return groups;
 	}
 
-	public long getTime(){
-		return time;
+	public StreamEntryId getLastGeneratedId(){
+		return lastGeneratedId;
 	}
 
-	public long getSequence(){
-		return sequence;
+	public List<StreamEntry> getEntries(){
+		return entries;
 	}
 
-	@Override
-	public int compareTo(StreamEntryId other){
-		int timeCompare = Long.compare(this.time, other.time);
-		return timeCompare != 0 ? timeCompare : Long.compare(this.sequence, other.sequence);
-	}
-
-	@Override
-	public int hashCode(){
-		return Objects.hash(time, sequence);
-	}
-
-	@Override
-	public boolean equals(Object obj){
-		if(obj == this){
-			return true;
-		}
-
-		if(obj instanceof StreamEntryId){
-			StreamEntryId that = (StreamEntryId) obj;
-			return that.time == time && that.sequence == sequence;
-		}
-
-		return false;
+	public Map<String, Object> getInfos(){
+		return infos;
 	}
 
 	@Override
 	public String toString(){
-		return time + "-" + sequence;
+		return new StringJoiner(", ", "[", "]")
+				.add("length=" + length)
+				.add("radixTreeKeys=" + radixTreeKeys)
+				.add("radixTreeNodes=" + radixTreeNodes)
+				.add("groups=" + groups)
+				.add("lastGeneratedId=" + lastGeneratedId)
+				.add("entries=" + entries)
+				.add("infos=" + infos)
+				.toString();
 	}
-
 }

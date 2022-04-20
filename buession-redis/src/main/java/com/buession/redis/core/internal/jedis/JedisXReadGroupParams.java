@@ -22,85 +22,56 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.jedis;
 
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.utils.SafeEncoder;
-
-import java.io.Serializable;
-import java.util.Objects;
+import redis.clients.jedis.params.XReadGroupParams;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
+public class JedisXReadGroupParams extends XReadGroupParams {
 
-	private final static long serialVersionUID = -4487927281373256508L;
-
-	private final long time;
-
-	private final long sequence;
-
-	public StreamEntryId(){
-		this(0L, 0L);
+	public JedisXReadGroupParams(){
+		super();
 	}
 
-	public StreamEntryId(final String id){
-		String[] split = StringUtils.split(id, '-');
-		this.time = Long.parseLong(split[0]);
-		this.sequence = Long.parseLong(split[1]);
+	public JedisXReadGroupParams(final long count){
+		super();
+		count((int) count);
 	}
 
-	public StreamEntryId(final byte[] id){
-		this(SafeEncoder.encode(id));
+	public JedisXReadGroupParams(final long count, final int block){
+		this(count);
+		block(block);
 	}
 
-	public StreamEntryId(final long time){
-		this(time, 0L);
+	public JedisXReadGroupParams(final long count, final boolean noAck){
+		this(noAck);
+		count((int) count);
 	}
 
-	public StreamEntryId(final long time, final long sequence){
-		this.time = time;
-		this.sequence = sequence;
+	public JedisXReadGroupParams(final long count, final int block, final boolean noAck){
+		this(count, noAck);
+		block(block);
 	}
 
-	public long getTime(){
-		return time;
+	public JedisXReadGroupParams(final int block){
+		super();
+		block(block);
 	}
 
-	public long getSequence(){
-		return sequence;
+	public JedisXReadGroupParams(final int block, final boolean noAck){
+		this(noAck);
+		block(block);
 	}
 
-	@Override
-	public int compareTo(StreamEntryId other){
-		int timeCompare = Long.compare(this.time, other.time);
-		return timeCompare != 0 ? timeCompare : Long.compare(this.sequence, other.sequence);
-	}
+	public JedisXReadGroupParams(final boolean noAck){
+		super();
 
-	@Override
-	public int hashCode(){
-		return Objects.hash(time, sequence);
-	}
-
-	@Override
-	public boolean equals(Object obj){
-		if(obj == this){
-			return true;
+		if(noAck){
+			noAck();
 		}
-
-		if(obj instanceof StreamEntryId){
-			StreamEntryId that = (StreamEntryId) obj;
-			return that.time == time && that.sequence == sequence;
-		}
-
-		return false;
-	}
-
-	@Override
-	public String toString(){
-		return time + "-" + sequence;
 	}
 
 }

@@ -22,85 +22,43 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.jedis.params;
 
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.utils.SafeEncoder;
-
-import java.io.Serializable;
-import java.util.Objects;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.command.StreamCommands;
+import redis.clients.jedis.params.XTrimParams;
 
 /**
+ * {@link StreamCommands.XTrimArgument} 转换为 jedis {@link XTrimParams}
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
+public class XTrimArgumentConverter implements Converter<StreamCommands.XTrimArgument, XTrimParams> {
 
-	private final static long serialVersionUID = -4487927281373256508L;
-
-	private final long time;
-
-	private final long sequence;
-
-	public StreamEntryId(){
-		this(0L, 0L);
-	}
-
-	public StreamEntryId(final String id){
-		String[] split = StringUtils.split(id, '-');
-		this.time = Long.parseLong(split[0]);
-		this.sequence = Long.parseLong(split[1]);
-	}
-
-	public StreamEntryId(final byte[] id){
-		this(SafeEncoder.encode(id));
-	}
-
-	public StreamEntryId(final long time){
-		this(time, 0L);
-	}
-
-	public StreamEntryId(final long time, final long sequence){
-		this.time = time;
-		this.sequence = sequence;
-	}
-
-	public long getTime(){
-		return time;
-	}
-
-	public long getSequence(){
-		return sequence;
-	}
+	public final static XTrimArgumentConverter INSTANCE = new XTrimArgumentConverter();
 
 	@Override
-	public int compareTo(StreamEntryId other){
-		int timeCompare = Long.compare(this.time, other.time);
-		return timeCompare != 0 ? timeCompare : Long.compare(this.sequence, other.sequence);
-	}
+	public XTrimParams convert(final StreamCommands.XTrimArgument source){
+		final XTrimParams xTrimParams = new XTrimParams();
 
-	@Override
-	public int hashCode(){
-		return Objects.hash(time, sequence);
-	}
-
-	@Override
-	public boolean equals(Object obj){
-		if(obj == this){
-			return true;
+		if(source.getMaxLen() != null){
+			xTrimParams.maxLen(source.getMaxLen());
 		}
 
-		if(obj instanceof StreamEntryId){
-			StreamEntryId that = (StreamEntryId) obj;
-			return that.time == time && that.sequence == sequence;
+		if(Boolean.TRUE.equals(source.isApproximateTrimming())){
+			xTrimParams.approximateTrimming();
 		}
 
-		return false;
-	}
+		if(Boolean.TRUE.equals(source.isExactTrimming())){
+			xTrimParams.exactTrimming();
+		}
 
-	@Override
-	public String toString(){
-		return time + "-" + sequence;
+		if(source.getMinId() != null){
+			xTrimParams.minId(source.getMinId());
+		}
+
+		return xTrimParams;
 	}
 
 }

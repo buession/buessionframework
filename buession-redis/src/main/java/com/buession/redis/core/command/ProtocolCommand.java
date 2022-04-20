@@ -599,17 +599,23 @@ public enum ProtocolCommand {
 
 	XINFO_GROUPS(ProtocolCommandGroup.STREAM),
 
-	XLEN(ProtocolCommandGroup.TRANSACTION),
-	XTRIM(ProtocolCommandGroup.TRANSACTION),
-	XRANGE(ProtocolCommandGroup.TRANSACTION),
-	XREVRANGE(ProtocolCommandGroup.TRANSACTION),
-	XREAD(ProtocolCommandGroup.TRANSACTION),
+	XINFO_STREAM(ProtocolCommandGroup.STREAM),
 
+	XLEN(ProtocolCommandGroup.STREAM),
 
-	XREADGROUP(ProtocolCommandGroup.TRANSACTION),
-	XPENDING(ProtocolCommandGroup.TRANSACTION),
-	XINFO(ProtocolCommandGroup.TRANSACTION),
-	STRALGO(ProtocolCommandGroup.TRANSACTION),
+	XPENDING(ProtocolCommandGroup.STREAM),
+
+	XRANGE(ProtocolCommandGroup.STREAM),
+
+	XREAD(ProtocolCommandGroup.STREAM),
+
+	XREADGROUP(ProtocolCommandGroup.STREAM),
+
+	XREVRANGE(ProtocolCommandGroup.STREAM),
+
+	XSETID(ProtocolCommandGroup.STREAM),
+
+	XTRIM(ProtocolCommandGroup.STREAM),
 	/**
 	 * stream command end
 	 **/

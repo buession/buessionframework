@@ -27,8 +27,8 @@ package com.buession.redis.core.operations;
 import com.buession.lang.Status;
 import com.buession.redis.core.StreamEntry;
 import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.command.StreamCommands;
-import com.buession.redis.utils.SafeEncoder;
 
 import java.util.List;
 
@@ -49,14 +49,14 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param group
-	 * 		Group
+	 * @param groupName
+	 * 		Group Name
 	 * @param ids
 	 * 		一个或多个 ID
 	 *
 	 * @return The command returns the number of messages successfully acknowledged
 	 */
-	default long xAck(final String key, final String group, final String[] ids){
+	default long xAck(final String key, final String groupName, final String[] ids){
 		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
 
 		if(ids != null){
@@ -65,7 +65,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 			}
 		}
 
-		return xAck(key, group, streamEntryIds);
+		return xAck(key, groupName, streamEntryIds);
 	}
 
 	/**
@@ -75,23 +75,23 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param group
-	 * 		Group
+	 * @param groupName
+	 * 		Group Name
 	 * @param ids
 	 * 		一个或多个 ID
 	 *
 	 * @return The command returns the number of messages successfully acknowledged
 	 */
-	default long xAck(final byte[] key, final byte[] group, final byte[][] ids){
+	default long xAck(final byte[] key, final byte[] groupName, final byte[][] ids){
 		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
 
 		if(ids != null){
 			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(SafeEncoder.encode(ids[i]));
+				streamEntryIds[i] = new StreamEntryId(ids[i]);
 			}
 		}
 
-		return xAck(key, group, streamEntryIds);
+		return xAck(key, groupName, streamEntryIds);
 	}
 
 	/**
@@ -102,8 +102,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param group
-	 * 		Group
+	 * @param groupName
+	 * 		Group Name
 	 * @param consumerName
 	 * 		Consumer Name
 	 * @param minIdleTime
@@ -113,7 +113,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xClaim(final String key, final String group, final String consumerName,
+	default List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
 									 final int minIdleTime, final String[] ids){
 		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
 
@@ -123,7 +123,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 			}
 		}
 
-		return xClaim(key, group, consumerName, minIdleTime, streamEntryIds);
+		return xClaim(key, groupName, consumerName, minIdleTime, streamEntryIds);
 	}
 
 	/**
@@ -134,8 +134,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param group
-	 * 		Group
+	 * @param groupName
+	 * 		Group Name
 	 * @param consumerName
 	 * 		Consumer Name
 	 * @param minIdleTime
@@ -145,17 +145,17 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xClaim(final byte[] key, final byte[] group, final byte[] consumerName,
+	default List<StreamEntry> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
 									 final int minIdleTime, final byte[][] ids){
 		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
 
 		if(ids != null){
 			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(SafeEncoder.encode(ids[i]));
+				streamEntryIds[i] = new StreamEntryId(ids[i]);
 			}
 		}
 
-		return xClaim(key, group, consumerName, minIdleTime, streamEntryIds);
+		return xClaim(key, groupName, consumerName, minIdleTime, streamEntryIds);
 	}
 
 
@@ -167,8 +167,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param group
-	 * 		Group
+	 * @param groupName
+	 * 		Group Name
 	 * @param consumerName
 	 * 		Consumer Name
 	 * @param minIdleTime
@@ -180,7 +180,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xClaim(final String key, final String group, final String consumerName,
+	default List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
 									 final int minIdleTime, final String[] ids, final XClaimArgument xClaimArgument){
 		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
 
@@ -190,7 +190,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 			}
 		}
 
-		return xClaim(key, group, consumerName, minIdleTime, streamEntryIds, xClaimArgument);
+		return xClaim(key, groupName, consumerName, minIdleTime, streamEntryIds, xClaimArgument);
 	}
 
 	/**
@@ -201,8 +201,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param group
-	 * 		Group
+	 * @param groupName
+	 * 		Group Name
 	 * @param consumerName
 	 * 		Consumer Name
 	 * @param minIdleTime
@@ -214,17 +214,17 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntry} 列表
 	 */
-	default List<StreamEntry> xClaim(final byte[] key, final byte[] group, final byte[] consumerName,
+	default List<StreamEntry> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
 									 final int minIdleTime, final byte[][] ids, final XClaimArgument xClaimArgument){
 		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
 
 		if(ids != null){
 			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(SafeEncoder.encode(ids[i]));
+				streamEntryIds[i] = new StreamEntryId(ids[i]);
 			}
 		}
 
-		return xClaim(key, group, consumerName, minIdleTime, streamEntryIds, xClaimArgument);
+		return xClaim(key, groupName, consumerName, minIdleTime, streamEntryIds, xClaimArgument);
 	}
 
 	/**
@@ -235,8 +235,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param group
-	 * 		Group
+	 * @param groupName
+	 * 		Group Name
 	 * @param consumerName
 	 * 		Consumer Name
 	 * @param minIdleTime
@@ -246,7 +246,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntryId} 列表
 	 */
-	default List<StreamEntryId> xClaimJustId(final String key, final String group, final String consumerName,
+	default List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
 											 final int minIdleTime, final String[] ids){
 		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
 
@@ -256,7 +256,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 			}
 		}
 
-		return xClaimJustId(key, group, consumerName, minIdleTime, streamEntryIds);
+		return xClaimJustId(key, groupName, consumerName, minIdleTime, streamEntryIds);
 	}
 
 	/**
@@ -267,8 +267,8 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @param key
 	 * 		Key
-	 * @param group
-	 * 		Group
+	 * @param groupName
+	 * 		Group Name
 	 * @param consumerName
 	 * 		Consumer Name
 	 * @param minIdleTime
@@ -278,17 +278,17 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 *
 	 * @return {@link StreamEntryId} 列表
 	 */
-	default List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] group, final byte[] consumerName,
+	default List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
 											 final int minIdleTime, final byte[][] ids){
 		final StreamEntryId[] streamEntryIds = ids == null ? null : new StreamEntryId[ids.length];
 
 		if(ids != null){
 			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(SafeEncoder.encode(ids[i]));
+				streamEntryIds[i] = new StreamEntryId(ids[i]);
 			}
 		}
 
-		return xClaimJustId(key, group, consumerName, minIdleTime, streamEntryIds);
+		return xClaimJustId(key, groupName, consumerName, minIdleTime, streamEntryIds);
 	}
 
 	/**
@@ -332,7 +332,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 
 		if(ids != null){
 			for(int i = 0; i < ids.length; i++){
-				streamEntryIds[i] = new StreamEntryId(SafeEncoder.encode(ids[i]));
+				streamEntryIds[i] = new StreamEntryId(ids[i]);
 			}
 		}
 
@@ -376,7 +376,7 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return 创建成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
 	default Status xGroupCreate(final byte[] key, final byte[] groupName, final byte[] id, final boolean makeStream){
-		return xGroupCreate(key, groupName, new StreamEntryId(SafeEncoder.encode(id)), makeStream);
+		return xGroupCreate(key, groupName, new StreamEntryId(id), makeStream);
 	}
 
 	/**
@@ -412,7 +412,371 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	 * @return 销毁成功，返回 Status.SUCCESS；否则，返回 Status.FAILURE
 	 */
 	default Status xGroupSetId(final byte[] key, final byte[] groupName, final byte[] id){
-		return xGroupSetId(key, groupName, new StreamEntryId(SafeEncoder.encode(id)));
+		return xGroupSetId(key, groupName, new StreamEntryId(id));
+	}
+
+	/**
+	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xpending/" target="_blank">https://redis.io/commands/xpending/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param start
+	 * 		Start Id
+	 * @param end
+	 * 		End Id
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return {@link StreamPending} 列表
+	 */
+	default List<StreamPending> xPending(final String key, final String groupName, final String start, final String end,
+										 final long count){
+		return xPending(key, groupName, new StreamEntryId(start), new StreamEntryId(end), count);
+	}
+
+	/**
+	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xpending/" target="_blank">https://redis.io/commands/xpending/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param start
+	 * 		Start Id
+	 * @param end
+	 * 		End Id
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return {@link StreamPending} 列表
+	 */
+	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final byte[] start, final byte[] end,
+										 final long count){
+		return xPending(key, groupName, new StreamEntryId(start), new StreamEntryId(end), count);
+	}
+
+	/**
+	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xpending/" target="_blank">https://redis.io/commands/xpending/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		Start Id
+	 * @param end
+	 * 		End Id
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return {@link StreamPending} 列表
+	 */
+	default List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
+										 final String start, final String end, final long count){
+		return xPending(key, groupName, minIdleTime, new StreamEntryId(start), new StreamEntryId(end), count);
+	}
+
+	/**
+	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xpending/" target="_blank">https://redis.io/commands/xpending/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		Start Id
+	 * @param end
+	 * 		End Id
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return {@link StreamPending} 列表
+	 */
+	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
+										 final byte[] start, final byte[] end, final long count){
+		return xPending(key, groupName, minIdleTime, new StreamEntryId(start), new StreamEntryId(end), count);
+	}
+
+	/**
+	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xpending/" target="_blank">https://redis.io/commands/xpending/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param start
+	 * 		Start Id
+	 * @param end
+	 * 		End Id
+	 * @param count
+	 * 		返回数量
+	 * @param consumerName
+	 * 		Consumer Name
+	 *
+	 * @return {@link StreamPending} 列表
+	 */
+	default List<StreamPending> xPending(final String key, final String groupName, final String start,
+										 final String end, final long count, final String consumerName){
+		return xPending(key, groupName, new StreamEntryId(start), new StreamEntryId(end), count, consumerName);
+	}
+
+	/**
+	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xpending/" target="_blank">https://redis.io/commands/xpending/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param start
+	 * 		Start Id
+	 * @param end
+	 * 		End Id
+	 * @param count
+	 * 		返回数量
+	 * @param consumerName
+	 * 		Consumer Name
+	 *
+	 * @return {@link StreamPending} 列表
+	 */
+	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final byte[] start,
+										 final byte[] end, final long count, final byte[] consumerName){
+		return xPending(key, groupName, new StreamEntryId(start), new StreamEntryId(end), count, consumerName);
+	}
+
+	/**
+	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xpending/" target="_blank">https://redis.io/commands/xpending/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		Start Id
+	 * @param end
+	 * 		End Id
+	 * @param count
+	 * 		返回数量
+	 * @param consumerName
+	 * 		Consumer Name
+	 *
+	 * @return {@link StreamPending} 列表
+	 */
+	default List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
+										 final String start, final String end, final long count,
+										 final String consumerName){
+		return xPending(key, groupName, minIdleTime, new StreamEntryId(start), new StreamEntryId(end), count,
+				consumerName);
+	}
+
+	/**
+	 * Fetching data from a stream via a consumer group, and not acknowledging such data, has the effect of creating pending entries
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xpending/" target="_blank">https://redis.io/commands/xpending/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		Start Id
+	 * @param end
+	 * 		End Id
+	 * @param count
+	 * 		返回数量
+	 * @param consumerName
+	 * 		Consumer Name
+	 *
+	 * @return {@link StreamPending} 列表
+	 */
+	default List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
+										 final byte[] start, final byte[] end, final long count,
+										 final byte[] consumerName){
+		return xPending(key, groupName, minIdleTime, new StreamEntryId(start), new StreamEntryId(end), count,
+				consumerName);
+	}
+
+	/**
+	 * The command returns the stream entries matching a given range of IDs
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xrange/" target="_blank">https://redis.io/commands/xrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		Start Id
+	 * @param end
+	 * 		End Id
+	 *
+	 * @return {@link StreamEntry} 列表
+	 */
+	default List<StreamEntry> xRange(final String key, final String start, final String end){
+		return xRange(key, new StreamEntryId(start), new StreamEntryId(end));
+	}
+
+	/**
+	 * The command returns the stream entries matching a given range of IDs
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xrange/" target="_blank">https://redis.io/commands/xrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		Start Id
+	 * @param end
+	 * 		End Id
+	 *
+	 * @return {@link StreamEntry} 列表
+	 */
+	default List<StreamEntry> xRange(final byte[] key, final byte[] start, final byte[] end){
+		return xRange(key, new StreamEntryId(start), new StreamEntryId(end));
+	}
+
+	/**
+	 * The command returns the stream entries matching a given range of IDs
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xrange/" target="_blank">https://redis.io/commands/xrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		Start Id
+	 * @param end
+	 * 		End Id
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return {@link StreamEntry} 列表
+	 */
+	default List<StreamEntry> xRange(final String key, final String start, final String end, final long count){
+		return xRange(key, new StreamEntryId(start), new StreamEntryId(end), count);
+	}
+
+	/**
+	 * The command returns the stream entries matching a given range of IDs
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xrange/" target="_blank">https://redis.io/commands/xrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param start
+	 * 		Start Id
+	 * @param end
+	 * 		End Id
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return {@link StreamEntry} 列表
+	 */
+	default List<StreamEntry> xRange(final byte[] key, final byte[] start, final byte[] end, final long count){
+		return xRange(key, new StreamEntryId(start), new StreamEntryId(end), count);
+	}
+
+	/**
+	 * This command is exactly like XRANGE, but with the notable difference of returning the entries in reverse order,
+	 * and also taking the start-end range in reverse order: in XREVRANGE you need to state the end ID and later the start ID,
+	 * and the command will produce all the element between (or exactly like) the two IDs, starting from the end side
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xrevrange/" target="_blank">https://redis.io/commands/xrevrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param end
+	 * 		End Id
+	 * @param start
+	 * 		Start Id
+	 *
+	 * @return {@link StreamEntry} 列表
+	 */
+	default List<StreamEntry> xRevRange(final String key, final String end, final String start){
+		return xRevRange(key, new StreamEntryId(end), new StreamEntryId(start));
+	}
+
+	/**
+	 * This command is exactly like XRANGE, but with the notable difference of returning the entries in reverse order,
+	 * and also taking the start-end range in reverse order: in XREVRANGE you need to state the end ID and later the start ID,
+	 * and the command will produce all the element between (or exactly like) the two IDs, starting from the end side
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xrevrange/" target="_blank">https://redis.io/commands/xrevrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param end
+	 * 		End Id
+	 * @param start
+	 * 		Start Id
+	 *
+	 * @return {@link StreamEntry} 列表
+	 */
+	default List<StreamEntry> xRevRange(final byte[] key, final byte[] end, final byte[] start){
+		return xRevRange(key, new StreamEntryId(end), new StreamEntryId(start));
+	}
+
+	/**
+	 * This command is exactly like XRANGE, but with the notable difference of returning the entries in reverse order,
+	 * and also taking the start-end range in reverse order: in XREVRANGE you need to state the end ID and later the start ID,
+	 * and the command will produce all the element between (or exactly like) the two IDs, starting from the end side
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xrevrange/" target="_blank">https://redis.io/commands/xrevrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param end
+	 * 		End Id
+	 * @param start
+	 * 		Start Id
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return {@link StreamEntry} 列表
+	 */
+	default List<StreamEntry> xRevRange(final String key, final String end, final String start, final long count){
+		return xRevRange(key, new StreamEntryId(end), new StreamEntryId(start), count);
+	}
+
+	/**
+	 * This command is exactly like XRANGE, but with the notable difference of returning the entries in reverse order,
+	 * and also taking the start-end range in reverse order: in XREVRANGE you need to state the end ID and later the start ID,
+	 * and the command will produce all the element between (or exactly like) the two IDs, starting from the end side
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xrevrange/" target="_blank">https://redis.io/commands/xrevrange/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param end
+	 * 		End Id
+	 * @param start
+	 * 		Start Id
+	 * @param count
+	 * 		返回数量
+	 *
+	 * @return {@link StreamEntry} 列表
+	 */
+	default List<StreamEntry> xRevRange(final byte[] key, final byte[] end, final byte[] start, final long count){
+		return xRevRange(key, new StreamEntryId(end), new StreamEntryId(start), count);
 	}
 
 }

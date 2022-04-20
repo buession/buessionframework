@@ -24,83 +24,67 @@
  */
 package com.buession.redis.core;
 
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.utils.SafeEncoder;
-
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
+public class StreamConsumerFull implements Serializable {
 
-	private final static long serialVersionUID = -4487927281373256508L;
+	private final static long serialVersionUID = -4058066725300830836L;
 
-	private final long time;
+	private final String name;
 
-	private final long sequence;
+	private final Long seenTime;
 
-	public StreamEntryId(){
-		this(0L, 0L);
+	private final Long pelCount;
+
+	private final List<Long> pending;
+
+	private final Map<String, Object> infos;
+
+	public StreamConsumerFull(final String name, final Long seenTime, final Long pelCount, final List<Long> pending,
+							  final Map<String, Object> infos){
+		this.name = name;
+		this.seenTime = seenTime;
+		this.pelCount = pelCount;
+		this.pending = pending;
+		this.infos = infos;
 	}
 
-	public StreamEntryId(final String id){
-		String[] split = StringUtils.split(id, '-');
-		this.time = Long.parseLong(split[0]);
-		this.sequence = Long.parseLong(split[1]);
+	public String getName(){
+		return name;
 	}
 
-	public StreamEntryId(final byte[] id){
-		this(SafeEncoder.encode(id));
+	public Long getSeenTime(){
+		return seenTime;
 	}
 
-	public StreamEntryId(final long time){
-		this(time, 0L);
+	public Long getPelCount(){
+		return pelCount;
 	}
 
-	public StreamEntryId(final long time, final long sequence){
-		this.time = time;
-		this.sequence = sequence;
+	public List<Long> getPending(){
+		return pending;
 	}
 
-	public long getTime(){
-		return time;
-	}
-
-	public long getSequence(){
-		return sequence;
-	}
-
-	@Override
-	public int compareTo(StreamEntryId other){
-		int timeCompare = Long.compare(this.time, other.time);
-		return timeCompare != 0 ? timeCompare : Long.compare(this.sequence, other.sequence);
-	}
-
-	@Override
-	public int hashCode(){
-		return Objects.hash(time, sequence);
-	}
-
-	@Override
-	public boolean equals(Object obj){
-		if(obj == this){
-			return true;
-		}
-
-		if(obj instanceof StreamEntryId){
-			StreamEntryId that = (StreamEntryId) obj;
-			return that.time == time && that.sequence == sequence;
-		}
-
-		return false;
+	public Map<String, Object> getInfos(){
+		return infos;
 	}
 
 	@Override
 	public String toString(){
-		return time + "-" + sequence;
+		return new StringJoiner(", ", "[", "]")
+				.add("name='" + name + "'")
+				.add("seenTime=" + seenTime)
+				.add("pelCount=" + pelCount)
+				.add("pending=" + pending)
+				.add("infos=" + infos)
+				.toString();
 	}
 
 }

@@ -26,6 +26,7 @@ package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.ArrayConverter;
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.StreamEntryId;
 import redis.clients.jedis.StreamEntryID;
 
@@ -44,6 +45,21 @@ public final class StreamEntryIdConverter implements Converter<StreamEntryId, St
 	@Override
 	public StreamEntryID convert(final StreamEntryId source){
 		return new StreamEntryID(source.getTime(), source.getSequence());
+	}
+
+	public final static class MapStreamEntryIdConverter<SK, TK>
+			extends MapConverter<SK, StreamEntryId, TK, StreamEntryID> {
+
+		public final static MapStreamEntryIdConverter<String, String> STRING_MAP_CONVERTER = new MapStreamEntryIdConverter<>(
+				(key)->key);
+
+		public final static MapStreamEntryIdConverter<byte[], byte[]> BINARY_MAP_CONVERTER = new MapStreamEntryIdConverter<>(
+				(key)->key);
+
+		public MapStreamEntryIdConverter(Converter<SK, TK> keyConverter){
+			super(keyConverter, StreamEntryIdConverter.INSTANCE);
+		}
+
 	}
 
 }

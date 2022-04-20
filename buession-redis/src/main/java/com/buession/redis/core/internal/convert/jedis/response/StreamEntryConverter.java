@@ -33,7 +33,6 @@ import redis.clients.jedis.StreamEntryID;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * jedis {@link redis.clients.jedis.resps.StreamEntry} 转换为 {@link StreamEntry}
@@ -53,25 +52,52 @@ public final class StreamEntryConverter implements Converter<redis.clients.jedis
 		return new StreamEntry(StreamEntryIDConverter.INSTANCE.convert(source.getID()), source.getFields());
 	}
 
-	public final static class MapStreamEntryConverter implements
-			Converter<Map.Entry<StreamEntryID, List<redis.clients.jedis.resps.StreamEntry>>, Map<StreamEntryId, List<StreamEntry>>> {
+	public final static class MapStreamEntryConverter<SK, TK> implements
+			Converter<Map.Entry<SK, List<redis.clients.jedis.resps.StreamEntry>>, Map<TK, List<StreamEntry>>> {
 
-		public final static MapStreamEntryConverter INSTANCE = new MapStreamEntryConverter();
+		public final static MapStreamEntryConverter<StreamEntryID, StreamEntryId> STREAMENTRYID_KEY_MAP_CONVERTER = new MapStreamEntryConverter<>(
+				StreamEntryIDConverter.INSTANCE);
+
+		public final static MapStreamEntryConverter<String, String> STRING_KEY_MAP_CONVERTER = new MapStreamEntryConverter<>(
+				(key)->key);
+
+		private final Converter<SK, TK> keyConverter;
+
+		public MapStreamEntryConverter(final Converter<SK, TK> keyConverter){
+			this.keyConverter = keyConverter;
+		}
 
 		@Override
-		public Map<StreamEntryId, List<StreamEntry>> convert(
-				final Map.Entry<StreamEntryID, List<redis.clients.jedis.resps.StreamEntry>> source){
-			final Map<StreamEntryId, List<StreamEntry>> result = new LinkedHashMap<>();
+		public Map<TK, List<StreamEntry>> convert(
+				final Map.Entry<SK, List<redis.clients.jedis.resps.StreamEntry>> source){
+			final Map<TK, List<StreamEntry>> result = new LinkedHashMap<>();
+			final TK key = keyConverter.convert(source.getKey());
 
 			if(source.getValue() != null){
-				final List<StreamEntry> streamEntries = source.getValue().stream()
-						.map(StreamEntryConverter.INSTANCE::convert).collect(Collectors.toList());
-				result.put(StreamEntryIDConverter.INSTANCE.convert(source.getKey()), streamEntries);
+				result.put(key, StreamEntryConverter.LIST_CONVERTER.convert(source.getValue()));
 			}else{
-				result.put(StreamEntryIDConverter.INSTANCE.convert(source.getKey()), null);
+				result.put(key, null);
 			}
 
 			return result;
+		}
+
+	}
+
+	public final static class ListMapStreamEntryConverter<SK, TK> extends
+			ListConverter<Map.Entry<SK, List<redis.clients.jedis.resps.StreamEntry>>, Map<TK, List<StreamEntry>>> {
+
+		public final static ListMapStreamEntryConverter<String, String> STRING_KEY_MAP_CONVERTER = new ListMapStreamEntryConverter<>(
+				(key)->key);
+
+		public final static ListMapStreamEntryConverter<byte[], byte[]> BINARY_KEY_MAP_CONVERTER = new ListMapStreamEntryConverter<>(
+				(key)->key);
+
+		public ListMapStreamEntryConverter(final Converter<SK, TK> keyConverter){
+			super((item)->{
+				final MapStreamEntryConverter<SK, TK> converter = new MapStreamEntryConverter<>(keyConverter);
+				return converter.convert(item);
+			});
 		}
 
 	}

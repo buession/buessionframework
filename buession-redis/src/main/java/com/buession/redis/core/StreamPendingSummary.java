@@ -24,83 +24,58 @@
  */
 package com.buession.redis.core;
 
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.utils.SafeEncoder;
-
 import java.io.Serializable;
-import java.util.Objects;
+import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
+public class StreamPendingSummary implements Serializable {
 
-	private final static long serialVersionUID = -4487927281373256508L;
+	private final static long serialVersionUID = 4352578196582945851L;
 
-	private final long time;
+	private final long total;
 
-	private final long sequence;
+	private final StreamEntryId minId;
 
-	public StreamEntryId(){
-		this(0L, 0L);
+	private final StreamEntryId maxId;
+
+	private final Map<String, Long> consumerMessageCount;
+
+	public StreamPendingSummary(long total, StreamEntryId minId, StreamEntryId maxId,
+								Map<String, Long> consumerMessageCount){
+		this.total = total;
+		this.minId = minId;
+		this.maxId = maxId;
+		this.consumerMessageCount = consumerMessageCount;
 	}
 
-	public StreamEntryId(final String id){
-		String[] split = StringUtils.split(id, '-');
-		this.time = Long.parseLong(split[0]);
-		this.sequence = Long.parseLong(split[1]);
+	public long getTotal(){
+		return total;
 	}
 
-	public StreamEntryId(final byte[] id){
-		this(SafeEncoder.encode(id));
+	public StreamEntryId getMinId(){
+		return minId;
 	}
 
-	public StreamEntryId(final long time){
-		this(time, 0L);
+	public StreamEntryId getMaxId(){
+		return maxId;
 	}
 
-	public StreamEntryId(final long time, final long sequence){
-		this.time = time;
-		this.sequence = sequence;
-	}
-
-	public long getTime(){
-		return time;
-	}
-
-	public long getSequence(){
-		return sequence;
-	}
-
-	@Override
-	public int compareTo(StreamEntryId other){
-		int timeCompare = Long.compare(this.time, other.time);
-		return timeCompare != 0 ? timeCompare : Long.compare(this.sequence, other.sequence);
-	}
-
-	@Override
-	public int hashCode(){
-		return Objects.hash(time, sequence);
-	}
-
-	@Override
-	public boolean equals(Object obj){
-		if(obj == this){
-			return true;
-		}
-
-		if(obj instanceof StreamEntryId){
-			StreamEntryId that = (StreamEntryId) obj;
-			return that.time == time && that.sequence == sequence;
-		}
-
-		return false;
+	public Map<String, Long> getConsumerMessageCount(){
+		return consumerMessageCount;
 	}
 
 	@Override
 	public String toString(){
-		return time + "-" + sequence;
+		return new StringJoiner(", ", "[", "]")
+				.add("total=" + total)
+				.add("minId=" + minId)
+				.add("maxId=" + maxId)
+				.add("consumerMessageCount=" + consumerMessageCount)
+				.toString();
 	}
 
 }

@@ -22,85 +22,60 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.jedis;
 
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.utils.SafeEncoder;
-
-import java.io.Serializable;
-import java.util.Objects;
+import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.internal.convert.jedis.params.StreamEntryIdConverter;
+import redis.clients.jedis.params.XPendingParams;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
+public class JedisXPendingParams extends XPendingParams {
 
-	private final static long serialVersionUID = -4487927281373256508L;
-
-	private final long time;
-
-	private final long sequence;
-
-	public StreamEntryId(){
-		this(0L, 0L);
+	public JedisXPendingParams(){
+		super();
 	}
 
-	public StreamEntryId(final String id){
-		String[] split = StringUtils.split(id, '-');
-		this.time = Long.parseLong(split[0]);
-		this.sequence = Long.parseLong(split[1]);
+	public JedisXPendingParams(final long minIdleTime){
+		super();
+		idle(minIdleTime);
 	}
 
-	public StreamEntryId(final byte[] id){
-		this(SafeEncoder.encode(id));
+	public JedisXPendingParams(final long minIdleTime, final StreamEntryId start, final StreamEntryId end,
+							   final long count){
+		this(start, end, count);
+		idle(minIdleTime);
 	}
 
-	public StreamEntryId(final long time){
-		this(time, 0L);
+	public JedisXPendingParams(final long minIdleTime, final String consumer){
+		this(minIdleTime);
+		consumer(consumer);
 	}
 
-	public StreamEntryId(final long time, final long sequence){
-		this.time = time;
-		this.sequence = sequence;
+	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final long count){
+		super();
+		start(StreamEntryIdConverter.INSTANCE.convert(start));
+		end(StreamEntryIdConverter.INSTANCE.convert(end));
+		count((int) count);
 	}
 
-	public long getTime(){
-		return time;
+	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final long count,
+							   final String consumer){
+		this(start, end, count);
+		consumer(consumer);
 	}
 
-	public long getSequence(){
-		return sequence;
+	public JedisXPendingParams(final long minIdleTime, final StreamEntryId start, final StreamEntryId end,
+							   final long count, final String consumer){
+		this(minIdleTime, start, end, count);
+		consumer(consumer);
 	}
 
-	@Override
-	public int compareTo(StreamEntryId other){
-		int timeCompare = Long.compare(this.time, other.time);
-		return timeCompare != 0 ? timeCompare : Long.compare(this.sequence, other.sequence);
-	}
-
-	@Override
-	public int hashCode(){
-		return Objects.hash(time, sequence);
-	}
-
-	@Override
-	public boolean equals(Object obj){
-		if(obj == this){
-			return true;
-		}
-
-		if(obj instanceof StreamEntryId){
-			StreamEntryId that = (StreamEntryId) obj;
-			return that.time == time && that.sequence == sequence;
-		}
-
-		return false;
-	}
-
-	@Override
-	public String toString(){
-		return time + "-" + sequence;
+	public JedisXPendingParams(final String consumer){
+		super();
+		consumer(consumer);
 	}
 
 }

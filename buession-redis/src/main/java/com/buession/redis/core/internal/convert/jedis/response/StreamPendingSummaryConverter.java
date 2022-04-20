@@ -22,85 +22,26 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.jedis.response;
 
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.utils.SafeEncoder;
-
-import java.io.Serializable;
-import java.util.Objects;
+import com.buession.core.converter.Converter;
+import com.buession.redis.core.StreamPendingSummary;
 
 /**
+ * jedis {@link redis.clients.jedis.resps.StreamPendingSummary} 转换为 {@link StreamPendingSummary}
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
+public class StreamPendingSummaryConverter
+		implements Converter<redis.clients.jedis.resps.StreamPendingSummary, StreamPendingSummary> {
 
-	private final static long serialVersionUID = -4487927281373256508L;
-
-	private final long time;
-
-	private final long sequence;
-
-	public StreamEntryId(){
-		this(0L, 0L);
-	}
-
-	public StreamEntryId(final String id){
-		String[] split = StringUtils.split(id, '-');
-		this.time = Long.parseLong(split[0]);
-		this.sequence = Long.parseLong(split[1]);
-	}
-
-	public StreamEntryId(final byte[] id){
-		this(SafeEncoder.encode(id));
-	}
-
-	public StreamEntryId(final long time){
-		this(time, 0L);
-	}
-
-	public StreamEntryId(final long time, final long sequence){
-		this.time = time;
-		this.sequence = sequence;
-	}
-
-	public long getTime(){
-		return time;
-	}
-
-	public long getSequence(){
-		return sequence;
-	}
+	public final static StreamPendingSummaryConverter INSTANCE = new StreamPendingSummaryConverter();
 
 	@Override
-	public int compareTo(StreamEntryId other){
-		int timeCompare = Long.compare(this.time, other.time);
-		return timeCompare != 0 ? timeCompare : Long.compare(this.sequence, other.sequence);
-	}
-
-	@Override
-	public int hashCode(){
-		return Objects.hash(time, sequence);
-	}
-
-	@Override
-	public boolean equals(Object obj){
-		if(obj == this){
-			return true;
-		}
-
-		if(obj instanceof StreamEntryId){
-			StreamEntryId that = (StreamEntryId) obj;
-			return that.time == time && that.sequence == sequence;
-		}
-
-		return false;
-	}
-
-	@Override
-	public String toString(){
-		return time + "-" + sequence;
+	public StreamPendingSummary convert(final redis.clients.jedis.resps.StreamPendingSummary source){
+		return new StreamPendingSummary(source.getTotal(), StreamEntryIDConverter.INSTANCE.convert(source.getMinId()),
+				StreamEntryIDConverter.INSTANCE.convert(source.getMaxId()), source.getConsumerMessageCount());
 	}
 
 }

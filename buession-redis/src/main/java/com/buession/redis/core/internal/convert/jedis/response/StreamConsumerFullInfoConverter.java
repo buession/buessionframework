@@ -22,85 +22,30 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core;
+package com.buession.redis.core.internal.convert.jedis.response;
 
-import com.buession.core.utils.StringUtils;
-import com.buession.redis.utils.SafeEncoder;
-
-import java.io.Serializable;
-import java.util.Objects;
+import com.buession.core.converter.Converter;
+import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.StreamConsumerFull;
+import redis.clients.jedis.resps.StreamConsumerFullInfo;
 
 /**
+ * jedis {@link StreamConsumerFullInfo} 转换为 {@link StreamConsumerFull}
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class StreamEntryId implements Comparable<StreamEntryId>, Serializable {
+public class StreamConsumerFullInfoConverter implements Converter<StreamConsumerFullInfo, StreamConsumerFull> {
 
-	private final static long serialVersionUID = -4487927281373256508L;
+	public final static StreamConsumerFullInfoConverter INSTANCE = new StreamConsumerFullInfoConverter();
 
-	private final long time;
-
-	private final long sequence;
-
-	public StreamEntryId(){
-		this(0L, 0L);
-	}
-
-	public StreamEntryId(final String id){
-		String[] split = StringUtils.split(id, '-');
-		this.time = Long.parseLong(split[0]);
-		this.sequence = Long.parseLong(split[1]);
-	}
-
-	public StreamEntryId(final byte[] id){
-		this(SafeEncoder.encode(id));
-	}
-
-	public StreamEntryId(final long time){
-		this(time, 0L);
-	}
-
-	public StreamEntryId(final long time, final long sequence){
-		this.time = time;
-		this.sequence = sequence;
-	}
-
-	public long getTime(){
-		return time;
-	}
-
-	public long getSequence(){
-		return sequence;
-	}
+	public final static ListConverter<StreamConsumerFullInfo, StreamConsumerFull> LIST_CONVERTER = new ListConverter<>(
+			INSTANCE);
 
 	@Override
-	public int compareTo(StreamEntryId other){
-		int timeCompare = Long.compare(this.time, other.time);
-		return timeCompare != 0 ? timeCompare : Long.compare(this.sequence, other.sequence);
-	}
-
-	@Override
-	public int hashCode(){
-		return Objects.hash(time, sequence);
-	}
-
-	@Override
-	public boolean equals(Object obj){
-		if(obj == this){
-			return true;
-		}
-
-		if(obj instanceof StreamEntryId){
-			StreamEntryId that = (StreamEntryId) obj;
-			return that.time == time && that.sequence == sequence;
-		}
-
-		return false;
-	}
-
-	@Override
-	public String toString(){
-		return time + "-" + sequence;
+	public StreamConsumerFull convert(final StreamConsumerFullInfo source){
+		return new StreamConsumerFull(source.getName(), source.getSeenTime(), source.getPelCount(), source.getPending(),
+				source.getConsumerInfo());
 	}
 
 }
