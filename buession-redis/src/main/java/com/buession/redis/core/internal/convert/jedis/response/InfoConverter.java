@@ -115,14 +115,14 @@ public class InfoConverter implements Converter<String, Info> {
 	}
 
 	@FunctionalInterface
-	protected interface Parser<V> {
+	private interface Parser<V> {
 
 		@Nullable
 		V parse(final String str);
 
 	}
 
-	protected final static class ServerParser implements Parser<Info.Server> {
+	private final static class ServerParser implements Parser<Info.Server> {
 
 		@Override
 		public Info.Server parse(final String str){
@@ -167,7 +167,7 @@ public class InfoConverter implements Converter<String, Info> {
 
 	}
 
-	protected final static class ClientsParser implements Parser<Info.Clients> {
+	private final static class ClientsParser implements Parser<Info.Clients> {
 
 		@Override
 		public Info.Clients parse(final String str){
@@ -185,7 +185,7 @@ public class InfoConverter implements Converter<String, Info> {
 
 	}
 
-	protected final static class MemoryParser implements Parser<Info.Memory> {
+	private final static class MemoryParser implements Parser<Info.Memory> {
 
 		@Override
 		public Info.Memory parse(final String str){
@@ -209,7 +209,7 @@ public class InfoConverter implements Converter<String, Info> {
 
 	}
 
-	protected final static class PersistenceParser implements Parser<Info.Persistence> {
+	private final static class PersistenceParser implements Parser<Info.Persistence> {
 
 		@Override
 		public Info.Persistence parse(final String str){
@@ -236,7 +236,7 @@ public class InfoConverter implements Converter<String, Info> {
 
 	}
 
-	protected final static class StatsParser implements Parser<Info.Stats> {
+	private final static class StatsParser implements Parser<Info.Stats> {
 
 		@Override
 		public Info.Stats parse(final String str){
@@ -254,7 +254,7 @@ public class InfoConverter implements Converter<String, Info> {
 
 	}
 
-	protected final static class ReplicationParser implements Parser<Info.Replication> {
+	private final static class ReplicationParser implements Parser<Info.Replication> {
 
 		private final static Pattern SLAVE_PATTERN = Pattern.compile("slave\\d");
 
@@ -353,7 +353,7 @@ public class InfoConverter implements Converter<String, Info> {
 
 	}
 
-	protected final static class CpuParser implements Parser<Info.Cpu> {
+	private final static class CpuParser implements Parser<Info.Cpu> {
 
 		@Override
 		public Info.Cpu parse(final String str){
@@ -371,7 +371,7 @@ public class InfoConverter implements Converter<String, Info> {
 
 	}
 
-	protected final static class ClusterParser implements Parser<Info.Cluster> {
+	private final static class ClusterParser implements Parser<Info.Cluster> {
 
 		@Override
 		public Info.Cluster parse(final String str){
@@ -389,7 +389,7 @@ public class InfoConverter implements Converter<String, Info> {
 
 	}
 
-	protected final static class SentinelParser implements Parser<Info.Sentinel> {
+	private final static class SentinelParser implements Parser<Info.Sentinel> {
 
 		private final static Pattern MASTER_PATTERN = Pattern.compile("master\\d");
 
@@ -441,7 +441,7 @@ public class InfoConverter implements Converter<String, Info> {
 
 	}
 
-	protected final static class KeyspaceParser implements Parser<List<Info.Keyspace>> {
+	private final static class KeyspaceParser implements Parser<List<Info.Keyspace>> {
 
 		@Override
 		public List<Info.Keyspace> parse(final String str){
@@ -477,7 +477,7 @@ public class InfoConverter implements Converter<String, Info> {
 
 	}
 
-	protected static String[] parseRows(final String str){
+	private static String[] parseRows(final String str){
 		return StringUtils.split(str, ROW_SEPARATOR);
 	}
 

@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.core.converter.MapConverter;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.JedisSentinelClient;
@@ -89,9 +88,9 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 	}
 
 	@Override
-	public StreamEntryId xAdd(final String key, final String id, final Map<String, String> hash){
+	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash){
 		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash);
-		final StreamEntryID streamEntryID = new StreamEntryID(id);
+		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(id);
 		final JedisSentinelCommand<StreamEntryId> command = JedisSentinelCommand.<StreamEntryId>create(
 						ProtocolCommand.XADD)
 				.general((cmd)->cmd.xadd(key, streamEntryID, hash), StreamEntryIDConverter.INSTANCE)
@@ -101,11 +100,12 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 	}
 
 	@Override
-	public StreamEntryId xAdd(final String key, final String id, final Map<String, String> hash,
+	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
 							  final XAddArgument xAddArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash)
 				.put("xAddArgument", xAddArgument);
-		final XAddParams params = XAddArgumentConverter.INSTANCE.convert(xAddArgument).id(id);
+		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(id);
+		final XAddParams params = XAddArgumentConverter.INSTANCE.convert(xAddArgument).id(streamEntryID);
 		final JedisSentinelCommand<StreamEntryId> command = JedisSentinelCommand.<StreamEntryId>create(
 						ProtocolCommand.XADD)
 				.general((cmd)->cmd.xadd(key, hash, params), StreamEntryIDConverter.INSTANCE)
@@ -115,11 +115,12 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 	}
 
 	@Override
-	public StreamEntryId xAdd(final byte[] key, final byte[] id, final Map<byte[], byte[]> hash,
+	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash,
 							  final XAddArgument xAddArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("id", id).put("hash", hash)
 				.put("xAddArgument", xAddArgument);
-		final XAddParams params = XAddArgumentConverter.INSTANCE.convert(xAddArgument).id(id);
+		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(id);
+		final XAddParams params = XAddArgumentConverter.INSTANCE.convert(xAddArgument).id(streamEntryID);
 		final JedisSentinelCommand<StreamEntryId> command = JedisSentinelCommand.<StreamEntryId>create(
 						ProtocolCommand.XADD)
 				.general((cmd)->cmd.xadd(key, hash, params),
@@ -134,10 +135,10 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 	@Override
 	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
 															final String consumerName, final int minIdleTime,
-															final String start){
+															final StreamEntryId start){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start);
-		final StreamEntryID streamEntryID = new StreamEntryID(start);
+		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(start);
 		final JedisXAutoClaimParams params = new JedisXAutoClaimParams();
 		final JedisSentinelCommand<Map<StreamEntryId, List<StreamEntry>>> command = JedisSentinelCommand.<Map<StreamEntryId, List<StreamEntry>>>create(
 						ProtocolCommand.XAUTOCLAIM)
@@ -154,11 +155,11 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 	@Override
 	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
 															final String consumerName, final int minIdleTime,
-															final String start, final long count){
+															final StreamEntryId start, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
-		final StreamEntryID streamEntryID = new StreamEntryID(start);
+		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(start);
 		final JedisXAutoClaimParams params = new JedisXAutoClaimParams(count);
 		final JedisSentinelCommand<Map<StreamEntryId, List<StreamEntry>>> command = JedisSentinelCommand.<Map<StreamEntryId, List<StreamEntry>>>create(
 						ProtocolCommand.XAUTOCLAIM)
@@ -175,11 +176,11 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 	@Override
 	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
 																	final String consumerName, final int minIdleTime,
-																	final String start){
+																	final StreamEntryId start){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count");
-		final StreamEntryID streamEntryID = new StreamEntryID(start);
+		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(start);
 		final JedisXAutoClaimParams params = new JedisXAutoClaimParams();
 		final JedisSentinelCommand<Map<StreamEntryId, List<StreamEntryId>>> command = JedisSentinelCommand.<Map<StreamEntryId, List<StreamEntryId>>>create(
 						ProtocolCommand.XAUTOCLAIM)
@@ -196,11 +197,11 @@ public final class JedisSentinelStreamOperations extends AbstractStreamOperation
 	@Override
 	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
 																	final String consumerName, final int minIdleTime,
-																	final String start, final long count){
+																	final StreamEntryId start, final long count){
 		final CommandArguments args = CommandArguments.create("key", key).put("groupName", groupName)
 				.put("consumerName", consumerName).put("minIdleTime", minIdleTime).put("start", start)
 				.put("count", count);
-		final StreamEntryID streamEntryID = new StreamEntryID(start);
+		final StreamEntryID streamEntryID = StreamEntryIdConverter.INSTANCE.convert(start);
 		final JedisXAutoClaimParams params = new JedisXAutoClaimParams(count);
 		final JedisSentinelCommand<Map<StreamEntryId, List<StreamEntryId>>> command = JedisSentinelCommand.<Map<StreamEntryId, List<StreamEntryId>>>create(
 						ProtocolCommand.XAUTOCLAIM)

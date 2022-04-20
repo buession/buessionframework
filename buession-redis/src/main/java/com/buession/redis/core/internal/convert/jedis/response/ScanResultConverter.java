@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.core.converter.MapConverter;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Tuple;
 
@@ -99,8 +100,8 @@ public interface ScanResultConverter<S, T> extends Converter<redis.clients.jedis
 		public final static MapScanResultConverter<byte[], byte[]> BINARY_MAP_CONVERTER = new MapScanResultConverter<>();
 
 		@Override
-		public ScanResult<Map<K, V>> convert(redis.clients.jedis.resps.ScanResult<Map.Entry<K, V>> source){
-			Map<K, V> data = source.getResult().stream().collect(Collectors.toMap(Map.Entry::getKey,
+		public ScanResult<Map<K, V>> convert(final redis.clients.jedis.resps.ScanResult<Map.Entry<K, V>> source){
+			final Map<K, V> data = source.getResult().stream().collect(Collectors.toMap(Map.Entry::getKey,
 					Map.Entry::getValue, (a, b)->a, LinkedHashMap::new));
 			return new ScanResult<>(source.getCursorAsBytes(), data);
 		}

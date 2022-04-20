@@ -31,6 +31,7 @@ import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.command.StreamCommands;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Stream 命令
@@ -95,6 +96,88 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 	}
 
 	/**
+	 * Appends the specified stream entry to the stream at the specified key.
+	 * If the key does not exist, as a side effect of running this command the key is created with a stream value
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xadd/" target="_blank">https://redis.io/commands/xadd/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param id
+	 * 		Id
+	 * @param hash
+	 * 		Hash
+	 *
+	 * @return {@link StreamEntryId}
+	 */
+	default StreamEntryId xAdd(final String key, final String id, final Map<String, String> hash){
+		return xAdd(key, new StreamEntryId(id), hash);
+	}
+
+	/**
+	 * Appends the specified stream entry to the stream at the specified key.
+	 * If the key does not exist, as a side effect of running this command the key is created with a stream value
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xadd/" target="_blank">https://redis.io/commands/xadd/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param id
+	 * 		Id
+	 * @param hash
+	 * 		Hash
+	 *
+	 * @return {@link StreamEntryId}
+	 */
+	default StreamEntryId xAdd(final byte[] key, byte[] id, final Map<byte[], byte[]> hash){
+		return xAdd(key, new StreamEntryId(id), hash);
+	}
+
+	/**
+	 * Appends the specified stream entry to the stream at the specified key.
+	 * If the key does not exist, as a side effect of running this command the key is created with a stream value
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xadd/" target="_blank">https://redis.io/commands/xadd/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param id
+	 * 		Id
+	 * @param hash
+	 * 		Hash
+	 * @param xAddArgument
+	 *        {@link XAddArgument}
+	 *
+	 * @return {@link StreamEntryId}
+	 */
+	default StreamEntryId xAdd(final String key, final String id, final Map<String, String> hash,
+							   final XAddArgument xAddArgument){
+		return xAdd(key, new StreamEntryId(id), hash, xAddArgument);
+	}
+
+	/**
+	 * Appends the specified stream entry to the stream at the specified key.
+	 * If the key does not exist, as a side effect of running this command the key is created with a stream value
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xadd/" target="_blank">https://redis.io/commands/xadd/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param id
+	 * 		Id
+	 * @param hash
+	 * 		Hash
+	 * @param xAddArgument
+	 *        {@link XAddArgument}
+	 *
+	 * @return {@link StreamEntryId}
+	 */
+	default StreamEntryId xAdd(final byte[] key, final byte[] id, final Map<byte[], byte[]> hash,
+							   final XAddArgument xAddArgument){
+		return xAdd(key, new StreamEntryId(id), hash, xAddArgument);
+	}
+
+	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
 	 * so that the new owner is the consumer specified as the command argument
 	 *
@@ -124,6 +207,206 @@ public interface StreamOperations extends StreamCommands, RedisOperations {
 		}
 
 		return xClaim(key, groupName, consumerName, minIdleTime, streamEntryIds);
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
+	 */
+	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
+															 final String consumerName,
+															 final int minIdleTime, final String start){
+		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start));
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
+	 */
+	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
+															 final byte[] consumerName,
+															 final int minIdleTime, final byte[] start){
+		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start));
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 * @param count
+	 * 		数量
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
+	 */
+	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
+															 final String consumerName, final int minIdleTime,
+															 final String start, final long count){
+		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 * @param count
+	 * 		数量
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
+	 */
+	default Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
+															 final byte[] consumerName, final int minIdleTime,
+															 final byte[] start, final long count){
+		return xAutoClaim(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
+	 */
+	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
+																	 final String consumerName, final int minIdleTime,
+																	 final String start){
+		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start));
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
+	 */
+	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
+																	 final byte[] consumerName, final int minIdleTime,
+																	 final byte[] start){
+		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start));
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 * @param count
+	 * 		数量
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
+	 */
+	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
+																	 final String consumerName, final int minIdleTime,
+																	 final String start, final long count){
+		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
+	}
+
+	/**
+	 * This command transfers ownership of pending stream entries that match the specified criteria
+	 *
+	 * <p>详情说明 <a href="https://redis.io/commands/xautoclaim/" target="_blank">https://redis.io/commands/xautoclaim/</a></p>
+	 *
+	 * @param key
+	 * 		Key
+	 * @param groupName
+	 * 		Group Name
+	 * @param consumerName
+	 * 		Consumer Name
+	 * @param minIdleTime
+	 * 		Min Idle Time
+	 * @param start
+	 * 		greater ID than
+	 * @param count
+	 * 		数量
+	 *
+	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntryId}
+	 */
+	default Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
+																	 final byte[] consumerName, final int minIdleTime,
+																	 final byte[] start, final long count){
+		return xAutoClaimJustId(key, groupName, consumerName, minIdleTime, new StreamEntryId(start), count);
 	}
 
 	/**

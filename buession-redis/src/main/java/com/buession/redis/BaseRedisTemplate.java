@@ -62,6 +62,14 @@ import com.buession.redis.core.Role;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.FlushMode;
 import com.buession.redis.core.SlowLog;
+import com.buession.redis.core.Stream;
+import com.buession.redis.core.StreamConsumer;
+import com.buession.redis.core.StreamEntry;
+import com.buession.redis.core.StreamEntryId;
+import com.buession.redis.core.StreamFull;
+import com.buession.redis.core.StreamGroup;
+import com.buession.redis.core.StreamPending;
+import com.buession.redis.core.StreamPendingSummary;
 import com.buession.redis.core.Tuple;
 import com.buession.redis.core.Type;
 import com.buession.redis.core.AclUser;
@@ -3511,6 +3519,563 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 	public long zUnionStore(final byte[] destKey, final byte[][] keys, final Aggregate aggregate,
 							final double... weights){
 		return sortedSetOpsExecute((ops)->ops.zUnionStore(rawKey(destKey), rawKeys(keys), aggregate, weights));
+	}
+
+	@Override
+	public long xAck(final String key, final String groupName, final StreamEntryId... ids){
+		return streamOpsOpsExecute((ops)->ops.xAck(rawKey(key), groupName, ids));
+	}
+
+	@Override
+	public long xAck(final byte[] key, final byte[] groupName, final StreamEntryId... ids){
+		return streamOpsOpsExecute((ops)->ops.xAck(rawKey(key), groupName, ids));
+	}
+
+	@Override
+	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash){
+		return streamOpsOpsExecute((ops)->ops.xAdd(rawKey(key), id, hash));
+	}
+
+	@Override
+	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, Map<byte[], byte[]> hash){
+		return streamOpsOpsExecute((ops)->ops.xAdd(rawKey(key), id, hash));
+	}
+
+	@Override
+	public StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
+							  final XAddArgument xAddArgument){
+		return streamOpsOpsExecute((ops)->ops.xAdd(rawKey(key), id, hash, xAddArgument));
+	}
+
+	@Override
+	public StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash,
+							  final XAddArgument xAddArgument){
+		return streamOpsOpsExecute((ops)->ops.xAdd(rawKey(key), id, hash, xAddArgument));
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
+															final String consumerName, final int minIdleTime,
+															final StreamEntryId start){
+		return streamOpsOpsExecute((ops)->ops.xAutoClaim(rawKey(key), groupName, consumerName, minIdleTime, start));
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
+															final byte[] consumerName, final int minIdleTime,
+															final StreamEntryId start){
+		return streamOpsOpsExecute((ops)->ops.xAutoClaim(rawKey(key), groupName, consumerName, minIdleTime, start));
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
+															final String consumerName, final int minIdleTime,
+															final StreamEntryId start, final long count){
+		return streamOpsOpsExecute(
+				(ops)->ops.xAutoClaim(rawKey(key), groupName, consumerName, minIdleTime, start, count));
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
+															final byte[] consumerName, final int minIdleTime,
+															final StreamEntryId start, final long count){
+		return streamOpsOpsExecute(
+				(ops)->ops.xAutoClaim(rawKey(key), groupName, consumerName, minIdleTime, start, count));
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
+																	final String consumerName, final int minIdleTime,
+																	final StreamEntryId start){
+		return streamOpsOpsExecute(
+				(ops)->ops.xAutoClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, start));
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
+																	final byte[] consumerName, final int minIdleTime,
+																	final StreamEntryId start){
+		return streamOpsOpsExecute(
+				(ops)->ops.xAutoClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, start));
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
+																	final String consumerName, final int minIdleTime,
+																	final StreamEntryId start, final long count){
+		return streamOpsOpsExecute(
+				(ops)->ops.xAutoClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, start, count));
+	}
+
+	@Override
+	public Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
+																	final byte[] consumerName, final int minIdleTime,
+																	final StreamEntryId start, final long count){
+		return streamOpsOpsExecute(
+				(ops)->ops.xAutoClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, start, count));
+	}
+
+	@Override
+	public List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
+									final int minIdleTime, final StreamEntryId... ids){
+		return streamOpsOpsExecute((ops)->ops.xClaim(rawKey(key), groupName, consumerName, minIdleTime, ids));
+	}
+
+	@Override
+	public List<StreamEntry> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
+									final int minIdleTime, final StreamEntryId... ids){
+		return streamOpsOpsExecute((ops)->ops.xClaim(rawKey(key), groupName, consumerName, minIdleTime, ids));
+	}
+
+	@Override
+	public List<StreamEntry> xClaim(final String key, final String groupName, final String consumerName,
+									final int minIdleTime, final StreamEntryId[] ids,
+									final XClaimArgument xClaimArgument){
+		return streamOpsOpsExecute(
+				(ops)->ops.xClaim(rawKey(key), groupName, consumerName, minIdleTime, ids, xClaimArgument));
+	}
+
+	@Override
+	public List<StreamEntry> xClaim(final byte[] key, final byte[] groupName, final byte[] consumerName,
+									final int minIdleTime, final StreamEntryId[] ids,
+									final XClaimArgument xClaimArgument){
+		return streamOpsOpsExecute(
+				(ops)->ops.xClaim(rawKey(key), groupName, consumerName, minIdleTime, ids, xClaimArgument));
+	}
+
+	@Override
+	public List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
+											final int minIdleTime, final StreamEntryId... ids){
+		return streamOpsOpsExecute((ops)->ops.xClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, ids));
+	}
+
+	@Override
+	public List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
+											final int minIdleTime, final StreamEntryId... ids){
+		return streamOpsOpsExecute((ops)->ops.xClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, ids));
+	}
+
+	@Override
+	public List<StreamEntryId> xClaimJustId(final String key, final String groupName, final String consumerName,
+											final int minIdleTime, final StreamEntryId[] ids,
+											final XClaimArgument xClaimArgument){
+		return streamOpsOpsExecute(
+				(ops)->ops.xClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, ids, xClaimArgument));
+	}
+
+	@Override
+	public List<StreamEntryId> xClaimJustId(final byte[] key, final byte[] groupName, final byte[] consumerName,
+											final int minIdleTime, final StreamEntryId[] ids,
+											final XClaimArgument xClaimArgument){
+		return streamOpsOpsExecute(
+				(ops)->ops.xClaimJustId(rawKey(key), groupName, consumerName, minIdleTime, ids, xClaimArgument));
+	}
+
+	@Override
+	public long xDel(final String key, final StreamEntryId... ids){
+		return streamOpsOpsExecute((ops)->ops.xDel(rawKey(key), ids));
+	}
+
+	@Override
+	public long xDel(final byte[] key, final StreamEntryId... ids){
+		return streamOpsOpsExecute((ops)->ops.xDel(rawKey(key), ids));
+	}
+
+	@Override
+	public Status xGroupCreate(final String key, final String groupName, final StreamEntryId id,
+							   final boolean makeStream){
+		return streamOpsOpsExecute((ops)->ops.xGroupCreate(rawKey(key), groupName, id, makeStream));
+	}
+
+	@Override
+	public Status xGroupCreate(final byte[] key, final byte[] groupName, final StreamEntryId id,
+							   final boolean makeStream){
+		return streamOpsOpsExecute((ops)->ops.xGroupCreate(rawKey(key), groupName, id, makeStream));
+	}
+
+	@Override
+	public Status xGroupCreateConsumer(final String key, final String groupName, final String consumerName){
+		return streamOpsOpsExecute((ops)->ops.xGroupCreateConsumer(rawKey(key), groupName, consumerName));
+	}
+
+	@Override
+	public Status xGroupCreateConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName){
+		return streamOpsOpsExecute((ops)->ops.xGroupCreateConsumer(rawKey(key), groupName, consumerName));
+	}
+
+	@Override
+	public long xGroupDelConsumer(final String key, final String groupName, final String consumerName){
+		return streamOpsOpsExecute((ops)->ops.xGroupDelConsumer(rawKey(key), groupName, consumerName));
+	}
+
+	@Override
+	public long xGroupDelConsumer(final byte[] key, final byte[] groupName, final byte[] consumerName){
+		return streamOpsOpsExecute((ops)->ops.xGroupDelConsumer(rawKey(key), groupName, consumerName));
+	}
+
+	@Override
+	public Status xGroupDestroy(final String key, final String groupName){
+		return streamOpsOpsExecute((ops)->ops.xGroupDestroy(rawKey(key), groupName));
+	}
+
+	@Override
+	public Status xGroupDestroy(final byte[] key, final byte[] groupName){
+		return streamOpsOpsExecute((ops)->ops.xGroupDestroy(rawKey(key), groupName));
+	}
+
+	@Override
+	public Status xGroupSetId(final String key, final String groupName, final StreamEntryId id){
+		return streamOpsOpsExecute((ops)->ops.xGroupSetId(rawKey(key), groupName, id));
+	}
+
+	@Override
+	public Status xGroupSetId(final byte[] key, final byte[] groupName, final StreamEntryId id){
+		return streamOpsOpsExecute((ops)->ops.xGroupSetId(rawKey(key), groupName, id));
+	}
+
+	@Override
+	public List<StreamConsumer> xInfoConsumers(final String key, final String groupName){
+		return streamOpsOpsExecute((ops)->ops.xInfoConsumers(rawKey(key), groupName));
+	}
+
+	@Override
+	public List<StreamConsumer> xInfoConsumers(final byte[] key, final byte[] groupName){
+		return streamOpsOpsExecute((ops)->ops.xInfoConsumers(rawKey(key), groupName));
+	}
+
+	@Override
+	public List<StreamGroup> xInfoGroups(final String key){
+		return streamOpsOpsExecute((ops)->ops.xInfoGroups(rawKey(key)));
+	}
+
+	@Override
+	public List<StreamGroup> xInfoGroups(final byte[] key){
+		return streamOpsOpsExecute((ops)->ops.xInfoGroups(rawKey(key)));
+	}
+
+	@Override
+	public Stream xInfoStream(final String key){
+		return streamOpsOpsExecute((ops)->ops.xInfoStream(rawKey(key)));
+	}
+
+	@Override
+	public Stream xInfoStream(final byte[] key){
+		return streamOpsOpsExecute((ops)->ops.xInfoStream(rawKey(key)));
+	}
+
+	@Override
+	public StreamFull xInfoStream(final String key, final boolean full){
+		return streamOpsOpsExecute((ops)->ops.xInfoStream(rawKey(key), full));
+	}
+
+	@Override
+	public StreamFull xInfoStream(final byte[] key, final boolean full){
+		return streamOpsOpsExecute((ops)->ops.xInfoStream(rawKey(key), full));
+	}
+
+	@Override
+	public StreamFull xInfoStream(final String key, final boolean full, final long count){
+		return streamOpsOpsExecute((ops)->ops.xInfoStream(rawKey(key), full, count));
+	}
+
+	@Override
+	public StreamFull xInfoStream(final byte[] key, final boolean full, final long count){
+		return streamOpsOpsExecute((ops)->ops.xInfoStream(rawKey(key), full, count));
+	}
+
+	@Override
+	public long xLen(final String key){
+		return streamOpsOpsExecute((ops)->ops.xLen(rawKey(key)));
+	}
+
+	@Override
+	public long xLen(final byte[] key){
+		return streamOpsOpsExecute((ops)->ops.xLen(rawKey(key)));
+	}
+
+	@Override
+	public StreamPendingSummary xPending(final String key, final String groupName){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName));
+	}
+
+	@Override
+	public StreamPendingSummary xPending(final byte[] key, final byte[] groupName){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName, minIdleTime));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName, minIdleTime));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
+										final StreamEntryId end, final long count){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName, start, end, count));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
+										final StreamEntryId end, final long count){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName, start, end, count));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final String key, final String groupName, final String consumerName){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName, consumerName));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final byte[] consumerName){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName, consumerName));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
+										final StreamEntryId start, final StreamEntryId end, final long count){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName, minIdleTime, start, end, count));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
+										final StreamEntryId start, final StreamEntryId end, final long count){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName, minIdleTime, start, end, count));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
+										final String consumerName){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName, minIdleTime, consumerName));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
+										final byte[] consumerName){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName, minIdleTime, consumerName));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final String key, final String groupName, final StreamEntryId start,
+										final StreamEntryId end, final long count, final String consumerName){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName, start, end, count, consumerName));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final StreamEntryId start,
+										final StreamEntryId end, final long count, final byte[] consumerName){
+		return streamOpsOpsExecute((ops)->ops.xPending(rawKey(key), groupName, start, end, count, consumerName));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final String key, final String groupName, final long minIdleTime,
+										final StreamEntryId start, final StreamEntryId end, final long count,
+										final String consumerName){
+		return streamOpsOpsExecute(
+				(ops)->ops.xPending(rawKey(key), groupName, minIdleTime, start, end, count, consumerName));
+	}
+
+	@Override
+	public List<StreamPending> xPending(final byte[] key, final byte[] groupName, final long minIdleTime,
+										final StreamEntryId start, final StreamEntryId end, final long count,
+										final byte[] consumerName){
+		return streamOpsOpsExecute(
+				(ops)->ops.xPending(rawKey(key), groupName, minIdleTime, start, end, count, consumerName));
+	}
+
+	@Override
+	public List<StreamEntry> xRange(final String key, final StreamEntryId start, final StreamEntryId end){
+		return streamOpsOpsExecute((ops)->ops.xRange(rawKey(key), start, end));
+	}
+
+	@Override
+	public List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end){
+		return streamOpsOpsExecute((ops)->ops.xRange(rawKey(key), start, end));
+	}
+
+	@Override
+	public List<StreamEntry> xRange(final String key, final StreamEntryId start, final StreamEntryId end,
+									final long count){
+		return streamOpsOpsExecute((ops)->ops.xRange(rawKey(key), start, end));
+	}
+
+	@Override
+	public List<StreamEntry> xRange(final byte[] key, final StreamEntryId start, final StreamEntryId end,
+									final long count){
+		return streamOpsOpsExecute((ops)->ops.xRange(rawKey(key), start, end));
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xRead(final Map<String, StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xRead(streams));
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xRead(final long count, final Map<String, StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xRead(count, streams));
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xRead(final int block, final Map<String, StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xRead(block, streams));
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xRead(final long count, final int block,
+													  final Map<String, StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xRead(count, block, streams));
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+														   final Map<String, StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, streams));
+	}
+
+	@Override
+	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final Map<byte[], StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, streams));
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+														   final long count, final Map<String, StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, count, streams));
+	}
+
+	@Override
+	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final long count, final Map<byte[], StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, count, streams));
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+														   final int block, final Map<String, StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, block, streams));
+	}
+
+	@Override
+	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final int block, final Map<byte[], StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, block, streams));
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+														   final boolean isNoAck,
+														   final Map<String, StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, isNoAck, streams));
+	}
+
+	@Override
+	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final boolean isNoAck,
+														   final Map<byte[], StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, isNoAck, streams));
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+														   final long count, final int block,
+														   final Map<String, StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, count, block, streams));
+	}
+
+	@Override
+	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final long count, final int block,
+														   final Map<byte[], StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, count, block, streams));
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+														   final long count, final boolean isNoAck,
+														   final Map<String, StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, count, isNoAck, streams));
+	}
+
+	@Override
+	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final long count, final boolean isNoAck,
+														   final Map<byte[], StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, count, isNoAck, streams));
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+														   final int block, final boolean isNoAck,
+														   final Map<String, StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, block, isNoAck, streams));
+	}
+
+	@Override
+	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final int block, final boolean isNoAck,
+														   final Map<byte[], StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, block, isNoAck, streams));
+	}
+
+	@Override
+	public List<Map<String, List<StreamEntry>>> xReadGroup(final String groupName, final String consumerName,
+														   final long count, final int block, final boolean isNoAck,
+														   final Map<String, StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, count, block, isNoAck, streams));
+	}
+
+	@Override
+	public List<Map<byte[], List<StreamEntry>>> xReadGroup(final byte[] groupName, final byte[] consumerName,
+														   final long count, final int block, final boolean isNoAck,
+														   final Map<byte[], StreamEntryId> streams){
+		return streamOpsOpsExecute((ops)->ops.xReadGroup(groupName, consumerName, count, block, isNoAck, streams));
+	}
+
+	@Override
+	public List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start){
+		return streamOpsOpsExecute((ops)->ops.xRevRange(key, end, start));
+	}
+
+	@Override
+	public List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start){
+		return streamOpsOpsExecute((ops)->ops.xRevRange(key, end, start));
+	}
+
+	@Override
+	public List<StreamEntry> xRevRange(final String key, final StreamEntryId end, final StreamEntryId start,
+									   final long count){
+		return streamOpsOpsExecute((ops)->ops.xRevRange(key, end, start, count));
+	}
+
+	@Override
+	public List<StreamEntry> xRevRange(final byte[] key, final StreamEntryId end, final StreamEntryId start,
+									   final long count){
+		return streamOpsOpsExecute((ops)->ops.xRevRange(key, end, start, count));
+	}
+
+	@Override
+	public long xTrim(final String key, final XTrimArgument xTrimArgument){
+		return streamOpsOpsExecute((ops)->ops.xTrim(key, xTrimArgument));
+	}
+
+	@Override
+	public long xTrim(final byte[] key, final XTrimArgument xTrimArgument){
+		return streamOpsOpsExecute((ops)->ops.xTrim(key, xTrimArgument));
+	}
+
+	@Override
+	public long xTrim(final String key, final XTrimArgument xTrimArgument, final long limit){
+		return streamOpsOpsExecute((ops)->ops.xTrim(key, xTrimArgument, limit));
+	}
+
+	@Override
+	public long xTrim(final byte[] key, final XTrimArgument xTrimArgument, final long limit){
+		return streamOpsOpsExecute((ops)->ops.xTrim(key, xTrimArgument, limit));
 	}
 
 	@Override

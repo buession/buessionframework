@@ -47,6 +47,7 @@ import com.buession.redis.client.operations.ScriptingOperations;
 import com.buession.redis.client.operations.ServerOperations;
 import com.buession.redis.client.operations.SetOperations;
 import com.buession.redis.client.operations.SortedSetOperations;
+import com.buession.redis.client.operations.StreamOperations;
 import com.buession.redis.client.operations.StringOperations;
 import com.buession.redis.client.operations.TransactionOperations;
 import com.buession.redis.core.Options;
@@ -105,6 +106,8 @@ public abstract class RedisAccessor implements Closeable {
 	protected SetOperations<? extends RedisConnection> setOps;
 
 	protected SortedSetOperations<? extends RedisConnection> sortedSetOps;
+
+	protected StreamOperations<? extends RedisConnection> streamOps;
 
 	protected StringOperations<? extends RedisConnection> stringOps;
 
@@ -168,6 +171,7 @@ public abstract class RedisAccessor implements Closeable {
 		serverOps = client.serverOperations();
 		setOps = client.setOperations();
 		sortedSetOps = client.sortedSetOperations();
+		streamOps = client.streamOperations();
 		stringOps = client.stringOperations();
 		transactionOps = client.transactionOperations();
 	}
@@ -257,6 +261,10 @@ public abstract class RedisAccessor implements Closeable {
 
 	protected <R> R sortedSetOpsExecute(final Executor<SortedSetOperations<? extends RedisConnection>, R> executor){
 		return execute(sortedSetOps, executor);
+	}
+
+	protected <R> R streamOpsOpsExecute(final Executor<StreamOperations<? extends RedisConnection>, R> executor){
+		return execute(streamOps, executor);
 	}
 
 	protected <R> R stringOpsOpsExecute(final Executor<StringOperations<? extends RedisConnection>, R> executor){

@@ -56,7 +56,7 @@ public final class StreamEntryIdConverter implements Converter<StreamEntryId, St
 		public final static MapStreamEntryIdConverter<byte[], byte[]> BINARY_MAP_CONVERTER = new MapStreamEntryIdConverter<>(
 				(key)->key);
 
-		public MapStreamEntryIdConverter(Converter<SK, TK> keyConverter){
+		public MapStreamEntryIdConverter(final Converter<SK, TK> keyConverter){
 			super(keyConverter, StreamEntryIdConverter.INSTANCE);
 		}
 

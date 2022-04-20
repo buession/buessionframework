@@ -94,7 +94,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamEntryId}
 	 */
-	StreamEntryId xAdd(final String key, final String id, final Map<String, String> hash);
+	StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash);
 
 	/**
 	 * Appends the specified stream entry to the stream at the specified key.
@@ -111,7 +111,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamEntryId}
 	 */
-	StreamEntryId xAdd(final byte[] key, final byte[] id, final Map<byte[], byte[]> hash);
+	StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash);
 
 	/**
 	 * Appends the specified stream entry to the stream at the specified key.
@@ -130,7 +130,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamEntryId}
 	 */
-	StreamEntryId xAdd(final String key, final String id, final Map<String, String> hash,
+	StreamEntryId xAdd(final String key, final StreamEntryId id, final Map<String, String> hash,
 					   final XAddArgument xAddArgument);
 
 	/**
@@ -150,7 +150,7 @@ public interface StreamCommands extends RedisCommands {
 	 *
 	 * @return {@link StreamEntryId}
 	 */
-	StreamEntryId xAdd(final byte[] key, final byte[] id, final Map<byte[], byte[]> hash,
+	StreamEntryId xAdd(final byte[] key, final StreamEntryId id, final Map<byte[], byte[]> hash,
 					   final XAddArgument xAddArgument);
 
 	/**
@@ -173,7 +173,7 @@ public interface StreamCommands extends RedisCommands {
 	 */
 	Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
 													 final String consumerName,
-													 final int minIdleTime, final String start);
+													 final int minIdleTime, final StreamEntryId start);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -195,7 +195,7 @@ public interface StreamCommands extends RedisCommands {
 	 */
 	Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
 													 final byte[] consumerName,
-													 final int minIdleTime, final byte[] start);
+													 final int minIdleTime, final StreamEntryId start);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -218,8 +218,8 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
 	 */
 	Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final String key, final String groupName,
-													 final String consumerName,
-													 final int minIdleTime, final String start, final long count);
+													 final String consumerName, final int minIdleTime,
+													 final StreamEntryId start, final long count);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -242,8 +242,9 @@ public interface StreamCommands extends RedisCommands {
 	 * @return {@link StreamEntryId} 和对应的 {@link StreamEntry}
 	 */
 	Map<StreamEntryId, List<StreamEntry>> xAutoClaim(final byte[] key, final byte[] groupName,
-													 final byte[] consumerName,
-													 final int minIdleTime, final byte[] start, final long count);
+													 final byte[] consumerName, final int minIdleTime,
+													 final StreamEntryId start,
+													 final long count);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -265,7 +266,7 @@ public interface StreamCommands extends RedisCommands {
 	 */
 	Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
 															 final String consumerName, final int minIdleTime,
-															 final String start);
+															 final StreamEntryId start);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -287,7 +288,7 @@ public interface StreamCommands extends RedisCommands {
 	 */
 	Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
 															 final byte[] consumerName, final int minIdleTime,
-															 final byte[] start);
+															 final StreamEntryId start);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -311,7 +312,7 @@ public interface StreamCommands extends RedisCommands {
 	 */
 	Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final String key, final String groupName,
 															 final String consumerName, final int minIdleTime,
-															 final String start, final long count);
+															 final StreamEntryId start, final long count);
 
 	/**
 	 * This command transfers ownership of pending stream entries that match the specified criteria
@@ -335,7 +336,7 @@ public interface StreamCommands extends RedisCommands {
 	 */
 	Map<StreamEntryId, List<StreamEntryId>> xAutoClaimJustId(final byte[] key, final byte[] groupName,
 															 final byte[] consumerName, final int minIdleTime,
-															 final byte[] start, final long count);
+															 final StreamEntryId start, final long count);
 
 	/**
 	 * In the context of a stream consumer group, this command changes the ownership of a pending message,
