@@ -27,6 +27,7 @@ package com.buession.redis.core;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -99,16 +100,16 @@ public class AclLog implements Serializable {
 
 	@Override
 	public String toString(){
-		return "AclLog{" +
-				"count=" + count +
-				", reason='" + reason + '\'' +
-				", context='" + context + '\'' +
-				", object='" + object + '\'' +
-				", username='" + username + '\'' +
-				", ageSeconds='" + ageSeconds + '\'' +
-				", clientInfo=" + clientInfo +
-				", logEntry=" + logEntry +
-				'}';
+		return new StringJoiner(", ", "{", "}")
+				.add("count=" + count)
+				.add("reason=" + reason)
+				.add("context=" + context)
+				.add("object=" + object)
+				.add("username=" + username)
+				.add("ageSeconds=" + ageSeconds)
+				.add("clientInfo=" + clientInfo)
+				.add("logEntry=" + logEntry)
+				.toString();
 	}
 
 }

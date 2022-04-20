@@ -653,6 +653,9 @@ public interface StringCommands extends RedisCommands {
 
 		private Boolean keepTtl;
 
+		private SetArgument(){
+		}
+
 		/**
 		 * 获取设置的键过期时间（单位：秒）
 		 *
@@ -712,7 +715,6 @@ public interface StringCommands extends RedisCommands {
 			private final SetArgument setArgument = new SetArgument();
 
 			private Builder(){
-
 			}
 
 			public static Builder create(){
@@ -844,6 +846,9 @@ public interface StringCommands extends RedisCommands {
 
 		private Boolean persist;
 
+		private GetExArgument(){
+		}
+
 		/**
 		 * 获取设置的键过期时间（单位：秒）
 		 *
@@ -904,7 +909,6 @@ public interface StringCommands extends RedisCommands {
 			private final GetExArgument getExArgument = new GetExArgument();
 
 			private Builder(){
-
 			}
 
 			public static Builder create(){

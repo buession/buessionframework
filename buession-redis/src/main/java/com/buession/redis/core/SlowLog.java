@@ -26,6 +26,7 @@ package com.buession.redis.core;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -39,7 +40,7 @@ public class SlowLog implements Serializable {
 
 	private final long timeStamp;
 
-	private long executionTime;
+	private final long executionTime;
 
 	private final List<String> args;
 
@@ -83,14 +84,14 @@ public class SlowLog implements Serializable {
 
 	@Override
 	public String toString(){
-		return "SlowLog{" +
-				"id=" + id +
-				", timeStamp=" + timeStamp +
-				", executionTime=" + executionTime +
-				", args=" + args +
-				", client=" + client +
-				", clientName='" + clientName + '\'' +
-				'}';
+		return new StringJoiner(", ", "{", "}")
+				.add("id=" + id)
+				.add("timeStamp=" + timeStamp)
+				.add("executionTime=" + executionTime)
+				.add("args=" + args)
+				.add("client=" + client)
+				.add("clientName=" + clientName)
+				.toString();
 	}
 
 }

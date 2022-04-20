@@ -30,6 +30,7 @@ import com.buession.redis.utils.SafeEncoder;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -109,7 +110,10 @@ public class Tuple implements Comparable<Tuple>, Serializable {
 
 	@Override
 	public String toString(){
-		return "element=" + SafeEncoder.encode(element) + ", score=" + score;
+		return new StringJoiner(", ", "{", "}")
+				.add("element=" + SafeEncoder.encode(element))
+				.add("score=" + score)
+				.toString();
 	}
 
 }

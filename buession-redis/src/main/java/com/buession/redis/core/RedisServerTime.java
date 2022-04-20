@@ -27,6 +27,7 @@ package com.buession.redis.core;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -73,7 +74,10 @@ public class RedisServerTime implements Serializable {
 
 	@Override
 	public String toString(){
-		return "date=" + date + ", usec=" + usec;
+		return new StringJoiner(", ", "{", "}")
+				.add("date=" + date)
+				.add("usec=" + usec)
+				.toString();
 	}
 
 }

@@ -58,7 +58,7 @@ public class Limit {
 
 	@Override
 	public String toString(){
-		StringBuilder sb = new StringBuilder();
+		final StringBuilder sb = new StringBuilder();
 
 		sb.append("Limit ");
 

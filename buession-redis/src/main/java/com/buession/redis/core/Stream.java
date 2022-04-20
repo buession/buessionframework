@@ -99,7 +99,7 @@ public class Stream implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "[", "]")
+		return new StringJoiner(", ", "{", "}")
 				.add("length=" + length)
 				.add("radixTreeKeys=" + radixTreeKeys)
 				.add("radixTreeNodes=" + radixTreeNodes)

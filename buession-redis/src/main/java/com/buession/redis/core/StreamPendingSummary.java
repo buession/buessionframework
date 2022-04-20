@@ -70,7 +70,7 @@ public class StreamPendingSummary implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "[", "]")
+		return new StringJoiner(", ", "{", "}")
 				.add("total=" + total)
 				.add("minId=" + minId)
 				.add("maxId=" + maxId)

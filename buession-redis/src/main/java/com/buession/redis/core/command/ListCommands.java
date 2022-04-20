@@ -738,7 +738,6 @@ public interface ListCommands extends RedisCommands {
 		private Integer maxLen;
 
 		private LPosArgument(){
-
 		}
 
 		public Integer getRank(){

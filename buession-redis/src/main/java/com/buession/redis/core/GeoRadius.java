@@ -30,6 +30,7 @@ import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -90,7 +91,11 @@ public class GeoRadius implements Serializable {
 
 	@Override
 	public String toString(){
-		return "member=" + Arrays.toString(member) + ", distance=" + distance + ", geo=" + geo;
+		return new StringJoiner(", ", "{", "}")
+				.add("member=" + Arrays.toString(member))
+				.add("distance=" + distance)
+				.add("geo=" + geo)
+				.toString();
 	}
 
 }

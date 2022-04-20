@@ -1498,7 +1498,6 @@ public interface KeyCommands extends RedisCommands {
 		private Long frequency;
 
 		private RestoreArgument(){
-
 		}
 
 		/**
@@ -1595,7 +1594,6 @@ public interface KeyCommands extends RedisCommands {
 		private Boolean alpha;
 
 		private SortArgument(){
-
 		}
 
 		/**

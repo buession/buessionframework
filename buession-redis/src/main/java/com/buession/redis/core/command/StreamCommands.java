@@ -1784,6 +1784,9 @@ public interface StreamCommands extends RedisCommands {
 
 		private Long limit;
 
+		private XAddArgument(){
+		}
+
 		public Long getMaxLen(){
 			return maxLen;
 		}
@@ -1824,7 +1827,6 @@ public interface StreamCommands extends RedisCommands {
 			private final XAddArgument xAddArgument = new XAddArgument();
 
 			private Builder(){
-
 			}
 
 			public static Builder create(){
@@ -1879,6 +1881,9 @@ public interface StreamCommands extends RedisCommands {
 
 		private Boolean force;
 
+		private XClaimArgument(){
+		}
+
 		public Long getIdleTime(){
 			return idleTime;
 		}
@@ -1909,7 +1914,6 @@ public interface StreamCommands extends RedisCommands {
 			private final XClaimArgument xClaimArgument = new XClaimArgument();
 
 			private Builder(){
-
 			}
 
 			public static Builder create(){
@@ -1954,6 +1958,9 @@ public interface StreamCommands extends RedisCommands {
 
 		private String minId;
 
+		private XTrimArgument(){
+		}
+
 		public Long getMaxLen(){
 			return maxLen;
 		}
@@ -1984,7 +1991,6 @@ public interface StreamCommands extends RedisCommands {
 			private final XTrimArgument xTrimArgument = new XTrimArgument();
 
 			private Builder(){
-
 			}
 
 			public static Builder create(){

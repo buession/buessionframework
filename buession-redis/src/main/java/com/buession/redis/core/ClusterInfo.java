@@ -355,15 +355,19 @@ public class ClusterInfo implements Serializable {
 
 	@Override
 	public String toString(){
-		final StringJoiner stringJoiner = new StringJoiner(",", "{", "}");
-
-		stringJoiner.add("state=" + state).add("slotsAssigned=" + slotsAssigned).add("slotsOk=" + slotsOk);
-		stringJoiner.add("slotsPfail=" + slotsPfail).add("slotsFail=" + slotsFail);
-		stringJoiner.add("knownNodes=" + knownNodes).add("size=" + size);
-		stringJoiner.add("currentEpoch=" + currentEpoch).add("myEpoch=" + myEpoch);
-		stringJoiner.add("messagesSent=" + messagesSent).add("messagesReceived=" + messagesReceived);
-
-		return stringJoiner.toString();
+		return new StringJoiner(", ", "{", "}")
+				.add("state=" + state)
+				.add("slotsAssigned=" + slotsAssigned)
+				.add("slotsOk=" + slotsOk)
+				.add("slotsPfail=" + slotsPfail)
+				.add("slotsFail=" + slotsFail)
+				.add("knownNodes=" + knownNodes)
+				.add("size=" + size)
+				.add("currentEpoch=" + currentEpoch)
+				.add("myEpoch=" + myEpoch)
+				.add("messagesSent=" + messagesSent)
+				.add("messagesReceived=" + messagesReceived)
+				.toString();
 	}
 
 	public enum Key {

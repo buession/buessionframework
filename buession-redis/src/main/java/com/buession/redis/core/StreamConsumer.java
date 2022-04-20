@@ -71,8 +71,8 @@ public class StreamConsumer implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "[", "]")
-				.add("name='" + name + "'")
+		return new StringJoiner(", ", "{", "}")
+				.add("name=" + name)
 				.add("idle=" + idle)
 				.add("pending=" + pending)
 				.add("infos=" + infos)

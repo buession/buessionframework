@@ -85,8 +85,8 @@ public class StreamGroupFull implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "[", "]")
-				.add("name='" + name + "'")
+		return new StringJoiner(", ", "{", "}")
+				.add("name='" + name)
 				.add("consumers=" + consumers)
 				.add("pending=" + pending)
 				.add("pelCount=" + pelCount)

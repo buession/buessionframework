@@ -27,6 +27,7 @@ package com.buession.redis.core;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -79,12 +80,12 @@ public class AclUser implements Serializable {
 
 	@Override
 	public String toString(){
-		return "AclUser{" +
-				"flags=" + flags +
-				", keys=" + keys +
-				", passwords=" + passwords +
-				", commands='" + commands + '\'' +
-				'}';
+		return new StringJoiner(", ", "{", "}")
+				.add("flags=" + flags)
+				.add("keys=" + keys)
+				.add("passwords=" + passwords)
+				.add("commands=" + commands)
+				.toString();
 	}
 
 }

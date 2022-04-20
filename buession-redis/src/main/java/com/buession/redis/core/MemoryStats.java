@@ -24,10 +24,13 @@
  */
 package com.buession.redis.core;
 
+import java.io.Serializable;
+
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public class MemoryStats {
+public class MemoryStats implements Serializable {
 
+	private final static long serialVersionUID = -5308964580953471955L;
 }

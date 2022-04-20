@@ -69,9 +69,9 @@ public class StreamPending implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "[", "]")
+		return new StringJoiner(", ", "{", "}")
 				.add("id=" + id)
-				.add("consumerName='" + consumerName + "'")
+				.add("consumerName=" + consumerName)
 				.add("idleTime=" + idleTime)
 				.add("deliveredTimes=" + deliveredTimes)
 				.toString();
