@@ -280,9 +280,9 @@ public class RedisNode implements Serializable, RedisNamedNode {
 	}
 
 	public String asString(){
-		final StringBuilder sb = new StringBuilder(16);
+		final StringBuilder sb = new StringBuilder(host);
 
-		sb.append(host).append(':').append(port);
+		sb.append(':').append(port);
 
 		return sb.toString();
 	}
@@ -316,6 +316,6 @@ public class RedisNode implements Serializable, RedisNamedNode {
 
 		return false;
 	}
-	
+
 
 }

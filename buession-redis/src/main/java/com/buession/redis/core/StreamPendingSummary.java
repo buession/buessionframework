@@ -24,9 +24,10 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.io.Serializable;
 import java.util.Map;
-import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -70,12 +71,12 @@ public class StreamPendingSummary implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "{", "}")
-				.add("total=" + total)
-				.add("minId=" + minId)
-				.add("maxId=" + maxId)
-				.add("consumerMessageCount=" + consumerMessageCount)
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("total", total)
+				.add("minId", minId)
+				.add("maxId", maxId)
+				.add("consumerMessageCount", consumerMessageCount)
+				.build();
 	}
 
 }

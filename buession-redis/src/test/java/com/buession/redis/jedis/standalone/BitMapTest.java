@@ -22,30 +22,22 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.command;
+package com.buession.redis.jedis.standalone;
+
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.jedis.AbstractJedisRedisTest;
+import org.junit.Test;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public enum CommandNotSupported {
+public class BitMapTest extends AbstractJedisRedisTest {
 
-	TRANSACTION(8),
-
-	PIPELINE(4),
-
-	NORMAL(2),
-
-	ALL(1);
-
-	private final int code;
-
-	CommandNotSupported(final int code){
-		this.code = code;
-	}
-
-	public int getCode(){
-		return code;
+	@Test
+	public void bitCount(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
+		System.out.println(redisTemplate.bitCount("test_str"));
 	}
 
 }

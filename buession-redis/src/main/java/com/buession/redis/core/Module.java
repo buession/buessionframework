@@ -24,9 +24,10 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.io.Serializable;
 import java.util.Objects;
-import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -74,10 +75,10 @@ public final class Module implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "{", "}")
-				.add("name=" + name)
-				.add("version=" + version)
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("name", name)
+				.add("version", version)
+				.build();
 	}
 
 }

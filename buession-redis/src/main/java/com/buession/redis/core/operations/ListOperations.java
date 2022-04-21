@@ -172,7 +172,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @return 执行成功，返回插入操作完成之后，列表的长度；
 	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
 	 */
-	<V> Long lInsert(final String key, final ListPosition position, final V pivot, final V value);
+	<V> long lInsert(final String key, final ListPosition position, final V pivot, final V value);
 
 	/**
 	 * 将值 value 序列化后，插入到列表 key 当中，位于值 pivot 之前或之后
@@ -193,7 +193,7 @@ public interface ListOperations extends ListCommands, RedisOperations {
 	 * @return 执行成功，返回插入操作完成之后，列表的长度；
 	 * 如果没有找到 pivot ，返回 -1 ；如果 key 不存在或为空列表，返回 0 。
 	 */
-	<V> Long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value);
+	<V> long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value);
 
 	/**
 	 * 将列表 key 下标为 index 的元素的值设置为 value 序列化的值

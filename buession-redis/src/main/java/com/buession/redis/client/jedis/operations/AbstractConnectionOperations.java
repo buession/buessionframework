@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ConnectionOperations;
 import com.buession.redis.utils.SafeEncoder;
@@ -34,15 +33,15 @@ import com.buession.redis.utils.SafeEncoder;
  * Jedis 连接命令操作抽象类
  *
  * @param <C>
- * 		连接对象
+ * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractConnectionOperations<C extends JedisRedisConnection>
+public abstract class AbstractConnectionOperations<C extends JedisRedisClient>
 		extends AbstractJedisRedisOperations<C> implements ConnectionOperations<C> {
 
-	public AbstractConnectionOperations(final JedisRedisClient client){
+	public AbstractConnectionOperations(final C client){
 		super(client);
 	}
 

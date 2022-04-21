@@ -24,6 +24,7 @@
  */
 package com.buession.redis.exception;
 
+import com.buession.redis.core.RedisMode;
 import com.buession.redis.core.command.ProtocolCommand;
 
 /**
@@ -33,12 +34,26 @@ public class NotSupportedCommandException extends RedisException {
 
 	private static final long serialVersionUID = -3098408677930013922L;
 
+	private Type type;
+
 	public NotSupportedCommandException(){
 		super();
 	}
 
 	public NotSupportedCommandException(ProtocolCommand command){
 		super("Not supported command: " + command);
+	}
+
+	public NotSupportedCommandException(Type type, ProtocolCommand command){
+		super("Not supported command: " + command + " in " + type);
+	}
+
+	public NotSupportedCommandException(RedisMode mode, ProtocolCommand command){
+		super("Not supported command: " + command + " with " + mode + " mode");
+	}
+
+	public NotSupportedCommandException(RedisMode mode, Type type, ProtocolCommand command){
+		super("Not supported command: " + command + " in " + type + " with " + mode + " mode");
 	}
 
 	public NotSupportedCommandException(String message){
@@ -51,6 +66,28 @@ public class NotSupportedCommandException extends RedisException {
 
 	public NotSupportedCommandException(Throwable cause){
 		super(cause);
+	}
+
+	public enum Type {
+
+		TRANSACTION(8),
+
+		PIPELINE(4),
+
+		NORMAL(2),
+
+		ALL(1);
+
+		private final int code;
+
+		Type(final int code){
+			this.code = code;
+		}
+
+		public int getCode(){
+			return code;
+		}
+
 	}
 
 }

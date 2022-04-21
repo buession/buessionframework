@@ -24,9 +24,9 @@
  */
 package com.buession.redis.client.connection;
 
+import com.buession.core.Executor;
 import com.buession.lang.Status;
 import com.buession.net.ssl.SslConfiguration;
-import com.buession.redis.core.Command;
 import com.buession.redis.core.Constants;
 import com.buession.redis.client.connection.datasource.DataSource;
 import com.buession.redis.exception.RedisException;
@@ -199,7 +199,7 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	}
 
 	@Override
-	public <R> R execute(final Command<RedisConnection, R> command) throws RedisException{
+	public <R> R execute(final Executor<RedisConnection, R> command) throws RedisException{
 		try{
 			return command.execute(this);
 		}catch(Exception e){

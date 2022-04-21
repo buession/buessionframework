@@ -26,13 +26,15 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
-import com.buession.redis.client.connection.jedis.JedisClusterConnection;
-import com.buession.redis.client.connection.jedis.JedisConnection;
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
-import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
+import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.connection.RedisConnectionUtils;
+import com.buession.redis.client.jedis.JedisClusterClient;
+import com.buession.redis.client.jedis.JedisRedisClient;
+import com.buession.redis.client.jedis.JedisSentinelClient;
+import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
-import com.buession.redis.core.Command;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.NotSupportedCommandException;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.Pipeline;
@@ -47,48 +49,26 @@ import redis.clients.jedis.Transaction;
  *
  * @author Yong.Teng
  */
-public interface JedisRedisOperations<C extends JedisRedisConnection> extends RedisOperations<C> {
+public interface JedisRedisOperations<C extends JedisRedisClient> extends RedisOperations<C> {
 
-	abstract class AbstractJedisCommand<C extends JedisRedisConnection, R> implements Command<C, R> {
+	abstract class AbstractJedisCommand<C extends JedisRedisClient, T, R> extends AbstractRedisCommand<C, R> {
 
-		private final ProtocolCommand command;
+		protected Executor<T, R> executor;
 
-		public AbstractJedisCommand(final ProtocolCommand command){
-			this.command = command;
+		protected Executor<Pipeline, Response<R>> pipelineExecutor;
+
+		protected Executor<Transaction, Response<R>> transactionExecutor;
+
+		protected AbstractJedisCommand(final C client, final ProtocolCommand command){
+			super(client, command);
 		}
-
-		@Override
-		public ProtocolCommand getCommand(){
-			return command;
-		}
-
-		/*
-		public AbstractJedisCommand<C, SR, R> pipeline(Executor<Jedis, R> executor){
-			return this;
-		}
-
-		public AbstractJedisCommand<C, SR, R> transaction(Executor<Jedis, R> executor){
-			return this;
-		}
-
-		 */
 
 	}
 
-	class JedisCommand<R> extends AbstractJedisCommand<JedisConnection, R> {
+	class JedisCommand<R> extends AbstractJedisCommand<JedisStandaloneClient, Jedis, R> {
 
-		private Executor<Jedis, R> executor;
-
-		private Executor<Pipeline, Response<R>> pipelineExecutor;
-
-		private Executor<Transaction, Response<R>> transactionExecutor;
-
-		public JedisCommand(final ProtocolCommand command){
-			super(command);
-		}
-
-		public static <R> JedisCommand<R> create(final ProtocolCommand command){
-			return new JedisCommand<>(command);
+		public JedisCommand(final JedisStandaloneClient client, final ProtocolCommand command){
+			super(client, command);
 		}
 
 		public JedisCommand<R> general(final Executor<Jedis, R> executor){
@@ -124,33 +104,39 @@ public interface JedisRedisOperations<C extends JedisRedisConnection> extends Re
 		}
 
 		@Override
-		public R execute(final JedisConnection connection){
+		public R execute(){
+			final RedisConnection connection = client.getConnection();
 			if(connection.isPipeline()){
-				pipelineExecutor.execute(null);
+				if(pipelineExecutor == null){
+					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
+							NotSupportedCommandException.Type.PIPELINE, getCommand());
+				}else{
+					//client.getTxResults().add(pipelineExecutor.execute(null));
+				}
 			}else if(connection.isTransaction()){
-				transactionExecutor.execute(null);
+				if(transactionExecutor == null){
+					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
+							NotSupportedCommandException.Type.TRANSACTION, getCommand());
+				}else{
+					transactionExecutor.execute(null);
+				}
 			}else{
-				return executor.execute(null);
+				if(executor == null){
+					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
+							NotSupportedCommandException.Type.NORMAL, getCommand());
+				}else{
+					return executor.execute(null);
+				}
 			}
 			return null;
 		}
 
 	}
 
-	class JedisSentinelCommand<R> extends AbstractJedisCommand<JedisSentinelConnection, R> {
+	class JedisSentinelCommand<R> extends AbstractJedisCommand<JedisSentinelClient, Jedis, R> {
 
-		protected Executor<Jedis, R> executor;
-
-		private Executor<Pipeline, Response<R>> pipelineExecutor;
-
-		private Executor<Transaction, Response<R>> transactionExecutor;
-
-		public JedisSentinelCommand(final ProtocolCommand command){
-			super(command);
-		}
-
-		public static <R> JedisSentinelCommand<R> create(final ProtocolCommand command){
-			return new JedisSentinelCommand<>(command);
+		protected JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command){
+			super(client, command);
 		}
 
 		public JedisSentinelCommand<R> general(Executor<Jedis, R> executor){
@@ -187,33 +173,39 @@ public interface JedisRedisOperations<C extends JedisRedisConnection> extends Re
 		}
 
 		@Override
-		public R execute(final JedisSentinelConnection connection){
+		public R execute(){
+			final RedisConnection connection = client.getConnection();
 			if(connection.isPipeline()){
-				pipelineExecutor.execute(null);
+				if(pipelineExecutor == null){
+					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
+							NotSupportedCommandException.Type.PIPELINE, getCommand());
+				}else{
+					pipelineExecutor.execute(null);
+				}
 			}else if(connection.isTransaction()){
-				transactionExecutor.execute(null);
+				if(transactionExecutor == null){
+					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
+							NotSupportedCommandException.Type.TRANSACTION, getCommand());
+				}else{
+					transactionExecutor.execute(null);
+				}
 			}else{
-				return executor.execute(null);
+				if(executor == null){
+					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
+							NotSupportedCommandException.Type.NORMAL, getCommand());
+				}else{
+					return executor.execute(null);
+				}
 			}
 			return null;
 		}
 
 	}
 
-	class JedisClusterCommand<R> extends AbstractJedisCommand<JedisClusterConnection, R> {
+	class JedisClusterCommand<R> extends AbstractJedisCommand<JedisClusterClient, JedisCluster, R> {
 
-		protected Executor<JedisCluster, R> executor;
-
-		private Executor<Pipeline, Response<R>> pipelineExecutor;
-
-		private Executor<Transaction, Response<R>> transactionExecutor;
-
-		public JedisClusterCommand(final ProtocolCommand command){
-			super(command);
-		}
-
-		public static <R> JedisClusterCommand<R> create(final ProtocolCommand command){
-			return new JedisClusterCommand<>(command);
+		protected JedisClusterCommand(final JedisClusterClient client, final ProtocolCommand command){
+			super(client, command);
 		}
 
 		public JedisClusterCommand<R> general(Executor<JedisCluster, R> executor){
@@ -250,13 +242,29 @@ public interface JedisRedisOperations<C extends JedisRedisConnection> extends Re
 		}
 
 		@Override
-		public R execute(final JedisClusterConnection connection){
+		public R execute(){
+			final RedisConnection connection = client.getConnection();
 			if(connection.isPipeline()){
-				pipelineExecutor.execute(null);
+				if(pipelineExecutor == null){
+					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
+							NotSupportedCommandException.Type.PIPELINE, getCommand());
+				}else{
+					pipelineExecutor.execute(null);
+				}
 			}else if(connection.isTransaction()){
-				transactionExecutor.execute(null);
+				if(transactionExecutor == null){
+					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
+							NotSupportedCommandException.Type.TRANSACTION, getCommand());
+				}else{
+					transactionExecutor.execute(null);
+				}
 			}else{
-				return executor.execute(null);
+				if(executor == null){
+					throw new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(connection),
+							NotSupportedCommandException.Type.NORMAL, getCommand());
+				}else{
+					return executor.execute(null);
+				}
 			}
 			return null;
 		}

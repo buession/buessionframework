@@ -24,9 +24,10 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.io.Serializable;
 import java.util.Map;
-import java.util.StringJoiner;
 
 /**
  * Stream Consumer
@@ -71,12 +72,12 @@ public class StreamConsumer implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "{", "}")
-				.add("name=" + name)
-				.add("idle=" + idle)
-				.add("pending=" + pending)
-				.add("infos=" + infos)
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("name", name)
+				.add("idle", idle)
+				.add("pending", pending)
+				.add("infos", infos)
+				.build();
 	}
 
 }

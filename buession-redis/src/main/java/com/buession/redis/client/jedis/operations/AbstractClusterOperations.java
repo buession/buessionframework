@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ClusterOperations;
 import com.buession.redis.core.ClusterResetOption;
@@ -39,15 +38,15 @@ import java.util.List;
  * Jedis 集群命令操作抽象类
  *
  * @param <C>
- * 		连接对象
+ * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractClusterOperations<C extends JedisRedisConnection> extends AbstractJedisRedisOperations<C>
+public abstract class AbstractClusterOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
 		implements ClusterOperations<C> {
 
-	public AbstractClusterOperations(final JedisRedisClient client){
+	public AbstractClusterOperations(final C client){
 		super(client);
 	}
 

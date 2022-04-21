@@ -55,10 +55,8 @@ public class JedisXPendingParams extends XPendingParams {
 	}
 
 	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final long count){
-		super();
-		start(StreamEntryIdConverter.INSTANCE.convert(start));
-		end(StreamEntryIdConverter.INSTANCE.convert(end));
-		count((int) count);
+		super(StreamEntryIdConverter.INSTANCE.convert(start), StreamEntryIdConverter.INSTANCE.convert(end),
+				(int) count);
 	}
 
 	public JedisXPendingParams(final StreamEntryId start, final StreamEntryId end, final long count,

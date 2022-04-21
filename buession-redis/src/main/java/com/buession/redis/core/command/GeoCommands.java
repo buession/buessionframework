@@ -28,6 +28,7 @@ import com.buession.lang.Geo;
 import com.buession.lang.Order;
 import com.buession.redis.core.GeoRadius;
 import com.buession.redis.core.GeoUnit;
+import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -635,7 +636,7 @@ public interface GeoCommands extends RedisCommands {
 
 		@Override
 		public String toString(){
-			return ArgumentStringBuilder.create().
+			return ObjectStringBuilder.create().
 					add("withCoord", withCoord).
 					add("withDist", withDist).
 					add("withHash", withHash).

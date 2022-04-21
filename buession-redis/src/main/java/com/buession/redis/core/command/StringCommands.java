@@ -26,6 +26,7 @@ package com.buession.redis.core.command;
 
 import com.buession.lang.Status;
 import com.buession.redis.core.NxXx;
+import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.Date;
 import java.util.List;
@@ -896,7 +897,7 @@ public interface StringCommands extends RedisCommands {
 
 		@Override
 		public String toString(){
-			return ArgumentStringBuilder.create().
+			return ObjectStringBuilder.create().
 					add("ex", ex).
 					add("exAt", exAt).
 					add("px", px).

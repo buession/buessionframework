@@ -24,18 +24,18 @@
  */
 package com.buession.redis.client.operations;
 
-import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.command.BitMapCommands;
 
 /**
  * BitMap 命令操作接口
  *
  * @param <C>
- * 		连接对象
+ * 		Redis Client {@link RedisClient}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface BitMapOperations<C extends RedisConnection> extends BitMapCommands, RedisOperations<C> {
+public interface BitMapOperations<C extends RedisClient> extends BitMapCommands, RedisOperations<C> {
 
 }

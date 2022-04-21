@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.BumpEpoch;
 import com.buession.redis.core.ClusterFailoverOption;
@@ -45,7 +44,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisClusterClusterOperations extends AbstractClusterOperations<JedisClusterConnection> {
+public final class JedisClusterClusterOperations extends AbstractClusterOperations<JedisClusterClient> {
 
 	public JedisClusterClusterOperations(final JedisClusterClient client){
 		super(client);
@@ -53,20 +52,20 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 
 	@Override
 	public String clusterMyId(){
-		final JedisClusterCommand<String> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_MY_ID);
+		final JedisClusterCommand<String> command = new JedisClusterCommand<>(client, ProtocolCommand.CLUSTER_MY_ID);
 		return execute(command);
 	}
 
 	@Override
 	public Status clusterAddSlots(final int... slots){
 		final CommandArguments args = CommandArguments.create("slots", slots);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_ADDSLOTS);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLUSTER_ADDSLOTS);
 		return execute(command, args);
 	}
 
 	@Override
 	public List<ClusterSlot> clusterSlots(){
-		final JedisClusterCommand<List<ClusterSlot>> command = JedisClusterCommand.create(
+		final JedisClusterCommand<List<ClusterSlot>> command = new JedisClusterCommand<>(client,
 				ProtocolCommand.CLUSTER_SLOTS);
 		return execute(command);
 	}
@@ -74,7 +73,7 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	@Override
 	public int clusterCountFailureReports(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		final JedisClusterCommand<Integer> command = JedisClusterCommand.create(
+		final JedisClusterCommand<Integer> command = new JedisClusterCommand<>(client,
 				ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS);
 		return execute(command, args);
 	}
@@ -82,7 +81,7 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	@Override
 	public int clusterCountFailureReports(final byte[] nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		final JedisClusterCommand<Integer> command = JedisClusterCommand.create(
+		final JedisClusterCommand<Integer> command = new JedisClusterCommand<>(client,
 				ProtocolCommand.CLUSTER_COUNTFAILUREREPORTS);
 		return execute(command, args);
 	}
@@ -90,41 +89,43 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	@Override
 	public long clusterCountKeysInSlot(final int slot){
 		final CommandArguments args = CommandArguments.create("slot", slot);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_COUNTKEYSINSLOT);
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<>(client,
+				ProtocolCommand.CLUSTER_COUNTKEYSINSLOT);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status clusterDelSlots(final int... slots){
 		final CommandArguments args = CommandArguments.create("slots", slots);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_DELSLOTS);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLUSTER_DELSLOTS);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status clusterFlushSlots(){
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_FLUSHSLOTS);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client,
+				ProtocolCommand.CLUSTER_FLUSHSLOTS);
 		return execute(command);
 	}
 
 	@Override
 	public Status clusterFailover(final ClusterFailoverOption clusterFailoverOption){
 		final CommandArguments args = CommandArguments.create("clusterFailoverOption", clusterFailoverOption);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_FAILOVER);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLUSTER_FAILOVER);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status clusterForget(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_FORGET);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLUSTER_FORGET);
 		return execute(command, args);
 	}
 
 	@Override
 	public List<String> clusterGetKeysInSlot(final int slot, final long count){
 		final CommandArguments args = CommandArguments.create("slot", slot).put("count", count);
-		final JedisClusterCommand<List<String>> command = JedisClusterCommand.create(
+		final JedisClusterCommand<List<String>> command = new JedisClusterCommand<>(client,
 				ProtocolCommand.CLUSTER_GETKEYSINSLOT);
 		return execute(command, args);
 	}
@@ -132,26 +133,28 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	@Override
 	public long clusterKeySlot(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_GETKEYSINSLOT);
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<>(client,
+				ProtocolCommand.CLUSTER_GETKEYSINSLOT);
 		return execute(command, args);
 	}
 
 	@Override
 	public ClusterInfo clusterInfo(){
-		final JedisClusterCommand<ClusterInfo> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_INFO);
+		final JedisClusterCommand<ClusterInfo> command = new JedisClusterCommand<>(client,
+				ProtocolCommand.CLUSTER_INFO);
 		return execute(command);
 	}
 
 	@Override
 	public Status clusterMeet(final String ip, final int port){
 		final CommandArguments args = CommandArguments.create("ip", ip).put("port", port);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_MEET);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLUSTER_MEET);
 		return execute(command, args);
 	}
 
 	@Override
 	public List<RedisClusterServer> clusterNodes(){
-		final JedisClusterCommand<List<RedisClusterServer>> command = JedisClusterCommand.create(
+		final JedisClusterCommand<List<RedisClusterServer>> command = new JedisClusterCommand<>(client,
 				ProtocolCommand.CLUSTER_NODES);
 		return execute(command);
 	}
@@ -159,7 +162,7 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	@Override
 	public List<RedisClusterServer> clusterSlaves(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		final JedisClusterCommand<List<RedisClusterServer>> command = JedisClusterCommand.create(
+		final JedisClusterCommand<List<RedisClusterServer>> command = new JedisClusterCommand<>(client,
 				ProtocolCommand.CLUSTER_SLAVES);
 		return execute(command, args);
 	}
@@ -167,7 +170,7 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	@Override
 	public List<RedisClusterServer> clusterReplicas(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		final JedisClusterCommand<List<RedisClusterServer>> command = JedisClusterCommand.create(
+		final JedisClusterCommand<List<RedisClusterServer>> command = new JedisClusterCommand<>(client,
 				ProtocolCommand.CLUSTER_REPLICAS);
 		return execute(command, args);
 	}
@@ -175,33 +178,37 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	@Override
 	public Status clusterReplicate(final String nodeId){
 		final CommandArguments args = CommandArguments.create("nodeId", nodeId);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_REPLICATE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client,
+				ProtocolCommand.CLUSTER_REPLICATE);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status clusterReset(final ClusterResetOption clusterResetOption){
 		final CommandArguments args = CommandArguments.create("clusterResetOption", clusterResetOption);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_RESET);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLUSTER_RESET);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status clusterSaveConfig(){
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_SAVECONFIG);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client,
+				ProtocolCommand.CLUSTER_SAVECONFIG);
 		return execute(command);
 	}
 
 	@Override
 	public Status clusterSetConfigEpoch(final long configEpoch){
 		final CommandArguments args = CommandArguments.create("configEpoch", configEpoch);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_SETCONFIGEPOCH);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client,
+				ProtocolCommand.CLUSTER_SETCONFIGEPOCH);
 		return execute(command, args);
 	}
 
 	@Override
 	public BumpEpoch clusterBumpEpoch(){
-		final JedisClusterCommand<BumpEpoch> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_BUMPEPOCH);
+		final JedisClusterCommand<BumpEpoch> command = new JedisClusterCommand<>(client,
+				ProtocolCommand.CLUSTER_BUMPEPOCH);
 		return execute(command);
 	}
 
@@ -209,25 +216,25 @@ public final class JedisClusterClusterOperations extends AbstractClusterOperatio
 	public Status clusterSetSlot(final int slot, final ClusterSetSlotOption setSlotOption, final String nodeId){
 		final CommandArguments args = CommandArguments.create("slot", slot).put("setSlotOption", setSlotOption)
 				.put("nodeId", nodeId);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.CLUSTER_SETSLOT);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLUSTER_SETSLOT);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status asking(){
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.ASKING);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.ASKING);
 		return execute(command);
 	}
 
 	@Override
 	public Status readWrite(){
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.ASKING);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.ASKING);
 		return execute(command);
 	}
 
 	@Override
 	public Status readOnly(){
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.ASKING);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.ASKING);
 		return execute(command);
 	}
 

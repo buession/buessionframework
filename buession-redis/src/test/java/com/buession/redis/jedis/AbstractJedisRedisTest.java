@@ -22,9 +22,11 @@
  * | Copyright @ 2013-2020 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis;
+package com.buession.redis.jedis;
 
 import com.buession.core.utils.StringUtils;
+import com.buession.redis.AbstractRedisTest;
+import com.buession.redis.RedisTemplate;
 import com.buession.redis.client.connection.RedisConnection;
 import com.buession.redis.core.Options;
 import com.buession.redis.spring.JedisConnectionFactoryBean;
@@ -43,10 +45,10 @@ public abstract class AbstractJedisRedisTest extends AbstractRedisTest {
 
 		poolConfig.setMaxIdle(3);
 
-		configuration.setHost("127.0.0.1");
-		configuration.setPort(56379);
-		configuration.setPassword("passwd");
-		configuration.setDatabase(12);
+		configuration.setHost("test.redis.server");
+		configuration.setPort(6379);
+		configuration.setPassword("rds_PWD");
+		configuration.setDatabase(60);
 		configuration.setClientName(StringUtils.random(6));
 		configuration.setPoolConfig(poolConfig);
 

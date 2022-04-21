@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientReply;
@@ -48,7 +47,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisSentinelConnectionOperations extends AbstractConnectionOperations<JedisSentinelConnection> {
+public final class JedisSentinelConnectionOperations extends AbstractConnectionOperations<JedisSentinelClient> {
 
 	public JedisSentinelConnectionOperations(final JedisSentinelClient client){
 		super(client);
@@ -57,7 +56,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	@Override
 	public Status auth(final String user, final String password){
 		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.AUTH)
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<Status>(client, ProtocolCommand.AUTH)
 				.general((cmd)->cmd.auth(user, password), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
@@ -65,7 +64,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	@Override
 	public Status auth(final String password){
 		final CommandArguments args = CommandArguments.create("password", password);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.AUTH)
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<Status>(client, ProtocolCommand.AUTH)
 				.general((cmd)->cmd.auth(password), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
@@ -73,7 +72,7 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	@Override
 	public String echo(final String str){
 		final CommandArguments args = CommandArguments.create("str", str);
-		final JedisSentinelCommand<String> command = JedisSentinelCommand.<String>create(ProtocolCommand.ECHO)
+		final JedisSentinelCommand<String> command = new JedisSentinelCommand<String>(client, ProtocolCommand.ECHO)
 				.general((cmd)->cmd.echo(str));
 		return execute(command, args);
 	}
@@ -81,36 +80,35 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	@Override
 	public byte[] echo(final byte[] str){
 		final CommandArguments args = CommandArguments.create("str", str);
-		final JedisSentinelCommand<byte[]> command = JedisSentinelCommand.<byte[]>create(ProtocolCommand.ECHO)
+		final JedisSentinelCommand<byte[]> command = new JedisSentinelCommand<byte[]>(client, ProtocolCommand.ECHO)
 				.general((cmd)->cmd.echo(str));
 		return execute(command, args);
 	}
 
 	@Override
 	public Status ping(){
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.PING)
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<Status>(client, ProtocolCommand.PING)
 				.general((cmd)->cmd.ping(), PingResultConverter.INSTANCE);
 		return execute(command);
 	}
 
 	@Override
 	public Status reset(){
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.create(ProtocolCommand.RESET);
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<>(client, ProtocolCommand.RESET);
 		return execute(command);
 	}
 
 	@Override
 	public Status quit(){
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.QUIT)
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<Status>(client, ProtocolCommand.QUIT)
 				.general((cmd)->cmd.quit(), OkStatusConverter.INSTANCE);
 		return execute(command);
 	}
-
-
+	
 	@Override
 	public Status select(final int db){
 		final CommandArguments args = CommandArguments.create("db", db);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SELECT)
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<Status>(client, ProtocolCommand.SELECT)
 				.general((cmd)->cmd.select(db), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.select(db), OkStatusConverter.INSTANCE);
 		return execute(command, args);
@@ -119,13 +117,13 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	@Override
 	public Status clientCaching(final boolean isYes){
 		final CommandArguments args = CommandArguments.create("isYes", isYes);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.create(ProtocolCommand.CLIENT_CACHING);
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_CACHING);
 		return execute(command, args);
 	}
 
 	@Override
 	public long clientId(){
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.CLIENT_ID)
+		final JedisSentinelCommand<Long> command = new JedisSentinelCommand<Long>(client, ProtocolCommand.CLIENT_ID)
 				.general((cmd)->cmd.clientId());
 		return execute(command);
 	}
@@ -133,53 +131,55 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	@Override
 	public Status clientSetName(final String name){
 		final CommandArguments args = CommandArguments.create("name", name);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.CLIENT_SETNAME)
-				.general((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE);
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<Status>(client,
+				ProtocolCommand.CLIENT_SETNAME).general((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status clientSetName(final byte[] name){
 		final CommandArguments args = CommandArguments.create("name", name);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.CLIENT_SETNAME)
-				.general((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE);
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<Status>(client,
+				ProtocolCommand.CLIENT_SETNAME).general((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
 	public String clientGetName(){
-		final JedisSentinelCommand<String> command = JedisSentinelCommand.<String>create(ProtocolCommand.CLIENT_GETNAME)
-				.general((cmd)->cmd.clientGetname());
+		final JedisSentinelCommand<String> command = new JedisSentinelCommand<String>(client,
+				ProtocolCommand.CLIENT_GETNAME).general((cmd)->cmd.clientGetname());
 		return execute(command);
 	}
 
 	@Override
 	public Integer clientGetRedir(){
-		final JedisSentinelCommand<Integer> command = JedisSentinelCommand.create(ProtocolCommand.CLIENT_GETREDIR);
+		final JedisSentinelCommand<Integer> command = new JedisSentinelCommand<>(client,
+				ProtocolCommand.CLIENT_GETREDIR);
 		return execute(command);
 	}
 
 	@Override
 	public List<Client> clientList(){
-		final JedisSentinelCommand<List<Client>> command = JedisSentinelCommand.<List<Client>>create(
-						ProtocolCommand.CLIENT_LIST)
-				.general((cmd)->cmd.clientList(), ClientConverter.ClientListConverter.INSTANCE);
+		final JedisSentinelCommand<List<Client>> command = new JedisSentinelCommand<List<Client>>(client,
+				ProtocolCommand.CLIENT_LIST).general((cmd)->cmd.clientList(),
+				ClientConverter.ClientListConverter.INSTANCE);
 		return execute(command);
 	}
 
 	@Override
 	public List<Client> clientList(final ClientType clientType){
 		final CommandArguments args = CommandArguments.create("clientType", clientType);
-		final JedisSentinelCommand<List<Client>> command = JedisSentinelCommand.<List<Client>>create(
-						ProtocolCommand.CLIENT_LIST)
-				.general((cmd)->cmd.clientList(ClientTypeConverter.INSTANCE.convert(clientType)),
-						ClientConverter.ClientListConverter.INSTANCE);
+		final JedisSentinelCommand<List<Client>> command = new JedisSentinelCommand<List<Client>>(client,
+				ProtocolCommand.CLIENT_LIST).general(
+				(cmd)->cmd.clientList(ClientTypeConverter.INSTANCE.convert(clientType)),
+				ClientConverter.ClientListConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
 	public Client clientInfo(){
-		final JedisSentinelCommand<Client> command = JedisSentinelCommand.<Client>create(ProtocolCommand.CLIENT_INFO)
+		final JedisSentinelCommand<Client> command = new JedisSentinelCommand<Client>(client,
+				ProtocolCommand.CLIENT_INFO)
 				.general((cmd)->cmd.clientInfo(), ClientConverter.INSTANCE);
 		return execute(command);
 	}
@@ -187,40 +187,43 @@ public final class JedisSentinelConnectionOperations extends AbstractConnectionO
 	@Override
 	public Status clientPause(final int timeout){
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.CLIENT_PAUSE)
-				.general((cmd)->cmd.clientPause(timeout), OkStatusConverter.INSTANCE);
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<Status>(client,
+				ProtocolCommand.CLIENT_PAUSE).general((cmd)->cmd.clientPause(timeout), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status clientReply(final ClientReply option){
 		final CommandArguments args = CommandArguments.create("option", option);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.create(ProtocolCommand.CLIENT_REPLY);
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<>(client, ProtocolCommand.CLIENT_REPLY);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status clientKill(final String host, final int port){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.CLIENT_PAUSE)
-				.general((cmd)->cmd.clientKill(host + ":" + port), OkStatusConverter.INSTANCE);
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<Status>(client,
+				ProtocolCommand.CLIENT_PAUSE).general((cmd)->cmd.clientKill(host + ":" + port),
+				OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId){
 		final CommandArguments args = CommandArguments.create("clientId", clientId);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.CLIENT_UNBLOCK)
-				.general((cmd)->cmd.clientUnblock(clientId, null), Converters.ONE_STATUS_CONVERTER);
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<Status>(client,
+				ProtocolCommand.CLIENT_UNBLOCK).general((cmd)->cmd.clientUnblock(clientId, null),
+				Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type){
 		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.CLIENT_UNBLOCK)
-				.general((cmd)->cmd.clientUnblock(clientId, ClientUnblockTypeConverter.INSTANCE.convert(type)),
-						Converters.ONE_STATUS_CONVERTER);
+		final JedisSentinelCommand<Status> command = new JedisSentinelCommand<Status>(client,
+				ProtocolCommand.CLIENT_UNBLOCK).general(
+				(cmd)->cmd.clientUnblock(clientId, ClientUnblockTypeConverter.INSTANCE.convert(type)),
+				Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
 

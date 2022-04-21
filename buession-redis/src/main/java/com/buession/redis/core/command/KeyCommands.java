@@ -32,6 +32,7 @@ import com.buession.redis.core.MigrateOperation;
 import com.buession.redis.core.ObjectEncoding;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.Type;
+import com.buession.redis.utils.ObjectStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.Arrays;
@@ -1530,7 +1531,7 @@ public interface KeyCommands extends RedisCommands {
 
 		@Override
 		public String toString(){
-			return ArgumentStringBuilder.create().
+			return ObjectStringBuilder.create().
 					add("replace", replace).
 					add("absTtl", absTtl).
 					add("idleTime", idleTime).
@@ -1643,7 +1644,7 @@ public interface KeyCommands extends RedisCommands {
 
 		@Override
 		public String toString(){
-			final ArgumentStringBuilder builder = ArgumentStringBuilder.create();
+			final ObjectStringBuilder builder = ObjectStringBuilder.create();
 
 			if(by != null){
 				builder.add("by", SafeEncoder.encode(by));

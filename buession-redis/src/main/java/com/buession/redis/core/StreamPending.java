@@ -24,8 +24,9 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.io.Serializable;
-import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -69,11 +70,12 @@ public class StreamPending implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "{", "}")
-				.add("id=" + id)
-				.add("consumerName=" + consumerName)
-				.add("idleTime=" + idleTime)
-				.add("deliveredTimes=" + deliveredTimes)
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("id", id)
+				.add("consumerName", consumerName)
+				.add("idleTime", idleTime)
+				.add("deliveredTimes", deliveredTimes)
+				.build();
 	}
+
 }

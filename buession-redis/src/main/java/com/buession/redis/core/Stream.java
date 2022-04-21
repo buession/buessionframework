@@ -24,9 +24,10 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.io.Serializable;
 import java.util.Map;
-import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -99,16 +100,16 @@ public class Stream implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "{", "}")
-				.add("length=" + length)
-				.add("radixTreeKeys=" + radixTreeKeys)
-				.add("radixTreeNodes=" + radixTreeNodes)
-				.add("groups=" + groups)
-				.add("lastGeneratedId=" + lastGeneratedId)
-				.add("firstEntry=" + firstEntry)
-				.add("lastEntry=" + lastEntry)
-				.add("infos=" + infos)
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("length", length)
+				.add("radixTreeKeys", radixTreeKeys)
+				.add("radixTreeNodes", radixTreeNodes)
+				.add("groups", groups)
+				.add("lastGeneratedId", lastGeneratedId)
+				.add("firstEntry", firstEntry)
+				.add("lastEntry", lastEntry)
+				.add("infos", infos)
+				.build();
 	}
 
 }

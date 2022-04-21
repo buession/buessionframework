@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.GeoOperations;
 
@@ -32,15 +31,15 @@ import com.buession.redis.client.operations.GeoOperations;
  * Jedis 地理位置命令操作抽象类
  *
  * @param <C>
- * 		连接对象
+ * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractGeoOperations<C extends JedisRedisConnection>
+public abstract class AbstractGeoOperations<C extends JedisRedisClient>
 		extends AbstractJedisRedisOperations<C> implements GeoOperations<C> {
 
-	public AbstractGeoOperations(final JedisRedisClient client){
+	public AbstractGeoOperations(final C client){
 		super(client);
 	}
 

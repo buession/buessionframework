@@ -24,7 +24,7 @@
  */
 package com.buession.redis.client.operations;
 
-import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.RedisClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,14 +32,14 @@ import org.slf4j.LoggerFactory;
  * Redis 命令操作抽象类
  *
  * @param <C>
- * 		连接对象
+ * 		Redis Client {@link RedisClient}
  *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisOperations<C extends RedisConnection> implements RedisOperations<C> {
+public abstract class AbstractRedisOperations<C extends RedisClient> implements RedisOperations<C> {
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	protected C connection;
+	protected C client;
 
 }

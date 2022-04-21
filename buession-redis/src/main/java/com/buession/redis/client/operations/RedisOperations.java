@@ -24,23 +24,42 @@
  */
 package com.buession.redis.client.operations;
 
-import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.exception.RedisException;
 
 /**
  * Redis 命令操作接口
  *
  * @param <C>
- * 		连接对象
+ * 		Redis Client {@link RedisClient}
  *
  * @author Yong.Teng
  */
-public interface RedisOperations<C extends RedisConnection> {
+public interface RedisOperations<C extends RedisClient> {
 
 	<R> R execute(final Command<C, R> command) throws RedisException;
 
 	<R> R execute(final Command<C, R> command, final CommandArguments arguments) throws RedisException;
+
+	abstract class AbstractRedisCommand<C extends RedisClient, R> implements Command<C, R> {
+
+		protected final C client;
+
+		private final ProtocolCommand command;
+
+		protected AbstractRedisCommand(final C client, final ProtocolCommand command){
+			this.client = client;
+			this.command = command;
+		}
+
+		@Override
+		public ProtocolCommand getCommand(){
+			return command;
+		}
+
+	}
 
 }

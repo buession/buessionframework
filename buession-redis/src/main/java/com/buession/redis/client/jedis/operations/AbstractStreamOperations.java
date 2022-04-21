@@ -24,9 +24,9 @@
  */
 package com.buession.redis.client.jedis.operations;
 
+import com.buession.core.collect.Maps;
 import com.buession.core.converter.MapConverter;
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.StreamOperations;
 import com.buession.redis.core.Stream;
@@ -41,7 +41,6 @@ import com.buession.redis.core.internal.convert.Converters;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,15 +48,15 @@ import java.util.Map;
  * Jedis Stream 命令操作抽象类
  *
  * @param <C>
- * 		连接对象
+ * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractStreamOperations<C extends JedisRedisConnection> extends AbstractJedisRedisOperations<C>
+public abstract class AbstractStreamOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
 		implements StreamOperations<C> {
 
-	public AbstractStreamOperations(final JedisRedisClient client){
+	public AbstractStreamOperations(final C client){
 		super(client);
 	}
 
@@ -242,12 +241,7 @@ public abstract class AbstractStreamOperations<C extends JedisRedisConnection> e
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), null));
 		}else{
-			final Map<String, StreamEntryId> xStreams = new LinkedHashMap<>(streams.size());
-
-			streams.forEach((key, id)->{
-				xStreams.put(SafeEncoder.encode(key), id);
-			});
-
+			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), xStreams));
 		}
@@ -260,12 +254,7 @@ public abstract class AbstractStreamOperations<C extends JedisRedisConnection> e
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, null));
 		}else{
-			final Map<String, StreamEntryId> xStreams = new LinkedHashMap<>(streams.size());
-
-			streams.forEach((key, id)->{
-				xStreams.put(SafeEncoder.encode(key), id);
-			});
-
+			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, xStreams));
 		}
@@ -278,12 +267,7 @@ public abstract class AbstractStreamOperations<C extends JedisRedisConnection> e
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), block, null));
 		}else{
-			final Map<String, StreamEntryId> xStreams = new LinkedHashMap<>(streams.size());
-
-			streams.forEach((key, id)->{
-				xStreams.put(SafeEncoder.encode(key), id);
-			});
-
+			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), block, xStreams));
 		}
@@ -297,12 +281,7 @@ public abstract class AbstractStreamOperations<C extends JedisRedisConnection> e
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), isNoAck, null));
 		}else{
-			final Map<String, StreamEntryId> xStreams = new LinkedHashMap<>(streams.size());
-
-			streams.forEach((key, id)->{
-				xStreams.put(SafeEncoder.encode(key), id);
-			});
-
+			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), isNoAck, xStreams));
 		}
@@ -316,12 +295,7 @@ public abstract class AbstractStreamOperations<C extends JedisRedisConnection> e
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, block, null));
 		}else{
-			final Map<String, StreamEntryId> xStreams = new LinkedHashMap<>(streams.size());
-
-			streams.forEach((key, id)->{
-				xStreams.put(SafeEncoder.encode(key), id);
-			});
-
+			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, block,
 							xStreams));
@@ -336,12 +310,7 @@ public abstract class AbstractStreamOperations<C extends JedisRedisConnection> e
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, isNoAck, null));
 		}else{
-			final Map<String, StreamEntryId> xStreams = new LinkedHashMap<>(streams.size());
-
-			streams.forEach((key, id)->{
-				xStreams.put(SafeEncoder.encode(key), id);
-			});
-
+			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, isNoAck,
 							xStreams));
@@ -356,12 +325,7 @@ public abstract class AbstractStreamOperations<C extends JedisRedisConnection> e
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), block, isNoAck, null));
 		}else{
-			final Map<String, StreamEntryId> xStreams = new LinkedHashMap<>(streams.size());
-
-			streams.forEach((key, id)->{
-				xStreams.put(SafeEncoder.encode(key), id);
-			});
-
+			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), block, block,
 							xStreams));
@@ -377,12 +341,7 @@ public abstract class AbstractStreamOperations<C extends JedisRedisConnection> e
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, block, isNoAck,
 							null));
 		}else{
-			final Map<String, StreamEntryId> xStreams = new LinkedHashMap<>(streams.size());
-
-			streams.forEach((key, id)->{
-				xStreams.put(SafeEncoder.encode(key), id);
-			});
-
+			final Map<String, StreamEntryId> xStreams = Maps.map(streams, SafeEncoder::encode, (id)->id);
 			return afterBianryXReadGroup(
 					xReadGroup(SafeEncoder.encode(groupName), SafeEncoder.encode(consumerName), count, block, isNoAck,
 							xStreams));

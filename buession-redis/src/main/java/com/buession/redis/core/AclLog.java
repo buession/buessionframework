@@ -24,10 +24,10 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
-import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -100,16 +100,16 @@ public class AclLog implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "{", "}")
-				.add("count=" + count)
-				.add("reason=" + reason)
-				.add("context=" + context)
-				.add("object=" + object)
-				.add("username=" + username)
-				.add("ageSeconds=" + ageSeconds)
-				.add("clientInfo=" + clientInfo)
-				.add("logEntry=" + logEntry)
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("count", count)
+				.add("reason", reason)
+				.add("context", context)
+				.add("object", object)
+				.add("username", username)
+				.add("ageSeconds", ageSeconds)
+				.add("clientInfo", clientInfo)
+				.add("logEntry", logEntry)
+				.build();
 	}
 
 }

@@ -40,38 +40,6 @@ import java.util.Set;
 public interface SetOperations extends SetCommands, RedisOperations {
 
 	/**
-	 * 将 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sadd.html" target="_blank">http://redisdoc.com/set/sadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		元素
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
-	 */
-	<V> long sAdd(final String key, final V member);
-
-	/**
-	 * 将 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
-	 *
-	 * <p>详情说明 <a href="http://redisdoc.com/set/sadd.html" target="_blank">http://redisdoc.com/set/sadd.html</a></p>
-	 *
-	 * @param key
-	 * 		Key
-	 * @param member
-	 * 		元素
-	 * @param <V>
-	 * 		元素值类型
-	 *
-	 * @return 被添加到集合中的新元素的数量，不包括被忽略的元素
-	 */
-	<V> long sAdd(final byte[] key, final V member);
-
-	/**
 	 * 将一个或多个 member 元素序列化后加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
 	 *
 	 * <p>详情说明 <a href="http://redisdoc.com/set/sadd.html" target="_blank">http://redisdoc.com/set/sadd.html</a></p>

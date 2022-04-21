@@ -24,17 +24,17 @@
  */
 package com.buession.redis.core;
 
-import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.command.ProtocolCommand;
 
 /**
  * @author Yong.Teng
  * @since 2.0.0
  */
-public interface Command<C extends RedisConnection, R> {
+public interface Command<C extends RedisClient, R> {
 
 	ProtocolCommand getCommand();
 
-	R execute(final C connection);
+	R execute();
 
 }

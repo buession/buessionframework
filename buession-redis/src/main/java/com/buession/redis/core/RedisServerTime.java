@@ -24,10 +24,11 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
-import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -74,10 +75,10 @@ public class RedisServerTime implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "{", "}")
-				.add("date=" + date)
-				.add("usec=" + usec)
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("date", date)
+				.add("usec", usec)
+				.build();
 	}
 
 }

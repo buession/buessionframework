@@ -89,11 +89,11 @@ public interface RedisClient {
 
 	TransactionOperations<? extends RedisConnection> transactionOperations();
 
-	default <R> R execute(final Command<RedisConnection, R> command) throws RedisException{
+	default <R> R execute(final Command<RedisClient, R> command) throws RedisException{
 		return execute(command, null);
 	}
 
-	<R> R execute(final Command<RedisConnection, R> command, final CommandArguments arguments)
+	<R> R execute(final Command<RedisClient, R> command, final CommandArguments arguments)
 			throws RedisException;
 
 }

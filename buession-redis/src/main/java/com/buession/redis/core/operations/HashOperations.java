@@ -1618,9 +1618,9 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @param <V>
 	 * 		值类型
 	 *
-	 * @return 操作结果
+	 * @return 被修改或增加的 field 个数
 	 */
-	<V> Status hSet(final String key, final String field, final V value);
+	<V> long hSet(final String key, final String field, final V value);
 
 	/**
 	 * 将哈希表 key 中域 field 的值设置为 value。
@@ -1636,9 +1636,9 @@ public interface HashOperations extends HashCommands, RedisOperations {
 	 * @param <V>
 	 * 		值类型
 	 *
-	 * @return 操作结果
+	 * @return 被修改或增加的 field 个数
 	 */
-	<V> Status hSet(final byte[] key, final byte[] field, final V value);
+	<V> long hSet(final byte[] key, final byte[] field, final V value);
 
 	/**
 	 * 当且仅当域 field 尚未存在于哈希表 key 中的情况下，将它的值设置为 value

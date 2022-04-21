@@ -24,17 +24,17 @@
  */
 package com.buession.redis.client.operations;
 
-import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.command.GeoCommands;
 
 /**
  * 地理位置操作命令接口
  *
  * @param <C>
- * 		连接对象
+ * 		Redis Client {@link RedisClient}
  *
  * @author Yong.Teng
  */
-public interface GeoOperations<C extends RedisConnection> extends GeoCommands, RedisOperations<C> {
+public interface GeoOperations<C extends RedisClient> extends GeoCommands, RedisOperations<C> {
 
 }

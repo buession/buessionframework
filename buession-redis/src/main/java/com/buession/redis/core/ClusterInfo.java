@@ -25,10 +25,10 @@
 package com.buession.redis.core;
 
 import com.buession.lang.Status;
+import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.io.Serializable;
 import java.util.Properties;
-import java.util.StringJoiner;
 
 /**
  * 集群信息，更多信息 <a href="http://www.redis.cn/commands/cluster-info.html" target="_blank">http://www.redis.cn/commands/cluster-info.html</a>
@@ -355,19 +355,19 @@ public class ClusterInfo implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "{", "}")
-				.add("state=" + state)
-				.add("slotsAssigned=" + slotsAssigned)
-				.add("slotsOk=" + slotsOk)
-				.add("slotsPfail=" + slotsPfail)
-				.add("slotsFail=" + slotsFail)
-				.add("knownNodes=" + knownNodes)
-				.add("size=" + size)
-				.add("currentEpoch=" + currentEpoch)
-				.add("myEpoch=" + myEpoch)
-				.add("messagesSent=" + messagesSent)
-				.add("messagesReceived=" + messagesReceived)
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("state", state)
+				.add("slotsAssigned", slotsAssigned)
+				.add("slotsOk", slotsOk)
+				.add("slotsPfail", slotsPfail)
+				.add("slotsFail", slotsFail)
+				.add("knownNodes", knownNodes)
+				.add("size", size)
+				.add("currentEpoch", currentEpoch)
+				.add("myEpoch", myEpoch)
+				.add("messagesSent", messagesSent)
+				.add("messagesReceived", messagesReceived)
+				.build();
 	}
 
 	public enum Key {

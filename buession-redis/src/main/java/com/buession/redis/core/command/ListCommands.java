@@ -27,6 +27,7 @@ package com.buession.redis.core.command;
 import com.buession.lang.Status;
 import com.buession.redis.core.Direction;
 import com.buession.redis.core.ListPosition;
+import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
 
@@ -750,7 +751,7 @@ public interface ListCommands extends RedisCommands {
 
 		@Override
 		public String toString(){
-			return ArgumentStringBuilder.create().add("rank", rank).add("maxLen", maxLen).build();
+			return ObjectStringBuilder.create().add("rank", rank).add("maxLen", maxLen).build();
 		}
 
 		public static class Builder {

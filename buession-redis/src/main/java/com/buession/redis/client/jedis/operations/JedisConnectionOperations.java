@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.Client;
 import com.buession.redis.core.ClientReply;
@@ -48,7 +47,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisConnectionOperations extends AbstractConnectionOperations<JedisConnection> {
+public final class JedisConnectionOperations extends AbstractConnectionOperations<JedisStandaloneClient> {
 
 	public JedisConnectionOperations(final JedisStandaloneClient client){
 		super(client);
@@ -57,7 +56,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status auth(final String user, final String password){
 		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.AUTH)
+		final JedisCommand<Status> command = new JedisCommand<Status>(client, ProtocolCommand.AUTH)
 				.general((cmd)->cmd.auth(user, password), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
@@ -65,7 +64,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status auth(final String password){
 		final CommandArguments args = CommandArguments.create("password", password);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.AUTH)
+		final JedisCommand<Status> command = new JedisCommand<Status>(client, ProtocolCommand.AUTH)
 				.general((cmd)->cmd.auth(password), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
@@ -73,7 +72,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public String echo(final String str){
 		final CommandArguments args = CommandArguments.create("str", str);
-		final JedisCommand<String> command = JedisCommand.<String>create(ProtocolCommand.ECHO)
+		final JedisCommand<String> command = new JedisCommand<String>(client, ProtocolCommand.ECHO)
 				.general((cmd)->cmd.echo(str));
 		return execute(command, args);
 	}
@@ -81,51 +80,50 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public byte[] echo(final byte[] str){
 		final CommandArguments args = CommandArguments.create("str", str);
-		final JedisCommand<byte[]> command = JedisCommand.<byte[]>create(ProtocolCommand.ECHO)
+		final JedisCommand<byte[]> command = new JedisCommand<byte[]>(client, ProtocolCommand.ECHO)
 				.general((cmd)->cmd.echo(str));
 		return execute(command, args);
 	}
 
 	@Override
 	public Status ping(){
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.PING)
+		final JedisCommand<Status> command = new JedisCommand<Status>(client, ProtocolCommand.PING)
 				.general((cmd)->cmd.ping(), PingResultConverter.INSTANCE);
 		return execute(command);
 	}
 
 	@Override
 	public Status reset(){
-		final JedisCommand<Status> command = JedisCommand.create(ProtocolCommand.RESET);
+		final JedisCommand<Status> command = new JedisCommand<>(client, ProtocolCommand.RESET);
 		return execute(command);
 	}
 
 	@Override
 	public Status quit(){
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.QUIT)
+		final JedisCommand<Status> command = new JedisCommand<Status>(client, ProtocolCommand.QUIT)
 				.general((cmd)->cmd.quit(), OkStatusConverter.INSTANCE);
 		return execute(command);
 	}
 
-
 	@Override
 	public Status select(final int db){
 		final CommandArguments args = CommandArguments.create("db", db);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.SELECT)
-				.pipeline((cmd)->cmd.select(db), OkStatusConverter.INSTANCE)
-				.general((cmd)->cmd.select(db), OkStatusConverter.INSTANCE);
+		final JedisCommand<Status> command = new JedisCommand<Status>(client, ProtocolCommand.SELECT)
+				.general((cmd)->cmd.select(db), OkStatusConverter.INSTANCE)
+				.pipeline((cmd)->cmd.select(db), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status clientCaching(final boolean isYes){
 		final CommandArguments args = CommandArguments.create("isYes", isYes);
-		final JedisCommand<Status> command = JedisCommand.create(ProtocolCommand.CLIENT_CACHING);
+		final JedisCommand<Status> command = new JedisCommand<>(client, ProtocolCommand.CLIENT_CACHING);
 		return execute(command, args);
 	}
 
 	@Override
 	public long clientId(){
-		final JedisCommand<Long> command = JedisCommand.<Long>create(ProtocolCommand.CLIENT_ID)
+		final JedisCommand<Long> command = new JedisCommand<Long>(client, ProtocolCommand.CLIENT_ID)
 				.general((cmd)->cmd.clientId());
 		return execute(command);
 	}
@@ -133,7 +131,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientSetName(final String name){
 		final CommandArguments args = CommandArguments.create("name", name);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.CLIENT_SETNAME)
+		final JedisCommand<Status> command = new JedisCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
 				.general((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
@@ -141,27 +139,27 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientSetName(final byte[] name){
 		final CommandArguments args = CommandArguments.create("name", name);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.CLIENT_SETNAME)
+		final JedisCommand<Status> command = new JedisCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
 				.general((cmd)->cmd.clientSetname(name), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
 
 	@Override
 	public String clientGetName(){
-		final JedisCommand<String> command = JedisCommand.<String>create(ProtocolCommand.CLIENT_GETNAME)
+		final JedisCommand<String> command = new JedisCommand<String>(client, ProtocolCommand.CLIENT_GETNAME)
 				.general((cmd)->cmd.clientGetname());
 		return execute(command);
 	}
 
 	@Override
 	public Integer clientGetRedir(){
-		final JedisCommand<Integer> command = JedisCommand.create(ProtocolCommand.CLIENT_GETREDIR);
+		final JedisCommand<Integer> command = new JedisCommand<>(client, ProtocolCommand.CLIENT_GETREDIR);
 		return execute(command);
 	}
 
 	@Override
 	public List<Client> clientList(){
-		final JedisCommand<List<Client>> command = JedisCommand.<List<Client>>create(ProtocolCommand.CLIENT_LIST)
+		final JedisCommand<List<Client>> command = new JedisCommand<List<Client>>(client, ProtocolCommand.CLIENT_LIST)
 				.general((cmd)->cmd.clientList(), ClientConverter.ClientListConverter.INSTANCE);
 		return execute(command);
 	}
@@ -169,7 +167,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public List<Client> clientList(final ClientType clientType){
 		final CommandArguments args = CommandArguments.create("clientType", clientType);
-		final JedisCommand<List<Client>> command = JedisCommand.<List<Client>>create(ProtocolCommand.CLIENT_LIST)
+		final JedisCommand<List<Client>> command = new JedisCommand<List<Client>>(client, ProtocolCommand.CLIENT_LIST)
 				.general((cmd)->cmd.clientList(ClientTypeConverter.INSTANCE.convert(clientType)),
 						ClientConverter.ClientListConverter.INSTANCE);
 		return execute(command, args);
@@ -177,7 +175,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 
 	@Override
 	public Client clientInfo(){
-		final JedisCommand<Client> command = JedisCommand.<Client>create(ProtocolCommand.CLIENT_INFO)
+		final JedisCommand<Client> command = new JedisCommand<Client>(client, ProtocolCommand.CLIENT_INFO)
 				.general((cmd)->cmd.clientInfo(), ClientConverter.INSTANCE);
 		return execute(command);
 	}
@@ -185,7 +183,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientPause(final int timeout){
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.CLIENT_PAUSE)
+		final JedisCommand<Status> command = new JedisCommand<Status>(client, ProtocolCommand.CLIENT_PAUSE)
 				.general((cmd)->cmd.clientPause(timeout), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
@@ -193,14 +191,14 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientReply(final ClientReply option){
 		final CommandArguments args = CommandArguments.create("option", option);
-		final JedisCommand<Status> command = JedisCommand.create(ProtocolCommand.CLIENT_REPLY);
+		final JedisCommand<Status> command = new JedisCommand<>(client, ProtocolCommand.CLIENT_REPLY);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status clientKill(final String host, final int port){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.CLIENT_PAUSE)
+		final JedisCommand<Status> command = new JedisCommand<Status>(client, ProtocolCommand.CLIENT_PAUSE)
 				.general((cmd)->cmd.clientKill(host + ":" + port), OkStatusConverter.INSTANCE);
 		return execute(command, args);
 	}
@@ -208,7 +206,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientUnblock(final int clientId){
 		final CommandArguments args = CommandArguments.create("clientId", clientId);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.CLIENT_UNBLOCK)
+		final JedisCommand<Status> command = new JedisCommand<Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
 				.general((cmd)->cmd.clientUnblock(clientId, null), Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);
 	}
@@ -216,7 +214,7 @@ public final class JedisConnectionOperations extends AbstractConnectionOperation
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type){
 		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.CLIENT_UNBLOCK)
+		final JedisCommand<Status> command = new JedisCommand<Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
 				.general((cmd)->cmd.clientUnblock(clientId, ClientUnblockTypeConverter.INSTANCE.convert(type)),
 						Converters.ONE_STATUS_CONVERTER);
 		return execute(command, args);

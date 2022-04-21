@@ -33,6 +33,7 @@ import com.buession.redis.core.StreamFull;
 import com.buession.redis.core.StreamGroup;
 import com.buession.redis.core.StreamPending;
 import com.buession.redis.core.StreamPendingSummary;
+import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -1814,7 +1815,7 @@ public interface StreamCommands extends RedisCommands {
 
 		@Override
 		public String toString(){
-			return ArgumentStringBuilder.create().
+			return ObjectStringBuilder.create().
 					add("maxLen", maxLen).
 					add("approximateTrimming", approximateTrimming).
 					add("exactTrimming", exactTrimming).
@@ -1903,7 +1904,7 @@ public interface StreamCommands extends RedisCommands {
 
 		@Override
 		public String toString(){
-			return ArgumentStringBuilder.create().
+			return ObjectStringBuilder.create().
 					add("idleTime", idleTime).
 					add("idleUnixTime", idleUnixTime).
 					add("retryCount", retryCount).
@@ -1980,7 +1981,7 @@ public interface StreamCommands extends RedisCommands {
 
 		@Override
 		public String toString(){
-			return ArgumentStringBuilder.create().
+			return ObjectStringBuilder.create().
 					add("maxLen", maxLen).
 					add("approximateTrimming", approximateTrimming).
 					add("exactTrimming", exactTrimming).

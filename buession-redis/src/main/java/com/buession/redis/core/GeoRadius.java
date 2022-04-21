@@ -25,12 +25,12 @@
 package com.buession.redis.core;
 
 import com.buession.lang.Geo;
+import com.buession.redis.utils.ObjectStringBuilder;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -91,11 +91,11 @@ public class GeoRadius implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "{", "}")
-				.add("member=" + Arrays.toString(member))
-				.add("distance=" + distance)
-				.add("geo=" + geo)
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("member", member)
+				.add("distance", distance)
+				.add("geo", geo)
+				.build();
 	}
 
 }

@@ -24,9 +24,10 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.io.Serializable;
 import java.util.List;
-import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -84,14 +85,14 @@ public class SlowLog implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "{", "}")
-				.add("id=" + id)
-				.add("timeStamp=" + timeStamp)
-				.add("executionTime=" + executionTime)
-				.add("args=" + args)
-				.add("client=" + client)
-				.add("clientName=" + clientName)
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("id", id)
+				.add("timeStamp", timeStamp)
+				.add("executionTime", executionTime)
+				.add("args", args)
+				.add("client", client)
+				.add("clientName", clientName)
+				.build();
 	}
 
 }

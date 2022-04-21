@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.params;
 
 import com.buession.core.converter.Converter;
+import com.buession.lang.Order;
 import com.buession.redis.core.Limit;
 import com.buession.redis.core.command.KeyCommands;
 import redis.clients.jedis.params.SortingParams;
@@ -47,15 +48,10 @@ public final class SortArgumentConverter implements Converter<KeyCommands.SortAr
 			sortingParams.by(source.getBy());
 		}
 
-		switch(source.getOrder()){
-			case ASC:
-				sortingParams.asc();
-				break;
-			case DESC:
-				sortingParams.desc();
-				break;
-			default:
-				break;
+		if(source.getOrder() == Order.ASC){
+			sortingParams.asc();
+		}else if(source.getOrder() == Order.DESC){
+			sortingParams.desc();
 		}
 
 		if(source.getLimit() != null){

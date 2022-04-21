@@ -25,13 +25,10 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.converter.Converter;
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.AbstractRedisOperations;
 import com.buession.redis.core.Command;
 import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.exception.RedisException;
 import redis.clients.jedis.Response;
@@ -40,17 +37,17 @@ import redis.clients.jedis.Response;
  * Jedis Redis 命令操作抽象类
  *
  * @param <C>
- * 		连接对象
+ * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractJedisRedisOperations<C extends JedisRedisConnection> extends AbstractRedisOperations<C>
+public abstract class AbstractJedisRedisOperations<C extends JedisRedisClient> extends AbstractRedisOperations<C>
 		implements JedisRedisOperations<C> {
 
-	protected JedisRedisClient client;
+	protected C client;
 
-	public AbstractJedisRedisOperations(final JedisRedisClient client){
+	public AbstractJedisRedisOperations(final C client){
 		this.client = client;
 	}
 
@@ -61,19 +58,7 @@ public abstract class AbstractJedisRedisOperations<C extends JedisRedisConnectio
 
 	@Override
 	public <R> R execute(final Command<C, R> command, final CommandArguments arguments) throws RedisException{
-		return client.execute(new Command<RedisConnection, R>() {
-
-			@Override
-			public ProtocolCommand getCommand(){
-				return command.getCommand();
-			}
-
-			@Override
-			public R execute(final RedisConnection connection){
-				return command.execute((C) connection);
-			}
-
-		}, arguments);
+		return null;//client.execute(command, arguments);
 	}
 
 	protected <SV, TV> JedisResult<SV, TV> newJedisResult(final Response<SV> response){

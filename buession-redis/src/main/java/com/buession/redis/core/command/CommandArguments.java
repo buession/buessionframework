@@ -85,7 +85,7 @@ public class CommandArguments {
 		if(Validate.isEmpty(getParameters())){
 			return Constants.EMPTY_STRING;
 		}else{
-			StringBuilder sb = new StringBuilder(getParameters().size() * 16);
+			StringBuilder sb = new StringBuilder(getParameters().size() * 8);
 
 			getParameters().forEach((name, value)->{
 				if(sb.length() > 0){

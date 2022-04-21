@@ -677,13 +677,11 @@ public enum ProtocolCommand {
 
 	UNWATCH(ProtocolCommandGroup.TRANSACTION),
 
-	WATCH(ProtocolCommandGroup.TRANSACTION),
+	WATCH(ProtocolCommandGroup.TRANSACTION);
+
 	/**
 	 * transaction command end
 	 **/
-
-
-	SENTINEL(ProtocolCommandGroup.TRANSACTION);
 
 	private final ProtocolCommandGroup group;
 

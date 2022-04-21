@@ -30,8 +30,11 @@ import com.buession.core.validator.Validate;
 import com.buession.lang.KeyValue;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
+import com.buession.redis.core.Aggregate;
 import com.buession.redis.core.Direction;
+import com.buession.redis.core.GtLt;
 import com.buession.redis.core.ListPosition;
+import com.buession.redis.core.NxXx;
 import com.buession.redis.core.ScanResult;
 import com.buession.redis.core.operations.*;
 import com.buession.redis.serializer.Serializer;
@@ -52,9 +55,9 @@ import java.util.stream.Collectors;
  * @author Yong.Teng
  */
 public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations, ClusterOperations,
-		ConnectionOperations, GeoOperations/*,
-		HashOperations, HyperLogLogOperations, KeyOperations, ListOperations, PubSubOperations, ScriptingOperations,
-		ServerOperations, SetOperations, SortedSetOperations, StringOperations, TransactionOperations*/ {
+		ConnectionOperations, GeoOperations, HashOperations, HyperLogLogOperations, KeyOperations, ListOperations,
+		PubSubOperations, ScriptingOperations, ServerOperations, SetOperations, SortedSetOperations,
+		StreamOperations, StringOperations, TransactionOperations {
 
 	private final static ThreadLocal<Map<Integer, Function<?, ?>>> txConverters = new ThreadLocal<>();
 
@@ -74,7 +77,6 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	public RedisTemplate(RedisConnection connection){
 		super(connection);
 	}
-	/*
 
 	@Override
 	public <V> V hGetObject(final String key, final String field){
@@ -731,12 +733,12 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> Status hSet(final String key, final String field, final V value){
+	public <V> long hSet(final String key, final String field, final V value){
 		return hSet(key, field, serializer.serialize(value));
 	}
 
 	@Override
-	public <V> Status hSet(final byte[] key, final byte[] field, final V value){
+	public <V> long hSet(final byte[] key, final byte[] field, final V value){
 		return hSet(key, field, serializer.serializeAsBytes(value));
 	}
 
@@ -835,12 +837,12 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> Long lInsert(final String key, final ListPosition position, final V pivot, final V value){
+	public <V> long lInsert(final String key, final ListPosition position, final V pivot, final V value){
 		return lInsert(key, position, serializer.serialize(pivot), serializer.serialize(value));
 	}
 
 	@Override
-	public <V> Long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value){
+	public <V> long lInsert(final byte[] key, final ListPosition position, final V pivot, final V value){
 		return lInsert(key, position, serializer.serializeAsBytes(pivot), serializer.serializeAsBytes(value));
 	}
 
@@ -1161,42 +1163,42 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> Long lPush(final String key, final V value){
+	public <V> long lPush(final String key, final V value){
 		return lPush(key, serializer.serialize(value));
 	}
 
 	@Override
-	public <V> Long lPush(final byte[] key, final V value){
+	public <V> long lPush(final byte[] key, final V value){
 		return lPush(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
-	public <V> Long lPush(final String key, final V... values){
+	public <V> long lPush(final String key, final V... values){
 		return lPush(key, serializer.serialize(values));
 	}
 
 	@Override
-	public <V> Long lPush(final byte[] key, final V... values){
+	public <V> long lPush(final byte[] key, final V... values){
 		return lPush(key, serializer.serializeAsBytes(values));
 	}
 
 	@Override
-	public <V> Long lPushX(final String key, final V value){
+	public <V> long lPushX(final String key, final V value){
 		return lPushX(key, serializer.serialize(value));
 	}
 
 	@Override
-	public <V> Long lPushX(final byte[] key, final V value){
+	public <V> long lPushX(final byte[] key, final V value){
 		return lPushX(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
-	public <V> Long lPushX(final String key, final V... values){
+	public <V> long lPushX(final String key, final V... values){
 		return lPushX(key, serializer.serialize(values));
 	}
 
 	@Override
-	public <V> Long lPushX(final byte[] key, final V... values){
+	public <V> long lPushX(final byte[] key, final V... values){
 		return lPushX(key, serializer.serializeAsBytes(values));
 	}
 
@@ -1285,104 +1287,136 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> Long rPush(final String key, final V value){
+	public <V> long rPush(final String key, final V value){
 		return rPush(key, serializer.serialize(value));
 	}
 
 	@Override
-	public <V> Long rPush(final byte[] key, final V value){
+	public <V> long rPush(final byte[] key, final V value){
 		return rPush(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
-	public <V> Long rPush(final String key, final V... values){
+	public <V> long rPush(final String key, final V... values){
 		return rPush(key, serializer.serialize(values));
 	}
 
 	@Override
-	public <V> Long rPush(final byte[] key, final V... values){
+	public <V> long rPush(final byte[] key, final V... values){
 		return rPush(key, serializer.serializeAsBytes(values));
 	}
 
 	@Override
-	public <V> Long rPushX(final String key, final V value){
+	public <V> long rPushX(final String key, final V value){
 		return rPushX(key, serializer.serialize(value));
 	}
 
 	@Override
-	public <V> Long rPushX(final byte[] key, final V value){
+	public <V> long rPushX(final byte[] key, final V value){
 		return rPushX(key, serializer.serializeAsBytes(value));
 	}
 
 	@Override
-	public <V> Long rPushX(final String key, final V... values){
+	public <V> long rPushX(final String key, final V... values){
 		return rPushX(key, serializer.serialize(values));
 	}
 
 	@Override
-	public <V> Long rPushX(final byte[] key, final V... values){
+	public <V> long rPushX(final byte[] key, final V... values){
 		return rPushX(key, serializer.serializeAsBytes(values));
 	}
 
 	@Override
-	public <V> Long sAdd(final String key, final V member){
-		return sAdd(key, serializer.serialize(member));
-	}
-
-	@Override
-	public <V> Long sAdd(final byte[] key, final V member){
-		return sAdd(key, serializer.serializeAsBytes(member));
-	}
-
-	@Override
-	public <V> Long sAdd(final String key, final V... members){
+	public <V> long sAdd(final String key, final V... members){
 		return sAdd(key, serializer.serialize(members));
 	}
 
 	@Override
-	public <V> Long sAdd(final byte[] key, final V... members){
+	public <V> long sAdd(final byte[] key, final V... members){
 		return sAdd(key, serializer.serializeAsBytes(members));
 	}
 
 	@Override
-	public <V> Set<V> sDiffObject(final String key, final String[] keys){
+	public <V> Set<V> sDiffObject(final String[] keys){
 		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sDiff(key, keys), this);
+				sDiff(keys), this);
 		return operations.operation();
 	}
 
 	@Override
-	public <V> Set<V> sDiffObject(final byte[] key, final byte[][] keys){
+	public <V> Set<V> sDiffObject(final byte[][] keys){
 		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sDiff(key, keys), this);
+				sDiff(keys), this);
 		return operations.operation();
 	}
 
 	@Override
-	public <V> Set<V> sDiffObject(final String key, final String[] keys, final Class<V> clazz){
+	public <V> Set<V> sDiffObject(final String[] keys, final Class<V> clazz){
 		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sDiff(key, keys), this);
+				sDiff(keys), this);
 		return operations.operation(clazz);
 	}
 
 	@Override
-	public <V> Set<V> sDiffObject(final byte[] key, final byte[][] keys, final Class<V> clazz){
+	public <V> Set<V> sDiffObject(final byte[][] keys, final Class<V> clazz){
 		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sDiff(key, keys), this);
+				sDiff(keys), this);
 		return operations.operation(clazz);
 	}
 
 	@Override
-	public <V> Set<V> sDiffObject(final String key, final String[] keys, final TypeReference<V> type){
+	public <V> Set<V> sDiffObject(final String[] keys, final TypeReference<V> type){
 		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				sDiff(key, keys), this);
+				sDiff(keys), this);
 		return operations.operation(type);
 	}
 
 	@Override
-	public <V> Set<V> sDiffObject(final byte[] key, final byte[][] keys, final TypeReference<V> type){
+	public <V> Set<V> sDiffObject(final byte[][] keys, final TypeReference<V> type){
 		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				sDiff(key, keys), this);
+				sDiff(keys), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> sInterObject(final String[] keys){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				sInter(keys), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> sInterObject(final byte[][] keys){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				sInter(keys), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> sInterObject(final String[] keys, final Class<V> clazz){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				sInter(keys), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> sInterObject(final byte[][] keys, final Class<V> clazz){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				sInter(keys), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> sInterObject(final String[] keys, final TypeReference<V> type){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				sInter(keys), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> sInterObject(final byte[][] keys, final TypeReference<V> type){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				sInter(keys), this);
 		return operations.operation(type);
 	}
 
@@ -1597,84 +1631,1344 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
-	public <V> Long sRem(final String key, final V member){
+	public <V> long sRem(final String key, final V member){
 		return sRem(key, serializer.serialize(member));
 	}
 
 	@Override
-	public <V> Long sRem(final byte[] key, final V member){
+	public <V> long sRem(final byte[] key, final V member){
 		return sRem(key, serializer.serializeAsBytes(member));
 	}
 
 	@Override
-	public <V> Long sRem(final String key, final V... members){
+	public <V> long sRem(final String key, final V... members){
 		return sRem(key, serializer.serialize(members));
 	}
 
 	@Override
-	public <V> Long sRem(final byte[] key, final V... members){
+	public <V> long sRem(final byte[] key, final V... members){
 		return sRem(key, serializer.serializeAsBytes(members));
 	}
 
 	@Override
-	public <V> Long zAdd(final String key, final double score, final V member){
-		return zAdd(key, score, serializer.serialize(member));
-	}
-
-	@Override
-	public <V> Long zAdd(final byte[] key, final double score, final V member){
-		return zAdd(key, score, serializer.serialize(member));
-	}
-
-	@Override
-	public <V> Long zAdd(final String key, final double score, final V member, final ZAddArgument argument){
-		return zAdd(key, score, serializer.serialize(member), argument);
-	}
-
-	@Override
-	public <V> Long zAdd(final byte[] key, final double score, final V member, final ZAddArgument argument){
-		return zAdd(key, score, serializer.serialize(member), argument);
-	}
-
-	@Override
-	public <V> Set<V> zDiffObject(final String key, final String[] keys){
+	public <V> Set<V> sUnionObject(final String[] keys){
 		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zDiff(key, keys), this);
+				sUnion(keys), this);
 		return operations.operation();
 	}
 
 	@Override
-	public <V> Set<V> zDiffObject(final byte[] key, final byte[][] keys){
+	public <V> Set<V> sUnionObject(final byte[][] keys){
 		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zDiff(key, keys), this);
+				sUnion(keys), this);
 		return operations.operation();
 	}
 
 	@Override
-	public <V> Set<V> zDiffObject(final String key, final String[] keys, final Class<V> clazz){
+	public <V> Set<V> sUnionObject(final String[] keys, final Class<V> clazz){
 		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zDiff(key, keys), this);
+				sUnion(keys), this);
 		return operations.operation(clazz);
 	}
 
 	@Override
-	public <V> Set<V> zDiffObject(final byte[] key, final byte[][] keys, final Class<V> clazz){
+	public <V> Set<V> sUnionObject(final byte[][] keys, final Class<V> clazz){
 		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zDiff(key, keys), this);
+				sUnion(keys), this);
 		return operations.operation(clazz);
 	}
 
 	@Override
-	public <V> Set<V> zDiffObject(final String key, final String[] keys, final TypeReference<V> type){
+	public <V> Set<V> sUnionObject(final String[] keys, final TypeReference<V> type){
 		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
-				zDiff(key, keys), this);
+				sUnion(keys), this);
 		return operations.operation(type);
 	}
 
 	@Override
-	public <V> Set<V> zDiffObject(final byte[] key, final byte[][] keys, final TypeReference<V> type){
+	public <V> Set<V> sUnionObject(final byte[][] keys, final TypeReference<V> type){
 		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
-				zDiff(key, keys), this);
+				sUnion(keys), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> long zAdd(final String key, final double score, final V member){
+		return zAdd(key, score, serializer.serialize(member));
+	}
+
+	@Override
+	public <V> long zAdd(final byte[] key, final double score, final V member){
+		return zAdd(key, score, serializer.serialize(member));
+	}
+
+	@Override
+	public <V> long zAdd(final String key, final double score, final V member, final NxXx nxXx){
+		return zAdd(key, score, serializer.serialize(member), nxXx);
+	}
+
+	@Override
+	public <V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx){
+		return zAdd(key, score, serializer.serialize(member), nxXx);
+	}
+
+	@Override
+	public <V> long zAdd(final String key, final double score, final V member, final GtLt gtLt){
+		return zAdd(key, score, serializer.serialize(member), gtLt);
+	}
+
+	@Override
+	public <V> long zAdd(final byte[] key, final double score, final V member, final GtLt gtLt){
+		return zAdd(key, score, serializer.serialize(member), gtLt);
+	}
+
+	@Override
+	public <V> long zAdd(final String key, final double score, final V member, final boolean ch){
+		return zAdd(key, score, serializer.serialize(member), ch);
+	}
+
+	@Override
+	public <V> long zAdd(final byte[] key, final double score, final V member, final boolean ch){
+		return zAdd(key, score, serializer.serialize(member), ch);
+	}
+
+	@Override
+	public <V> long zAdd(final String key, final double score, final V member, final NxXx nxXx, final GtLt gtLt){
+		return zAdd(key, score, serializer.serialize(member), nxXx, gtLt);
+	}
+
+	@Override
+	public <V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final GtLt gtLt){
+		return zAdd(key, score, serializer.serialize(member), nxXx, gtLt);
+	}
+
+	@Override
+	public <V> long zAdd(final String key, final double score, final V member, final NxXx nxXx, final boolean ch){
+		return zAdd(key, score, serializer.serialize(member), nxXx, ch);
+	}
+
+	@Override
+	public <V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final boolean ch){
+		return zAdd(key, score, serializer.serialize(member), nxXx, ch);
+	}
+
+	@Override
+	public <V> long zAdd(final String key, final double score, final V member, final GtLt gtLt, final boolean ch){
+		return zAdd(key, score, serializer.serialize(member), gtLt, ch);
+	}
+
+	@Override
+	public <V> long zAdd(final byte[] key, final double score, final V member, final GtLt gtLt, final boolean ch){
+		return zAdd(key, score, serializer.serialize(member), gtLt, ch);
+	}
+
+	@Override
+	public <V> long zAdd(final String key, final double score, final V member, final NxXx nxXx, final GtLt gtLt,
+						 final boolean ch){
+		return zAdd(key, score, serializer.serialize(member), nxXx, gtLt, ch);
+	}
+
+	@Override
+	public <V> long zAdd(final byte[] key, final double score, final V member, final NxXx nxXx, final GtLt gtLt,
+						 final boolean ch){
+		return zAdd(key, score, serializer.serialize(member), nxXx, gtLt, ch);
+	}
+
+	@Override
+	public <V> Set<V> zDiffObject(final String[] keys){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zDiff(keys), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zDiffObject(final byte[][] keys){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zDiff(keys), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zDiffObject(final String[] keys, final Class<V> clazz){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zDiff(keys), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zDiffObject(final byte[][] keys, final Class<V> clazz){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zDiff(keys), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zDiffObject(final String[] keys, final TypeReference<V> type){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zDiff(keys), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zDiffObject(final byte[][] keys, final TypeReference<V> type){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zDiff(keys), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final String[] keys){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zInter(keys), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final byte[][] keys){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zInter(keys), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final String[] keys, final Class<V> clazz){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zInter(keys), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final byte[][] keys, final Class<V> clazz){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zInter(keys), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final String[] keys, final TypeReference<V> type){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zInter(keys), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final byte[][] keys, final TypeReference<V> type){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zInter(keys), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zInter(keys, aggregate), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zInter(keys, aggregate), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zInter(keys, aggregate), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zInter(keys, aggregate), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zInter(keys, aggregate), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zInter(keys, aggregate), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final String[] keys, final double[] weights){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zInter(keys, weights), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final byte[][] keys, final double[] weights){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zInter(keys, weights), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final String[] keys, final double[] weights, final Class<V> clazz){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zInter(keys, weights), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final byte[][] keys, final double[] weights, final Class<V> clazz){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zInter(keys, weights), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final String[] keys, final double[] weights, final TypeReference<V> type){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zInter(keys, weights), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final byte[][] keys, final double[] weights, final TypeReference<V> type){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zInter(keys, weights), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zInter(keys, aggregate, weights), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zInter(keys, aggregate, weights), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+								   final Class<V> clazz){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zInter(keys, aggregate, weights), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+								   final Class<V> clazz){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zInter(keys, aggregate, weights), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+								   final TypeReference<V> type){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zInter(keys, aggregate, weights), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zInterObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+								   final TypeReference<V> type){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zInter(keys, aggregate, weights), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> V zRandMemberObject(final String key){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				zRandMember(key), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> V zRandMemberObject(final byte[] key){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				zRandMember(key), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> V zRandMemberObject(final String key, final Class<V> clazz){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				zRandMember(key), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> V zRandMemberObject(final byte[] key, final Class<V> clazz){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				zRandMember(key), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> V zRandMemberObject(final String key, final TypeReference<V> type){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				zRandMember(key), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> V zRandMemberObject(final byte[] key, final TypeReference<V> type){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				zRandMember(key), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRandMemberObject(final String key, final long count){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRandMember(key, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRandMemberObject(final byte[] key, final long count){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRandMember(key, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRandMemberObject(final String key, final long count, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRandMember(key, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRandMemberObject(final byte[] key, final long count, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRandMember(key, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRandMemberObject(final String key, final long count, final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRandMember(key, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRandMemberObject(final byte[] key, final long count, final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRandMember(key, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRangeObject(final String key, final long start, final long end){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRange(key, start, end), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeObject(final byte[] key, final long start, final long end){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRange(key, start, end), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeObject(final String key, final long start, final long end, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRange(key, start, end), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRange(key, start, end), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeObject(final String key, final long start, final long end, final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRange(key, start, end), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRange(key, start, end), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRangeByLexObject(final String key, final double min, final double max){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByLex(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByLexObject(final byte[] key, final double min, final double max){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByLex(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByLexObject(final String key, final double min, final double max, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByLex(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeByLexObject(final byte[] key, final double min, final double max, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByLex(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeByLexObject(final String key, final double min, final double max,
+										 final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByLex(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRangeByLexObject(final byte[] key, final double min, final double max,
+										 final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByLex(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByLexObject(final String key, final String min, final String max){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByLex(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByLex(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByLexObject(final String key, final String min, final String max, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByLex(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByLex(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeByLexObject(final String key, final String min, final String max,
+										 final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByLex(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRangeByLexObject(final byte[] key, final byte[] min, final byte[] max,
+										 final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByLex(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByScore(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByScore(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByScore(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByScore(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max,
+										   final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByScore(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max,
+										   final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByScore(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByScore(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByScore(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByScore(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByScore(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max,
+										   final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByScore(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
+										   final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByScore(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
+										   final long count){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByScore(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
+										   final long count){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByScore(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
+										   final long count, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
+										   final long count, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final String key, final double min, final double max, final long offset,
+										   final long count, final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
+										   final long count, final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
+										   final long count){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByScore(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+										   final long count){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByScore(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
+										   final long count, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+										   final long count, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final String key, final String min, final String max, final long offset,
+										   final long count, final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+										   final long count, final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeObject(final String key, final long start, final long end){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRange(key, start, end), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeObject(final byte[] key, final long start, final long end){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRange(key, start, end), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeObject(final String key, final long start, final long end, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRange(key, start, end), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeObject(final byte[] key, final long start, final long end, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRange(key, start, end), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeObject(final String key, final long start, final long end, final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRange(key, start, end), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeObject(final byte[] key, final long start, final long end, final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRange(key, start, end), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByLex(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByLex(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByLex(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByLex(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max,
+											final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByLex(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max,
+											final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByLex(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByLex(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByLex(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByLex(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByLex(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max,
+											final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByLex(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max,
+											final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByLex(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
+											final long count){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByLex(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
+											final long count){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByLex(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
+											final long count, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByLex(key, min, max, offset, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
+											final long count, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByLex(key, min, max, offset, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final String key, final double min, final double max, final long offset,
+											final long count, final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByLex(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final byte[] key, final double min, final double max, final long offset,
+											final long count, final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByLex(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
+											final long count){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByLex(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+											final long count){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByLex(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
+											final long count, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByLex(key, min, max, offset, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+											final long count, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByLex(key, min, max, offset, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final String key, final String min, final String max, final long offset,
+											final long count, final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByLex(key, min, max, offset, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByLexObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+											final long count, final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByLex(key, min, max, offset, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByScore(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByScore(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max,
+											  final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByScore(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max,
+											  final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByScore(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max,
+											  final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByScore(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max,
+											  final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByScore(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByScore(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByScore(key, min, max), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max,
+											  final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByScore(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
+											  final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByScore(key, min, max), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max,
+											  final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByScore(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max,
+											  final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByScore(key, min, max), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
+											  final long count){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByScore(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
+											  final long count){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByScore(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
+											  final long count, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
+											  final long count, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final String key, final double min, final double max, final long offset,
+											  final long count, final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final double min, final double max, final long offset,
+											  final long count, final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
+											  final long count){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByScore(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+											  final long count){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByScore(key, min, max, offset, count), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
+											  final long count, final Class<V> clazz){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+											  final long count, final Class<V> clazz){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final String key, final String min, final String max, final long offset,
+											  final long count, final TypeReference<V> type){
+		final ObjectOperations.ListStringObjectOperations operations = new ObjectOperations.ListStringObjectOperations(
+				zRevRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> List<V> zRevRangeByScoreObject(final byte[] key, final byte[] min, final byte[] max, final long offset,
+											  final long count, final TypeReference<V> type){
+		final ObjectOperations.ListBinaryObjectOperations operations = new ObjectOperations.ListBinaryObjectOperations(
+				zRevRangeByScore(key, min, max, offset, count), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final String[] keys){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zUnion(keys), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final byte[][] keys){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zUnion(keys), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final String[] keys, final Class<V> clazz){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zUnion(keys), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final byte[][] keys, final Class<V> clazz){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zUnion(keys), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final String[] keys, final TypeReference<V> type){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zUnion(keys), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final byte[][] keys, final TypeReference<V> type){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zUnion(keys), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zUnion(keys, aggregate), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zUnion(keys, aggregate), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final Class<V> clazz){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zUnion(keys, aggregate), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final Class<V> clazz){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zUnion(keys, aggregate), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final TypeReference<V> type){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zUnion(keys, aggregate), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final TypeReference<V> type){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zUnion(keys, aggregate), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final String[] keys, final double[] weights){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zUnion(keys, weights), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final byte[][] keys, final double[] weights){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zUnion(keys, weights), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final String[] keys, final double[] weights, final Class<V> clazz){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zUnion(keys, weights), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final byte[][] keys, final double[] weights, final Class<V> clazz){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zUnion(keys, weights), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final String[] keys, final double[] weights, final TypeReference<V> type){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zUnion(keys, weights), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final byte[][] keys, final double[] weights, final TypeReference<V> type){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zUnion(keys, weights), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zUnion(keys, aggregate, weights), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zUnion(keys, aggregate, weights), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+								   final Class<V> clazz){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zUnion(keys, aggregate, weights), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+								   final Class<V> clazz){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zUnion(keys, aggregate, weights), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final String[] keys, final Aggregate aggregate, final double[] weights,
+								   final TypeReference<V> type){
+		final ObjectOperations.SetStringObjectOperations operations = new ObjectOperations.SetStringObjectOperations(
+				zUnion(keys, aggregate, weights), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> Set<V> zUnionObject(final byte[][] keys, final Aggregate aggregate, final double[] weights,
+								   final TypeReference<V> type){
+		final ObjectOperations.SetBinaryObjectOperations operations = new ObjectOperations.SetBinaryObjectOperations(
+				zUnion(keys, aggregate, weights), this);
 		return operations.operation(type);
 	}
 
@@ -1721,6 +3015,48 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	}
 
 	@Override
+	public <V> V getExObject(final String key, final GetExArgument getExArgument){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				getEx(key, getExArgument), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> V getExObject(final byte[] key, final GetExArgument getExArgument){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				getEx(key, getExArgument), this);
+		return operations.operation();
+	}
+
+	@Override
+	public <V> V getExObject(final String key, final GetExArgument getExArgument, final Class<V> clazz){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				getEx(key, getExArgument), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> V getExObject(final byte[] key, final GetExArgument getExArgument, final Class<V> clazz){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				getEx(key, getExArgument), this);
+		return operations.operation(clazz);
+	}
+
+	@Override
+	public <V> V getExObject(final String key, final GetExArgument getExArgument, final TypeReference<V> type){
+		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
+				getEx(key, getExArgument), this);
+		return operations.operation(type);
+	}
+
+	@Override
+	public <V> V getExObject(final byte[] key, final GetExArgument getExArgument, final TypeReference<V> type){
+		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
+				getEx(key, getExArgument), this);
+		return operations.operation(type);
+	}
+
+	@Override
 	public <V> V getSet(final String key, final V value){
 		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
 				getSet(key, serializer.serialize(value)), this);
@@ -1759,50 +3095,6 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 	public <V> V getSet(final byte[] key, final V value, final TypeReference<V> type){
 		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
 				getSet(key, serializer.serializeAsBytes(value)), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> V getExObject(final String key, final GetExArgument getExArgument){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				getEx(key, getExArgument), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> V getExObject(final byte[] key, final GetExArgument getExArgument){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				getEx(key, getExArgument), this);
-		return operations.operation();
-	}
-
-	@Override
-	public <V> V getExObject(final String key, final GetExArgument getExArgument, final Class<V> clazz){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				getEx(key, getExArgument), this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> V getExObject(final byte[] key, final GetExArgument getExArgument, final Class<V> clazz){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				getEx(key, getExArgument),
-				this);
-		return operations.operation(clazz);
-	}
-
-	@Override
-	public <V> V getExObject(final String key, final GetExArgument getExArgument, final TypeReference<V> type){
-		final ObjectOperations.StringObjectOperations operations = new ObjectOperations.StringObjectOperations(
-				getEx(key, getExArgument), this);
-		return operations.operation(type);
-	}
-
-	@Override
-	public <V> V getExObject(final byte[] key, final GetExArgument getExArgument, final TypeReference<V> type){
-		final ObjectOperations.BinaryObjectOperations operations = new ObjectOperations.BinaryObjectOperations(
-				getEx(key, getExArgument),
-				this);
 		return operations.operation(type);
 	}
 
@@ -2385,7 +3677,5 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 		}
 
 	}
-
-	 */
 
 }

@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -38,7 +37,7 @@ import com.buession.redis.core.internal.convert.response.OkStatusConverter;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLogOperations<JedisClusterConnection> {
+public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLogOperations<JedisClusterClient> {
 
 	public JedisClusterHyperLogLogOperations(final JedisClusterClient client){
 		super(client);
@@ -47,7 +46,7 @@ public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLog
 	@Override
 	public Status pfAdd(final String key, final String... elements){
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", elements);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.PFADD)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PFADD)
 				.general((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER);
@@ -57,7 +56,7 @@ public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLog
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements){
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", elements);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.PFADD)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PFADD)
 				.general((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER);
@@ -67,7 +66,7 @@ public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLog
 	@Override
 	public Status pfMerge(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.PFMERGE)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PFMERGE)
 				.general((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE);
@@ -77,7 +76,7 @@ public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLog
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.PFMERGE)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PFMERGE)
 				.general((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE);
@@ -87,8 +86,9 @@ public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLog
 	@Override
 	public long pfCount(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.PFCOUNT)
-				.general((cmd)->cmd.pfcount(keys)).pipeline((cmd)->cmd.pfcount(keys))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.PFCOUNT)
+				.general((cmd)->cmd.pfcount(keys))
+				.pipeline((cmd)->cmd.pfcount(keys))
 				.transaction((cmd)->cmd.pfcount(keys));
 		return execute(command, args);
 	}
@@ -96,8 +96,9 @@ public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLog
 	@Override
 	public long pfCount(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.PFCOUNT)
-				.general((cmd)->cmd.pfcount(keys)).pipeline((cmd)->cmd.pfcount(keys))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.PFCOUNT)
+				.general((cmd)->cmd.pfcount(keys))
+				.pipeline((cmd)->cmd.pfcount(keys))
 				.transaction((cmd)->cmd.pfcount(keys));
 		return execute(command, args);
 	}

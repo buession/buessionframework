@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.ExpireOption;
 import com.buession.redis.core.MigrateOperation;
@@ -54,7 +53,7 @@ import java.util.Set;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisClusterKeyOperations extends AbstractKeyOperations<JedisClusterConnection> {
+public final class JedisClusterKeyOperations extends AbstractKeyOperations<JedisClusterClient> {
 
 	public JedisClusterKeyOperations(final JedisClusterClient client){
 		super(client);
@@ -63,23 +62,27 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long del(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.DEL)
-				.general((cmd)->cmd.del(keys)).pipeline((cmd)->cmd.del(keys)).transaction((cmd)->cmd.del(keys));
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.DEL)
+				.general((cmd)->cmd.del(keys))
+				.pipeline((cmd)->cmd.del(keys))
+				.transaction((cmd)->cmd.del(keys));
 		return execute(command, args);
 	}
 
 	@Override
 	public long del(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.DEL)
-				.general((cmd)->cmd.del(keys)).pipeline((cmd)->cmd.del(keys)).transaction((cmd)->cmd.del(keys));
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.DEL)
+				.general((cmd)->cmd.del(keys))
+				.pipeline((cmd)->cmd.del(keys))
+				.transaction((cmd)->cmd.del(keys));
 		return execute(command, args);
 	}
 
 	@Override
 	public String dump(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<String> command = JedisClusterCommand.<String>create(ProtocolCommand.DUMP)
+		final JedisClusterCommand<String> command = new JedisClusterCommand<String>(client, ProtocolCommand.DUMP)
 				.general((cmd)->cmd.dump(key), Converters.BINARY_TO_STRING_CONVERTER)
 				.pipeline((cmd)->cmd.dump(key), Converters.BINARY_TO_STRING_CONVERTER)
 				.transaction((cmd)->cmd.dump(key), Converters.BINARY_TO_STRING_CONVERTER);
@@ -89,41 +92,49 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public byte[] dump(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<byte[]> command = JedisClusterCommand.<byte[]>create(ProtocolCommand.DUMP)
-				.general((cmd)->cmd.dump(key)).pipeline((cmd)->cmd.dump(key)).transaction((cmd)->cmd.dump(key));
+		final JedisClusterCommand<byte[]> command = new JedisClusterCommand<byte[]>(client, ProtocolCommand.DUMP)
+				.general((cmd)->cmd.dump(key))
+				.pipeline((cmd)->cmd.dump(key))
+				.transaction((cmd)->cmd.dump(key));
 		return execute(command, args);
 	}
 
 	@Override
 	public boolean exists(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Boolean> command = JedisClusterCommand.<Boolean>create(ProtocolCommand.EXISTS)
-				.general((cmd)->cmd.exists(key)).pipeline((cmd)->cmd.exists(key)).transaction((cmd)->cmd.exists(key));
+		final JedisClusterCommand<Boolean> command = new JedisClusterCommand<Boolean>(client, ProtocolCommand.EXISTS)
+				.general((cmd)->cmd.exists(key))
+				.pipeline((cmd)->cmd.exists(key))
+				.transaction((cmd)->cmd.exists(key));
 		return execute(command, args);
 	}
 
 	@Override
 	public boolean exists(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Boolean> command = JedisClusterCommand.<Boolean>create(ProtocolCommand.EXISTS)
-				.general((cmd)->cmd.exists(key)).pipeline((cmd)->cmd.exists(key)).transaction((cmd)->cmd.exists(key));
+		final JedisClusterCommand<Boolean> command = new JedisClusterCommand<Boolean>(client, ProtocolCommand.EXISTS)
+				.general((cmd)->cmd.exists(key))
+				.pipeline((cmd)->cmd.exists(key))
+				.transaction((cmd)->cmd.exists(key));
 		return execute(command, args);
 	}
 
 	@Override
 	public long exists(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(
-						ProtocolCommand.EXISTS).general((cmd)->cmd.exists(keys))
-				.pipeline((cmd)->cmd.exists(keys)).transaction((cmd)->cmd.exists(keys));
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.EXISTS)
+				.general((cmd)->cmd.exists(keys))
+				.pipeline((cmd)->cmd.exists(keys))
+				.transaction((cmd)->cmd.exists(keys));
 		return execute(command, args);
 	}
 
 	@Override
 	public long exists(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.EXISTS)
-				.general((cmd)->cmd.exists(keys)).pipeline((cmd)->cmd.exists(keys))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.EXISTS)
+				.general((cmd)->cmd.exists(keys))
+				.pipeline((cmd)->cmd.exists(keys))
 				.transaction((cmd)->cmd.exists(keys));
 		return execute(command, args);
 	}
@@ -131,7 +142,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status expire(final String key, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.EXPIRE)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIRE)
 				.general((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER);
@@ -141,7 +152,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status expire(final byte[] key, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.EXPIRE)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIRE)
 				.general((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.expire(key, lifetime), Converters.ONE_STATUS_CONVERTER);
@@ -153,7 +164,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
 				.put("expireOption", expireOption);
 		final ExpiryOption expiryOption = ExpireOptionConverter.INSTANCE.convert(expireOption);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.EXPIRE)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIRE)
 				.general((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER);
@@ -165,7 +176,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime)
 				.put("expireOption", expireOption);
 		final ExpiryOption expiryOption = ExpireOptionConverter.INSTANCE.convert(expireOption);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.EXPIRE)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIRE)
 				.general((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.expire(key, lifetime, expiryOption), Converters.ONE_STATUS_CONVERTER);
@@ -175,7 +186,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status expireAt(final String key, final long unixTimestamp){
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.EXPIREAT)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIREAT)
 				.general((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER);
@@ -185,7 +196,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status expireAt(final byte[] key, final long unixTimestamp){
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.EXPIREAT)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.EXPIREAT)
 				.general((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.expireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER);
@@ -195,7 +206,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status pExpire(final String key, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.PEXPIRE)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PEXPIRE)
 				.general((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER);
@@ -205,7 +216,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status pExpire(final byte[] key, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("lifetime", lifetime);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.PEXPIRE)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PEXPIRE)
 				.general((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.pexpire(key, lifetime), Converters.ONE_STATUS_CONVERTER);
@@ -215,7 +226,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status pExpireAt(final String key, final long unixTimestamp){
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.PEXPIREAT)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PEXPIREAT)
 				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER);
@@ -225,7 +236,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status pExpireAt(final byte[] key, final long unixTimestamp){
 		final CommandArguments args = CommandArguments.create("key", key).put("unixTimestamp", unixTimestamp);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.PEXPIREAT)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PEXPIREAT)
 				.general((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.pexpireAt(key, unixTimestamp), Converters.ONE_STATUS_CONVERTER);
@@ -235,7 +246,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status persist(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.PERSIST)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PERSIST)
 				.general((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER);
@@ -245,7 +256,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status persist(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.PERSIST)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PERSIST)
 				.general((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.persist(key), Converters.ONE_STATUS_CONVERTER);
@@ -255,39 +266,47 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long ttl(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.TTL)
-				.general((cmd)->cmd.ttl(key)).pipeline((cmd)->cmd.ttl(key)).transaction((cmd)->cmd.ttl(key));
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.TTL)
+				.general((cmd)->cmd.ttl(key))
+				.pipeline((cmd)->cmd.ttl(key))
+				.transaction((cmd)->cmd.ttl(key));
 		return execute(command, args);
 	}
 
 	@Override
 	public long ttl(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.TTL)
-				.general((cmd)->cmd.ttl(key)).pipeline((cmd)->cmd.ttl(key)).transaction((cmd)->cmd.ttl(key));
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.TTL)
+				.general((cmd)->cmd.ttl(key))
+				.pipeline((cmd)->cmd.ttl(key))
+				.transaction((cmd)->cmd.ttl(key));
 		return execute(command, args);
 	}
 
 	@Override
 	public long pTtl(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.PTTL)
-				.general((cmd)->cmd.pttl(key)).pipeline((cmd)->cmd.pttl(key)).transaction((cmd)->cmd.pttl(key));
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.PTTL)
+				.general((cmd)->cmd.pttl(key))
+				.pipeline((cmd)->cmd.pttl(key))
+				.transaction((cmd)->cmd.pttl(key));
 		return execute(command, args);
 	}
 
 	@Override
 	public long pTtl(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.PTTL)
-				.general((cmd)->cmd.pttl(key)).pipeline((cmd)->cmd.pttl(key)).transaction((cmd)->cmd.pttl(key));
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.PTTL)
+				.general((cmd)->cmd.pttl(key))
+				.pipeline((cmd)->cmd.pttl(key))
+				.transaction((cmd)->cmd.pttl(key));
 		return execute(command, args);
 	}
 
 	@Override
 	public Status copy(final String key, final String destKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.COPY)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.COPY)
 				.general((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER);
@@ -297,7 +316,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status copy(final byte[] key, final byte[] destKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.COPY)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.COPY)
 				.general((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.copy(key, destKey, false), Converters.BOOLEAN_STATUS_CONVERTER);
@@ -307,7 +326,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status copy(final String key, final String destKey, final int db){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.COPY);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.COPY);
 		return execute(command, args);
 	}
 
@@ -315,7 +334,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status copy(final byte[] key, final byte[] destKey, final int db){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("db", db);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.COPY);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.COPY);
 		return execute(command, args);
 	}
 
@@ -323,7 +342,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status copy(final String key, final String destKey, final boolean replace){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("replace", replace);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.COPY)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.COPY)
 				.general((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER);
@@ -334,7 +353,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status copy(final byte[] key, final byte[] destKey, final boolean replace){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("replace", replace);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.COPY)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.COPY)
 				.general((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.copy(key, destKey, replace), Converters.BOOLEAN_STATUS_CONVERTER);
@@ -345,7 +364,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status copy(final String key, final String destKey, final int db, final boolean replace){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db)
 				.put("replace", replace);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.COPY);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.COPY);
 		return execute(command, args);
 	}
 
@@ -353,21 +372,21 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status copy(final byte[] key, final byte[] destKey, final int db, final boolean replace){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey).put("db", db)
 				.put("replace", replace);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.COPY);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.COPY);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status move(final String key, final int db){
 		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MOVE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MOVE);
 		return execute(command, args);
 	}
 
 	@Override
 	public Status move(final byte[] key, final int db){
 		final CommandArguments args = CommandArguments.create("key", key).put("db", db);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MOVE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MOVE);
 		return execute(command, args);
 	}
 
@@ -375,7 +394,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status migrate(final String host, final int port, final int db, final int timeout, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MIGRATE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE);
 		return execute(command, args);
 	}
 
@@ -383,7 +402,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status migrate(final String host, final int port, final int db, final int timeout, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MIGRATE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE);
 		return execute(command, args);
 	}
 
@@ -392,7 +411,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final MigrateOperation operation, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("operation", operation).put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MIGRATE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE);
 		return execute(command, args);
 	}
 
@@ -401,7 +420,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final MigrateOperation operation, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("timeout", timeout).put("operation", operation).put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MIGRATE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE);
 		return execute(command, args);
 	}
 
@@ -410,7 +429,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MIGRATE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE);
 		return execute(command, args);
 	}
 
@@ -419,7 +438,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MIGRATE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE);
 		return execute(command, args);
 	}
 
@@ -428,7 +447,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final MigrateOperation operation, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("operation", operation).put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MIGRATE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE);
 		return execute(command, args);
 	}
 
@@ -437,7 +456,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final MigrateOperation operation, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("password", password).put("timeout", timeout).put("operation", operation).put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MIGRATE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE);
 		return execute(command, args);
 	}
 
@@ -446,7 +465,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final int timeout, final String... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MIGRATE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE);
 		return execute(command, args);
 	}
 
@@ -455,7 +474,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 						  final int timeout, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MIGRATE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE);
 		return execute(command, args);
 	}
 
@@ -465,7 +484,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MIGRATE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE);
 		return execute(command, args);
 	}
 
@@ -475,15 +494,17 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port).put("db", db)
 				.put("user", user).put("password", password).put("timeout", timeout).put("operation", operation)
 				.put("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.create(ProtocolCommand.MIGRATE);
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.MIGRATE);
 		return execute(command, args);
 	}
 
 	@Override
 	public Set<String> keys(final String pattern){
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		final JedisClusterCommand<Set<String>> command = JedisClusterCommand.<Set<String>>create(ProtocolCommand.KEYS)
-				.general((cmd)->cmd.keys(pattern)).pipeline((cmd)->cmd.keys(pattern))
+		final JedisClusterCommand<Set<String>> command = new JedisClusterCommand<Set<String>>(client,
+				ProtocolCommand.KEYS)
+				.general((cmd)->cmd.keys(pattern))
+				.pipeline((cmd)->cmd.keys(pattern))
 				.transaction((cmd)->cmd.keys(pattern));
 		return execute(command, args);
 	}
@@ -491,23 +512,27 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Set<byte[]> keys(final byte[] pattern){
 		final CommandArguments args = CommandArguments.create("pattern", pattern);
-		final JedisClusterCommand<Set<byte[]>> command = JedisClusterCommand.<Set<byte[]>>create(ProtocolCommand.KEYS)
-				.general((cmd)->cmd.keys(pattern)).pipeline((cmd)->cmd.keys(pattern))
+		final JedisClusterCommand<Set<byte[]>> command = new JedisClusterCommand<Set<byte[]>>(client,
+				ProtocolCommand.KEYS)
+				.general((cmd)->cmd.keys(pattern))
+				.pipeline((cmd)->cmd.keys(pattern))
 				.transaction((cmd)->cmd.keys(pattern));
 		return execute(command, args);
 	}
 
 	@Override
 	public String randomKey(){
-		final JedisClusterCommand<String> command = JedisClusterCommand.<String>create(ProtocolCommand.RANDOMKEY)
-				.general((cmd)->cmd.randomKey()).pipeline((cmd)->cmd.randomKey()).transaction((cmd)->cmd.randomKey());
+		final JedisClusterCommand<String> command = new JedisClusterCommand<String>(client, ProtocolCommand.RANDOMKEY)
+				.general((cmd)->cmd.randomKey())
+				.pipeline((cmd)->cmd.randomKey())
+				.transaction((cmd)->cmd.randomKey());
 		return execute(command);
 	}
 
 	@Override
 	public Status rename(final String key, final String newKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.RENAME)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.RENAME)
 				.general((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE);
@@ -517,7 +542,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status rename(final byte[] key, final byte[] newKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.RENAME)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.RENAME)
 				.general((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.rename(key, newKey), OkStatusConverter.INSTANCE);
@@ -527,7 +552,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status renameNx(final String key, final String newKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.RENAME)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.RENAME)
 				.general((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER);
@@ -537,7 +562,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Status renameNx(final byte[] key, final byte[] newKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("newKey", newKey);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.RENAME)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.RENAME)
 				.general((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER)
 				.transaction((cmd)->cmd.renamenx(key, newKey), Converters.ONE_STATUS_CONVERTER);
@@ -548,7 +573,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status restore(final String key, final byte[] serializedValue, final int ttl){
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.RESTORE)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.RESTORE)
 				.general((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE);
@@ -559,7 +584,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public Status restore(final byte[] key, final byte[] serializedValue, final int ttl){
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.RESTORE)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.RESTORE)
 				.general((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.restore(key, ttl, serializedValue), OkStatusConverter.INSTANCE);
@@ -572,7 +597,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl).put("argument", argument);
 		final RestoreParams params = RestoreArgumentConverter.INSTANCE.convert(argument);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.RESTORE)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.RESTORE)
 				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE);
@@ -585,7 +610,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("key", key).put("serializedValue", serializedValue)
 				.put("ttl", ttl).put("argument", argument);
 		final RestoreParams params = RestoreArgumentConverter.INSTANCE.convert(argument);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.RESTORE)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.RESTORE)
 				.general((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->cmd.restore(key, ttl, serializedValue, params), OkStatusConverter.INSTANCE);
@@ -595,8 +620,8 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public ScanResult<List<String>> scan(final String cursor){
 		final CommandArguments args = CommandArguments.create("cursor", cursor);
-		final JedisClusterCommand<ScanResult<List<String>>> command = JedisClusterCommand.<ScanResult<List<String>>>create(
-						ProtocolCommand.SCAN)
+		final JedisClusterCommand<ScanResult<List<String>>> command = new JedisClusterCommand<ScanResult<List<String>>>(
+				client, ProtocolCommand.SCAN)
 				.general((cmd)->cmd.scan(cursor), ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.scan(cursor), ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.transaction((cmd)->cmd.scan(cursor),
@@ -607,8 +632,8 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public ScanResult<List<byte[]>> scan(final byte[] cursor){
 		final CommandArguments args = CommandArguments.create("cursor", cursor);
-		final JedisClusterCommand<ScanResult<List<byte[]>>> command = JedisClusterCommand.<ScanResult<List<byte[]>>>create(
-						ProtocolCommand.SCAN)
+		final JedisClusterCommand<ScanResult<List<byte[]>>> command = new JedisClusterCommand<ScanResult<List<byte[]>>>(
+				client, ProtocolCommand.SCAN)
 				.general((cmd)->cmd.scan(cursor), ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.scan(cursor), ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.transaction((cmd)->cmd.scan(cursor),
@@ -620,8 +645,8 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public ScanResult<List<String>> scan(final String cursor, final String pattern){
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
-		final JedisClusterCommand<ScanResult<List<String>>> command = JedisClusterCommand.<ScanResult<List<String>>>create(
-						ProtocolCommand.SCAN)
+		final JedisClusterCommand<ScanResult<List<String>>> command = new JedisClusterCommand<ScanResult<List<String>>>(
+				client, ProtocolCommand.SCAN)
 				.general((cmd)->cmd.scan(cursor, params),
 						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.scan(cursor, params),
@@ -635,8 +660,8 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final byte[] pattern){
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern);
 		final JedisScanParams params = new JedisScanParams(pattern);
-		final JedisClusterCommand<ScanResult<List<byte[]>>> command = JedisClusterCommand.<ScanResult<List<byte[]>>>create(
-						ProtocolCommand.SCAN)
+		final JedisClusterCommand<ScanResult<List<byte[]>>> command = new JedisClusterCommand<ScanResult<List<byte[]>>>(
+				client, ProtocolCommand.SCAN)
 				.general((cmd)->cmd.scan(cursor, params),
 						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.scan(cursor, params),
@@ -650,8 +675,8 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public ScanResult<List<String>> scan(final String cursor, final long count){
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
-		final JedisClusterCommand<ScanResult<List<String>>> command = JedisClusterCommand.<ScanResult<List<String>>>create(
-						ProtocolCommand.SCAN)
+		final JedisClusterCommand<ScanResult<List<String>>> command = new JedisClusterCommand<ScanResult<List<String>>>(
+				client, ProtocolCommand.SCAN)
 				.general((cmd)->cmd.scan(cursor, params),
 						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.scan(cursor, params),
@@ -665,8 +690,8 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public ScanResult<List<byte[]>> scan(final byte[] cursor, final long count){
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("count", count);
 		final JedisScanParams params = new JedisScanParams(count);
-		final JedisClusterCommand<ScanResult<List<byte[]>>> command = JedisClusterCommand.<ScanResult<List<byte[]>>>create(
-						ProtocolCommand.SCAN)
+		final JedisClusterCommand<ScanResult<List<byte[]>>> command = new JedisClusterCommand<ScanResult<List<byte[]>>>(
+				client, ProtocolCommand.SCAN)
 				.general((cmd)->cmd.scan(cursor, params),
 						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.scan(cursor, params),
@@ -681,8 +706,8 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
-		final JedisClusterCommand<ScanResult<List<String>>> command = JedisClusterCommand.<ScanResult<List<String>>>create(
-						ProtocolCommand.SCAN)
+		final JedisClusterCommand<ScanResult<List<String>>> command = new JedisClusterCommand<ScanResult<List<String>>>(
+				client, ProtocolCommand.SCAN)
 				.general((cmd)->cmd.scan(cursor, params),
 						ScanResultConverter.ListScanResultConverter.STRING_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.scan(cursor, params),
@@ -697,8 +722,8 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("cursor", cursor).put("pattern", pattern)
 				.put("count", count);
 		final JedisScanParams params = new JedisScanParams(pattern, count);
-		final JedisClusterCommand<ScanResult<List<byte[]>>> command = JedisClusterCommand.<ScanResult<List<byte[]>>>create(
-						ProtocolCommand.SCAN)
+		final JedisClusterCommand<ScanResult<List<byte[]>>> command = new JedisClusterCommand<ScanResult<List<byte[]>>>(
+				client, ProtocolCommand.SCAN)
 				.general((cmd)->cmd.scan(cursor, params),
 						ScanResultConverter.ListScanResultConverter.BINARY_LIST_CONVERTER)
 				.pipeline((cmd)->cmd.scan(cursor, params),
@@ -711,16 +736,22 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public List<String> sort(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<List<String>> command = JedisClusterCommand.<List<String>>create(ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key)).pipeline((cmd)->cmd.sort(key)).transaction((cmd)->cmd.sort(key));
+		final JedisClusterCommand<List<String>> command = new JedisClusterCommand<List<String>>(client,
+				ProtocolCommand.SORT)
+				.general((cmd)->cmd.sort(key))
+				.pipeline((cmd)->cmd.sort(key))
+				.transaction((cmd)->cmd.sort(key));
 		return execute(command, args);
 	}
 
 	@Override
 	public List<byte[]> sort(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<List<byte[]>> command = JedisClusterCommand.<List<byte[]>>create(ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key)).pipeline((cmd)->cmd.sort(key)).transaction((cmd)->cmd.sort(key));
+		final JedisClusterCommand<List<byte[]>> command = new JedisClusterCommand<List<byte[]>>(client,
+				ProtocolCommand.SORT)
+				.general((cmd)->cmd.sort(key))
+				.pipeline((cmd)->cmd.sort(key))
+				.transaction((cmd)->cmd.sort(key));
 		return execute(command, args);
 	}
 
@@ -728,8 +759,10 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public List<String> sort(final String key, final SortArgument sortArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
 		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
-		final JedisClusterCommand<List<String>> command = JedisClusterCommand.<List<String>>create(ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, params)).pipeline((cmd)->cmd.sort(key, params))
+		final JedisClusterCommand<List<String>> command = new JedisClusterCommand<List<String>>(client,
+				ProtocolCommand.SORT)
+				.general((cmd)->cmd.sort(key, params))
+				.pipeline((cmd)->cmd.sort(key, params))
 				.transaction((cmd)->cmd.sort(key, params));
 		return execute(command, args);
 	}
@@ -738,8 +771,10 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	public List<byte[]> sort(final byte[] key, final SortArgument sortArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("sortArgument", sortArgument);
 		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
-		final JedisClusterCommand<List<byte[]>> command = JedisClusterCommand.<List<byte[]>>create(ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, params)).pipeline((cmd)->cmd.sort(key, params))
+		final JedisClusterCommand<List<byte[]>> command = new JedisClusterCommand<List<byte[]>>(client,
+				ProtocolCommand.SORT)
+				.general((cmd)->cmd.sort(key, params))
+				.pipeline((cmd)->cmd.sort(key, params))
 				.transaction((cmd)->cmd.sort(key, params));
 		return execute(command, args);
 	}
@@ -747,8 +782,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long sort(final String key, final String destKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, destKey)).pipeline((cmd)->cmd.sort(key, destKey))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.SORT)
+				.general((cmd)->cmd.sort(key, destKey))
+				.pipeline((cmd)->cmd.sort(key, destKey))
 				.transaction((cmd)->cmd.sort(key, destKey));
 		return execute(command, args);
 	}
@@ -756,8 +792,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long sort(final byte[] key, final byte[] destKey){
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, destKey)).pipeline((cmd)->cmd.sort(key, destKey))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.SORT)
+				.general((cmd)->cmd.sort(key, destKey))
+				.pipeline((cmd)->cmd.sort(key, destKey))
 				.transaction((cmd)->cmd.sort(key, destKey));
 		return execute(command, args);
 	}
@@ -767,8 +804,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("sortArgument", sortArgument);
 		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, params, destKey)).pipeline((cmd)->cmd.sort(key, params, destKey))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.SORT)
+				.general((cmd)->cmd.sort(key, params, destKey))
+				.pipeline((cmd)->cmd.sort(key, params, destKey))
 				.transaction((cmd)->cmd.sort(key, params, destKey));
 		return execute(command, args);
 	}
@@ -778,8 +816,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 		final CommandArguments args = CommandArguments.create("key", key).put("destKey", destKey)
 				.put("sortArgument", sortArgument);
 		final SortingParams params = SortArgumentConverter.INSTANCE.convert(sortArgument);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.SORT)
-				.general((cmd)->cmd.sort(key, params, destKey)).pipeline((cmd)->cmd.sort(key, params, destKey))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.SORT)
+				.general((cmd)->cmd.sort(key, params, destKey))
+				.pipeline((cmd)->cmd.sort(key, params, destKey))
 				.transaction((cmd)->cmd.sort(key, params, destKey));
 		return execute(command, args);
 	}
@@ -787,23 +826,27 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long touch(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.TOUCH)
-				.general((cmd)->cmd.touch(keys)).pipeline((cmd)->cmd.touch(keys)).transaction((cmd)->cmd.touch(keys));
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.TOUCH)
+				.general((cmd)->cmd.touch(keys))
+				.pipeline((cmd)->cmd.touch(keys))
+				.transaction((cmd)->cmd.touch(keys));
 		return execute(command, args);
 	}
 
 	@Override
 	public long touch(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.TOUCH)
-				.general((cmd)->cmd.touch(keys)).pipeline((cmd)->cmd.touch(keys)).transaction((cmd)->cmd.touch(keys));
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.TOUCH)
+				.general((cmd)->cmd.touch(keys))
+				.pipeline((cmd)->cmd.touch(keys))
+				.transaction((cmd)->cmd.touch(keys));
 		return execute(command, args);
 	}
 
 	@Override
 	public Type type(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Type> command = JedisClusterCommand.<Type>create(ProtocolCommand.TYPE)
+		final JedisClusterCommand<Type> command = new JedisClusterCommand<Type>(client, ProtocolCommand.TYPE)
 				.general((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
 				.pipeline((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
 				.transaction((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER);
@@ -813,7 +856,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public Type type(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Type> command = JedisClusterCommand.<Type>create(ProtocolCommand.TYPE)
+		final JedisClusterCommand<Type> command = new JedisClusterCommand<Type>(client, ProtocolCommand.TYPE)
 				.general((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
 				.pipeline((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER)
 				.transaction((cmd)->cmd.type(key), Converters.TYPE_RESULT_CONVERTER);
@@ -823,8 +866,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long unlink(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.UNLINK)
-				.general((cmd)->cmd.unlink(keys)).pipeline((cmd)->cmd.unlink(keys))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.UNLINK)
+				.general((cmd)->cmd.unlink(keys))
+				.pipeline((cmd)->cmd.unlink(keys))
 				.transaction((cmd)->cmd.unlink(keys));
 		return execute(command, args);
 	}
@@ -832,8 +876,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long unlink(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.UNLINK)
-				.general((cmd)->cmd.unlink(keys)).pipeline((cmd)->cmd.unlink(keys))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.UNLINK)
+				.general((cmd)->cmd.unlink(keys))
+				.pipeline((cmd)->cmd.unlink(keys))
 				.transaction((cmd)->cmd.unlink(keys));
 		return execute(command, args);
 	}
@@ -841,7 +886,7 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long wait(final int replicas, final int timeout){
 		final CommandArguments args = CommandArguments.create("replicas", replicas).put("timeout", timeout);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.WAIT)
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.WAIT)
 				.general((cmd)->cmd.waitReplicas((String) null, replicas, timeout))
 				.pipeline((cmd)->cmd.waitReplicas(replicas, timeout))
 				.transaction((cmd)->cmd.waitReplicas(replicas, timeout));
@@ -851,8 +896,8 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public ObjectEncoding objectEncoding(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<ObjectEncoding> command = JedisClusterCommand.<ObjectEncoding>create(
-						ProtocolCommand.OBJECT_ENCODING)
+		final JedisClusterCommand<ObjectEncoding> command = new JedisClusterCommand<ObjectEncoding>(client,
+				ProtocolCommand.OBJECT_ENCODING)
 				.general((cmd)->cmd.objectEncoding(key), Converters.STRING_OBJECT_ENCODING_RESULT_CONVERTER)
 				.pipeline((cmd)->cmd.objectEncoding(key), Converters.STRING_OBJECT_ENCODING_RESULT_CONVERTER)
 				.transaction((cmd)->cmd.objectEncoding(key), Converters.STRING_OBJECT_ENCODING_RESULT_CONVERTER);
@@ -862,8 +907,8 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public ObjectEncoding objectEncoding(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<ObjectEncoding> command = JedisClusterCommand.<ObjectEncoding>create(
-						ProtocolCommand.OBJECT_ENCODING)
+		final JedisClusterCommand<ObjectEncoding> command = new JedisClusterCommand<ObjectEncoding>(client,
+				ProtocolCommand.OBJECT_ENCODING)
 				.general((cmd)->cmd.objectEncoding(key), Converters.BINARY_OBJECT_ENCODING_RESULT_CONVERTER)
 				.pipeline((cmd)->cmd.objectEncoding(key), Converters.BINARY_OBJECT_ENCODING_RESULT_CONVERTER)
 				.transaction((cmd)->cmd.objectEncoding(key), Converters.BINARY_OBJECT_ENCODING_RESULT_CONVERTER);
@@ -873,8 +918,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long objectFreq(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.OBJECT_REFQ)
-				.general((cmd)->cmd.objectFreq(key)).pipeline((cmd)->cmd.objectFreq(key))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.OBJECT_REFQ)
+				.general((cmd)->cmd.objectFreq(key))
+				.pipeline((cmd)->cmd.objectFreq(key))
 				.transaction((cmd)->cmd.objectFreq(key));
 		return execute(command, args);
 	}
@@ -882,8 +928,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long objectFreq(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.OBJECT_REFQ)
-				.general((cmd)->cmd.objectFreq(key)).pipeline((cmd)->cmd.objectFreq(key))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.OBJECT_REFQ)
+				.general((cmd)->cmd.objectFreq(key))
+				.pipeline((cmd)->cmd.objectFreq(key))
 				.transaction((cmd)->cmd.objectFreq(key));
 		return execute(command, args);
 	}
@@ -891,8 +938,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long objectIdleTime(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.OBJECT_IDLETIME)
-				.general((cmd)->cmd.objectIdletime(key)).pipeline((cmd)->cmd.objectIdletime(key))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.OBJECT_IDLETIME)
+				.general((cmd)->cmd.objectIdletime(key))
+				.pipeline((cmd)->cmd.objectIdletime(key))
 				.transaction((cmd)->cmd.objectIdletime(key));
 		return execute(command, args);
 	}
@@ -900,8 +948,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long objectIdleTime(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.OBJECT_IDLETIME)
-				.general((cmd)->cmd.objectIdletime(key)).pipeline((cmd)->cmd.objectIdletime(key))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.OBJECT_IDLETIME)
+				.general((cmd)->cmd.objectIdletime(key))
+				.pipeline((cmd)->cmd.objectIdletime(key))
 				.transaction((cmd)->cmd.objectIdletime(key));
 		return execute(command, args);
 	}
@@ -909,8 +958,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long objectRefcount(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.OBJECT_REFCOUNT)
-				.general((cmd)->cmd.objectRefcount(key)).pipeline((cmd)->cmd.objectRefcount(key))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.OBJECT_REFCOUNT)
+				.general((cmd)->cmd.objectRefcount(key))
+				.pipeline((cmd)->cmd.objectRefcount(key))
 				.transaction((cmd)->cmd.objectRefcount(key));
 		return execute(command, args);
 	}
@@ -918,8 +968,9 @@ public final class JedisClusterKeyOperations extends AbstractKeyOperations<Jedis
 	@Override
 	public long objectRefcount(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisClusterCommand<Long> command = JedisClusterCommand.<Long>create(ProtocolCommand.OBJECT_REFCOUNT)
-				.general((cmd)->cmd.objectRefcount(key)).pipeline((cmd)->cmd.objectRefcount(key))
+		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.OBJECT_REFCOUNT)
+				.general((cmd)->cmd.objectRefcount(key))
+				.pipeline((cmd)->cmd.objectRefcount(key))
 				.transaction((cmd)->cmd.objectRefcount(key));
 		return execute(command, args);
 	}

@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.BitMapOperations;
 
@@ -32,15 +31,15 @@ import com.buession.redis.client.operations.BitMapOperations;
  * Jedis BitMap 命令操作抽象类
  *
  * @param <C>
- * 		连接对象
+ * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractBitMapOperations<C extends JedisRedisConnection> extends AbstractJedisRedisOperations<C>
+public abstract class AbstractBitMapOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
 		implements BitMapOperations<C> {
 
-	public AbstractBitMapOperations(final JedisRedisClient client){
+	public AbstractBitMapOperations(final C client){
 		super(client);
 	}
 

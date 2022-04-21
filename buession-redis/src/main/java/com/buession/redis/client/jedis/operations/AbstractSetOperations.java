@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.utils.NumberUtils;
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.SetOperations;
 import com.buession.redis.core.ScanResult;
@@ -36,15 +35,15 @@ import java.util.List;
  * Jedis 集合命令操作抽象类
  *
  * @param <C>
- * 		连接对象
+ * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractSetOperations<C extends JedisRedisConnection> extends AbstractJedisRedisOperations<C>
+public abstract class AbstractSetOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
 		implements SetOperations<C> {
 
-	public AbstractSetOperations(final JedisRedisClient client){
+	public AbstractSetOperations(final C client){
 		super(client);
 	}
 

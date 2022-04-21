@@ -27,7 +27,6 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.jedis.JedisClusterConnection;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -44,7 +43,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisClusterTransactionOperations extends AbstractTransactionOperations<JedisClusterConnection> {
+public final class JedisClusterTransactionOperations extends AbstractTransactionOperations<JedisClusterClient> {
 
 	public JedisClusterTransactionOperations(final JedisClusterClient client){
 		super(client);
@@ -52,7 +51,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 
 	@Override
 	public Status multi(){
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.MULTI)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.MULTI)
 				.general((cmd)->{
 					RedisConnection connection = client.getConnection();
 					connection.multi();
@@ -76,28 +75,28 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 
 	@Override
 	public List<Object> exec(){
-		final JedisClusterCommand<List<Object>> command = JedisClusterCommand.<List<Object>>create(ProtocolCommand.EXEC)
-				.transaction((cmd)->{
-					RedisConnection connection = client.getConnection();
-					List<Object> results = connection.exec();
+		final JedisClusterCommand<List<Object>> command = new JedisClusterCommand<List<Object>>(client,
+				ProtocolCommand.EXEC).transaction((cmd)->{
+			RedisConnection connection = client.getConnection();
+			List<Object> results = connection.exec();
 
-					return new Response<>(new Builder<List<Object>>() {
+			return new Response<>(new Builder<List<Object>>() {
 
-						@Override
-						public List<Object> build(Object data){
-							return Validate.isEmpty(results) ? results : new TransactionResultConverter<>(
-									client.getTxResults()).convert(
-									results);
-						}
+				@Override
+				public List<Object> build(Object data){
+					return Validate.isEmpty(results) ? results : new TransactionResultConverter<>(
+							client.getTxResults()).convert(
+							results);
+				}
 
-					});
-				});
+			});
+		});
 		return execute(command);
 	}
 
 	@Override
 	public void discard(){
-		final JedisClusterCommand<Void> command = JedisClusterCommand.<Void>create(ProtocolCommand.DISCARD)
+		final JedisClusterCommand<Void> command = new JedisClusterCommand<Void>(client, ProtocolCommand.DISCARD)
 				.transaction((cmd)->{
 					RedisConnection connection = client.getConnection();
 					connection.discard();
@@ -109,7 +108,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 	@Override
 	public Status watch(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.WATCH)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.WATCH)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
 					@Override
@@ -124,7 +123,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 	@Override
 	public Status watch(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.WATCH)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.WATCH)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
 					@Override
@@ -138,7 +137,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 
 	@Override
 	public Status unwatch(){
-		final JedisClusterCommand<Status> command = JedisClusterCommand.<Status>create(ProtocolCommand.UNWATCH)
+		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.UNWATCH)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
 					@Override

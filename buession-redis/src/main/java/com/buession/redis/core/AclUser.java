@@ -24,10 +24,11 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -80,12 +81,12 @@ public class AclUser implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "{", "}")
-				.add("flags=" + flags)
-				.add("keys=" + keys)
-				.add("passwords=" + passwords)
-				.add("commands=" + commands)
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("flags", flags)
+				.add("keys", keys)
+				.add("passwords", passwords)
+				.add("commands", commands)
+				.build();
 	}
 
 }

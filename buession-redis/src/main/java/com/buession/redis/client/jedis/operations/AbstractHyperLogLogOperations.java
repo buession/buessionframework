@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.HyperLogLogOperations;
 
@@ -32,15 +31,15 @@ import com.buession.redis.client.operations.HyperLogLogOperations;
  * Jedis HyperLogLog 命令操作抽象类
  *
  * @param <C>
- * 		连接对象
+ * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractHyperLogLogOperations<C extends JedisRedisConnection>
+public abstract class AbstractHyperLogLogOperations<C extends JedisRedisClient>
 		extends AbstractJedisRedisOperations<C> implements HyperLogLogOperations<C> {
 
-	public AbstractHyperLogLogOperations(final JedisRedisClient client){
+	public AbstractHyperLogLogOperations(final C client){
 		super(client);
 	}
 

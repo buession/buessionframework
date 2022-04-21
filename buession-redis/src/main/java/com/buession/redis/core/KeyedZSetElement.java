@@ -24,10 +24,10 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
 import com.buession.redis.utils.SafeEncoder;
 
 import java.util.Arrays;
-import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -80,10 +80,10 @@ public class KeyedZSetElement extends Tuple {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "{", "}")
-				.add("key=" + Arrays.toString(key))
-				.add(super.toString())
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("key", key)
+				.append(super.toString())
+				.build();
 	}
 
 }

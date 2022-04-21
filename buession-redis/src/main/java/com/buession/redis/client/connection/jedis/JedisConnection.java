@@ -183,6 +183,10 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 		super(dataSource, poolConfig, connectTimeout, soTimeout, sslConfiguration);
 	}
 
+	public Jedis getJedis(){
+		return jedis;
+	}
+
 	@Override
 	public boolean isTransaction(){
 		return transaction != null;

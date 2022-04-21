@@ -24,7 +24,6 @@
  */
 package com.buession.redis.client.jedis.operations;
 
-import com.buession.redis.client.connection.jedis.JedisRedisConnection;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.ListOperations;
 
@@ -32,15 +31,15 @@ import com.buession.redis.client.operations.ListOperations;
  * Jedis 列表命令操作抽象类
  *
  * @param <C>
- * 		连接对象
+ * 		Redis Client {@link JedisRedisClient}
  *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public abstract class AbstractListOperations<C extends JedisRedisConnection> extends AbstractJedisRedisOperations<C>
+public abstract class AbstractListOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
 		implements ListOperations<C> {
 
-	public AbstractListOperations(final JedisRedisClient client){
+	public AbstractListOperations(final C client){
 		super(client);
 	}
 

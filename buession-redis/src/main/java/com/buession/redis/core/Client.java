@@ -24,11 +24,11 @@
  */
 package com.buession.redis.core;
 
+import com.buession.redis.utils.ObjectStringBuilder;
 import redis.clients.jedis.Protocol;
 
 import java.io.Serializable;
 import java.util.Set;
-import java.util.StringJoiner;
 
 /**
  * @author Yong.Teng
@@ -519,28 +519,28 @@ public class Client implements Serializable {
 
 	@Override
 	public String toString(){
-		return new StringJoiner(", ", "{", "}")
-				.add("id=" + id)
-				.add("name=" + name)
-				.add("addr=" + addr)
-				.add("host=" + host)
-				.add("port=" + port)
-				.add("fd=" + fd)
-				.add("age=" + age)
-				.add("idle=" + idle)
-				.add("flags=" + flags)
-				.add("db=" + db)
-				.add("sub=" + sub)
-				.add("psub=" + psub)
-				.add("multi=" + multi)
-				.add("qBuf=" + qBuf)
-				.add("qBufFree=" + qBufFree)
-				.add("obl=" + obl)
-				.add("oll=" + oll)
-				.add("omem=" + omem)
-				.add("events=" + events)
-				.add("cmd=" + cmd)
-				.toString();
+		return ObjectStringBuilder.create()
+				.add("id", id)
+				.add("name", name)
+				.add("addr", addr)
+				.add("host", host)
+				.add("port", port)
+				.add("fd", fd)
+				.add("age", age)
+				.add("idle", idle)
+				.add("flags", flags)
+				.add("db", db)
+				.add("su", sub)
+				.add("psub", psub)
+				.add("mult", multi)
+				.add("qBuf", qBuf)
+				.add("qBufFree", qBufFree)
+				.add("obl", obl)
+				.add("oll", oll)
+				.add("omem", omem)
+				.add("events", events)
+				.add("cmd", cmd)
+				.build();
 	}
 
 	public enum Flag {
