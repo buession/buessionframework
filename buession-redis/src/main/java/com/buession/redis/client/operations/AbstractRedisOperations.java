@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Yong.Teng
  */
-public abstract class AbstractRedisOperations<C extends RedisClient> implements RedisOperations<C> {
+public abstract class AbstractRedisOperations<C extends RedisClient> implements RedisOperations {
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 

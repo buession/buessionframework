@@ -41,7 +41,7 @@ import java.util.List;
  * @since 2.0.0
  */
 public abstract class AbstractSetOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements SetOperations<C> {
+		implements SetOperations {
 
 	public AbstractSetOperations(final C client){
 		super(client);

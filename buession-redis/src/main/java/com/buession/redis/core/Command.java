@@ -25,7 +25,9 @@
 package com.buession.redis.core;
 
 import com.buession.redis.client.RedisClient;
+import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.RedisException;
 
 /**
  * @author Yong.Teng
@@ -36,5 +38,11 @@ public interface Command<C extends RedisClient, R> {
 	ProtocolCommand getCommand();
 
 	R execute();
+
+	default R run() throws RedisException{
+		return run(null);
+	}
+
+	R run(final CommandArguments arguments) throws RedisException;
 
 }

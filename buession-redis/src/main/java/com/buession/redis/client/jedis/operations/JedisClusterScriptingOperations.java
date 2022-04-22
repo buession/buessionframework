@@ -50,202 +50,198 @@ public final class JedisClusterScriptingOperations extends AbstractScriptingOper
 	@Override
 	public Object eval(final String script){
 		final CommandArguments args = CommandArguments.create("script", script);
-		final JedisClusterCommand<Object> command = new JedisClusterCommand<>(client, ProtocolCommand.EVAL)
+		return new JedisClusterCommand<>(client, ProtocolCommand.EVAL)
 				.general((cmd)->cmd.eval(script))
 				.pipeline((cmd)->cmd.eval(script))
-				.transaction((cmd)->cmd.eval(script));
-		return execute(command, args);
+				.transaction((cmd)->cmd.eval(script))
+				.run(args);
 	}
 
 	@Override
 	public Object eval(final byte[] script){
 		final CommandArguments args = CommandArguments.create("script", script);
-		final JedisClusterCommand<Object> command = new JedisClusterCommand<>(client, ProtocolCommand.EVAL)
+		return new JedisClusterCommand<>(client, ProtocolCommand.EVAL)
 				.general((cmd)->cmd.eval(script))
 				.pipeline((cmd)->cmd.eval(script))
-				.transaction((cmd)->cmd.eval(script));
-		return execute(command, args);
+				.transaction((cmd)->cmd.eval(script))
+				.run(args);
 	}
 
 	@Override
 	public Object eval(final String script, final String... params){
 		final CommandArguments args = CommandArguments.create("script", script).put("params", params);
 		final int paramsSize = params == null ? 0 : params.length;
-		final JedisClusterCommand<Object> command = new JedisClusterCommand<>(client, ProtocolCommand.EVAL)
+		return new JedisClusterCommand<>(client, ProtocolCommand.EVAL)
 				.general((cmd)->cmd.eval(script, paramsSize, params))
 				.pipeline((cmd)->cmd.eval(script, paramsSize, params))
-				.transaction((cmd)->cmd.eval(script, paramsSize, params));
-		return execute(command, args);
+				.transaction((cmd)->cmd.eval(script, paramsSize, params))
+				.run(args);
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[]... params){
 		final CommandArguments args = CommandArguments.create("script", script).put("params", params);
 		final int paramsSize = params == null ? 0 : params.length;
-		final JedisClusterCommand<Object> command = new JedisClusterCommand<>(client, ProtocolCommand.EVAL)
+		return new JedisClusterCommand<>(client, ProtocolCommand.EVAL)
 				.general((cmd)->cmd.eval(script, paramsSize, params))
 				.pipeline((cmd)->cmd.eval(script, paramsSize, params))
-				.transaction((cmd)->cmd.eval(script, paramsSize, params));
-		return execute(command, args);
+				.transaction((cmd)->cmd.eval(script, paramsSize, params))
+				.run(args);
 	}
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments){
 		final CommandArguments args = CommandArguments.create("script", script).put("keys", keys)
 				.put("arguments", arguments);
-		final JedisClusterCommand<Object> command = new JedisClusterCommand<>(client, ProtocolCommand.EVAL)
+		return new JedisClusterCommand<>(client, ProtocolCommand.EVAL)
 				.general((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
 				.pipeline((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
-				.transaction((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
-		return execute(command, args);
+				.transaction((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
+				.run(args);
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments){
 		final CommandArguments args = CommandArguments.create("script", script).put("keys", keys)
 				.put("arguments", arguments);
-		final JedisClusterCommand<Object> command = new JedisClusterCommand<>(client, ProtocolCommand.EVAL)
+		return new JedisClusterCommand<>(client, ProtocolCommand.EVAL)
 				.general((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
 				.pipeline((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
-				.transaction((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)));
-		return execute(command, args);
+				.transaction((cmd)->cmd.eval(script, Arrays.asList(keys), Arrays.asList(arguments)))
+				.run(args);
 	}
 
 	@Override
 	public Object evalSha(final String digest){
 		final CommandArguments args = CommandArguments.create("digest", digest);
-		final JedisClusterCommand<Object> command = new JedisClusterCommand<>(client, ProtocolCommand.EVALSHA)
+		return new JedisClusterCommand<>(client, ProtocolCommand.EVALSHA)
 				.general((cmd)->cmd.evalsha(digest))
 				.pipeline((cmd)->cmd.evalsha(digest))
-				.transaction((cmd)->cmd.evalsha(digest));
-		return execute(command, args);
+				.transaction((cmd)->cmd.evalsha(digest))
+				.run(args);
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest){
 		final CommandArguments args = CommandArguments.create("digest", digest);
-		final JedisClusterCommand<Object> command = new JedisClusterCommand<>(client, ProtocolCommand.EVALSHA)
+		return new JedisClusterCommand<>(client, ProtocolCommand.EVALSHA)
 				.general((cmd)->cmd.evalsha(digest))
 				.pipeline((cmd)->cmd.evalsha(digest))
-				.transaction((cmd)->cmd.evalsha(digest));
-		return execute(command, args);
+				.transaction((cmd)->cmd.evalsha(digest))
+				.run(args);
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String... params){
 		final CommandArguments args = CommandArguments.create("digest", digest).put("params", params);
 		final int paramsSize = params == null ? 0 : params.length;
-		final JedisClusterCommand<Object> command = new JedisClusterCommand<>(client, ProtocolCommand.EVALSHA)
+		return new JedisClusterCommand<>(client, ProtocolCommand.EVALSHA)
 				.general((cmd)->cmd.evalsha(digest, paramsSize, params))
 				.pipeline((cmd)->cmd.evalsha(digest, paramsSize, params))
-				.transaction((cmd)->cmd.evalsha(digest, paramsSize, params));
-		return execute(command, args);
+				.transaction((cmd)->cmd.evalsha(digest, paramsSize, params))
+				.run(args);
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[]... params){
 		final CommandArguments args = CommandArguments.create("digest", digest).put("params", params);
 		final int paramsSize = params == null ? 0 : params.length;
-		final JedisClusterCommand<Object> command = new JedisClusterCommand<>(client, ProtocolCommand.EVALSHA)
+		return new JedisClusterCommand<>(client, ProtocolCommand.EVALSHA)
 				.general((cmd)->cmd.evalsha(digest, paramsSize, params))
 				.pipeline((cmd)->cmd.evalsha(digest, paramsSize, params))
-				.transaction((cmd)->cmd.evalsha(digest, paramsSize, params));
-		return execute(command, args);
+				.transaction((cmd)->cmd.evalsha(digest, paramsSize, params))
+				.run(args);
 	}
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
 		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", keys)
 				.put("arguments", arguments);
-		final JedisClusterCommand<Object> command = new JedisClusterCommand<>(client, ProtocolCommand.EVALSHA)
+		return new JedisClusterCommand<>(client, ProtocolCommand.EVALSHA)
 				.general((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
 				.pipeline((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
-				.transaction((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
-		return execute(command, args);
+				.transaction((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
+				.run(args);
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments){
 		final CommandArguments args = CommandArguments.create("digest", digest).put("keys", keys)
 				.put("arguments", arguments);
-		final JedisClusterCommand<Object> command = new JedisClusterCommand<>(client, ProtocolCommand.EVALSHA)
+		return new JedisClusterCommand<>(client, ProtocolCommand.EVALSHA)
 				.general((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
 				.pipeline((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
-				.transaction((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)));
-		return execute(command, args);
+				.transaction((cmd)->cmd.evalsha(digest, Arrays.asList(keys), Arrays.asList(arguments)))
+				.run(args);
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final String... sha1){
 		final CommandArguments args = CommandArguments.create("sha1", sha1);
-		final JedisClusterCommand<List<Boolean>> command = new JedisClusterCommand<List<Boolean>>(client,
-				ProtocolCommand.SCRIPT_EXISTS)
+		return new JedisClusterCommand<List<Boolean>>(client, ProtocolCommand.SCRIPT_EXISTS)
 				.general((cmd)->cmd.scriptExists(null, sha1))
 				.pipeline((cmd)->cmd.scriptExists(null, sha1))
-				.transaction((cmd)->cmd.scriptExists(null, sha1));
-		return execute(command, args);
+				.transaction((cmd)->cmd.scriptExists(null, sha1))
+				.run(args);
 	}
 
 	@Override
 	public List<Boolean> scriptExists(final byte[]... sha1){
 		final CommandArguments args = CommandArguments.create("sha1", sha1);
-		final JedisClusterCommand<List<Boolean>> command = new JedisClusterCommand<List<Boolean>>(client,
-				ProtocolCommand.SCRIPT_EXISTS)
+		return new JedisClusterCommand<List<Boolean>>(client, ProtocolCommand.SCRIPT_EXISTS)
 				.general((cmd)->cmd.scriptExists(null, sha1))
 				.pipeline((cmd)->cmd.scriptExists(null, sha1))
-				.transaction((cmd)->cmd.scriptExists(null, sha1));
-		return execute(command, args);
+				.transaction((cmd)->cmd.scriptExists(null, sha1))
+				.run(args);
 	}
 
 	@Override
 	public Status scriptFlush(){
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client,
-				ProtocolCommand.SCRIPT_FLUSH)
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.SCRIPT_FLUSH)
 				.general((cmd)->cmd.scriptFlush((String) null), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.scriptFlush((String) null), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.scriptFlush((String) null), OkStatusConverter.INSTANCE);
-		return execute(command);
+				.transaction((cmd)->cmd.scriptFlush((String) null), OkStatusConverter.INSTANCE)
+				.run();
 	}
 
 	@Override
 	public Status scriptFlush(final FlushMode mode){
 		final CommandArguments args = CommandArguments.create("mode", mode);
 		final redis.clients.jedis.args.FlushMode flushMode = FlushModeConverter.INSTANCE.convert(mode);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client,
-				ProtocolCommand.SCRIPT_FLUSH)
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.SCRIPT_FLUSH)
 				.general((cmd)->cmd.scriptFlush((String) null, flushMode), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.scriptFlush((String) null, flushMode), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.scriptFlush((String) null, flushMode), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				.transaction((cmd)->cmd.scriptFlush((String) null, flushMode), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
 	public String scriptLoad(final String script){
 		final CommandArguments args = CommandArguments.create("script", script);
-		final JedisClusterCommand<String> command = new JedisClusterCommand<String>(client, ProtocolCommand.SCRIPT_LOAD)
+		return new JedisClusterCommand<String>(client, ProtocolCommand.SCRIPT_LOAD)
 				.general((cmd)->cmd.scriptLoad(script, null))
 				.pipeline((cmd)->cmd.scriptLoad(script, null))
-				.transaction((cmd)->cmd.scriptLoad(script, null));
-		return execute(command, args);
+				.transaction((cmd)->cmd.scriptLoad(script, null))
+				.run(args);
 	}
 
 	@Override
 	public byte[] scriptLoad(final byte[] script){
 		final CommandArguments args = CommandArguments.create("script", script);
-		final JedisClusterCommand<byte[]> command = new JedisClusterCommand<byte[]>(client, ProtocolCommand.SCRIPT_LOAD)
+		return new JedisClusterCommand<byte[]>(client, ProtocolCommand.SCRIPT_LOAD)
 				.general((cmd)->cmd.scriptLoad(script, null))
 				.pipeline((cmd)->cmd.scriptLoad(script, null))
-				.transaction((cmd)->cmd.scriptLoad(script, null));
-		return execute(command, args);
+				.transaction((cmd)->cmd.scriptLoad(script, null))
+				.run(args);
 	}
 
 	@Override
 	public Status scriptKill(){
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.SCRIPT_KILL)
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.SCRIPT_KILL)
 				.general((cmd)->cmd.scriptKill((String) null), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.scriptKill((String) null), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.scriptKill((String) null), OkStatusConverter.INSTANCE);
-		return execute(command);
+				.transaction((cmd)->cmd.scriptKill((String) null), OkStatusConverter.INSTANCE)
+				.run();
 	}
 
 }

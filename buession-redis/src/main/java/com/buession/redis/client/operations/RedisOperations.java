@@ -33,16 +33,9 @@ import com.buession.redis.exception.RedisException;
 /**
  * Redis 命令操作接口
  *
- * @param <C>
- * 		Redis Client {@link RedisClient}
- *
  * @author Yong.Teng
  */
-public interface RedisOperations<C extends RedisClient> {
-
-	<R> R execute(final Command<C, R> command) throws RedisException;
-
-	<R> R execute(final Command<C, R> command, final CommandArguments arguments) throws RedisException;
+public interface RedisOperations {
 
 	abstract class AbstractRedisCommand<C extends RedisClient, R> implements Command<C, R> {
 
@@ -60,6 +53,10 @@ public interface RedisOperations<C extends RedisClient> {
 			return command;
 		}
 
+		@Override
+		public R run(final CommandArguments arguments) throws RedisException{
+			return client.execute(this, arguments);
+		}
 	}
 
 }

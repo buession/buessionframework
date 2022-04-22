@@ -37,7 +37,7 @@ import com.buession.redis.client.operations.PubSubOperations;
  * @since 2.0.0
  */
 public abstract class AbstractPubSubOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements PubSubOperations<C> {
+		implements PubSubOperations {
 
 	public AbstractPubSubOperations(final C client){
 		super(client);

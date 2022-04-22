@@ -51,38 +51,42 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 	@Override
 	public long bitCount(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisSentinelCommand<Long> command = new JedisSentinelCommand<Long>(client, ProtocolCommand.BITCOUNT)
-				.general((cmd)->cmd.bitcount(key)).pipeline((cmd)->cmd.bitcount(key))
-				.transaction((cmd)->cmd.bitcount(key));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.BITCOUNT)
+				.general((cmd)->cmd.bitcount(key))
+				.pipeline((cmd)->cmd.bitcount(key))
+				.transaction((cmd)->cmd.bitcount(key))
+				.run(args);
 	}
 
 	@Override
 
 	public long bitCount(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisSentinelCommand<Long> command = new JedisSentinelCommand<Long>(client, ProtocolCommand.BITCOUNT)
-				.general((cmd)->cmd.bitcount(key)).pipeline((cmd)->cmd.bitcount(key))
-				.transaction((cmd)->cmd.bitcount(key));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.BITCOUNT)
+				.general((cmd)->cmd.bitcount(key))
+				.pipeline((cmd)->cmd.bitcount(key))
+				.transaction((cmd)->cmd.bitcount(key))
+				.run(args);
 	}
 
 	@Override
 	public long bitCount(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final JedisSentinelCommand<Long> command = new JedisSentinelCommand<Long>(client, ProtocolCommand.BITCOUNT)
-				.general((cmd)->cmd.bitcount(key, start, end)).pipeline((cmd)->cmd.bitcount(key, start, end))
-				.transaction((cmd)->cmd.bitcount(key, start, end));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.BITCOUNT)
+				.general((cmd)->cmd.bitcount(key, start, end))
+				.pipeline((cmd)->cmd.bitcount(key, start, end))
+				.transaction((cmd)->cmd.bitcount(key, start, end))
+				.run(args);
 	}
 
 	@Override
 	public long bitCount(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final JedisSentinelCommand<Long> command = new JedisSentinelCommand<Long>(client, ProtocolCommand.BITCOUNT)
-				.general((cmd)->cmd.bitcount(key, start, end)).pipeline((cmd)->cmd.bitcount(key, start, end))
-				.transaction((cmd)->cmd.bitcount(key, start, end));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.BITCOUNT)
+				.general((cmd)->cmd.bitcount(key, start, end))
+				.pipeline((cmd)->cmd.bitcount(key, start, end))
+				.transaction((cmd)->cmd.bitcount(key, start, end))
+				.run(args);
 	}
 
 	@Override
@@ -91,11 +95,11 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 				.put("bitCountOption", bitCountOption);
 		final redis.clients.jedis.args.BitCountOption option = BitCountOptionConverter.INSTANCE.convert(
 				bitCountOption);
-		final JedisSentinelCommand<Long> command = new JedisSentinelCommand<Long>(client, ProtocolCommand.BITCOUNT)
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.BITCOUNT)
 				.general((cmd)->cmd.bitcount(key, start, end, option))
 				.pipeline((cmd)->cmd.bitcount(key, start, end, option))
-				.transaction((cmd)->cmd.bitcount(key, start, end, option));
-		return execute(command, args);
+				.transaction((cmd)->cmd.bitcount(key, start, end, option))
+				.run(args);
 	}
 
 	@Override
@@ -104,49 +108,51 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 				.put("bitCountOption", bitCountOption);
 		final redis.clients.jedis.args.BitCountOption option = BitCountOptionConverter.INSTANCE.convert(
 				bitCountOption);
-		final JedisSentinelCommand<Long> command = new JedisSentinelCommand<Long>(client, ProtocolCommand.BITCOUNT)
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.BITCOUNT)
 				.general((cmd)->cmd.bitcount(key, start, end, option))
 				.pipeline((cmd)->cmd.bitcount(key, start, end, option))
-				.transaction((cmd)->cmd.bitcount(key, start, end, option));
-		return execute(command, args);
+				.transaction((cmd)->cmd.bitcount(key, start, end, option))
+				.run(args);
 	}
 
 	@Override
 	public List<Long> bitField(final String key, final String... arguments){
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", arguments);
-		final JedisSentinelCommand<List<Long>> command = new JedisSentinelCommand<List<Long>>(client,
-				ProtocolCommand.BITFIELD).general((cmd)->cmd.bitfield(key, arguments))
-				.pipeline((cmd)->cmd.bitfield(key, arguments)).transaction((cmd)->cmd.bitfield(key, arguments));
-		return execute(command, args);
+		return new JedisSentinelCommand<List<Long>>(client, ProtocolCommand.BITFIELD)
+				.general((cmd)->cmd.bitfield(key, arguments))
+				.pipeline((cmd)->cmd.bitfield(key, arguments))
+				.transaction((cmd)->cmd.bitfield(key, arguments))
+				.run(args);
 	}
 
 	@Override
 	public List<Long> bitField(final byte[] key, final byte[]... arguments){
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", arguments);
-		final JedisSentinelCommand<List<Long>> command = new JedisSentinelCommand<List<Long>>(client,
-				ProtocolCommand.BITFIELD).general((cmd)->cmd.bitfield(key, arguments))
-				.pipeline((cmd)->cmd.bitfield(key, arguments)).transaction((cmd)->cmd.bitfield(key, arguments));
-		return execute(command, args);
+		return new JedisSentinelCommand<List<Long>>(client, ProtocolCommand.BITFIELD)
+				.general((cmd)->cmd.bitfield(key, arguments))
+				.pipeline((cmd)->cmd.bitfield(key, arguments))
+				.transaction((cmd)->cmd.bitfield(key, arguments))
+				.run(args);
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final String key, final String... arguments){
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", arguments);
-		final JedisSentinelCommand<List<Long>> command = new JedisSentinelCommand<List<Long>>(client,
-				ProtocolCommand.BITFIELD_RO).general((cmd)->cmd.bitfieldReadonly(key, arguments))
+		return new JedisSentinelCommand<List<Long>>(client, ProtocolCommand.BITFIELD_RO)
+				.general((cmd)->cmd.bitfieldReadonly(key, arguments))
 				.pipeline((cmd)->cmd.bitfieldReadonly(key, arguments))
-				.transaction((cmd)->cmd.bitfieldReadonly(key, arguments));
-		return execute(command, args);
+				.transaction((cmd)->cmd.bitfieldReadonly(key, arguments))
+				.run(args);
 	}
 
 	@Override
 	public List<Long> bitFieldRo(final byte[] key, final byte[]... arguments){
 		final CommandArguments args = CommandArguments.create("key", key).put("arguments", arguments);
-		final JedisSentinelCommand<List<Long>> command = new JedisSentinelCommand<List<Long>>(client,
-				ProtocolCommand.BITFIELD_RO).general((cmd)->cmd.bitfieldReadonly(key, arguments))
+		return new JedisSentinelCommand<List<Long>>(client, ProtocolCommand.BITFIELD_RO)
+				.general((cmd)->cmd.bitfieldReadonly(key, arguments))
 				.pipeline((cmd)->cmd.bitfieldReadonly(key, arguments))
-				.transaction((cmd)->cmd.bitfieldReadonly(key, arguments));
-		return execute(command, args);
+				.transaction((cmd)->cmd.bitfieldReadonly(key, arguments))
+				.run(args);
 	}
 
 	@Override
@@ -154,10 +160,11 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
 				.put("keys", keys);
 		final BitOP bitOP = BitOperationConverter.INSTANCE.convert(operation);
-		final JedisSentinelCommand<Long> command = new JedisSentinelCommand<Long>(client, ProtocolCommand.BITOP)
-				.general((cmd)->cmd.bitop(bitOP, destKey, keys)).pipeline((cmd)->cmd.bitop(bitOP, destKey, keys))
-				.transaction((cmd)->cmd.bitop(bitOP, destKey, keys));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.BITOP)
+				.general((cmd)->cmd.bitop(bitOP, destKey, keys))
+				.pipeline((cmd)->cmd.bitop(bitOP, destKey, keys))
+				.transaction((cmd)->cmd.bitop(bitOP, destKey, keys))
+				.run(args);
 	}
 
 	@Override
@@ -165,28 +172,31 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("operation", operation).put("destKey", destKey)
 				.put("keys", keys);
 		final BitOP bitOP = BitOperationConverter.INSTANCE.convert(operation);
-		final JedisSentinelCommand<Long> command = new JedisSentinelCommand<Long>(client, ProtocolCommand.BITOP)
-				.general((cmd)->cmd.bitop(bitOP, destKey, keys)).pipeline((cmd)->cmd.bitop(bitOP, destKey, keys))
-				.transaction((cmd)->cmd.bitop(bitOP, destKey, keys));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.BITOP)
+				.general((cmd)->cmd.bitop(bitOP, destKey, keys))
+				.pipeline((cmd)->cmd.bitop(bitOP, destKey, keys))
+				.transaction((cmd)->cmd.bitop(bitOP, destKey, keys))
+				.run(args);
 	}
 
 	@Override
 	public long bitPos(final String key, final boolean value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Long> command = new JedisSentinelCommand<Long>(client, ProtocolCommand.BITPOS)
-				.general((cmd)->cmd.bitpos(key, value)).pipeline((cmd)->cmd.bitpos(key, value))
-				.transaction((cmd)->cmd.bitpos(key, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.BITPOS)
+				.general((cmd)->cmd.bitpos(key, value))
+				.pipeline((cmd)->cmd.bitpos(key, value))
+				.transaction((cmd)->cmd.bitpos(key, value))
+				.run(args);
 	}
 
 	@Override
 	public long bitPos(final byte[] key, final boolean value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Long> command = new JedisSentinelCommand<Long>(client, ProtocolCommand.BITPOS)
-				.general((cmd)->cmd.bitpos(key, value)).pipeline((cmd)->cmd.bitpos(key, value))
-				.transaction((cmd)->cmd.bitpos(key, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.BITPOS)
+				.general((cmd)->cmd.bitpos(key, value))
+				.pipeline((cmd)->cmd.bitpos(key, value))
+				.transaction((cmd)->cmd.bitpos(key, value))
+				.run(args);
 	}
 
 	@Override
@@ -194,10 +204,11 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
 				.put("end", end);
 		final BitPosParams params = new BitPosParams(start, end);
-		final JedisSentinelCommand<Long> command = new JedisSentinelCommand<Long>(client, ProtocolCommand.BITPOS)
-				.general((cmd)->cmd.bitpos(key, value, params)).pipeline((cmd)->cmd.bitpos(key, value, params))
-				.transaction((cmd)->cmd.bitpos(key, value, params));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.BITPOS)
+				.general((cmd)->cmd.bitpos(key, value, params))
+				.pipeline((cmd)->cmd.bitpos(key, value, params))
+				.transaction((cmd)->cmd.bitpos(key, value, params))
+				.run(args);
 	}
 
 	@Override
@@ -205,46 +216,51 @@ public final class JedisSentinelBitMapOperations extends AbstractBitMapOperation
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("start", start)
 				.put("end", end);
 		final BitPosParams params = new BitPosParams(start, end);
-		final JedisSentinelCommand<Long> command = new JedisSentinelCommand<Long>(client, ProtocolCommand.BITPOS)
-				.general((cmd)->cmd.bitpos(key, value, params)).pipeline((cmd)->cmd.bitpos(key, value, params))
-				.transaction((cmd)->cmd.bitpos(key, value, params));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.BITPOS)
+				.general((cmd)->cmd.bitpos(key, value, params))
+				.pipeline((cmd)->cmd.bitpos(key, value, params))
+				.transaction((cmd)->cmd.bitpos(key, value, params))
+				.run(args);
 	}
 
 	@Override
 	public boolean getBit(final String key, final long offset){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		final JedisSentinelCommand<Boolean> command = new JedisSentinelCommand<Boolean>(client, ProtocolCommand.GETBIT)
-				.general((cmd)->cmd.getbit(key, offset)).pipeline((cmd)->cmd.getbit(key, offset))
-				.transaction((cmd)->cmd.getbit(key, offset));
-		return execute(command, args);
+		return new JedisSentinelCommand<Boolean>(client, ProtocolCommand.GETBIT)
+				.general((cmd)->cmd.getbit(key, offset))
+				.pipeline((cmd)->cmd.getbit(key, offset))
+				.transaction((cmd)->cmd.getbit(key, offset))
+				.run(args);
 	}
 
 	@Override
 	public boolean getBit(final byte[] key, final long offset){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset);
-		final JedisSentinelCommand<Boolean> command = new JedisSentinelCommand<Boolean>(client, ProtocolCommand.GETBIT)
-				.general((cmd)->cmd.getbit(key, offset)).pipeline((cmd)->cmd.getbit(key, offset))
-				.transaction((cmd)->cmd.getbit(key, offset));
-		return execute(command, args);
+		return new JedisSentinelCommand<Boolean>(client, ProtocolCommand.GETBIT)
+				.general((cmd)->cmd.getbit(key, offset))
+				.pipeline((cmd)->cmd.getbit(key, offset))
+				.transaction((cmd)->cmd.getbit(key, offset))
+				.run(args);
 	}
 
 	@Override
 	public boolean setBit(final String key, final long offset, final boolean value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		final JedisSentinelCommand<Boolean> command = new JedisSentinelCommand<Boolean>(client, ProtocolCommand.SETBIT)
-				.general((cmd)->cmd.setbit(key, offset, value)).pipeline((cmd)->cmd.setbit(key, offset, value))
-				.transaction((cmd)->cmd.setbit(key, offset, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<Boolean>(client, ProtocolCommand.SETBIT)
+				.general((cmd)->cmd.setbit(key, offset, value))
+				.pipeline((cmd)->cmd.setbit(key, offset, value))
+				.transaction((cmd)->cmd.setbit(key, offset, value))
+				.run(args);
 	}
 
 	@Override
 	public boolean setBit(final byte[] key, final long offset, final boolean value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		final JedisSentinelCommand<Boolean> command = new JedisSentinelCommand<Boolean>(client, ProtocolCommand.SETBIT)
-				.general((cmd)->cmd.setbit(key, offset, value)).pipeline((cmd)->cmd.setbit(key, offset, value))
-				.transaction((cmd)->cmd.setbit(key, offset, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<Boolean>(client, ProtocolCommand.SETBIT)
+				.general((cmd)->cmd.setbit(key, offset, value))
+				.pipeline((cmd)->cmd.setbit(key, offset, value))
+				.transaction((cmd)->cmd.setbit(key, offset, value))
+				.run(args);
 	}
 
 }

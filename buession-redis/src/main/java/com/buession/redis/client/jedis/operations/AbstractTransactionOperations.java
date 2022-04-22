@@ -37,7 +37,7 @@ import com.buession.redis.client.operations.TransactionOperations;
  * @since 2.0.0
  */
 public abstract class AbstractTransactionOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements TransactionOperations<C> {
+		implements TransactionOperations {
 
 	public AbstractTransactionOperations(final C client){
 		super(client);

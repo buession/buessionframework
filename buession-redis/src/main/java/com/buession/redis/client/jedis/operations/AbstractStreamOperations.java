@@ -54,7 +54,7 @@ import java.util.Map;
  * @since 2.0.0
  */
 public abstract class AbstractStreamOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements StreamOperations<C> {
+		implements StreamOperations {
 
 	public AbstractStreamOperations(final C client){
 		super(client);

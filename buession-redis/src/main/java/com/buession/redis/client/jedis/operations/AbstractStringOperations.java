@@ -37,7 +37,7 @@ import com.buession.redis.client.operations.StringOperations;
  * @since 2.0.0
  */
 public abstract class AbstractStringOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements StringOperations<C> {
+		implements StringOperations {
 
 	public AbstractStringOperations(final C client){
 		super(client);

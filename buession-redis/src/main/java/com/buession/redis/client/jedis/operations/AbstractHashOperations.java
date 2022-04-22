@@ -41,7 +41,7 @@ import java.util.Map;
  * @since 2.0.0
  */
 public abstract class AbstractHashOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements HashOperations<C> {
+		implements HashOperations {
 
 	public AbstractHashOperations(final C client){
 		super(client);

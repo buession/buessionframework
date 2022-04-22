@@ -27,7 +27,6 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -44,7 +43,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisSentinelTransactionOperations extends AbstractTransactionOperations<JedisSentinelConnection> {
+public final class JedisSentinelTransactionOperations extends AbstractTransactionOperations<JedisSentinelClient> {
 
 	public JedisSentinelTransactionOperations(final JedisSentinelClient client){
 		super(client);
@@ -52,7 +51,7 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 
 	@Override
 	public Status multi(){
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MULTI)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MULTI)
 				.general((cmd)->{
 					RedisConnection connection = client.getConnection();
 					connection.multi();
@@ -70,14 +69,13 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 						}
 
 					});
-				});
-		return execute(command);
+				})
+				.run();
 	}
 
 	@Override
 	public List<Object> exec(){
-		final JedisSentinelCommand<List<Object>> command = JedisSentinelCommand.<List<Object>>create(
-						ProtocolCommand.EXEC)
+		return new JedisSentinelCommand<List<Object>>(client, ProtocolCommand.EXEC)
 				.transaction((cmd)->{
 					RedisConnection connection = client.getConnection();
 					List<Object> results = connection.exec();
@@ -92,25 +90,25 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 						}
 
 					});
-				});
-		return execute(command);
+				})
+				.run();
 	}
 
 	@Override
 	public void discard(){
-		final JedisSentinelCommand<Void> command = JedisSentinelCommand.<Void>create(ProtocolCommand.DISCARD)
+		new JedisSentinelCommand<Void>(client, ProtocolCommand.DISCARD)
 				.transaction((cmd)->{
 					RedisConnection connection = client.getConnection();
 					connection.discard();
 					return null;
-				});
-		execute(command);
+				})
+				.run();
 	}
 
 	@Override
 	public Status watch(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.WATCH)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.WATCH)
 				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
@@ -119,14 +117,14 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 						return cmd.watch(keys);
 					}
 
-				}), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				}), OkStatusConverter.INSTANCE)
+				.run();
 	}
 
 	@Override
 	public Status watch(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.WATCH)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.WATCH)
 				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
@@ -135,13 +133,13 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 						return cmd.watch(keys);
 					}
 
-				}), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				}), OkStatusConverter.INSTANCE)
+				.run();
 	}
 
 	@Override
 	public Status unwatch(){
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.UNWATCH)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.UNWATCH)
 				.general((cmd)->cmd.unwatch(), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
@@ -150,8 +148,8 @@ public final class JedisSentinelTransactionOperations extends AbstractTransactio
 						return cmd.unwatch();
 					}
 
-				}), OkStatusConverter.INSTANCE);
-		return execute(command);
+				}), OkStatusConverter.INSTANCE)
+				.run();
 	}
 
 }

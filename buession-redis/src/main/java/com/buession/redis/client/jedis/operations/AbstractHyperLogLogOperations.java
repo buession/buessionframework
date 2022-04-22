@@ -37,7 +37,7 @@ import com.buession.redis.client.operations.HyperLogLogOperations;
  * @since 2.0.0
  */
 public abstract class AbstractHyperLogLogOperations<C extends JedisRedisClient>
-		extends AbstractJedisRedisOperations<C> implements HyperLogLogOperations<C> {
+		extends AbstractJedisRedisOperations<C> implements HyperLogLogOperations {
 
 	public AbstractHyperLogLogOperations(final C client){
 		super(client);

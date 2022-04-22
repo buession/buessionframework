@@ -24,17 +24,13 @@
  */
 package com.buession.redis.client.operations;
 
-import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.command.SortedSetCommands;
 
 /**
  * 有序集合命令操作接口
  *
- * @param <C>
- * 		Redis Client {@link RedisClient}
- *
  * @author Yong.Teng
  */
-public interface SortedSetOperations<C extends RedisClient> extends SortedSetCommands, RedisOperations<C> {
+public interface SortedSetOperations extends SortedSetCommands, RedisOperations {
 
 }

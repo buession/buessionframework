@@ -85,7 +85,7 @@ public abstract class AbstractRedisClient implements RedisClient {
 	}
 
 	@Override
-	public <R> R execute(final Command<RedisClient, R> command, final CommandArguments arguments){
+	public <R> R execute(final Command<? extends RedisClient, R> command, final CommandArguments arguments){
 		RedisConnection connection;
 
 		long startTime = 0;

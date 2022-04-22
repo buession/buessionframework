@@ -44,7 +44,7 @@ import java.util.List;
  * @since 2.0.0
  */
 public abstract class AbstractClusterOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements ClusterOperations<C> {
+		implements ClusterOperations {
 
 	public AbstractClusterOperations(final C client){
 		super(client);

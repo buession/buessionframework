@@ -39,7 +39,7 @@ import com.buession.redis.utils.SafeEncoder;
  * @since 2.0.0
  */
 public abstract class AbstractConnectionOperations<C extends JedisRedisClient>
-		extends AbstractJedisRedisOperations<C> implements ConnectionOperations<C> {
+		extends AbstractJedisRedisOperations<C> implements ConnectionOperations {
 
 	public AbstractConnectionOperations(final C client){
 		super(client);

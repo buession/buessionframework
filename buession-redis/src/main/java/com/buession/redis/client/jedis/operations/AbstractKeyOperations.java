@@ -41,7 +41,7 @@ import java.util.List;
  * @since 2.0.0
  */
 public abstract class AbstractKeyOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements KeyOperations<C> {
+		implements KeyOperations {
 
 	public AbstractKeyOperations(final C client){
 		super(client);

@@ -37,7 +37,7 @@ import com.buession.redis.client.operations.GeoOperations;
  * @since 2.0.0
  */
 public abstract class AbstractGeoOperations<C extends JedisRedisClient>
-		extends AbstractJedisRedisOperations<C> implements GeoOperations<C> {
+		extends AbstractJedisRedisOperations<C> implements GeoOperations {
 
 	public AbstractGeoOperations(final C client){
 		super(client);

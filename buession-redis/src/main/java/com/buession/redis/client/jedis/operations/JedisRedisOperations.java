@@ -44,12 +44,9 @@ import redis.clients.jedis.Transaction;
 /**
  * Jedis Redis 命令操作接口
  *
- * @param <C>
- * 		连接对象
- *
  * @author Yong.Teng
  */
-public interface JedisRedisOperations<C extends JedisRedisClient> extends RedisOperations<C> {
+public interface JedisRedisOperations extends RedisOperations {
 
 	abstract class AbstractJedisCommand<C extends JedisRedisClient, T, R> extends AbstractRedisCommand<C, R> {
 

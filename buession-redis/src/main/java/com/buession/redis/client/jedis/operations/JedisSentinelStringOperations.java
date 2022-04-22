@@ -25,7 +25,6 @@
 package com.buession.redis.client.jedis.operations;
 
 import com.buession.lang.Status;
-import com.buession.redis.client.connection.jedis.JedisSentinelConnection;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -46,7 +45,7 @@ import java.util.Map;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisSentinelStringOperations extends AbstractStringOperations<JedisSentinelConnection> {
+public final class JedisSentinelStringOperations extends AbstractStringOperations<JedisSentinelClient> {
 
 	public JedisSentinelStringOperations(final JedisSentinelClient client){
 		super(client);
@@ -55,197 +54,221 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 	@Override
 	public long append(final String key, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.APPEND)
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.APPEND)
 				.general((cmd)->cmd.append(key, value)).pipeline((cmd)->cmd.append(key, value))
-				.transaction((cmd)->cmd.append(key, value));
-		return execute(command, args);
+				.transaction((cmd)->cmd.append(key, value))
+				.run(args);
 	}
 
 	@Override
 	public long append(final byte[] key, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.APPEND)
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.APPEND)
 				.general((cmd)->cmd.append(key, value)).pipeline((cmd)->cmd.append(key, value))
-				.transaction((cmd)->cmd.append(key, value));
-		return execute(command, args);
+				.transaction((cmd)->cmd.append(key, value))
+				.run(args);
 	}
 
 	@Override
 	public long incr(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.INCR)
-				.general((cmd)->cmd.incr(key)).pipeline((cmd)->cmd.incr(key)).transaction((cmd)->cmd.incr(key));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.INCR)
+				.general((cmd)->cmd.incr(key))
+				.pipeline((cmd)->cmd.incr(key))
+				.transaction((cmd)->cmd.incr(key))
+				.run(args);
 	}
 
 	@Override
 	public long incr(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.INCR)
-				.general((cmd)->cmd.incr(key)).pipeline((cmd)->cmd.incr(key)).transaction((cmd)->cmd.incr(key));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.INCR)
+				.general((cmd)->cmd.incr(key))
+				.pipeline((cmd)->cmd.incr(key))
+				.transaction((cmd)->cmd.incr(key))
+				.run(args);
 	}
 
 	@Override
 	public long incrBy(final String key, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.INCRBY)
-				.general((cmd)->cmd.incrBy(key, value)).pipeline((cmd)->cmd.incrBy(key, value))
-				.transaction((cmd)->cmd.incrBy(key, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.INCRBY)
+				.general((cmd)->cmd.incrBy(key, value))
+				.pipeline((cmd)->cmd.incrBy(key, value))
+				.transaction((cmd)->cmd.incrBy(key, value))
+				.run(args);
 	}
 
 	@Override
 	public long incrBy(final byte[] key, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.INCRBY)
-				.general((cmd)->cmd.incrBy(key, value)).pipeline((cmd)->cmd.incrBy(key, value))
-				.transaction((cmd)->cmd.incrBy(key, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.INCRBY)
+				.general((cmd)->cmd.incrBy(key, value))
+				.pipeline((cmd)->cmd.incrBy(key, value))
+				.transaction((cmd)->cmd.incrBy(key, value))
+				.run(args);
 	}
 
 	@Override
 	public double incrByFloat(final String key, final double value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Double> command = JedisSentinelCommand.<Double>create(ProtocolCommand.INCRBYFLOAT)
-				.general((cmd)->cmd.incrByFloat(key, value)).pipeline((cmd)->cmd.incrByFloat(key, value))
-				.transaction((cmd)->cmd.incrByFloat(key, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<Double>(client, ProtocolCommand.INCRBYFLOAT)
+				.general((cmd)->cmd.incrByFloat(key, value))
+				.pipeline((cmd)->cmd.incrByFloat(key, value))
+				.transaction((cmd)->cmd.incrByFloat(key, value))
+				.run(args);
 	}
 
 	@Override
 	public double incrByFloat(final byte[] key, final double value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Double> command = JedisSentinelCommand.<Double>create(ProtocolCommand.INCRBYFLOAT)
-				.general((cmd)->cmd.incrByFloat(key, value)).pipeline((cmd)->cmd.incrByFloat(key, value))
-				.transaction((cmd)->cmd.incrByFloat(key, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<Double>(client, ProtocolCommand.INCRBYFLOAT)
+				.general((cmd)->cmd.incrByFloat(key, value))
+				.pipeline((cmd)->cmd.incrByFloat(key, value))
+				.transaction((cmd)->cmd.incrByFloat(key, value))
+				.run(args);
 	}
 
 	@Override
 	public long decr(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.DECR)
-				.general((cmd)->cmd.decr(key)).pipeline((cmd)->cmd.decr(key))
-				.transaction((cmd)->cmd.decr(key));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.DECR)
+				.general((cmd)->cmd.decr(key))
+				.pipeline((cmd)->cmd.decr(key))
+				.transaction((cmd)->cmd.decr(key))
+				.run(args);
 	}
 
 	@Override
 	public long decr(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.DECR)
-				.general((cmd)->cmd.decr(key)).pipeline((cmd)->cmd.decr(key))
-				.transaction((cmd)->cmd.decr(key));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.DECR)
+				.general((cmd)->cmd.decr(key))
+				.pipeline((cmd)->cmd.decr(key))
+				.transaction((cmd)->cmd.decr(key))
+				.run(args);
 	}
 
 	@Override
 	public long decrBy(final String key, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.DECRBY)
-				.general((cmd)->cmd.decrBy(key, value)).pipeline((cmd)->cmd.decrBy(key, value))
-				.transaction((cmd)->cmd.decrBy(key, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.DECRBY)
+				.general((cmd)->cmd.decrBy(key, value))
+				.pipeline((cmd)->cmd.decrBy(key, value))
+				.transaction((cmd)->cmd.decrBy(key, value))
+				.run(args);
 	}
 
 	@Override
 	public long decrBy(final byte[] key, final long value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.DECRBY)
-				.general((cmd)->cmd.decrBy(key, value)).pipeline((cmd)->cmd.decrBy(key, value))
-				.transaction((cmd)->cmd.decrBy(key, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.DECRBY)
+				.general((cmd)->cmd.decrBy(key, value))
+				.pipeline((cmd)->cmd.decrBy(key, value))
+				.transaction((cmd)->cmd.decrBy(key, value))
+				.run(args);
 	}
 
 	@Override
 	public String get(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisSentinelCommand<String> command = JedisSentinelCommand.<String>create(ProtocolCommand.GET)
-				.general((cmd)->cmd.get(key)).pipeline((cmd)->cmd.get(key))
-				.transaction((cmd)->cmd.get(key));
-		return execute(command, args);
+		return new JedisSentinelCommand<String>(client, ProtocolCommand.GET)
+				.general((cmd)->cmd.get(key))
+				.pipeline((cmd)->cmd.get(key))
+				.transaction((cmd)->cmd.get(key))
+				.run(args);
 	}
 
 	@Override
 	public byte[] get(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisSentinelCommand<byte[]> command = JedisSentinelCommand.<byte[]>create(ProtocolCommand.GET)
-				.general((cmd)->cmd.get(key)).pipeline((cmd)->cmd.get(key))
-				.transaction((cmd)->cmd.get(key));
-		return execute(command, args);
+		return new JedisSentinelCommand<byte[]>(client, ProtocolCommand.GET)
+				.general((cmd)->cmd.get(key))
+				.pipeline((cmd)->cmd.get(key))
+				.transaction((cmd)->cmd.get(key))
+				.run(args);
 	}
 
 	@Override
 	public String getEx(final String key, final GetExArgument getExArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
 		final GetExParams params = GetExArgumentConverter.INSTANCE.convert(getExArgument);
-		final JedisSentinelCommand<String> command = JedisSentinelCommand.<String>create(ProtocolCommand.GETEX)
-				.general((cmd)->cmd.getEx(key, params)).pipeline((cmd)->cmd.getEx(key, params))
-				.transaction((cmd)->cmd.getEx(key, params));
-		return execute(command, args);
+		return new JedisSentinelCommand<String>(client, ProtocolCommand.GETEX)
+				.general((cmd)->cmd.getEx(key, params))
+				.pipeline((cmd)->cmd.getEx(key, params))
+				.transaction((cmd)->cmd.getEx(key, params))
+				.run(args);
 	}
 
 	@Override
 	public byte[] getEx(final byte[] key, final GetExArgument getExArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("getExArgument", getExArgument);
 		final GetExParams params = GetExArgumentConverter.INSTANCE.convert(getExArgument);
-		final JedisSentinelCommand<byte[]> command = JedisSentinelCommand.<byte[]>create(ProtocolCommand.GETEX)
-				.general((cmd)->cmd.getEx(key, params)).pipeline((cmd)->cmd.getEx(key, params))
-				.transaction((cmd)->cmd.getEx(key, params));
-		return execute(command, args);
+		return new JedisSentinelCommand<byte[]>(client, ProtocolCommand.GETEX)
+				.general((cmd)->cmd.getEx(key, params))
+				.pipeline((cmd)->cmd.getEx(key, params))
+				.transaction((cmd)->cmd.getEx(key, params))
+				.run(args);
 	}
 
 	@Override
 	public String getSet(final String key, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<String> command = JedisSentinelCommand.<String>create(ProtocolCommand.GETSET)
-				.general((cmd)->cmd.getSet(key, value)).pipeline((cmd)->cmd.getSet(key, value))
-				.transaction((cmd)->cmd.getSet(key, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<String>(client, ProtocolCommand.GETSET)
+				.general((cmd)->cmd.getSet(key, value))
+				.pipeline((cmd)->cmd.getSet(key, value))
+				.transaction((cmd)->cmd.getSet(key, value))
+				.run(args);
 	}
 
 	@Override
 	public byte[] getSet(final byte[] key, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<byte[]> command = JedisSentinelCommand.<byte[]>create(ProtocolCommand.GETSET)
-				.general((cmd)->cmd.getSet(key, value)).pipeline((cmd)->cmd.getSet(key, value))
-				.transaction((cmd)->cmd.getSet(key, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<byte[]>(client, ProtocolCommand.GETSET)
+				.general((cmd)->cmd.getSet(key, value))
+				.pipeline((cmd)->cmd.getSet(key, value))
+				.transaction((cmd)->cmd.getSet(key, value))
+				.run(args);
 	}
 
 	@Override
 	public String getDel(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisSentinelCommand<String> command = JedisSentinelCommand.<String>create(ProtocolCommand.GETDEL)
-				.general((cmd)->cmd.getDel(key)).pipeline((cmd)->cmd.getDel(key)).transaction((cmd)->cmd.getDel(key));
-		return execute(command, args);
+		return new JedisSentinelCommand<String>(client, ProtocolCommand.GETDEL)
+				.general((cmd)->cmd.getDel(key))
+				.pipeline((cmd)->cmd.getDel(key))
+				.transaction((cmd)->cmd.getDel(key))
+				.run(args);
 	}
 
 	@Override
 	public byte[] getDel(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisSentinelCommand<byte[]> command = JedisSentinelCommand.<byte[]>create(ProtocolCommand.GETDEL)
-				.general((cmd)->cmd.getDel(key)).pipeline((cmd)->cmd.getDel(key)).transaction((cmd)->cmd.getDel(key));
-		return execute(command, args);
+		return new JedisSentinelCommand<byte[]>(client, ProtocolCommand.GETDEL)
+				.general((cmd)->cmd.getDel(key))
+				.pipeline((cmd)->cmd.getDel(key))
+				.transaction((cmd)->cmd.getDel(key))
+				.run(args);
 	}
 
 	@Override
 	public List<String> mGet(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisSentinelCommand<List<String>> command = JedisSentinelCommand.<List<String>>create(
-						ProtocolCommand.MGET)
-				.general((cmd)->cmd.mget(keys)).pipeline((cmd)->cmd.mget(keys)).transaction((cmd)->cmd.mget(keys));
-		return execute(command, args);
+		return new JedisSentinelCommand<List<String>>(client, ProtocolCommand.MGET)
+				.general((cmd)->cmd.mget(keys))
+				.pipeline((cmd)->cmd.mget(keys))
+				.transaction((cmd)->cmd.mget(keys))
+				.run(args);
 	}
 
 	@Override
 	public List<byte[]> mGet(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisSentinelCommand<List<byte[]>> command = JedisSentinelCommand.<List<byte[]>>create(
-						ProtocolCommand.MGET)
-				.general((cmd)->cmd.mget(keys)).pipeline((cmd)->cmd.mget(keys)).transaction((cmd)->cmd.mget(keys));
-		return execute(command, args);
+		return new JedisSentinelCommand<List<byte[]>>(client, ProtocolCommand.MGET)
+				.general((cmd)->cmd.mget(keys))
+				.pipeline((cmd)->cmd.mget(keys))
+				.transaction((cmd)->cmd.mget(keys))
+				.run(args);
 	}
 
 	@Override
@@ -259,11 +282,11 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 		});
 
 		final String[] keysValues = temp.toArray(new String[0]);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MSET)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MSET)
 				.general((cmd)->cmd.mset(keysValues), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.mset(keysValues), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.mset(keysValues), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				.transaction((cmd)->cmd.mset(keysValues), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
@@ -277,183 +300,191 @@ public final class JedisSentinelStringOperations extends AbstractStringOperation
 		});
 
 		final String[] keysValues = temp.toArray(new String[0]);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.MSETNX)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.MSETNX)
 				.general((cmd)->cmd.msetnx(keysValues), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.msetnx(keysValues), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.msetnx(keysValues), Converters.ONE_STATUS_CONVERTER);
-		return execute(command, args);
+				.transaction((cmd)->cmd.msetnx(keysValues), Converters.ONE_STATUS_CONVERTER)
+				.run(args);
 	}
 
 	@Override
 	public Status pSetEx(final String key, final String value, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.PSETEX)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PSETEX)
 				.general((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				.transaction((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
 	public Status pSetEx(final byte[] key, final byte[] value, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.PSETEX)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.PSETEX)
 				.general((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				.transaction((cmd)->cmd.psetex(key, lifetime, value), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
 	public Status set(final String key, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SET)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SET)
 				.general((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				.transaction((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SET)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SET)
 				.general((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				.transaction((cmd)->cmd.set(key, value), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
 	public Status set(final String key, final String value, final SetArgument setArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		final SetParams params = SetArgumentConverter.INSTANCE.convert(setArgument);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SET)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SET)
 				.general((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				.transaction((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
 	public Status set(final byte[] key, final byte[] value, final SetArgument setArgument){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
 		final SetParams params = SetArgumentConverter.INSTANCE.convert(setArgument);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SET)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SET)
 				.general((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				.transaction((cmd)->cmd.set(key, value, params), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
 	public Status setEx(final String key, final String value, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SETEX)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SETEX)
 				.general((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				.transaction((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
 	public Status setEx(final byte[] key, final byte[] value, final int lifetime){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value).put("lifetime", lifetime);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SETEX)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SETEX)
 				.general((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				.transaction((cmd)->cmd.setex(key, lifetime, value), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
 	public Status setNx(final String key, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SETEX)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SETEX)
 				.general((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER);
-		return execute(command, args);
+				.transaction((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
+				.run(args);
 	}
 
 	@Override
 	public Status setNx(final byte[] key, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("value", value);
-		final JedisSentinelCommand<Status> command = JedisSentinelCommand.<Status>create(ProtocolCommand.SETEX)
+		return new JedisSentinelCommand<Status>(client, ProtocolCommand.SETEX)
 				.general((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER);
-		return execute(command, args);
+				.transaction((cmd)->cmd.setnx(key, value), Converters.ONE_STATUS_CONVERTER)
+				.run(args);
 	}
 
 	@Override
 	public long setRange(final String key, final long offset, final String value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setrange(key, offset, value)).pipeline((cmd)->cmd.setrange(key, offset, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SETEX)
+				.general((cmd)->cmd.setrange(key, offset, value))
+				.pipeline((cmd)->cmd.setrange(key, offset, value))
+				.run(args);
 	}
 
 	@Override
 	public long setRange(final byte[] key, final long offset, final byte[] value){
 		final CommandArguments args = CommandArguments.create("key", key).put("offset", offset).put("value", value);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.SETEX)
-				.general((cmd)->cmd.setrange(key, offset, value)).pipeline((cmd)->cmd.setrange(key, offset, value));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.SETEX)
+				.general((cmd)->cmd.setrange(key, offset, value))
+				.pipeline((cmd)->cmd.setrange(key, offset, value))
+				.run(args);
 	}
 
 	@Override
 	public String getRange(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final JedisSentinelCommand<String> command = JedisSentinelCommand.<String>create(ProtocolCommand.GETRANGE)
-				.general((cmd)->cmd.getrange(key, start, end)).pipeline((cmd)->cmd.getrange(key, start, end))
-				.transaction((cmd)->cmd.getrange(key, start, end));
-		return execute(command, args);
+		return new JedisSentinelCommand<String>(client, ProtocolCommand.GETRANGE)
+				.general((cmd)->cmd.getrange(key, start, end))
+				.pipeline((cmd)->cmd.getrange(key, start, end))
+				.transaction((cmd)->cmd.getrange(key, start, end))
+				.run(args);
 	}
 
 	@Override
 	public byte[] getRange(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final JedisSentinelCommand<byte[]> command = JedisSentinelCommand.<byte[]>create(ProtocolCommand.GETRANGE)
-				.general((cmd)->cmd.getrange(key, start, end)).pipeline((cmd)->cmd.getrange(key, start, end))
-				.transaction((cmd)->cmd.getrange(key, start, end));
-		return execute(command, args);
+		return new JedisSentinelCommand<byte[]>(client, ProtocolCommand.GETRANGE)
+				.general((cmd)->cmd.getrange(key, start, end))
+				.pipeline((cmd)->cmd.getrange(key, start, end))
+				.transaction((cmd)->cmd.getrange(key, start, end))
+				.run(args);
 	}
 
 	@Override
 	public long strlen(final String key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.STRLEN)
-				.general((cmd)->cmd.strlen(key)).pipeline((cmd)->cmd.strlen(key)).transaction((cmd)->cmd.strlen(key));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.STRLEN)
+				.general((cmd)->cmd.strlen(key))
+				.pipeline((cmd)->cmd.strlen(key))
+				.transaction((cmd)->cmd.strlen(key))
+				.run(args);
 	}
 
 	@Override
 	public long strlen(final byte[] key){
 		final CommandArguments args = CommandArguments.create("key", key);
-		final JedisSentinelCommand<Long> command = JedisSentinelCommand.<Long>create(ProtocolCommand.STRLEN)
-				.general((cmd)->cmd.strlen(key)).pipeline((cmd)->cmd.strlen(key)).transaction((cmd)->cmd.strlen(key));
-		return execute(command, args);
+		return new JedisSentinelCommand<Long>(client, ProtocolCommand.STRLEN)
+				.general((cmd)->cmd.strlen(key))
+				.pipeline((cmd)->cmd.strlen(key))
+				.transaction((cmd)->cmd.strlen(key))
+				.run(args);
 	}
 
 	@Override
 	public String substr(final String key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final JedisSentinelCommand<String> command = JedisSentinelCommand.<String>create(ProtocolCommand.SUBSTR)
+		return new JedisSentinelCommand<String>(client, ProtocolCommand.SUBSTR)
 				.general((cmd)->cmd.substr(key, (int) start, (int) end))
 				.pipeline((cmd)->cmd.substr(key, (int) start, (int) end))
-				.transaction((cmd)->cmd.substr(key, (int) start, (int) end));
-		return execute(command, args);
+				.transaction((cmd)->cmd.substr(key, (int) start, (int) end))
+				.run(args);
 	}
 
 	@Override
 	public byte[] substr(final byte[] key, final long start, final long end){
 		final CommandArguments args = CommandArguments.create("key", key).put("start", start).put("end", end);
-		final JedisSentinelCommand<byte[]> command = JedisSentinelCommand.<byte[]>create(ProtocolCommand.SUBSTR)
+		return new JedisSentinelCommand<byte[]>(client, ProtocolCommand.SUBSTR)
 				.general((cmd)->cmd.substr(key, (int) start, (int) end))
 				.pipeline((cmd)->cmd.substr(key, (int) start, (int) end))
-				.transaction((cmd)->cmd.substr(key, (int) start, (int) end));
-		return execute(command, args);
+				.transaction((cmd)->cmd.substr(key, (int) start, (int) end))
+				.run(args);
 	}
 
 }

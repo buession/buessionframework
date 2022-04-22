@@ -81,37 +81,37 @@ public abstract class RedisAccessor implements Closeable {
 
 	protected AtomicInteger index = new AtomicInteger(-1);
 
-	protected BitMapOperations<? extends RedisConnection> bitMapOps;
+	protected BitMapOperations bitMapOps;
 
-	protected ClusterOperations<? extends RedisConnection> clusterOps;
+	protected ClusterOperations clusterOps;
 
-	protected ConnectionOperations<? extends RedisConnection> connectionOps;
+	protected ConnectionOperations connectionOps;
 
-	protected GeoOperations<? extends RedisConnection> geoOps;
+	protected GeoOperations geoOps;
 
-	protected HashOperations<? extends RedisConnection> hashOps;
+	protected HashOperations hashOps;
 
-	protected HyperLogLogOperations<? extends RedisConnection> hyperLogLogOps;
+	protected HyperLogLogOperations hyperLogLogOps;
 
-	protected KeyOperations<? extends RedisConnection> keyOps;
+	protected KeyOperations keyOps;
 
-	protected ListOperations<? extends RedisConnection> listOps;
+	protected ListOperations listOps;
 
-	protected PubSubOperations<? extends RedisConnection> pubSubOps;
+	protected PubSubOperations pubSubOps;
 
-	protected ScriptingOperations<? extends RedisConnection> scriptingOps;
+	protected ScriptingOperations scriptingOps;
 
-	protected ServerOperations<? extends RedisConnection> serverOps;
+	protected ServerOperations serverOps;
 
-	protected SetOperations<? extends RedisConnection> setOps;
+	protected SetOperations setOps;
 
-	protected SortedSetOperations<? extends RedisConnection> sortedSetOps;
+	protected SortedSetOperations sortedSetOps;
 
-	protected StreamOperations<? extends RedisConnection> streamOps;
+	protected StreamOperations streamOps;
 
-	protected StringOperations<? extends RedisConnection> stringOps;
+	protected StringOperations stringOps;
 
-	protected TransactionOperations<? extends RedisConnection> transactionOps;
+	protected TransactionOperations transactionOps;
 
 	static{
 		DEFAULT_OPTIONS.setSerializer(DEFAULT_SERIALIZER);
@@ -211,67 +211,67 @@ public abstract class RedisAccessor implements Closeable {
 		return executor.execute(ops);
 	}
 
-	protected <R> R bitMapOpsExecute(final Executor<BitMapOperations<? extends RedisConnection>, R> executor){
+	protected <R> R bitMapOpsExecute(final Executor<BitMapOperations, R> executor){
 		return execute(bitMapOps, executor);
 	}
 
-	protected <R> R clusterOpsExecute(final Executor<ClusterOperations<? extends RedisConnection>, R> executor){
+	protected <R> R clusterOpsExecute(final Executor<ClusterOperations, R> executor){
 		return execute(clusterOps, executor);
 	}
 
-	protected <R> R connectionOpsExecute(final Executor<ConnectionOperations<? extends RedisConnection>, R> executor){
+	protected <R> R connectionOpsExecute(final Executor<ConnectionOperations, R> executor){
 		return execute(connectionOps, executor);
 	}
 
-	protected <R> R geoOpsExecute(final Executor<GeoOperations<? extends RedisConnection>, R> executor){
+	protected <R> R geoOpsExecute(final Executor<GeoOperations, R> executor){
 		return execute(geoOps, executor);
 	}
 
-	protected <R> R hashOpsExecute(final Executor<HashOperations<? extends RedisConnection>, R> executor){
+	protected <R> R hashOpsExecute(final Executor<HashOperations, R> executor){
 		return execute(hashOps, executor);
 	}
 
-	protected <R> R hyperLogLogOpsExecute(final Executor<HyperLogLogOperations<? extends RedisConnection>, R> executor){
+	protected <R> R hyperLogLogOpsExecute(final Executor<HyperLogLogOperations, R> executor){
 		return execute(hyperLogLogOps, executor);
 	}
 
-	protected <R> R keyOpsExecute(final Executor<KeyOperations<? extends RedisConnection>, R> executor){
+	protected <R> R keyOpsExecute(final Executor<KeyOperations, R> executor){
 		return execute(keyOps, executor);
 	}
 
-	protected <R> R listOpsExecute(final Executor<ListOperations<? extends RedisConnection>, R> executor){
+	protected <R> R listOpsExecute(final Executor<ListOperations, R> executor){
 		return execute(listOps, executor);
 	}
 
-	protected <R> R pubSubOpsExecute(final Executor<PubSubOperations<? extends RedisConnection>, R> executor){
+	protected <R> R pubSubOpsExecute(final Executor<PubSubOperations, R> executor){
 		return execute(pubSubOps, executor);
 	}
 
-	protected <R> R scriptingOpsExecute(final Executor<ScriptingOperations<? extends RedisConnection>, R> executor){
+	protected <R> R scriptingOpsExecute(final Executor<ScriptingOperations, R> executor){
 		return execute(scriptingOps, executor);
 	}
 
-	protected <R> R serverOpsExecute(final Executor<ServerOperations<? extends RedisConnection>, R> executor){
+	protected <R> R serverOpsExecute(final Executor<ServerOperations, R> executor){
 		return execute(serverOps, executor);
 	}
 
-	protected <R> R setOpsExecute(final Executor<SetOperations<? extends RedisConnection>, R> executor){
+	protected <R> R setOpsExecute(final Executor<SetOperations, R> executor){
 		return execute(setOps, executor);
 	}
 
-	protected <R> R sortedSetOpsExecute(final Executor<SortedSetOperations<? extends RedisConnection>, R> executor){
+	protected <R> R sortedSetOpsExecute(final Executor<SortedSetOperations, R> executor){
 		return execute(sortedSetOps, executor);
 	}
 
-	protected <R> R streamOpsOpsExecute(final Executor<StreamOperations<? extends RedisConnection>, R> executor){
+	protected <R> R streamOpsOpsExecute(final Executor<StreamOperations, R> executor){
 		return execute(streamOps, executor);
 	}
 
-	protected <R> R stringOpsOpsExecute(final Executor<StringOperations<? extends RedisConnection>, R> executor){
+	protected <R> R stringOpsOpsExecute(final Executor<StringOperations, R> executor){
 		return execute(stringOps, executor);
 	}
 
-	protected <R> R transactionOpsExecute(final Executor<TransactionOperations<? extends RedisConnection>, R> executor){
+	protected <R> R transactionOpsExecute(final Executor<TransactionOperations, R> executor){
 		return execute(transactionOps, executor);
 	}
 

@@ -24,17 +24,13 @@
  */
 package com.buession.redis.client.operations;
 
-import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.command.KeyCommands;
 
 /**
  * KEY 命令操作接口
  *
- * @param <C>
- * 		Redis Client {@link RedisClient}
- *
  * @author Yong.Teng
  */
-public interface KeyOperations<C extends RedisClient> extends KeyCommands, RedisOperations<C> {
+public interface KeyOperations extends KeyCommands, RedisOperations {
 
 }

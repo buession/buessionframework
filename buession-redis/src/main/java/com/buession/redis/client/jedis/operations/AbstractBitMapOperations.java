@@ -37,7 +37,7 @@ import com.buession.redis.client.operations.BitMapOperations;
  * @since 2.0.0
  */
 public abstract class AbstractBitMapOperations<C extends JedisRedisClient> extends AbstractJedisRedisOperations<C>
-		implements BitMapOperations<C> {
+		implements BitMapOperations {
 
 	public AbstractBitMapOperations(final C client){
 		super(client);

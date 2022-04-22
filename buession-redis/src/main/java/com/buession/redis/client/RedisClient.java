@@ -57,43 +57,43 @@ public interface RedisClient {
 
 	Pipeline pipeline();
 
-	BitMapOperations<? extends RedisConnection> bitMapOperations();
+	BitMapOperations bitMapOperations();
 
-	ClusterOperations<? extends RedisConnection> clusterOperations();
+	ClusterOperations clusterOperations();
 
-	ConnectionOperations<? extends RedisConnection> connectionOperations();
+	ConnectionOperations connectionOperations();
 
-	GeoOperations<? extends RedisConnection> geoOperations();
+	GeoOperations geoOperations();
 
-	HashOperations<? extends RedisConnection> hashOperations();
+	HashOperations hashOperations();
 
-	HyperLogLogOperations<? extends RedisConnection> hyperLogLogOperations();
+	HyperLogLogOperations hyperLogLogOperations();
 
-	KeyOperations<? extends RedisConnection> keyOperations();
+	KeyOperations keyOperations();
 
-	ListOperations<? extends RedisConnection> listOperations();
+	ListOperations listOperations();
 
-	PubSubOperations<? extends RedisConnection> pubSubOperations();
+	PubSubOperations pubSubOperations();
 
-	ScriptingOperations<? extends RedisConnection> scriptingOperations();
+	ScriptingOperations scriptingOperations();
 
-	ServerOperations<? extends RedisConnection> serverOperations();
+	ServerOperations serverOperations();
 
-	SetOperations<? extends RedisConnection> setOperations();
+	SetOperations setOperations();
 
-	SortedSetOperations<? extends RedisConnection> sortedSetOperations();
+	SortedSetOperations sortedSetOperations();
 
-	StreamOperations<? extends RedisConnection> streamOperations();
+	StreamOperations streamOperations();
 
-	StringOperations<? extends RedisConnection> stringOperations();
+	StringOperations stringOperations();
 
-	TransactionOperations<? extends RedisConnection> transactionOperations();
+	TransactionOperations transactionOperations();
 
-	default <R> R execute(final Command<RedisClient, R> command) throws RedisException{
+	default <R> R execute(final Command<? extends RedisClient, R> command) throws RedisException{
 		return execute(command, null);
 	}
 
-	<R> R execute(final Command<RedisClient, R> command, final CommandArguments arguments)
+	<R> R execute(final Command<? extends RedisClient, R> command, final CommandArguments arguments)
 			throws RedisException;
 
 }

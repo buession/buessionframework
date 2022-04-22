@@ -51,7 +51,7 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 
 	@Override
 	public Status multi(){
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.MULTI)
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.MULTI)
 				.general((cmd)->{
 					RedisConnection connection = client.getConnection();
 					connection.multi();
@@ -69,46 +69,47 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 						}
 
 					});
-				});
-		return execute(command);
+				})
+				.run();
 	}
 
 	@Override
 	public List<Object> exec(){
-		final JedisClusterCommand<List<Object>> command = new JedisClusterCommand<List<Object>>(client,
-				ProtocolCommand.EXEC).transaction((cmd)->{
-			RedisConnection connection = client.getConnection();
-			List<Object> results = connection.exec();
+		return new JedisClusterCommand<List<Object>>(client,
+				ProtocolCommand.EXEC)
+				.transaction((cmd)->{
+					RedisConnection connection = client.getConnection();
+					List<Object> results = connection.exec();
 
-			return new Response<>(new Builder<List<Object>>() {
+					return new Response<>(new Builder<List<Object>>() {
 
-				@Override
-				public List<Object> build(Object data){
-					return Validate.isEmpty(results) ? results : new TransactionResultConverter<>(
-							client.getTxResults()).convert(
-							results);
-				}
+						@Override
+						public List<Object> build(Object data){
+							return Validate.isEmpty(results) ? results : new TransactionResultConverter<>(
+									client.getTxResults()).convert(
+									results);
+						}
 
-			});
-		});
-		return execute(command);
+					});
+				})
+				.run();
 	}
 
 	@Override
 	public void discard(){
-		final JedisClusterCommand<Void> command = new JedisClusterCommand<Void>(client, ProtocolCommand.DISCARD)
+		new JedisClusterCommand<>(client, ProtocolCommand.DISCARD)
 				.transaction((cmd)->{
 					RedisConnection connection = client.getConnection();
 					connection.discard();
 					return null;
-				});
-		execute(command);
+				})
+				.run();
 	}
 
 	@Override
 	public Status watch(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.WATCH)
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.WATCH)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
 					@Override
@@ -116,14 +117,14 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 						return cmd.watch(keys);
 					}
 
-				}), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				}), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
 	public Status watch(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.WATCH)
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.WATCH)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
 					@Override
@@ -131,13 +132,13 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 						return cmd.watch(keys);
 					}
 
-				}), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				}), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
 	public Status unwatch(){
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.UNWATCH)
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.UNWATCH)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
 					@Override
@@ -145,8 +146,8 @@ public final class JedisClusterTransactionOperations extends AbstractTransaction
 						return cmd.unwatch();
 					}
 
-				}), OkStatusConverter.INSTANCE);
-		return execute(command);
+				}), OkStatusConverter.INSTANCE)
+				.run();
 	}
 
 }

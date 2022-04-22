@@ -42,7 +42,7 @@ import java.util.List;
  * @since 2.0.0
  */
 public abstract class AbstractSortedSetOperations<C extends JedisRedisClient>
-		extends AbstractJedisRedisOperations<C> implements SortedSetOperations<C> {
+		extends AbstractJedisRedisOperations<C> implements SortedSetOperations {
 
 	public AbstractSortedSetOperations(final C client){
 		super(client);

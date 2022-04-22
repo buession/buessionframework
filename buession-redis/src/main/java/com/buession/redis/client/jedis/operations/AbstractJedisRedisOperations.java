@@ -27,10 +27,7 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.converter.Converter;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.operations.AbstractRedisOperations;
-import com.buession.redis.core.Command;
-import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.internal.jedis.JedisResult;
-import com.buession.redis.exception.RedisException;
 import redis.clients.jedis.Response;
 
 /**
@@ -43,22 +40,12 @@ import redis.clients.jedis.Response;
  * @since 2.0.0
  */
 public abstract class AbstractJedisRedisOperations<C extends JedisRedisClient> extends AbstractRedisOperations<C>
-		implements JedisRedisOperations<C> {
+		implements JedisRedisOperations {
 
 	protected C client;
 
 	public AbstractJedisRedisOperations(final C client){
 		this.client = client;
-	}
-
-	@Override
-	public <R> R execute(final Command<C, R> command) throws RedisException{
-		return execute(command, null);
-	}
-
-	@Override
-	public <R> R execute(final Command<C, R> command, final CommandArguments arguments) throws RedisException{
-		return null;//client.execute(command, arguments);
 	}
 
 	protected <SV, TV> JedisResult<SV, TV> newJedisResult(final Response<SV> response){

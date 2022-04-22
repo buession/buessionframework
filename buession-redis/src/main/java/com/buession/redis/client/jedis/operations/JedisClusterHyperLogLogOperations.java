@@ -46,61 +46,61 @@ public final class JedisClusterHyperLogLogOperations extends AbstractHyperLogLog
 	@Override
 	public Status pfAdd(final String key, final String... elements){
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", elements);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PFADD)
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.PFADD)
 				.general((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER);
-		return execute(command, args);
+				.transaction((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
+				.run(args);
 	}
 
 	@Override
 	public Status pfAdd(final byte[] key, final byte[]... elements){
 		final CommandArguments args = CommandArguments.create("key", key).put("elements", elements);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PFADD)
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.PFADD)
 				.general((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
 				.pipeline((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
-				.transaction((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER);
-		return execute(command, args);
+				.transaction((cmd)->cmd.pfadd(key, elements), Converters.ONE_STATUS_CONVERTER)
+				.run(args);
 	}
 
 	@Override
 	public Status pfMerge(final String destKey, final String... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PFMERGE)
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.PFMERGE)
 				.general((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				.transaction((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
 	public Status pfMerge(final byte[] destKey, final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("destKey", destKey).put("keys", keys);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<Status>(client, ProtocolCommand.PFMERGE)
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.PFMERGE)
 				.general((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
 				.pipeline((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
-				.transaction((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				.transaction((cmd)->cmd.pfmerge(destKey, keys), OkStatusConverter.INSTANCE)
+				.run(args);
 	}
 
 	@Override
 	public long pfCount(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.PFCOUNT)
+		return new JedisClusterCommand<Long>(client, ProtocolCommand.PFCOUNT)
 				.general((cmd)->cmd.pfcount(keys))
 				.pipeline((cmd)->cmd.pfcount(keys))
-				.transaction((cmd)->cmd.pfcount(keys));
-		return execute(command, args);
+				.transaction((cmd)->cmd.pfcount(keys))
+				.run(args);
 	}
 
 	@Override
 	public long pfCount(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisClusterCommand<Long> command = new JedisClusterCommand<Long>(client, ProtocolCommand.PFCOUNT)
+		return new JedisClusterCommand<Long>(client, ProtocolCommand.PFCOUNT)
 				.general((cmd)->cmd.pfcount(keys))
 				.pipeline((cmd)->cmd.pfcount(keys))
-				.transaction((cmd)->cmd.pfcount(keys));
-		return execute(command, args);
+				.transaction((cmd)->cmd.pfcount(keys))
+				.run(args);
 	}
 
 }

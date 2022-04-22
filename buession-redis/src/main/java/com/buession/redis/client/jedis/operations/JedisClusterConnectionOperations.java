@@ -48,150 +48,148 @@ public final class JedisClusterConnectionOperations extends AbstractConnectionOp
 	@Override
 	public Status auth(final String user, final String password){
 		final CommandArguments args = CommandArguments.create("user", user).put("password", password);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.AUTH);
-		return execute(command, args);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.AUTH)
+				.run(args);
 	}
 
 	@Override
 	public Status auth(final String password){
 		final CommandArguments args = CommandArguments.create("password", password);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.AUTH);
-		return execute(command, args);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.AUTH)
+				.run(args);
 	}
 
 	@Override
 	public String echo(final String str){
 		final CommandArguments args = CommandArguments.create("str", str);
-		final JedisClusterCommand<String> command = new JedisClusterCommand<>(client, ProtocolCommand.ECHO);
-		return execute(command, args);
+		return new JedisClusterCommand<String>(client, ProtocolCommand.ECHO)
+				.run(args);
 	}
 
 	@Override
 	public byte[] echo(final byte[] str){
 		final CommandArguments args = CommandArguments.create("str", str);
-		final JedisClusterCommand<byte[]> command = new JedisClusterCommand<>(client, ProtocolCommand.ECHO);
-		return execute(command, args);
+		return new JedisClusterCommand<byte[]>(client, ProtocolCommand.ECHO)
+				.run(args);
 	}
 
 	@Override
 	public Status ping(){
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.PING);
-		return execute(command);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.PING)
+				.run();
 	}
 
 	@Override
 	public Status reset(){
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.RESET);
-		return execute(command);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.RESET)
+				.run();
 	}
 
 	@Override
 	public Status quit(){
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.QUIT);
-		return execute(command);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.QUIT)
+				.run();
 	}
 
 
 	@Override
 	public Status select(final int db){
 		final CommandArguments args = CommandArguments.create("db", db);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.SELECT);
-		return execute(command, args);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.SELECT)
+				.run(args);
 	}
 
 	@Override
 	public Status clientCaching(final boolean isYes){
 		final CommandArguments args = CommandArguments.create("isYes", isYes);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLIENT_CACHING);
-		return execute(command, args);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.CLIENT_CACHING)
+				.run(args);
 	}
 
 	@Override
 	public long clientId(){
-		final JedisClusterCommand<Long> command = new JedisClusterCommand<>(client, ProtocolCommand.CLIENT_ID);
-		return execute(command);
+		return new JedisClusterCommand<Long>(client, ProtocolCommand.CLIENT_ID)
+				.run();
 	}
 
 	@Override
 	public Status clientSetName(final String name){
 		final CommandArguments args = CommandArguments.create("name", name);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLIENT_SETNAME);
-		return execute(command, args);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
+				.run(args);
 	}
 
 	@Override
 	public Status clientSetName(final byte[] name){
 		final CommandArguments args = CommandArguments.create("name", name);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLIENT_SETNAME);
-		return execute(command, args);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.CLIENT_SETNAME)
+				.run(args);
 	}
 
 	@Override
 	public String clientGetName(){
-		final JedisClusterCommand<String> command = new JedisClusterCommand<>(client, ProtocolCommand.CLIENT_GETNAME);
-		return execute(command);
+		return new JedisClusterCommand<String>(client, ProtocolCommand.CLIENT_GETNAME)
+				.run();
 	}
 
 	@Override
 	public Integer clientGetRedir(){
-		final JedisClusterCommand<Integer> command = new JedisClusterCommand<>(client, ProtocolCommand.CLIENT_GETREDIR);
-		return execute(command);
+		return new JedisClusterCommand<Integer>(client, ProtocolCommand.CLIENT_GETREDIR)
+				.run();
 	}
 
 	@Override
 	public List<Client> clientList(){
-		final JedisClusterCommand<List<Client>> command = new JedisClusterCommand<>(client,
-				ProtocolCommand.CLIENT_LIST);
-		return execute(command);
+		return new JedisClusterCommand<List<Client>>(client, ProtocolCommand.CLIENT_LIST)
+				.run();
 	}
 
 	@Override
 	public List<Client> clientList(final ClientType clientType){
 		final CommandArguments args = CommandArguments.create("clientType", clientType);
-		final JedisClusterCommand<List<Client>> command = new JedisClusterCommand<>(client,
-				ProtocolCommand.CLIENT_LIST);
-		return execute(command, args);
+		return new JedisClusterCommand<List<Client>>(client, ProtocolCommand.CLIENT_LIST)
+				.run(args);
 	}
 
 	@Override
 	public Client clientInfo(){
-		final JedisClusterCommand<Client> command = new JedisClusterCommand<>(client, ProtocolCommand.CLIENT_INFO);
-		return execute(command);
+		return new JedisClusterCommand<Client>(client, ProtocolCommand.CLIENT_INFO)
+				.run();
 	}
 
 	@Override
 	public Status clientPause(final int timeout){
 		final CommandArguments args = CommandArguments.create("timeout", timeout);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLIENT_PAUSE);
-		return execute(command, args);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.CLIENT_PAUSE)
+				.run(args);
 	}
 
 	@Override
 	public Status clientReply(final ClientReply option){
 		final CommandArguments args = CommandArguments.create("option", option);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLIENT_REPLY);
-		return execute(command, args);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.CLIENT_REPLY)
+				.run(args);
 	}
 
 	@Override
 	public Status clientKill(final String host, final int port){
 		final CommandArguments args = CommandArguments.create("host", host).put("port", port);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLIENT_PAUSE);
-		return execute(command, args);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.CLIENT_PAUSE)
+				.run(args);
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId){
 		final CommandArguments args = CommandArguments.create("clientId", clientId);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLIENT_UNBLOCK);
-		return execute(command, args);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
+				.run(args);
 	}
 
 	@Override
 	public Status clientUnblock(final int clientId, final ClientUnblockType type){
 		final CommandArguments args = CommandArguments.create("clientId", clientId).put("type", type);
-		final JedisClusterCommand<Status> command = new JedisClusterCommand<>(client, ProtocolCommand.CLIENT_UNBLOCK);
-		return execute(command, args);
+		return new JedisClusterCommand<Status>(client, ProtocolCommand.CLIENT_UNBLOCK)
+				.run(args);
 	}
 
 }

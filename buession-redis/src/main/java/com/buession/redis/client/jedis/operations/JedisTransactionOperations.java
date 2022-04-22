@@ -27,7 +27,6 @@ package com.buession.redis.client.jedis.operations;
 import com.buession.core.validator.Validate;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.core.command.CommandArguments;
 import com.buession.redis.core.command.ProtocolCommand;
@@ -44,7 +43,7 @@ import java.util.List;
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class JedisTransactionOperations extends AbstractTransactionOperations<JedisConnection> {
+public final class JedisTransactionOperations extends AbstractTransactionOperations<JedisStandaloneClient> {
 
 	public JedisTransactionOperations(final JedisStandaloneClient client){
 		super(client);
@@ -52,7 +51,7 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 
 	@Override
 	public Status multi(){
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.MULTI)
+		return new JedisCommand<Status>(client, ProtocolCommand.MULTI)
 				.general((cmd)->{
 					RedisConnection connection = client.getConnection();
 					connection.multi();
@@ -70,13 +69,13 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 						}
 
 					});
-				});
-		return execute(command);
+				})
+				.run();
 	}
 
 	@Override
 	public List<Object> exec(){
-		final JedisCommand<List<Object>> command = JedisCommand.<List<Object>>create(ProtocolCommand.EXEC)
+		return new JedisCommand<List<Object>>(client, ProtocolCommand.EXEC)
 				.transaction((cmd)->{
 					RedisConnection connection = client.getConnection();
 					List<Object> results = connection.exec();
@@ -91,25 +90,25 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 						}
 
 					});
-				});
-		return execute(command);
+				})
+				.run();
 	}
 
 	@Override
 	public void discard(){
-		final JedisCommand<Void> command = JedisCommand.<Void>create(ProtocolCommand.DISCARD)
+		new JedisCommand<Void>(client, ProtocolCommand.DISCARD)
 				.transaction((cmd)->{
 					RedisConnection connection = client.getConnection();
 					connection.discard();
 					return null;
-				});
-		execute(command);
+				})
+				.run();
 	}
 
 	@Override
 	public Status watch(final String... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.WATCH)
+		return new JedisCommand<Status>(client, ProtocolCommand.WATCH)
 				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
@@ -118,14 +117,14 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 						return cmd.watch(keys);
 					}
 
-				}), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				}), OkStatusConverter.INSTANCE)
+				.run();
 	}
 
 	@Override
 	public Status watch(final byte[]... keys){
 		final CommandArguments args = CommandArguments.create("keys", keys);
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.WATCH)
+		return new JedisCommand<Status>(client, ProtocolCommand.WATCH)
 				.general((cmd)->cmd.watch(keys), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
@@ -134,13 +133,13 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 						return cmd.watch(keys);
 					}
 
-				}), OkStatusConverter.INSTANCE);
-		return execute(command, args);
+				}), OkStatusConverter.INSTANCE)
+				.run();
 	}
 
 	@Override
 	public Status unwatch(){
-		final JedisCommand<Status> command = JedisCommand.<Status>create(ProtocolCommand.UNWATCH)
+		return new JedisCommand<Status>(client, ProtocolCommand.UNWATCH)
 				.general((cmd)->cmd.unwatch(), OkStatusConverter.INSTANCE)
 				.transaction((cmd)->new Response<>(new Builder<String>() {
 
@@ -149,8 +148,8 @@ public final class JedisTransactionOperations extends AbstractTransactionOperati
 						return cmd.unwatch();
 					}
 
-				}), OkStatusConverter.INSTANCE);
-		return execute(command);
+				}), OkStatusConverter.INSTANCE)
+				.run();
 	}
 
 }

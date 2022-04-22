@@ -24,17 +24,13 @@
  */
 package com.buession.redis.client.operations;
 
-import com.buession.redis.client.RedisClient;
 import com.buession.redis.core.command.StreamCommands;
 
 /**
  * Stream 命令操作接口
  *
- * @param <C>
- * 		Redis Client {@link RedisClient}
- *
  * @author Yong.Teng
  */
-public interface StreamOperations<C extends RedisClient> extends StreamCommands, RedisOperations<C> {
+public interface StreamOperations extends StreamCommands, RedisOperations {
 
 }
