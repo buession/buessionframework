@@ -24,6 +24,8 @@
  */
 package com.buession.core.converter;
 
+import com.buession.core.collect.Arrays;
+
 /**
  * 数组转换器
  *
@@ -48,19 +50,8 @@ public class ArrayConverter<S, T> implements Converter<S[], T[]> {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public T[] convert(final S[] source){
-		if(source == null){
-			return null;
-		}else{
-			final T[] result = (T[]) new Object[source.length];
-
-			for(int i = 0; i < source.length; i++){
-				result[i] = itemConverter.convert(source[i]);
-			}
-
-			return result;
-		}
+		return Arrays.map(source, itemConverter::convert);
 	}
 
 }

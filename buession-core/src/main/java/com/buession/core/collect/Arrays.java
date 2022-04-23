@@ -31,6 +31,7 @@ import com.buession.lang.Constants;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -2741,6 +2742,35 @@ public class Arrays extends org.apache.commons.lang3.ArrayUtils {
 
 			for(T[] item : b){
 				result = addAll(result, item);
+			}
+
+			return result;
+		}
+	}
+
+	/**
+	 * 对数组的元素进行操作，返回一个新的数组
+	 *
+	 * @param arrays
+	 * 		需操作的数组
+	 * @param fn
+	 * 		Value 操作函数
+	 * @param <S>
+	 * 		源数组类型
+	 * @param <T>
+	 * 		目标数组类型
+	 *
+	 * @return 新的 Map
+	 */
+	@SuppressWarnings("unchecked")
+	public static <S, T> T[] map(final S[] arrays, final Function<S, T> fn){
+		if(arrays == null){
+			return null;
+		}else{
+			final T[] result = (T[]) new Object[arrays.length];
+
+			for(int i = 0; i < arrays.length; i++){
+				result[i] = fn.apply(arrays[i]);
 			}
 
 			return result;
