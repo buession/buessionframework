@@ -62,7 +62,8 @@ public class ListConverter<S, T> implements Converter<List<S>, List<T>> {
 		if(source == null){
 			return null;
 		}else{
-			return source.stream().map(itemConverter::convert).collect(Collectors.toCollection(source instanceof LinkedList ? LinkedList::new : ArrayList::new));
+			return source.stream().map(itemConverter::convert)
+					.collect(Collectors.toCollection(source instanceof LinkedList ? LinkedList::new : ArrayList::new));
 		}
 	}
 

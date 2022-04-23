@@ -79,11 +79,40 @@ public class Maps {
 			result = new HashMap<>(map.size());
 		}
 
-		Map<TK, TV> finalResult = result;
+		return map(map, keyFun, valueFun, result);
+	}
 
-		map.forEach((k, v)->finalResult.put(keyFun.apply(k), valueFun.apply(v)));
+	/**
+	 * 对 Map 的 Key 和 Value 进行操作，返回一个新的 Map
+	 *
+	 * @param map
+	 * 		需操作的 Map
+	 * @param keyFun
+	 * 		Key 操作函数
+	 * @param valueFun
+	 * 		Value 操作函数
+	 * @param targetMap
+	 * 		目标 Map
+	 * @param <SK>
+	 * 		源 Key 类型
+	 * @param <SV>
+	 * 		源 Value 类型
+	 * @param <TK>
+	 * 		目标 Key 类型
+	 * @param <TV>
+	 * 		目标 Value 类型
+	 *
+	 * @return 新的 Map
+	 */
+	public static <SK, SV, TK, TV> Map<TK, TV> map(final Map<SK, SV> map, final Function<SK, TK> keyFun,
+												   final Function<SV, TV> valueFun, final Map<TK, TV> targetMap){
+		if(map == null){
+			return null;
+		}
 
-		return finalResult;
+		map.forEach((k, v)->targetMap.put(keyFun.apply(k), valueFun.apply(v)));
+
+		return targetMap;
 	}
 
 	/**
