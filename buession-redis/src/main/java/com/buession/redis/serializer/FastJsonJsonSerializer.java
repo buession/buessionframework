@@ -21,28 +21,21 @@
  * +------------------------------------------------------------------------------------------------+
  * | License: http://www.apache.org/licenses/LICENSE-2.0.txt 										|
  * | Author: Yong.Teng <webmaster@buession.com> 													|
- * | Copyright @ 2013-2020 Buession.com Inc.														|
+ * | Copyright @ 2013-2022 Buession.com Inc.														|
  * +------------------------------------------------------------------------------------------------+
  */
 package com.buession.redis.serializer;
 
 import com.buession.core.serializer.SerializerException;
 import com.buession.core.serializer.type.TypeReference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Yong.Teng
  */
-public class FastJsonJsonSerializer extends AbstractSerializer {
-
-	private final static com.buession.core.serializer.FastJsonJsonSerializer serializer =
-			new com.buession.core.serializer.FastJsonJsonSerializer();
-
-	private final static Logger logger = LoggerFactory.getLogger(FastJsonJsonSerializer.class);
+public class FastJsonJsonSerializer extends AbstractSerializer<com.buession.core.serializer.FastJsonJsonSerializer> {
 
 	public FastJsonJsonSerializer(){
-		super(serializer);
+		super(new com.buession.core.serializer.FastJsonJsonSerializer());
 	}
 
 	@Override

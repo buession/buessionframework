@@ -25,6 +25,7 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamPendingSummary;
 
 /**
@@ -40,8 +41,9 @@ public class StreamPendingSummaryConverter
 
 	@Override
 	public StreamPendingSummary convert(final redis.clients.jedis.resps.StreamPendingSummary source){
-		return new StreamPendingSummary(source.getTotal(), StreamEntryIDConverter.INSTANCE.convert(source.getMinId()),
-				StreamEntryIDConverter.INSTANCE.convert(source.getMaxId()), source.getConsumerMessageCount());
+		final StreamEntryId minId = StreamEntryIDConverter.INSTANCE.convert(source.getMinId());
+		final StreamEntryId maxId = StreamEntryIDConverter.INSTANCE.convert(source.getMaxId());
+		return new StreamPendingSummary(source.getTotal(), minId, maxId, source.getConsumerMessageCount());
 	}
 
 }

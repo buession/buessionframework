@@ -22,51 +22,31 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.jedis.standalone;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.StreamCommands;
-import redis.clients.jedis.params.XAddParams;
+import com.buession.redis.RedisTemplate;
+import com.buession.redis.User;
+import com.buession.redis.jedis.AbstractJedisRedisTest;
+import com.buession.redis.pipeline.Pipeline;
+import org.junit.Test;
 
 /**
- * {@link StreamCommands.XAddArgument} 转换为 jedis {@link XAddParams}
- *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class XAddArgumentConverter implements Converter<StreamCommands.XAddArgument, XAddParams> {
+public class PipelineTest extends AbstractJedisRedisTest {
 
-	public final static XAddArgumentConverter INSTANCE = new XAddArgumentConverter();
+	@Test
+	public void pipeline(){
+		RedisTemplate redisTemplate = getRedisTemplate(createJedisConnection());
 
-	@Override
-	public XAddParams convert(final StreamCommands.XAddArgument source){
-		final XAddParams xAddParams = new XAddParams();
-
-		if(source.getMaxLen() != null){
-			xAddParams.maxLen(source.getMaxLen());
-		}
-
-		if(Boolean.TRUE.equals(source.isApproximateTrimming())){
-			xAddParams.approximateTrimming();
-		}
-
-		if(Boolean.TRUE.equals(source.isExactTrimming())){
-			xAddParams.exactTrimming();
-		}
-
-		if(Boolean.TRUE.equals(source.isNoMkStream())){
-			xAddParams.noMkStream();
-		}
-
-		if(source.getMinId() != null){
-			xAddParams.minId(source.getMinId());
-		}
-
-		if(source.getLimit() != null){
-			xAddParams.limit(source.getLimit());
-		}
-
-		return xAddParams;
+		Pipeline pipeline = redisTemplate.pipeline();
+		//redisTemplate.bitCount("str");
+		redisTemplate.get("user");
+		redisTemplate.get("a");
+		redisTemplate.getObject("user", User.class);
+		//redisTemplate.sync();
+		System.out.println(redisTemplate.exec());
 	}
 
 }

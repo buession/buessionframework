@@ -43,6 +43,7 @@ import com.buession.redis.client.operations.HyperLogLogOperations;
 import com.buession.redis.client.operations.KeyOperations;
 import com.buession.redis.client.operations.ListOperations;
 import com.buession.redis.client.operations.PubSubOperations;
+import com.buession.redis.client.operations.RedisOperations;
 import com.buession.redis.client.operations.ScriptingOperations;
 import com.buession.redis.client.operations.ServerOperations;
 import com.buession.redis.client.operations.SetOperations;
@@ -51,6 +52,7 @@ import com.buession.redis.client.operations.StreamOperations;
 import com.buession.redis.client.operations.StringOperations;
 import com.buession.redis.client.operations.TransactionOperations;
 import com.buession.redis.core.Options;
+import com.buession.redis.core.SessionCallback;
 import com.buession.redis.exception.RedisException;
 import com.buession.redis.pipeline.Pipeline;
 import com.buession.redis.serializer.JacksonJsonSerializer;
@@ -177,22 +179,23 @@ public abstract class RedisAccessor implements Closeable {
 	}
 
 	public Pipeline pipeline(){
-		//return execute((cmd)->client.pipeline());
-		return null;
+		return execute((cmd)->client.pipeline());
 	}
 
-	/*
 	public <R> R execute(final SessionCallback<R> callback) throws RedisException{
 		Assert.isNull(callback, "callback cloud not be null.");
+		checkInitialized();
+
+		if(isTransactionOrPipeline()){
+			index.getAndIncrement();
+		}
 
 		try{
-			return doExecute(callback);
+			return callback.execute(getClient());
 		}catch(Exception e){
 			throw new RedisException(e.getMessage(), e);
 		}
 	}
-
-	 */
 
 	@Override
 	public void close() throws IOException{
@@ -201,7 +204,7 @@ public abstract class RedisAccessor implements Closeable {
 		}
 	}
 
-	protected <OPS, R> R execute(final OPS ops, final Executor<OPS, R> executor){
+	protected <OPS extends RedisOperations, R> R execute(final OPS ops, final Executor<OPS, R> executor){
 		checkInitialized();
 
 		if(isTransactionOrPipeline()){

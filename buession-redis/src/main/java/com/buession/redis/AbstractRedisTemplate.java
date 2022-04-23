@@ -24,6 +24,7 @@
  */
 package com.buession.redis;
 
+import com.buession.core.collect.Arrays;
 import com.buession.core.utils.ByteUtils;
 import com.buession.core.validator.Validate;
 import com.buession.redis.client.connection.RedisConnection;
@@ -57,37 +58,17 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Bit
 
 	protected final String rawKey(final String key){
 		String prefix = getOptions().getPrefix();
-
-		if(Validate.isEmpty(prefix)){
-			return key;
-		}
-
-		final StringBuilder sb = new StringBuilder(prefix.length() + key.length());
-
-		sb.append(prefix).append(key);
-
-		return sb.toString();
-	}
-
-	protected final String[] rawKeys(final String[] keys){
-		String prefix = getOptions().getPrefix();
-
-		if(Validate.isEmpty(prefix) || Validate.isEmpty(keys)){
-			return keys;
-		}
-
-		String[] rawKeys = new String[keys.length];
-
-		for(int i = 0; i < keys.length; i++){
-			rawKeys[i] = rawKey(keys[i]);
-		}
-
-		return rawKeys;
+		return Validate.isEmpty(prefix) ? key : prefix.concat(key);
 	}
 
 	protected final byte[] rawKey(byte[] key){
 		String prefix = getOptions().getPrefix();
 		return Validate.isEmpty(prefix) ? key : ByteUtils.concat(SafeEncoder.encode(prefix), key);
+	}
+
+	protected final String[] rawKeys(final String[] keys){
+		String prefix = getOptions().getPrefix();
+		return Validate.isEmpty(prefix) || Validate.isEmpty(keys) ? keys : Arrays.map(keys, this::rawKey);
 	}
 
 	protected final byte[][] rawKeys(final byte[][] keys){
@@ -98,13 +79,7 @@ public abstract class AbstractRedisTemplate extends RedisAccessor implements Bit
 		}
 
 		byte[] prefixByte = SafeEncoder.encode(prefix);
-		byte[][] result = new byte[keys.length][];
-
-		for(int i = 0; i < keys.length; i++){
-			result[i] = ByteUtils.concat(prefixByte, keys[i]);
-		}
-
-		return result;
+		return Arrays.map(keys, (value)->ByteUtils.concat(prefixByte, value));
 	}
 
 }

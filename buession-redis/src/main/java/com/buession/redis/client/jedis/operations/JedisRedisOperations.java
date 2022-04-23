@@ -26,17 +26,18 @@ package com.buession.redis.client.jedis.operations;
 
 import com.buession.core.Executor;
 import com.buession.core.converter.Converter;
-import com.buession.redis.client.connection.RedisConnection;
-import com.buession.redis.client.connection.RedisConnectionUtils;
 import com.buession.redis.client.connection.jedis.JedisConnection;
 import com.buession.redis.client.jedis.JedisClusterClient;
 import com.buession.redis.client.jedis.JedisRedisClient;
 import com.buession.redis.client.jedis.JedisSentinelClient;
 import com.buession.redis.client.jedis.JedisStandaloneClient;
 import com.buession.redis.client.operations.RedisOperations;
+import com.buession.redis.core.AbstractRedisCommand;
 import com.buession.redis.core.command.ProtocolCommand;
 import com.buession.redis.core.internal.jedis.JedisResult;
 import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.exception.RedisException;
+import com.buession.redis.pipeline.jedis.JedisPipeline;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisCluster;
 import redis.clients.jedis.Pipeline;
@@ -50,13 +51,13 @@ import redis.clients.jedis.Transaction;
  */
 public interface JedisRedisOperations extends RedisOperations {
 
-	abstract class AbstractJedisCommand<C extends JedisRedisClient, T, R> extends AbstractRedisCommand<C, R> {
+	abstract class AbstractJedisCommand<C extends JedisRedisClient, R> extends AbstractRedisCommand<C, R> {
 
-		protected Executor<T, R> executor;
+		protected Runner runner;
 
-		protected Executor<Pipeline, Response<R>> pipelineExecutor;
+		protected Runner pipelineRunner;
 
-		protected Executor<Transaction, Response<R>> transactionExecutor;
+		protected Runner transactionRunner;
 
 		protected AbstractJedisCommand(final C client, final ProtocolCommand command){
 			super(client, command);
@@ -73,43 +74,71 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	class JedisCommand<R> extends AbstractJedisCommand<JedisStandaloneClient, Jedis, R> {
+	class JedisCommand<R> extends AbstractJedisCommand<JedisStandaloneClient, R> {
 
 		public JedisCommand(final JedisStandaloneClient client, final ProtocolCommand command){
 			super(client, command);
 		}
 
 		public JedisCommand<R> general(final Executor<Jedis, R> executor){
-			this.executor = executor;
+			this.runner = new Runner() {
+
+				@Override
+				public R run() throws RedisException{
+					final JedisConnection connection = (JedisConnection) client.getConnection();
+					return executor.execute(connection.getJedis());
+				}
+
+			};
+
 			return this;
 		}
 
 		public <SR> JedisCommand<R> general(final Executor<Jedis, SR> executor, final Converter<SR, R> converter){
-			this.executor = context->converter.convert(executor.execute(context));
+			this.runner = new Runner() {
+
+				@Override
+				public R run() throws RedisException{
+					final JedisConnection connection = (JedisConnection) client.getConnection();
+					return converter.convert(executor.execute(connection.getJedis()));
+				}
+
+			};
+
 			return this;
 		}
 
 		public JedisCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor){
-			this.pipelineExecutor = executor;
+			this.pipelineRunner = new Runner() {
+
+				@Override
+				public JedisResult<R, R> run() throws RedisException{
+					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) client.pipeline()).primitive();
+					return newJedisResult(executor.execute(jedisPipeline));
+				}
+
+			};
+
 			return this;
 		}
 
 		public <SR> JedisCommand<R> pipeline(final Executor<Pipeline, Response<SR>> executor,
 											 final Converter<SR, R> converter){
-			this.pipelineExecutor = new Executor<Pipeline, Response<R>>() {
+			this.pipelineRunner = new Runner() {
 
 				@Override
-				public Response<R> execute(Pipeline context){
-					return null;
+				public JedisResult<SR, R> run() throws RedisException{
+					final redis.clients.jedis.Pipeline jedisPipeline = ((JedisPipeline) client.pipeline()).primitive();
+					return newJedisResult(executor.execute(jedisPipeline), converter);
 				}
-				
+
 			};
-			//this.pipelineExecutor = context->converter.convert(executor.execute(context));
+
 			return this;
 		}
 
 		public JedisCommand<R> transaction(final Executor<Transaction, Response<R>> executor){
-			this.transactionExecutor = executor;
+			//this.transactionExecutor = executor;
 			return this;
 		}
 
@@ -124,24 +153,22 @@ public interface JedisRedisOperations extends RedisOperations {
 			final JedisConnection connection = (JedisConnection) client.getConnection();
 
 			if(connection.isPipeline()){
-				if(pipelineExecutor == null){
+				if(pipelineRunner == null){
 					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.PIPELINE);
 				}else{
-					client.getTxResults()
-							.add((JedisResult<Object, Object>) newJedisResult(pipelineExecutor.execute(null)));
+					client.getTxResults().add(pipelineRunner.run());
 				}
 			}else if(connection.isTransaction()){
-				if(transactionExecutor == null){
+				if(transactionRunner == null){
 					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.TRANSACTION);
 				}else{
-					client.getTxResults()
-							.add((JedisResult<Object, Object>) newJedisResult(transactionExecutor.execute(null)));
+					client.getTxResults().add(transactionRunner.run());
 				}
 			}else{
-				if(executor == null){
+				if(runner == null){
 					throw throwNotSupportedCommandException(NotSupportedCommandException.Type.NORMAL);
 				}else{
-					return executor.execute(connection.getJedis());
+					return runner.run();
 				}
 			}
 			return null;
@@ -149,25 +176,25 @@ public interface JedisRedisOperations extends RedisOperations {
 
 	}
 
-	class JedisSentinelCommand<R> extends AbstractJedisCommand<JedisSentinelClient, Jedis, R> {
+	class JedisSentinelCommand<R> extends AbstractJedisCommand<JedisSentinelClient, R> {
 
 		protected JedisSentinelCommand(final JedisSentinelClient client, final ProtocolCommand command){
 			super(client, command);
 		}
 
 		public JedisSentinelCommand<R> general(Executor<Jedis, R> executor){
-			this.executor = executor;
+			//this.executor = executor;
 			return this;
 		}
 
 		public <SR> JedisSentinelCommand<R> general(final Executor<Jedis, SR> executor,
 													final Converter<SR, R> converter){
-			this.executor = context->converter.convert(executor.execute(context));
+			//this.executor = context->converter.convert(executor.execute(context));
 			return this;
 		}
 
 		public JedisSentinelCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor){
-			this.pipelineExecutor = executor;
+			//this.pipelineExecutor = executor;
 			return this;
 		}
 
@@ -178,7 +205,7 @@ public interface JedisRedisOperations extends RedisOperations {
 		}
 
 		public JedisSentinelCommand<R> transaction(final Executor<Transaction, Response<R>> executor){
-			this.transactionExecutor = executor;
+			//this.transactionExecutor = executor;
 			return this;
 		}
 
@@ -190,6 +217,7 @@ public interface JedisRedisOperations extends RedisOperations {
 
 		@Override
 		public R execute(){
+			/*
 			final RedisConnection connection = client.getConnection();
 			if(connection.isPipeline()){
 				if(pipelineExecutor == null){
@@ -210,30 +238,32 @@ public interface JedisRedisOperations extends RedisOperations {
 					return executor.execute(null);
 				}
 			}
+
+			 */
 			return null;
 		}
 
 	}
 
-	class JedisClusterCommand<R> extends AbstractJedisCommand<JedisClusterClient, JedisCluster, R> {
+	class JedisClusterCommand<R> extends AbstractJedisCommand<JedisClusterClient, R> {
 
 		protected JedisClusterCommand(final JedisClusterClient client, final ProtocolCommand command){
 			super(client, command);
 		}
 
 		public JedisClusterCommand<R> general(Executor<JedisCluster, R> executor){
-			this.executor = executor;
+			//this.executor = executor;
 			return this;
 		}
 
 		public <SR> JedisClusterCommand<R> general(final Executor<JedisCluster, SR> executor,
 												   final Converter<SR, R> converter){
-			this.executor = context->converter.convert(executor.execute(context));
+			//this.executor = context->converter.convert(executor.execute(context));
 			return this;
 		}
 
 		public JedisClusterCommand<R> pipeline(final Executor<Pipeline, Response<R>> executor){
-			this.pipelineExecutor = executor;
+			//this.pipelineExecutor = executor;
 			return this;
 		}
 
@@ -244,7 +274,7 @@ public interface JedisRedisOperations extends RedisOperations {
 		}
 
 		public JedisClusterCommand<R> transaction(final Executor<Transaction, Response<R>> executor){
-			this.transactionExecutor = executor;
+			//this.transactionExecutor = executor;
 			return this;
 		}
 
@@ -256,6 +286,7 @@ public interface JedisRedisOperations extends RedisOperations {
 
 		@Override
 		public R execute(){
+			/*
 			final RedisConnection connection = client.getConnection();
 			if(connection.isPipeline()){
 				if(pipelineExecutor == null){
@@ -276,6 +307,8 @@ public interface JedisRedisOperations extends RedisOperations {
 					return executor.execute(null);
 				}
 			}
+
+			 */
 			return null;
 		}
 

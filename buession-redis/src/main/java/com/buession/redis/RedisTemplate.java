@@ -3410,7 +3410,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				}else{
 					if(this.value != null){
 						return this.value.stream().map((value)->serializer.deserialize(value, clazz))
-								.collect(Collectors.toList());
+								.collect(Collectors.toCollection(ArrayList::new));
 					}
 				}
 
@@ -3462,7 +3462,7 @@ public class RedisTemplate extends BaseRedisTemplate implements BitMapOperations
 				}else{
 					if(this.value != null){
 						return this.value.stream().map((value)->serializer.deserializeBytes(value, clazz))
-								.collect(Collectors.toList());
+								.collect(Collectors.toCollection(ArrayList::new));
 					}
 				}
 

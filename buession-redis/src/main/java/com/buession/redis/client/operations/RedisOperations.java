@@ -24,48 +24,11 @@
  */
 package com.buession.redis.client.operations;
 
-import com.buession.redis.client.RedisClient;
-import com.buession.redis.client.connection.RedisConnectionUtils;
-import com.buession.redis.core.Command;
-import com.buession.redis.core.command.CommandArguments;
-import com.buession.redis.core.command.ProtocolCommand;
-import com.buession.redis.exception.NotSupportedCommandException;
-import com.buession.redis.exception.RedisException;
-
 /**
  * Redis 命令操作接口
  *
  * @author Yong.Teng
  */
 public interface RedisOperations {
-
-	abstract class AbstractRedisCommand<C extends RedisClient, R> implements Command<C, R> {
-
-		protected final C client;
-
-		private final ProtocolCommand command;
-
-		protected AbstractRedisCommand(final C client, final ProtocolCommand command){
-			this.client = client;
-			this.command = command;
-		}
-
-		@Override
-		public ProtocolCommand getCommand(){
-			return command;
-		}
-
-		@Override
-		public R run(final CommandArguments arguments) throws RedisException{
-			return client.execute(this, arguments);
-		}
-
-		protected NotSupportedCommandException throwNotSupportedCommandException(
-				final NotSupportedCommandException.Type type){
-			return new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(client.getConnection()),
-					type, getCommand());
-		}
-
-	}
 
 }

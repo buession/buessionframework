@@ -63,6 +63,7 @@ public class JedisClusterConnection extends AbstractJedisRedisConnection impleme
 		return false;
 	}
 
+	@Override
 	public Pipeline pipeline(){
 		return null;
 	}

@@ -25,8 +25,13 @@
 package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
+import com.buession.redis.core.StreamEntry;
+import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamFull;
+import com.buession.redis.core.StreamGroupFull;
 import redis.clients.jedis.resps.StreamFullInfo;
+
+import java.util.List;
 
 /**
  * jedis {@link StreamFullInfo} 转换为 {@link StreamFull}
@@ -40,10 +45,11 @@ public class StreamFullInfoConverter implements Converter<StreamFullInfo, Stream
 
 	@Override
 	public StreamFull convert(final StreamFullInfo source){
+		final List<StreamGroupFull> groups = StreamGroupFullInfoConverter.LIST_CONVERTER.convert(source.getGroups());
+		final StreamEntryId lastGeneratedId = StreamEntryIDConverter.INSTANCE.convert(source.getLastGeneratedId());
+		final List<StreamEntry> entries = StreamEntryConverter.LIST_CONVERTER.convert(source.getEntries());
 		return new StreamFull(source.getLength(), source.getRadixTreeKeys(), source.getRadixTreeNodes(),
-				StreamGroupFullInfoConverter.LIST_CONVERTER.convert(source.getGroups()),
-				StreamEntryIDConverter.INSTANCE.convert(source.getLastGeneratedId()),
-				StreamEntryConverter.LIST_CONVERTER.convert(source.getEntries()), source.getStreamFullInfo());
+				groups, lastGeneratedId, entries, source.getStreamFullInfo());
 	}
 
 }

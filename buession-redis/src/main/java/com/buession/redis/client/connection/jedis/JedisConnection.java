@@ -192,6 +192,7 @@ public class JedisConnection extends AbstractJedisRedisConnection implements Red
 		return transaction != null;
 	}
 
+	@Override
 	public Pipeline pipeline(){
 		if(pipeline == null){
 			pipeline = new JedisPipeline(jedis.pipelined());

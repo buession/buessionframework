@@ -30,6 +30,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * 慢日志信息，更多信息 <a href="http://www.redis.cn/commands/slowlog.html" target="_blank">http://www.redis.cn/commands/slowlog.html</a>
+ *
  * @author Yong.Teng
  * @since 2.0.0
  */
@@ -37,48 +39,112 @@ public class SlowLog implements Serializable {
 
 	private static final long serialVersionUID = 4948377124212583969L;
 
+	/**
+	 * 每个慢查询条目的唯一的递增标识符
+	 */
 	private final long id;
 
-	private final long timeStamp;
+	/**
+	 * 处理记录命令的unix时间戳
+	 */
+	private final long timestamp;
 
+	/**
+	 * 命令执行所需的总时间（单位：毫秒）
+	 */
 	private final long executionTime;
 
+	/**
+	 * 组成该命令的参数的数组
+	 */
 	private final List<String> args;
 
+	/**
+	 * 客户端信息
+	 */
 	private final Client client;
 
+	/**
+	 * 客户端名称
+	 */
 	private final String clientName;
 
-	public SlowLog(final long id, final long timeStamp, final long executionTime, final List<String> args,
+	/**
+	 * 构造函数
+	 *
+	 * @param id
+	 * 		每个慢查询条目的唯一的递增标识符
+	 * @param timestamp
+	 * 		处理记录命令的unix时间戳
+	 * @param executionTime
+	 * 		命令执行所需的总时间（单位：毫秒）
+	 * @param args
+	 * 		组成该命令的参数的数组
+	 * @param client
+	 * 		客户端信息
+	 * @param clientName
+	 * 		客户端名称
+	 */
+	public SlowLog(final long id, final long timestamp, final long executionTime, final List<String> args,
 				   final Client client, final String clientName){
 		this.id = id;
-		this.timeStamp = timeStamp;
+		this.timestamp = timestamp;
 		this.executionTime = executionTime;
 		this.args = args;
 		this.client = client;
 		this.clientName = clientName;
 	}
 
+	/**
+	 * 返回每个慢查询条目的唯一的递增标识符
+	 *
+	 * @return 每个慢查询条目的唯一的递增标识符
+	 */
 	public long getId(){
 		return id;
 	}
 
-	public long getTimeStamp(){
-		return timeStamp;
+	/**
+	 * 返回处理记录命令的unix时间戳
+	 *
+	 * @return 处理记录命令的unix时间戳
+	 */
+	public long getTimestamp(){
+		return timestamp;
 	}
 
+	/**
+	 * 返回命令执行所需的总时间（单位：毫秒）
+	 *
+	 * @return 命令执行所需的总时间
+	 */
 	public long getExecutionTime(){
 		return executionTime;
 	}
 
+	/**
+	 * 返回组成该命令的参数的数组
+	 *
+	 * @return 组成该命令的参数的数组
+	 */
 	public List<String> getArgs(){
 		return args;
 	}
 
+	/**
+	 * 返回客户端信息
+	 *
+	 * @return 客户端信息
+	 */
 	public Client getClient(){
 		return client;
 	}
 
+	/**
+	 * 返回客户端名称
+	 *
+	 * @return 客户端名称
+	 */
 	public String getClientName(){
 		return clientName;
 	}
@@ -87,7 +153,7 @@ public class SlowLog implements Serializable {
 	public String toString(){
 		return ObjectStringBuilder.create()
 				.add("id", id)
-				.add("timeStamp", timeStamp)
+				.add("timestamp", timestamp)
 				.add("executionTime", executionTime)
 				.add("args", args)
 				.add("client", client)

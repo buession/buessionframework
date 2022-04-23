@@ -24,6 +24,7 @@
  */
 package com.buession.redis;
 
+import com.buession.core.collect.Maps;
 import com.buession.lang.Geo;
 import com.buession.lang.Status;
 import com.buession.redis.client.connection.RedisConnection;
@@ -106,12 +107,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public long bitCount(final String key){
-		return bitMapOpsExecute((ops)->ops.bitCount(key));
+		return bitMapOpsExecute((ops)->ops.bitCount(rawKey(key)));
 	}
 
 	@Override
 	public long bitCount(final byte[] key){
-		return bitMapOpsExecute((ops)->ops.bitCount(key));
+		return bitMapOpsExecute((ops)->ops.bitCount(rawKey(key)));
 	}
 
 	@Override
@@ -266,12 +267,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public long clusterKeySlot(final String key){
-		return clusterOpsExecute((ops)->ops.clusterKeySlot(key));
+		return clusterOpsExecute((ops)->ops.clusterKeySlot(rawKey(key)));
 	}
 
 	@Override
 	public long clusterKeySlot(final byte[] key){
-		return clusterOpsExecute((ops)->ops.clusterKeySlot(key));
+		return clusterOpsExecute((ops)->ops.clusterKeySlot(rawKey(key)));
 	}
 
 	@Override
@@ -1761,12 +1762,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Object eval(final String script, final String[] keys, final String[] arguments){
-		return scriptingOpsExecute((ops)->ops.eval(script, keys, arguments));
+		return scriptingOpsExecute((ops)->ops.eval(script, rawKeys(keys), arguments));
 	}
 
 	@Override
 	public Object eval(final byte[] script, final byte[][] keys, final byte[][] arguments){
-		return scriptingOpsExecute((ops)->ops.eval(script, keys, arguments));
+		return scriptingOpsExecute((ops)->ops.eval(script, rawKeys(keys), arguments));
 	}
 
 	@Override
@@ -1791,12 +1792,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Object evalSha(final String digest, final String[] keys, final String[] arguments){
-		return scriptingOpsExecute((ops)->ops.evalSha(digest, keys, arguments));
+		return scriptingOpsExecute((ops)->ops.evalSha(digest, rawKeys(keys), arguments));
 	}
 
 	@Override
 	public Object evalSha(final byte[] digest, final byte[][] keys, final byte[][] arguments){
-		return scriptingOpsExecute((ops)->ops.evalSha(digest, keys, arguments));
+		return scriptingOpsExecute((ops)->ops.evalSha(digest, rawKeys(keys), arguments));
 	}
 
 	@Override
@@ -4190,23 +4191,15 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Status mSet(final Map<String, String> values){
-		final Map<String, String> newValues = new LinkedHashMap<>(values.size());
-
-		values.forEach((key, value)->{
-			newValues.put(rawKey(key), value);
-		});
-
+		final Map<String, String> newValues = Maps.map(values, this::rawKey, (value)->value,
+				new LinkedHashMap<>(values.size()));
 		return stringOpsOpsExecute((ops)->ops.mSet(newValues));
 	}
 
 	@Override
 	public Status mSetNx(final Map<String, String> values){
-		final Map<String, String> newValues = new LinkedHashMap<>(values.size());
-
-		values.forEach((key, value)->{
-			newValues.put(rawKey(key), value);
-		});
-
+		final Map<String, String> newValues = Maps.map(values, this::rawKey, (value)->value,
+				new LinkedHashMap<>(values.size()));
 		return stringOpsOpsExecute((ops)->ops.mSetNx(newValues));
 	}
 
@@ -4320,12 +4313,12 @@ public class BaseRedisTemplate extends AbstractRedisTemplate {
 
 	@Override
 	public Status watch(final String... keys){
-		return transactionOpsExecute((ops)->ops.watch(keys));
+		return transactionOpsExecute((ops)->ops.watch(rawKeys(keys)));
 	}
 
 	@Override
 	public Status watch(final byte[]... keys){
-		return transactionOpsExecute((ops)->ops.watch(keys));
+		return transactionOpsExecute((ops)->ops.watch(rawKeys(keys)));
 	}
 
 	@Override

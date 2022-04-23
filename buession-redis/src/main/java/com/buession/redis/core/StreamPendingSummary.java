@@ -45,8 +45,8 @@ public class StreamPendingSummary implements Serializable {
 
 	private final Map<String, Long> consumerMessageCount;
 
-	public StreamPendingSummary(long total, StreamEntryId minId, StreamEntryId maxId,
-								Map<String, Long> consumerMessageCount){
+	public StreamPendingSummary(final long total, final StreamEntryId minId, final StreamEntryId maxId,
+								final Map<String, Long> consumerMessageCount){
 		this.total = total;
 		this.minId = minId;
 		this.maxId = maxId;

@@ -26,6 +26,8 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.redis.core.Stream;
+import com.buession.redis.core.StreamEntry;
+import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamGroup;
 import redis.clients.jedis.resps.StreamInfo;
 
@@ -41,10 +43,11 @@ public class StreamInfoConverter implements Converter<StreamInfo, Stream> {
 
 	@Override
 	public Stream convert(final StreamInfo source){
+		final StreamEntryId lastGeneratedId = StreamEntryIDConverter.INSTANCE.convert(source.getLastGeneratedId());
+		final StreamEntry firstEntry = StreamEntryConverter.INSTANCE.convert(source.getFirstEntry());
+		final StreamEntry lastEntry = StreamEntryConverter.INSTANCE.convert(source.getLastEntry());
 		return new Stream(source.getLength(), source.getRadixTreeKeys(), source.getRadixTreeNodes(),
-				source.getGroups(), StreamEntryIDConverter.INSTANCE.convert(source.getLastGeneratedId()),
-				StreamEntryConverter.INSTANCE.convert(source.getFirstEntry()), StreamEntryConverter.INSTANCE.convert(
-				source.getLastEntry()), source.getStreamInfo());
+				source.getGroups(), lastGeneratedId, firstEntry, lastEntry, source.getStreamInfo());
 	}
 
 }

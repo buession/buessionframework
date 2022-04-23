@@ -553,6 +553,7 @@ public class JedisSentinelConnection extends AbstractJedisRedisConnection implem
 		return transaction != null;
 	}
 
+	@Override
 	public Pipeline pipeline(){
 		if(pipeline == null){
 			pipeline = new JedisPipeline(jedis.pipelined());

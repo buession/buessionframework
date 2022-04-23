@@ -24,12 +24,12 @@
  */
 package com.buession.redis.core;
 
-import com.buession.redis.client.operations.RedisOperations;
+import com.buession.redis.client.RedisClient;
 
 /**
  * @author Yong.Teng
  */
 @FunctionalInterface
-public interface SessionCallback<R> extends com.buession.core.Executor<RedisOperations, R> {
+public interface SessionCallback<R> extends com.buession.core.Executor<RedisClient, R> {
 
 }

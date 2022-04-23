@@ -22,51 +22,44 @@
  * | Copyright @ 2013-2022 Buession.com Inc.														       |
  * +-------------------------------------------------------------------------------------------------------+
  */
-package com.buession.redis.core.internal.convert.jedis.params;
+package com.buession.redis.core;
 
-import com.buession.core.converter.Converter;
-import com.buession.redis.core.command.StreamCommands;
-import redis.clients.jedis.params.XAddParams;
+import com.buession.redis.client.RedisClient;
+import com.buession.redis.client.connection.RedisConnectionUtils;
+import com.buession.redis.core.command.CommandArguments;
+import com.buession.redis.core.command.ProtocolCommand;
+import com.buession.redis.exception.NotSupportedCommandException;
+import com.buession.redis.exception.RedisException;
 
 /**
- * {@link StreamCommands.XAddArgument} 转换为 jedis {@link XAddParams}
- *
  * @author Yong.Teng
  * @since 2.0.0
  */
-public final class XAddArgumentConverter implements Converter<StreamCommands.XAddArgument, XAddParams> {
+public abstract class AbstractRedisCommand<C extends RedisClient, R> implements Command<R> {
 
-	public final static XAddArgumentConverter INSTANCE = new XAddArgumentConverter();
+	protected final C client;
+
+	private final ProtocolCommand command;
+
+	protected AbstractRedisCommand(final C client, final ProtocolCommand command){
+		this.client = client;
+		this.command = command;
+	}
 
 	@Override
-	public XAddParams convert(final StreamCommands.XAddArgument source){
-		final XAddParams xAddParams = new XAddParams();
+	public ProtocolCommand getCommand(){
+		return command;
+	}
 
-		if(source.getMaxLen() != null){
-			xAddParams.maxLen(source.getMaxLen());
-		}
+	@Override
+	public R run(final CommandArguments arguments) throws RedisException{
+		return client.execute(this, arguments);
+	}
 
-		if(Boolean.TRUE.equals(source.isApproximateTrimming())){
-			xAddParams.approximateTrimming();
-		}
-
-		if(Boolean.TRUE.equals(source.isExactTrimming())){
-			xAddParams.exactTrimming();
-		}
-
-		if(Boolean.TRUE.equals(source.isNoMkStream())){
-			xAddParams.noMkStream();
-		}
-
-		if(source.getMinId() != null){
-			xAddParams.minId(source.getMinId());
-		}
-
-		if(source.getLimit() != null){
-			xAddParams.limit(source.getLimit());
-		}
-
-		return xAddParams;
+	protected NotSupportedCommandException throwNotSupportedCommandException(
+			final NotSupportedCommandException.Type type){
+		return new NotSupportedCommandException(RedisConnectionUtils.getRedisMode(client.getConnection()),
+				type, getCommand());
 	}
 
 }

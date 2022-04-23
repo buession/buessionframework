@@ -371,6 +371,7 @@ public class ClusterInfo implements Serializable {
 	}
 
 	public enum Key {
+
 		STATE("cluster_state"),
 
 		SLOTS_ASSIGNED("cluster_slots_assigned"),

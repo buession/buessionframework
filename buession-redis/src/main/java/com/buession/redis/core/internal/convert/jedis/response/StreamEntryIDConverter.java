@@ -27,7 +27,6 @@ package com.buession.redis.core.internal.convert.jedis.response;
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
 import com.buession.redis.core.StreamEntryId;
-import com.buession.redis.utils.SafeEncoder;
 import redis.clients.jedis.StreamEntryID;
 
 import java.util.LinkedHashMap;
@@ -57,7 +56,7 @@ public final class StreamEntryIDConverter implements Converter<StreamEntryID, St
 
 		@Override
 		public StreamEntryId convert(final byte[] source){
-			return new StreamEntryId(SafeEncoder.encode(source));
+			return new StreamEntryId(source);
 		}
 
 	}
@@ -74,12 +73,13 @@ public final class StreamEntryIDConverter implements Converter<StreamEntryID, St
 		public Map<StreamEntryId, List<StreamEntryId>> convert(
 				final Map.Entry<StreamEntryID, List<StreamEntryID>> source){
 			final Map<StreamEntryId, List<StreamEntryId>> result = new LinkedHashMap<>();
+			final StreamEntryId id = StreamEntryIDConverter.INSTANCE.convert(source.getKey());
 
 			if(source.getValue() != null){
 				final List<StreamEntryId> streamEntryIdS = LIST_ENTRY_ID_CONVERTER.convert(source.getValue());
-				result.put(StreamEntryIDConverter.INSTANCE.convert(source.getKey()), streamEntryIdS);
+				result.put(id, streamEntryIdS);
 			}else{
-				result.put(StreamEntryIDConverter.INSTANCE.convert(source.getKey()), null);
+				result.put(id, null);
 			}
 
 			return result;

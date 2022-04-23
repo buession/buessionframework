@@ -49,7 +49,8 @@ public final class StreamEntryConverter implements Converter<redis.clients.jedis
 
 	@Override
 	public StreamEntry convert(final redis.clients.jedis.resps.StreamEntry source){
-		return new StreamEntry(StreamEntryIDConverter.INSTANCE.convert(source.getID()), source.getFields());
+		final StreamEntryId id = StreamEntryIDConverter.INSTANCE.convert(source.getID());
+		return new StreamEntry(id, source.getFields());
 	}
 
 	public final static class MapStreamEntryConverter<SK, TK> implements

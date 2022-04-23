@@ -26,6 +26,7 @@ package com.buession.redis.core.internal.convert.jedis.response;
 
 import com.buession.core.converter.Converter;
 import com.buession.core.converter.ListConverter;
+import com.buession.redis.core.StreamEntryId;
 import com.buession.redis.core.StreamPending;
 import redis.clients.jedis.resps.StreamPendingEntry;
 
@@ -43,8 +44,8 @@ public class StreamPendingEntryConverter implements Converter<StreamPendingEntry
 
 	@Override
 	public StreamPending convert(final StreamPendingEntry source){
-		return new StreamPending(StreamEntryIDConverter.INSTANCE.convert(source.getID()),
-				source.getConsumerName(), source.getIdleTime(), source.getDeliveredTimes());
+		final StreamEntryId id = StreamEntryIDConverter.INSTANCE.convert(source.getID());
+		return new StreamPending(id, source.getConsumerName(), source.getIdleTime(), source.getDeliveredTimes());
 	}
 
 }

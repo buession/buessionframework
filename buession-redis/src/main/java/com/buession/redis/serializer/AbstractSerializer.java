@@ -26,6 +26,7 @@
  */
 package com.buession.redis.serializer;
 
+import com.buession.core.collect.Arrays;
 import com.buession.core.serializer.SerializerException;
 import com.buession.core.utils.Assert;
 import org.slf4j.Logger;
@@ -34,13 +35,13 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Yong.Teng
  */
-public abstract class AbstractSerializer implements Serializer {
+public abstract class AbstractSerializer<T extends com.buession.core.serializer.Serializer> implements Serializer {
 
-	private final com.buession.core.serializer.Serializer serializer;
+	protected final T serializer;
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
+	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
-	protected AbstractSerializer(final com.buession.core.serializer.Serializer serializer){
+	protected AbstractSerializer(final T serializer){
 		Assert.isNull(serializer, "original serializer object cloud not be null.");
 		this.serializer = serializer;
 	}
@@ -60,17 +61,7 @@ public abstract class AbstractSerializer implements Serializer {
 
 	@Override
 	public <V> String[] serialize(final V... objects){
-		if(objects != null){
-			final String[] temp = new String[objects.length];
-
-			for(int i = 0; i < objects.length; i++){
-				temp[i] = serialize(objects[i]);
-			}
-
-			return temp;
-		}
-
-		return null;
+		return objects == null ? null : Arrays.map(objects, this::serialize);
 	}
 
 	@Override
@@ -88,17 +79,7 @@ public abstract class AbstractSerializer implements Serializer {
 
 	@Override
 	public <V> byte[][] serializeAsBytes(final V... objects){
-		if(objects != null){
-			final byte[][] temp = new byte[objects.length][];
-
-			for(int i = 0; i < objects.length; i++){
-				temp[i] = serializeAsBytes(objects[i]);
-			}
-
-			return temp;
-		}
-
-		return null;
+		return objects == null ? null : Arrays.map(objects, this::serializeAsBytes);
 	}
 
 	@Override

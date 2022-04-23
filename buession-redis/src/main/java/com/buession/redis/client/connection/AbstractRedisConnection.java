@@ -199,9 +199,9 @@ public abstract class AbstractRedisConnection implements RedisConnection {
 	}
 
 	@Override
-	public <R> R execute(final Executor<RedisConnection, R> command) throws RedisException{
+	public <R> R execute(final Executor<RedisConnection, R> executor) throws RedisException{
 		try{
-			return command.execute(this);
+			return executor.execute(this);
 		}catch(Exception e){
 			logger.error("Redis execute command failure: {}", e.getMessage(), e);
 			throw RedisExceptionUtils.convert(e);
